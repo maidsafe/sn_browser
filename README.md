@@ -1,11 +1,55 @@
-beaker browser
-======
+# SAFEr Browser
 
-Beaker is a browser for IPFS and Dat.
-It's licensed MIT, and supports plugins for adding new protocols and Web APIs.
-[Read the introduction](http://pfrazee.github.io/2016/08/10/beaker-browser-0.1.html).
+SAFEr is a browser designed to open safe:// websites on The SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
 
-Please feel free to open usability issues. Join us at #beakerbrowser on Freenode.
+For more information about The SAFE Network please visit the following links.
+
+https://safenetwork.org/
+https://safenetforum.org/
+https://safenetforum.org/t/safer-browser-s-proposal-donation-address-in-op/10336/247
+http://maidsafe.net/
+
+
+# Linux/Ubuntu Install Instructions:
+
+1. Install Git https://help.ubuntu.com/lts/serverguide/git.html
+
+2. Sign up for https://github.com/
+
+3. https://help.github.com/articles/set-up-git/#platform-linux
+
+4. https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux
+
+5. https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux
+
+6. Install node js requires the latest version of node js Check to see what the latest version is here https://nodejs.org/en/download/
+
+Use option one make sure to install the latest version http://www.hostingadvice.com/how-to/install-nodejs-ubuntu-14-04/#node-version-manager
+
+7. Open Terminal
+
+```
+$ git clone https://github.com/joshuef/beaker.git
+$ cd beaker
+$ git checkout SafePOC
+$ npm install
+$ npm run rebuild
+$ npm start
+```
+
+8. Any time you want to run the browser again all you have to do is open terminal
+
+```
+$ cd beaker
+$ npm start
+
+```
+
+Note 01: If you want to do a fresh install. Delete the beaker folder and start at Step 07:
+
+Note 02: Do not worry about any errors that appear.
+
+## Beaker Browser
 
 ### [Demo video](https://www.youtube.com/watch?v=nKHJ4rLN9mo)
 
@@ -15,25 +59,8 @@ Please feel free to open usability issues. Join us at #beakerbrowser on Freenode
 
 ### [OSX 64-bit](https://download.beakerbrowser.net/download/0.2.0/osx_64/Beaker%20Browser-0.2.0.dmg)
 
-## Building from source
 
-Requires node 6.2.1.
-In linux (possibly also OSX) you need libtool, m4, and automake.
-
-```
-sudo apt-get install libtool m4 automake
-```
-
-To build:
-
-```
-git clone https://github.com/pfrazee/beaker.git
-cd beaker
-npm install
-npm run rebuild #see https://github.com/electron/electron/issues/5851
-npm start
-```
-
+## Updating
 If you pull latest from the repo and get weird module errors, do:
 
 ```
@@ -53,7 +80,7 @@ If you're doing development, `npm run watch` to have assets build automatically.
  - Howto: [Authoring Protocol Plugins](./doc/authoring-plugins.md)
  - [Codebase & build notes](./build-notes.md)
 
-## License
+## Beaker License
 
 Modified MIT License (MIT)
 
