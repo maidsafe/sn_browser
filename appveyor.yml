@@ -5,8 +5,6 @@ image: Visual Studio 2015
 os: unstable
 environment:
   nodejs_version: "6.3.1"
-  # access_token:
-  #   secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4
 
 skip_tags: true
     
@@ -30,23 +28,26 @@ build_script:
   - node --version
   - npm --version
   - npm run release:windows
-# build: off
-# test_script:
-#   - npm config set msvs_version=2013
-#   - npm install --progress false --depth 0
-#   - npm test
+
  
-# before_deploy:
-#     - 
+artifacts: 
+    - path: dist/*-win.zip
+ 
+ 
+after_build:
+  - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+before_deploy:
+    - dir dist
 deploy:
   release: safe-beaker-win-v$(appveyor_build_version)
   description: 'Safe Beaker Browser'
   provider: GitHub
   auth_token:
-    secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
-  artifact: dist
+    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+ # your encrypted token from GitHub
+  artifact: '*.zip'
   draft: false
   prerelease: true
   on:
-    branch: SAFEr                 # release from master branch only
+    branch: release                  # release from master branch only
     appveyor_repo_tag:  false        # deploy on tag push only
