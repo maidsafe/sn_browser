@@ -39,14 +39,14 @@ after_build:
 before_deploy:
     - dir dist
 deploy:
-  # release: safe-beaker-win-v$(appveyor_build_version)
+  release: safe-beaker-v$(appveyor_build_version)
   description: 'Safe Beaker Browser'
   provider: GitHub
   auth_token:
     secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
  # your encrypted token from GitHub
   artifact: '*.zip'
-  draft: false
+  draft: true
   prerelease: true
   on:
     branch: release                  # release from master branch only

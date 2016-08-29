@@ -1,16 +1,6 @@
 os: 
   - linux
   - osx
-# # dist: trusty
-# matrix:
-#   include:
-#   - os: linux
-#     env: | 
-#       PLATFORM=linux-x64 
-#       PLATFORM_NAME=linux 
-#       CXX=g++-4.8
-#   - os: osx
-    # env: PLATFORM=osx-x64 PLATFORM_NAME=darwin CXX=g++-4.8
 
 node_js:
     - '6'
