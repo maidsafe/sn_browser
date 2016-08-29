@@ -41,7 +41,8 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; ls dist/linux; fi
 
 before_deploy:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/**/*.dmg); fi
+  - ls dist
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG=$(ls dist/*.tar.gz); fi
   - echo "deploying ${RELEASE_PKG} to GitHub releases"
 deploy:
