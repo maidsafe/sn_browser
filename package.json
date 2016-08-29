@@ -30,8 +30,9 @@
     "win" : {
         "target" : "zip"
     },
-    "protocols" : ["safe"]
-    
+    "mac" : {
+        "target" :"dmg"
+    }
   },
   "scripts": {
     "postinstall": "cd app && npm install",
