@@ -45,7 +45,7 @@ deploy:
   on:
     repo: joshuef/beaker
     branch: release
-    # tags:   true
+    tags:   true
 
 
 notifications:
