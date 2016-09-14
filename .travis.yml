@@ -27,8 +27,8 @@ before_script:
   # - npm run build
 
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; ls dist ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; ls dist; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
 
 before_deploy:
   - ls dist
