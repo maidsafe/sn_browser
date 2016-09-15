@@ -25,7 +25,7 @@
     "category": "public.app-category.productivity",
     "npmRebuild": false,
     "linux" : {
-        "target" : [ "tar.gz", "zip" ]
+        "target" : [ "tar.gz", "zip", "deb", "AppImage", "freebsd" ]
     },
     "win" : {
         "target" : "zip"
