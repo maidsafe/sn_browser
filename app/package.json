@@ -7,7 +7,7 @@
   "author": "Josh Wilson <joshuef@gmail.com>",
   "main": "background-process.build.js",
   "dependencies": {
-    "beaker-plugin-safe": "0.0.8",
+    "beaker-plugin-safe": "0.0.9",
     "co": "^4.6.0",
     "electron-localshortcut": "^0.6.0",
     "emit-stream": "^0.1.2",
