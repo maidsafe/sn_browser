@@ -3,7 +3,7 @@
   "productName": "SAFE Beaker Browser",
   "description": "A browser for SAFE Network access. Powered by Beaker.",
   "homepage": "https://github.com/joshuef/beaker",
-  "version": "0.2.5-0",
+  "version": "0.2.7",
   "author": "Josh Wilson <joshuef@gmail.com>",
   "main": "background-process.build.js",
   "dependencies": {
