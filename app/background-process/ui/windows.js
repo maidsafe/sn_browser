@@ -4,7 +4,7 @@ import jetpack from 'fs-jetpack'
 import path from 'path'
 import * as downloads from './downloads'
 import log from '../../log'
-
+import url from 'url'
 // globals
 // =
 var userDataDir
@@ -32,6 +32,35 @@ export function createShellWindow () {
       webSecurity: false, // disable same-origin policy in the shell-window; the <webview>s of site content will have it re-enabled
     }
   })
+
+
+    //safe filter
+    let filter = {
+        urls: ['http://*/*', 'https://*/*' ]
+      
+    }
+    win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) => 
+    {
+        const parsedUrl = url.parse(details.url);
+       
+        if( parsedUrl.host.indexOf( 'localhost' ) === 0 )
+        {
+            console.log( "this is okay", details.url );
+            callback({})
+            return;
+        }
+            
+        if( details.url.indexOf('http') > -1 )
+        {
+          callback({ cancel: true })
+          
+        }
+    });
+
+  
+  
+  
+  
   downloads.registerListener(win)
   loadURL(win, 'beaker:shell-window')
 
