@@ -14,6 +14,7 @@ import * as windows from './background-process/ui/windows'
 import buildWindowMenu from './background-process/ui/window-menu'
 import registerContextMenu from './background-process/ui/context-menu'
 import * as downloads from './background-process/ui/downloads'
+import * as permissions from './background-process/ui/permissions'
 import * as settings from './background-process/dbs/settings'
 import * as sitedata from './background-process/dbs/sitedata'
 import * as bookmarks from './background-process/dbs/bookmarks'
@@ -21,6 +22,8 @@ import * as history from './background-process/dbs/history'
 
 import * as beakerProtocol from './background-process/protocols/beaker'
 import * as beakerFaviconProtocol from './background-process/protocols/beaker-favicon'
+
+import * as openURL from './background-process/open-url'
 
 // configure logging
 log.setLevel('trace')
@@ -43,6 +46,7 @@ app.on('ready', function () {
   registerContextMenu()
   windows.setup()
   downloads.setup()
+  permissions.setup()
 
   // protocols
   beakerProtocol.setup()
@@ -52,10 +56,17 @@ app.on('ready', function () {
   // web APIs
   webAPIs.setup()
   plugins.setupWebAPIs()
+
+  // listen OSX open-url event
+  openURL.setup()
 })
 
 app.on('window-all-closed', function () {
-  // it's normal for OSX apps to stay open, even if all windows are closed
-  // but, since we have an uncloseable tabs bar, let's close when they're all gone
-  app.quit()
+  if (process.platform !== 'darwin')
+    app.quit()
 })
+
+app.on('open-url', function (e, url) {
+  openURL.open(url)
+})
+

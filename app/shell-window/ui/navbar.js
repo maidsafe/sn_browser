@@ -1,11 +1,12 @@
 import { remote } from 'electron'
 import * as pages from '../pages'
+import * as zoom from '../pages/zoom'
 import * as yo from 'yo-yo'
+import emitStream from 'emit-stream'
 import { UpdatesNavbarBtn } from './navbar/updates'
 import { DownloadsNavbarBtn } from './navbar/downloads'
 import { SitePermsNavbarBtn } from './navbar/site-perms'
 
-const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/1bzALt_JzmM_N8B3aK29epE7_VIyZMe0QsCXh3LqPY2I/viewform'
 const KEYCODE_DOWN = 40
 const KEYCODE_UP = 38
 const KEYCODE_ESC = 27
@@ -17,8 +18,8 @@ const KEYCODE_P = 80
 // =
 
 var toolbarNavDiv = document.getElementById('toolbar-nav')
-var downloadsNavbarBtn = null
 var updatesNavbarBtn = null
+var downloadsNavbarBtn = null
 var sitePermsNavbarBtn = null
 
 // autocomplete data
@@ -31,13 +32,13 @@ var autocompleteResults = null // if set to an array, will render dropdown
 
 export function setup () {
   // create the button managers
-  downloadsNavbarBtn = new DownloadsNavbarBtn()
   updatesNavbarBtn = new UpdatesNavbarBtn()
+  downloadsNavbarBtn = new DownloadsNavbarBtn()
   sitePermsNavbarBtn = new SitePermsNavbarBtn()
 }
 
 export function createEl (id) {
-  // render (only need to render once)
+  // render
   var el = render(id, null)
   toolbarNavDiv.appendChild(el)
   return el
@@ -126,6 +127,10 @@ function render (id, page) {
   // and it should be hidden if the page isnt active
   var toolbarHidden = (!page || !page.isActive) ? ' hidden' : ''
 
+  // preserve the current finder value and focus
+  var findEl = page && page.navbarEl.querySelector('.nav-find-input')
+  var findValue = findEl ? findEl.value : ''
+
   // inpage finder ctrl
   var inpageFinder = (page && page.isInpageFinding)
     ? yo`<input
@@ -133,11 +138,21 @@ function render (id, page) {
             class="nav-find-input"
             placeholder="Find in page..."
             oninput=${onInputFind}
-            onkeydown=${onKeydownFind} />`
+            onkeydown=${onKeydownFind}
+            value=${findValue} />`
     : ''
 
-  // bookmark btn should be disabled if on a beaker: protocol page
-  var bookmarkClass = 'nav-bookmark-btn'+((page && !!page.bookmark) ? ' gold' : '')
+
+  // bookmark toggle state
+  var bookmarkClass = 'nav-bookmark-btn'+((page && !!page.bookmark) ? ' active' : '')
+
+  // view dat
+  var viewDatBtn
+  if (page && page.protocolDescription && page.protocolDescription.scheme == 'dat') {
+    viewDatBtn = yo`<button class="nav-view-files-btn" onclick=${onClickViewFiles}>
+      <span class="icon icon-docs"></span> <small>View Site Files</small>
+    </button>`
+  }
 
   // zoom btn should only show if zoom is not the default setting
   var zoomBtn = ''
@@ -202,10 +217,10 @@ function render (id, page) {
   return yo`<div data-id=${id} class="toolbar-actions${toolbarHidden}">
     <div class="toolbar-group">
       <button class="toolbar-btn nav-back-btn" ${backDisabled} onclick=${onClickBack}>
-        <span class="icon icon-left-open"></span>
+        <span class="icon icon-left-open-big"></span>
       </button>
       <button class="toolbar-btn nav-forward-btn" ${forwardDisabled} onclick=${onClickForward}>
-        <span class="icon icon-right-open"></span>
+        <span class="icon icon-right-open-big"></span>
       </button>
       ${reloadBtn}      
     </div>
@@ -216,18 +231,17 @@ function render (id, page) {
         class="nav-location-input"
         onfocus=${onFocusLocation}
         onblur=${onBlurLocation}
-        onkeyup=${onKeyupLocation}
         onkeydown=${onKeydownLocation}
         oninput=${onInputLocation}
         value=${addrValue} />
       ${inpageFinder}
+      ${viewDatBtn}
       ${zoomBtn}
       <button class=${bookmarkClass} onclick=${onClickBookmark}><span class="icon icon-star"></span></button>
       ${autocompleteDropdown}
     </div>
     <div class="toolbar-group">
       ${downloadsNavbarBtn.render()}
-      <button class="toolbar-btn" onclick=${onClickFeedback} title="Send feedback"><span class="icon icon-megaphone"></span></button>
       ${updatesNavbarBtn.render()}
     </div>
   </div>`
@@ -238,11 +252,12 @@ function handleAutocompleteSearch (results) {
   var v = autocompleteCurrentValue
 
   // decorate result with bolded regions
-  var searchTerms = v.replace(/[^A-Za-z0-9]/g, ' ').split(' ').filter(Boolean)
-  results.forEach(r => decorateResultMatches(searchTerms, r))  
+  // explicitly replace special characters to match sqlite fts tokenization
+  var searchTerms = v.replace(/[:^*-\.]/g, ' ').split(' ').filter(Boolean)
+  results.forEach(r => decorateResultMatches(searchTerms, r))
 
   // does the value look like a url?
-  var isProbablyUrl = (!v.includes(' ') && (/\.[A-z]/.test(v) || isHashRegex.test(v) || v.includes('://') || v.startsWith('beaker:') || v.startsWith('ipfs:/')))
+  var isProbablyUrl = (!v.includes(' ') && (/\.[A-z]/.test(v) || isHashRegex.test(v) || v.startsWith('localhost') || v.includes('://') || v.startsWith('beaker:') || v.startsWith('ipfs:/')))
   var vWithProtocol = v
   var isGuessingTheScheme = false
   if (isProbablyUrl && !v.includes('://') && !(v.startsWith('beaker:') || v.startsWith('ipfs:/'))) {
@@ -396,19 +411,24 @@ function onClickBookmark (e) {
     page.toggleBookmark()
 }
 
-function onClickZoom (e) {
-  const { Menu, MenuItem } = remote
-  const command = (c) => () => pages.getActive().send('command', c)
-  var menu = Menu.buildFromTemplate([
-    { label: 'Reset Zoom', click: command('view:zoom-reset') },
-    { label: 'Zoom In', click: command('view:zoom-in') },
-    { label: 'Zoom Out', click: command('view:zoom-out') },
-  ])
-  menu.popup(remote.getCurrentWindow())
+function onClickViewFiles (e) {
+  var page = getEventPage(e)
+  if (page) {
+    if (e.metaKey || e.ctrlKey) // popup
+      pages.setActive(pages.create('view-'+page.getURL()))
+    else
+      page.loadURL('view-'+page.getURL()) // goto
+  }
 }
 
-function onClickFeedback (e) {
-  pages.setActive(pages.create(FEEDBACK_FORM_URL))
+function onClickZoom (e) {
+  const { Menu, MenuItem } = remote
+  var menu = Menu.buildFromTemplate([
+    { label: 'Reset Zoom', click: () => zoom.zoomReset(pages.getActive()) },
+    { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
+    { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
+  ])
+  menu.popup(remote.getCurrentWindow())
 }
 
 function onFocusLocation (e) {
@@ -423,21 +443,6 @@ function onBlurLocation () {
   // so, wait a bit before clearing the autocomplete, so the click has a chance to fire
   // -prf
   setTimeout(clearAutocomplete, 150)
-}
-
-function onKeyupLocation (e) {
-  // on enter
-  if (e.keyCode == KEYCODE_ENTER) {
-    e.preventDefault()
-
-    var page = getEventPage(e)
-    if (page) {
-      var selection = getAutocompleteSelection()
-      page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
-      e.target.blur()
-    }
-    return
-  }
 }
 
 function onInputLocation (e) {
@@ -455,8 +460,23 @@ function onInputLocation (e) {
 }
 
 function onKeydownLocation (e) {
+  // on enter
+  if (e.keyCode == KEYCODE_ENTER) {
+    e.preventDefault()
+
+    var page = getEventPage(e)
+    if (page) {
+      var selection = getAutocompleteSelection()
+      page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
+      e.target.blur()
+    }
+    return
+  }
+
   // on escape
   if (e.keyCode == KEYCODE_ESC) {
+    var page = getEventPage(e)
+    page.navbarEl.querySelector('.nav-location-input').value = page.getURL()
     e.target.blur()
     return
   }

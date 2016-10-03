@@ -4,17 +4,18 @@
   <meta charset="utf-8">
   <title>Beaker</title>
   <link rel="stylesheet" href="beaker:shell-window.css">
-  <meta http-equiv="Content-Security-Policy" content="default-src beaker:; style-src beaker: 'unsafe-inline'; img-src beaker: beaker-favicon: http: https:">
+  <meta http-equiv="Content-Security-Policy" content="default-src beaker:; style-src beaker: 'unsafe-inline'; img-src *">
 </head>
 <body>
   <header id="toolbar" class="toolbar toolbar-header">
     <div id="toolbar-tabs"></div>
     <div id="toolbar-nav"></div>
   </header>
+  <div id="promptbars"></div>
   <div id="left-swipe-arrow"><span class="icon icon-left-bold"></span></div>
   <div id="right-swipe-arrow"><span class="icon icon-right-bold"></span></div>
   <div id="webviews"></div>
-  <div id="status-bar"></div>
+  <div id="statusbar"></div>
   <script src="beaker:shell-window.js"></script>
 </body>
 </html>

@@ -35,24 +35,25 @@ export function hide () {
 // =
 
 function render () {
-  // helper function to render big rows
-  const renderBigRow = (row, i) => yo`<a class="lt-tile" href=${row.url} title=${row.title}>
-    <span class="lt-actions"><span class="icon icon-cancel" onclick=${onClickDelete(i)} title="Delete bookmark"></span></span>
-    <div class="lt-title">
-      <img class="favicon" src=${'beaker-favicon:'+row.url} />
-      ${row.title}
-    </div>
-    <div class="lt-url">${row.url}</div>
-  </a>`
+  const renderRow = (row, i) => row.isEditing ? renderRowEditing(row, i) : renderRowDefault(row, i)
 
-  // helper function to render small rows
-  const renderSmallRow = (row, i) => yo`<div class="ll-row">
+  const renderRowEditing = (row, i) => yo`<div class="ll-row ll-row-is-editing" data-row=${i}>
+    <span class="ll-link">
+      <div class="ll-inputs">
+        <input name="title" value=${row.editTitle} onkeyup=${onKeyUp(i)} />
+        <input name="url" value=${row.editUrl} onkeyup=${onKeyUp(i)} />
+      </div>
+    </div>
+  </div>`
+
+  const renderRowDefault = (row, i) => yo`<div class="ll-row" data-row=${i}>
     <a class="ll-link" href=${row.url} title=${row.title}>
       <img class="favicon" src=${'beaker-favicon:'+row.url} />
       <span class="ll-title">${row.title}</span>
     </a>
     <div class="ll-actions">
-      <span class="icon icon-cancel" onclick=${onClickDelete(i+9)} title="Delete bookmark"></span>
+      <span class="icon icon-pencil" onclick=${onClickEdit(i)} title="Edit bookmark"></span>
+      <span class="icon icon-cancel" onclick=${onClickDelete(i)} title="Delete bookmark"></span>
     </div>
   </div>`
 
@@ -66,13 +67,16 @@ function render () {
 
   // render the top 9 big, the rest small
   yo.update(document.querySelector('#el-content'), yo`<div class="pane" id="el-content">
-    <div class="favorites links-tiles">
-      <div class="lt-inner">
-        ${bookmarks.slice(0, 9).map(renderBigRow)}
-      </div>
-    </div>
     <div class="favorites links-list">
-      ${bookmarks.slice(9).map(renderSmallRow)}
+      <div class="ll-heading">
+        Favorites
+        <small class="ll-heading-right">
+          <a href="https://community.beakerbrowser.com/" title="Feedback and Discussion"><span class="icon icon-megaphone"></span> Feedback & Discussion</a>
+          <a href="https://github.com/pfrazee/beaker/issues" title="Report Bug"><span class="icon icon-attention"></span> Report Bug</a>
+          <a href="https://beakerbrowser.com/docs/" title="Get Help"><span class="icon icon-lifebuoy"></span> Help</a>
+        </small>
+      </div>
+      ${bookmarks.map(renderRow)}
       ${helpEl}
     </div>
   </div>`)
@@ -80,6 +84,61 @@ function render () {
 
 // event handlers
 // =
+
+function onClickEdit (i) {
+  return e => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    // capture initial value
+    bookmarks[i].editTitle = bookmarks[i].title
+    bookmarks[i].editUrl = bookmarks[i].url
+
+    // enter edit-mode
+    bookmarks[i].isEditing = true
+    render()
+    document.querySelector(`[data-row="${i}"] input`).focus()
+  }
+}
+
+function onKeyUp (i) {
+  return e => {
+    // enter-key
+    if (e.keyCode == 13) {
+      // capture the old url
+      var oldUrl = bookmarks[i].url
+
+      // update values
+      bookmarks[i].title = document.querySelector(`[data-row="${i}"] [name="title"]`).value
+      bookmarks[i].url = document.querySelector(`[data-row="${i}"] [name="url"]`).value
+
+      // exit edit-mode
+      bookmarks[i].isEditing = false
+      render()
+
+      // save in backend
+      beakerBookmarks.changeTitle(oldUrl, bookmarks[i].title)
+      beakerBookmarks.changeUrl(oldUrl, bookmarks[i].url)
+    }
+
+    // escape-key
+    else if (e.keyCode == 27) {
+      // exit edit-mode
+      bookmarks[i].isEditing = false
+      render()
+    }
+
+    // all else
+    else {
+      // update edit values
+      if (e.target.name == 'title')
+        bookmarks[i].editTitle = e.target.value
+      if (e.target.name == 'url')
+        bookmarks[i].editUrl = e.target.value
+    }
+
+  }
+}
 
 function onClickDelete (i) {
   return e => {

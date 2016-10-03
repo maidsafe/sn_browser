@@ -55,18 +55,8 @@ export function setup () {
   }
   setTimeout(scheduledAutoUpdate, 15e3) // wait 15s for first run
 
-  // TEMPORARY
-  // deny permission requests for special web apis
-  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
-    log.debug('[Web API] Denying permission request for', permission, 'for', webContents.getURL())
-    if (permission == 'openExternal' && webContents.hostWebContents) {
-      webContents.hostWebContents.send('protocol-not-supported')
-    }
-    callback(false)
-  })
-
   // wire up RPC
-  rpc.exportAPI('beakerBrowser', manifest, { 
+  rpc.exportAPI('beakerBrowser', manifest, {
     eventsStream,
     getInfo,
     checkForUpdates,
@@ -77,8 +67,27 @@ export function setup () {
     setSetting,
 
     getProtocolDescription,
-    getHomePages
+    getHomePages,
+
+    getDefaultProtocolSettings,
+    setAsDefaultProtocolClient,
+    removeAsDefaultProtocolClient
   })
+}
+
+export function getDefaultProtocolSettings () {
+  return Promise.resolve(['http', 'dat', 'ipfs', 'view-dat'].reduce((res, x) => {
+    res[x] = app.isDefaultProtocolClient(x)
+    return res
+  }, {}))
+}
+
+export function setAsDefaultProtocolClient (protocol) {
+  return Promise.resolve(app.setAsDefaultProtocolClient(protocol))
+}
+
+export function removeAsDefaultProtocolClient (protocol) {
+  return Promise.resolve(app.removeAsDefaultProtocolClient(protocol))
 }
 
 export function getInfo () {
@@ -225,7 +234,7 @@ function getAutoUpdaterFeedURL () {
 
 // run a daily check for new updates
 function scheduledAutoUpdate () {
-  settingsDb.get('auto_update_enabled', (err, v) => {
+  settingsDb.get('auto_update_enabled').then(v => {
     // if auto updates are enabled, run the check
     if (+v === 1)
       checkForUpdates()
