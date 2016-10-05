@@ -1,14 +1,16 @@
-import { app, BrowserWindow, screen } from 'electron'
+import { app, BrowserWindow, screen, ipcMain } from 'electron'
 import { register as registerShortcut, unregisterAll as unregisterAllShortcuts } from 'electron-localshortcut'
 import jetpack from 'fs-jetpack'
 import path from 'path'
 import * as downloads from './downloads'
+import * as permissions from './permissions'
 import log from '../../log'
 import url from 'url'
 // globals
 // =
 var userDataDir
 var stateStoreFile = 'shell-window-state.json'
+var numActiveWindows = 0
 
 // exported methods
 // =
@@ -17,8 +19,16 @@ export function setup () {
   // config
   userDataDir = jetpack.cwd(app.getPath('userData'))
 
+  // load pinned tabs
+  ipcMain.on('shell-window-ready', e => {
+    // if this is the first window opened (since app start or since all windows closing)
+    if (numActiveWindows === 1) {
+      e.sender.webContents.send('command', 'load-pinned-tabs')
+    }
+  })
+
   // create first shell window
-  createShellWindow()
+  return createShellWindow()
 }
 
 export function createShellWindow () {
@@ -29,7 +39,8 @@ export function createShellWindow () {
     'standard-window': false,
     x, y, width, height,
     webPreferences: {
-      webSecurity: false, // disable same-origin policy in the shell-window; the <webview>s of site content will have it re-enabled
+      webSecurity: false, // disable same-origin-policy in the shell window, webviews have it restored
+      allowRunningInsecureContent: false
     }
   })
 
@@ -63,6 +74,7 @@ export function createShellWindow () {
   
   downloads.registerListener(win)
   loadURL(win, 'beaker:shell-window')
+  numActiveWindows++
 
   // register shortcuts
   for (var i=1; i <= 9; i++)
@@ -91,21 +103,21 @@ function loadURL (win, url) {
 }
 
 function getCurrentPosition (win) {
-    var position = win.getPosition()
-    var size = win.getSize()
-    return {
-        x: position[0],
-        y: position[1],
-        width: size[0],
-        height: size[1]
-    }
+  var position = win.getPosition()
+  var size = win.getSize()
+  return {
+    x: position[0],
+    y: position[1],
+    width: size[0],
+    height: size[1]
+  }
 }
 
 function windowWithinBounds (windowState, bounds) {
-    return windowState.x >= bounds.x &&
-        windowState.y >= bounds.y &&
-        windowState.x + windowState.width <= bounds.x + bounds.width &&
-        windowState.y + windowState.height <= bounds.y + bounds.height
+  return windowState.x >= bounds.x &&
+    windowState.y >= bounds.y &&
+    windowState.x + windowState.width <= bounds.x + bounds.width &&
+    windowState.y + windowState.height <= bounds.y + bounds.height
 }
 
 function restoreState () {
@@ -120,29 +132,34 @@ function restoreState () {
 }
 
 function defaultState () {
-    var bounds = screen.getPrimaryDisplay().bounds
-    var width = Math.max(800, Math.min(1800, bounds.width - 50))
-    var height = Math.max(600, Math.min(1200, bounds.height - 50))
-    return Object.assign({}, {
-        x: (bounds.width - width) / 2,
-        y: (bounds.height - height) / 2,
-        width,
-        height
-    })
+  var bounds = screen.getPrimaryDisplay().bounds
+  var width = Math.max(800, Math.min(1800, bounds.width - 50))
+  var height = Math.max(600, Math.min(1200, bounds.height - 50))
+  return Object.assign({}, {
+    x: (bounds.width - width) / 2,
+    y: (bounds.height - height) / 2,
+    width,
+    height
+  })
 }
 
 function ensureVisibleOnSomeDisplay (windowState) {
-    var visible = screen.getAllDisplays().some(display => windowWithinBounds(windowState, display.bounds))
-    if (!visible) {
-        // Window is partially or fully not visible now.
-        // Reset it to safe defaults.
-        return defaultState(windowState)
-    }
-    return windowState
+  var visible = screen.getAllDisplays().some(display => windowWithinBounds(windowState, display.bounds))
+  if (!visible) {
+    // Window is partially or fully not visible now.
+    // Reset it to safe defaults.
+    return defaultState(windowState)
+  }
+  return windowState
 }
 
 function onClose (win) {
   return e => {
+    numActiveWindows--
+
+    // deny any outstanding permission requests
+    permissions.denyAllRequests(win)
+
     // unregister shortcuts
     unregisterAllShortcuts(win)
 

@@ -1,24 +1,29 @@
 import * as yo from 'yo-yo'
 import co from 'co'
-import EventEmitter from 'events'
+import * as editSiteModal from '../com/modals/edit-site' 
 
 // globals
 // =
 
-var events = new EventEmitter()
 var navItems = [
-  { href: 'beaker:start', label: 'Favorites' },
-  { href: 'beaker:history', label: 'History' },
-  { href: 'beaker:settings', label: 'Settings' }
+  { href: 'beaker:start', label: 'Favorites', icon: 'star' },
+  { href: 'beaker:archives', label: 'Dat Archives', icon: 'archive' },
+  { href: 'beaker:history', label: 'History', icon: 'back-in-time' },
+  { href: 'beaker:downloads', label: 'Downloads', icon: 'install' },
+  { href: 'beaker:settings', label: 'Settings', icon: 'list' }
 ]
 
 co(function *() {
   // fetch dynamic nav items
-  var moreNavItems = yield beakerBrowser.getHomePages()
-  moreNavItems = moreNavItems.filter(item => (typeof item.href == 'string') && (typeof item.label == 'string'))
-  navItems = navItems.slice(0, 2).concat(moreNavItems).concat(navItems.slice(2))
-  update()
+  // var moreNavItems = yield beakerBrowser.getHomePages()
+  // moreNavItems = moreNavItems.filter(item => (typeof item.href == 'string') && (typeof item.label == 'string'))
+  // navItems = navItems.concat(moreNavItems)
+  // update()
 })
+
+// re-render when the URL changes
+window.addEventListener('pushstate', update)
+window.addEventListener('popstate', update)
 
 // exported API
 // =
@@ -31,14 +36,13 @@ export function update () {
   yo.update(document.querySelector('#el-sidenav nav'), render())
 }
 
-export var on = events.on.bind(events)
-
 // rendering
 // =
 
 function render () {
   return yo`<nav class="nav-group">
-    <h1>Beaker</h1>
+    <img class="logo" src="beaker:logo">
+    <a class="btn" onclick=${onClickShareFiles}>Share Files</a>
     ${navItems.map(renderNavItem)}
   </nav>`
 }
@@ -49,10 +53,10 @@ function renderNavItem (item) {
     return yo`<h5 class="nav-group-title">${item}</h5>`
 
   // render items
-  var { href, label } = item
+  var { href, label, icon } = item
   var isActive = window.location == href
   return yo`<a class=${'nav-group-item' + (isActive?' active':'')} href=${href} onclick=${onClickNavItem(item)}>
-    ${label}
+    <span class="icon icon-${icon}"></span> ${label}
   </a>`
 }
 
@@ -69,11 +73,17 @@ function onClickNavItem (item) {
     if (window.location.protocol == 'beaker:' && item.href.startsWith('beaker:')) {
       // just navigate virtually, if we're on and going to a beaker: page
       window.history.pushState(null, '', item.href)
-      events.emit('change-view', item.href)
-      update()
     } else {
       // actually go to the page
       window.location = item.href
     }
   }
+}
+
+function onClickShareFiles (e) {
+  editSiteModal.create({}, { title: 'New Files Archive', onSubmit: opts => {
+    datInternalAPI.createNewArchive(opts).then(key => {
+      window.location = 'view-dat://' + key
+    })
+  }})
 }

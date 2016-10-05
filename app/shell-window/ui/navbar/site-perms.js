@@ -26,12 +26,16 @@ export class SitePermsNavbarBtn {
     }
 
     // render btn
-    var icon = 'network'
-    if (['IPFS','Dat Network','HTTPS'].indexOf(this.protocolDescription.label) !== -1) // TODO this shouldnt be special-cased
+    var icon = 'window'
+    var label = ''
+    if (this.protocolDescription.label == 'HTTPS')
       icon = 'lock'
+    if (['dat', 'view-dat', 'ipfs'].indexOf(this.protocolDescription.scheme) != -1) {
+      icon = 'share'
+    }
     return yo`<div class="toolbar-site-perms">
       <button class="green">
-        <span class="icon icon-${icon}"></span> <small>${this.protocolDescription.label}</small>
+        <span class="icon icon-${icon}"></span> <small>${label}</small>
       </button>
       ${dropdownEl}
     </div>`

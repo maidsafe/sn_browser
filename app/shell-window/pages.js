@@ -3,9 +3,17 @@ import EventEmitter from 'events'
 import path from 'path'
 import * as zoom from './pages/zoom'
 import * as navbar from './ui/navbar'
-import * as statusBar from './ui/status-bar'
+import * as promptbar from './ui/promptbar'
+import * as statusBar from './ui/statusbar'
 import { urlToData } from '../lib/fg/img'
 import errorPage from '../lib/error-page'
+
+// constants
+// =
+
+const ERR_ABORTED = -3
+const ERR_CONNECTION_REFUSED = -102
+const ERR_INSECURE_RESPONSE = -501
 
 export const DEFAULT_URL = 'beaker:start'
 
@@ -49,6 +57,7 @@ export function create (opts) {
     id: id,
     webviewEl: createWebviewEl(id, url),
     navbarEl: navbar.createEl(id),
+    promptbarEl: promptbar.createEl(id),
 
     // page state
     loadingURL: false, // what URL is being loaded, if any?
@@ -63,9 +72,11 @@ export function create (opts) {
     favicons: null, // what are the favicons of the page?
     archiveInfo: null, // if a dat archive, includes the metadata
 
+    // prompts
+    prompts: [], // list of active prompts
+
     // tab state
     isPinned: opts.isPinned, // is this page pinned?
-    isTabRendered: false, // has the tab el been rendered?
     isTabDragging: false, // being dragged?
     tabDragOffset: 0, // if being dragged, this is the current offset
 
@@ -105,10 +116,14 @@ export function create (opts) {
     },
 
     getURLOrigin: function () {
-      return (new URL(this.getURL())).origin
+      return parseURL(this.getURL()).origin
     }
   }
-  pages.push(page)
+
+  if (opts.isPinned)
+    pages.splice(indexOfLastPinnedTab(), 0, page)
+  else
+    pages.push(page)
 
   // create proxies for webview methods
   //   webviews need to be dom-ready before their methods work
@@ -157,6 +172,7 @@ export function create (opts) {
   page.webviewEl.addEventListener('did-start-loading', onDidStartLoading)
   page.webviewEl.addEventListener('did-stop-loading', onDidStopLoading)
   page.webviewEl.addEventListener('load-commit', onLoadCommit)
+  page.webviewEl.addEventListener('did-get-redirect-request', onDidGetRedirectRequest)
   page.webviewEl.addEventListener('did-get-response-details', onDidGetResponseDetails)
   page.webviewEl.addEventListener('did-finish-load', onDidFinishLoad)
   page.webviewEl.addEventListener('did-fail-load', onDidFailLoad)
@@ -213,13 +229,13 @@ export function remove (page) {
   if (page.isPinned)
     savePinnedToDB()
 
-  // remove all attributes, to clear circular references
-  for (var k in page)
-    page[k] = null
-
   // emit
   events.emit('remove', page)
   events.emit('update')
+
+  // remove all attributes, to clear circular references
+  for (var k in page)
+    page[k] = null
 }
 
 export function reopenLastRemoved () {
@@ -242,25 +258,32 @@ export function setActive (page) {
   page.webviewEl.focus()
   statusBar.setIsLoading(page.isLoading())
   navbar.update()
+  promptbar.update()
   events.emit('set-active', page)
 }
 
 export function togglePinned (page) {
   // move tab in/out of the pinned tabs
-  var oldIndex = pages.indexOf(page), newIndex = 0
-  for (newIndex; newIndex < pages.length; newIndex++)
-    if (!pages[newIndex].isPinned)
-      break
+  var oldIndex = pages.indexOf(page)
+  var newIndex = indexOfLastPinnedTab()
   if (oldIndex < newIndex) newIndex--
   pages.splice(oldIndex, 1)
   pages.splice(newIndex, 0, page)
 
   // update page state
   page.isPinned = !page.isPinned
-  events.emit('update')
+  events.emit('pin-updated', page)
 
   // persist
   savePinnedToDB()
+}
+
+function indexOfLastPinnedTab () {
+  var index = 0
+  for (index; index < pages.length; index++)
+    if (!pages[index].isPinned)
+      break
+  return index
 }
 
 export function reorderTab (page, offset) {
@@ -322,6 +345,14 @@ export function getAdjacentPage (page, offset) {
 
 export function getByWebview (el) {
   return getById(el.dataset.id)
+}
+
+export function getByWebContents (webContents) {
+  for (var i=0; i < pages.length; i++) {
+    if (pages[i].webviewEl && pages[i].webviewEl.getWebContents() == webContents)
+      return pages[i]
+  }
+  return null
 }
 
 export function getById (id) {
@@ -387,6 +418,9 @@ function onDidNavigateInPage (e) {
     if (!url.startsWith('beaker:')) {
       beakerHistory.addVisit({ url: page.getURL(), title: page.getTitle() || page.getURL() })
       beakerBookmarks.addVisit(page.getURL())
+      if (page.isPinned) {
+        savePinnedToDB()
+      }
     }
   }
 }
@@ -405,6 +439,8 @@ function onLoadCommit (e) {
     })
     // stop autocompleting
     navbar.clearAutocomplete()
+    // close any prompts
+    promptbar.forceRemoveAll(page)
   }
 }
 
@@ -421,11 +457,63 @@ function onDidStartLoading (e) {
 
 function onDidStopLoading (e) {
   var page = getByWebview(e.target)
-  if (page) {
+  if (page) {    
+    // update history
+    var url = page.getURL()
+    if (!url.startsWith('beaker:')) {
+      beakerHistory.addVisit({ url: page.getURL(), title: page.getTitle() || page.getURL() })
+      beakerBookmarks.addVisit(page.getURL())
+      if (page.isPinned) {
+        savePinnedToDB()
+      }
+    }
+
+    // fetch protocol info
+    var scheme = parseURL(url).protocol
+    if (scheme == 'http:' || scheme == 'https:')
+      page.protocolDescription = { label: scheme.slice(0,-1).toUpperCase() }
+    else
+      page.protocolDescription = beakerBrowser.getProtocolDescription(scheme)
+    console.log('Protocol description', page.protocolDescription)
+
+    // update page
+    page.loadingURL = false
     page.manuallyTrackedIsLoading = false
     if (page.isActive) {
       navbar.update(page)
+      navbar.updateLocation(page)
       statusBar.setIsLoading(false)
+    }
+
+    // HACK
+    // inject some corrections to the user-agent styles
+    // real solution is to update electron so we can change the user-agent styles
+    // -prf
+    page.webviewEl.insertCSS(`
+      body:-webkit-full-page-media {
+        background: #ddd;
+      }
+      audio:-webkit-full-page-media, video:-webkit-full-page-media {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    `)
+  }
+}
+
+function onDidGetRedirectRequest (e) {
+  // HACK
+  // electron has a problem handling redirects correctly, so we need to handle it for them
+  // see https://github.com/electron/electron/issues/3471
+  // thanks github.com/sokcuri for this fix
+  // -prf
+  if (e.isMainFrame) {
+    var page = getByWebview(e.target)
+    if (page) {
+      e.preventDefault()
+      setTimeout(() => page.loadURL(e.newURL), 100)
     }
   }
 }
@@ -453,21 +541,6 @@ function onDidFinishLoad (e) {
     page.favicons = null
     navbar.update(page)
     navbar.updateLocation(page)
-
-    // update history
-    var url = page.getURL()
-    if (!url.startsWith('beaker:')) {
-      beakerHistory.addVisit({ url: page.getURL(), title: page.getTitle() || page.getURL() })
-      beakerBookmarks.addVisit(page.getURL())
-    }
-
-    // fetch protocol info
-    var scheme = (new URL(url)).protocol
-    if (scheme == 'http:' || scheme == 'https:')
-      page.protocolDescription = { label: scheme.slice(0,-1).toUpperCase() }
-    else
-      page.protocolDescription = beakerBrowser.getProtocolDescription(scheme)
-    console.log('Protocol description', page.protocolDescription)
   }
 }
 
@@ -479,7 +552,7 @@ function onDidFailLoad (e) {
   // ignore aborts. why:
   // - sometimes, aborts are caused by redirects. no biggy
   // - if the user cancels, then we dont want to give an error screen
-  if (e.errorDescription == 'ERR_ABORTED' || e.errorCode == -3) // -3 = ABORTED
+  if (e.errorDescription == 'ERR_ABORTED' || e.errorCode == ERR_ABORTED)
     return
 
   // also ignore non-errors
@@ -489,9 +562,9 @@ function onDidFailLoad (e) {
 
   var page = getByWebview(e.target)
   if (page) {
-    // if https fails for security reasons, and beaker *assumed* https, then fallback to http
-    // -501 == ERR_INSECURE_RESPONSE
-    if (e.errorCode == -501 && page.isGuessingTheURLScheme) {
+    // if https fails for some specific reasons, and beaker *assumed* https, then fallback to http
+    if (page.isGuessingTheURLScheme && [ERR_INSECURE_RESPONSE, ERR_CONNECTION_REFUSED].indexOf(e.errorCode) >= 0) {
+      console.log('Guessed the URL scheme was HTTPS, but got back', e.errorDescription, ' - trying HTTP')
       var url = page.getIntendedURL()
       page.isGuessingTheURLScheme = false // no longer doing that!
       if (url.startsWith('https')) {
@@ -510,6 +583,7 @@ function onDidFailLoad (e) {
 function onPageFaviconUpdated (e) {
   if (e.favicons && e.favicons[0]) {
     var page = getByWebview(e.target)
+    page.favicons = e.favicons
     urlToData(e.favicons[0], 16, 16, (err, dataUrl) => {
       if (dataUrl)
         beakerSitedata.set(page.getURL(), 'favicon', dataUrl)
@@ -531,12 +605,14 @@ function onCrashed (e) {
 function show (page) {
   page.webviewEl.classList.remove('hidden')
   page.navbarEl.classList.remove('hidden')
+  page.promptbarEl.classList.remove('hidden')
   events.emit('show', page)
 }
 
 function hide (page) {
   page.webviewEl.classList.add('hidden')
   page.navbarEl.classList.add('hidden')
+  page.promptbarEl.classList.add('hidden')
   events.emit('hide', page)
 }
 
@@ -549,7 +625,7 @@ function createWebviewEl (id, url) {
 }
 
 function rebroadcastEvent (e) {
-  events.emit(e.type, e)
+  events.emit(e.type, getByWebview(e.target), e)
 }
 
 function warnIfError (label) {
@@ -557,4 +633,9 @@ function warnIfError (label) {
     if (err)
       console.warn(label, err)
   }
+}
+
+function parseURL (str) {
+  try { return new URL(str) }
+  catch (e) { return {} }
 }

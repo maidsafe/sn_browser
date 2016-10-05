@@ -17,10 +17,12 @@ export function setup () {
       return cb(path.join(__dirname, 'stylesheets/shell-window.css'))
 
     // builtin pages
-    for (let slug of ['start', 'history', 'settings']) {
+    for (let slug of ['start', 'archives', 'history', 'downloads', 'settings']) {
       if (request.url == `beaker:${slug}`)
         return cb(path.join(__dirname, 'builtin-pages.html'))
     }
+    if (request.url.startsWith('beaker:site/'))
+      return cb(path.join(__dirname, 'builtin-pages.html'))
     if (request.url == 'beaker:builtin-pages.js')
       return cb(path.join(__dirname, 'builtin-pages.build.js'))
     if (request.url == 'beaker:builtin-pages.css')
@@ -29,6 +31,9 @@ export function setup () {
     // common assets
     if (request.url == 'beaker:font')
       return cb(path.join(__dirname, 'fonts/photon-entypo.woff'))
+    if (request.url.startsWith('beaker:logo'))
+      return cb(path.join(__dirname, 'img/logo.png'))
+
     return cb(-6)
   }, e => {
     if (e)

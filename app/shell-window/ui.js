@@ -5,29 +5,31 @@ import * as navbar from './ui/navbar'
 import * as pages from './pages'
 import * as commandHandlers from './command-handlers'
 import * as swipeHandlers from './swipe-handlers'
-import errorPage from '../lib/error-page'
 
-export function setup () {
+export function setup (cb) {
   if (window.process.platform == 'darwin') {
     document.body.classList.add('darwin')
   }
 
-  ipcRenderer.on('protocol-not-supported', onProtocolNotSupported)
+  // wire up event handlers
   ipcRenderer.on('window-event', onWindowEvent)
+  document.addEventListener('dragover', preventDragDrop, false)
+  document.addEventListener('drop', preventDragDrop, false)
+  function preventDragDrop (event) {
+    // important - dont allow drag/drop in the shell window, only into the webview
+    if (!event.target || event.target.tagName != 'WEBVIEW') {
+      event.preventDefault()
+      return false
+    }
+  }
+
+  // setup subsystems
   tabs.setup()
   navbar.setup()
   commandHandlers.setup()
   swipeHandlers.setup()
-  pages.loadPinnedFromDB().then(() => pages.setActive(pages.create(pages.DEFAULT_URL)))
-}
-
-function onProtocolNotSupported () {
-  var page = pages.getActive()
-  var protocol = url.parse(page.getIntendedURL()).protocol
-
-  // render failure page
-  var errorPageHTML = errorPage('The ' + (''+protocol).replace(/</g, '') + ' protocol is not installed in Beaker.')
-  page.webviewEl.getWebContents().executeJavaScript('document.documentElement.innerHTML = \''+errorPageHTML+'\'')
+  pages.setActive(pages.create(pages.DEFAULT_URL))
+  cb()
 }
 
 function onWindowEvent (event, type) {
