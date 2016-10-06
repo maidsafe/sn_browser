@@ -24,7 +24,7 @@
   },
   "build": {
     "category": "public.app-category.productivity",
-    "copyright": "© 2016, Paul Frazee",
+    "copyright": "© 2016, Josh Wilson",
     "npmRebuild": false,
     "asar": false,
     "protocols": [
@@ -48,7 +48,8 @@
       ]
     },
     "linux" : {
-        "target" : [ "tar.gz", "zip", "deb", "AppImage", "freebsd" ]
+        "target" : [ "tar.gz", "zip", "deb", "AppImage", "freebsd" ],
+        "category" : "WebBrowser",
     },
     "win" : {
         "target" : "zip"
