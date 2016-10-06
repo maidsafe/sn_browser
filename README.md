@@ -20,11 +20,6 @@ You have three main APIs available to SAFE sites:
 Each of these is a mapping to safejs functions, which (currently limited) documentation, you can find (here)[https://github.com/joshuef/safe-js)];
 
 
-## Beaker Browser
-
-SAFE Beaker Browser is a lightly modified fork of the [decentralized beaker browser](https://www.beakerbrowser.net/).
-
-
 ## Development Install Instructions:
 
  1. Install Git https://help.ubuntu.com/lts/serverguide/git.html
@@ -75,3 +70,10 @@ SAFE Beaker Browser is a lightly modified fork of the [decentralized beaker brow
  `npm start` should work afterwards.
 
  If you're doing development, `npm run watch` to have assets build automatically.
+
+
+## License
+
+SAFE Beaker Browser is a lightly modified fork of the [decentralized beaker browser](https://www.beakerbrowser.net/).
+
+Modified MIT as per the (BeakerLicense)(https://github.com/joshuef/beaker/blob/master/BEAKER_LICENSE.md)
