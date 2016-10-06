@@ -53,10 +53,14 @@ export function createShellWindow () {
     win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) => 
     {
         const parsedUrl = url.parse(details.url);
-       
-        if( parsedUrl.host.indexOf( 'localhost' ) === 0 )
+        
+        if( typeof(win.webContents.isSafe) === 'undefined' )
         {
-            console.log( "this is okay", details.url );
+            win.webContents.isSafe = true;
+        }
+       
+        if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
+        {
             callback({})
             return;
         }

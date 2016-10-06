@@ -39,6 +39,18 @@ var fileMenu = {
       }
     },
     {
+      label: 'Toggle SAFE Browsing',
+      checked: true,
+      accelerator: 'CmdOrCtrl+Shift+L',
+      click: function (item, win) {
+        if (win)
+        {
+            item.checked = !item.checked;
+            win.webContents.isSafe = item.checked;
+        }
+      }
+    },
+    {
       label: 'Open File',
       accelerator: 'CmdOrCtrl+O',
       click: function (item, win) {
