@@ -43,11 +43,7 @@ var fileMenu = {
       checked: true,
       accelerator: 'CmdOrCtrl+Shift+L',
       click: function (item, win) {
-        if (win)
-        {
-            item.checked = !item.checked;
-            win.webContents.isSafe = item.checked;
-        }
+          if (win) win.webContents.send('command', 'window:toggle-safe-mode')
       }
     },
     {

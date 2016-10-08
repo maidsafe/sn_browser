@@ -331,6 +331,29 @@ export function getActive () {
   return activePage
 }
 
+
+export function toggleSafe ( )
+{
+    var webContents = remote.getCurrentWindow().webContents;
+        
+    if( typeof(webContents.isSafe) === 'undefined' )
+    {
+        webContents.isSafe = true;
+    }
+    
+    webContents.isSafe = ! webContents.isSafe;
+
+    let page = getActive()
+
+    if (page)
+        page.reload()    
+}
+
+
+export function getActive () {
+  return activePage
+}
+
 export function getAdjacentPage (page, offset) {
   if (pages.length > 1) {
     // lookup the index

@@ -108,6 +108,15 @@ export function updateLocation (page) {
 
 function render (id, page) {
   var isLoading = page && page.isLoading()
+  
+  var webContents = remote.getCurrentWindow().webContents;
+  
+  var isSafe = webContents.isSafe;
+  
+  if( typeof isSafe === 'undefined' )
+  {
+      isSafe = true;
+  }
 
   // back/forward should be disabled if its not possible go back/forward
   var backDisabled = (page && page.canGoBack()) ? '' : 'disabled'
@@ -120,6 +129,16 @@ function render (id, page) {
       </button>`
     : yo`<button class="toolbar-btn nav-reload-btn" onclick=${onClickReload}>
         <span class="icon icon-ccw"></span>
+      </button>`
+      
+      
+  // render safe btn
+  var safeBtn = (isSafe)
+    ? yo`<button class="toolbar-btn safe-btn-safe" onclick=${onClickToggleSafe}>
+        <span class="icon icon-rocket"></span>
+      </button>`
+    : yo`<button class="toolbar-btn safe-btn-not-safe" onclick=${onClickToggleSafe}>
+        <span class="icon icon-alert"></span>
       </button>`
 
   // `page` is null on initial render
@@ -223,6 +242,7 @@ function render (id, page) {
         <span class="icon icon-right-open-big"></span>
       </button>
       ${reloadBtn}      
+      ${safeBtn}      
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}
@@ -397,6 +417,11 @@ function onClickReload (e) {
   var page = getEventPage(e)
   if (page)
     page.reload()
+}
+
+export function onClickToggleSafe ( e )
+{
+    pages.toggleSafe();    
 }
 
 function onClickCancel (e) {
