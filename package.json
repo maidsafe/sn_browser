@@ -48,7 +48,7 @@
       ]
     },
     "linux" : {
-        "target" : [ "tar.gz", "zip", "deb", "AppImage", "freebsd" ],
+        "target" : [ "zip", "AppImage", "freebsd" ],
         "category" : "WebBrowser"
     },
     "win" : {

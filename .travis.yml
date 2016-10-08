@@ -35,8 +35,10 @@ script:
 
 before_deploy:
   - ls dist
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv dist/mac/*.dmg dist/mac/safe-browser-${TRAVIS_TAG}-osx-x64.dmg; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safer*"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rename -v 's/safe-browser-\d\.\d\.\d/safe-browser-${TRAVIS_TAG}-linux-x64/' dist/safe*; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safe*"; fi
   - echo "deploying ${RELEASE_PKG} to GitHub releases"
 deploy:
   skip_cleanup: true
