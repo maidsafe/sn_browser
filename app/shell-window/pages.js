@@ -343,10 +343,15 @@ export function toggleSafe ( )
     
     webContents.isSafe = ! webContents.isSafe;
 
-    let page = getActive()
-
-    if (page)
+    let pages = getAll();
+    
+    pages.forEach( page => 
+    {
+        // if (page)
         page.reload()    
+        
+    })
+
 }
 
 
