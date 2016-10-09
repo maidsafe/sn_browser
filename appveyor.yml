@@ -45,9 +45,10 @@ deploy:
   auth_token:
     secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
  # your encrypted token from GitHub
-  artifact: '*.zip'
+  artifact: 'dist\\*.zip'
   draft: true
   prerelease: true
+  tag: $(appveyor_repo_tag_name) 
   on:
-    branch: release                  # release from master branch only
-    appveyor_repo_tag:  false        # deploy on tag push only
+    branch: release                  # release branch only
+    appveyor_repo_tag:  true        # deploy on tag push only
