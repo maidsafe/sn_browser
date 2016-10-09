@@ -26,6 +26,7 @@ export function setup () {
       case 'history:back':           return page.goBack()
       case 'history:forward':        return page.goForward()
       case 'window:toggle-safe-mode':  return pages.toggleSafe();
+      case 'window:disable-web-security':  return pages.toggleWebSecurity();
       case 'window:next-tab':        return pages.changeActiveBy(1)
       case 'window:prev-tab':        return pages.changeActiveBy(-1)
       case 'set-tab':                return pages.changeActiveTo(arg1)

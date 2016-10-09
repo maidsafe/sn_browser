@@ -225,6 +225,11 @@ var beakerDevMenu = {
     click: function () {
       BrowserWindow.getFocusedWindow().toggleDevTools()
     }
+  },{
+    label: 'Toggle WebSecurity for new tabs',
+    click: function ( item, win ) {
+        if (win) win.webContents.send('command', 'window:disable-web-security' )
+    }
   }]
 }
 
