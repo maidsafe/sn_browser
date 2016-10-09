@@ -47,9 +47,9 @@ deploy:
   auth_token:
     secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
  # your encrypted token from GitHub
-  artifact: dist\*-win.zip
+  artifact: '**/*.zip'
   draft: false
-  prerelease: true
+  prerelease: false
   on:
     branch: release                  # release branch only
     appveyor_repo_tag:  true        # deploy on tag push only
