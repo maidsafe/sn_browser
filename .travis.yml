@@ -17,6 +17,8 @@ cache:
   
 language: node_js
 
+env:
+  - NODE_ENV=production
 
 addons:
   apt:

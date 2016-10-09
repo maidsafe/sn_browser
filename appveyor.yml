@@ -24,6 +24,7 @@ install:
 
 build_script:
   - node --version
+  - set NODE_ENV=production
   - npm --version
   - npm run release:windows
 
