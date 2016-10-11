@@ -6,8 +6,8 @@ import * as editSiteModal from '../com/modals/edit-site'
 // =
 
 var navItems = [
-  { href: 'beaker:start', label: 'Favorites', icon: 'star' },
-  { href: 'beaker:archives', label: 'Dat Archives', icon: 'archive' },
+  { href: 'beaker:start', label: 'SAFE Status', icon: 'rocket' },
+  { href: 'beaker:favorites', label: 'Favorites', icon: 'star' },
   { href: 'beaker:history', label: 'History', icon: 'back-in-time' },
   { href: 'beaker:downloads', label: 'Downloads', icon: 'install' },
   { href: 'beaker:settings', label: 'Settings', icon: 'list' }

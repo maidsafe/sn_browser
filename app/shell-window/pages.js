@@ -7,6 +7,7 @@ import * as promptbar from './ui/promptbar'
 import * as statusBar from './ui/statusbar'
 import { urlToData } from '../lib/fg/img'
 import errorPage from '../lib/error-page'
+import store from '../background-process/safe-storage/store/safe-store';
 
 // constants
 // =
@@ -204,8 +205,29 @@ export function create (opts) {
   if (!activePage)
     setActive(page)
 
+    //for safe status page.
+    if( url === DEFAULT_URL )
+    {
+	let unsubscribe = store.subscribe( handleChange );
+    }
+
   return page
 }
+
+
+function handleChange() {
+    var page = getAll();
+
+    pages.forEach( page =>
+    {
+	if( page.isWebviewReady && page.getURL() === DEFAULT_URL )
+	{
+	    page.reload()
+	}
+    })
+}
+
+
 
 export function remove (page) {
   // find
