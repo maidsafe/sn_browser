@@ -27,16 +27,6 @@
     "copyright": "© 2016, Josh Wilson",
     "npmRebuild": false,
     "asar": false,
-    "protocols": [
-      {
-        "name": "URL",
-        "schemes": ["http", "https"]
-      },
-      {
-        "name": "SAFE",
-        "schemes": ["safe"]
-      }
-    ],
     "dmg": {
       "contents": [
         { "x": 410, "y": 220, "type": "link", "path": "/Applications" },
