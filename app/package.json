@@ -1,7 +1,7 @@
 {
   "name": "safe-browser",
   "productName": "safe-browser",
-  "description": "A browser for the SAFE Network. Powered by Beaker.",
+  "description": "A browser for the SAFE Network, powered by Beaker.",
   "homepage": "https://github.com/joshuef/beaker",
   "version": "0.3.4",
   "author": "Josh Wilson <joshuef@gmail.com>",
