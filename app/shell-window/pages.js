@@ -208,7 +208,8 @@ export function create (opts) {
     //for safe status page.
     if( url === DEFAULT_URL )
     {
-	let unsubscribe = store.subscribe( handleChange );
+        //and here we'd filter???
+	    let unsubscribe = store.subscribe( handleChange );
     }
 
   return page
@@ -216,8 +217,10 @@ export function create (opts) {
 
 
 function handleChange() {
+    
     var page = getAll();
 
+    // TODO: filter for settings pages?? Or just all beaker pages....
     pages.forEach( page =>
     {
 	if( page.isWebviewReady && page.getURL() === DEFAULT_URL )

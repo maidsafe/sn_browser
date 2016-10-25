@@ -7,9 +7,10 @@ import { app, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import store from './background-process/safe-storage/store/safe-store';
-// import setupStore from './background-process/safe-storage/store/safe-store';
-import * as rawSitedataActions from './background-process/safe-storage/store/actions/sitedata';
+import store, { getStore, reStore } from './background-process/safe-storage/store/safe-store';
+
+// set setting does not trigger save
+import { saveSetting, setSetting } from './background-process/safe-storage/store/actions/settings';
 
 
 
@@ -38,35 +39,10 @@ log.setLevel('trace')
 
 
 let sitedataActions = {};
-// let store = setupStore();
 const dispatch = store.dispatch;
-
-Object.keys( rawSitedataActions ).forEach( key =>
-{
-    if( typeof rawSitedataActions[ key ] === 'string' )
-	return;
-    //if its a function....
-    // let's setup dispatch for convenience. This should be
-    // abstracted for other store/actions
-    sitedataActions[ key ] = ( data ) => dispatch( rawSitedataActions[ key ]( data ) );
-});
-
-
 
 
 let currentValue;
-
-function handleChange() {
-  let previousValue = currentValue
-  currentValue = store.getState();
-
-  if (previousValue !== currentValue) {
-    console.log('Store change');
-    // console.log('Store changed from', previousValue, 'to', currentValue)
-  }
-}
-
-let unsubscribe = store.subscribe(handleChange)
 
 // load the installed protocols
 plugins.registerStandardSchemes()
@@ -75,31 +51,35 @@ app.on('ready', function () {
 
     const app =
     {
-	//pull from package.json
-	name: "SafeBrowser",
-	id: "safe-browser",
-	version: "0.3.2",
-	vendor: "josh.wilson",
-	permissions : [ "SAFE_DRIVE_ACCESS"]
+    	//TODO: pull from package.json
+    	name: "SafeBrowser",
+    	id: "safe-browser",
+    	version: "0.3.2",
+    	vendor: "josh.wilson",
+    	permissions : [ "SAFE_DRIVE_ACCESS"]
     };
 
-    let browserData =
-    {
-	id: 'safe:safe-browser',
-	data: {}
-    }
-    //
-    let token = auth.authorise( app, 'armadillo' ).then( tok =>
-	{
-	    browserData.data.authToken = tok;
-	    browserData.data.authMessage = 'Authorised with launcher.';
+    let token = auth.authorise( app ).then( tok =>
+	{    
+        // TODO: Trigger save should be automatic not on every instance.
+        // NOTHING should be saved until a store is gotten. Or failed.
+        // Only then do we do createOrUpdateFile....
+        // setting for sync interval
+        store.dispatch( setSetting( 'authToken', tok.token ) );
+        store.dispatch( setSetting( 'authMessage', 'Authorised with launcher.' ) );
 
-	    console.log( browserData );
+        //get store can optionally have a token passed?
+        getStore()
+            .then( response =>
+            {            
+                response.json().then( json => reStore( json ) )  
+                
+            })
+            .catch( err => 
+            {
+                store.dispatch( setSetting( 'authMessage', 'Problems getting browser settings from the network, ' + JSON.stringify( err )  ) );
+            })
 
-	    sitedataActions.setSiteData( browserData );
-
-
-	    //lets shim an auth status via the sites api
 	})
 	.catch( err =>
 	{
@@ -108,20 +88,18 @@ app.on('ready', function () {
 	    //routing interface error when cannot connect to  network!!
 	    //
 	    //{ errorCode: -12,
-  // description: 'CoreError::RoutingInterfaceError' }
+        // description: 'CoreError::RoutingInterfaceError' }
 
 	    if( err.code === 'ECONNREFUSED' )
 	    {
-		browserData.data.authMessage = 'SAFE Launcher does not appear to be open.';
-		console.log( "Connection refused, launcher not open" );
-		sitedataActions.setSiteData( browserData );
+    		console.log( "Connection refused, launcher not open" );
+    		store.dispatch( setSetting( 'authMessage', 'SAFE Launcher does not appear to be open.' ) );
 	    }
 
 	    if( err === 'Unauthorized' )
 	    {
-		browserData.data.authMessage = 'The browser failed to authorise with the SAFE launcher.';
-		sitedataActions.setSiteData( browserData );
-		console.log( "Connection refused, not authorised with launcher" );
+    		store.dispatch( setSetting( 'authMessage','The browser failed to authorise with the SAFE launcher.' ) );
+    		console.log( "Connection refused, not authorised with launcher" );
 	    }
 
 	});

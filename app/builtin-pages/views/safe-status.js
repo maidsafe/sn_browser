@@ -7,7 +7,7 @@ import co from 'co'
 
 // bookmarks, cached in memory
 var bookmarks = []
-
+var saveTest = 'nothing saved here';
 export function setup () {
 
 
@@ -16,13 +16,17 @@ export function setup () {
 export function show () {
   document.title = 'SAFE Network Status'
 
+  co(function*() {
 
+    saveTest = yield beakerBrowser.getSetting( 'saveTest' );
+    
+    render()
+  })
 
   co(function*() {
 
-      // this should be built around an auth API in beaker.
-    bookmarks = yield beakerSitedata.get('safe://safe-browser', 'authMessage')
     bookmarks = bookmarks || {};
+    bookmarks = yield beakerBrowser.getSetting( 'authMessage' );
 
     render()
   })
@@ -60,10 +64,17 @@ function render () {
 
   // optional help text
   var helpEl = ''
+  var testEl = ''
 
-  if (bookmarks.length > 0 ) {
+  if (bookmarks && bookmarks.length > 0 ) {
     helpEl = yo`<div class="ll-help">
       <span class="icon icon-info-circled">${bookmarks}</span>
+    </div>`
+  }
+  
+  if (saveTest && saveTest.length > 0 ) {
+    testEl = yo`<div class="ll-help">
+      <span class="icon icon-info-circled">${saveTest}</span>
     </div>`
   }
 
@@ -76,6 +87,7 @@ function render () {
 	</small>
       </div>
       ${helpEl}
+      ${testEl}
     </div>
   </div>`)
 }
