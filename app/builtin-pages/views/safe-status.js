@@ -7,7 +7,6 @@ import co from 'co'
 
 // bookmarks, cached in memory
 var bookmarks = []
-var saveTest = 'nothing saved here';
 export function setup () {
 
 
@@ -15,13 +14,6 @@ export function setup () {
 
 export function show () {
   document.title = 'SAFE Network Status'
-
-  co(function*() {
-
-    saveTest = yield beakerBrowser.getSetting( 'saveTest' );
-    
-    render()
-  })
 
   co(function*() {
 
@@ -71,16 +63,10 @@ function render () {
       <span class="icon icon-info-circled">${bookmarks}</span>
     </div>`
   }
-  
-  if (saveTest && saveTest.length > 0 ) {
-    testEl = yo`<div class="ll-help">
-      <span class="icon icon-info-circled">${saveTest}</span>
-    </div>`
-  }
 
   // render the top 9 big, the rest small
   yo.update(document.querySelector('#el-content'), yo`<div class="pane" id="el-content">
-    <div class="favorites links-list">
+    <div class="safe-status links-list">
       <div class="ll-heading">
 	SAFE Network
 	<small class="ll-heading-right">

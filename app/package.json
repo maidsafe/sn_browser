@@ -8,7 +8,7 @@
   "main": "background-process.build.js",
   "dependencies": {
     "browser-es-module-loader": "^0.1.6",
-    "beaker-plugin-safe": "0.1.8",
+    "beaker-plugin-safe": "0.2.0",
     "co": "^4.6.0",
     "electron-localshortcut": "^0.6.0",
     "emit-stream": "^0.1.2",
@@ -29,11 +29,14 @@
     "sqlite3": "^3.1.4",
     "unused-filename": "^0.1.0",
     "yo-yo": "^1.2.1",
+    "redux-actions": "^0.13.0",
+    "redux-promise": "^0.5.3",
+    "immutable": "^3.8.1",
+    "redux-thunk": "^2.1.0",
     "zerr": "^1.0.4"
   },
   "devDependencies": {
-    "immutable": "^3.8.1",
     "redux-logger": "^2.7.0",
-    "redux-thunk": "^2.1.0"
+    "redux-node-logger": "^0.1.0"
   }
 }

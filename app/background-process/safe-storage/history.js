@@ -1,183 +1,249 @@
 import { app, ipcMain } from 'electron'
-import sqlite3 from 'sqlite3'
-import path from 'path'
 import url from 'url'
 import zerr from 'zerr'
-import multicb from 'multicb'
 import rpc from 'pauls-electron-rpc'
-import FnQueue from 'function-queue'
 import manifest from '../api-manifests/history'
-import { cbPromise } from '../../lib/functions'
-import { setupDatabase2 } from '../../lib/bg/sqlite-tools'
 import log from '../../log'
+
+import store, { saveStore, saveStore2 } from './store/safe-store';
+import { List, Map, fromJS } from 'immutable';
+import { createAction } from 'redux-actions';
 
 const BadParam = zerr('BadParam', '% must be a %')
 const InvalidCmd = zerr('InvalidCommand', '% is not a valid command')
 
-// globals
-// =
-var db
-var migrations
-var setupPromise
-var addVisitQueue = FnQueue()
 
-// exported methods
-// =
+const initialHistoryState = List( [
+    Map( {
+        url: 'https://safenetforum.org/',
+        title : "Safenet Forum",
+        visits: List([]), 
+        last_visit: new Date()
+        
+    })
+] );
+
+
+
+const UPDATE_SITE = 'UPDATE_SITE';
+const DELETE_SITE = 'DELETE_SITE';
+const DELETE_ALL  = 'DELETE_ALL';
+
+// export const { deleteSite, deleteAll } = createActions( DELETE_SITE, DELETE_ALL );
+
+
+export const updateSite = createAction( UPDATE_SITE, ( payload , preventSave ) =>
+{
+    let state = fromJS( store.getState() );
+    let history = state.get('history');
+    let newState;
+    let newHistory;
+    
+    payload = fromJS( payload );
+    
+    let index = history.findIndex( site => {
+        return site.get('url') === payload.get( 'url' );
+    });
+    
+    if( index > -1 )
+    {
+        let siteToMerge = history.get( index );
+        let updatedSite = siteToMerge.mergeDeep( payload ); //updates last visit, url, title
+        let lastVisit   = payload.get('last_visit')
+        // // beter parsing of things that will be always there
+        if( payload.get('last_visit') && ! updatedSite.get('visits').includes( lastVisit ) )
+        {
+            let updatedSiteVisits = updatedSite.get( 'visits' ).push( lastVisit );
+            updatedSite = updatedSite.set( 'visits', updatedSiteVisits );
+        }
+        
+        updatedSite = updatedSite.set( 'last_visit', payload.get('last_visit') );
+
+        newHistory = history.set( index, updatedSite );
+            
+        newState = state.set( 'history', newHistory );
+        
+        if( preventSave )
+        {
+            return newState.get('history');
+        }
+        
+        //DRY this string out
+        return saveStore2( 'history', newState  );
+    }
+    
+    payload = payload.set( 'visits', List([ payload.get('last_visit') ] ));
+    
+    newHistory  = history.push( payload );
+    newState    = state.set( 'history', newHistory );
+    
+    if( preventSave )
+    {
+        return newState.get('history');
+    }
+
+    //DRY this string out
+    return saveStore2( 'history', newState  );
+});
+
+
+
+export const { deleteSite } = createAction( DELETE_SITE, payload =>
+{
+    let state = fromJS( store.getState() ).get('history');
+    
+    payload = fromJS( payload );
+    
+    let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) );
+    
+    let newState = state.delete( index );
+    
+    return saveStore2( 'history', newState );;
+} );
+
+
+export const { deleteAll } = createAction( DELETE_ALL, payload =>
+{
+    let state = fromJS( store.getState() ).get('history');
+    
+    let newState = state.clear();
+    
+    return saveStore2( 'history', newState );;
+} );
+
+
+
+
+
+
+export default function history(state = initialHistoryState, action) {
+    let payload = fromJS(  action.payload );
+    
+    if( payload && payload.error )
+    {
+        return state;
+    }
+    
+    switch (action.type) {
+        case UPDATE_SITE :
+        {
+        	return payload;
+        }
+        case DELETE_SITE: 
+            {                 
+                return payload;
+            } 
+        
+        case DELETE_ALL: 
+            { 
+                return payload;
+            }
+        default:
+          return state
+  }
+  
+  
+}
+
+
+
+
+
+
 
 export function setup () {
-  // open database
-  var dbPath = path.join(app.getPath('userData'), 'History')
-  db = new sqlite3.Database(dbPath)
-  setupPromise = setupDatabase2(db, migrations, '[HISTORY]')
-
   // wire up RPC
   rpc.exportAPI('beakerHistory', manifest, { addVisit, getVisitHistory, getMostVisited, search, removeVisit, removeAllVisits })
 }
 
-export function addVisit ({url, title}) {
-  return setupPromise.then(v => cbPromise(cb => {
-    // validate parameters
-    cb = cb || (()=>{})
-    if (!url || typeof url != 'string')
-      return cb(new BadParam('url', 'string'))
-    if (!title || typeof title != 'string')
-      return cb(new BadParam('title', 'string'))
-
-    // get current stats
-    addVisitQueue.push(endTransaction => {
-      db.serialize(() => {
-	db.run('BEGIN TRANSACTION;')
-	db.get('SELECT * FROM visit_stats WHERE url = ?;', [url], (err, stats) => {
-	  if (err)
-	    return cb(err)
-
-	  var done = multicb()
-	  var ts = Date.now()
-	  db.serialize(() => {
-	    // log visit
-	    db.run('INSERT INTO visits (url, title, ts) VALUES (?, ?, ?);', [url, title, ts], done())
-	    // first visit?
-	    if (!stats) {
-	      // yes, create new stat and search entries
-	      db.run('INSERT INTO visit_stats (url, num_visits, last_visit_ts) VALUES (?, ?, ?);', [url, 1, ts], done())
-	      db.run('INSERT INTO visit_fts (url, title) VALUES (?, ?);', [url, title], done())
-	    } else {
-	      // no, update stats
-	      var num_visits = (+stats.num_visits||1) + 1
-	      db.run('UPDATE visit_stats SET num_visits = ?, last_visit_ts = ? WHERE url = ?;', [num_visits, ts, url], done())
-	    }
-	    db.run('COMMIT;', done())
-	  })
-	  done(err => {
-	    endTransaction()
-	    cb(err)
-	  })
-	})
-      })
-    })
-  }))
+export function addVisit ( {url, title } ) {
+    // each visit has a timestamp
+    return new Promise( (resolve, reject ) =>
+    {
+        let site = { url, title, last_visit: new Date() };        
+        return store.dispatch( updateSite( site ) );
+    });
 }
 
 export function getVisitHistory ({ offset, limit }) {
-  return setupPromise.then(v => cbPromise(cb => {
-    offset = offset || 0
-    limit = limit || 50
-    db.all('SELECT * FROM visits ORDER BY rowid DESC LIMIT ? OFFSET ?', [limit, offset], cb)
-  }))
+    
+    return new Promise( (resolve, reject ) =>
+    {
+        let history = store.getState()[ 'history' ];
+        
+        let filteredHistory = history.filter( (value, key) => 
+        {            
+            return ( key >= offset && key <= limit  )
+        } )
+                
+        if( filteredHistory )
+        {
+            resolve( filteredHistory.toJS() );
+        }
+        else {
+            resolve( undefined );
+        }
+    });
 }
 
 export function getMostVisited ({ offset, limit }) {
-  return setupPromise.then(v => cbPromise(cb => {
-    offset = offset || 0
-    limit = limit || 50
-    db.all(`
-      SELECT visit_stats.*, visits.title AS title
-	FROM visit_stats
-	  LEFT JOIN visits ON visits.url = visit_stats.url
-	WHERE visit_stats.num_visits > 5
-	GROUP BY visit_stats.url
-	ORDER BY num_visits DESC, last_visit_ts DESC
-	LIMIT ? OFFSET ?
-    `, [limit, offset], cb)
-  }))
+    
+    offset  = offset || 0;
+    limit   = limit || 50;
+     
+    return getVisitHistory( { offset, limit } )
+            .then( unsortedHistory => 
+            {                
+                unsortedHistory.sort(function(a, b) {
+                    return b.visits.length - a.visits.length; //high->low ??
+                });
+                
+                return unsortedHistory;
+            });
 }
 
-export function search (q) {
-  return setupPromise.then(v => cbPromise(cb => {
-    if (!q || typeof q != 'string')
-      return cb(new BadParam('q', 'string'))
-
-    // prep search terms
-    q = q
-      .toLowerCase() // all lowercase. (uppercase is interpretted as a directive by sqlite.)
-      .replace(/[:^*]/g, '') // strip symbols that sqlite interprets.
-      + '*' // allow partial matches
-
-    // run query
-    db.all(`
-      SELECT offsets(visit_fts) as offsets, visit_fts.url, visit_fts.title, visit_stats.num_visits
-	FROM visit_fts
-	LEFT JOIN visit_stats ON visit_stats.url = visit_fts.url
-	WHERE visit_fts MATCH ?
-	ORDER BY visit_stats.num_visits DESC
-	LIMIT 10;
-    `, [q], cb)
-  }))
+export function search (q) 
+{    
+    let history = store.getState()[ 'history' ].toJS();
+    
+    let filteredHistory = history.filter( (value, key) => 
+    {
+        return ( value.url.includes( q ) || value.title.includes( q ) );
+    } )
+    
+    //sort mby most should be a helper function.
+    filteredHistory = filteredHistory.sort(function(a, b) {
+        if( !a.visits || !b.visits )
+        { 
+            return 1;
+        }
+        else 
+        {
+            return b.visits.length - a.visits.length; //high->low ??
+        }
+    });
+    
+    return new Promise( (resolve, reject ) =>
+    {
+        resolve( filteredHistory );
+    });
 }
 
 export function removeVisit (url) {
-  return setupPromise.then(v => cbPromise(cb => {
-    // validate parameters
-    cb = cb || (()=>{})
-    if (!url || typeof url != 'string')
-      return cb(new BadParam('url', 'string'))
-
-    db.serialize(() => {
-      db.run('BEGIN TRANSACTION;')
-      db.run('DELETE FROM visits WHERE url = ?;', url)
-      db.run('DELETE FROM visit_stats WHERE url = ?;', url)
-      db.run('DELETE FROM visit_fts WHERE url = ?;', url)
-      db.run('COMMIT;', cb)
-    })
-  }))
+    return new Promise( (resolve, reject) =>
+    {
+        let site = { url };
+        
+        return store.dispatch( deleteSite( site ) );
+    } ) 
 }
 
 export function removeAllVisits () {
-  return setupPromise.then(v => cbPromise(cb => {
-    cb = cb || (()=>{})
-    db.run(`
-      BEGIN TRANSACTION;
-      DELETE FROM visits;
-      DELETE FROM visit_stats;
-      DELETE FROM visit_fts;
-      COMMIT;
-    `, cb)
-  }))
+    
+    
+    return new Promise( (resolve, reject) =>
+    {        
+        return store.dispatch( deleteAll() );
+    } ) 
 }
-
-// internal methods
-// =
-
-migrations = [
-  // version 1
-  function (cb) {
-    db.exec(`
-      CREATE TABLE visits(
-	url NOT NULL,
-	title NOT NULL,
-	ts NOT NULL
-      );
-      CREATE TABLE visit_stats(
-	url NOT NULL,
-	num_visits,
-	last_visit_ts
-      );
-      CREATE VIRTUAL TABLE visit_fts USING fts4(
-	url,
-	title
-      );
-      CREATE UNIQUE INDEX visits_stats_url ON visit_stats (url);
-      PRAGMA user_version = 1;
-    `, cb)
-  }
-]
+    

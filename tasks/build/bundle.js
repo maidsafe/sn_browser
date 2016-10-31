@@ -1,4 +1,5 @@
 'use strict';
+var babel = require( 'rollup-plugin-babel' );
 
 var pathUtil = require('path');
 var jetpack = require('fs-jetpack');
@@ -6,6 +7,7 @@ var rollup = require('rollup');
 var Q = require('q');
 var browserify = require('browserify');
 var intoStream = require('into-stream');
+
 
 var nodeBuiltInModules = ['assert', 'buffer', 'child_process', 'cluster',
   'console', 'constants', 'crypto', 'dgram', 'dns', 'domain', 'events',
@@ -30,6 +32,9 @@ module.exports = function (src, dest, opts) {
   rollup.rollup({
     entry: src,
     external: generateExternalModulesList(),
+    plugins: [ babel({
+      exclude: 'node_modules/**'
+    })]
   }).then(function (bundle) {
     var jsFile = pathUtil.basename(dest);
     var result = bundle.generate({

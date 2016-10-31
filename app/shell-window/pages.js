@@ -7,7 +7,7 @@ import * as promptbar from './ui/promptbar'
 import * as statusBar from './ui/statusbar'
 import { urlToData } from '../lib/fg/img'
 import errorPage from '../lib/error-page'
-import store from '../background-process/safe-storage/store/safe-store';
+// import store from '../background-process/safe-storage/store/safe-store';
 
 // constants
 // =
@@ -206,11 +206,11 @@ export function create (opts) {
     setActive(page)
 
     //for safe status page.
-    if( url === DEFAULT_URL )
-    {
-        //and here we'd filter???
-	    let unsubscribe = store.subscribe( handleChange );
-    }
+    // if( url === DEFAULT_URL )
+    // {
+    //     //and here we'd filter???
+	//     let unsubscribe = store.subscribe( handleChange );
+    // }
 
   return page
 }
@@ -354,9 +354,9 @@ export function changeActiveTo (index) {
     setActive(pages[index])
 }
 
-export function getActive () {
-  return activePage
-}
+// export function getActive () {
+//   return activePage
+// }
 
 
 export function toggleSafe ( )

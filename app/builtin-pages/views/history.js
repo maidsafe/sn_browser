@@ -42,8 +42,11 @@ function fetchMore (cb) {
   if (isAtEnd)
     return cb()
 
+    console.log( "beaker history page" );
   isFetching = true
   beakerHistory.getVisitHistory({ offset: visits.length, limit: 100 }).then(rows => {
+      
+      console.log( "GOTTEN THE HISTORYYYY", rows );
     if (rows.length == 0)
       isAtEnd = true
     else

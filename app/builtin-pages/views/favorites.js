@@ -19,11 +19,13 @@ export function setup () {
 }
 
 export function show () {
-  document.title = 'New tab'
+    
+  document.title = 'Favorites'
   co(function*() {
     // get the bookmarks, ordered by # of views
     bookmarks = yield beakerBookmarks.list()
     bookmarks = bookmarks || []
+    
     render()
   })
 }

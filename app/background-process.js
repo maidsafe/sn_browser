@@ -49,6 +49,12 @@ plugins.registerStandardSchemes()
 
 app.on('ready', function () {
 
+
+    store.subscribe( e => 
+    {
+        console.log( 'Updated Store')
+    })
+
     const app =
     {
     	//TODO: pull from package.json
