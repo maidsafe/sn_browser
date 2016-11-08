@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import networkAuth from './network-auth'
 import settings from './settings'
-import siteData from './siteData'
+import siteData from './sitedata'
 import bookmarks from '../../bookmarks'
 import history from '../../history'
 
