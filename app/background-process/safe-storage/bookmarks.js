@@ -110,10 +110,17 @@ export const updateBookmark = createAction( UPDATE_BOOKMARK, ( payload , prevent
 });
 
 
+
+
+
+
+
+
+
 export default function bookmarks(state = initialBookmarkState, action) {
     let payload =  action.payload ;
     
-    if( payload && payload.error )
+    if( action.error )
     {
         return state;
     }
@@ -133,13 +140,20 @@ export default function bookmarks(state = initialBookmarkState, action) {
 }
 
 
+
+
+
+
+
+
+
+
 export function setup () {
   // wire up RPC
   rpc.exportAPI('beakerBookmarks', manifest, { add, changeTitle, changeUrl, addVisit, remove, get, list })
 }
 
 export function add (url, title) {
-    console.log( "ADDING BMARK" );
     return new Promise( (resolve, reject) =>
     {
         let bookmark = { url, title };        
@@ -149,7 +163,6 @@ export function add (url, title) {
 }
 
 export function changeTitle (url, title) {
-    console.log( "CHANGE BMARK" );
     
     return new Promise( (resolve, reject) =>
     {
@@ -160,7 +173,6 @@ export function changeTitle (url, title) {
 }
 
 export function changeUrl (oldUrl, newUrl) {
-    console.log( "CHANGE url" );
 
     return new Promise( (resolve, reject) =>
     {
@@ -174,19 +186,26 @@ export function changeUrl (oldUrl, newUrl) {
 }
 
 export function addVisit (url) {
-    console.log( "add visit BMARK" );
-
-    return new Promise( (resolve, reject) =>
+    
+    let site = store.getState()[ 'bookmarks' ].find( site => site.get('url') === url ) ;
+    if( site )
     {
-        let bookmark = { url, num_visits : 1 };
+        return new Promise( (resolve, reject) =>
+        {
+            let bookmark = { url, num_visits : 1 };
+            
+            return store.dispatch( updateBookmark( bookmark ) );
+        } ) 
         
-        return store.dispatch( updateBookmark( bookmark ) );
-    } ) 
+    }
+    else {
+        return Promise.reject('bookmark does not exist')
+    }
+
 
 }
 
 export function remove (url) {
-    console.log( "remove BMARK" );
 
     return new Promise( (resolve, reject) =>
     {
@@ -197,7 +216,6 @@ export function remove (url) {
 }
 
 export function get (url) {
-    console.log( "get BMARK" );
 
     return new Promise( ( resolve, reject) =>
     {
@@ -216,7 +234,6 @@ export function get (url) {
 }
 
 export function list () {
-    console.log( "list BMARK" );
 
     let sites = store.getState()[ 'bookmarks' ].toJS();
     

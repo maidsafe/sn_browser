@@ -88,7 +88,7 @@ export const updateSite = createAction( UPDATE_SITE, ( payload , preventSave ) =
 
 
 
-export const { deleteSite } = createAction( DELETE_SITE, payload =>
+export const deleteSite = createAction( DELETE_SITE, payload =>
 {
     let state = fromJS( store.getState() ).get('history');
     
@@ -102,12 +102,11 @@ export const { deleteSite } = createAction( DELETE_SITE, payload =>
 } );
 
 
-export const { deleteAll } = createAction( DELETE_ALL, payload =>
+export const deleteAll = createAction( DELETE_ALL, payload =>
 {
     let state = fromJS( store.getState() ).get('history');
     
-    let newState = state.clear();
-    
+    let newState = state.clear();    
     return saveStore2( 'history', newState );;
 } );
 
@@ -119,7 +118,7 @@ export const { deleteAll } = createAction( DELETE_ALL, payload =>
 export default function history(state = initialHistoryState, action) {
     let payload = fromJS(  action.payload );
     
-    if( payload && payload.error )
+    if( action.error )
     {
         return state;
     }

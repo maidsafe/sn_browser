@@ -114,12 +114,6 @@ export const saveStore2 = ( specificReducer, newState ) =>
                         // 
                         return newState.get( specificReducer );
                     } )
-                    .catch( err => 
-                    {
-                        console.log( "NOT SUCCESSSSSSSSS", error );
-                        
-                        
-                    })
         }
         else {
             console.log( "FAILLL" );
