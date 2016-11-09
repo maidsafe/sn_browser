@@ -5,9 +5,9 @@ import manifest from '../api-manifests/bookmarks'
 import log from '../../log'
 
 
-import store, { saveStore, saveStore2 } from './store/safe-store';
+import store from './store/safe-store';
 import { List, Map, fromJS } from 'immutable';
-import { createActions, createAction } from 'redux-actions';
+import { createActions } from 'redux-actions';
 
 const initialBookmarkState = List( [
     Map( {
@@ -26,113 +26,61 @@ const initialBookmarkState = List( [
 const UPDATE_BOOKMARK = 'UPDATE_BOOKMARK';
 const DELETE_BOOKMARK = 'DELETE_BOOKMARK';
 
-// const { updateBookmark, deleteBookmark } = createActions( UPDATE_BOOKMARK, DELETE_BOOKMARK );
-export const { deleteBookmark } = createAction( DELETE_BOOKMARK, payload =>
-{
-    let state = fromJS( store.getState() ).get('bookmarks');
-    
-    payload = fromJS( payload );
-    
-    let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) );
-    
-    let newState = state.delete( index );
-    
-    return saveStore2( 'bookmarks', newState );;
-} );
-
-
-
-export const updateBookmark = createAction( UPDATE_BOOKMARK, ( payload , preventSave ) =>
-{
-    let state = fromJS( store.getState() );
-    let bookmarks = state.get('bookmarks');
-    
-    payload = fromJS( payload );
-    
-    let newState;
-    let newBookmarks;
-    
-    if( ! bookmarks.findIndex )
-    {
-        //TODO: solve this properly
-        console.log( "THERE WAS A PROBLEMMMM", payload, bookmarks );
-        return bookmarks;
-    }
-    
-    let index = bookmarks.findIndex( site => {
-        return site.get('url') === payload.get( 'url' );
-    });
-    
-    if( index > -1 )
-    {
-        let siteToMerge = bookmarks.get( index );
-        let updatedSite = siteToMerge.mergeDeep( payload );
-
-        if( payload.get('newUrl') )
-        {
-            updatedSite = updatedSite.set( 'url', payload.get('newUrl') );
-        }
-        
-        if( payload.get('num_visits') )
-        {
-            let newVisitCount = siteToMerge.get('num_visits') || 0;
-            newVisitCount++;
-            updatedSite = updatedSite.set( 'num_visits', newVisitCount );
-        }
-        
-        newBookmarks = bookmarks.set( index, updatedSite );
-            
-        newState = state.set( 'bookmarks', newBookmarks );
-        
-        if( preventSave )
-        {
-            return newState.get('bookmarks');
-        }
-        
-        return saveStore2( 'bookmarks', newState  );
-    }
-    
-    
-    if( payload.get( 'num_visits' ) )
-    {
-        return bookmarks;
-    }
-    
-    
-    newBookmarks    = bookmarks.push( payload );
-    newState        = state.set( 'bookmarks', newBookmarks );
-    
-    if( preventSave )
-    {
-        return newState.get('bookmarks');
-    }
-    return saveStore2( 'bookmarks', newState );
-});
-
-
-
-
-
-
-
-
+export const { updateBookmark, deleteBookmark } = createActions( UPDATE_BOOKMARK, DELETE_BOOKMARK );
 
 export default function bookmarks(state = initialBookmarkState, action) {
-    let payload =  action.payload ;
+    let payload =  fromJS( action.payload ) ;
     
     if( action.error )
     {
+        //trigger error action
         return state;
     }
 
     switch (action.type) {
         case UPDATE_BOOKMARK :
         {
-            return payload;
+        
+            let newState;
+            let newBookmarks;
+            
+            let index = state.findIndex( site => {
+                return site.get('url') === payload.get( 'url' );
+            });
+            
+            if( index > -1 )
+            {
+                let siteToMerge = state.get( index );
+                let updatedSite = siteToMerge.mergeDeep( payload );
+
+                if( payload.get('newUrl') )
+                {
+                    updatedSite = updatedSite.set( 'url', payload.get('newUrl') );
+                }
+                
+                if( payload.get('num_visits') )
+                {
+                    let newVisitCount = siteToMerge.get('num_visits') || 0;
+                    newVisitCount++;
+                    updatedSite = updatedSite.set( 'num_visits', newVisitCount );
+                }
+                
+                return state.set( index, updatedSite );
+                
+            }
+            
+            if( payload.get( 'num_visits' ) )
+            {
+                return state;
+            }
+            
+            return state.push( payload );
         }
         case DELETE_BOOKMARK: 
-        {             
-            return payload;
+        {                         
+            let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) );
+            
+            return state.delete( index );
         } 
         default:
             return state
