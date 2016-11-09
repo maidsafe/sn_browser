@@ -5,9 +5,9 @@ import rpc from 'pauls-electron-rpc'
 import manifest from '../api-manifests/history'
 import log from '../../log'
 
-import store, { saveStore, saveStore2 } from './store/safe-store';
+import store from './store/safe-store';
 import { List, Map, fromJS } from 'immutable';
-import { createAction } from 'redux-actions';
+import { createAction, createActions } from 'redux-actions';
 
 const BadParam = zerr('BadParam', '% must be a %')
 const InvalidCmd = zerr('InvalidCommand', '% is not a valid command')
@@ -29,91 +29,7 @@ const UPDATE_SITE = 'UPDATE_SITE';
 const DELETE_SITE = 'DELETE_SITE';
 const DELETE_ALL  = 'DELETE_ALL';
 
-// export const { deleteSite, deleteAll } = createActions( DELETE_SITE, DELETE_ALL );
-
-
-export const updateSite = createAction( UPDATE_SITE, ( payload , preventSave ) =>
-{
-    let state = fromJS( store.getState() );
-    let history = state.get('history');
-    let newState;
-    let newHistory;
-    
-    payload = fromJS( payload );
-    
-    let index = history.findIndex( site => {
-        return site.get('url') === payload.get( 'url' );
-    });
-    
-    if( index > -1 )
-    {
-        let siteToMerge = history.get( index );
-        let updatedSite = siteToMerge.mergeDeep( payload ); //updates last visit, url, title
-        let lastVisit   = payload.get('last_visit')
-        // // beter parsing of things that will be always there
-        if( payload.get('last_visit') && ! updatedSite.get('visits').includes( lastVisit ) )
-        {
-            let updatedSiteVisits = updatedSite.get( 'visits' ).push( lastVisit );
-            updatedSite = updatedSite.set( 'visits', updatedSiteVisits );
-        }
-        
-        updatedSite = updatedSite.set( 'last_visit', payload.get('last_visit') );
-
-        newHistory = history.set( index, updatedSite );
-            
-        newState = state.set( 'history', newHistory );
-        
-        if( preventSave )
-        {
-            return newState.get('history');
-        }
-        
-        //DRY this string out
-        return saveStore2( 'history', newState  );
-    }
-    
-    payload = payload.set( 'visits', List([ payload.get('last_visit') ] ));
-    
-    newHistory  = history.push( payload );
-    newState    = state.set( 'history', newHistory );
-    
-    if( preventSave )
-    {
-        return newState.get('history');
-    }
-
-    //DRY this string out
-    return saveStore2( 'history', newState  );
-});
-
-
-
-export const deleteSite = createAction( DELETE_SITE, payload =>
-{
-    let state = fromJS( store.getState() ).get('history');
-    
-    payload = fromJS( payload );
-    
-    let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) );
-    
-    let newState = state.delete( index );
-    
-    return saveStore2( 'history', newState );;
-} );
-
-
-export const deleteAll = createAction( DELETE_ALL, payload =>
-{
-    let state = fromJS( store.getState() ).get('history');
-    
-    let newState = state.clear();    
-    return saveStore2( 'history', newState );;
-} );
-
-
-
-
-
+export const { updateSite, deleteSite, deleteAll } = createActions( UPDATE_SITE, DELETE_SITE, DELETE_ALL );
 
 export default function history(state = initialHistoryState, action) {
     let payload = fromJS(  action.payload );
@@ -125,17 +41,43 @@ export default function history(state = initialHistoryState, action) {
     
     switch (action.type) {
         case UPDATE_SITE :
-        {
-        	return payload;
+        {    
+            let index = state.findIndex( site => {
+                return site.get('url') === payload.get( 'url' );
+            });
+            
+            if( index > -1 )
+            {
+                let siteToMerge = state.get( index );
+                let updatedSite = siteToMerge.mergeDeep( payload ); //updates last visit, url, title
+                let lastVisit   = payload.get('last_visit')
+                // // beter parsing of things that will be always there
+                if( payload.get('last_visit') && ! updatedSite.get('visits').includes( lastVisit ) )
+                {
+                    let updatedSiteVisits = updatedSite.get( 'visits' ).push( lastVisit );
+                    updatedSite = updatedSite.set( 'visits', updatedSiteVisits );
+                }
+                
+                updatedSite = updatedSite.set( 'last_visit', payload.get('last_visit') );
+
+                return state.set( index, updatedSite );
+
+            }
+            
+            payload = payload.set( 'visits', List([ payload.get('last_visit') ] ));
+            
+            return state.push( payload );
         }
         case DELETE_SITE: 
-            {                 
-                return payload;
+            {                
+                let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) );
+                
+                return state.delete( index );
             } 
         
         case DELETE_ALL: 
             { 
-                return payload;
+                return state.clear();    
             }
         default:
           return state
