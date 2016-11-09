@@ -36,6 +36,7 @@
     "zerr": "^1.0.4"
   },
   "devDependencies": {
+    "lodash": "^4.16.6",
     "redux-logger": "^2.7.0",
     "redux-node-logger": "^0.1.0"
   }

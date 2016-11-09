@@ -42,7 +42,7 @@ export function set (url, key, value)
 
 	return new Promise( ( resolve, reject) =>
 	{
-	    return sitedataActions.saveSiteData( siteData );
+	    return sitedataActions.setSiteData( siteData );
 
 	})
 

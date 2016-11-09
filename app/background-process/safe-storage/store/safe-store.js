@@ -5,11 +5,12 @@ import createNodeLogger from 'redux-node-logger';
 import promiseMiddleware from 'redux-promise';
 //get actions for reStore
 // this seems a bit whack, but for now...
-import { setSiteData } from './actions/sitedata';
-import { setSetting } from './actions/settings';
+import { updateSiteData } from './actions/sitedata';
+import { updateSetting } from './actions/settings';
 import { updateBookmark } from '../bookmarks';
 import { updateSite } from '../history';
 
+import _ from 'lodash';
 
 import rootReducer from './reducers/root-reducer';
 import { nfs } from 'safe-js';
@@ -77,8 +78,9 @@ export const getStore = () =>
 }
 
 
-export const saveStore = ( ) =>
+const save = ( ) =>
 {
+    console.log( "SAVING STORREEE" );
         let state = store.getState();
         let currentToken = getTokenFromState( state );
         
@@ -96,6 +98,8 @@ export const saveStore = ( ) =>
             return Promise.reject( new Error( 'Unable to save data to the SAFE network, as no token found' ) );
         }
 }
+
+export const saveStore = _.debounce( save, 200 );
 
 export const saveStore2 = ( specificReducer, newState ) =>
 {
@@ -131,12 +135,12 @@ export const reStore = ( storeState ) =>
     
     if( storeState.settings )
     {
-        dispatchActionForEachProp( storeState.settings , setSetting );
+        dispatchActionForEachProp( storeState.settings , updateSetting );
     }
     
     if( storeState.sitedata )
     {
-        dispatchActionForEachProp( storeState.sitedata , setSiteData );
+        dispatchActionForEachProp( storeState.sitedata , updateSiteData );
     }
     
     if( storeState.history )

@@ -7,10 +7,10 @@ import { app, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import store, { getStore, reStore } from './background-process/safe-storage/store/safe-store';
+import store, { getStore, reStore, saveStore } from './background-process/safe-storage/store/safe-store';
 
 // set setting does not trigger save
-import { saveSetting, setSetting } from './background-process/safe-storage/store/actions/settings';
+import { updateSetting } from './background-process/safe-storage/store/actions/settings';
 
 
 
@@ -52,7 +52,10 @@ app.on('ready', function () {
 
     store.subscribe( e => 
     {
-        console.log( 'Updated Store')
+        console.log( 'Updated Store', e );
+        
+        saveStore();
+        
     })
 
     const app =
@@ -71,8 +74,8 @@ app.on('ready', function () {
         // NOTHING should be saved until a store is gotten. Or failed.
         // Only then do we do createOrUpdateFile....
         // setting for sync interval
-        store.dispatch( setSetting( 'authToken', tok.token ) );
-        store.dispatch( setSetting( 'authMessage', 'Authorised with launcher.' ) );
+        store.dispatch( updateSetting( 'authToken', tok.token ) );
+        store.dispatch( updateSetting( 'authMessage', 'Authorised with launcher.' ) );
 
         //get store can optionally have a token passed?
         getStore()
@@ -83,7 +86,7 @@ app.on('ready', function () {
             })
             .catch( err => 
             {
-                store.dispatch( setSetting( 'authMessage', 'Problems getting browser settings from the network, ' + JSON.stringify( err )  ) );
+                store.dispatch( updateSetting( 'authMessage', 'Problems getting browser settings from the network, ' + JSON.stringify( err )  ) );
             })
 
 	})
@@ -99,12 +102,12 @@ app.on('ready', function () {
 	    if( err.code === 'ECONNREFUSED' )
 	    {
     		console.log( "Connection refused, launcher not open" );
-    		store.dispatch( setSetting( 'authMessage', 'SAFE Launcher does not appear to be open.' ) );
+    		store.dispatch( updateSetting( 'authMessage', 'SAFE Launcher does not appear to be open.' ) );
 	    }
 
 	    if( err === 'Unauthorized' )
 	    {
-    		store.dispatch( setSetting( 'authMessage','The browser failed to authorise with the SAFE launcher.' ) );
+    		store.dispatch( updateSetting( 'authMessage','The browser failed to authorise with the SAFE launcher.' ) );
     		console.log( "Connection refused, not authorised with launcher" );
 	    }
 

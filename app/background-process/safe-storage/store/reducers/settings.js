@@ -1,5 +1,5 @@
 import { List, Map, fromJS } from 'immutable';
-import { SET_SETTING } from '../actions/settings';
+import { UPDATE_SETTING } from '../actions/settings';
 
 const initialState = Map( {
 	    auto_update_enabled: 0,
@@ -8,7 +8,7 @@ const initialState = Map( {
 
 export default function settings(state = initialState, action) {
   switch (action.type) {
-    case SET_SETTING :
+    case UPDATE_SETTING :
     {
     	let payload = {};
 		
