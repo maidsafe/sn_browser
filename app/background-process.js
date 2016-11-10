@@ -7,10 +7,10 @@ import { app, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import store, { getStore, reStore, saveStore } from './background-process/safe-storage/store/safe-store';
+import store, { getStore, reStore, saveStore } from './background-process/safe-storage/store';
 
 // set setting does not trigger save
-import { updateSetting } from './background-process/safe-storage/store/actions/settings';
+import { updateSettings } from './background-process/safe-storage/settings';
 
 
 
@@ -51,11 +51,8 @@ app.on('ready', function () {
 
 
     store.subscribe( e => 
-    {
-        console.log( 'Updated Store', e );
-        
-        saveStore();
-        
+    {        
+        saveStore();    
     })
 
     const app =
@@ -63,7 +60,7 @@ app.on('ready', function () {
     	//TODO: pull from package.json
     	name: "SafeBrowser",
     	id: "safe-browser",
-    	version: "0.3.2",
+    	version: "0.4.0",
     	vendor: "josh.wilson",
     	permissions : [ "SAFE_DRIVE_ACCESS"]
     };
@@ -74,42 +71,43 @@ app.on('ready', function () {
         // NOTHING should be saved until a store is gotten. Or failed.
         // Only then do we do createOrUpdateFile....
         // setting for sync interval
-        store.dispatch( updateSetting( 'authToken', tok.token ) );
-        store.dispatch( updateSetting( 'authMessage', 'Authorised with launcher.' ) );
 
         //get store can optionally have a token passed?
-        getStore()
-            .then( response =>
+        
+        
+        getStore( tok.token )
+            .then( json =>
             {            
-                response.json().then( json => reStore( json ) )  
+                store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
+                reStore( json );
                 
+                store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
             })
             .catch( err => 
             {
-                store.dispatch( updateSetting( 'authMessage', 'Problems getting browser settings from the network, ' + JSON.stringify( err )  ) );
+                store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + JSON.stringify( err )  } ) );
             })
 
 	})
 	.catch( err =>
-	{
-	    console.log( "ERROORORRRRSS", err );
-
-	    //routing interface error when cannot connect to  network!!
-	    //
-	    //{ errorCode: -12,
-        // description: 'CoreError::RoutingInterfaceError' }
-
-	    if( err.code === 'ECONNREFUSED' )
+	{        
+	    if( err.code === -12 )
+        {
+            store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) );
+            return;
+        }
+        else if( err.code === 'ECONNREFUSED' )
 	    {
-    		console.log( "Connection refused, launcher not open" );
-    		store.dispatch( updateSetting( 'authMessage', 'SAFE Launcher does not appear to be open.' ) );
+    		store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) );
+            return;
 	    }
-
-	    if( err === 'Unauthorized' )
+        else if( err === 'Unauthorized' )
 	    {
-    		store.dispatch( updateSetting( 'authMessage','The browser failed to authorise with the SAFE launcher.' ) );
-    		console.log( "Connection refused, not authorised with launcher" );
+    		store.dispatch( updateSettings( { 'authMessage':'The browser failed to authorise with the SAFE launcher.' } ) );
+            return;
 	    }
+        
+        store.dispatch( updateSettings( { 'authMessage': '' + err } ) );
 
 	});
 

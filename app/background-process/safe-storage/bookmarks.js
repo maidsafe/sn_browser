@@ -5,7 +5,7 @@ import manifest from '../api-manifests/bookmarks'
 import log from '../../log'
 
 
-import store from './store/safe-store';
+import store from './store';
 import { List, Map, fromJS } from 'immutable';
 import { createActions } from 'redux-actions';
 

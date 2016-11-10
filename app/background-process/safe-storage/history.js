@@ -5,7 +5,7 @@ import rpc from 'pauls-electron-rpc'
 import manifest from '../api-manifests/history'
 import log from '../../log'
 
-import store from './store/safe-store';
+import store from './store';
 import { List, Map, fromJS } from 'immutable';
 import { createAction, createActions } from 'redux-actions';
 

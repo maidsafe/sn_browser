@@ -3,16 +3,14 @@ import thunk from 'redux-thunk'
 import { electronEnhancer } from 'redux-electron-store';
 import createNodeLogger from 'redux-node-logger';
 import promiseMiddleware from 'redux-promise';
-//get actions for reStore
-// this seems a bit whack, but for now...
-import { updateSiteData } from './actions/sitedata';
-import { updateSetting } from './actions/settings';
-import { updateBookmark } from '../bookmarks';
-import { updateSite } from '../history';
-
 import _ from 'lodash';
 
-import rootReducer from './reducers/root-reducer';
+import { updateSiteData } from './sitedata';
+import { updateSettings } from './settings';
+import { updateBookmark } from './bookmarks';
+import { updateSite } from './history';
+
+import rootReducer from './root-reducer';
 import { nfs } from 'safe-js';
 
 export const SITE_DATA_ID = 'safe:safe-browser';
@@ -24,9 +22,6 @@ const logger = createNodeLogger({
     collapsed: true
 });
 
-
-let initialState = {};
-
 let enhancer = compose(
     applyMiddleware(thunk, logger, promiseMiddleware),
     electronEnhancer()
@@ -35,8 +30,6 @@ let enhancer = compose(
 let store = createStore(rootReducer, enhancer);
 
 export default store;
-
-
 
 
 
@@ -64,13 +57,13 @@ const getTokenFromState = ( state = store.getState() ) =>
 }
 
 
-export const getStore = () =>
+export const getStore = ( tok ) =>
 {
-    let currentToken = getTokenFromState( );
+    let currentToken = tok || getTokenFromState( );
     
     if( currentToken )
     {
-        return nfs.getFile( currentToken, SAFE_BROWSER_STATE_FILE );
+        return nfs.getFile( currentToken, SAFE_BROWSER_STATE_FILE, 'json' );
     }
     else {
         return Promise.reject( 'no token data found' );
@@ -80,10 +73,9 @@ export const getStore = () =>
 
 const save = ( ) =>
 {
-    console.log( "SAVING STORREEE" );
         let state = store.getState();
         let currentToken = getTokenFromState( state );
-        
+
         if( currentToken )
         {
             let JSONToSave = JSON.stringify( state );
@@ -101,31 +93,6 @@ const save = ( ) =>
 
 export const saveStore = _.debounce( save, 200 );
 
-export const saveStore2 = ( specificReducer, newState ) =>
-{
-        let state = newState;
-        let currentToken = getTokenFromState();
-
-        if( currentToken )
-        {
-            let JSONToSave = JSON.stringify( newState );
-            return nfs.createOrUpdateFile( currentToken, SAFE_BROWSER_STATE_FILE, JSONToSave, 'application/json' )
-                .then( bool => 
-                    {
-                        //currently request is sucecssful, but retuning errors
-                        console.log( "success was had saving newState:  ", bool, newState )
-                        // fail condition here. if not 200
-                        // 
-                        return newState.get( specificReducer );
-                    } )
-        }
-        else {
-            console.log( "FAILLL" );
-            return Promise.reject( new Error( 'Unable to save data to the SAFE network, as no token found' ) );
-        }
-}
-
-
 export const reStore = ( storeState ) =>
 {
     if( storeState.errorCode )
@@ -135,12 +102,13 @@ export const reStore = ( storeState ) =>
     
     if( storeState.settings )
     {
-        dispatchActionForEachProp( storeState.settings , updateSetting );
+        store.dispatch( updateSettings( storeState.settings ) );        
+
     }
     
     if( storeState.sitedata )
     {
-        dispatchActionForEachProp( storeState.sitedata , updateSiteData );
+        dispatchForEach( storeState.sitedata , updateSiteData );
     }
     
     if( storeState.history )
@@ -160,27 +128,7 @@ const dispatchForEach = ( array, action ) =>
 {
     array.forEach( (item, key) => 
     {
-        // item.save = false;
-        store.dispatch( action( item, true ) ); //true to prevent save
+        store.dispatch( action( item ) ); 
         return;
     })
 }
-
-const dispatchActionForEachProp = ( object, action ) =>
-{
-    let objectArray = Object.keys( object );
-    
-    objectArray.forEach( ( prop ) =>
-    {
-        if( prop.includes( 'auth' ) )
-        {
-            return;
-        }
-        
-        store.dispatch( action( prop, object[ prop ] ) );        
-    } )
-    
-} 
-
-
-
