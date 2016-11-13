@@ -5,6 +5,11 @@ import * as navbar from './ui/navbar'
 import permsPrompt from './ui/prompts/permission'
 
 export function setup () {
+  ipcRenderer.on('safeStore-updated', (e, type) => {
+        return pages.handleSafeStoreChange();
+  })
+  
+  
   ipcRenderer.on('command', function (event, type, arg1, arg2, arg3) {
     var page = pages.getActive()
     switch (type) {

@@ -7,6 +7,7 @@ import * as promptbar from './ui/promptbar'
 import * as statusBar from './ui/statusbar'
 import { urlToData } from '../lib/fg/img'
 import errorPage from '../lib/error-page'
+import _ from 'lodash';
 // import store from '../background-process/safe-storage/store/safe-store';
 
 // constants
@@ -205,30 +206,24 @@ export function create (opts) {
   if (!activePage)
     setActive(page)
 
-    //for safe status page.
-    // if( url === DEFAULT_URL )
-    // {
-    //     //and here we'd filter???
-	//     let unsubscribe = store.subscribe( handleChange );
-    // }
-
   return page
 }
 
 
-function handleChange() {
-    
+function handleStoreChange() {
     var page = getAll();
 
-    // TODO: filter for settings pages?? Or just all beaker pages....
     pages.forEach( page =>
     {
-	if( page.isWebviewReady && page.getURL() === DEFAULT_URL )
+	if( page.isWebviewReady && page.getURL().includes('beaker:') )
 	{
 	    page.reload()
 	}
     })
 }
+
+
+export const handleSafeStoreChange = _.debounce( handleStoreChange, 200 );
 
 
 

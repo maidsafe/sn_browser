@@ -6,6 +6,9 @@ import * as downloads from './downloads'
 import * as permissions from './permissions'
 import log from '../../log'
 import url from 'url'
+
+import store, { saveStore } from '../safe-storage/store';
+
 // globals
 // =
 var userDataDir
@@ -71,9 +74,15 @@ export function createShellWindow () {
           
         }
     });
+  
+    
+    store.subscribe( e => 
+    {        
+        saveStore();    
+        win.webContents.send('safeStore-updated', 'boom');
 
-  
-  
+    })
+
   
   
   downloads.registerListener(win)

@@ -51,7 +51,7 @@ export function set (key, value)
 	{    
 		let setter = {};
 		setter[key] = value;
-		store.dispatch( updateSetting( setter ) )
+		store.dispatch( updateSettings( setter ) )
 	})
 }
 

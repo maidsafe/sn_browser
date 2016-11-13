@@ -3,7 +3,7 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
-import { app, Menu } from 'electron'
+import { app, Menu, ipcMain } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
@@ -50,11 +50,6 @@ plugins.registerStandardSchemes()
 app.on('ready', function () {
 
 
-    store.subscribe( e => 
-    {        
-        saveStore();    
-    })
-
     const app =
     {
     	//TODO: pull from package.json
@@ -67,14 +62,6 @@ app.on('ready', function () {
 
     let token = auth.authorise( app ).then( tok =>
 	{    
-        // TODO: Trigger save should be automatic not on every instance.
-        // NOTHING should be saved until a store is gotten. Or failed.
-        // Only then do we do createOrUpdateFile....
-        // setting for sync interval
-
-        //get store can optionally have a token passed?
-        
-        
         getStore( tok.token )
             .then( json =>
             {            
