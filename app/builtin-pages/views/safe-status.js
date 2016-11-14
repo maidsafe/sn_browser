@@ -5,8 +5,10 @@ This uses the beakerBookmarks APIs, which is exposed by webview-preload to all s
 import * as yo from 'yo-yo'
 import co from 'co'
 
-// bookmarks, cached in memory
-var bookmarks = []
+// safeStatus, cached in memory
+var safeStatus = {};
+var reAuthMessage = 'Reauthorise with SAFE Launcher';
+var authSuccess = false;
 export function setup () {
 
 
@@ -15,10 +17,20 @@ export function setup () {
 export function show () {
   document.title = 'SAFE Network Status'
 
+  
+    co(function*() {
+
+      authSuccess = authSuccess || false;
+      authSuccess = yield beakerBrowser.getSetting( 'authSuccess' );
+
+      render()
+    })
+    
+    
   co(function*() {
 
-    bookmarks = bookmarks || {};
-    bookmarks = yield beakerBrowser.getSetting( 'authMessage' );
+    safeStatus = safeStatus || {};
+    safeStatus = yield beakerBrowser.getSetting( 'authMessage' );
 
     render()
   })
@@ -32,35 +44,19 @@ export function hide () {
 
 function render () {
 
-  const renderRow = (row, i) => row.isEditing ? renderRowEditing(row, i) : renderRowDefault(row, i)
-
-  const renderRowEditing = (row, i) => yo`<div class="ll-row ll-row-is-editing" data-row=${i}>
-    <span class="ll-link">
-      <div class="ll-inputs">
-	<input name="title" value=${row.editTitle} onkeyup=${onKeyUp(i)} />
-	<input name="url" value=${row.editUrl} onkeyup=${onKeyUp(i)} />
-      </div>
-    </div>
-  </div>`
-
-  const renderRowDefault = (row, i) => yo`<div class="ll-row" data-row=${i}>
-    <a class="ll-link" href=${row.url} title=${row.title}>
-      <img class="favicon" src=${'beaker-favicon:'+row.url} />
-      <span class="ll-title">${row.title}</span>
-    </a>
-    <div class="ll-actions">
-      <span class="icon icon-pencil" onclick=${onClickEdit(i)} title="Edit bookmark"></span>
-      <span class="icon icon-cancel" onclick=${onClickDelete(i)} title="Delete bookmark"></span>
-    </div>
-  </div>`
-
   // optional help text
-  var helpEl = ''
-  var testEl = ''
+  var statusEl = ''
+  var reAuthEl = ''
 
-  if (bookmarks && bookmarks.length > 0 ) {
-    helpEl = yo`<div class="ll-help">
-      <span class="icon icon-info-circled">${bookmarks}</span>
+  if ( ! authSuccess ) {
+      reAuthEl = yo`<div class="ll-help">
+      <div class="icon icon-rocket" onclick=${onClickReAuth()} style="cursor: pointer;" >${reAuthMessage}</div>
+      </div>`
+  }
+  
+  if (safeStatus && safeStatus.length > 0 ) {
+    statusEl = yo`<div class="ll-help">
+      <div class="icon icon-info-circled">${safeStatus}</div>
     </div>`
   }
 
@@ -69,11 +65,9 @@ function render () {
     <div class="safe-status links-list">
       <div class="ll-heading">
 	SAFE Network
-	<small class="ll-heading-right">
-	</small>
       </div>
-      ${helpEl}
-      ${testEl}
+      ${statusEl}
+      ${reAuthEl}
     </div>
   </div>`)
 }
@@ -81,70 +75,11 @@ function render () {
 // event handlers
 // =
 
-function onClickEdit (i) {
+function onClickReAuth (i) {
   return e => {
     e.preventDefault()
     e.stopPropagation()
 
-    // capture initial value
-    bookmarks[i].editTitle = bookmarks[i].title
-    bookmarks[i].editUrl = bookmarks[i].url
-
-    // enter edit-mode
-    bookmarks[i].isEditing = true
-    render()
-    document.querySelector(`[data-row="${i}"] input`).focus()
-  }
-}
-
-function onKeyUp (i) {
-  return e => {
-    // enter-key
-    if (e.keyCode == 13) {
-      // capture the old url
-      var oldUrl = bookmarks[i].url
-
-      // update values
-      bookmarks[i].title = document.querySelector(`[data-row="${i}"] [name="title"]`).value
-      bookmarks[i].url = document.querySelector(`[data-row="${i}"] [name="url"]`).value
-
-      // exit edit-mode
-      bookmarks[i].isEditing = false
-      render()
-
-      // save in backend
-      beakerBookmarks.changeTitle(oldUrl, bookmarks[i].title)
-      beakerBookmarks.changeUrl(oldUrl, bookmarks[i].url)
-    }
-
-    // escape-key
-    else if (e.keyCode == 27) {
-      // exit edit-mode
-      bookmarks[i].isEditing = false
-      render()
-    }
-
-    // all else
-    else {
-      // update edit values
-      if (e.target.name == 'title')
-	bookmarks[i].editTitle = e.target.value
-      if (e.target.name == 'url')
-	bookmarks[i].editUrl = e.target.value
-    }
-
-  }
-}
-
-function onClickDelete (i) {
-  return e => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    // delete bookmark
-    var b = bookmarks[i]
-    bookmarks.splice(i, 1)
-    beakerBookmarks.remove(b.url)
-    render()
+    beakerBrowser.reauthenticateSAFE( );
   }
 }

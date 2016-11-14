@@ -1,10 +1,10 @@
 import { app } from 'electron'
 import log from '../../log'
-import store from './store';
+import store, { handleAuthError } from './store';
 import { List, Map, fromJS } from 'immutable';
 
 import { createActions } from 'redux-actions';
-
+import { auth } from 'safe-js';
 
 const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 
@@ -76,6 +76,31 @@ export function get (key)
 	})
 	
 }
+
+
+const safeBrowserApp =
+{
+    //TODO: pull from package.json
+    name: "SafeBrowser",
+    id: "safe-browser",
+    version: "0.4.0",
+    vendor: "josh.wilson",
+    permissions : [ "SAFE_DRIVE_ACCESS"]
+};
+
+
+
+export function reauthenticateSAFE () {
+		
+	return auth.authorise( safeBrowserApp ).then( tok =>
+	{
+		store.dispatch( updateSettings( { 'authSuccess': true } ) );
+
+		store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
+		store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
+
+	} ).catch( handleAuthError );
+};
 
 export function getAll () {
 	return new Promise( ( resolve, reject) =>

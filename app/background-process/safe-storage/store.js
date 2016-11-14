@@ -93,6 +93,10 @@ const save = ( ) =>
 
 export const saveStore = _.debounce( save, 200 );
 
+
+
+
+
 export const reStore = ( storeState ) =>
 {
     if( storeState.errorCode )
@@ -131,4 +135,30 @@ const dispatchForEach = ( array, action ) =>
         store.dispatch( action( item ) ); 
         return;
     })
+}
+
+
+
+
+
+export const handleAuthError = ( err ) =>
+{   
+    store.dispatch( updateSettings( { 'authSuccess': false} ) );
+    if( err.code === -12 )
+    {
+        store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) );
+        return;
+    }
+    else if( err.code === 'ECONNREFUSED' )
+    {
+		store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) );
+        return;
+    }
+    else if( err === 'Unauthorized' )
+    {
+		store.dispatch( updateSettings( { 'authMessage':'The browser failed to authorise with the SAFE launcher.' } ) );
+        return;
+    }
+    
+    store.dispatch( updateSettings( { 'authMessage': '' + err } ) );
 }

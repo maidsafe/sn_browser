@@ -32,7 +32,6 @@ window.history.replaceState = _wr('replaceState');
 // =
 // 
 // 
-console.log( "FAVS PAGE???", favorites );
 
 var views = { start: safeStatus, favorites, archives, history, downloads, settings }
 var currentView = getLocationView()

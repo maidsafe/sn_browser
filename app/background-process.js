@@ -7,7 +7,7 @@ import { app, Menu, ipcMain } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import store, { getStore, reStore, saveStore } from './background-process/safe-storage/store';
+import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store';
 
 // set setting does not trigger save
 import { updateSettings } from './background-process/safe-storage/settings';
@@ -34,15 +34,22 @@ import * as openURL from './background-process/open-url'
 
 import { auth } from 'safe-js';
 
+
+const safeBrowserApp =
+{
+    //TODO: pull from package.json
+    name: "SafeBrowser",
+    id: "safe-browser",
+    version: "0.4.0",
+    vendor: "josh.wilson",
+    permissions : [ "SAFE_DRIVE_ACCESS"]
+};
+
+
+
+
 // // configure logging
 log.setLevel('trace')
-
-
-let sitedataActions = {};
-const dispatch = store.dispatch;
-
-
-let currentValue;
 
 // load the installed protocols
 plugins.registerStandardSchemes()
@@ -50,18 +57,10 @@ plugins.registerStandardSchemes()
 app.on('ready', function () {
 
 
-    const app =
-    {
-    	//TODO: pull from package.json
-    	name: "SafeBrowser",
-    	id: "safe-browser",
-    	version: "0.4.0",
-    	vendor: "josh.wilson",
-    	permissions : [ "SAFE_DRIVE_ACCESS"]
-    };
-
-    let token = auth.authorise( app ).then( tok =>
+    let token = auth.authorise( safeBrowserApp ).then( tok =>
 	{    
+        store.dispatch( updateSettings( { 'authSuccess': true } ) );
+
         getStore( tok.token )
             .then( json =>
             {            
@@ -76,27 +75,7 @@ app.on('ready', function () {
             })
 
 	})
-	.catch( err =>
-	{        
-	    if( err.code === -12 )
-        {
-            store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) );
-            return;
-        }
-        else if( err.code === 'ECONNREFUSED' )
-	    {
-    		store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) );
-            return;
-	    }
-        else if( err === 'Unauthorized' )
-	    {
-    		store.dispatch( updateSettings( { 'authMessage':'The browser failed to authorise with the SAFE launcher.' } ) );
-            return;
-	    }
-        
-        store.dispatch( updateSettings( { 'authMessage': '' + err } ) );
-
-	});
+	.catch( handleAuthError );
 
 
   // databases

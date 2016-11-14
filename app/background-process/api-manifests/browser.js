@@ -3,6 +3,7 @@ export default {
   getInfo: 'promise',
   checkForUpdates: 'promise',
   restartBrowser: 'sync',
+  reauthenticateSAFE: 'promise',
 
   getSettings: 'promise',
   getSetting: 'promise',

@@ -61,7 +61,7 @@ export function setup () {
     getInfo,
     checkForUpdates,
     restartBrowser,
-
+    reauthenticateSAFE,
     getSetting,
     getSettings,
     setSetting,
@@ -183,6 +183,10 @@ export function restartBrowser () {
 
 export function getSetting (key) {
   return settingsDb.get(key)
+}
+
+export function reauthenticateSAFE () {
+  return settingsDb.reauthenticateSAFE()
 }
 
 export function getSettings () {
