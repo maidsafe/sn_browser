@@ -56,7 +56,6 @@ plugins.registerStandardSchemes()
 
 app.on('ready', function () {
 
-
     let token = auth.authorise( safeBrowserApp ).then( tok =>
 	{    
         store.dispatch( updateSettings( { 'authSuccess': true } ) );

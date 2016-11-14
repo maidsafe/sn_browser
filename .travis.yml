@@ -1,6 +1,11 @@
 sudo: required
 dist: trusty
 
+env:
+  global:
+  - NODE_ENV=production
+        
+        
 matrix:
   include:
   - os: osx
@@ -8,9 +13,6 @@ matrix:
 node_js:
     - '6.3.1'
 
-env:
-  global:
-    - NODE_ENV=production
     
 cache:
   directories:
@@ -30,7 +32,6 @@ addons:
       
 before_script:
   - npm run rebuild
-  # - npm run build
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; fi
