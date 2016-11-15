@@ -99,7 +99,8 @@ export function reauthenticateSAFE () {
 		store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
 		store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
 
-	} ).catch( handleAuthError );
+	} )
+	// .catch( handleAuthError );
 };
 
 export function getAll () {

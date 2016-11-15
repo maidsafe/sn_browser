@@ -80,6 +80,9 @@ function onClickReAuth (i) {
     e.preventDefault()
     e.stopPropagation()
 
-    beakerBrowser.reauthenticateSAFE( );
+    let check = beakerBrowser.reauthenticateSAFE( );
+    
+    check.then( r => console.log( r ) )
+        .catch( e => console.log( 'errors', e ))
   }
 }
