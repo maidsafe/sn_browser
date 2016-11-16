@@ -1,11 +1,6 @@
 sudo: required
 dist: trusty
 
-env:
-  global:
-  - NODE_ENV=production
-        
-        
 matrix:
   include:
   - os: osx
