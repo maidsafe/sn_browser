@@ -98,7 +98,7 @@ function render () {
       <div class="ll-heading">
         Downloads
         <small class="ll-heading-right">
-          <a href="https://beakerbrowser.com/docs/" title="Get Help"><span class="icon icon-lifebuoy"></span> Help</a>
+          <a href="https://github.com/joshuef/beaker" title="Get Help"><span class="icon icon-lifebuoy"></span> Help</a>
         </small>
         </div>
       ${downloadEls}
