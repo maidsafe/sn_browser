@@ -68,6 +68,11 @@
         }
       ]
     },
+    "protocols" :
+    {
+        "name" : "SAFE Network URL",
+        "schemes" : [ "safe" ]
+    },
     "linux": {
       "target": [
         "zip",
@@ -77,7 +82,10 @@
       "category": "WebBrowser"
     },
     "win": {
-      "target": "zip"
+      "target": "nsis"
+    },
+    "nsis": {
+      "perMachine": true
     },
     "mac": {
       "target": "dmg"
