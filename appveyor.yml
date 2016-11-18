@@ -29,15 +29,20 @@ build_script:
   - npm run release:windows
 
  
-artifacts: 
-    - path: dist/*-win.zip
  
  
 after_build:
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - dir dist
+  - rename dist/win-unpacked dist/safe-browser-$(appveyor_repo_tag_name)-win
+  - 7z a dist/safe-browser-$(appveyor_repo_tag_name)-win 
+  - dir dist
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
+
+artifacts: 
+  - path: dist/*-win.zip
+
 before_deploy:
     - dir dist
 deploy:
