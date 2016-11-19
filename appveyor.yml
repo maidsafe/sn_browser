@@ -18,7 +18,7 @@ install:
   - npm --version
   - npm install npm@next -g
   - npm install
-  - npm run rebuild:only
+  # - npm run rebuild:only
   - npm run build
 
 
@@ -34,9 +34,12 @@ build_script:
 after_build:
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - dir dist
-  - rename dist/win-unpacked dist/safe-browser-$(appveyor_repo_tag_name)-win
-  - 7z a dist/safe-browser-$(appveyor_repo_tag_name)-win 
-  - dir dist
+  - echo dist\safe-browser-%APPVEYOR_REPO_TAG_NAME%-win
+  - cd dist
+  - dir
+  - rename win-unpacked safe-browser-%APPVEYOR_REPO_TAG_NAME%-win
+  - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win.zip 
+  - dir
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
 
@@ -44,7 +47,8 @@ artifacts:
   - path: dist/*-win.zip
 
 before_deploy:
-    - dir dist
+    # - dir dist
+
 deploy:
   release: $(appveyor_repo_tag_name)
   tag: $(appveyor_repo_tag_name)
