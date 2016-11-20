@@ -6,6 +6,7 @@ import * as downloads from './downloads'
 import * as permissions from './permissions'
 import log from '../../log'
 import url from 'url'
+import electronLocalshortcut from 'electron-localshortcut';
 
 import store, { saveStore } from '../safe-storage/store';
 
@@ -73,6 +74,12 @@ export function createShellWindow () {
           callback({ cancel: true })
           
         }
+    });
+    
+    //extra shortcuts outside of menus
+    electronLocalshortcut.register(win, 'Alt+D', () => 
+    {
+        if (win) win.webContents.send('command', 'file:open-location')
     });
   
     
