@@ -73,9 +73,9 @@ function render () {
       <div class="ll-heading">
         Favorites
         <small class="ll-heading-right">
-          <a href="https://community.beakerbrowser.com/" title="Feedback and Discussion"><span class="icon icon-megaphone"></span> Feedback & Discussion</a>
-          <a href="https://github.com/pfrazee/beaker/issues" title="Report Bug"><span class="icon icon-attention"></span> Report Bug</a>
-          <a href="https://beakerbrowser.com/docs/" title="Get Help"><span class="icon icon-lifebuoy"></span> Help</a>
+          <a href="https://forum.safedev.org/t/safe-browser-feedback/174" title="Feedback and Discussion"><span class="icon icon-megaphone"></span> Feedback & Discussion</a>
+          <a href="https://github.com/joshuef/beaker/issues" title="Report Bug"><span class="icon icon-attention"></span> Report Bug</a>
+          <a href="https://github.com/joshuef/beaker" title="Get Help"><span class="icon icon-lifebuoy"></span> Help</a>
         </small>
       </div>
       ${bookmarks.map(renderRow)}
