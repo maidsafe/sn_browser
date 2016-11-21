@@ -86,7 +86,7 @@ export function createShellWindow () {
     store.subscribe( e => 
     {        
         saveStore();    
-        win.webContents.send('safeStore-updated', 'boom');
+        win.webContents.send('safeStore-updated');
 
     })
 

@@ -59,18 +59,25 @@ app.on('ready', function () {
     let token = auth.authorise( safeBrowserApp ).then( tok =>
 	{    
         store.dispatch( updateSettings( { 'authSuccess': true } ) );
+        store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
+        store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
 
         getStore( tok.token )
             .then( json =>
             {            
-                store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
                 reStore( json );
                 
-                store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
             })
             .catch( err => 
             {
-                store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + JSON.stringify( err )  } ) );
+                if( err.status === 404)
+                {
+                    store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.'  } ) );
+                }
+                else {
+                    
+                    store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) );
+                }
             })
 
 	})

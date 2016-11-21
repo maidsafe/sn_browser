@@ -91,7 +91,7 @@ const save = ( ) =>
         }
 }
 
-export const saveStore = _.debounce( save, 200 );
+export const saveStore = _.debounce( save, 500 );
 
 
 
