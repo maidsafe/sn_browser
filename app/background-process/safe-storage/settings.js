@@ -97,7 +97,7 @@ export function reauthenticateSAFE () {
 		store.dispatch( updateSettings( { 'authSuccess': true } ) );
 
 		store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
-		store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
+		store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) );
 
 	} )
 	// .catch( handleAuthError );

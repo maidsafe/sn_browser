@@ -3,23 +3,20 @@
   padding: 12px 10px 6px;
   font-weight: bold;
   color: #555;
-  text-transform: uppercase;
   border-bottom: 1px solid #ccc;
 
-  small {
-    text-transform: none;
+  small, .dropdown-btn-list {
     font-weight: normal;
   }
   .btn {
     position: relative;
     top: -2px;
     padding: 0px 10px 1px;
-    margin-left: 8px;
     font-weight: normal;
     font-size: 11px;
     line-height: 16px;
-    color: #777;
   }
+  .ll-heading-group,
   .btn-group {
     margin-left: 8px;
   }
@@ -43,7 +40,7 @@
     display: flex;
     color: #555;
     text-decoration: none;
-      
+
     .btn {
       padding: 0 8px;
     }
@@ -108,13 +105,28 @@
       padding-right: 0;
       color: #999;
     }
-    .ll-size {
+    .ll-progressbar {
       flex: 0 0 100px;
+      padding: 6px 8px;
+      progress {
+        width: 80px;
+        position: relative;
+        top: 3px;
+      }
+    }
+    .ll-progress {
+      padding: 6px 8px;
+      color: #999;
+      min-width: 45px;
+      text-align: right;
+    }
+    .ll-size {
+      flex: 0 0 90px;
       padding: 6px 8px;
       color: #999;
     }
     .ll-updated {
-      flex: 0 0 160px;
+      flex: 0 0 110px;
       padding: 6px 8px;
       color: #999;
       overflow: hidden;
@@ -122,9 +134,9 @@
       white-space: pre;
     }
     .ll-status {
-      flex: 0 0 80px;
       padding: 6px 8px;
       color: #999;
+      text-align: right;
     }
     .ll-serve {
       padding: 6px 0;
@@ -132,7 +144,7 @@
       text-align: right;
     }
     .ll-dropdown {
-      flex: 0 0 30px;
+      flex: 0 0 40px;
       padding: 6px 8px;
       color: #999;
     }
@@ -159,7 +171,6 @@
   }
 
   .ll-help {
-    text-align: center;
     margin: 10px;
     padding: 10px 26px 10px 0px;
     border-radius: 2px;

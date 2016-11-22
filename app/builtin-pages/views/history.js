@@ -5,6 +5,7 @@ This uses the beakerHistory API, which is exposed by webview-preload to all site
 import * as yo from 'yo-yo'
 import * as moment from 'moment'
 import { niceDate } from '../../lib/time'
+import { ucfirst } from '../../lib/strings'
 
 // globals
 // =
@@ -44,7 +45,7 @@ function fetchMore (cb) {
 
   isFetching = true
   beakerHistory.getVisitHistory({ offset: visits.length, limit: 100 }).then(rows => {
-      
+
     if (rows.length == 0)
       isAtEnd = true
     else
@@ -66,7 +67,7 @@ function render () {
     var oldLastDate = lastDate
     lastDate = moment(row.ts).endOf('day')
     if (!lastDate.isSame(oldLastDate, 'day')) {
-      rowEls.push(yo`<div class="ll-heading">${niceDate(lastDate, { noTime: true })}</div>`)
+      rowEls.push(yo`<div class="ll-heading">${ucfirst(niceDate(lastDate, { noTime: true }))}</div>`)
     }
 
     // render row

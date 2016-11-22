@@ -57,25 +57,25 @@ plugins.registerStandardSchemes()
 app.on('ready', function () {
 
     let token = auth.authorise( safeBrowserApp ).then( tok =>
-	{    
+	{
         store.dispatch( updateSettings( { 'authSuccess': true } ) );
         store.dispatch( updateSettings( { 'authToken' : tok.token } ) );
-        store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.' } ) );
+        store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) );
 
         getStore( tok.token )
             .then( json =>
-            {            
+            {
                 reStore( json );
-                
+
             })
-            .catch( err => 
+            .catch( err =>
             {
                 if( err.status === 404)
                 {
-                    store.dispatch( updateSettings( { 'authMessage': 'Authorised with launcher.'  } ) );
+                    store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher'  } ) );
                 }
                 else {
-                    
+
                     store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) );
                 }
             })
@@ -121,4 +121,3 @@ app.on('window-all-closed', function () {
 app.on('open-url', function (e, url) {
   openURL.open(url)
 })
-
