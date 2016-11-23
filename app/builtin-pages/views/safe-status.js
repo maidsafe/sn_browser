@@ -17,7 +17,7 @@ export function setup () {
 export function show () {
   document.title = 'SAFE Network Status'
 
-  
+
     co(function*() {
 
       authSuccess = authSuccess || false;
@@ -25,8 +25,8 @@ export function show () {
 
       render()
     })
-    
-    
+
+
   co(function*() {
 
     safeStatus = safeStatus || {};
@@ -49,14 +49,14 @@ function render () {
   var reAuthEl = ''
 
   if ( ! authSuccess ) {
-      reAuthEl = yo`<div class="ll-help">
-      <div class="icon icon-rocket" onclick=${onClickReAuth()} style="cursor: pointer;" >${reAuthMessage}</div>
+      reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer;">
+      <span class="icon icon-rocket"></span> ${reAuthMessage}
       </div>`
   }
-  
+
   if (safeStatus && safeStatus.length > 0 ) {
     statusEl = yo`<div class="ll-help">
-      <div class="icon icon-info-circled">${safeStatus}</div>
+      <span class="icon icon-info-circled"></span> ${safeStatus}
     </div>`
   }
 
@@ -81,7 +81,7 @@ function onClickReAuth (i) {
     e.stopPropagation()
 
     let check = beakerBrowser.reauthenticateSAFE( );
-    
+
     check.then( r => console.log( r ) )
         .catch( e => console.log( 'errors', e ))
   }

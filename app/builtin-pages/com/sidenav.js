@@ -1,6 +1,5 @@
 import * as yo from 'yo-yo'
 import co from 'co'
-import * as editSiteModal from '../com/modals/edit-site' 
 
 // globals
 // =
@@ -8,8 +7,8 @@ import * as editSiteModal from '../com/modals/edit-site'
 var navItems = [
   { href: 'beaker:start', label: 'SAFE Status', icon: 'rocket' },
   { href: 'beaker:favorites', label: 'Favorites', icon: 'star' },
+  { href: 'beaker:downloads', label: 'Downloads', icon: 'down-circled' },
   { href: 'beaker:history', label: 'History', icon: 'back-in-time' },
-  { href: 'beaker:downloads', label: 'Downloads', icon: 'install' },
   { href: 'beaker:settings', label: 'Settings', icon: 'list' }
 ]
 
@@ -41,8 +40,7 @@ export function update () {
 
 function render () {
   return yo`<nav class="nav-group">
-    <img class="logo" src="beaker:logo">
-    <a class="btn" onclick=${onClickShareFiles}>Share Files</a>
+    <img class="logo" src="beaker:logo" />
     ${navItems.map(renderNavItem)}
   </nav>`
 }
@@ -54,9 +52,9 @@ function renderNavItem (item) {
 
   // render items
   var { href, label, icon } = item
-  var isActive = window.location == href
-  return yo`<a class=${'nav-group-item' + (isActive?' active':'')} href=${href} onclick=${onClickNavItem(item)}>
-    <span class="icon icon-${icon}"></span> ${label}
+  var isActive = (''+window.location).startsWith(href)
+  return yo`<a class=${'nav-group-item' + (isActive?' active':'')} href=${href} title=${label} onclick=${onClickNavItem(item)}>
+    <span class="icon icon-${icon}"></span>
   </a>`
 }
 
@@ -66,8 +64,7 @@ function renderNavItem (item) {
 function onClickNavItem (item) {
   return e => {
     // ignore ctrl/cmd+click
-    if (e.metaKey)
-      return
+    if (e.metaKey) return
     e.preventDefault()
 
     if (window.location.protocol == 'beaker:' && item.href.startsWith('beaker:')) {
@@ -78,12 +75,4 @@ function onClickNavItem (item) {
       window.location = item.href
     }
   }
-}
-
-function onClickShareFiles (e) {
-  editSiteModal.create({}, { title: 'New Files Archive', onSubmit: opts => {
-    datInternalAPI.createNewArchive(opts).then(key => {
-      window.location = 'view-dat://' + key
-    })
-  }})
 }

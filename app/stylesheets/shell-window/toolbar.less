@@ -5,24 +5,13 @@ body.darwin #toolbar {
 }
 
 #toolbar {
-  height: 74px;
-  background: #ddd;
+  height: 75px;
+  background: #bbb;
 
   .toolbar-group {
     padding: 0 4px;
     display: flex;
     height: 28px;
-  }
-
-  .btn {
-    padding: 6px 8px 5px;
-    position: relative;
-    top: -3px;
-    color: gray;
-    
-    .icon {
-      margin-right: 3px;
-    }
   }
 }
 
@@ -44,9 +33,16 @@ body.darwin #toolbar {
 .window-blurred {
   // when the window isnt focused, lighten the toolbar
   #toolbar {
-    .toolbar-actions .form-control, .toolbar-input-group {
-      box-shadow: none;
+    background: #ddd;
+
+    .chrome-tabs .chrome-tab.chrome-tab-add-btn:before,
+    .chrome-tabs .chrome-tab.chrome-tab-add-btn:after,
+    .chrome-tabs .chrome-tab.chrome-tab-add-btn .chrome-tab-bg {
+      display: none;
     }
+
+    .toolbar-input-group .toolbar-site-info button .icon,
+    .toolbar-input-group .toolbar-site-info button .title,
     .toolbar-actions input {
       color: gray;
     }
