@@ -39,8 +39,8 @@ before_deploy:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv dist/mac/*.dmg dist/mac/safe-browser-${TRAVIS_TAG}-osx-x64.dmg; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv dist/linux-unpacked ./safe-browser-${TRAVIS_TAG}-linux-x64; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r ./safe-browser-${TRAVIS_TAG}-linux-x64.zip dist/safe-browser-${TRAVIS_TAG}-linux-x64; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rm -rf ,/safe-browser-${TRAVIS_TAG}-linux-x64; fi # remove folder to not try and deploy it
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r ./safe-browser-${TRAVIS_TAG}-linux-x64.zip ./safe-browser-${TRAVIS_TAG}-linux-x64; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rm -rf ./safe-browser-${TRAVIS_TAG}-linux-x64; fi # remove folder to not try and deploy it
   - ls
   - ls dist
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safe*"; fi
