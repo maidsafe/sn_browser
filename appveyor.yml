@@ -37,8 +37,8 @@ after_build:
   - echo dist\safe-browser-%APPVEYOR_REPO_TAG_NAME%-win
   - cd dist
   - dir
-  - rename win-unpacked safe-browser-%APPVEYOR_REPO_TAG_NAME%-win
-  - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win.zip 
+  - rename win-unpacked safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64
+  - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip 
   - dir
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%

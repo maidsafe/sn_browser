@@ -101,7 +101,7 @@
     "release": "build -m -l -w -p never",
     "release:mac": "build -m -p never",
     "release:linux": "build -l -p never",
-    "release:windows": "build -w -p never",
+    "release:windows": "build -w -p never --x64",
     "start": "gulp start",
     "watch": "gulp start-watch"
   },
