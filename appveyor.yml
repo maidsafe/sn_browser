@@ -44,7 +44,7 @@ after_build:
   - echo %APPVEYOR_REPO_TAG_NAME%
 
 artifacts: 
-  - path: dist/*-win.zip
+  - path: dist/*.zip
 
 before_deploy:
     # - dir dist
