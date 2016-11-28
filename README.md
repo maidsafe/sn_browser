@@ -1,23 +1,23 @@
 # SAFEr Browser
 
-SAFEr is a browser designed to open safe:// websites on The SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
+> SAFEr is a browser designed to open safe:// websites on The SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
 
 For more information about The SAFE Network please visit the following links.
 
-https://safenetwork.org/
-https://safenetforum.org/
-https://safenetforum.org/t/safer-browser-s-proposal-donation-address-in-op/10336/247
-http://maidsafe.net/
+* https://safenetwork.org/
+* https://safenetforum.org/
+* https://safenetforum.org/t/safer-browser-s-proposal-donation-address-in-op/10336/247
+* http://maidsafe.net/
 
 SAFE Beaker Browser uses [safe-js](https://github.com/joshuef/safe-js) to interact with the safe launcher.
 
 You have three main APIs available to SAFE sites:
 
-- `window.safeAuth`;
-- `window.safeNFS`;
-- `window.safeDNS`;
+* `window.safeAuth`;
+* `window.safeNFS`;
+* `window.safeDNS`;
 
-Each of these is a mapping to safejs functions, which (currently limited) documentation, you can find (here)[https://github.com/joshuef/safe-js)];
+Each of these is a mapping to safejs functions, which (currently limited) documentation, you can find [here](https://github.com/joshuef/safe-js);
 
 
 ## Development Install Instructions:
@@ -32,13 +32,13 @@ Each of these is a mapping to safejs functions, which (currently limited) docume
 
  5. https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux
 
- 6. Install node js requires the latest version of node js Check to see what the latest version is here https://nodejs.org/en/download/
+ 6. Install node js requires the latest version of node js Check to see what the latest version is [here](https://nodejs.org/en/download/)
 
- Use option one make sure to install the latest version http://www.hostingadvice.com/how-to/install-nodejs-ubuntu-14-04/#node-version-manager
+ Use option one make sure to install the [latest version](http://www.hostingadvice.com/how-to/install-nodejs-ubuntu-14-04/#node-version-manager)
 
  7. Open Terminal
 
- ```
+ ``` shell
  $ git clone https://github.com/joshuef/beaker.git
  $ cd beaker
  $ git checkout SafePOC
@@ -49,15 +49,15 @@ Each of these is a mapping to safejs functions, which (currently limited) docume
 
  8. Any time you want to run the browser again all you have to do is open terminal
 
- ```
+ ``` shell
  $ cd beaker
  $ npm start
 
  ```
 
- Note 01: If you want to do a fresh install. Delete the beaker folder and start at Step 07:
+ *Note 01: If you want to do a fresh install. Delete the beaker folder and start at Step 07:*
 
- Note 02: Do not worry about any errors that appear.
+ *Note 02: Do not worry about any errors that appear.*
 
 ### Updating
  If you pull latest from the repo and get weird module errors, do:
@@ -76,4 +76,4 @@ Each of these is a mapping to safejs functions, which (currently limited) docume
 
 SAFE Beaker Browser is a lightly modified fork of the [decentralized beaker browser](https://www.beakerbrowser.net/).
 
-Modified MIT as per the (BeakerLicense)(https://github.com/joshuef/beaker/blob/master/BEAKER_LICENSE.md)
+Modified MIT as per the [BeakerLicense](https://github.com/joshuef/beaker/blob/master/BEAKER_LICENSE.md)
