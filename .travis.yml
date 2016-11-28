@@ -41,7 +41,7 @@ before_deploy:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv dist/linux-unpacked dist/safe-browser-${TRAVIS_TAG}-linux-x64; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd dist && zip -r ./safe-browser-${TRAVIS_TAG}-linux-x64.zip ./safe-browser-${TRAVIS_TAG}-linux-x64; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv *.freebsd safe-browser-${TRAVIS_TAG}-x64.freebsd; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv *.AppImage safe-browser-${TRAVIS_TAG}-x86_64.AppImage; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv *.AppImage safe-browser-${TRAVIS_TAG}-x64.AppImage; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rm -rf ./safe-browser-${TRAVIS_TAG}-linux-x64; fi # remove folder to not try and deploy it
   - ls
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="safe*"; fi
