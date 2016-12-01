@@ -6,9 +6,9 @@ import * as downloads from './downloads'
 import * as permissions from './permissions'
 import log from '../../log'
 import url from 'url'
-import electronLocalshortcut from 'electron-localshortcut';
+import electronLocalshortcut from 'electron-localshortcut'
 
-import store, { saveStore } from '../safe-storage/store';
+import store, { saveStore } from '../safe-storage/store'
 
 // globals
 // =
@@ -56,17 +56,17 @@ export function createShellWindow () {
     }
     win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) => 
     {
-        const parsedUrl = url.parse(details.url);
+        const parsedUrl = url.parse(details.url)
         
         if( typeof(win.webContents.isSafe) === 'undefined' )
         {
-            win.webContents.isSafe = true;
+            win.webContents.isSafe = true
         }
        
         if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
         {
             callback({})
-            return;
+            return
         }
             
         if( details.url.indexOf('http') > -1 )
@@ -74,19 +74,19 @@ export function createShellWindow () {
           callback({ cancel: true })
           
         }
-    });
+    })
     
     //extra shortcuts outside of menus
     electronLocalshortcut.register(win, 'Alt+D', () => 
     {
         if (win) win.webContents.send('command', 'file:open-location')
-    });
+    })
   
     
     store.subscribe( e => 
     {        
         saveStore();    
-        win.webContents.send('safeStore-updated');
+        win.webContents.send('safeStore-updated')
 
     })
 

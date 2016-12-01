@@ -24,7 +24,6 @@
     "pretty-bytes": "^3.0.1",
     "redux": "^3.6.0",
     "redux-actions": "^0.13.0",
-    "redux-electron-store": "^0.3.13",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",
     "remarkable": "^1.6.2",

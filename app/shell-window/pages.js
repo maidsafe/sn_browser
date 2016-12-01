@@ -7,8 +7,7 @@ import * as promptbar from './ui/promptbar'
 import * as statusBar from './ui/statusbar'
 import { urlToData } from '../lib/fg/img'
 import errorPage from '../lib/error-page'
-import _ from 'lodash';
-// import store from '../background-process/safe-storage/store/safe-store';
+import _ from 'lodash'
 
 // constants
 // =

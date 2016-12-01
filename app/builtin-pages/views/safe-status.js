@@ -6,9 +6,9 @@ import * as yo from 'yo-yo'
 import co from 'co'
 
 // safeStatus, cached in memory
-var safeStatus = {};
-var reAuthMessage = 'Reauthorise with SAFE Launcher';
-var authSuccess = false;
+var safeStatus = {}
+var reAuthMessage = 'Reauthorise with SAFE Launcher'
+var authSuccess = false
 export function setup () {
 
 
@@ -20,8 +20,8 @@ export function show () {
 
     co(function*() {
 
-      authSuccess = authSuccess || false;
-      authSuccess = yield beakerBrowser.getSetting( 'authSuccess' );
+      authSuccess = authSuccess || false
+      authSuccess = yield beakerBrowser.getSetting( 'authSuccess' )
 
       render()
     })
@@ -29,8 +29,8 @@ export function show () {
 
   co(function*() {
 
-    safeStatus = safeStatus || {};
-    safeStatus = yield beakerBrowser.getSetting( 'authMessage' );
+    safeStatus = safeStatus || {}
+    safeStatus = yield beakerBrowser.getSetting( 'authMessage' )
 
     render()
   })
@@ -49,7 +49,7 @@ function render () {
   var reAuthEl = ''
 
   if ( ! authSuccess ) {
-      reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer;">
+      reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer">
       <span class="icon icon-rocket"></span> ${reAuthMessage}
       </div>`
   }
@@ -80,7 +80,7 @@ function onClickReAuth (i) {
     e.preventDefault()
     e.stopPropagation()
 
-    let check = beakerBrowser.reauthenticateSAFE( );
+    let check = beakerBrowser.reauthenticateSAFE( )
 
     check.then( r => console.log( r ) )
         .catch( e => console.log( 'errors', e ))
