@@ -17,7 +17,7 @@ You have three main APIs available to SAFE sites:
 * `window.safeNFS`;
 * `window.safeDNS`;
 
-Each of these is a mapping to safejs functions, which (currently limited) documentation, you can find [here](https://github.com/joshuef/safe-js);
+Each of these is a mapping to safejs functions, which you can find [here](https://github.com/joshuef/beaker/blob/master/doc/SAFE-setup.md);
 
 
 ## Development Install Instructions:

@@ -1,10 +1,14 @@
 {
   "name": "safe-browser",
-  "productName": "safe-browser",
+  "productName": "Safe Browser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
   "homepage": "https://github.com/joshuef/beaker",
-  "version": "0.4.2",
-  "author": "Josh Wilson <joshuef@gmail.com>",
+  "version": "0.4.3",
+  "author": {
+      "name" : "Josh Wilson",
+      "email" : "joshuef@gmail.com",
+      "url" :"https://github.com/joshuef"
+  },
   "main": "background-process.build.js",
   "dependencies": {
     "beaker-plugin-safe": "0.2.3",

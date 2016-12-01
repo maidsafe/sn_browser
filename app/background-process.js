@@ -12,8 +12,6 @@ import store, { getStore, reStore, saveStore, handleAuthError } from './backgrou
 // set setting does not trigger save
 import { updateSettings } from './background-process/safe-storage/settings'
 
-
-
 import * as beakerBrowser from './background-process/browser'
 import * as plugins from './background-process/plugins'
 import * as webAPIs from './background-process/web-apis'
@@ -33,15 +31,17 @@ import * as beakerFaviconProtocol from './background-process/protocols/beaker-fa
 import * as openURL from './background-process/open-url'
 
 import { auth } from 'safe-js'
+// import packageJson from './package.json'
+var packageJson = require( './package.json' );
 
+console.log( "packagejson" );
 
 const safeBrowserApp =
 {
-    //TODO: pull from package.json
-    name: "SafeBrowser",
-    id: "safe-browser",
-    version: "0.4.0",
-    vendor: "josh.wilson",
+    name: packageJson.name,
+    id: packageJson.name,
+    version: packageJson.version,
+    vendor: packageJson.author.name,
     permissions : [ "SAFE_DRIVE_ACCESS"]
 };
 
