@@ -152,11 +152,11 @@ export const handleAuthError = ( err ) =>
 		store.dispatch( updateSettings( { 'authMessage': 'SAFE Launcher does not appear to be open.' } ) )
         return
     }
-    else if( err === 'Unauthorized' )
+    else if( err.statusText === 'Unauthorized' )
     {
 		store.dispatch( updateSettings( { 'authMessage':'The browser failed to authorise with the SAFE launcher.' } ) )
         return
     }
     
-    store.dispatch( updateSettings( { 'authMessage': '' + err } ) )
+    store.dispatch( updateSettings( { 'authMessage': '' + JSON.stringify( err ) } ) )
 }
