@@ -41,7 +41,6 @@ Each of these is a mapping to safejs functions, which you can find [here](https:
  ``` shell
  $ git clone https://github.com/joshuef/beaker.git
  $ cd beaker
- $ git checkout SafePOC
  $ npm install
  $ npm run rebuild
  $ npm start
