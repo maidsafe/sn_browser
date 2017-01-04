@@ -183,7 +183,7 @@ var windowMenu = {
     },
     {
       label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
+      accelerator: 'CmdOrCtrl+Q',
       role: 'close'
     },
     {
