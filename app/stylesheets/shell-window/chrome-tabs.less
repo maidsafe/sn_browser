@@ -1,0 +1,189 @@
+.chrome-tabs-shell {
+  position: relative;
+  padding: 0 18px 0 0px;
+  height: 36px;
+  border-bottom: 1px solid #999;
+}
+
+.chrome-tabs {
+  position: relative;
+
+  * {
+    -webkit-user-select: none;
+    cursor: default;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 13px;
+  }
+
+  .chrome-tab {
+    position: absolute;
+    top: 7px;
+    height: 29px;
+    width: 52px;
+    z-index: 1;
+    -webkit-app-region: no-drag;
+    transition: .1s transform;
+
+    // before, after, and .chrome-tab-bg comprise the tab visuals
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      top: -56px;
+      bottom: 0;
+      width: 15px;
+      z-index: -1;
+      border: 1px solid #a0a0a0;
+      border-top-color: #888;
+      border-bottom-color: #aaa;
+      background: #ddd;
+      transform: perspective(5px) rotateX(7deg);
+      transition: 0.2s background;
+    }
+    &:before {
+      left: 0;
+      transform-origin: bottom right;
+      border-right: 0;
+    }
+    &:after {
+      right: 0;
+      transform-origin: bottom left;
+      border-left: 0;
+    }
+    .chrome-tab-bg {
+      background: #ddd;
+      position: absolute;
+      left: 11px;
+      top: 0px;
+      right: 11px;
+      bottom: 1px;
+      z-index: -1;
+      border-top: 1px solid #aaa;
+      transition: 0.2s background;
+    }
+
+    .chrome-tab-favicon {
+      width: 16px;
+      height: 23px;
+      text-align: center;
+      background-size: 16px;
+      position: absolute;
+      left: 15px;
+      top: 7px;
+      z-index: 3;
+
+      img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    .spinner {
+      position: relative;
+      left: 1px;
+      top: 1px;
+    }
+    &.chrome-tab-pinned {
+      .chrome-tab-favicon {
+        left: 20px;
+      }
+    }
+
+    .chrome-tab-title {
+      color: #222222;
+      padding: 9px 26px 5px 36px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &.chrome-tab-nofavicon .chrome-tab-title {
+      padding-left: 16px;
+    }
+
+    .chrome-tab-close {
+      display: none;
+      position: absolute;
+      right: 14px;
+      top: 8px;
+      width: 15px;
+      height: 15px;
+      z-index: 2;
+      border-radius: 8px;
+
+      &:before {
+        content: "\00D7";
+        position: absolute;
+        top: 1px;
+        right: 3px;
+        font-size: 12px;
+        line-height: 12px;
+        color: #777777;
+      }
+      &:hover:before,
+      &:active:before {
+        color: white;
+      }
+      &:hover,
+      &:active {
+        background: #f17469;
+      }
+      &:active:before {
+      }
+    }
+
+    &:hover {
+      &:before, &:after, .chrome-tab-bg {
+        background-color: #f0f0f0;
+      }
+      .chrome-tab-close {
+        display: block;
+      }
+    }
+
+    &.chrome-tab-dragging {
+      transition: none !important;
+    }
+
+    &.chrome-tab-current {
+      border: 0;
+      &:before, &:after, .chrome-tab-bg {
+        border-bottom: none;
+        background-color: #f5f5f5;
+      }
+      .chrome-tab-bg {
+        bottom: 0;
+      }
+    }
+
+    &.chrome-tab-add-btn {
+      &:before, &:after, .chrome-tab-bg {
+        bottom: 1px;
+        background: #bbb;
+        border-color: transparent;
+      }
+
+      .chrome-tab-favicon {
+        top: 6px;
+        padding: 0 6px;
+      }
+      .icon {
+        font-size: 17px;
+        line-height: 15px;
+        color: #666;
+      }
+
+      &:hover {
+        &:before, &:after, .chrome-tab-bg {
+          background: #d6d5d5;
+        }
+        .icon {
+          color: #444;
+        }
+      }
+    }
+  }
+}
+
+// make room for the traffic lights
+.darwin:not(.fullscreen) .chrome-tabs {
+  padding-left: 75px;
+}

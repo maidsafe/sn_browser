@@ -1,0 +1,45 @@
+{
+  "name": "safe-browser",
+  "productName": "SAFE Browser",
+  "description": "A browser for the SAFE Network, powered by Beaker.",
+  "homepage": "https://github.com/joshuef/beaker",
+  "version": "0.4.3",
+  "author": {
+      "name" : "Josh Wilson",
+      "email" : "joshuef@gmail.com",
+      "url" :"https://github.com/joshuef"
+  },
+  "main": "background-process.build.js",
+  "dependencies": {
+    "beaker-plugin-safe": "0.2.3",
+    "browser-es-module-loader": "^0.1.6",
+    "co": "^4.6.0",
+    "electron-localshortcut": "^0.6.0",
+    "emit-stream": "^0.1.2",
+    "fs-jetpack": "^0.9.0",
+    "function-queue": "0.0.12",
+    "global-modules": "^0.2.3",
+    "immutable": "^3.8.1",
+    "loglevel": "^1.4.1",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.13.0",
+    "multicb": "^1.2.1",
+    "pauls-electron-rpc": "~2.0.0",
+    "pretty-bytes": "^3.0.1",
+    "redux": "^3.6.0",
+    "redux-actions": "^0.13.0",
+    "redux-promise": "^0.5.3",
+    "redux-thunk": "^2.1.0",
+    "remarkable": "^1.6.2",
+    "safe-js": "^0.3.3",
+    "speedometer": "^1.0.0",
+    "unused-filename": "^0.1.0",
+    "yo-yo": "^1.2.1",
+    "zerr": "^1.0.4"
+  },
+  "devDependencies": {
+    "lodash": "^4.16.6",
+    "redux-logger": "^2.7.0",
+    "redux-node-logger": "^0.1.0"
+  }
+}

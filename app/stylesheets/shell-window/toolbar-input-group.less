@@ -1,0 +1,146 @@
+.toolbar-input-group {
+  flex: 1;
+  display: flex;
+  position: relative; // for the :after el, and autocomplete dropdown, to position off of
+  height: 29px;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  font-size: 14px;
+  -webkit-app-region: no-drag;
+  background: #fff;
+  margin: 0 2px 0 5px;
+
+  input[type=text] {
+    flex: 1;
+    padding: 1px 0 1px 10px;
+
+    border: 0;
+    background: transparent;
+    cursor: text;
+
+    &:focus {
+      outline: 0;
+      background: #fff;
+      color: #555;
+    }
+
+    &.nav-find-input {
+      border-left: 1px solid #bbb;
+    }
+  }
+
+  button {
+    background: none;
+    font-size: 17px;
+    line-height: 1.1;
+
+    border: 0;
+    border-left: 1px solid #ccc;
+    border-radius: 0;
+
+    padding: 4px 8px;
+    min-width: 34px;
+    color: #999;
+
+    &:disabled {
+      color: #ddd !important;
+      background: rgba(0,0,0,0.05);
+    }
+
+    &:focus {
+      outline: 0;
+    }
+
+    &:last-child {
+      // give a little more room on the right
+      min-width: 32px;
+    }
+
+    // navbar btn styles
+    &.nav-bookmark-btn {
+      color: transparent;
+      -webkit-text-stroke: 1px #aaa;
+      font-size: 13px;
+      padding-bottom: 6px;
+      &.active {
+        color: #FFBC00;
+        -webkit-text-stroke: 1px #EAAE05;
+      }
+      &:disabled {
+        -webkit-text-stroke: 1px #ccc;
+      }
+    }
+
+    &.green {
+      color: #555;
+      padding: 4px 3px 4px 9px;
+      border: 0;
+      min-width: 0;
+      .icon {
+        font-size: 14px;
+      }
+      .icon-lock {
+        color: #129a12;
+      }
+      .icon-share {
+        color: #016fde;
+      }
+    }
+  }
+
+  .autocomplete-dropdown {
+    position: absolute;
+    left: -1px;
+    width: 100%;
+    top: 28px;
+    background: #fff;
+    z-index: 2;
+    border: 1px solid #ddd;
+    border-top: 0;
+    padding-bottom: 3px;
+    box-sizing: content-box;
+
+    .result {
+      padding: 2px 10px;
+      font-size: 15px;
+      display: flex;
+      .icon {
+        margin-right: 10px;
+        width: 15px;
+        display: inline-block;
+        text-align: center;
+        &.icon-search {
+          font-size: 17px;
+        }
+      }
+      .result-url {
+        color: #397EEF;
+
+        // set a width limit
+        display: inline-block;
+        max-width: 40%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
+        white-space: pre;
+      }
+      .result-title {
+        margin-left: 2px;
+        color: gray;
+        white-space: pre;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:before {
+          content: '-';
+          margin-right: 5px;
+        }
+      }
+      &.selected {
+        background: lightgoldenrodyellow;
+      }
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+}

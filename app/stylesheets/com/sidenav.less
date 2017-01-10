@@ -1,0 +1,53 @@
+#el-sidenav {
+  width: 60px;
+  background: #fafafa;
+  border-right: 1px solid #ccc;
+  padding-top: 5px;
+  overflow: visible;
+
+  .logo {
+    width: 40px;
+    margin: 2px 0 3px 10px;
+  }
+
+  .nav-group-item {
+    padding: 14px 14px 12px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    .icon {
+      display: block;
+      position: relative;
+      cursor: pointer;
+      color: #666;
+      width: 32px;
+      height: auto;
+      float: none;
+      font-size: 24px;
+      text-align: center;
+
+      &.icon-star {
+        font-size: 22px;
+      }
+      &.icon-window {
+        font-size: 20px;
+      }
+      &.icon-folder {
+        font-size: 20px;
+      }
+      &.icon-back-in-time {
+        left: -1px;
+      }
+      &.icon-down-circled {
+        font-size: 23px;
+        left: 0.5px;
+      }
+    }
+
+    &.active {
+      background: #fff;
+      width: 60px;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+}

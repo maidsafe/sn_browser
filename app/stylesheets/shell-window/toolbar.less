@@ -1,0 +1,50 @@
+// draggable region for OSX
+body.darwin #toolbar {
+  display: block;
+  -webkit-app-region: drag;
+}
+
+#toolbar {
+  height: 75px;
+  background: #bbb;
+
+  .toolbar-group {
+    padding: 0 4px;
+    display: flex;
+    height: 28px;
+  }
+}
+
+.download-started-animation {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-size: 32px;
+  background: rgba(0,0,0,.75);
+  color: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+
+  a {
+    color: #0091ff;
+  }
+}
+
+.window-blurred {
+  // when the window isnt focused, lighten the toolbar
+  #toolbar {
+    background: #ddd;
+
+    .chrome-tabs .chrome-tab.chrome-tab-add-btn:before,
+    .chrome-tabs .chrome-tab.chrome-tab-add-btn:after,
+    .chrome-tabs .chrome-tab.chrome-tab-add-btn .chrome-tab-bg {
+      display: none;
+    }
+
+    .toolbar-input-group .toolbar-site-info button .icon,
+    .toolbar-input-group .toolbar-site-info button .title,
+    .toolbar-actions input {
+      color: gray;
+    }
+  }
+}
