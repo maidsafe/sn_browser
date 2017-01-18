@@ -405,27 +405,27 @@ export function changeActiveTo (index) {
 // }
 
 
-export function toggleSafe ( )
-{
-    var webContents = remote.getCurrentWindow().webContents;
+// export function toggleSafe ( )
+// {
+//     var webContents = remote.getCurrentWindow().webContents;
         
-    if( typeof(webContents.isSafe) === 'undefined' )
-    {
-        webContents.isSafe = true;
-    }
+//     if( typeof(webContents.isSafe) === 'undefined' )
+//     {
+//         webContents.isSafe = true;
+//     }
     
-    webContents.isSafe = ! webContents.isSafe;
+//     webContents.isSafe = ! webContents.isSafe;
 
-    let pages = getAll();
+//     let pages = getAll();
     
-    pages.forEach( page => 
-    {
-        // if (page)
-        page.reload()    
+//     pages.forEach( page => 
+//     {
+//         // if (page)
+//         page.reload()    
         
-    })
+//     })
 
-}
+// }
 
 export function toggleWebSecurity( )
 {

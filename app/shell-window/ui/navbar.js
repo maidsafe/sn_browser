@@ -231,12 +231,12 @@ function render (id, page) {
   
   var webContents = remote.getCurrentWindow().webContents;
   
-  var isSafe = webContents.isSafe;
+  // var isSafe = webContents.isSafe;
   
-  if( typeof isSafe === 'undefined' )
-  {
-      isSafe = true;
-  }
+  // if( typeof isSafe === 'undefined' )
+  // {
+  //     isSafe = true;
+  // }
 
   // back/forward should be disabled if its not possible go back/forward
   var backDisabled = (page && page.canGoBack()) ? '' : 'disabled'
@@ -415,10 +415,10 @@ function handleAutocompleteSearch (results) {
   if (isProbablyUrl && !v.includes('://') && !(v.startsWith('beaker:') || v.startsWith('ipfs:/'))) {
     if (isHashRegex.test(v))
       vWithProtocol = 'dat://'+v
-    else {
-      vWithProtocol = 'safe://'+v
-      isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
-    }
+    // else {
+    //   vWithProtocol = 'safe://'+v
+    //   isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
+    // }
   }
 
   // set the top results accordingly
@@ -551,10 +551,10 @@ function onClickReload (e) {
     page.reload()
 }
 
-export function onClickToggleSafe ( e )
-{
-    pages.toggleSafe();    
-}
+// export function onClickToggleSafe ( e )
+// {
+//     pages.toggleSafe();    
+// }
 
 function onClickOpenSafeAuthHome(e) {
   pages.setActive(pages.create(pages.SAFE_AUTH_DEFAULT_URL))
