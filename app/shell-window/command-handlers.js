@@ -30,7 +30,7 @@ export function setup () {
       case 'view:toggle-dev-tools':  return (page.isDevToolsOpened()) ? page.closeDevTools() : page.openDevTools()
       case 'history:back':           return page.goBack()
       case 'history:forward':        return page.goForward()
-      case 'window:toggle-safe-mode':  return pages.toggleSafe();
+      // case 'window:toggle-safe-mode':  return pages.toggleSafe();
       case 'window:disable-web-security':  return pages.toggleWebSecurity();
       case 'window:next-tab':        return pages.changeActiveBy(1)
       case 'window:prev-tab':        return pages.changeActiveBy(-1)
