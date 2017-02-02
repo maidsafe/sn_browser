@@ -1,4 +1,4 @@
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import * as pages from '../pages'
 import * as zoom from '../pages/zoom'
 import * as yo from 'yo-yo'
@@ -26,6 +26,48 @@ var sitePermsNavbarBtn = null
 var autocompleteCurrentValue = null
 var autocompleteCurrentSelection = 0
 var autocompleteResults = null // if set to an array, will render dropdown
+
+var isSafeAppAuthenticating = false
+var safeAuthNetworkState = -1
+var safeAuthData = null
+var safeAuthPopupDiv = yo`<div></div>`
+
+ipcRenderer.send('registerSafeNetworkListener');
+ipcRenderer.send('registerOnAuthReq');
+ipcRenderer.send('registerOnContainerReq');
+
+ipcRenderer.on('onNetworkStatus', function(event, status) {
+  console.log('Authenticator network state :: ', status)
+  safeAuthNetworkState = status
+  if (status === -1) {
+    hideSafeAuthPopup();
+  }
+  update()
+})
+
+ipcRenderer.on('onAuthReq', function(event, data) {
+  if (data) {
+    safeAuthData = data
+    showSafeAuthPopup()
+  }
+})
+
+ipcRenderer.on('onContainerReq', function(event, data) {
+  if (data) {
+    safeAuthData = data
+    showSafeAuthPopup(true)
+  }
+})
+
+ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  update()
+})
+
+ipcRenderer.on('onContDecisionRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  update()
+})
 
 // exported functions
 // =
@@ -83,7 +125,7 @@ export function clearAutocomplete () {
 
 export function update (page) {
   // fetch current page, if not given
-  page = page || pages.getActive()
+  page = pages.getActive()
 
   // render
   yo.update(page.navbarEl, render(page.id, page))
@@ -103,6 +145,103 @@ export function updateLocation (page) {
   }
 }
 
+export function handleSafeAuthAuthentication(url) {
+  ipcRenderer.send('decryptRequest', url)
+  clearAutocomplete()
+  if (safeAuthNetworkState === -1) {
+    onClickOpenSafeAuthHome()
+  }
+}
+
+function authDecision(isAllowed, isContainerReq) {
+  isSafeAppAuthenticating = true
+  update()
+  if (isContainerReq) {
+    ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
+    return
+  }
+  ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+}
+
+function onClickAllowBtn(e) {
+  hideSafeAuthPopup()
+  authDecision(true, (parseInt(e.target.dataset.type, 10) === 0))
+}
+
+function onClickDenyBtn(e) {
+  hideSafeAuthPopup()
+  authDecision(false, (parseInt(e.target.dataset.type, 10) === 0))
+}
+
+function hideSafeAuthPopup() {
+  yo.update(safeAuthPopupDiv, yo`<div></div>`)
+}
+
+function showSafeAuthPopup(isContainerReq) {
+  var arrToYo = function(arr) {
+    var getPermissionPhrase = function(perm) {
+      switch (perm) {
+        case 'Read':
+          return yo`<span>Allow application to <i>read</i> data</span>`;
+        case 'Insert':
+          return yo`<span>Allow application to <i>add new</i> data</span>`;
+        case 'Update':
+          return yo`<span>Allow application to <i>update</i> existing data</span>`;
+        case 'Delete':
+          return yo`<span>Allow application to <i>delete</i> data</span>`;
+        case 'ManagePermissions':
+          return yo`<span>Grant application <i>full control</i> of the container</span>`;
+      }
+    };
+
+    return arr.map(function(item) {
+      return yo`<li>${getPermissionPhrase(item)}</li>`;
+    })
+  }
+  var reqKey = isContainerReq ? 'contReq' : 'authReq';
+  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
+  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'requesting for authorisation.' : 'requesting access for the following contaniers';
+
+  var popupBase = yo`<div class="popup">
+      <div class="popup-base">
+        <div class="popup-title">Authorisation request</div>
+        <div class="popup-i">
+          <div class="popup-cnt">
+            <div class="popup-cnt-main">
+              <h3>${safeAuthData[reqKey].app.name}</h3>
+              <h4>${safeAuthData[reqKey].app.vendor}</h4>
+              <p>${contPara}</p>
+            </div>
+            <div class="popup-cnt-ls">
+              <span class="list">
+                ${
+                  safeAuthData[reqKey].containers.map(function(container) {
+                    if (typeof container.access === 'object') {
+                      return yo`<div class="list-i">
+                        <h3>${container.cont_name}</h3>
+                        <ul>
+                          ${arrToYo(container.access)}
+                        </ul>
+                      </div>`;
+                    }
+                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+                  })
+                }
+              </span>
+            </div>
+          </div>
+          <div class="popup-foot">
+            ${denyBtn}
+            ${allowBtn}
+          </div>
+        </div>
+      </div>
+  </div>`
+
+  yo.update(safeAuthPopupDiv, popupBase)
+}
+
 // internal helpers
 // =
 
@@ -111,12 +250,12 @@ function render (id, page) {
   
   var webContents = remote.getCurrentWindow().webContents;
   
-  var isSafe = webContents.isSafe;
+  // var isSafe = webContents.isSafe;
   
-  if( typeof isSafe === 'undefined' )
-  {
-      isSafe = true;
-  }
+  // if( typeof isSafe === 'undefined' )
+  // {
+  //     isSafe = true;
+  // }
 
   // back/forward should be disabled if its not possible go back/forward
   var backDisabled = (page && page.canGoBack()) ? '' : 'disabled'
@@ -131,15 +270,27 @@ function render (id, page) {
         <span class="icon icon-ccw"></span>
       </button>`
       
-      
-  // render safe btn
-  var safeBtn = (isSafe)
-    ? yo`<button class="toolbar-btn safe-btn-safe" onclick=${onClickToggleSafe}>
+  var safeNetworkStatusBtn = (isSafeAppAuthenticating) 
+    ? yo`<button class="toolbar-btn loading" onclick=${onClickOpenSafeAuthHome}>
+        <span class="icon icon-hourglass"></span>
+      </button>`
+    : yo`<button class="toolbar-btn ${(function() {
+      if (safeAuthNetworkState === 0) {
+        return 'connecting'
+      } else if (safeAuthNetworkState === 1) {
+        return 'connected'
+      } else if (safeAuthNetworkState === 2) {
+        return 'terminated'
+      }
+    })()}" onclick=${onClickOpenSafeAuthHome}>
         <span class="icon icon-rocket"></span>
-      </button>`
-    : yo`<button class="toolbar-btn safe-btn-not-safe" onclick=${onClickToggleSafe}>
-        <span class="icon icon-alert"></span>
-      </button>`
+      </button>` 
+
+  // render safe btn
+  var safeBtn = yo`<span class="safe-btn-safe">
+      ${safeNetworkStatusBtn}
+      ${safeAuthPopupDiv}
+      </span>`
 
   // `page` is null on initial render
   // and the toolbar should be hidden on initial render
@@ -283,10 +434,10 @@ function handleAutocompleteSearch (results) {
   if (isProbablyUrl && !v.includes('://') && !(v.startsWith('beaker:') || v.startsWith('ipfs:/'))) {
     if (isHashRegex.test(v))
       vWithProtocol = 'dat://'+v
-    else {
-      vWithProtocol = 'safe://'+v
-      isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
-    }
+    // else {
+    //   vWithProtocol = 'safe://'+v
+    //   isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
+    // }
   }
 
   // set the top results accordingly
@@ -419,9 +570,13 @@ function onClickReload (e) {
     page.reload()
 }
 
-export function onClickToggleSafe ( e )
-{
-    pages.toggleSafe();    
+// export function onClickToggleSafe ( e )
+// {
+//     pages.toggleSafe();    
+// }
+
+function onClickOpenSafeAuthHome(e) {
+  pages.setActive(pages.create(pages.SAFE_AUTH_DEFAULT_URL))
 }
 
 function onClickCancel (e) {
@@ -492,6 +647,14 @@ function onKeydownLocation (e) {
     var page = getEventPage(e)
     if (page) {
       var selection = getAutocompleteSelection()
+      // laod safeauth page
+      if (new URL(selection.url).protocol === pages.SAFE_AUTH_SCHEME) {
+        if (pages.handleSafeAuthScheme(selection.url)) {
+          e.target.blur()    
+          return
+        }
+      }
+
       page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }
