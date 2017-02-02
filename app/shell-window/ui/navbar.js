@@ -179,42 +179,61 @@ function hideSafeAuthPopup() {
 
 function showSafeAuthPopup(isContainerReq) {
   var arrToYo = function(arr) {
+    var getPermissionPhrase = function(perm) {
+      switch (perm) {
+        case 'Read':
+          return yo`<span>Allow application to <i>read</i> data</span>`;
+        case 'Insert':
+          return yo`<span>Allow application to <i>add new</i> data</span>`;
+        case 'Update':
+          return yo`<span>Allow application to <i>update</i> existing data</span>`;
+        case 'Delete':
+          return yo`<span>Allow application to <i>delete</i> data</span>`;
+        case 'ManagePermissions':
+          return yo`<span>Grant application <i>full control</i> of the container</span>`;
+      }
+    };
+
     return arr.map(function(item) {
-      return yo`<span class="list-inner-i">${item}</span>`;
+      return yo`<li>${getPermissionPhrase(item)}</li>`;
     })
   }
   var reqKey = isContainerReq ? 'contReq' : 'authReq';
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
-  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'requesting authorisation' : 'requesting access for following containers';
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'requesting for authorisation.' : 'requesting access for the following contaniers';
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
+        <div class="popup-title">Authorisation request</div>
         <div class="popup-i">
-          <div class="popup-title">Authorisation request</div>
           <div class="popup-cnt">
-            <div class="popup-cnt-i">
-              <b>${safeAuthData[reqKey].app.name}</b> by <b>${safeAuthData[reqKey].app.vendor}</b> ${contPara}
+            <div class="popup-cnt-main">
+              <h3>${safeAuthData[reqKey].app.name}</h3>
+              <h4>${safeAuthData[reqKey].app.vendor}</h4>
+              <p>${contPara}</p>
             </div>
-            <div class="popup-cnt-i">
+            <div class="popup-cnt-ls">
               <span class="list">
                 ${
                   safeAuthData[reqKey].containers.map(function(container) {
                     if (typeof container.access === 'object') {
                       return yo`<div class="list-i">
-                        <span class="list-title">${container.cont_name}</span>
-                        ${arrToYo(container.access)}
+                        <h3>${container.cont_name}</h3>
+                        <ul>
+                          ${arrToYo(container.access)}
+                        </ul>
                       </div>`;
                     }
-                    return yo`<div class="list-i"><span class="list-title">${container}</span></div>`;
+                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
                   })
                 }
               </span>
             </div>
           </div>
           <div class="popup-foot">
-            ${allowBtn}
             ${denyBtn}
+            ${allowBtn}
           </div>
         </div>
       </div>

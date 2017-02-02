@@ -101,72 +101,93 @@
         padding: 0;
         list-style: none;
         text-align: left;
-        .popup-i {
-          padding: 24px;
-          min-height: 200px;
+        .popup-title {
+          font-size: 15px;
+          line-height: 30px;
+          font-weight: 600;
           position: relative;
-          .popup-title {
-            font-size: 15px;
-            line-height: 30px;
-            padding-left: 40px;
-            padding-bottom: 16px;
-            font-weight: 600;
-            position: relative;
-            &:before {
-              content: "";
-              background-image: url(beaker:safe-auth-logo);
-              width: 30px;
-              height: 30px;
-              display: inline-block;
-              background-size: contain;
-              background-position: center;
-              background-repeat: no-repeat;
-              position: absolute;
-              top: 0;
-              left: 0;
-            }
+          padding: 12px 12px 12px 54px;
+          background-color: #EFEFEF;
+          &:before {
+            content: "";
+            background-image: url(beaker:safe-auth-logo);
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 12px;
+            left: 12px;
           }
+        }
+        .popup-i {
+          position: relative;
+          padding-top: 16px;
+          max-height: 250px;
+          overflow: auto;
           .popup-cnt {
-            margin-bottom: 30px;
-            .popup-cnt-i {
-              padding-bottom: 8px;
-              font-size: 14px;
-              .label {
-                font-weight: 600;
-                display: block;
+            min-height: 150px;
+            padding: 0 16px;
+            .popup-cnt-main {
+              padding-bottom: 12px;
+              h3 {
+                font-size: 20px;
+                font-weight: 500;
+                margin: 0;
+                padding: 0;
+              }
+              h4 {
+                font-size: 14px;
+                font-weight: 500;
                 opacity: 0.5;
+                margin: 0;
+                padding: 0;
               }
-              .value {
-                display: block;
+              p.p {
+                font-size: 14px;
+                opacity: 0.5;
+                padding: 24px 0 0;
+                display: inline-block;      
               }
+            }
+            .popup-cnt-ls {
+              font-size: 14px;
+              margin-bottom: 16px;
               .list {
-                display: block;
-                margin-bottom: 16px;
                 .list-i {
-                  margin-bottom: 8px;
-                  border-left: 3px solid #EEE;
+                  font-size: 16px;
+                  margin-bottom: 16px;
                   padding-left: 5px;
-                  .list-title {
-                    display: block;
+                  h3 {
+                    font-size: 16px;
+                    font-weight: 500;
                     line-height: 24px;
-                    font-weight: 600;
+                    margin: 0 0 5px;
+                    padding: 0;
                   }
-                  .list-inner-i {
-                    display: block;
-                    border-bottom: 1px dashed rgba(0,0,0,0.26);
-                    margin-left: 8px;
-                    margin-bottom: 8px;
-                    line-height: 30px;
+                  ul {
+                    margin: 0;
+                    font-size: 14px;
+                    opacity: 0.8;
+                    padding-left: 24px;
+                    li {
+                      line-height: 24px;
+                      i {
+                        opacity: 0.8;
+                      }
+                    }
                   }
                 }
+              }
+              &:last-child {
+                margin-bottom: 0;
               }
             }
           }
           .popup-foot {
             width: 100%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
             padding: 16px;
             text-align: right;
             button {
@@ -177,6 +198,7 @@
               outline: none;
               padding: 8px 16px;
               text-transform: uppercase;
+              border-radius: 3px;
               &:hover {
                 box-shadow: 0 1px 5px rgba(0,0,0,0.26);
               }
