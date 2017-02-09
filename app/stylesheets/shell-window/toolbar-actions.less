@@ -158,20 +158,28 @@
               .list {
                 .list-i {
                   font-size: 16px;
-                  margin-bottom: 16px;
-                  padding-left: 5px;
+                  &.show {
+                    ul {
+                      display: block;
+                    }
+                  }
                   h3 {
                     font-size: 16px;
                     font-weight: 500;
                     line-height: 24px;
                     margin: 0 0 5px;
                     padding: 0;
+                    cursor: pointer;
+                    &:hover {
+                      color: #5592d7;
+                    }
                   }
                   ul {
-                    margin: 0;
+                    margin: 0 0 16px;
                     font-size: 14px;
                     opacity: 0.8;
                     padding-left: 24px;
+                    display: none;
                     li {
                       line-height: 24px;
                       i {

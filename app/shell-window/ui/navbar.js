@@ -218,7 +218,7 @@ function showSafeAuthPopup(isContainerReq) {
                 ${
                   safeAuthData[reqKey].containers.map(function(container) {
                     if (typeof container.access === 'object') {
-                      return yo`<div class="list-i">
+                      return yo`<div class="list-i" onclick=${togglePermissions}>
                         <h3>${container.cont_name}</h3>
                         <ul>
                           ${arrToYo(container.access)}
@@ -568,6 +568,17 @@ function onClickReload (e) {
   var page = getEventPage(e)
   if (page)
     page.reload()
+}
+
+function togglePermissions(e) {
+  var targetNode = e.currentTarget;
+  if (!targetNode.classList.contains('list-i')) {
+    return;
+  }
+  if (targetNode.classList.contains('show')) {
+    return targetNode.classList.remove('show');
+  }
+  targetNode.classList.add('show');
 }
 
 // export function onClickToggleSafe ( e )
