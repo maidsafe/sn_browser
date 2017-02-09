@@ -71,4 +71,173 @@
       }
     }
   }
+  .safe-btn-safe {
+    position: relative;
+    .connected {
+      color: #5592d7;
+    }
+    .connecting {
+      transition: color 1s linear;
+      animation: safeConnecting 1s infinite;
+    }
+    .terminated {
+      color: #e26464;
+    }
+    .loading {
+      animation: safeLoading 1.5s infinite
+    }
+    > .popup {
+      position: absolute;
+      width: 400px;
+      z-index: 99;
+      background: white;
+      border: 1px solid #AAA;
+      top: 100%;
+      left: 0;
+      margin-top: 6px;
+      box-shadow: 0 1px 16px rgba(0, 0, 0, 0.26);
+      .popup-base {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        text-align: left;
+        .popup-title {
+          font-size: 15px;
+          line-height: 30px;
+          font-weight: 600;
+          position: relative;
+          padding: 12px 12px 12px 54px;
+          background-color: #EFEFEF;
+          &:before {
+            content: "";
+            background-image: url(beaker:safe-auth-logo);
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 12px;
+            left: 12px;
+          }
+        }
+        .popup-i {
+          position: relative;
+          padding-top: 16px;
+          max-height: 250px;
+          overflow: auto;
+          .popup-cnt {
+            min-height: 150px;
+            padding: 0 16px;
+            .popup-cnt-main {
+              padding-bottom: 12px;
+              h3 {
+                font-size: 20px;
+                font-weight: 500;
+                margin: 0;
+                padding: 0;
+              }
+              h4 {
+                font-size: 14px;
+                font-weight: 500;
+                opacity: 0.5;
+                margin: 0;
+                padding: 0;
+              }
+              p.p {
+                font-size: 14px;
+                opacity: 0.5;
+                padding: 24px 0 0;
+                display: inline-block;      
+              }
+            }
+            .popup-cnt-ls {
+              font-size: 14px;
+              margin-bottom: 16px;
+              .list {
+                .list-i {
+                  font-size: 16px;
+                  &.show {
+                    ul {
+                      display: block;
+                    }
+                  }
+                  h3 {
+                    font-size: 16px;
+                    font-weight: 500;
+                    line-height: 24px;
+                    margin: 0 0 5px;
+                    padding: 0;
+                    cursor: pointer;
+                    &:hover {
+                      color: #5592d7;
+                    }
+                  }
+                  ul {
+                    margin: 0 0 16px;
+                    font-size: 14px;
+                    opacity: 0.8;
+                    padding-left: 24px;
+                    display: none;
+                    li {
+                      line-height: 24px;
+                      i {
+                        opacity: 0.8;
+                      }
+                    }
+                  }
+                }
+              }
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+          }
+          .popup-foot {
+            width: 100%;
+            padding: 16px;
+            text-align: right;
+            button {
+              border: 0;
+              background: transparent;
+              font-size: 15px;
+              cursor: pointer;
+              outline: none;
+              padding: 8px 16px;
+              text-transform: uppercase;
+              border-radius: 3px;
+              &:hover {
+                box-shadow: 0 1px 5px rgba(0,0,0,0.26);
+              }
+              &.allow-btn {
+                color: #5592d7;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes safeLoading {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);  
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes safeConnecting {
+  0% {
+    color: #666666;
+  }
+  50% {
+    color: #5592d7;
+  }
 }

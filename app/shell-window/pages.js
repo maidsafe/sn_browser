@@ -18,6 +18,8 @@ const ERR_INSECURE_RESPONSE = -501
 
 let webSecurityDisabled = false;
 
+export const SAFE_AUTH_SCHEME = 'safe-auth:'
+export const SAFE_AUTH_DEFAULT_URL = `${SAFE_AUTH_SCHEME}//home`
 export const DEFAULT_URL = 'beaker:start'
 
 // globals
@@ -44,6 +46,48 @@ export function getPinned () {
   return pages.filter(p => p.isPinned)
 }
 
+export function parseSafeAuthUrl(url, isClient) {
+  var safeAuthUrl = {}
+  var parsedUrl = new URL(url)
+  
+  if (!(/^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test(parsedUrl.hostname))) {
+    return { action: 'auth' };
+  }
+
+  safeAuthUrl['protocol'] = parsedUrl.protocol
+  safeAuthUrl['action'] = parsedUrl.hostname
+
+  var data = parsedUrl.pathname.split('/')
+  if (!isClient) {
+    safeAuthUrl['appId'] = data[1]
+    safeAuthUrl['payload'] = data[2]
+  } else {
+    safeAuthUrl['appId'] = parsedUrl.protocol.split('-').slice(-1)[0]
+    safeAuthUrl['payload'] = data[1]
+  }
+  safeAuthUrl['search'] = parsedUrl.search
+  return safeAuthUrl
+}
+
+export function handleSafeAuthScheme(url) {
+  var parsedUrl = parseSafeAuthUrl(url);
+
+  if (parsedUrl.action === 'auth') {
+    navbar.handleSafeAuthAuthentication(url);
+    return activePage || pages[0];
+  }
+  var safeAuthPage = pages.filter(function(page) {
+    if (!page.getURL()) {
+      return
+    }
+    return new URL(page.getURL()).protocol === SAFE_AUTH_SCHEME
+  });
+  if (safeAuthPage.length > 0) {
+    setActive(safeAuthPage[0]);
+    return safeAuthPage[0];
+  }
+}
+
 export function create (opts) {
   var url
   if (opts && typeof opts == 'object') {
@@ -54,6 +98,14 @@ export function create (opts) {
   } else
     opts = {}
 
+  // handle safeauth protocol
+  if (url && (new URL(url).protocol === SAFE_AUTH_SCHEME)) {
+    var safeAuthPage = handleSafeAuthScheme(url);
+    if (safeAuthPage) {
+      return safeAuthPage;
+    }
+  }
+    
   // create page object
   var id = (Math.random()*1000|0) + Date.now()
   var page = {
@@ -353,27 +405,27 @@ export function changeActiveTo (index) {
 // }
 
 
-export function toggleSafe ( )
-{
-    var webContents = remote.getCurrentWindow().webContents;
+// export function toggleSafe ( )
+// {
+//     var webContents = remote.getCurrentWindow().webContents;
         
-    if( typeof(webContents.isSafe) === 'undefined' )
-    {
-        webContents.isSafe = true;
-    }
+//     if( typeof(webContents.isSafe) === 'undefined' )
+//     {
+//         webContents.isSafe = true;
+//     }
     
-    webContents.isSafe = ! webContents.isSafe;
+//     webContents.isSafe = ! webContents.isSafe;
 
-    let pages = getAll();
+//     let pages = getAll();
     
-    pages.forEach( page => 
-    {
-        // if (page)
-        page.reload()    
+//     pages.forEach( page => 
+//     {
+//         // if (page)
+//         page.reload()    
         
-    })
+//     })
 
-}
+// }
 
 export function toggleWebSecurity( )
 {
