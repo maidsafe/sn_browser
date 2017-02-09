@@ -15,7 +15,7 @@ export function setup () {
 }
 
 export function show () {
-  document.title = 'SAFE Network'
+  document.title = 'SAFE Network Status'
 
 
     co(function*() {
@@ -56,7 +56,7 @@ function render () {
 
   if (safeStatus && safeStatus.length > 0 ) {
     statusEl = yo`<div class="ll-help">
-      <span class="icon icon-info-circled"></span> Manage Applications Using Authenticator
+      <span class="icon icon-info-circled"></span> ${safeStatus}
     </div>`
   }
 
@@ -67,9 +67,7 @@ function render () {
 	SAFE Network
       </div>
       ${statusEl}
-      <div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer">
-        Click <span class="icon icon-rocket"></span> to open Authenticator</a>
-      </div>
+      ${reAuthEl}
     </div>
   </div>`)
 }
