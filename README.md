@@ -35,11 +35,16 @@ Each of these is a mapping to safejs functions, which you can find [here](https:
  $ git clone https://github.com/maidsafe/safe_browser.git
  $ cd safe_browser
  $ npm install
+ ```
+ 8. Build Authenticator plugin(https://github.com/maidsafe/beaker-plugin-safe-authenticator) as explained.
+
+ 9. Good to build.
+ ```
  $ npm run rebuild
  $ npm start
  ```
 
- 8. Any time you want to run the browser again all you have to do is open terminal
+ 9. Any time you want to run the browser again all you have to do is open terminal
 
  ``` shell
  $ cd safe_browser
