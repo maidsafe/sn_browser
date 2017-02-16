@@ -1,76 +1,62 @@
 # safe_browser
 
-> SAFE Browser Application is a browser designed to open safe:// websites on The SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
+> SAFE Browser is a browser designed to open safe:// websites on the SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
 
-SAFE Beaker Browser uses [safe-js](https://github.com/joshuef/safe-js) to interact with the safe launcher.
+## Development
 
-You have three main APIs available to SAFE sites:
+1. Make sure you have the latest version of Node.js.
 
-* `window.safeAuth`;
-* `window.safeNFS`;
-* `window.safeDNS`;
+  ```shell
+  node --version
+  ```
 
-Each of these is a mapping to safejs functions, which you can find [here](https://github.com/maidsafe/safe_browser/blob/master/doc/SAFE-setup.md);
+  There are many ways to install Node.js. See [nodejs.org](https://nodejs.org/en/download/) for more info.
 
+2. Clone this GitHub repository.
 
-## Development Install Instructions:
+  ```shell
+  git clone https://github.com/maidsafe/safe_browser.git
+  ```
 
- 1. Install Git https://help.ubuntu.com/lts/serverguide/git.html
+  If you don't have Git installed, you can download it from [git-scm.com](https://git-scm.com/downloads).
 
- 2. Sign up for https://github.com/
+3. Install the dependencies.
 
- 3. https://help.github.com/articles/set-up-git/#platform-linux
+  ``` shell
+  $ cd safe_browser
+  $ npm install
+  ```
 
- 4. https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux
+4. Build the SAFE Authenticator plugin as explained [here](https://github.com/maidsafe/beaker-plugin-safe-authenticator).
 
- 5. https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux
+5. Build SAFE Browser and open it.
 
- 6. Install node js requires the latest version of node js Check to see what the latest version is [here](https://nodejs.org/en/download/)
+  ```
+  $ npm run rebuild
+  $ npm start
+  ```
 
- Use option one make sure to install the [latest version](http://www.hostingadvice.com/how-to/install-nodejs-ubuntu-14-04/#node-version-manager)
+Any time you want to run SAFE Browser again, all you have to do is open a terminal and type this:
 
- 7. Open Terminal
-
- ``` shell
- $ git clone https://github.com/maidsafe/safe_browser.git
- $ cd safe_browser
- $ npm install
- ```
- 8. Build Authenticator plugin(https://github.com/maidsafe/beaker-plugin-safe-authenticator) as explained.
-
- 9. Good to build.
- ```
- $ npm run rebuild
- $ npm start
- ```
-
- 9. Any time you want to run the browser again all you have to do is open terminal
-
- ``` shell
- $ cd safe_browser
- $ npm start
-
- ```
-
- *Note 01: If you want to do a fresh install. Delete the beaker folder and start at Step 07:*
-
- *Note 02: Do not worry about any errors that appear.*
+``` shell
+$ cd safe_browser
+$ npm start
+```
 
 ### Updating
- If you pull latest from the repo and get weird module errors, do:
 
- ```
- npm run burnthemall
- ```
+If you pull latest from the repo and get weird module errors, do:
 
- This invokes [the mad king](http://nerdist.com/wp-content/uploads/2016/05/the-mad-king-game-of-thrones.jpg), who will torch your npm_modules, and do the full install/rebuild process for you.
- `npm start` should work afterwards.
+```shell
+$ npm run burnthemall
+```
 
- If you're doing development, `npm run watch` to have assets build automatically.
+This invokes [the mad king](http://nerdist.com/wp-content/uploads/2016/05/the-mad-king-game-of-thrones.jpg), who will torch your npm_modules, and do the full install/rebuild process for you. `npm start` should work afterwards.
 
+If you're doing development, `npm run watch` to have assets build automatically.
 
 ## License
 
-SAFE Beaker Browser is a lightly modified fork of the [decentralized beaker browser](https://www.beakerbrowser.net/).
+SAFE Browser is a lightly modified fork of the [beaker browser](https://www.beakerbrowser.com/).
 
 Modified MIT as per the [BeakerLicense](https://github.com/joshuef/beaker/blob/master/BEAKER_LICENSE.md)
