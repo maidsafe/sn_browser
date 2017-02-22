@@ -105,7 +105,9 @@
     "release:linux": "build -l -p never --x64",
     "release:windows": "build -w -p never --x64",
     "start": "gulp start",
-    "watch": "gulp start-watch"
+    "watch": "gulp start-watch",
+    "pack-authenticator": "sh ./shell_scripts/pack_authenticator.sh",
+    "pack-authenticator-win": "powershell.exe -noexit -file \"./shell_scripts/pack_authenticator.ps1\""
   },
   "dependencies": {
     "rollup-plugin-async": "^1.1.0"

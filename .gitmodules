@@ -1,0 +1,4 @@
+[submodule "safe_authenticator"]
+	path = safe_authenticator
+	url = https://github.com/maidsafe/beaker-plugin-safe-authenticator.git
+	branch = master
