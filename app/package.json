@@ -32,6 +32,7 @@
     "redux-thunk": "^2.1.0",
     "remarkable": "^1.6.2",
     "speedometer": "^1.0.0",
+    "safe-js": "^0.3.3",
     "unused-filename": "^0.1.0",
     "yo-yo": "^1.2.1",
     "zerr": "^1.0.4"
