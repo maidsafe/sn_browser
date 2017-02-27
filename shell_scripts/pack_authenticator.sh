@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git submodule update --init --recursive
+
 DEST_FOLD="../app/node_modules/beaker-plugin-safe-authenticator-1"
 
 cd safe_authenticator

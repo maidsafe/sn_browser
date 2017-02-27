@@ -107,7 +107,7 @@
     "start": "gulp start",
     "watch": "gulp start-watch",
     "pack-authenticator": "sh ./shell_scripts/pack_authenticator.sh",
-    "pack-authenticator-win": "powershell.exe -noexit -file \"./shell_scripts/pack_authenticator.ps1\""
+    "pack-authenticator-win": "powershell.exe -ExecutionPolicy Bypass -File \".\\shell_scripts\\pack_authenticator.ps1\""
   },
   "dependencies": {
     "rollup-plugin-async": "^1.1.0"
