@@ -6,7 +6,7 @@ cd authenticator
 
 git submodule update --init --recursive
 
-npm i && npm run build-native && npm run build 
+npm i && npm run build-native && npm run copy-binaries:win && npm run build 
 
 $FILES_ARR = @("./dist", "./index.js", "./package.json")
 

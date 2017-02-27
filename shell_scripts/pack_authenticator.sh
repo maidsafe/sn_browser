@@ -8,7 +8,7 @@ cd authenticator
 
 git submodule update --init --recursive
 
-npm i && npm run build-native && npm run build 
+npm i && npm run build-native && npm run copy-binaries:unix && npm run build 
 
 mkdir -p $DEST_FOLD
 
