@@ -3,7 +3,7 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
-import { app, Menu } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
@@ -33,6 +33,7 @@ import * as openURL from './background-process/open-url'
 import { auth } from 'safe-js'
 // import packageJson from './package.json'
 var packageJson = require( './package.json' );
+var mainWindow = null;
 
 console.log( "packagejson" );
 
@@ -82,6 +83,25 @@ app.on('ready', function () {
 
 	})
 	.catch( handleAuthError )
+
+  const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+    if (commandLine.length >= 2 && commandLine[1]) {
+      openURL.open(commandLine[1]);
+    }
+
+    mainWindow = BrowserWindow.getFocusedWindow()
+
+    // Someone tried to run a second instance, we should focus our window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  if (shouldQuit) {
+    app.quit();
+  }
+
 
 
   // API initialisations
