@@ -3,7 +3,7 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
-import { app, Menu } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
@@ -33,6 +33,7 @@ import * as openURL from './background-process/open-url'
 import { auth } from 'safe-js'
 // import packageJson from './package.json'
 var packageJson = require( './package.json' );
+var mainWindow = null;
 
 console.log( "packagejson" );
 
@@ -57,7 +58,7 @@ plugins.registerStandardSchemes()
 app.on('ready', function () {
 
     let token = auth.authorise( safeBrowserApp ).then( tok =>
-	{
+  {
         store.dispatch( updateSettings( { 'authSuccess': true } ) )
         store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
         store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
@@ -80,8 +81,35 @@ app.on('ready', function () {
                 }
             })
 
-	})
-	.catch( handleAuthError )
+  })
+  .catch( handleAuthError )
+
+  const allWindows = BrowserWindow.getAllWindows();
+
+  const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+    if (commandLine.length >= 2 && commandLine[1]) {
+      openURL.open(commandLine[1]);
+    }
+
+    mainWindow = BrowserWindow.getFocusedWindow() || allWindows[0]
+
+    // Someone tried to run a second instance, we should focus our window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+
+    if((process.platform === 'linux' || process.platform === 'win32') && allWindows.length === 1) {
+      if (process.argv[1] && process.argv[1].indexOf('safe') !== -1) {
+        openURL.open(process.argv[1])
+      }
+    }
+  });
+
+  if (shouldQuit) {
+    app.quit();
+  }
+
 
 
   // API initialisations
