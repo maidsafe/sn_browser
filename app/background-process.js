@@ -37,6 +37,10 @@ var mainWindow = null;
 
 console.log( "packagejson" );
 
+const parseSafeUri = function(uri) {
+  return uri.replace('//', '').replace('==/', '==');
+};
+
 const safeBrowserApp =
 {
     name: packageJson.name,
@@ -84,34 +88,6 @@ app.on('ready', function () {
   })
   .catch( handleAuthError )
 
-  const allWindows = BrowserWindow.getAllWindows();
-
-  const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-    if (commandLine.length >= 2 && commandLine[1]) {
-      openURL.open(commandLine[1]);
-    }
-
-    mainWindow = BrowserWindow.getFocusedWindow() || allWindows[0]
-
-    // Someone tried to run a second instance, we should focus our window
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
-
-    if((process.platform === 'linux' || process.platform === 'win32') && allWindows.length === 1) {
-      if (process.argv[1] && process.argv[1].indexOf('safe') !== -1) {
-        openURL.open(process.argv[1])
-      }
-    }
-  });
-
-  if (shouldQuit) {
-    app.quit();
-  }
-
-
-
   // API initialisations
   sitedata.setup()
   bookmarks.setup()
@@ -138,6 +114,30 @@ app.on('ready', function () {
 
   // listen OSX open-url event
   openURL.setup()
+
+  if((process.platform === 'linux') || (process.platform === 'win32')) {
+    if (process.argv[1] && (process.argv[1].indexOf('safe') !== -1)) {
+      openURL.open(parseSafeUri(process.argv[1]))
+    }
+  }
+
+  const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+    if (commandLine.length >= 2 && commandLine[1]) {
+      openURL.open(parseSafeUri(commandLine[1]));
+    }
+
+    mainWindow = BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]
+
+    // Someone tried to run a second instance, we should focus our window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  if (shouldQuit) {
+    app.quit();
+  }
 })
 
 app.on('window-all-closed', function () {
