@@ -86,6 +86,7 @@
    ```
    
     The packed SAFE Browser will be found inside `dist` folder.
+    
 ### Updating
 
 If you pull latest from the repo and get weird module errors, do:
