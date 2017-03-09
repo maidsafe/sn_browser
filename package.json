@@ -95,7 +95,7 @@
     }
   },
   "scripts": {
-    "postinstall": "cd app && npm install && cd node_modules/safe-app && npm i",
+    "postinstall": "cd app && npm install",
     "build": "gulp build",
     "rebuild:only": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "rebuild": "(cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source); gulp build;",
@@ -106,8 +106,9 @@
     "release:windows": "build -w -p never --x64",
     "start": "gulp start",
     "watch": "gulp start-watch",
-    "pack-authenticator": "sh ./shell_scripts/pack_authenticator.sh",
-    "pack-authenticator-win": "powershell.exe -ExecutionPolicy Bypass -File \".\\shell_scripts\\pack_authenticator.ps1\""
+    "pack-authenticator:unix": "sh ./shell_scripts/pack_authenticator.sh",
+    "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\shell_scripts\\pack_authenticator.ps1\"",
+    "pack-authenticator": "node ./shell_scripts/pack_authenticator.js"
   },
   "dependencies": {
     "rollup-plugin-async": "^1.1.0"
