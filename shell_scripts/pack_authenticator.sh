@@ -8,7 +8,7 @@ cd authenticator
 
 git submodule update --init --recursive --remote
 
-npm i && npm run build-libs && npm run build
+npm i && npm run build-libs features="mock-routing" && npm run build
 
 mkdir -p $DEST_FOLD
 

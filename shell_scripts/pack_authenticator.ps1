@@ -7,7 +7,7 @@ cd authenticator
 git submodule update --init --recursive --remote
 
 npm i
-npm run build-libs
+npm run build-libs features="mock-routing"
 npm run build
 
 $FILES_ARR = @("./dist", "./index.js", "./package.json")
