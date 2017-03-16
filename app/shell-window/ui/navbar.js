@@ -14,6 +14,11 @@ const KEYCODE_ENTER = 13
 const KEYCODE_N = 78
 const KEYCODE_P = 80
 
+const CLIENT_TYPES = {
+  DESKTOP: 'DESKTOP',
+  WEB: 'WEB'
+};
+
 // globals
 // =
 
@@ -32,9 +37,19 @@ var safeAuthNetworkState = -1
 var safeAuthData = null
 var safeAuthPopupDiv = yo`<div></div>`
 
+// safe app plugin
+ipcRenderer.send('registerSafeApp');
+
+ipcRenderer.on('webClientAuthReq', function(event, uri) {
+  handleSafeAuthAuthentication(uri, CLIENT_TYPES.WEB);
+})
+
+
+// safe authenticator plugin
 ipcRenderer.send('registerSafeNetworkListener');
 ipcRenderer.send('registerOnAuthReq');
 ipcRenderer.send('registerOnContainerReq');
+ipcRenderer.send('registerOnReqError');
 
 ipcRenderer.on('onNetworkStatus', function(event, status) {
   console.log('Authenticator network state :: ', status)
@@ -50,24 +65,38 @@ ipcRenderer.on('onAuthReq', function(event, data) {
     safeAuthData = data
     showSafeAuthPopup()
   }
-})
+});
 
 ipcRenderer.on('onContainerReq', function(event, data) {
   if (data) {
     safeAuthData = data
     showSafeAuthPopup(true)
   }
-})
+});
 
 ipcRenderer.on('onAuthDecisionRes', function(event, data) {
   isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientAuthRes', data.res);
+  }
   update()
-})
+});
 
 ipcRenderer.on('onContDecisionRes', function(event, data) {
   isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientContainerRes', data.res);
+  }
   update()
-})
+});
+
+ipcRenderer.on('onAuthResError', function(event, data) {
+  isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientErrorRes', data.res);
+  }
+  update()
+});
 
 // exported functions
 // =
@@ -105,7 +134,7 @@ export function showInpageFind (page) {
   // do we want it back?
   // -prf
   // if (el.value)
-    // page.findInPage(el.value)
+  // page.findInPage(el.value)
 }
 
 export function hideInpageFind (page) {
@@ -145,8 +174,11 @@ export function updateLocation (page) {
   }
 }
 
-export function handleSafeAuthAuthentication(url) {
-  ipcRenderer.send('decryptRequest', url)
+export function handleSafeAuthAuthentication(url, type) {
+  ipcRenderer.send('decryptRequest', {
+    type: type || CLIENT_TYPES.DESKTOP,
+    data: url
+  })
   clearAutocomplete()
   if (safeAuthNetworkState === -1) {
     onClickOpenSafeAuthHome()
@@ -216,18 +248,18 @@ function showSafeAuthPopup(isContainerReq) {
             <div class="popup-cnt-ls">
               <span class="list">
                 ${
-                  safeAuthData[reqKey].containers.map(function(container) {
-                    if (typeof container.access === 'object') {
-                      return yo`<div class="list-i" onclick=${togglePermissions}>
+    safeAuthData[reqKey].containers.map(function(container) {
+      if (typeof container.access === 'object') {
+        return yo`<div class="list-i" onclick=${togglePermissions}>
                         <h3>${container.cont_name}</h3>
                         <ul>
                           ${arrToYo(container.access)}
                         </ul>
                       </div>`;
-                    }
-                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-                  })
-                }
+      }
+      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+    })
+    }
               </span>
             </div>
           </div>
@@ -247,11 +279,11 @@ function showSafeAuthPopup(isContainerReq) {
 
 function render (id, page) {
   var isLoading = page && page.isLoading()
-  
+
   var webContents = remote.getCurrentWindow().webContents;
-  
+
   // var isSafe = webContents.isSafe;
-  
+
   // if( typeof isSafe === 'undefined' )
   // {
   //     isSafe = true;
@@ -269,8 +301,8 @@ function render (id, page) {
     : yo`<button class="toolbar-btn nav-reload-btn" onclick=${onClickReload}>
         <span class="icon icon-ccw"></span>
       </button>`
-      
-  var safeNetworkStatusBtn = (isSafeAppAuthenticating) 
+
+  var safeNetworkStatusBtn = (isSafeAppAuthenticating)
     ? yo`<button class="toolbar-btn loading" onclick=${onClickOpenSafeAuthHome}>
         <span class="icon icon-hourglass"></span>
       </button>`
@@ -284,7 +316,7 @@ function render (id, page) {
       }
     })()}" onclick=${onClickOpenSafeAuthHome}>
         <span class="icon icon-rocket"></span>
-      </button>` 
+      </button>`
 
   // render safe btn
   var safeBtn = yo`<span class="safe-btn-safe">
@@ -342,36 +374,36 @@ function render (id, page) {
     autocompleteDropdown = yo`
       <div class="autocomplete-dropdown" onclick=${onClickAutocompleteDropdown}>
         ${autocompleteResults.map((r, i) => {
-          // content
-          var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
-          var contentColumn
-          if (r.search)
-            contentColumn = yo`<span class="result-search">${r.search}</span>`
-          else {
-            contentColumn = yo`<span class="result-url"></span>`
-            if (r.urlDecorated)
-              contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
-            else
-              contentColumn.textContent = r.url
-          }
-          var titleColumn = yo`<span class="result-title"></span>`
-          if (r.titleDecorated)
-            titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
-          else
-            titleColumn.textContent = r.title
-          
-          // selection
-          var rowCls = 'result'
-          if (i == autocompleteCurrentSelection)
-            rowCls += ' selected'
+      // content
+      var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
+      var contentColumn
+      if (r.search)
+        contentColumn = yo`<span class="result-search">${r.search}</span>`
+      else {
+        contentColumn = yo`<span class="result-url"></span>`
+        if (r.urlDecorated)
+          contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
+        else
+          contentColumn.textContent = r.url
+      }
+      var titleColumn = yo`<span class="result-title"></span>`
+      if (r.titleDecorated)
+        titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
+      else
+        titleColumn.textContent = r.title
 
-          // result row
-          return yo`<div class=${rowCls} data-result-index=${i}>
+      // selection
+      var rowCls = 'result'
+      if (i == autocompleteCurrentSelection)
+        rowCls += ' selected'
+
+      // result row
+      return yo`<div class=${rowCls} data-result-index=${i}>
             <span class=${iconCls}></span>
             ${contentColumn}
             ${titleColumn}
           </div>`
-        })}
+    })}
       </div>
     `
   }
@@ -442,7 +474,7 @@ function handleAutocompleteSearch (results) {
 
   // set the top results accordingly
   var gotoResult = { url: vWithProtocol, title: 'Go to '+v, isGuessingTheScheme }
-  var searchResult = { 
+  var searchResult = {
     search: v,
     title: 'DuckDuckGo Search',
     url: 'https://duckduckgo.com/?q=' + v.split(' ').join('+')
@@ -583,7 +615,7 @@ function togglePermissions(e) {
 
 // export function onClickToggleSafe ( e )
 // {
-//     pages.toggleSafe();    
+//     pages.toggleSafe();
 // }
 
 function onClickOpenSafeAuthHome(e) {
@@ -661,7 +693,7 @@ function onKeydownLocation (e) {
       // laod safeauth page
       if (new URL(selection.url).protocol === pages.SAFE_AUTH_SCHEME) {
         if (pages.handleSafeAuthScheme(selection.url)) {
-          e.target.blur()    
+          e.target.blur()
           return
         }
       }
