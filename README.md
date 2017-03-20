@@ -33,7 +33,13 @@
     $ npm run pack-authenticator
     ```
     
-5. Build SAFE Browser and open it.
+5. Build the SAFE App plugin.
+
+    ```
+    $ npm run pack-safe-app
+    ```
+
+6. Build SAFE Browser and open it.
   
     **Linux and macOS**
     
@@ -60,7 +66,7 @@
     $ npm start
     ```
 
-6. Package SAFE Browser.
+7. Package SAFE Browser.
  
     **macOs**
    ```

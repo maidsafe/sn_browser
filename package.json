@@ -108,7 +108,8 @@
     "watch": "gulp start-watch",
     "pack-authenticator:unix": "sh ./shell_scripts/pack_authenticator.sh",
     "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\shell_scripts\\pack_authenticator.ps1\"",
-    "pack-authenticator": "node ./shell_scripts/pack_authenticator.js"
+    "pack-authenticator": "node ./shell_scripts/pack_authenticator.js",
+    "pack-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build"
   },
   "dependencies": {
     "rollup-plugin-async": "^1.1.0"
