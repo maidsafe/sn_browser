@@ -95,7 +95,7 @@
     }
   },
   "scripts": {
-    "postinstall": "cd app && npm install",
+    "postinstall": "cd app && npm install && cd ../ && npm run build-safe-app",
     "build": "gulp build",
     "rebuild:only": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "rebuild": "(cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source); gulp build;",
@@ -108,7 +108,8 @@
     "watch": "gulp start-watch",
     "pack-authenticator:unix": "sh ./shell_scripts/pack_authenticator.sh",
     "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\shell_scripts\\pack_authenticator.ps1\"",
-    "pack-authenticator": "node ./shell_scripts/pack_authenticator.js"
+    "pack-authenticator": "node ./shell_scripts/pack_authenticator.js",
+    "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build"
   },
   "dependencies": {
     "rollup-plugin-async": "^1.1.0"

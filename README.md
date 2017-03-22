@@ -32,7 +32,7 @@
     ```
     $ npm run pack-authenticator
     ```
-    
+
 5. Build SAFE Browser and open it.
   
     **Linux and macOS**
