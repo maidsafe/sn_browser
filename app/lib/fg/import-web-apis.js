@@ -3,12 +3,13 @@ import rpc from 'pauls-electron-rpc'
 
 // it would be better to import this from package.json
 const BEAKER_VERSION = '0.0.1'
+const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 
 const readableToCallback = (rpcAPI) => {
   return (arg1, arg2, cb) => {
     return new Promise((resolve, reject) => {
       var r = rpcAPI(arg1, arg2);
-      r.on('data', n => cb(n));
+      r.on('data', data => cb.apply(cb, data));
       r.on('error', err => reject(err));
       r.on('end', () => resolve());
     });
@@ -29,12 +30,12 @@ export default function () {
     let fnsWithCallback = [];
     for (var fn in webAPIs[k]) {
       // We adapt the functions which contain a callback
-      if (fn.startsWith('_with_cb_')) {
+      if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
         // We use a readable type to receive the data from rpc channel
         let manifest = {[fn]: 'readable'};
-        let rpcAPI = rpc.importAPI('_with_cb_' + k, manifest, { timeout: false })
-        // We expose the function removing the '_with_cb_' prefix
-        let newFnName = fn.replace('_with_cb_', '');
+        let rpcAPI = rpc.importAPI(WITH_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false })
+        // We expose the function removing the WITH_CALLBACK_TYPE_PREFIX prefix
+        let newFnName = fn.replace(WITH_CALLBACK_TYPE_PREFIX, '');
         fnsWithCallback[newFnName] = readableToCallback(rpcAPI[fn]);
       } else {
         fnsToImport[fn] = webAPIs[k][fn];
