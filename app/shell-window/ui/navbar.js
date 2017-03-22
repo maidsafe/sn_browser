@@ -134,7 +134,7 @@ export function showInpageFind (page) {
   // do we want it back?
   // -prf
   // if (el.value)
-    // page.findInPage(el.value)
+  // page.findInPage(el.value)
 }
 
 export function hideInpageFind (page) {
@@ -248,18 +248,18 @@ function showSafeAuthPopup(isContainerReq) {
             <div class="popup-cnt-ls">
               <span class="list">
                 ${
-                  safeAuthData[reqKey].containers.map(function(container) {
-                    if (typeof container.access === 'object') {
-                      return yo`<div class="list-i" onclick=${togglePermissions}>
+    safeAuthData[reqKey].containers.map(function(container) {
+      if (typeof container.access === 'object') {
+        return yo`<div class="list-i" onclick=${togglePermissions}>
                         <h3>${container.cont_name}</h3>
                         <ul>
                           ${arrToYo(container.access)}
                         </ul>
                       </div>`;
-                    }
-                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-                  })
-                }
+      }
+      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+    })
+    }
               </span>
             </div>
           </div>
@@ -374,36 +374,36 @@ function render (id, page) {
     autocompleteDropdown = yo`
       <div class="autocomplete-dropdown" onclick=${onClickAutocompleteDropdown}>
         ${autocompleteResults.map((r, i) => {
-          // content
-          var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
-          var contentColumn
-          if (r.search)
-            contentColumn = yo`<span class="result-search">${r.search}</span>`
-          else {
-            contentColumn = yo`<span class="result-url"></span>`
-            if (r.urlDecorated)
-              contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
-            else
-              contentColumn.textContent = r.url
-          }
-          var titleColumn = yo`<span class="result-title"></span>`
-          if (r.titleDecorated)
-            titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
-          else
-            titleColumn.textContent = r.title
-          
-          // selection
-          var rowCls = 'result'
-          if (i == autocompleteCurrentSelection)
-            rowCls += ' selected'
+      // content
+      var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
+      var contentColumn
+      if (r.search)
+        contentColumn = yo`<span class="result-search">${r.search}</span>`
+      else {
+        contentColumn = yo`<span class="result-url"></span>`
+        if (r.urlDecorated)
+          contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
+        else
+          contentColumn.textContent = r.url
+      }
+      var titleColumn = yo`<span class="result-title"></span>`
+      if (r.titleDecorated)
+        titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
+      else
+        titleColumn.textContent = r.title
 
-          // result row
-          return yo`<div class=${rowCls} data-result-index=${i}>
+      // selection
+      var rowCls = 'result'
+      if (i == autocompleteCurrentSelection)
+        rowCls += ' selected'
+
+      // result row
+      return yo`<div class=${rowCls} data-result-index=${i}>
             <span class=${iconCls}></span>
             ${contentColumn}
             ${titleColumn}
           </div>`
-        })}
+    })}
       </div>
     `
   }
