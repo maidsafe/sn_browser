@@ -7,6 +7,7 @@ import emitStream from 'emit-stream'
 
 // globals
 // =
+const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 
 const PLUGIN_NODE_MODULES = path.join(__dirname, 'node_modules')
 console.log('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
@@ -86,7 +87,20 @@ export function setupWebAPIs () {
   getAllInfo('webAPIs').forEach(api => {
     // run the module's protocol setup
     log.debug('Wiring up Web API:', api.name)
-    rpc.exportAPI(api.name, api.manifest, api.methods)
+
+    // We export functions with callbacks in a separate channel
+    // since they will be adapted on the rederer side to invoke the callbacks
+    let fnsToExport = [];
+    let fnsWithCallbacks = [];
+    for (var fn in api.manifest) {
+      if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
+        fnsWithCallbacks[fn] = api.manifest[fn];
+      } else {
+        fnsToExport[fn] = api.manifest[fn];
+      }
+    }
+    rpc.exportAPI(api.name, fnsToExport, api.methods)
+    rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
   })
 }
 
