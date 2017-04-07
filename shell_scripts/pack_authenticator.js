@@ -1,21 +1,24 @@
-const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const os = require('os');
 
 let cmd = '';
 
 if (os.platform() === 'win32') {
-  cmd = 'npm run pack-authenticator:windows';
+  cmd = 'pack-authenticator:windows';
 } else {
-  cmd = 'npm run pack-authenticator:unix';
+  cmd = 'pack-authenticator:unix';
 }
 
-exec(cmd, (error, stdout, stderr) => {
-  if (error) {
-    console.error(`exec error: ${error}`);
-    return;
-  }
-  console.warn(stdout);
-  if (stderr) {
-    console.warn(`Error: ${stderr}`);
-  }
+const build = spawn('npm', ['run', cmd]);
+
+build.stdout.on('data', (data) => {
+  console.log(data.toString());
+});
+
+build.stderr.on('data', (data) => {
+  console.log(data.toString());
+});
+
+build.on('exit', (code) => {
+  console.log(`Pack Authenticator exited with code ${code}`);
 });
