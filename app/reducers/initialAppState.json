@@ -1,0 +1,10 @@
+{
+    "addressSafe" : "safe://aaa.testtt",
+    "address" : "http://guardian.co.uk",
+    "tabs"    : [ {
+        "url": "http://guardian.co.uk",
+        "history" : [],
+        "isActiveTab" : true,
+        "isClosed" : false
+    } ]
+}

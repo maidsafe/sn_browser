@@ -1,0 +1,6 @@
+.container,
+.tabWindow
+ {
+    flex: 1 0 0%;
+    height: 100%;
+}

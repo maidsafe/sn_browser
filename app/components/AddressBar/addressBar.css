@@ -1,0 +1,21 @@
+.container
+{
+    width: 100%;
+    padding: 3px;
+    padding-left: 3px;
+    background-color: rgba( 246, 246, 246, 1);
+    border:             1px solid rgba( 127, 127, 127, 1);
+
+}
+
+.input
+{
+    display: block;
+    border:             1px solid rgba( 127, 127, 127, 1);
+    padding: 5px;
+    border-radius:         4px;
+    font-size: 14px;
+    max-width: 800px;
+    width: 100%;
+    
+}

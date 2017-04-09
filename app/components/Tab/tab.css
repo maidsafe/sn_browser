@@ -1,0 +1,17 @@
+.tab
+{
+    z-index:           0;
+    height:            100%;
+    width:             100%;
+    display:           flex;
+    position:          absolute;
+    background-color:  white;
+}
+
+
+
+.activeTab
+{
+    composes: tab;
+    z-index: 1;
+}

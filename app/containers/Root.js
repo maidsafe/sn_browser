@@ -9,10 +9,11 @@ type RootType = {
   history: {}
 };
 
-export default function Root({ store, history }: RootType) {
-  return (
-    <Provider store={store}>
-      <Router key={Math.random()} history={history} routes={routes} />
-    </Provider>
-  );
+export default function Root( { store, history }: RootType )
+{
+    return (
+        <Provider store={ store }>
+            <Router key={ Math.random() } history={ history } routes={ routes } />
+        </Provider>
+    );
 }

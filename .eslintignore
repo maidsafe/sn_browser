@@ -1,5 +1,6 @@
 flow-typed/
 app/dist/
 app/main.js
+app/node_modules/
 node_modules
 dll

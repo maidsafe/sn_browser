@@ -1,0 +1,21 @@
+.container {
+    text-align:       center;
+    height:           100%;
+    display:          flex;
+    flex-direction:   column;
+    position:         relative;
+}
+
+.container h2 {
+    font-size: 5rem;
+}
+
+.container a {
+    font-size: 1.4rem;
+}
+
+
+.tab
+{
+    flex-grow: 1;
+}
