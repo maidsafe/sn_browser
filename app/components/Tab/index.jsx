@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { remote } from 'electron';
 // import { Link }                 from 'react-router'
 import styles from './tab.css';
 // import { MdClose }                from 'react-icons/md';
@@ -8,9 +9,15 @@ import styles from './tab.css';
 // import electronContextMenu      from 'electron-context-menu'
 // import WebView                  from 'react-electron-web-view';
 
+
+const {Menu, MenuItem} = remote;
+
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt(process.env.DEVTOOLS, 10) > 1;
+
+
+
 
 
 export default class Tab extends Component {
@@ -96,6 +103,23 @@ export default class Tab extends Component {
         // wv.useragent = useragent
         wv.plugins = true;
         // wv.preload = injectPath
+        //
+
+        const menu = Menu.buildFromTemplate([
+
+            { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
+            { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
+            { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+            { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
+        ]);
+
+
+        // menu.append(new MenuItem({label: 'Copy', click() { console.log('item 1 clicked') }}))
+        // menu.append(new MenuItem({label: 'MenuItem1', click() { console.log('item 1 clicked') }}))
+        // menu.append(new MenuItem({type: 'separator'}))
+        // menu.append(new MenuItem({label: 'MenuItem2', type: 'checkbox', checked: true}))
+
+
 
         const callbackSetup = () => {
             wv.addEventListener('did-start-loading', ::this.didStartLoading);
@@ -105,6 +129,12 @@ export default class Tab extends Component {
             wv.addEventListener('page-title-updated', ::this.pageTitleUpdated);
             wv.addEventListener('page-favicon-updated', ::this.pageFaviconUpdated);
             wv.addEventListener('new-window', ::this.newWindow);
+
+            wv.addEventListener('contextmenu', (e) => {
+                  e.preventDefault()
+                  menu.popup(remote.getCurrentWindow())
+              }, false);
+
             this.domReady();
 
             wv.removeEventListener('dom-ready', callbackSetup);
@@ -171,12 +201,12 @@ export default class Tab extends Component {
         this.updateBrowserState({ loading: true });
         const { webview } = this;
         const { addTab } = this.props;
-
+        //
         // electronContextMenu({
         //             window: webview,
         //             showInspectElement : true,
         //             prepend: (params, browserWindow) => [{
-        //                 label: 'NewTabbb',
+        //                 label: 'OpenInNewTabbb',
         //                 accelerator : 'CommandOrControl+T',
         //                 click : ( menuItem, browserWindow, event )=>
         //                 {
