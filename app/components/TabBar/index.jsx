@@ -33,8 +33,6 @@ export default class TabBar extends Component {
     handleTabClick( tabData, event )
     {
         event.stopPropagation();
-        console.log( 'handleTabClick', event.target, event.currentTarget  );
-
         // if( event.target )
         this.props.setActiveTab( tabData.key );
         this.props.updateAddress( tabData.url );
@@ -43,11 +41,9 @@ export default class TabBar extends Component {
     handleTabClose( tabData, event )
     {
         event.stopPropagation();
-        // event.preventDefault();
+
         const { closeTab } = this.props;
-        //
-        //
-        console.log( 'closeing tab:' , tabData.key );
+
         closeTab( { index: tabData.key } );
 
     }

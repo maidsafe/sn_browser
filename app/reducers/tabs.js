@@ -107,8 +107,6 @@ export default function tabs( state: array = initialState, action )
 
             if( tabToMerge.get( 'isActiveTab' ) )
             {
-                console.log( 'Closing the active tab    *************'   );
-
                 // TODO: Filter tabs for isClosed and get nearest index that is not closed
                 let newActiveTabIndex = index - 1;
                 let newActiveTab = state.get( newActiveTabIndex );
@@ -123,8 +121,6 @@ export default function tabs( state: array = initialState, action )
                 {
                     console.log( 'NO TABS LEFT ======22221!!!' );
                 }
-
-                console.log( ' the NEWWWWW active tab index    *************' ,newActiveTabIndex , _setActiveTab );
 
                 updatedState = _setActiveTab( newActiveTabIndex, updatedState );
             }
@@ -156,7 +152,7 @@ export default function tabs( state: array = initialState, action )
 
             let updatedTab = tabToMerge.mergeDeep( payload );
 
-            console.log( 'updating active tabToMerge', updatedTab.toJS() );
+            // console.log( 'updating active tabToMerge', updatedTab.toJS() );
 
             const url = payload.get( 'url' );
 
@@ -183,7 +179,7 @@ export default function tabs( state: array = initialState, action )
             updatedTab = _updateTabHistory( updatedTab, url );
 
 
-            console.log( 'updating tab', updatedTab.toJS() );
+            // console.log( 'updating tab', updatedTab.toJS() );
             return state.set( index, updatedTab );
         }
     default:

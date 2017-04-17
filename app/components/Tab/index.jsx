@@ -60,17 +60,14 @@ export default class Tab extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('Tab receiving props', nextProps);
 
         if (nextProps.url) {
-            console.log('receiving proooooooooppppssss', nextProps.url);
             const { webview } = this;
             if (!webview) {
                 return;
             }
             if (webview.src === '' || webview.src === 'about:blank' ||
             webview.src !== nextProps.url) {
-                console.log('receiving props', nextProps);
                 // we didn't have a proper url but now do
                 this.loadURL(nextProps.url);
             }
@@ -83,7 +80,7 @@ export default class Tab extends Component {
 
         const injectPath = ''; // js well be chucking in
 
-        console.log('MOUNTING TABBB', this.props);
+        // console.log('MOUNTING TABBB', this.props);
 
         // cf. https://github.com/electron/electron/issues/6046
         //
@@ -149,7 +146,7 @@ export default class Tab extends Component {
         const { url } = this.props;
         const { webview } = this;
 
-        console.log('DOME READYYYYY', url);
+        // console.log('DOME READYYYYY', url);
 
         const webContents = webview.getWebContents();
         if (!webContents || webContents.isDestroyed()) return;
@@ -207,7 +204,7 @@ export default class Tab extends Component {
             title, index
         };
 
-        console.log( 'action check pageTitleUpdated' );
+        // console.log( 'action check pageTitleUpdated' );
 
         // if( ! )
         updateTab(tabUpdate);
@@ -228,7 +225,7 @@ export default class Tab extends Component {
 
         this.updateBrowserState({ url });
 
-        console.log( 'action check didNavigate' );
+        // console.log( 'action check didNavigate' );
 
         updateTab({ index, url });
         // this.analyzePage(index, url)
@@ -259,7 +256,7 @@ export default class Tab extends Component {
 
         // extract to navigation lib?
         //
-                console.log( 'action check will navigate' );
+                // console.log( 'action check will navigate' );
 
         this.props.updateTab({ url: event.url });
         this.props.updateAddress(event.url);
@@ -324,7 +321,7 @@ export default class Tab extends Component {
     }
 
     async loadURL(input) {
-        console.log(' input', input);
+        // console.log(' input', input);
         const { navigate } = this.props;
         // const url = await transformUrl(input)
         // const url = 'http://google.com';
@@ -336,14 +333,14 @@ export default class Tab extends Component {
         const browserState = { ...this.state.browserState, url };
         this.setState({ browserState });
 
-        console.log('browserstattte???', this.state);
+        // console.log('browserstattte???', this.state);
 
         const { webview } = this;
 
         //prevent looping over attempted url loading
         if (webview && url !== 'about:blank') {
             // webview.src = url;
-            console.log('webview exiissstsss', webview);
+            // console.log('webview exiissstsss', webview);
             webview.loadURL(url);
         }
         // }
@@ -360,7 +357,7 @@ export default class Tab extends Component {
 
 
     render() {
-        console.log('STARTING tab RENNNDEERRRRRR');
+        // console.log('STARTING tab RENNNDEERRRRRR');
         const { isActiveTab, tabData, tabPath, controls } = this.props;
         const { browserState } = this.state;
 
