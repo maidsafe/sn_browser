@@ -86,7 +86,7 @@ export default class Tab extends Component {
         const { index } = this.props;
 
         const injectPath = ''; // js well be chucking in
-
+        let rightClickPosition;
         // console.log('MOUNTING TABBB', this.props);
 
         // cf. https://github.com/electron/electron/issues/6046
@@ -106,11 +106,18 @@ export default class Tab extends Component {
         //
 
         const menu = Menu.buildFromTemplate([
-
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
             { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
             { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
-            { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
+            { type: 'separator' },
+            { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' },
+            {
+                label : 'Inspect element',
+                click : ( e ) =>
+                {
+                    remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
+                }
+            }
         ]);
 
 
@@ -131,8 +138,9 @@ export default class Tab extends Component {
             wv.addEventListener('new-window', ::this.newWindow);
 
             wv.addEventListener('contextmenu', (e) => {
-                  e.preventDefault()
-                  menu.popup(remote.getCurrentWindow())
+                    e.preventDefault()
+                    rightClickPosition = {x: e.x, y: e.y}
+                    menu.popup(remote.getCurrentWindow())
               }, false);
 
             this.domReady();
@@ -201,25 +209,6 @@ export default class Tab extends Component {
         this.updateBrowserState({ loading: true });
         const { webview } = this;
         const { addTab } = this.props;
-        //
-        // electronContextMenu({
-        //             window: webview,
-        //             showInspectElement : true,
-        //             prepend: (params, browserWindow) => [{
-        //                 label: 'OpenInNewTabbb',
-        //                 accelerator : 'CommandOrControl+T',
-        //                 click : ( menuItem, browserWindow, event )=>
-        //                 {
-        //                     if( params.linkURL )
-        //                     {
-        //                         console.log( params.linkURL );
-        //                         addTab( { url : params.linkURL }  )
-        //
-        //                     }
-        //                 }
-        //
-        //             }]
-        //         })
     }
 
     didStopLoading() {

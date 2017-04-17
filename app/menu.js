@@ -11,20 +11,20 @@ export default class MenuBuilder
     }
 
     buildMenu()
-{
+    {
         if ( process.env.NODE_ENV === 'development' )
-{
+        {
             this.setupDevelopmentEnvironment();
         }
 
         let template;
 
         if ( process.platform === 'darwin' )
-{
+        {
             template = this.buildDarwinTemplate();
         }
         else
-{
+        {
             template = this.buildDefaultTemplate();
         }
 
@@ -35,17 +35,17 @@ export default class MenuBuilder
     }
 
     setupDevelopmentEnvironment()
-{
+    {
         this.mainWindow.openDevTools();
         this.mainWindow.webContents.on( 'context-menu', ( e, props ) =>
-{
+        {
             const { x, y } = props;
 
             Menu
         .buildFromTemplate( [{
             label : 'Inspect element',
             click : () =>
-{
+            {
                 this.mainWindow.inspectElement( x, y );
             }
         }] )
