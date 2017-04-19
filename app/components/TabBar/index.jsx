@@ -51,31 +51,21 @@ export default class TabBar extends Component {
     handleAddTabClick( event )
     {
         event.stopPropagation();
-        // const { addTab } = this.props;
+
         const { addTab, updateAddress } = this.props;
         const newTabUrl = 'about:blank';
+
         event.preventDefault();
         addTab( { url: newTabUrl, isActiveTab: true } );
         updateAddress( newTabUrl );
-
-        // console.log( 'ipcRenderer'  , ipcRenderer );
-
-        // ipcRenderer.send( 'command', 'file:new-tab' );
-        // ipcMain.send( 'command', 'file:new-tab' );
-        // console.log( 'addtab clicked' );
-        // this.props.setActiveTab( tabData.key );
-        // this.props.updateAddress( tabData.url );
     }
 
     render()
     {
 
         const { tabs } = this.props;
-        // const { tabInFocus }  = this.state;
 
-        // console.log( "props in TabBar component", this.props );
-
-            return (
+        return (
             <div className={styles.container}>
                 <div className={styles.tabBar}>
                     {
@@ -91,12 +81,13 @@ export default class TabBar extends Component {
                             {
                                 tabStyleClass = styles.activeTab;
                             }
-                            return (<div key={ i } className={ tabStyleClass } onClick={ this.handleTabClick.bind(this, tabData  ) }>
-                                        <div className={styles.tabBox}>
+                            return (<div
+                                        key={ i }
+                                        className={ tabStyleClass }
+                                        onClick={ this.handleTabClick.bind(this, tabData  ) }>
                                             <span className={ styles.tabText }>{ tab.get('title') || 'New Tab' }</span>
                                             <MdClose className={ styles.tabCloseButton }
                                                 onClick={ this.handleTabClose.bind( this, tabData ) } />
-                                        </div>
                                     </div>)
                         })
                     }
