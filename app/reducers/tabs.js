@@ -18,7 +18,7 @@ export const { addTab, setActiveTab, closeTab, reopenTab, updateTab, updateActiv
 
 const initialState = fromJS( initialAppState.tabs );
 
-function _deactivateOldTab( state )
+export function _deactivateOldTab( state )
 {
     let newState;
     const oldTabIndex = state.findIndex( tab => tab.get( 'isActiveTab' ) );
@@ -35,7 +35,7 @@ function _deactivateOldTab( state )
 
 
 
-function _setActiveTab( payload , state )
+export function _setActiveTab( payload , state )
 {
     let newState = state;
     //
@@ -51,7 +51,7 @@ function _setActiveTab( payload , state )
 }
 
 
-function _updateTabHistory( tabToMerge, url )
+export function _updateTabHistory( tabToMerge, url )
 {
     let updatedTab = tabToMerge;
     if( url && url !== tabToMerge.get('url') )

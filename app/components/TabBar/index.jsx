@@ -5,8 +5,8 @@ import { ipcRenderer, ipcMain }          from 'electron';
 
 // import { Link }                 from 'react-router';
 import styles                   from './tabBar.css';
-import MdClose                from 'react-icons/lib/md/close';
-import MdAdd                    from 'react-icons/lib/md/add';
+// import MdClose                from 'react-icons/lib/md/close';
+// import MdAdd                    from 'react-icons/lib/md/add';
 
 export default class TabBar extends Component {
 
@@ -65,6 +65,8 @@ export default class TabBar extends Component {
 
         const { tabs } = this.props;
 
+        //<MdClose className={ styles.tabCloseButton }
+            onClick={ this.handleTabClose.bind( this, tabData ) } />
         return (
             <div className={styles.container}>
                 <div className={styles.tabBar}>
@@ -86,14 +88,12 @@ export default class TabBar extends Component {
                                         className={ tabStyleClass }
                                         onClick={ this.handleTabClick.bind(this, tabData  ) }>
                                             <span className={ styles.tabText }>{ tab.get('title') || 'New Tab' }</span>
-                                            <MdClose className={ styles.tabCloseButton }
-                                                onClick={ this.handleTabClose.bind( this, tabData ) } />
                                     </div>)
                         })
                     }
                     <div className={ styles.addTab } onClick={ this.handleAddTabClick.bind(this) }>
                         <div className={styles.tabBox}>
-                            <MdAdd className={ styles.tabAddButton } />
+                            //<MdAdd className={ styles.tabAddButton } />
                         </div>
                     </div>
                 </div>
