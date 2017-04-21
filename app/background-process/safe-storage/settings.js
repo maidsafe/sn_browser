@@ -4,8 +4,7 @@ import store, { handleAuthError } from './store'
 import { List, Map, fromJS } from 'immutable'
 
 import { createActions } from 'redux-actions'
-import { auth } from 'safe-js'
-
+// import { auth } from 'safe-js'
 const UPDATE_SETTINGS = 'UPDATE_SETTINGS'
 
 export const { updateSettings } = createActions( UPDATE_SETTINGS )
@@ -16,10 +15,10 @@ const initialState = Map( {
 	authMessage : 'Not attempted to connect yet'
 })
 
-export default function settings(state = initialState, action) 
+export default function settings(state = initialState, action)
 {
 	let payload = fromJS( action.payload )
-	
+
 	switch (action.type) {
 		case UPDATE_SETTINGS :
 		{
@@ -39,22 +38,22 @@ export default function settings(state = initialState, action)
 
 
 
-export function set (key, value) 
+export function set (key, value)
 {
-	return new Promise( (resolve, reject ) => 
-	{    
+	return new Promise( (resolve, reject ) =>
+	{
 		let setter = {}
 		setter[key] = value
 		store.dispatch( updateSettings( setter ) )
 	})
 }
 
-export function get (key) 
+export function get (key)
 {
 	return new Promise( ( resolve, reject) =>
 	{
 		let settings = store.getState()[ 'settings' ]
-		
+
 		if( settings )
 		{
 			let result = settings.get( key )
@@ -62,13 +61,13 @@ export function get (key)
 			{
 				resolve( settings.get( key ) )
 			}
-			
+
 		}
 		else {
 			resolve( 'undefined' )
 		}
 	})
-	
+
 }
 
 
@@ -85,23 +84,24 @@ const safeBrowserApp =
 
 
 export function reauthenticateSAFE () {
-		
-	return auth.authorise( safeBrowserApp ).then( tok =>
-	{
-		store.dispatch( updateSettings( { 'authSuccess': true } ) )
 
-		store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
-		store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
-
-	} )
+	// return auth.authorise( safeBrowserApp ).then( tok =>
+	// {
+	// 	store.dispatch( updateSettings( { 'authSuccess': true } ) )
+  //
+	// 	store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
+	// 	store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
+  //
+	// } )
 	// .catch( handleAuthError )
+  return Promise.resolve();
 }
 
 export function getAll () {
 	return new Promise( ( resolve, reject) =>
 	{
 		let settings = store.getState()[ 'settings' ]
-		
+
 		if( settings )
 		{
 			resolve( settings.toJS() )
