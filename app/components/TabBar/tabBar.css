@@ -33,10 +33,9 @@
     position: relative;
     max-width: 400px;
     text-align: left;
-    border-color:rgba( 127, 127, 127, 1);
 
-    border-top: 1px solid;
-    border-right: 1px solid;
+    border-top: 1px solid rgba( 127, 127, 127, 1);
+    border-right: 1px solid rgba( 127, 127, 127, 1);
 
     cursor: pointer;
 
@@ -44,7 +43,8 @@
 
 .tab:first-child
 {
-    border-left: 1px solid;
+    border-left: 1px solid rgba( 127, 127, 127, 1);
+;
 
 }
 
