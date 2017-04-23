@@ -69,6 +69,110 @@ export function _updateTabHistory( tabToMerge, url )
 }
 
 
+export function _addTab( state, payload )
+{
+    let newState = state.push( payload );
+
+    if ( payload.get( 'isActiveTab' ) )
+    {
+        newState = _deactivateOldTab( newState );
+    }
+
+    return newState;
+}
+
+export function _closeTab( state, payload )
+{
+    const index = payload.get( 'index' );
+
+    const tabToMerge = state.get( index );
+    const updatedTab = tabToMerge.mergeDeep( { isActiveTab: false, index, isClosed: true, closedTime: new Date() } );
+    let updatedState = state.set( index, updatedTab );
+
+    if( tabToMerge.get( 'isActiveTab' ) )
+    {
+        // TODO: Filter tabs for isClosed and get nearest index that is not closed
+        let newActiveTabIndex = index - 1;
+        let newActiveTab = state.get( newActiveTabIndex );
+
+        if( !newActiveTab )
+        {
+            console.log( 'index minus one doesnt exist ', newActiveTab );
+            newActiveTabIndex = index + 1;
+        }
+
+        if( !newActiveTab )
+        {
+            console.log( 'NO TABS LEFT ======22221!!!' );
+        }
+
+        updatedState = _setActiveTab( newActiveTabIndex, updatedState );
+    }
+
+    return updatedState;
+}
+
+
+export function _reopenTab( state, payload )
+{
+    let lastTab = state.max( tab => tab.get( 'closedTime' ) );
+
+    lastTab = lastTab.set( 'isClosed', false );
+    lastTab = lastTab.set( 'closedTime', null );
+
+    console.log( 'lastTab---------------------------------------'  , lastTab.toJS(), lastTab.get('index') );
+    // console.log( 'lastTab---------------???--------------------'  , lastTab.get( 'index' ), lastTab);
+
+    return state.set( lastTab.get('index'), lastTab  );
+}
+
+
+export function _updateActiveTab( state, payload )
+{
+    const index = state.findIndex( tab => tab.get( 'isActiveTab' ) );
+
+    if ( index < 0 )
+    {
+        return state;
+    }
+
+    const tabToMerge = state.get( index );
+
+    let updatedTab = tabToMerge.mergeDeep( payload );
+
+    // console.log( 'updating active tabToMerge', updatedTab.toJS() );
+
+    const url = payload.get( 'url' );
+
+    updatedTab = _updateTabHistory( updatedTab , url)
+
+    return state.set( index, updatedTab );
+}
+
+
+export function _updateTab( state, payload )
+{
+    const index = payload.get( 'index' );
+
+    if ( index < 0 )
+    {
+        return state;
+    }
+
+    const tabToMerge = state.get( index );
+
+    let updatedTab = tabToMerge.mergeDeep( payload );
+
+
+    const url = payload.get( 'url' );
+
+    updatedTab = _updateTabHistory( updatedTab, url );
+
+
+    // console.log( 'updating tab', updatedTab.toJS() );
+    return state.set( index, updatedTab );
+}
+
 export default function tabs( state: array = initialState, action )
 {
     const payload = fromJS( action.payload );
@@ -81,109 +185,33 @@ export default function tabs( state: array = initialState, action )
 
     switch ( action.type )
     {
-    case ADD_TAB :
-        {
-            let newState = state.push( payload );
-
-            if ( payload.get( 'isActiveTab' ) )
+        case ADD_TAB :
             {
-                newState = _deactivateOldTab( newState );
+                return _addTab( state, payload );
             }
-
-            return newState;
-        }
-    case SET_ACTIVE_TAB :
-        {
-            return _setActiveTab( payload , state );
-
-        }
-    case CLOSE_TAB :
-        {
-            const index = payload.get( 'index' );
-
-            const tabToMerge = state.get( index );
-            const updatedTab = tabToMerge.mergeDeep( { isActiveTab: false, index, isClosed: true, closedTime: new Date() } );
-            let updatedState = state.set( index, updatedTab );
-
-            if( tabToMerge.get( 'isActiveTab' ) )
+        case SET_ACTIVE_TAB :
             {
-                // TODO: Filter tabs for isClosed and get nearest index that is not closed
-                let newActiveTabIndex = index - 1;
-                let newActiveTab = state.get( newActiveTabIndex );
+                return _setActiveTab( payload , state );
 
-                if( !newActiveTab )
-                {
-                    console.log( 'index minus one doesnt exist ', newActiveTab );
-                    newActiveTabIndex = index + 1;
-                }
-
-                if( !newActiveTab )
-                {
-                    console.log( 'NO TABS LEFT ======22221!!!' );
-                }
-
-                updatedState = _setActiveTab( newActiveTabIndex, updatedState );
             }
-
-            return updatedState;
-        }
-    case REOPEN_TAB :
-    {
-        let lastTab = state.max( tab => tab.get( 'closedTime' ) );
-
-        lastTab = lastTab.set( 'isClosed', false );
-        lastTab = lastTab.set( 'closedTime', null );
-
-        console.log( 'lastTab---------------------------------------'  , lastTab.toJS(), lastTab.get('index') );
-        // console.log( 'lastTab---------------???--------------------'  , lastTab.get( 'index' ), lastTab);
-
-        return state.set( lastTab.get('index'), lastTab  );
-    }
-    case UPDATE_ACTIVE_TAB :
-        {
-            const index = state.findIndex( tab => tab.get( 'isActiveTab' ) );
-
-            if ( index < 0 )
+        case CLOSE_TAB :
             {
-                return state;
+                return _closeTab( state, payload )
             }
-
-            const tabToMerge = state.get( index );
-
-            let updatedTab = tabToMerge.mergeDeep( payload );
-
-            // console.log( 'updating active tabToMerge', updatedTab.toJS() );
-
-            const url = payload.get( 'url' );
-
-            updatedTab = _updateTabHistory( updatedTab , url)
-
-            return state.set( index, updatedTab );
-        }
-    case UPDATE_TAB :
+        case REOPEN_TAB :
         {
-            const index = payload.get( 'index' );
-
-            if ( index < 0 )
-            {
-                return state;
-            }
-
-            const tabToMerge = state.get( index );
-
-            let updatedTab = tabToMerge.mergeDeep( payload );
-
-
-            const url = payload.get( 'url' );
-
-            updatedTab = _updateTabHistory( updatedTab, url );
-
-
-            // console.log( 'updating tab', updatedTab.toJS() );
-            return state.set( index, updatedTab );
+            return _reopenTab( state, payload )
         }
-    default:
-        return state;
+        case UPDATE_ACTIVE_TAB :
+            {
+                return _updateActiveTab( state, payload )
+            }
+        case UPDATE_TAB :
+            {
+                return _updateTab( state, payload )
+            }
+        default:
+            return state;
     }
 }
 

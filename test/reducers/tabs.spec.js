@@ -100,3 +100,50 @@ describe( '_updateTabHistory', () =>
     xit( 'should not add a url if its the same as the previous one' );
     xit( 'should allow a url to exist twice as long as they are not consecutive' );
 });
+
+
+describe( '_addTab', () =>
+{
+    it( 'should exist', () =>
+    {
+        expect( tabs._addTab ).to.exist;
+    });
+    xit( 'should add a tab' );
+});
+
+describe( '_closeTab', () =>
+{
+    it( 'should exist', () =>
+    {
+        expect( tabs._closeTab ).to.exist;
+    });
+    xit( 'should close a tab' );
+});
+
+describe( '_reopenTab', () =>
+{
+    it( 'should exist', () =>
+    {
+        expect( tabs._reopenTab ).to.exist;
+    });
+    xit( 'should reopen a tab' );
+});
+
+describe( '_updateActiveTab', () =>
+{
+    it( 'should exist', () =>
+    {
+        expect( tabs._updateActiveTab ).to.exist;
+    });
+    xit( 'should update the active tab' );
+    xit( 'should not update any other tab' );
+});
+
+describe( '_updateTab', () =>
+{
+    it( 'should exist', () =>
+    {
+        expect( tabs._updateTab ).to.exist;
+    });
+    xit( 'should update a tab' );
+});
