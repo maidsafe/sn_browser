@@ -5,9 +5,10 @@ export default class MenuBuilder
 {
     mainWindow: BrowserWindow;
 
-    constructor( mainWindow: BrowserWindow )
-{
+    constructor( mainWindow: BrowserWindow, openWindow )
+    {
         this.mainWindow = mainWindow;
+        this.openWindow = openWindow;
     }
 
     buildMenu()
@@ -54,7 +55,7 @@ export default class MenuBuilder
     }
 
     buildDarwinTemplate()
-{
+    {
         const subMenuAbout = {
             label   : 'Peruse',
             submenu : [
@@ -78,11 +79,19 @@ export default class MenuBuilder
             label   : 'File',
             submenu : [
                 {
+                    label       : 'New Window',
+                    accelerator : 'Command+N',
+                    click       : ( item, win ) =>
+                    {
+                        if( this.openWindow ) this.openWindow();
+                    }
+                },
+                {
                     label       : 'New Tab',
                     accelerator : 'Command+T',
                     click       : ( item, win ) =>
                     {
-                        if ( win ) win.webContents.send( 'command', 'file:new-tab', 'bullshit' );
+                        if ( win ) win.webContents.send( 'command', 'file:new-tab', );
                     }
                 },
                 {
@@ -91,6 +100,14 @@ export default class MenuBuilder
                     click       : ( item, win ) =>
                     {
                         if ( win ) win.webContents.send( 'command', 'file:close-tab' );
+                    }
+                },
+                {
+                    label       : 'Close Window',
+                    accelerator : 'Command+Shift+W',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win ) win.close();
                     }
                 },
                 // { type: 'separator' },
@@ -132,19 +149,19 @@ export default class MenuBuilder
                 { label       : 'Reload',
                     accelerator : 'Command+R',
                     click       : () =>
-{
+                    {
                         this.mainWindow.webContents.reload();
                     } },
                 { label       : 'Toggle Full Screen',
                     accelerator : 'Ctrl+Command+F',
                     click       : () =>
-{
+                    {
                         this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
                     } },
                 { label       : 'Toggle Developer Tools',
                     accelerator : 'Alt+Command+I',
                     click       : () =>
-{
+                    {
                         this.mainWindow.toggleDevTools();
                     } }
             ]
@@ -155,7 +172,7 @@ export default class MenuBuilder
                 { label       : 'Toggle Full Screen',
                     accelerator : 'Ctrl+Command+F',
                     click       : () =>
-{
+                    {
                         this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
                     } }
             ]
@@ -174,22 +191,22 @@ export default class MenuBuilder
             submenu : [
                 { label : 'Learn More',
                     click()
-{
+                    {
                         shell.openExternal( 'http://electron.atom.io' );
                     } },
                 { label : 'Documentation',
                     click()
-{
+                    {
                         shell.openExternal( 'https://github.com/atom/electron/tree/master/docs#readme' );
                     } },
                 { label : 'Community Discussions',
                     click()
-{
+                    {
                         shell.openExternal( 'https://discuss.atom.io/c/electron' );
                     } },
                 { label : 'Search Issues',
                     click()
-{
+                    {
                         shell.openExternal( 'https://github.com/atom/electron/issues' );
                     } }
             ]
@@ -210,7 +227,7 @@ export default class MenuBuilder
     }
 
     buildDefaultTemplate()
-{
+    {
         const templateDefault = [{
             label   : '&File',
             submenu : [{
@@ -220,7 +237,7 @@ export default class MenuBuilder
                 label       : '&Close',
                 accelerator : 'Ctrl+W',
                 click       : () =>
-{
+                {
                     this.mainWindow.close();
                 }
             }]
@@ -230,28 +247,28 @@ export default class MenuBuilder
                 label       : '&Reload',
                 accelerator : 'Ctrl+R',
                 click       : () =>
-{
+                {
                     this.mainWindow.webContents.reload();
                 }
             }, {
                 label       : 'Toggle &Full Screen',
                 accelerator : 'F11',
                 click       : () =>
-{
+                {
                     this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
                 }
             }, {
                 label       : 'Toggle &Developer Tools',
                 accelerator : 'Alt+Ctrl+I',
                 click       : () =>
-{
+                {
                     this.mainWindow.toggleDevTools();
                 }
             }] : [{
                 label       : 'Toggle &Full Screen',
                 accelerator : 'F11',
                 click       : () =>
-{
+                {
                     this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
                 }
             }]
@@ -260,25 +277,25 @@ export default class MenuBuilder
             submenu : [{
                 label : 'Learn More',
                 click()
-{
+                {
                     shell.openExternal( 'http://electron.atom.io' );
                 }
             }, {
                 label : 'Documentation',
                 click()
-{
+                {
                     shell.openExternal( 'https://github.com/atom/electron/tree/master/docs#readme' );
                 }
             }, {
                 label : 'Community Discussions',
                 click()
-{
+                {
                     shell.openExternal( 'https://discuss.atom.io/c/electron' );
                 }
             }, {
                 label : 'Search Issues',
                 click()
-{
+                {
                     shell.openExternal( 'https://github.com/atom/electron/issues' );
                 }
             }]

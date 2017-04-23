@@ -2,10 +2,60 @@
 // @flow
 import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
-
+import windowStateKeeper from 'electron-window-state'
 import loadCorePackages from './corePackageLoader';
 
 let mainWindow = null;
+
+export function openWindow()
+{
+
+    let mainWindowState = windowStateKeeper({
+       defaultWidth: 2048,
+       defaultHeight: 1024
+    });
+
+    mainWindow = new BrowserWindow( {
+        show              : false,
+        'x'               : mainWindowState.x,
+        'y'               : mainWindowState.y,
+        'width'           : mainWindowState.width,
+        'height'          : mainWindowState.height,
+        titleBarStyle     : 'hidden-inset',
+        'standard-window' : false
+    } );
+
+    mainWindowState.manage(mainWindow);
+
+
+    mainWindow.loadURL( `file://${__dirname}/app.html` );
+
+  // @TODO: Use 'ready-to-show' event
+  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+
+    mainWindow.webContents.on( 'did-finish-load', () =>
+    {
+        if ( !mainWindow )
+        {
+            throw new Error( '"mainWindow" is not defined' );
+        }
+        mainWindow.show();
+        mainWindow.focus();
+    } );
+
+    mainWindow.on( 'closed', () =>
+    {
+        mainWindow = null;
+    } );
+
+    const menuBuilder = new MenuBuilder( mainWindow , openWindow );
+    menuBuilder.buildMenu();
+}
+
+
+
+
+
 
 if ( process.env.NODE_ENV === 'production' )
 {
@@ -50,43 +100,13 @@ app.on( 'window-all-closed', () =>
 app.on( 'ready', async () =>
 {
     if ( process.env.NODE_ENV === 'development' )
-{
+    {
         await installExtensions();
     }
 
     loadCorePackages();
 
-
-    mainWindow = new BrowserWindow( {
-        show              : false,
-        width             : 2048,
-        height            : 1024,
-        titleBarStyle     : 'hidden-inset',
-        'standard-window' : false,
-    } );
-
-    mainWindow.loadURL( `file://${__dirname}/app.html` );
-
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-
-    mainWindow.webContents.on( 'did-finish-load', () =>
-    {
-        if ( !mainWindow )
-        {
-            throw new Error( '"mainWindow" is not defined' );
-        }
-        mainWindow.show();
-        mainWindow.focus();
-    } );
-
-    mainWindow.on( 'closed', () =>
-    {
-        mainWindow = null;
-    } );
-
-    const menuBuilder = new MenuBuilder( mainWindow );
-    menuBuilder.buildMenu();
+    openWindow();
     //
     // // bounce back command messages from the render process.
     // // this keeps all command handling in the browser component
