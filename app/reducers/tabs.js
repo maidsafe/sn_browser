@@ -4,7 +4,7 @@ import { List, Map, fromJS } from 'immutable';
 
 import { createActions } from 'redux-actions';
 import initialAppState 			from './initialAppState.json';
-
+import { remote } from 'electron';
 import updateAddress from 'reducers/address';
 
 const ADD_TAB = 'ADD_TAB';
@@ -16,7 +16,19 @@ const REOPEN_TAB = 'REOPEN_TAB';
 
 export const { addTab, setActiveTab, closeTab, reopenTab, updateTab, updateActiveTab } = createActions( ADD_TAB, SET_ACTIVE_TAB, CLOSE_TAB, REOPEN_TAB, UPDATE_TAB, UPDATE_ACTIVE_TAB );
 
-const initialState = fromJS( initialAppState.tabs );
+let initialState = fromJS( initialAppState.tabs );
+
+let firstTab = initialState.get( 0 )
+if( ! firstTab.get( 'windowID' ) )
+{
+    console.log( 'no initial windowID' );
+
+    firstTab = firstTab.mergeDeep({ windowId: remote.getCurrentWindow().id });
+
+    initialState = initialState.set( 0, firstTab );
+
+    console.log( 'initialState after setting firstTab' , initialState );
+}
 
 export function _deactivateOldTab( state )
 {
@@ -71,9 +83,12 @@ export function _updateTabHistory( tabToMerge, url )
 
 export function _addTab( state, payload )
 {
-    let newState = state.push( payload );
+    let newTab = payload.mergeDeep({ windowId : remote.getCurrentWindow().id });
 
-    if ( payload.get( 'isActiveTab' ) )
+    console.log( 'newTab on addTab' , newTab );
+    let newState = state.push( newTab );
+
+    if ( newTab.get( 'isActiveTab' ) )
     {
         newState = _deactivateOldTab( newState );
     }
