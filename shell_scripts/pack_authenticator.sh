@@ -18,5 +18,3 @@ for File in $FILES_ARR
 do
 	cp -fr $File $DEST_FOLD
 done
-
-echo "Packed Authenticator!"
