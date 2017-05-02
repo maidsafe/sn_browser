@@ -20,5 +20,3 @@ if( -Not (Test-Path -Path $DEST_FOLD ) )
 for ($i=0; $i -lt $FILES_ARR.length; $i++) {
 	Copy-Item $FILES_ARR[$i] $DEST_FOLD -Recurse -Force
 }
-
-"Packed Authenticator!"
