@@ -49,11 +49,19 @@ export function getAllInfo (key) {
   protocolModules.forEach(protocolModule => {
     if (!protocolModule[key])
       return
-
     // get the values from the module
     var values = protocolModule[key]
     if (!Array.isArray(values))
       values = [values]
+
+    if (key === 'webAPIs') {
+      values = values.map(val => {
+        if (typeof val === 'object' && !val.scheme) {
+          val['scheme'] = protocolModule.protocols[0].scheme; // FIXME: for more than one scheme within plugin
+        }
+        return val;
+      });
+    }
 
     // add to list
     caches[key] = caches[key].concat(values)
@@ -119,7 +127,7 @@ export function getWebAPIManifests (scheme) {
   // collect manifests
   getAllInfo('webAPIs').forEach(api => {
     // just need to match isInternal for the api and the scheme
-    if (api.isInternal == proto.isInternal)
+    if ((api.isInternal == proto.isInternal) && (api.scheme === scheme))
       manifests[api.name] = api.manifest
   })
   return manifests
