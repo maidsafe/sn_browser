@@ -38,6 +38,7 @@ export default {
         {
             components : path.join( __dirname, 'app/components' ),
             containers : path.join( __dirname, 'app/containers' ),
+            store      : path.join( __dirname, 'app/store' ),
             reducers   : path.join( __dirname, 'app/reducers' )
         },
         modules : [

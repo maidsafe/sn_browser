@@ -5,6 +5,7 @@
         "url": "http://guardian.co.uk",
         "history" : [],
         "isActiveTab" : true,
-        "isClosed" : false
+        "isClosed" : false,
+        "windowId" : 1
     } ]
 }

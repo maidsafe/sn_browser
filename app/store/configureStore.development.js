@@ -4,8 +4,38 @@ import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
-
+import { ipcRenderer, ipcMain, remote, webContents } from 'electron';
 import { toJS } from 'immutable';
+
+
+const electronSyncer = store => next => action =>
+{
+    let meta = action.payload.meta;
+    let syncAction = { ...action };
+    syncAction.payload.meta = { sync: true };
+
+    //prevent looping
+    if( meta && meta.sync )
+        return;
+
+    if( ipcMain )
+    {
+        console.log('dispatching from MAIN', action);
+        webContents.getAllWebContents().forEach( webcontent => webcontent.send( 'electronSync', action ) ); //should also pass latest update window
+    }
+
+    if( ipcRenderer )
+    {
+        let currentWindowId = remote.getCurrentWindow().id;
+        console.log('dispatching from Renderer', syncAction)
+        ipcRenderer.send('electronSync', currentWindowId,  syncAction );
+    }
+
+  let result = next(action)
+  return result
+}
+
+
 
 
 export default ( initialState: ?counterStateType ) =>
@@ -16,6 +46,9 @@ export default ( initialState: ?counterStateType ) =>
 
   // Thunk Middleware
     middleware.push( thunk );
+
+    //electron Syncer
+    middleware.push( electronSyncer );
 
   // Logging Middleware
     const logger = createLogger( {
@@ -55,14 +88,23 @@ export default ( initialState: ?counterStateType ) =>
 
         push,
     };
-  // If Redux DevTools Extension is installed use it, otherwise use Redux compose
-  /* eslint-disable no-underscore-dangle */
-    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {
-      // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
-        actionCreators,
-    } )
-    : compose;
+
+    let composeEnhancers;
+    if( typeof window !== 'undefined' )
+    {
+        composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {
+            // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
+            actionCreators,
+        } )
+        : compose;
+
+    }
+    else{
+        composeEnhancers = compose;
+    }
+
+
   /* eslint-enable no-underscore-dangle */
 
   // Apply Middleware & Compose Enhancers

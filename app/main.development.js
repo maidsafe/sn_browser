@@ -1,11 +1,21 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 // @flow
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, webContents  } from 'electron';
 import MenuBuilder from './menu';
 import windowStateKeeper from 'electron-window-state'
 import loadCorePackages from './corePackageLoader';
 
+import configureStore from './store/configureStore';
+
 let mainWindow = null;
+const store = configureStore();
+
+ipcMain.on('electronSync', (ev, currentWindowId,  action) => {
+
+  console.log( 'actio received main', 'from', currentWindowId );
+  store.dispatch( action );
+
+});
 
 export function openWindow()
 {
@@ -39,6 +49,9 @@ export function openWindow()
         {
             throw new Error( '"mainWindow" is not defined' );
         }
+
+        // mainWindow.webContents.send( 'stateUpdate',  )
+        //before show lets load state
         mainWindow.show();
         mainWindow.focus();
     } );
