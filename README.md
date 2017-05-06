@@ -1,6 +1,6 @@
 # Peruse
 
-An electron web browser with the intention extensibility.
+An electron web browser. Built to be a basis. Extendable by design.
 
 ## TODO
 

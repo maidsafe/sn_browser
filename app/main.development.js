@@ -6,15 +6,13 @@ import windowStateKeeper from 'electron-window-state'
 import loadCorePackages from './corePackageLoader';
 
 import configureStore from './store/configureStore';
+import { mainSync } from './store/electronStoreSyncer';
+
 
 let mainWindow = null;
 const store = configureStore();
 
-ipcMain.on('electronSync', (ev, currentWindowId,  action) =>
-{
-    store.dispatch( action );
-
-});
+mainSync( store );
 
 export function openWindow()
 {

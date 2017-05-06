@@ -27,4 +27,21 @@ const electronSyncerMiddleware = store => next => action =>
 }
 
 
+export const mainSync = ( store ) =>
+{
+    ipcMain.on('electronSync', (ev, currentWindowId,  action) =>
+    {
+        store.dispatch( action );
+
+    });
+}
+
+export const rendererSync = ( store ) =>
+{
+    ipcRenderer.on('electronSync', (ev, action) => {
+        store.dispatch( action );
+    } );
+
+}
+
 export default electronSyncerMiddleware;

@@ -7,14 +7,12 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import Root from './containers/Root';
 import configureStore from './store/configureStore';
 import './app.global.css';
+import { rendererSync } from './store/electronStoreSyncer';
 
 const store = configureStore();
 const history = syncHistoryWithStore( hashHistory, store );
 
-ipcRenderer.on('electronSync', (ev, action) => {
-    store.dispatch( action );
-} );
-
+rendererSync( store );
 
 
 render(
