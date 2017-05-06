@@ -7,28 +7,27 @@ import Tab                      from 'components/Tab';
 
 export default class TabContents extends Component {
 
-    constructor( props )
-    {
-        super( props );
-        this.state = {
-            tabInFocus : 0 //to update when many tabs can exist
-        }
-    }
-
-    static defaultProps =
-    {
-        tabInFocus : 0
-    }
+    // constructor( props )
+    // {
+    //     super( props );
+    //     this.state = {
+    //         tabInFocus : 0 //to update when many tabs can exist
+    //     }
+    // }
+    //
+    // static defaultProps =
+    // {
+    //     tabInFocus : 0
+    // }
 
 
     render() {
 
-        const { addTab, tabs, closeTab, updateActiveTab, updateTab, updateAddress  } = this.props;
-        const { tabInFocus }  = this.state;
+        const { addTab, tabs, updateActiveTab, updateTab, updateAddress  } = this.props;
 
         // console.log( "props in TabContainer component", this.props );
 
-            return (
+        return (
             <div className={styles.container}>
                 <div className={styles.tabWindow}>
                     {

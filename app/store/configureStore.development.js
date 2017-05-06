@@ -5,39 +5,10 @@ import { routerMiddleware, push } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import createCLILogger from 'redux-cli-logger'
 import rootReducer from '../reducers';
-import { ipcRenderer, ipcMain, remote, webContents } from 'electron';
 import { toJS } from 'immutable';
+import electronSyncerMiddleware from './electronStoreSyncer';
 
 const inRendererProcess = typeof window !== 'undefined';
-
-const electronSyncer = store => next => action =>
-{
-    let meta = action.meta;
-    let syncAction = { ...action };
-    let result = next(action);
-
-    syncAction.meta = { sync: true };
-
-    //prevent looping
-    if( meta && meta.sync )
-        return result;
-
-    if( ipcMain )
-    {
-        console.log('dispatching from MAIN', action);
-        webContents.getAllWebContents().forEach( webcontent => webcontent.send( 'electronSync', action ) ); //should also pass latest update window
-    }
-
-    if( ipcRenderer )
-    {
-        let currentWindowId = remote.getCurrentWindow().id;
-        console.log('dispatching from Renderer', syncAction)
-        ipcRenderer.send('electronSync', currentWindowId,  syncAction );
-    }
-
-  return result
-}
-
 
 
 
@@ -51,7 +22,7 @@ export default ( initialState: ?counterStateType ) =>
     middleware.push( thunk );
 
     //electron Syncer
-    middleware.push( electronSyncer );
+    middleware.push( electronSyncerMiddleware );
 
 
     //lets sort logging

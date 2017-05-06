@@ -4,11 +4,12 @@ import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware } from 'react-router-redux';
 import rootReducer from '../reducers';
+import electronSyncerMiddleware from './electronStoreSyncer';
 
 
 const router = routerMiddleware( hashHistory );
 
-const enhancer = applyMiddleware( thunk, router );
+const enhancer = applyMiddleware( thunk, router, electronSyncerMiddleware );
 
 export default function configureStore( initialState )
 {

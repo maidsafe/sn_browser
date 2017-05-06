@@ -33,9 +33,9 @@ export default class TabBar extends Component {
     handleTabClick( tabData, event )
     {
         event.stopPropagation();
-        // if( event.target )
+
         this.props.setActiveTab( tabData.key );
-        this.props.updateAddress( { address: event.target.value } );
+        this.props.updateAddress( event.target.value );
     }
 
     handleTabClose( tabData, event )
@@ -57,7 +57,7 @@ export default class TabBar extends Component {
 
         event.preventDefault();
         addTab( { url: newTabUrl, isActiveTab: true } );
-        updateAddress( { address: event.target.value } );
+        updateAddress( event.target.value );
     }
 
     render()
@@ -83,10 +83,11 @@ export default class TabBar extends Component {
                             }
                             return (<div
                                         key={ i }
-                                        className={ tabStyleClass } >
+                                        className={ tabStyleClass }
+                                        onClick={ this.handleTabClick.bind(this, tabData  ) }>
                                             <span className={ styles.tabText }>{ tab.get('title') || 'New Tab' }</span>
                                             <MdClose className={ styles.tabCloseButton }
-                                                 onClick={ this.handleTabClick.bind(this, tabData  ) } />
+                                                 onClick={ this.handleTabClose.bind(this, tabData  ) } />
                                     </div>)
                         })
                     }

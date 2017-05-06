@@ -1,14 +1,16 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
+import { reopenTab, getLastClosedTab, setActiveTab } from './reducers/tabs';
 
 export default class MenuBuilder
 {
     mainWindow: BrowserWindow;
 
-    constructor( mainWindow: BrowserWindow, openWindow )
+    constructor( mainWindow: BrowserWindow, openWindow, store )
     {
         this.mainWindow = mainWindow;
         this.openWindow = openWindow;
+        this.store = store;
     }
 
     buildMenu()
@@ -56,6 +58,8 @@ export default class MenuBuilder
 
     buildDarwinTemplate()
     {
+        const store = this.store;
+
         const subMenuAbout = {
             label   : 'Peruse',
             submenu : [
@@ -99,24 +103,36 @@ export default class MenuBuilder
                     accelerator : 'Command+W',
                     click       : ( item, win ) =>
                     {
-                        if ( win ) win.webContents.send( 'command', 'file:close-tab' );
+                        if ( win ) win.webContents.send( 'command', 'file:close-active-tab' );
                     }
                 },
-                {
-                    label       : 'Close Window',
-                    accelerator : 'Command+Shift+W',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win ) win.close();
-                    }
-                },
+                // {
+                //     label       : 'Close Window',
+                //     accelerator : 'Command+Shift+W',
+                //     click       : ( item, win ) =>
+                //     {
+                //         if ( win ) win.close();
+                //     }
+                // },
                 // { type: 'separator' },
                 {
-                    label       : 'Reopen Closed Tab',
+                    label       : 'Reopen Last Tab',
                     accelerator : 'Command+Shift+T',
                     click( item, win )
                     {
-                        if ( win ) win.webContents.send( 'command', 'file:reopen-tab' );
+                        let lastTab = getLastClosedTab( store.getState().tabs );
+                        let windowToFocus = lastTab.get('windowId');
+                        windowToFocus = BrowserWindow.fromId( windowToFocus );
+
+                        if( windowToFocus )
+                            windowToFocus.focus();
+
+                        // here. we find last tab && update store to be open.
+                        store.dispatch( reopenTab() );
+                        // store.dispatch( setActiveTab( lastTab ) );
+                        //need window ID to focus it
+
+                        // if ( win ) win.webContents.send( 'command', 'file:reopen-tab' );
                         console.log( 'TODO: Add history to all tabs... go back in time. Redux goodness??' );
                     }
                 }, { type: 'separator' },
@@ -181,7 +197,7 @@ export default class MenuBuilder
             label   : 'Window',
             submenu : [
         { label: 'Minimize', accelerator: 'Command+M', selector: 'performMiniaturize:' },
-        { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
+        { label: 'Close', accelerator: 'Command+Shift+W', selector: 'performClose:' },
         { type: 'separator' },
         { label: 'Bring All to Front', selector: 'arrangeInFront:' }
             ]

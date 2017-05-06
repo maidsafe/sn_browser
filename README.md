@@ -1,18 +1,15 @@
 # Peruse
 
-An electron web browser for extensibility.
+An electron web browser with the intention extensibility.
 
 ## TODO
 
-- Add icons
-- Add tab functionality
-- Add context menu 
+- general cleanup of logging / code 
+- implement basic example of extensibility
+
 - Add shortcuts for common cases
     - Favourites
     - To address bar
-
-THE REST
-
 
 - CSS 
     - Add PostCSS

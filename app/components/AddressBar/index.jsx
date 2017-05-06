@@ -51,7 +51,7 @@ export default class AddressBar extends Component {
             return;
         }
 
-        this.props.updateAddress( { address: event.target.value } );
+        this.props.updateAddress( event.target.value );
         this.props.updateActiveTab( { url: event.target.value } );
     }
 

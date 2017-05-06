@@ -37,7 +37,7 @@ export default class Browser extends Component {
 
     componentDidMount( )
     {
-        const { addTab, closeTab, reopenTab } = this.props;
+        const { addTab, closeTab, closeActiveTab,  reopenTab } = this.props;
         const addressBar = this.address.refs.addressBar ;
 
         ipcRenderer.on( 'command', ( ...args ) =>
@@ -69,13 +69,21 @@ export default class Browser extends Component {
                         return;
 
                     }
-                case 'file:reopen-tab':
+                case 'file:close-active-tab':
                     {
-                        // console.log( 'closing tabbb' )
-                        reopenTab();
+                        console.log( 'closing active tabbb' )
+                        closeActiveTab( );
                         // addressBar.focus();
                         return;
+
                     }
+                // case 'file:reopen-tab':
+                //     {
+                //         // console.log( 'closing tabbb' )
+                //         reopenTab();
+                //         // addressBar.focus();
+                //         return;
+                //     }
                 case 'file:focus-location':
                     {
                         addressBar.focus();

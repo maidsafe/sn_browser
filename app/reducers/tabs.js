@@ -9,21 +9,43 @@ import updateAddress from './address';
 
 const ADD_TAB = 'ADD_TAB';
 const CLOSE_TAB = 'CLOSE_TAB';
+const CLOSE_ACTIVE_TAB = 'CLOSE_ACTIVE_TAB';
 const UPDATE_TAB = 'UPDATE_TAB';
 const UPDATE_ACTIVE_TAB = 'UPDATE_ACTIVE_TAB';
 const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 const REOPEN_TAB = 'REOPEN_TAB';
 
-export const { addTab, setActiveTab, closeTab, reopenTab, updateTab, updateActiveTab } = createActions( ADD_TAB, SET_ACTIVE_TAB, CLOSE_TAB, REOPEN_TAB, UPDATE_TAB, UPDATE_ACTIVE_TAB );
+export const {
+    addTab
+    , setActiveTab
+    , closeTab
+    , closeActiveTab
+    , reopenTab
+    , updateTab
+    , updateActiveTab
+} = createActions(
+    ADD_TAB
+    , SET_ACTIVE_TAB
+    , CLOSE_TAB
+    , CLOSE_ACTIVE_TAB
+    , REOPEN_TAB
+    , UPDATE_TAB
+    , UPDATE_ACTIVE_TAB
+);
 
 const initialState = fromJS( initialAppState.tabs );
 
 
+const getActiveTabIndex = ( state ) =>
+{
+    return state.findIndex( tab => tab.get( 'isActiveTab' ) );
+
+}
 
 export function _deactivateOldTab( state )
 {
     let newState;
-    const oldTabIndex = state.findIndex( tab => tab.get( 'isActiveTab' ) );
+    const oldTabIndex = getActiveTabIndex( state );
 
     if ( oldTabIndex > -1 )
     {
@@ -91,6 +113,13 @@ export function _closeTab( state, payload )
 {
     const index = payload.get( 'index' );
 
+    setTabAsClosed( state, index );
+
+    return updatedState;
+}
+
+function setTabAsClosed( state, index )
+{
     const tabToMerge = state.get( index );
     const updatedTab = tabToMerge.mergeDeep( { isActiveTab: false, index, isClosed: true, closedTime: new Date() } );
     let updatedState = state.set( index, updatedTab );
@@ -118,18 +147,33 @@ export function _closeTab( state, payload )
     return updatedState;
 }
 
+export function _closeActiveTab( state )
+{
+    let activeTabIndex = getActiveTabIndex( state );
+    console.log( 'closing active tab' , activeTabIndex );
+    return setTabAsClosed( state, activeTabIndex );
+
+
+
+    // closeTab( { index: activeTabIndex } );
+
+    // return state;
+}
+
 
 export function _reopenTab( state, payload )
 {
-    let lastTab = state.max( tab => tab.get( 'closedTime' ) );
+    let lastTab = getLastClosedTab( state );
 
     lastTab = lastTab.set( 'isClosed', false );
     lastTab = lastTab.set( 'closedTime', null );
 
-    console.log( 'lastTab---------------------------------------'  , lastTab.toJS(), lastTab.get('index') );
-    // console.log( 'lastTab---------------???--------------------'  , lastTab.get( 'index' ), lastTab);
-
     return state.set( lastTab.get('index'), lastTab  );
+}
+
+export function getLastClosedTab( state )
+{
+    return state.max( tab => tab.get( 'closedTime' ) );
 }
 
 
@@ -180,6 +224,12 @@ export function _updateTab( state, payload )
 }
 
 
+
+
+
+
+
+
 export default function tabs( state: array = initialState, action )
 {
     const payload = fromJS( action.payload );
@@ -205,6 +255,10 @@ export default function tabs( state: array = initialState, action )
             {
                 return _closeTab( state, payload )
             }
+        case CLOSE_ACTIVE_TAB :
+            {
+                return _closeActiveTab( state )
+            }
         case REOPEN_TAB :
         {
             return _reopenTab( state, payload )
@@ -221,6 +275,11 @@ export default function tabs( state: array = initialState, action )
             return state;
     }
 }
+
+
+
+
+
 
 
 const safeBrowserApp =

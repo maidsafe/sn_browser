@@ -12,9 +12,7 @@ const store = configureStore();
 
 ipcMain.on('electronSync', (ev, currentWindowId,  action) =>
 {
-
-  console.log( 'actio received main', 'from', currentWindowId );
-  store.dispatch( action );
+    store.dispatch( action );
 
 });
 
@@ -62,7 +60,7 @@ export function openWindow()
         mainWindow = null;
     } );
 
-    const menuBuilder = new MenuBuilder( mainWindow , openWindow );
+    const menuBuilder = new MenuBuilder( mainWindow , openWindow, store );
     menuBuilder.buildMenu();
 }
 

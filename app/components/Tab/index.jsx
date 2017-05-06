@@ -2,12 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { remote } from 'electron';
-// import { Link }                 from 'react-router'
 import styles from './tab.css';
-// import { MdClose }                from 'react-icons/md';
-// import FaBeer from 'react-icons/lib/fa/beer';
-// import electronContextMenu      from 'electron-context-menu'
-// import WebView                  from 'react-electron-web-view';
 
 
 const {Menu, MenuItem} = remote;
@@ -25,18 +20,11 @@ export default class Tab extends Component {
     {
         isActiveTab : PropTypes.bool.isRequired,
         url         : PropTypes.string.isRequired,
-        //   tabPath: PropTypes.string,
-        //   tabData: PropTypes.object,
         index    : PropTypes.number.isRequired,
         // className   : PropTypes.string,
-        //   meId: PropTypes.any,
         // navigate    : PropTypes.any,
-
         updateTab : PropTypes.func.isRequired,
         addTab          : PropTypes.func.isRequired
-        //   evolveTab: PropTypes.func.isRequired,
-
-        //   controls: PropTypes.oneOf(['generic', 'game', 'user'])
     }
 
     static defaultProps =
@@ -49,12 +37,15 @@ export default class Tab extends Component {
 
     constructor(props) {
         super(props);
+
+        console.log( 'CONSTRUCTING TABBVVB', props  );
         this.state = {
             browserState : {
-                canGoBack    : false,
-                canGoForward : false,
-                loading      : true,
-                url          : ''
+                canGoBack       : false,
+                canGoForward    : false,
+                loading         : true,
+                mountedAndReady : false,
+                url             : ''
             }
         };
 
@@ -66,15 +57,27 @@ export default class Tab extends Component {
         this.loadURL = ::this.loadURL;
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps)
+    {
+        if( JSON.stringify(nextProps) === JSON.stringify( this.props ) )
+        {
+            return;
+        }
+
+        if( !this.state.mountedAndReady )
+            return;
 
         if (nextProps.url) {
             const { webview } = this;
-            if (!webview) {
+            if (!webview)
+            {
+                console.log( 'no webview, but props'  );
                 return;
             }
+
             if (webview.src === '' || webview.src === 'about:blank' ||
             webview.src !== nextProps.url) {
+                console.log( 'props received' );
                 // we didn't have a proper url but now do
                 this.loadURL(nextProps.url);
             }
@@ -86,8 +89,8 @@ export default class Tab extends Component {
         const { index } = this.props;
 
         const injectPath = ''; // js well be chucking in
+
         let rightClickPosition;
-        // console.log('MOUNTING TABBB', this.props);
 
         // cf. https://github.com/electron/electron/issues/6046
         //
@@ -144,11 +147,9 @@ export default class Tab extends Component {
 
         wv.addEventListener('dom-ready', () => {
             // wv.executeJavaScript(`window.__itchInit && window.__itchInit(${JSON.stringify(index)})`)
-            // this.didStopLoading()
+            this.didStopLoading()
         });
 
-        // wv.src = 'http://google.com'
-        // wv.src = 'about:blank'
         wv.src = 'about:blank';
     }
 
@@ -177,8 +178,6 @@ export default class Tab extends Component {
         const { url } = this.props;
         const { webview } = this;
 
-        // console.log('DOME READYYYYY', url);
-
         const webContents = webview.getWebContents();
         if (!webContents || webContents.isDestroyed()) return;
 
@@ -186,7 +185,7 @@ export default class Tab extends Component {
             webContents.openDevTools({ detach: true });
         }
 
-        this.updateBrowserState({ loading: false });
+        this.updateBrowserState({ loading: false, mountedAndReady : true });
 
         // if (currentSession !== webContents.session) {
         //     this.setupItchInternal(webContents.session)
@@ -216,14 +215,7 @@ export default class Tab extends Component {
             title, index
         };
 
-        // console.log( 'action check pageTitleUpdated' );
-
-        // if( ! )
-        updateTab(tabUpdate);
-        // should be title in bar not url !!
-        //
-        // const {index, tabDataFetched} = this.props
-        // tabDataFetched(index, {webTitle: e.title})
+        updateTab( tabUpdate );
     }
 
     pageFaviconUpdated(e) {
@@ -237,10 +229,7 @@ export default class Tab extends Component {
 
         this.updateBrowserState({ url });
 
-        // console.log( 'action check didNavigate' );
-
         updateTab({ index, url });
-        // this.analyzePage(index, url)
     }
 
     willNavigate(e) {
@@ -262,16 +251,10 @@ export default class Tab extends Component {
         this.lastNavigationUrl = url;
         this.lastNavigationTimeStamp = e.timeStamp;
 
-        // navigate(`url/${url}`)
-
         const index = this.props.index;
 
-        // extract to navigation lib?
-        //
-                // console.log( 'action check will navigate' );
-
         this.props.updateTab({ url: event.url });
-        this.props.updateAddress( { address: event.target.value } );
+        this.props.updateAddress( event.target.value );
 
         // our own little preventDefault
         // cf. https://github.com/electron/electron/issues/1378
@@ -288,11 +271,11 @@ export default class Tab extends Component {
         this.props.addTab(event.url);
     }
 
-    isFrozen(e) {
-        // const {index} = this.props
-        // const frozen = staticTabData[index] || !index
-        return false;
-    }
+    // isFrozen(e) {
+    //     // const {index} = this.props
+    //     // const frozen = staticTabData[index] || !index
+    //     return false;
+    // }
 
     with(cb, opts = { insist: false }) {
         const { webview } = this;
@@ -333,10 +316,10 @@ export default class Tab extends Component {
     }
 
     async loadURL(input) {
-        // console.log(' input', input);
+
         const { navigate } = this.props;
         // const url = await transformUrl(input)
-        // const url = 'http://google.com';
+
         const url = input;
 
         // if (navigation.isAppSupported(url) && this.isFrozen()) {
@@ -345,14 +328,12 @@ export default class Tab extends Component {
         const browserState = { ...this.state.browserState, url };
         this.setState({ browserState });
 
-        // console.log('browserstattte???', this.state);
 
         const { webview } = this;
 
         //prevent looping over attempted url loading
         if (webview && url !== 'about:blank') {
             // webview.src = url;
-            // console.log('webview exiissstsss', webview);
             webview.loadURL(url);
         }
         // }
@@ -369,94 +350,17 @@ export default class Tab extends Component {
 
 
     render() {
-        // console.log('STARTING tab RENNNDEERRRRRR');
         const { isActiveTab, tabData, tabPath, controls } = this.props;
         const { browserState } = this.state;
 
         let moddedClass = styles.tab;
         if (isActiveTab) {
             moddedClass = styles.activeTab;
-            // console.log('THIS IS NOT THE ACTIVE TAB YOU WERE LOOKING FOR', moddedClass);
         }
-
-        // const { goBack, goForward, stop, reload, openDevTools, loadURL } = this;
-        // const controlProps = {tabPath, tabData, browserState, goBack, goForward, stop, reload, openDevTools, loadURL}
 
         const context = '';
 
         return <div className={moddedClass} ref="webviewShell" />;
     }
 
-    //
-    //
-    // componentDidMount( )
-    // {
-    //     let webview = this.refs.webview;
-    //
-    //     console.log( "webview", webview );
-    //     let thisTab = this;
-    //     //webviw event binding function needed
-    //     webview.addEventListener('will-navigate', event =>
-    //     {
-    //         const index  = this.props.index;
-    //
-    //         thisTab.props.updateTab( { url: event.url })
-    //         thisTab.props.updateAddress( event.url )
-    //     })
-    //
-    //     webview.addEventListener('new-window', event =>
-    //     {
-    //         thisTab.props.addTab( event.url )
-    //
-    //     });
-    //
-    //     webview.addEventListener('did-start-loading', event =>
-    //     {
-    //         // let webRequest = webview.getWebContents().session.webRequest ;
-    //         //
-    //         // console.log( "sessionnnnnnn wr", webRequest );
-    //         //
-    //         // webRequest.onBeforeSendHeaders( '*://*/*', (details, callback) =>
-    //         // {
-    //         //     console.log( "requessssssttttt", details );
-    //         //
-    //         //     callback({});
-    //         // });
-    //
-    //
-    //         electronContextMenu({
-    //             window: webview,
-    //             showInspectElement : true,
-    //             prepend: (params, browserWindow) => [{
-    //                 label: 'NewTabbb',
-    //                 accelerator : 'CommandOrControl+T',
-    //                 click : ( menuItem, browserWindow, event )=>
-    //                 {
-    //                     if( params.linkURL )
-    //                     {
-    //                         console.log( params.linkURL );
-    //                         thisTab.props.addTab( { url : params.linkURL }  )
-    //
-    //                     }
-    //                 }
-    //
-    //             }]
-    //         })
-    //     });
-    //
-    // }
-    //
-    //
-    // render() {
-    //
-    //     const { url } = this.props;
-    //     console.log( "props in Tab component", this.props );
-    //
-    //
-    //
-    //     // let tabSrc = tabs.get( index ).get( 'url' );
-    //     return (
-    //         <webview ref="webview" className={moddedClass} src={ url } session="persist:safe"/>
-    //     );
-    // }
 }

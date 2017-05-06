@@ -12,9 +12,7 @@ const store = configureStore();
 const history = syncHistoryWithStore( hashHistory, store );
 
 ipcRenderer.on('electronSync', (ev, action) => {
-    console.log( 'actio received in RENDERER' , action );
     store.dispatch( action );
-
 } );
 
 
