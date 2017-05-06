@@ -3,20 +3,24 @@ import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
+import createCLILogger from 'redux-cli-logger'
 import rootReducer from '../reducers';
 import { ipcRenderer, ipcMain, remote, webContents } from 'electron';
 import { toJS } from 'immutable';
 
+const inRendererProcess = typeof window !== 'undefined';
 
 const electronSyncer = store => next => action =>
 {
     let meta = action.payload.meta;
     let syncAction = { ...action };
+    let result = next(action);
+
     syncAction.payload.meta = { sync: true };
 
     //prevent looping
     if( meta && meta.sync )
-        return;
+        return result;
 
     if( ipcMain )
     {
@@ -31,7 +35,6 @@ const electronSyncer = store => next => action =>
         ipcRenderer.send('electronSync', currentWindowId,  syncAction );
     }
 
-  let result = next(action)
   return result
 }
 
@@ -50,33 +53,57 @@ export default ( initialState: ?counterStateType ) =>
     //electron Syncer
     middleware.push( electronSyncer );
 
-  // Logging Middleware
-    const logger = createLogger( {
-        level     : 'info',
-        collapsed : true,
-        stateTransformer: ( state ) =>
+
+    //lets sort logging
+    let logger;
+
+    const stateTransformer = ( state ) =>
+    {
+        let logState = {};
+
+        Object.keys(state).forEach(function(key,index) {
+
+            if( state[ key ].toJS )
+            {
+                logState[key] = state[ key ].toJS();
+            }
+            else
+            {
+                logState[key] = state[ key ];
+
+            }
+
+            // key: the name of the object key
+        });
+
+        return logState;
+    };
+
+
+
+
+    if( inRendererProcess )
+    {
+        // Logging Middleware
+        logger = createLogger( {
+            level     : 'info',
+            collapsed : true,
+            stateTransformer: stateTransformer
+            // actionTransformer: ( action ) => action.toJS()
+        } );
+
+    }
+    else
+    {
+        const loggerOptions =
         {
-            let logState = {};
+            stateTransformer: stateTransformer
+        };
 
-            Object.keys(state).forEach(function(key,index) {
+        logger = createCLILogger(loggerOptions)
 
-                if( state[ key ].toJS )
-                {
-                    logState[key] = state[ key ].toJS();
-                }
-                else
-                {
-                    logState[key] = state[ key ];
+    }
 
-                }
-
-                // key: the name of the object key
-            });
-
-            return logState;
-        },
-        // actionTransformer: ( action ) => action.toJS()
-    } );
     middleware.push( logger );
 
   // Router Middleware
@@ -90,7 +117,7 @@ export default ( initialState: ?counterStateType ) =>
     };
 
     let composeEnhancers;
-    if( typeof window !== 'undefined' )
+    if( inRendererProcess )
     {
         composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {

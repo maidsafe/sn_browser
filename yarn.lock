@@ -6267,6 +6267,12 @@ redux-actions@^2.0.2:
     lodash-es "^4.17.4"
     reduce-reducers "^0.1.0"
 
+redux-cli-logger@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/redux-cli-logger/-/redux-cli-logger-2.0.0.tgz#54314147b2bd3b0e8275f862ea7553b19e63f60b"
+  dependencies:
+    colors "^1.1.2"
+
 redux-logger@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-3.0.1.tgz#ae8ae4c3c55ed3dd7aa31509f0856c5d3751057a"

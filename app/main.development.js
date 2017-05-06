@@ -10,7 +10,8 @@ import configureStore from './store/configureStore';
 let mainWindow = null;
 const store = configureStore();
 
-ipcMain.on('electronSync', (ev, currentWindowId,  action) => {
+ipcMain.on('electronSync', (ev, currentWindowId,  action) =>
+{
 
   console.log( 'actio received main', 'from', currentWindowId );
   store.dispatch( action );
