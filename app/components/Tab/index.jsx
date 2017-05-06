@@ -271,7 +271,7 @@ export default class Tab extends Component {
                 // console.log( 'action check will navigate' );
 
         this.props.updateTab({ url: event.url });
-        this.props.updateAddress(event.url);
+        this.props.updateAddress( { address: event.target.value } );
 
         // our own little preventDefault
         // cf. https://github.com/electron/electron/issues/1378

@@ -14,15 +14,16 @@ const initialState = initialAppState.address;
 export default function address( state: array = initialState, action )
 {
     const payload = fromJS( action.payload );
-
+    console.log( 'payload====>>>'  , payload );
     switch ( action.type )
-{
-    case UPDATE_ADDRESS :
-        {
-            return payload;
-        }
+    {
+        case UPDATE_ADDRESS :
+            {
+                let address = payload.get( 'address' )
+                return address || '';
+            }
 
-    default:
-        return state;
+        default:
+            return state;
     }
 }

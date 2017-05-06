@@ -12,11 +12,11 @@ const inRendererProcess = typeof window !== 'undefined';
 
 const electronSyncer = store => next => action =>
 {
-    let meta = action.payload.meta;
+    let meta = action.meta;
     let syncAction = { ...action };
     let result = next(action);
 
-    syncAction.payload.meta = { sync: true };
+    syncAction.meta = { sync: true };
 
     //prevent looping
     if( meta && meta.sync )
