@@ -9,10 +9,26 @@ import configureStore from './store/configureStore';
 import { mainSync } from './store/electronStoreSyncer';
 
 
-let mainWindow = null;
-const store = configureStore();
 
+
+// const nonsense = store => next => action =>
+// {
+//     console.log( 'this is happening with every action dispatch );
+//     let result = next(action);
+//   return result
+// }
+
+
+//here we would load middlewares, eg. nonsense
+let loadMiddlewarePackages = [ ]
+
+let initialState = {};
+const store = configureStore( initialState, loadMiddlewarePackages );
 mainSync( store );
+
+
+
+let mainWindow = null;
 
 export function openWindow()
 {
@@ -47,7 +63,6 @@ export function openWindow()
             throw new Error( '"mainWindow" is not defined' );
         }
 
-        // mainWindow.webContents.send( 'stateUpdate',  )
         //before show lets load state
         mainWindow.show();
         mainWindow.focus();
@@ -114,28 +129,13 @@ app.on( 'ready', async () =>
         await installExtensions();
     }
 
-    loadCorePackages();
 
+    // Pass store to packages for use.
+    // Peruse-tab can be passed to target webview partitions. This could be made
+    // more flexible...
+    //
+    // Many things could be passed here for customisation...
+    loadCorePackages( store );
     openWindow();
-    //
-    // // bounce back command messages from the render process.
-    // // this keeps all command handling in the browser component
-    // ipcMain.on( 'command', ( ...args ) =>
-    // {
-    //
-    //     //dutty. this is just trying to replace actions...
-    //     const event = args[0];
-    //     // const type = args[1];
-    //
-    //
-    //     // console.log( 'type'  , type );
-    //     const theRest = args.slice(1);
-    //
-    //     // console.log( 'theRest'  , theRest );
-    //     // var args = [...arguments];
-    //
-    //     // console.log( 'args'  , args );
-    //     event.sender.send('command', ...theRest );
-    //
-    // })
+
 } );

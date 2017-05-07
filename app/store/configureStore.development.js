@@ -12,10 +12,10 @@ const inRendererProcess = typeof window !== 'undefined';
 
 
 
-export default ( initialState: ?counterStateType ) =>
+export default ( initialState = {}, middleware = [] ) =>
 {
   // Redux Configuration
-    const middleware = [];
+    // middleware ? middleware = [];
     const enhancers = [];
 
   // Thunk Middleware
@@ -113,10 +113,10 @@ export default ( initialState: ?counterStateType ) =>
     const store = createStore( rootReducer, initialState, enhancer );
 
     if ( module.hot )
-{
+    {
         module.hot.accept( '../reducers', () =>
-      store.replaceReducer( require( '../reducers' ) ) // eslint-disable-line global-require
-    );
+            store.replaceReducer( require( '../reducers' ) ) // eslint-disable-line global-require
+        );
     }
 
     return store;

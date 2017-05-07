@@ -8,7 +8,6 @@ export default class App extends Component
     static propTypes = {
         children : PropTypes.element.isRequired
     };
-    // <div className={styles.titleBar} >Peru</div>
 
     render()
 {

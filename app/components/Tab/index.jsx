@@ -93,16 +93,14 @@ export default class Tab extends Component {
         let rightClickPosition;
 
         // cf. https://github.com/electron/electron/issues/6046
-        //
-        // Move this to css
-        webviewShell.innerHTML = `<webview partition=${'tabPartition-' + index } style="height: 100%; display: flex; flex: 1 1;"/>`;
+        webviewShell.innerHTML = `<webview style="height: 100%; display: flex; flex: 1 1;"/>`;
         const wv = webviewShell.querySelector('webview');
         this.webview = wv;
 
         const { meId } = this.props;
-        // const partition = `persist:safe`
+        const partition = `persist:peruse-tab`;
 
-        // wv.partition = partition
+        wv.partition = partition
         // wv.useragent = useragent
         wv.plugins = true;
         // wv.preload = injectPath

@@ -4,12 +4,11 @@ An electron web browser. Built to be a basis. Extendable by design.
 
 ## TODO
 
-- general cleanup of logging / code 
-- implement basic example of extensibility
-
-- Add shortcuts for common cases
+- Improve drag behaviour
+- Populate PropTypes
+- TESTS
+- Add browser basic functionality
     - Favourites
-    - To address bar
-
+    - history
 - CSS 
     - Add PostCSS

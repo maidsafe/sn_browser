@@ -39,20 +39,22 @@ const safeHandler = ( req, cb ) =>
 
 const applySafeProtocolStandardsToAll = () =>
 {
-    // let safeSession = session.fromPartition('persist:safe')
+    //peruse-tab is partition for all webviews in the browser (for now...)
+    let safeSession = session.fromPartition('persist:peruse-tab')
 
-    // safeSession.webRequest.onBeforeSendHeaders(filter, (details, callback) =>
-    session.defaultSession.webRequest.onBeforeSendHeaders( filter, ( details, callback ) =>
-{
+    // catch all version
+    // session.defaultSession.webRequest.onBeforeSendHeaders( filter, ( details, callback ) =>
+    safeSession.webRequest.onBeforeSendHeaders(filter, (details, callback) =>
+    {
         const referrer = url.parse( details.referrer );
         const target = url.parse( details.url );
 
-        console.log( details.requestHeaders );
+        console.log('DEETS==>', details.url );
 
         if ( target.hostname === 'localhost'
             || details.requestHeaders.Origin === 'chrome-devtools://devtools' )
-{
-            console.log( 'going to safe API' );
+        {
+            console.log( 'going to safe API or somewhere safe at least...' );
             callback( {} );
             return;
         }
@@ -62,17 +64,25 @@ const applySafeProtocolStandardsToAll = () =>
     } );
 };
 
-const initSafeBrowsing = () =>
+const initSafeBrowsing = ( store ) =>
 {
-    console.log( 'NOT registering SAFE Network Protocols, BUT COULD BE.' );
-    // console.log( "registering SAFE Network Protocols" );
+    console.log( 'Registering SAFE Network Protocols, BUT COULD BE.' );
 
     // applySafeProtocolStandardsToAll();
-    // // setup the protocol handler
+
+    // setup the protocol handler
     // protocol.registerHttpProtocol('safe', safeHandler, err => {
     //     if (err)
     //     throw ProtocolSetupError(err, 'Failed to create protocol: safe')
-    // } )
+    // } );
+
+
+    // if we want to do something with the store, we would do it here.
+    store.subscribe( () =>
+    {
+        //might not be needed with middleware option.
+        console.log( 'SAFE package listening to the store' );
+    })
 };
 
 export default initSafeBrowsing;
