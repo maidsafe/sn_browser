@@ -3,12 +3,22 @@
 {
     flex: 0 0 0%;
     height: 100%;
-    padding-top:     10px;
+    padding-top:     20px;
     padding-left:     75px;
     background: rgba( 207, 208, 209, 1);
 
     font-size: 1.4rem;
 
+
+}
+
+.dragZone
+{
+    display: block;
+    position: absolute;
+    top: 0;
+    width:100%;
+    height: 15px;
     -webkit-app-region: drag;
 
 }

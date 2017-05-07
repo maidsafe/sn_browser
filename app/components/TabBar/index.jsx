@@ -2,8 +2,6 @@
 import React, { Component }     from 'react';
 import PropTypes                from 'prop-types';
 import { ipcRenderer, ipcMain }          from 'electron';
-
-// import { Link }                 from 'react-router';
 import styles                   from './tabBar.css';
 import MdClose                from 'react-icons/lib/md/close';
 import MdAdd                    from 'react-icons/lib/md/add';
@@ -67,6 +65,7 @@ export default class TabBar extends Component {
 
         return (
             <div className={styles.container}>
+                <div  className={styles.dragZone}  />
                 <div className={styles.tabBar}>
                     {
                         tabs.map( ( tab, i ) =>
