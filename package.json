@@ -1,8 +1,8 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "name": "peruse",
+  "productName": "Peruse",
   "version": "0.10.0",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
   "scripts": {
     "test": "mocha-webpack --webpack-config webpack.config.test.js \"test/**/*.spec.js\"",
