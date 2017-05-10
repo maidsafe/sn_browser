@@ -466,10 +466,10 @@ function handleAutocompleteSearch (results) {
   if (isProbablyUrl && !v.includes('://') && !(v.startsWith('beaker:') || v.startsWith('ipfs:/'))) {
     if (isHashRegex.test(v))
       vWithProtocol = 'dat://'+v
-    // else {
-    //   vWithProtocol = 'safe://'+v
-    //   isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
-    // }
+    else {
+      vWithProtocol = 'safe://'+v
+      isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
+    }
   }
 
   // set the top results accordingly
@@ -690,7 +690,7 @@ function onKeydownLocation (e) {
     var page = getEventPage(e)
     if (page) {
       var selection = getAutocompleteSelection()
-      // laod safeauth page
+      // load safeauth page
       if (new URL(selection.url).protocol === pages.SAFE_AUTH_SCHEME) {
         if (pages.handleSafeAuthScheme(selection.url)) {
           e.target.blur()
@@ -698,7 +698,18 @@ function onKeydownLocation (e) {
         }
       }
 
-      page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
+      // add index.html to prefix if not found
+      var selectionUrl = selection.url
+      var parsedSelectionUrl = new URL(selection.url)
+      if (parsedSelectionUrl.pathname === '/') {
+        if (selectionUrl.slice(-1) !== '/') {
+          selectionUrl += '/index.html'
+        } else {
+          selectionUrl += 'index.html'
+        }
+      }
+
+      page.loadURL(selectionUrl, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }
     return
