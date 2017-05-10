@@ -97,19 +97,15 @@
   "scripts": {
     "postinstall": "cd app && npm install && cd ../ && npm run build-safe-app",
     "build": "gulp build",
-    "rebuild:only": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
-    "rebuild": "(cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source); gulp build;",
-    "burnthemall": "rm -Rf ./node_modules ./app/node_modules; npm i",
-    "release": "build -m -l -w -p never",
-    "release:mac": "build -m -p never",
-    "release:linux": "build -l -p never --x64",
-    "release:windows": "build -w -p never --x64",
+    "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
+    "rebuild": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
+    "burnthemall": "rm -Rf ./node_modules ./app/node_modules && npm i && npm run rebuild && npm run pack-authenticator && npm run build && npm run package",
+    "package": "node ./scripts/main.js --package",
     "start": "gulp start",
     "watch": "gulp start-watch",
-    "pack-authenticator:unix": "sh ./shell_scripts/pack_authenticator.sh",
-    "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\shell_scripts\\pack_authenticator.ps1\"",
-    "pack-authenticator": "node ./shell_scripts/pack_authenticator.js",
-    "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build"
+    "pack-authenticator:unix": "sh ./scripts/pack_authenticator.sh",
+    "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\scripts\\pack_authenticator.ps1\"",
+    "pack-authenticator": "node ./scripts/main.js --authenticator"
   },
   "dependencies": {
     "rollup-plugin-async": "^1.1.0"
