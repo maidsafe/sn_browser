@@ -1,95 +1,66 @@
 # safe_browser
 
-> SAFE Browser is a browser designed to open safe:// websites on the SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
+> SAFE Browser is a browser designed to open safe:// websites on the SAFE Network.
+
+**Maintainer:** Krishna Kumar (krishna.kumar@maidsafe.net)
 
 ## Development
 
-1. Make sure you have Node.js `v6.5.0`.
+### Prerequisites
 
-    ```shell
-    node --version
+  * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
+  * Rust stable (we recommend installing it from [rust-lang.org](https://www.rust-lang.org/en-US/))
+  * [Git](https://git-scm.com/)
+
+1. Clone this GitHub repository.
+
+    ```bash
+    $ git clone -b dev https://github.com/maidsafe/safe_browser.git
     ```
+    
+2. Install the dependencies.
 
-    There are many ways to install Node.js. See [nodejs.org](https://nodejs.org/en/download/) for more info.
-
-2. Clone this GitHub repository.
-
-    ```shell
-    git clone https://github.com/maidsafe/safe_browser.git
-    ```
-  
-    If you don't have Git installed, you can download it from [git-scm.com](https://git-scm.com/downloads).
-
-3. Install the dependencies.
-
-    ``` shell
+    ``` bash
     $ cd safe_browser
-    $ npm install
+    $ npm i
+    ```
+3. Rebuild native modules
+    
+    ```bash
+    $ npm run rebuild
     ```
 
 4. Build the SAFE Authenticator plugin.
 
-    ```
+    ```bash
     $ npm run pack-authenticator
     ```
 
 5. Build SAFE Browser and open it.
   
-    **Linux and macOS**
-    
     ```
-    $ npm run rebuild
-    ```
-    
-    **Windows** 
-    
-    ```
-    $ npm run rebuild:only
     $ npm run build
+    $ npm start
     ```
-    Finally,
     
-    ```
-    $ npm start
-    ```
-
-    Any time you want to run SAFE Browser again, all you have to do is open a terminal and run this:
-
-    ``` shell
-    $ cd safe_browser
-    $ npm start
-    ```
+    If you're doing development, `npm run watch` to have assets build automatically.
 
 6. Package SAFE Browser.
  
-    **macOs**
    ```
-   $ npm run release:mac
-   ```
-   
-   **Linux**
-   ```
-   $ npm run release:linux
-   ```
-   
-   **Windows**
-   ```
-   $ npm run release:windows
+   $ npm run package
    ```
    
     The packed SAFE Browser will be found inside `dist` folder.
-    
+
 ### Updating
 
 If you pull latest from the repo and get weird module errors, do:
 
-```shell
+```bash
 $ npm run burnthemall
 ```
-
-This will remove your npm_modules, and do the full install/rebuild process for you. `npm start` should work afterwards.
-
-If you're doing development, `npm run watch` to have assets build automatically.
+This will remove your npm_modules, and do the full install, rebuild, build SAFE Authenticator and package  processes for you. `npm start` should work afterwards.
 
 ## License
 
