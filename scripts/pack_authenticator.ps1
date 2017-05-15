@@ -1,13 +1,15 @@
-git submodule update --init --recursive --remote
+$clean=""
+if ( $args[0] ) {
+  $clean="--clean"
+}
+git submodule update --init --recursive
 
 $DEST_FOLD = "../app/node_modules/beaker-plugin-safe-authenticator"
 
 cd authenticator
 
-git submodule update --init --recursive --remote
-
 npm i
-npm run build-libs features="mock-routing"
+npm run build-libs -- --features="mock-routing" $clean
 npm run build
 
 $FILES_ARR = @("./dist", "./index.js", "./package.json")
