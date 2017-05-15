@@ -31,7 +31,8 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const packAuthenticator = () => {
-  const cmd = `npm run pack-authenticator:${(osPlatform === 'win32') ? 'windows' : 'unix'}`;
+  const toClean = (process.argv.indexOf('--clean') !== -1);
+  const cmd = `npm run pack-authenticator:${(osPlatform === 'win32') ? 'windows' : 'unix'} ${(toClean ? 'clean' : '')}`;
   runSpawn('Pack Authenticator', cmd);
 };
 

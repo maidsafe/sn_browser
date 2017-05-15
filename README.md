@@ -35,6 +35,8 @@
     ```bash
     $ npm run pack-authenticator
     ```
+    
+    To clean the cargo dependencies of Authenticator's native modules add `-- --clean` to above command.
 
 5. Build SAFE Browser and open it.
   
