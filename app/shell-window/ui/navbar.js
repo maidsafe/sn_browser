@@ -233,7 +233,7 @@ function showSafeAuthPopup(isContainerReq) {
   var reqKey = isContainerReq ? 'contReq' : 'authReq';
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
-  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'requesting for authorisation.' : 'requesting access for the following contaniers';
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'Requesting for authorisation.' : 'Requesting access for the following containers';
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
