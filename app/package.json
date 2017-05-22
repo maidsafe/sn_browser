@@ -2,7 +2,7 @@
   "name": "SAFEBrowser",
   "productName": "SAFEBrowser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
-  "homepage": "https://github.com/maidsafe/safe_browser/blob/dev/README.md",
+  "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
   "version": "0.1.0",
   "author": {
       "name" : "MaidSafe",
