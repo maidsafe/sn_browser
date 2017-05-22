@@ -2,12 +2,12 @@
   "name": "SAFEBrowser",
   "productName": "SAFEBrowser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
-  "homepage": "https://github.com/joshuef/beaker",
-  "version": "0.4.3",
+  "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
+  "version": "0.1.0",
   "author": {
-      "name" : "Josh Wilson",
-      "email" : "joshuef@gmail.com",
-      "url" :"https://github.com/joshuef"
+    "name" : "MaidSafe Ltd",
+    "email" : "qa@maidsafe.net",
+    "url" :"https://maidsafe.net"
   },
   "main": "background-process.build.js",
   "dependencies": {
