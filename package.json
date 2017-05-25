@@ -27,7 +27,7 @@
   },
   "build": {
     "category": "public.app-category.productivity",
-    "copyright": "© 2016, Josh Wilson",
+    "copyright": "© 2017, MaidSafe.net Ltd",
     "npmRebuild": false,
     "asar": false,
     "dmg": {
