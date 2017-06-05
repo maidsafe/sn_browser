@@ -2,7 +2,7 @@ $clean=""
 if ( $args[0] ) {
   $clean="--clean"
 }
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 
 $DEST_FOLD = "../app/node_modules/beaker-plugin-safe-authenticator"
 
