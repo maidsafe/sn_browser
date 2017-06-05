@@ -3,7 +3,7 @@ clean=""
 if [ $1 ]; then
   clean="--clean"
 fi
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 
 DEST_FOLD="../app/node_modules/beaker-plugin-safe-authenticator"
 
