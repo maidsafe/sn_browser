@@ -4,9 +4,9 @@ const fs = require('fs-extra');
 
 const runSpawn = (title, cmdStr) => {
   return new Promise((resolve) => {
-    const whiteListCmds = [ 'rm' ];
+    const whiteListCmds = [ 'git' ];
     cmdStr = cmdStr.split(' ');
-    if (osPlatform === 'win32') {
+    if ((osPlatform === 'win32') && (whiteListCmds.indexOf(cmdStr[0]) === -1)) {
       cmdStr[0] += '.cmd';
     }
     const build = spawn(cmdStr[0], cmdStr.slice(1));
