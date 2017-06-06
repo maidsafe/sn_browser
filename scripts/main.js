@@ -1,13 +1,12 @@
 const spawn = require('child_process').spawn;
 const osPlatform = require('os').platform();
 const fs = require('fs-extra');
-const authenticatorPkg = require('../authenticator/package.json');
 
 const runSpawn = (title, cmdStr) => {
   return new Promise((resolve) => {
-    const whiteListCmds = [ 'rm' ];
+    const whiteListCmds = [ 'git' ];
     cmdStr = cmdStr.split(' ');
-    if (osPlatform === 'win32') {
+    if ((osPlatform === 'win32') && (whiteListCmds.indexOf(cmdStr[0]) === -1)) {
       cmdStr[0] += '.cmd';
     }
     const build = spawn(cmdStr[0], cmdStr.slice(1));
@@ -34,14 +33,18 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const packAuthenticator = () => {
-  delete authenticatorPkg.scripts.postinstall;
   try {
-    fs.outputFileSync('./authenticator/_package.json', JSON.stringify(authenticatorPkg), {
-      spaces: 2
-    });
-    const toClean = (process.argv.indexOf('--clean') !== -1);
-    const cmd = `npm run pack-authenticator:${(osPlatform === 'win32') ? 'windows' : 'unix'} ${(toClean ? 'clean' : '')}`;
-    runSpawn('Pack Authenticator', cmd);
+    runSpawn('Update git submodule', 'git submodule update --init --recursive')
+      .then(() => {
+        const authenticatorPkg = require('../authenticator/package.json');
+        delete authenticatorPkg.scripts.postinstall;
+        fs.outputFileSync('./authenticator/_package.json', JSON.stringify(authenticatorPkg), {
+          spaces: 2
+        });
+        const toClean = (process.argv.indexOf('--clean') !== -1);
+        const cmd = `npm run pack-authenticator:${(osPlatform === 'win32') ? 'windows' : 'unix'} ${(toClean ? 'clean' : '')}`;
+        return runSpawn('Pack Authenticator', cmd);
+      })
   } catch (e) {
     console.error(`Error while creating package.json :: ${e.message}`);
   }
