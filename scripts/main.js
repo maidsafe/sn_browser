@@ -1,8 +1,11 @@
 const spawn = require('child_process').spawn;
 const osPlatform = require('os').platform();
+const fs = require('fs-extra');
+const authenticatorPkg = require('../authenticator/package.json');
 
 const runSpawn = (title, cmdStr) => {
   return new Promise((resolve) => {
+    const whiteListCmds = [ 'rm' ];
     cmdStr = cmdStr.split(' ');
     if (osPlatform === 'win32') {
       cmdStr[0] += '.cmd';
@@ -31,9 +34,17 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const packAuthenticator = () => {
-  const toClean = (process.argv.indexOf('--clean') !== -1);
-  const cmd = `npm run pack-authenticator:${(osPlatform === 'win32') ? 'windows' : 'unix'} ${(toClean ? 'clean' : '')}`;
-  runSpawn('Pack Authenticator', cmd);
+  delete authenticatorPkg.scripts.postinstall;
+  try {
+    fs.outputFileSync('./authenticator/_package.json', JSON.stringify(authenticatorPkg), {
+      spaces: 2
+    });
+    const toClean = (process.argv.indexOf('--clean') !== -1);
+    const cmd = `npm run pack-authenticator:${(osPlatform === 'win32') ? 'windows' : 'unix'} ${(toClean ? 'clean' : '')}`;
+    runSpawn('Pack Authenticator', cmd);
+  } catch (e) {
+    console.error(`Error while creating package.json :: ${e.message}`);
+  }
 };
 
 const package = () => {
