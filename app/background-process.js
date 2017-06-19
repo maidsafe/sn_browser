@@ -35,7 +35,7 @@ import { auth } from 'safe-js'
 var packageJson = require( './package.json' );
 var mainWindow = null;
 
-console.log( "packagejson" );
+log.debug( "packagejson" );
 
 const parseSafeUri = function(uri) {
   return uri.replace('//', '').replace('==/', '==');

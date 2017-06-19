@@ -10,7 +10,7 @@ import emitStream from 'emit-stream'
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 
 const PLUGIN_NODE_MODULES = path.join(__dirname, 'node_modules')
-console.log('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
+log.debug('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
 
 // find all modules named beaker-plugin-*
 var protocolModuleNames = []
@@ -85,7 +85,7 @@ export function registerStandardSchemes () {
 export function setupProtocolHandlers () {
   getAllInfo('protocols').forEach(proto => {
     // run the module's protocol setup
-    log.debug('Registering protocol handler:', proto.scheme)
+    //log.debug('Registering protocol handler:', proto.scheme)
     proto.register()
   })
 }
@@ -94,7 +94,7 @@ export function setupProtocolHandlers () {
 export function setupWebAPIs () {
   getAllInfo('webAPIs').forEach(api => {
     // run the module's protocol setup
-    log.debug('Wiring up Web API:', api.name)
+    //log.debug('Wiring up Web API:', api.name)
 
     // We export functions with callbacks in a separate channel
     // since they will be adapted on the rederer side to invoke the callbacks
