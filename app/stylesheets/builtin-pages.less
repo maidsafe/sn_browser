@@ -48,3 +48,123 @@
     -webkit-text-stroke: 1px #999;
   }
 }
+
+.safe-status {
+  .heading {
+    border: 0;
+    font-size: 36px;
+    text-align: center;
+    margin-top: 50px;
+    color: #5592d7;
+    font-weight: 300;
+  }
+  .desc {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    span {
+      font-size: 14px;
+      font-weight: normal;
+      opacity: 0.5;
+      padding: 0 16px;
+      position: relative;
+      &:after {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background-color: black;
+        position: absolute;
+        bottom: 5px;
+        right: -2.5px;
+        border-radius: 100%;
+      }
+      &:last-child {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+  .desc-2 {
+    width: 400px;
+    text-align: center;
+    margin: 20px auto 50px;
+    font-size: 15px;
+    font-weight: normal;
+  }
+  .desc-lnk {
+    width: 400px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 20px auto 0;
+    overflow: auto;
+    text-overflow: inherit;
+    white-space: inherit;
+  }
+  .ll-help {
+    text-align: center;
+    margin: 0;
+    padding: 20px 0 0;
+    a {
+      color: #5592d7;
+      text-decoration: none;
+      margin-top: 16px;
+      display: inline-block;
+    }
+  }
+  .safe-auth-state {
+    position: relative;
+    .connected {
+      color: #5592d7;
+    }
+    .connecting {
+      transition: color 1s linear;
+      animation: safeConnecting 1s infinite;
+    }
+    .terminated {
+      color: #e26464;
+    }
+  }
+  .safe-auth {
+    width: 100%;
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    padding-left: 60px;
+    background-color: transparent;
+    .safe-auth-desc {
+      color: gray;
+      font-size: 18px;
+      font-family: sans-serif;
+    }
+    .states {
+      display: none;
+      margin-top: 30px;
+      h3 {
+        font-size: 14px;
+        opacity: 0.5;
+      }
+      .safe-auth-state {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        margin: 0 16px;
+        .icon {
+          font-size: 20px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes safeConnecting {
+  0% {
+    color: #666666;
+  }
+  50% {
+    color: #5592d7;
+  }
+}
+
