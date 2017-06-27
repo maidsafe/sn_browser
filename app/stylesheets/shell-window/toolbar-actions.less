@@ -39,7 +39,7 @@
 
     // shrink and reposition some buttons
     &.nav-back-btn,
-    &.nav-forward-btn, 
+    &.nav-forward-btn,
     &.nav-reload-btn {
       padding: 2px 5px 5px;
       margin: 0 2px;
@@ -73,29 +73,42 @@
   }
   .safe-btn-safe {
     position: relative;
+    .toolbar-btn {
+      padding: 3px 4px;
+      .icon {
+        background-image: url("beaker:safe-auth-nav-logo-dark");
+        display: block;
+        width: 20px;
+        height: 20px;
+      }
+    }
     .connected {
       color: #5592d7;
     }
     .connecting {
       transition: color 1s linear;
-      animation: safeConnecting 1s infinite;
+      animation: safeConnecting 2s infinite;
     }
     .terminated {
       color: #e26464;
     }
     .loading {
-      animation: safeLoading 1.5s infinite
+      .icon {
+        background-image: none;
+      }
+      animation: safeLoading 2s infinite
     }
     > .popup {
-      position: absolute;
-      width: 400px;
+      position: fixed;
+      width: 330px;
       z-index: 99;
       background: white;
       border: 1px solid #AAA;
-      top: 100%;
-      left: 0;
-      margin-top: 6px;
+      bottom: 0;
+      right: 40px;
       box-shadow: 0 1px 16px rgba(0, 0, 0, 0.26);
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
       .popup-base {
         margin: 0;
         padding: 0;
@@ -103,53 +116,53 @@
         text-align: left;
         .popup-title {
           font-size: 15px;
-          line-height: 30px;
-          font-weight: 600;
+          line-height: 40px;
+          font-weight: normal;
           position: relative;
-          padding: 12px 12px 12px 54px;
-          background-color: #EFEFEF;
+          padding-left: 42px;
+          background-color: #5592d7;
+          color: white;
           &:before {
             content: "";
             background-image: url(beaker:safe-auth-logo);
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             display: inline-block;
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             position: absolute;
-            top: 12px;
-            left: 12px;
+            top: 8px;
+            left: 10px;
           }
         }
         .popup-i {
           position: relative;
-          padding-top: 16px;
+          padding-top: 30px;
           max-height: 250px;
           overflow: auto;
+          background-color: #deecf9;
           .popup-cnt {
             min-height: 150px;
-            padding: 0 16px;
+            padding-left: 30px;
             .popup-cnt-main {
-              padding-bottom: 12px;
               h3 {
-                font-size: 20px;
-                font-weight: 500;
+                font-size: 18px;
+                font-weight: normal;
                 margin: 0;
                 padding: 0;
               }
               h4 {
-                font-size: 14px;
-                font-weight: 500;
-                opacity: 0.5;
+                font-size: 15px;
+                font-weight: normal;
                 margin: 0;
                 padding: 0;
               }
-              p.p {
-                font-size: 14px;
-                opacity: 0.5;
-                padding: 24px 0 0;
-                display: inline-block;      
+              p {
+                font-size: 12px;
+                margin: 30px 0;
+                display: inline-block;
+                line-height: 12px;
               }
             }
             .popup-cnt-ls {
@@ -164,9 +177,9 @@
                     }
                   }
                   h3 {
-                    font-size: 16px;
-                    font-weight: 500;
-                    line-height: 24px;
+                    font-size: 18px;
+                    font-weight: normal;
+                    line-height: normal;
                     margin: 0 0 5px;
                     padding: 0;
                     cursor: pointer;
@@ -201,12 +214,14 @@
             button {
               border: 0;
               background: transparent;
-              font-size: 15px;
+              font-size: 13px;
+              font-weight: bolder;
               cursor: pointer;
               outline: none;
               padding: 8px 16px;
               text-transform: uppercase;
               border-radius: 3px;
+              color: #4D4D4D;
               &:hover {
                 box-shadow: 0 1px 5px rgba(0,0,0,0.26);
               }
@@ -226,7 +241,7 @@
     transform: rotate(0deg);
   }
   50% {
-    transform: rotate(180deg);  
+    transform: rotate(180deg);
   }
   100% {
     transform: rotate(360deg);
@@ -235,9 +250,12 @@
 
 @keyframes safeConnecting {
   0% {
-    color: #666666;
+    opacity: 1;
   }
   50% {
-    color: #5592d7;
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
   }
 }

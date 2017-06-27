@@ -75,6 +75,7 @@ ipcRenderer.on('onContainerReq', function(event, data) {
 });
 
 ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+  console.log(data)
   isSafeAppAuthenticating = false
   if (data.type === CLIENT_TYPES.WEB) {
     ipcRenderer.send('webClientAuthRes', data.res);
@@ -233,7 +234,7 @@ function showSafeAuthPopup(isContainerReq) {
   var reqKey = isContainerReq ? 'contReq' : 'authReq';
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
-  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'requesting for authorisation.' : 'requesting access for the following contaniers';
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'Requesting for authorisation.' : 'Requesting access for the following containers';
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
@@ -308,14 +309,14 @@ function render (id, page) {
       </button>`
     : yo`<button class="toolbar-btn ${(function() {
       if (safeAuthNetworkState === 0) {
-        return 'connecting'
-      } else if (safeAuthNetworkState === 1) {
         return 'connected'
+      } else if (safeAuthNetworkState === -1) {
+        return 'connecting'
       } else if (safeAuthNetworkState === 2) {
         return 'terminated'
       }
     })()}" onclick=${onClickOpenSafeAuthHome}>
-        <span class="icon icon-rocket"></span>
+        <span class="icon"></span>
       </button>`
 
   // render safe btn
@@ -378,32 +379,30 @@ function render (id, page) {
       var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
       var contentColumn
       if (r.search)
-        contentColumn = yo`<span class="result-search">${r.search}</span>`
+      contentColumn = yo`<span class="result-search">${r.search}</span>`
       else {
-        contentColumn = yo`<span class="result-url"></span>`
-        if (r.urlDecorated)
-          contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
-        else
-          contentColumn.textContent = r.url
+      contentColumn = yo`<span class="result-url"></span>`
+      if (r.urlDecorated)
+      contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
+      else
+      contentColumn.textContent = r.url
       }
       var titleColumn = yo`<span class="result-title"></span>`
       if (r.titleDecorated)
-        titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
+      titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
       else
-        titleColumn.textContent = r.title
-
+      titleColumn.textContent = r.title
       // selection
       var rowCls = 'result'
       if (i == autocompleteCurrentSelection)
-        rowCls += ' selected'
-
+      rowCls += ' selected'
       // result row
       return yo`<div class=${rowCls} data-result-index=${i}>
             <span class=${iconCls}></span>
             ${contentColumn}
             ${titleColumn}
           </div>`
-    })}
+      })}
       </div>
     `
   }
@@ -648,9 +647,9 @@ function onClickZoom (e) {
   const { Menu, MenuItem } = remote
   var menu = Menu.buildFromTemplate([
     { label: 'Reset Zoom', click: () => zoom.zoomReset(pages.getActive()) },
-    { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
-    { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
-  ])
+  { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
+  { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
+])
   menu.popup(remote.getCurrentWindow())
 }
 
