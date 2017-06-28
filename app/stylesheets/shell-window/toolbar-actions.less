@@ -77,26 +77,34 @@
       padding: 3px 4px;
       .icon {
         background-image: url("beaker:safe-auth-nav-logo-dark");
+        background-size: contain;
         display: block;
         width: 20px;
         height: 20px;
       }
     }
     .connected {
-      color: #5592d7;
+      .icon {
+        background-image: url("beaker:safe-auth-nav-logo");
+      }
     }
     .connecting {
-      transition: color 1s linear;
-      animation: safeConnecting 2s infinite;
+      .icon {
+        background-image: url("beaker:safe-auth-nav-logo");
+        animation: safeConnecting 2s infinite;
+      }
     }
     .terminated {
-      color: #e26464;
+      .icon {
+        background-image: url("beaker:safe-auth-nav-logo-dark");
+        background-size: contain;
+      }
     }
-    .loading {
+    .isLoading {
       .icon {
         background-image: none;
       }
-      animation: safeLoading 2s infinite
+      animation: safeConnecting 2s infinite;
     }
     > .popup {
       position: fixed;
