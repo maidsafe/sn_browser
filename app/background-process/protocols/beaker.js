@@ -35,10 +35,10 @@ export function setup () {
     return cb(path.join(__dirname, 'img/logo.png'))
   if (request.url.startsWith('beaker:safe-auth-logo'))
     return cb(path.join(__dirname, 'img/safe_auth_logo.svg'))
-  if (request.url.startsWith('beaker:safe-auth-nav-logo'))
-    return cb(path.join(__dirname, 'img/authenticator-logo.svg'))
   if (request.url.startsWith('beaker:safe-auth-nav-logo-dark'))
     return cb(path.join(__dirname, 'img/authenticator-logo-dark.png'))
+  if (request.url.startsWith('beaker:safe-auth-nav-logo'))
+    return cb(path.join(__dirname, 'img/authenticator-logo.svg'))
   if (request.url.startsWith('beaker:safe-auth-home'))
     return cb(shell.openExternal('safe-auth://home/'))
 

@@ -304,15 +304,13 @@ function render (id, page) {
       </button>`
 
   var safeNetworkStatusBtn = (isSafeAppAuthenticating)
-    ? yo`<button class="toolbar-btn loading" onclick=${onClickOpenSafeAuthHome}>
-        <span class="icon icon-hourglass"></span>
+    ? yo`<button class="toolbar-btn connecting" onclick=${onClickOpenSafeAuthHome}>
+        <span class="icon"></span>
       </button>`
     : yo`<button class="toolbar-btn ${(function() {
       if (safeAuthNetworkState === 0) {
         return 'connected'
       } else if (safeAuthNetworkState === -1) {
-        return 'connecting'
-      } else if (safeAuthNetworkState === 2) {
         return 'terminated'
       }
     })()}" onclick=${onClickOpenSafeAuthHome}>
