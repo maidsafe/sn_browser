@@ -36,7 +36,7 @@ export function setup () {
   if (request.url.startsWith('beaker:safe-auth-logo'))
     return cb(path.join(__dirname, 'img/safe_auth_logo.svg'))
   if (request.url.startsWith('beaker:safe-auth-nav-logo-dark'))
-    return cb(path.join(__dirname, 'img/authenticator-logo-dark.png'))
+    return cb(path.join(__dirname, 'img/authenticator-logo-dark.svg'))
   if (request.url.startsWith('beaker:safe-auth-nav-logo'))
     return cb(path.join(__dirname, 'img/authenticator-logo.svg'))
   if (request.url.startsWith('beaker:safe-auth-home'))
