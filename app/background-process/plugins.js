@@ -8,6 +8,7 @@ import emitStream from 'emit-stream'
 // globals
 // =
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
+const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 
 const PLUGIN_NODE_MODULES = path.join(__dirname, 'node_modules')
 log.debug('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
@@ -100,15 +101,19 @@ export function setupWebAPIs () {
     // since they will be adapted on the rederer side to invoke the callbacks
     let fnsToExport = [];
     let fnsWithCallbacks = [];
+    let fnsWithAsyncCallbacks = [];
     for (var fn in api.manifest) {
       if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
         fnsWithCallbacks[fn] = api.manifest[fn];
+      } else if (fn.startsWith(WITH_ASYNC_CALLBACK_TYPE_PREFIX)) {
+        fnsWithAsyncCallbacks[fn] = api.manifest[fn];
       } else {
         fnsToExport[fn] = api.manifest[fn];
       }
     }
     rpc.exportAPI(api.name, fnsToExport, api.methods)
     rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+    rpc.exportAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + api.name, fnsWithAsyncCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
   })
 }
 
