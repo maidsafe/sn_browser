@@ -59,15 +59,17 @@ export default class Tab extends Component {
 
     componentWillReceiveProps(nextProps)
     {
+
         if( JSON.stringify(nextProps) === JSON.stringify( this.props ) )
         {
             return;
         }
 
-        if( !this.state.mountedAndReady )
+        if( !this.state.browserState.mountedAndReady )
             return;
 
         if (nextProps.url) {
+
             const { webview } = this;
             if (!webview)
             {
