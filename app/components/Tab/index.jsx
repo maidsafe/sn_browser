@@ -253,7 +253,7 @@ export default class Tab extends Component {
 
         const index = this.props.index;
 
-        this.props.updateTab({ url: event.url });
+        this.props.updateTab({ index, url: event.url });
         this.props.updateAddress( event.target.value );
 
         // our own little preventDefault
@@ -271,11 +271,12 @@ export default class Tab extends Component {
         this.props.addTab(event.url);
     }
 
-    // isFrozen(e) {
-    //     // const {index} = this.props
-    //     // const frozen = staticTabData[index] || !index
-    //     return false;
-    // }
+    isFrozen(e) {
+        const {index} = this.props
+        const frozen = !index;
+        // const frozen = staticTabData[index] || !index
+        return frozen;
+    }
 
     with(cb, opts = { insist: false }) {
         const { webview } = this;
