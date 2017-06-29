@@ -75,7 +75,7 @@ ipcRenderer.on('onContainerReq', function(event, data) {
 });
 
 ipcRenderer.on('onAuthDecisionRes', function(event, data) {
-  console.log(data)
+  console.log('onAuthDecisionRes', data)
   isSafeAppAuthenticating = false
   if (data.type === CLIENT_TYPES.WEB) {
     ipcRenderer.send('webClientAuthRes', data.res);
@@ -93,6 +93,10 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
 
 ipcRenderer.on('onAuthResError', function(event, data) {
   isSafeAppAuthenticating = false
+  console.log('onAuthResError', data.res)
+  if (data.res && data.res.toLowerCase() === 'unauthorised') {
+    onClickOpenSafeAuthHome()
+  }
   if (data.type === CLIENT_TYPES.WEB) {
     ipcRenderer.send('webClientErrorRes', data.res);
   }
@@ -176,14 +180,16 @@ export function updateLocation (page) {
 }
 
 export function handleSafeAuthAuthentication(url, type) {
+  console.log('01', url, type)
   ipcRenderer.send('decryptRequest', {
     type: type || CLIENT_TYPES.DESKTOP,
     data: url
   })
   clearAutocomplete()
-  if (safeAuthNetworkState === -1) {
-    onClickOpenSafeAuthHome()
-  }
+  // FIXME change to constant instand of -1
+  // if (safeAuthNetworkState === -1) {
+  //   onClickOpenSafeAuthHome()
+  // }
 }
 
 function authDecision(isAllowed, isContainerReq) {
