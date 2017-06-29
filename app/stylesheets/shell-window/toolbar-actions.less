@@ -107,16 +107,17 @@
       animation: safeConnecting 2s infinite;
     }
     > .popup {
-      position: fixed;
+      position: absolute;
       width: 330px;
-      z-index: 99;
+      margin-top: 5px;
+      margin-left: -16px;
       background: white;
       border: 1px solid #AAA;
-      bottom: 0;
-      right: 40px;
+      top: 100%;
+      left: 0;
       box-shadow: 0 1px 16px rgba(0, 0, 0, 0.26);
-      border-radius: 10px 10px 0 0;
       overflow: hidden;
+      z-index: 99;
       .popup-base {
         margin: 0;
         padding: 0;
