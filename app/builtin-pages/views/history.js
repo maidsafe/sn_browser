@@ -3,7 +3,7 @@ This uses the beakerHistory API, which is exposed by webview-preload to all site
 */
 
 import * as yo from 'yo-yo'
-import * as moment from 'moment'
+import moment from 'moment'
 import { niceDate } from '../../lib/time'
 import { ucfirst } from '../../lib/strings'
 
