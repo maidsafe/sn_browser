@@ -5,7 +5,7 @@ import { List, Map, fromJS } from 'immutable';
 import { createActions } from 'redux-actions';
 import initialAppState 			from './initialAppState.json';
 import { remote } from 'electron';
-import updateAddress from './address';
+// import updateAddress from './address';
 
 const ADD_TAB = 'ADD_TAB';
 const CLOSE_TAB = 'CLOSE_TAB';

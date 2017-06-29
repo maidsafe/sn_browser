@@ -38,7 +38,6 @@ export default class Tab extends Component {
     constructor(props) {
         super(props);
 
-        console.log( 'CONSTRUCTING TABBVVB', props  );
         this.state = {
             browserState : {
                 canGoBack       : false,
@@ -253,14 +252,18 @@ export default class Tab extends Component {
 
         const index = this.props.index;
 
-        this.props.updateTab({ index, url: event.url });
-        this.props.updateAddress( event.target.value );
+        this.props.updateTab({ index, url });
+
+        if( this.props.isActiveTab )
+        {
+            this.props.updateAddress( url );
+        }
 
         // our own little preventDefault
         // cf. https://github.com/electron/electron/issues/1378
         this.with((wv) => {
             wv.stop();
-            wv.loadURL(this.props.url);
+            wv.loadURL( url );
         });
     }
 

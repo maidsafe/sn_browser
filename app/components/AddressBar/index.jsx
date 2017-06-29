@@ -25,6 +25,7 @@ export default class AddressBar extends Component {
 
     componentWillReceiveProps( props )
     {
+        console.log("proooooopssss", props.address, this.state.address );
         if( props.address !== this.state.address )
         {
             this.setState( { address: props.address } )
