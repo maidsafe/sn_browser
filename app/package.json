@@ -1,9 +1,10 @@
 {
-  "name": "SAFEBrowser",
-  "productName": "SAFEBrowser",
+  "name": "safe-browser",
+  "productName": "SAFE Browser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
   "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
   "version": "0.2.1",
+  "identifier": "net.maidsafe.safebrowser",
   "author": {
     "name" : "MaidSafe.net Ltd",
     "email" : "qa@maidsafe.net",
@@ -11,7 +12,8 @@
   },
   "main": "background-process.build.js",
   "dependencies": {
-    "beaker-plugin-safe-app": "https://github.com/maidsafe/beaker-plugin-safe-app.git",
+    "beaker-plugin-safe-app": "https://github.com/krishnaIndia/beaker-plugin-safe-app/releases/download/test-0.1.0/beaker-plugin-safe-app-0.1.0.tgz",
+    "beaker-plugin-safe-authenticator": "https://github.com/krishnaIndia/beaker-plugin-safe-authenticator/releases/download/test-0.1.0/beaker-plugin-safe-authenticator-0.1.0.tgz",
     "browser-es-module-loader": "^0.1.6",
     "co": "^4.6.0",
     "electron-localshortcut": "^0.6.0",

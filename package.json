@@ -95,7 +95,7 @@
     }
   },
   "scripts": {
-    "postinstall": "cd app && npm install && cd ../ && npm run build-safe-app",
+    "postinstall": "cd app && npm install",
     "build": "gulp build",
     "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
