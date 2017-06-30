@@ -10,6 +10,8 @@
 
   * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
   * [Git](https://git-scm.com/)
+  * [Yarn](https://yarnpkg.com) (As a replacement for `npm`).
+
 
 1. Clone this GitHub repository.
 
@@ -21,32 +23,22 @@
 
     ``` bash
     $ cd safe_browser
-    $ npm install
+    $ yarn
     ```
 
-    If you are working on a development environment, you can run `NODE_ENV=dev npm install` instead in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
-
-3. Rebuild native modules
-
-    ```bash
-    $ npm run rebuild
-    ```
-
-    If you are working on a development environment and want to use the `MockVault`, you need to run `NODE_ENV=dev npm run rebuild` instead.
-
-4. Build SAFE Browser and open it.
+3. Build SAFE Browser and open it.
 
     ```
-    $ npm run build
-    $ npm start
+    $ yarn run build
+    $ yarn start
     ```
 
-    If you're doing development, `npm run watch` to have assets build automatically.
+    If you're doing development, `yarn run watch` to have assets build automatically.
 
 6. Package SAFE Browser.
 
    ```
-   $ npm run package
+   $ yarn run package
    ```
 
     The packed SAFE Browser will be found inside `dist` folder.
@@ -56,10 +48,9 @@
 If you pull latest from the repo and get weird module errors, do:
 
 ```bash
-$ npm run burnthemall
+$ yarn run burnthemall
 ```
-
-This will remove your npm_modules, and do the full install, rebuild, build SAFE Authenticator and package  processes for you. `npm start` should work afterwards.
+This will remove your node_modules, and do the full install, rebuild, build SAFE Authenticator and package  processes for you. `yarn start` should work afterwards.
 
 ## License
 
