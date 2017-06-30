@@ -71,9 +71,9 @@ export function createShellWindow () {
         if( details.url.indexOf('http') > -1 )
         {
           // FIXME shankar - temp handling for opening external links
-          if (details.url.indexOf('safe_proxy.pac') !== -1) {
-            return callback({ cancel: true })
-          }
+          // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+          //   return callback({ cancel: true })
+          // }
           try {
             shell.openExternal(details.url);
           } catch (e) {};
