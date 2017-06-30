@@ -96,7 +96,7 @@
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules && yarn install --force && yarn run pack-authenticator && yarn run build && yarn run package",
     "package": "node ./scripts/main.js --package",
     "start": "gulp start",
-    "watch": "gulp start-watch",
+    "watch": "NODE_ENV=development gulp start-watch",
     "pack-authenticator:unix": "sh ./scripts/pack_authenticator.sh",
     "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\scripts\\pack_authenticator.ps1\"",
     "pack-authenticator": "node ./scripts/main.js --authenticator"
