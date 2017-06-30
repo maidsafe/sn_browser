@@ -11,48 +11,45 @@
   * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
   * Rust stable (we recommend installing it from [rust-lang.org](https://www.rust-lang.org/en-US/))
   * [Git](https://git-scm.com/)
+  * [Yarn](https://yarnpkg.com) (As a replacement for `npm`).
+
 
 1. Clone this GitHub repository.
 
     ```bash
     $ git clone -b dev https://github.com/maidsafe/safe_browser.git
     ```
-    
+
 2. Install the dependencies.
 
     ``` bash
     $ cd safe_browser
-    $ npm i
-    ```
-3. Rebuild native modules
-    
-    ```bash
-    $ npm run rebuild
+    $ yarn
     ```
 
-4. Build the SAFE Authenticator plugin.
+3. Build the SAFE Authenticator plugin.
 
     ```bash
-    $ npm run pack-authenticator
+    $ yarn run pack-authenticator
     ```
-    
+
     To clean the cargo dependencies of Authenticator's native modules add `-- --clean` to above command.
 
 5. Build SAFE Browser and open it.
-  
+
     ```
-    $ npm run build
-    $ npm start
+    $ yarn run build
+    $ yarn start
     ```
-    
-    If you're doing development, `npm run watch` to have assets build automatically.
+
+    If you're doing development, `yarn run watch` to have assets build automatically.
 
 6. Package SAFE Browser.
- 
+
    ```
-   $ npm run package
+   $ yarn run package
    ```
-   
+
     The packed SAFE Browser will be found inside `dist` folder.
 
 ### Updating
@@ -60,9 +57,9 @@
 If you pull latest from the repo and get weird module errors, do:
 
 ```bash
-$ npm run burnthemall
+$ yarn run burnthemall
 ```
-This will remove your npm_modules, and do the full install, rebuild, build SAFE Authenticator and package  processes for you. `npm start` should work afterwards.
+This will remove your node_modules, and do the full install, rebuild, build SAFE Authenticator and package  processes for you. `yarn start` should work afterwards.
 
 ## License
 
