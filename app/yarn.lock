@@ -1466,8 +1466,8 @@ reduce-reducers@^0.1.0:
   resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-0.1.2.tgz#fa1b4718bc5292a71ddd1e5d839c9bea9770f14b"
 
 redux-actions@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/redux-actions/-/redux-actions-2.0.3.tgz#1550aba9def179166ccd234d07672104a736d889"
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/redux-actions/-/redux-actions-2.1.0.tgz#13a479ad40f5fcee599d5f6edfd538fc6a476085"
   dependencies:
     invariant "^2.2.1"
     lodash "^4.13.1"
