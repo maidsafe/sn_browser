@@ -19,5 +19,8 @@ The interface is built in react for simple data flow and clear componentisation.
 - Add browser basic functionality
     - Favourites
     - history
-- CSS 
+    - default http / protocol in address
+    - open in new tab with cmd
+
+- CSS
     - Add PostCSS

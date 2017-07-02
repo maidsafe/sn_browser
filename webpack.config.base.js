@@ -36,6 +36,7 @@ export default {
         extensions : ['.js', '.jsx', '.json'],
         alias      :
         {
+            appPackage : path.join( __dirname, 'package.json' ),
             components : path.join( __dirname, 'app/components' ),
             containers : path.join( __dirname, 'app/containers' ),
             store      : path.join( __dirname, 'app/store' ),

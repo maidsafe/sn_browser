@@ -1,8 +1,10 @@
 // @flow
+import url                      from 'url';
 import React, { Component }     from 'react';
 import PropTypes                from 'prop-types';
 import { Link }                 from 'react-router';
 import styles                   from './addressBar.css';
+import appPackage               from 'appPackage';
 
 export default class AddressBar extends Component {
 
@@ -25,35 +27,81 @@ export default class AddressBar extends Component {
 
     componentWillReceiveProps( props )
     {
-        console.log("proooooopssss", props.address, this.state.address );
         if( props.address !== this.state.address )
         {
             this.setState( { address: props.address } )
         }
     }
 
+    /**
+     * Takes input and adds requisite url portions as needed, comparing to package.json defined
+     * protocols, or defaulting to http
+     * @param  {String} input address bar input
+     * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
+     */
+    makeValidUrl( input )
+    {
+        const validProtocols = appPackage.build.protocols.schemes || ['http'];
+
+        const parser = document.createElement('a');
+        parser.href = input;
+
+        const inputProtocol = parser.protocol;
+        const inputHost = parser.host;
+
+        let finalProtocol;
+        let finalHost;
+        let everythingAfterHost = '';
+
+        if ( inputHost )
+        {
+            finalHost = inputHost.includes( '.' ) ? inputHost : `${inputHost}.com`;
+            everythingAfterHost = input.substring(
+                input.indexOf( inputHost ) + inputHost.length,
+                input.length );
+        }
+        else
+        {
+            finalHost = input;
+        }
+
+        if ( validProtocols.includes( inputProtocol ) )
+        {
+            finalProtocol = inputProtocol;
+        }
+        else
+        {
+            finalProtocol = validProtocols[0];
+        }
+
+        return `${finalProtocol}://${finalHost}${everythingAfterHost}`;
+    }
+
     handleChange( event )
     {
+
         this.setState({address: event.target.value});
     }
 
     handleFocus( event )
     {
-        this.refs.addressBar.select()
-        console.log( "onFocus of addressbar", this.refs.addressBar );
+        this.refs.addressBar.select();
         return;
     }
 
     handleKeyPress ( event )
     {
-        console.log( 'action check in on Keypress in address bar' );
         if( event.key !== 'Enter' )
         {
             return;
         }
 
-        this.props.updateAddress( event.target.value );
-        this.props.updateActiveTab( { url: event.target.value } );
+        const input = event.target.value;
+
+        const url = this.makeValidUrl( input );
+
+        this.props.updateAddress( url );
+        this.props.updateActiveTab( { url } );
     }
 
     render() {
