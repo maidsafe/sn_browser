@@ -52,7 +52,6 @@ ipcRenderer.send('registerOnContainerReq');
 ipcRenderer.send('registerOnReqError');
 
 ipcRenderer.on('onNetworkStatus', function(event, status) {
-  console.log('Authenticator network state :: ', status)
   safeAuthNetworkState = status
   if (status === -1) {
     hideSafeAuthPopup();
@@ -75,7 +74,6 @@ ipcRenderer.on('onContainerReq', function(event, data) {
 });
 
 ipcRenderer.on('onAuthDecisionRes', function(event, data) {
-  console.log('onAuthDecisionRes', data)
   isSafeAppAuthenticating = false
   if (data.type === CLIENT_TYPES.WEB) {
     ipcRenderer.send('webClientAuthRes', data.res);
@@ -93,7 +91,6 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
 
 ipcRenderer.on('onAuthResError', function(event, data) {
   isSafeAppAuthenticating = false
-  console.log('onAuthResError', data.res)
   if (data.res && data.res.toLowerCase() === 'unauthorised') {
     onClickOpenSafeAuthHome()
   }
@@ -180,7 +177,6 @@ export function updateLocation (page) {
 }
 
 export function handleSafeAuthAuthentication(url, type) {
-  console.log('01', url, type)
   ipcRenderer.send('decryptRequest', {
     type: type || CLIENT_TYPES.DESKTOP,
     data: url
@@ -250,6 +246,7 @@ function showSafeAuthPopup(isContainerReq) {
             <div class="popup-cnt-main">
               <h3>${safeAuthData[reqKey].app.name}</h3>
               <h4>${safeAuthData[reqKey].app.vendor}</h4>
+              <h5>${safeAuthData[reqKey].app.id}</h5>
               <p>${contPara}</p>
             </div>
             <div class="popup-cnt-ls">
