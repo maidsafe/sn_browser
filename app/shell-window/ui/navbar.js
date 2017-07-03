@@ -258,7 +258,7 @@ function showSafeAuthPopup(isContainerReq) {
     safeAuthData[reqKey].containers.map(function(container) {
       if (typeof container.access === 'object') {
         return yo`<div class="list-i" onclick=${togglePermissions}>
-                        <h3>${container.cont_name}</h3>
+                        <h3><span class="icon icon-right-dir"></span>${container.cont_name}</h3>
                         <ul>
                           ${arrToYo(container.access)}
                         </ul>
