@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import createNodeLogger from 'redux-node-logger'
 import promiseMiddleware from 'redux-promise'
 import _ from 'lodash'
 
@@ -16,13 +15,21 @@ export const SITE_DATA_ID = 'safe:safe-browser'
 export const SAFE_BROWSER_STATE_FILE = 'safeBrowserData.json'
 
 
-const logger = createNodeLogger({
+let middlware = [thunk, promiseMiddleware];
+
+if( process.env.NODE_ENV === 'development' )
+{
+  let createNodeLogger = require('redux-node-logger');
+  const logger = createNodeLogger({
     level: 'info',
     collapsed: true
-})
+  })
+
+  middlware.push(logger);
+}
 
 let enhancer = compose(
-    applyMiddleware(thunk, logger, promiseMiddleware)
+    applyMiddleware( ...middlware )
 )
 
 let store = createStore(rootReducer, enhancer)
@@ -38,16 +45,16 @@ const getTokenFromState = ( state = store.getState() ) =>
     if( browserSettings )
     {
         let authToken = browserSettings.get('authToken')
-                
+
         if( authToken )
         {
             return authToken;
-            
+
         }
         else {
             return null;
         }
-        
+
     }
     else {
         return null;
@@ -58,7 +65,7 @@ const getTokenFromState = ( state = store.getState() ) =>
 export const getStore = ( token ) =>
 {
     let currentToken = token || getTokenFromState()
-    
+
     if( currentToken )
     {
         return nfs.getFile( currentToken, SAFE_BROWSER_STATE_FILE, 'json' )
@@ -78,7 +85,7 @@ const save = ( ) =>
         {
             let JSONToSave = JSON.stringify( state )
             return nfs.createOrUpdateFile( currentToken, SAFE_BROWSER_STATE_FILE, JSONToSave, 'application/json' )
-                .then( bool => 
+                .then( bool =>
                     {
                         console.log( "success was had saving state:  ", bool )
                         return bool
@@ -101,34 +108,34 @@ export const reStore = ( storeState ) =>
     {
         return Promise.reject( storeState )
     }
-    
+
     if( storeState.settings )
     {
-        store.dispatch( updateSettings( storeState.settings ) )        
+        store.dispatch( updateSettings( storeState.settings ) )
 
     }
-    
+
     if( storeState.sitedata )
     {
         dispatchForEach( storeState.sitedata , updateSiteData )
     }
-    
+
     if( storeState.history )
     {
         dispatchForEach( storeState.history , updateSite )
     }
-    
+
     if( storeState.bookmarks )
     {
         dispatchForEach( storeState.bookmarks , updateBookmark )
     }
-    
+
 }
 
 
 const dispatchForEach = ( array, action ) =>
 {
-    array.forEach( (item, key) => 
+    array.forEach( (item, key) =>
     {
         store.dispatch( action( item ) )
         return;
@@ -140,7 +147,7 @@ const dispatchForEach = ( array, action ) =>
 
 
 export const handleAuthError = ( err ) =>
-{   
+{
     store.dispatch( updateSettings( { 'authSuccess': false} ) )
     if( err.code === -12 )
     {
@@ -157,6 +164,6 @@ export const handleAuthError = ( err ) =>
 		store.dispatch( updateSettings( { 'authMessage':'The browser failed to authorise with the SAFE launcher.' } ) )
         return
     }
-    
+
     store.dispatch( updateSettings( { 'authMessage': '' + JSON.stringify( err ) } ) )
 }

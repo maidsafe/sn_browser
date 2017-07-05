@@ -49,7 +49,7 @@ export function getPinned () {
 export function parseSafeAuthUrl(url, isClient) {
   var safeAuthUrl = {}
   var parsedUrl = new URL(url)
-  
+
   if (!(/^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test(parsedUrl.hostname))) {
     return { action: 'auth' };
   }
@@ -105,7 +105,7 @@ export function create (opts) {
       return safeAuthPage;
     }
   }
-    
+
   // create page object
   var id = (Math.random()*1000|0) + Date.now()
   var page = {
@@ -186,7 +186,7 @@ export function create (opts) {
   ;([
     ['getURL', ''],
     ['getTitle', ''],
-    
+
     ['goBack'],
     ['canGoBack'],
     ['goForward'],
@@ -266,10 +266,10 @@ function handleStoreChange() {
 
     pages.forEach( page =>
     {
-	if( page.isWebviewReady && page.getURL().includes('beaker:') )
-	{
-	    page.reload()
-	}
+    	if( page.isWebviewReady && page.getURL().includes('beaker:') )
+    	{
+    	    page.reloadIgnoringCache();
+    	}
     })
 }
 
@@ -408,21 +408,21 @@ export function changeActiveTo (index) {
 // export function toggleSafe ( )
 // {
 //     var webContents = remote.getCurrentWindow().webContents;
-        
+
 //     if( typeof(webContents.isSafe) === 'undefined' )
 //     {
 //         webContents.isSafe = true;
 //     }
-    
+
 //     webContents.isSafe = ! webContents.isSafe;
 
 //     let pages = getAll();
-    
-//     pages.forEach( page => 
+
+//     pages.forEach( page =>
 //     {
 //         // if (page)
-//         page.reload()    
-        
+//         page.reload()
+
 //     })
 
 // }
@@ -532,16 +532,24 @@ function onDidNavigateInPage (e) {
 
 function onLoadCommit (e) {
   // ignore if this is a subresource
+
   if (!e.isMainFrame)
     return
-  
+
   var page = getByWebview(e.target)
   if (page) {
+
     // check if this page bookmarked
-    beakerBookmarks.get(e.url).then(bookmark => {
-      page.bookmark = bookmark
-      navbar.update(page)
+    beakerBookmarks.get(e.url)
+    .then(bookmark => {
+      if( bookmark )
+      {
+        //here with bookmark
+        page.bookmark = bookmark
+        navbar.update(page);
+      }
     })
+
     // stop autocompleting
     navbar.clearAutocomplete()
     // close any prompts
@@ -562,7 +570,7 @@ function onDidStartLoading (e) {
 
 function onDidStopLoading (e) {
   var page = getByWebview(e.target)
-  if (page) {    
+  if (page) {
     // update history
     var url = page.getURL()
     if (!url.startsWith('beaker:')) {
@@ -726,12 +734,12 @@ function createWebviewEl (id, url) {
   el.dataset.id = id
   el.setAttribute('preload', 'file://'+path.join(remote.app.getAppPath(), 'webview-preload.build.js'))
   el.setAttribute('src', url || DEFAULT_URL)
-  
+
   if( webSecurityDisabled )
   {
       el.setAttribute('disablewebsecurity', true)
   }
-  
+
   return el
 }
 
