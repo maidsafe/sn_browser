@@ -208,6 +208,11 @@ function onClickDenyBtn(e) {
   authDecision(false, (parseInt(e.target.dataset.type, 10) === 0))
 }
 
+function onClickSkipBtn(e) {
+  hideSafeAuthPopup()
+  ipcRenderer.send('skipAuthRequest', true);
+}
+
 function hideSafeAuthPopup() {
   yo.update(safeAuthPopupDiv, yo`<div></div>`)
 }
@@ -217,15 +222,15 @@ function showSafeAuthPopup(isContainerReq) {
     var getPermissionPhrase = function(perm) {
       switch (perm) {
         case 'Read':
-          return yo`<span>Allow application to <i>read</i> data</span>`;
+          return yo`<span><b>Read</b> data</span>`;
         case 'Insert':
-          return yo`<span>Allow application to <i>add new</i> data</span>`;
+          return yo`<span><b>Store</b> data</span>`;
         case 'Update':
-          return yo`<span>Allow application to <i>update</i> existing data</span>`;
+          return yo`<span><b>Update</b> existing data</span>`;
         case 'Delete':
-          return yo`<span>Allow application to <i>delete</i> data</span>`;
+          return yo`<span><b>Delete</b> data</span>`;
         case 'ManagePermissions':
-          return yo`<span>Grant application <i>full control</i> of the container</span>`;
+          return yo`<span><b>Full control</b>  to read, store, delete data and manage permissions</span>`;
       }
     };
 
@@ -233,37 +238,88 @@ function showSafeAuthPopup(isContainerReq) {
       return yo`<li>${getPermissionPhrase(item)}</li>`;
     })
   }
+
+  const getCont = function(contName) {
+    const obj = {};
+    switch (contName) {
+      case '_documents':
+        obj['name'] = 'Document container'
+        obj['desc'] = 'Container for storing general documents'
+        obj['style'] = 'document'
+        break;
+      case '_downloads':
+        obj['name'] = 'Download container'
+        obj['desc'] = 'Container for downloaded files'
+        obj['style'] = 'download'
+        break;
+      case '_music':
+        obj['name'] = 'Music container'
+        obj['desc'] = 'Container for storing music files'
+        obj['style'] = 'music'
+        break;
+      case '_pictures':
+        obj['name'] = 'Pictures container'
+        obj['desc'] = 'Container for storing picture files'
+        obj['style'] = 'pictures'
+        break;
+      case '_videos':
+        obj['name'] = 'Videos container'
+        obj['desc'] = 'Container for storing video files'
+        obj['style'] = 'videos'
+        break;
+      case '_public':
+        obj['name'] = 'Public container'
+        obj['desc'] = 'Container for storing unencrypted data'
+        obj['style'] = 'public'
+        break;
+      case '_publicNames':
+        obj['name'] = 'Public names container'
+        obj['desc'] = 'Container for storing pubic profile related information. Public names and associated services are stored in this container'
+        obj['style'] = 'publicNames'
+        break;
+      default:
+        obj['name'] = contName
+        obj['desc'] = ''
+        obj['style'] = 'default'
+        break;
+    }
+    return obj;
+  }
+
   var reqKey = isContainerReq ? 'contReq' : 'authReq';
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
-  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'Requesting for authorisation.' : 'Requesting access for the following containers';
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
-        <div class="popup-title">Authorisation request</div>
         <div class="popup-i">
           <div class="popup-cnt">
+            <div class="popup-skip">${skipBtn}</div>
             <div class="popup-cnt-main">
-              <h3>${safeAuthData[reqKey].app.name}</h3>
-              <h4>${safeAuthData[reqKey].app.vendor}</h4>
+              <h3>${safeAuthData[reqKey].app.name.slice(0, 2)}</h3>
+              <h4><b>${safeAuthData[reqKey].app.name}</b> by <b>${safeAuthData[reqKey].app.vendor}</b></h4>
+              <h4>${contPara}</h4>
               <h5>${safeAuthData[reqKey].app.id}</h5>
-              <p>${contPara}</p>
             </div>
             <div class="popup-cnt-ls">
               <span class="list">
                 ${
-    safeAuthData[reqKey].containers.map(function(container) {
-      if (typeof container.access === 'object') {
-        return yo`<div class="list-i" onclick=${togglePermissions}>
-                        <h3><span class="icon icon-right-dir"></span>${container.cont_name}</h3>
-                        <ul>
-                          ${arrToYo(container.access)}
-                        </ul>
-                      </div>`;
-      }
-      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-    })
-    }
+                  safeAuthData[reqKey].containers.map(function(container) {
+                    if (typeof container.access === 'object') {
+                      const contObj = getCont(container.cont_name);
+                      return yo`<div class="list-i" onclick=${togglePermissions}>
+                                  <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
+                                  <div class="list-i-b">
+                                    <p>${contObj.desc}</p>
+                                    <ul>${arrToYo(container.access)}</ul> 
+                                  </div>
+                                </div>`;
+                    }
+                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+                  })
+                }
               </span>
             </div>
           </div>
