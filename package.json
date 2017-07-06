@@ -39,8 +39,7 @@
         {
           "x": 130,
           "y": 220,
-          "type": "file",
-          "path": "dist/mac/Beaker Browser.app"
+          "type": "file"
         },
         {
           "x": 50,
