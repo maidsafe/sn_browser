@@ -108,7 +108,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-authenticator@https://github.com/krishnaIndia/beaker-plugin-safe-authenticator/releases/download/test-0.1.0/beaker-plugin-safe-authenticator-0.1.0.tgz":
   version "0.1.0"
-  resolved "https://github.com/krishnaIndia/beaker-plugin-safe-authenticator/releases/download/test-0.1.0/beaker-plugin-safe-authenticator-0.1.0.tgz#7f0184a4af555b934b3900114a1d71ed3ba7b2f8"
+  resolved "https://github.com/krishnaIndia/beaker-plugin-safe-authenticator/releases/download/test-0.1.0/beaker-plugin-safe-authenticator-0.1.0.tgz#8a48517a9da19bfd3b45febcec2eba8fbe394f63"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "git+https://github.com/maidsafe/deps_downloader.git"
@@ -1597,7 +1597,7 @@ rimraf@2, rimraf@^2.2.8:
 
 "safe-app@https://github.com/krishnaIndia/safe_app_nodejs/releases/download/test-0.1.0/safe-app-0.0.1.tgz":
   version "0.0.1"
-  resolved "https://github.com/krishnaIndia/safe_app_nodejs/releases/download/test-0.1.0/safe-app-0.0.1.tgz#f2f2d9288cd99964877172977de9ad90342e8ffa"
+  resolved "https://github.com/krishnaIndia/safe_app_nodejs/releases/download/test-0.1.0/safe-app-0.0.1.tgz#1a21b562120215d61d75e3da01aec345def22f66"
   dependencies:
     deps_downloader "git+https://github.com/maidsafe/deps_downloader.git"
     enum "^2.3.0"
