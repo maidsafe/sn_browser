@@ -89,11 +89,12 @@
     }
   },
   "scripts": {
-    "postinstall": "cd app && yarn install && cd .. && yarn build && yarn package",
+    "postinstall": "cd app && yarn install && cd .. && yarn build && yarn rebuild",
     "build": "gulp build",
     "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules && yarn install --force && yarn run pack-authenticator && yarn run build && yarn run package",
     "package": "node ./scripts/main.js --package",
+    "rebuild": "cd app && npm rebuild --runtime=electron --target=1.7.4 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "start": "gulp start",
     "watch": "gulp start-watch",
     "pack-authenticator:unix": "sh ./scripts/pack_authenticator.sh",
