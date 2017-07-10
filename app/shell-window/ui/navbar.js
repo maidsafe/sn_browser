@@ -274,7 +274,7 @@ function showSafeAuthPopup(isContainerReq) {
         break;
       case '_publicNames':
         obj['name'] = 'Public names container'
-        obj['desc'] = 'Container for storing pubic profile related information. Public names and associated services are stored in this container'
+        obj['desc'] = 'Container for storing public profile related information. Public names and associated services are stored in this container'
         obj['style'] = 'publicNames'
         break;
       default:
