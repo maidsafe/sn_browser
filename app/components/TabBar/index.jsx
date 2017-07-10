@@ -3,7 +3,7 @@ import React, { Component }     from 'react';
 import PropTypes                from 'prop-types';
 import { ipcRenderer, ipcMain }          from 'electron';
 import styles                   from './tabBar.css';
-import MdClose                from 'react-icons/lib/md/close';
+import MdClose                  from 'react-icons/lib/md/close';
 import MdAdd                    from 'react-icons/lib/md/add';
 
 export default class TabBar extends Component {
@@ -86,7 +86,7 @@ export default class TabBar extends Component {
                                         onClick={ this.handleTabClick.bind(this, tabData  ) }>
                                             <span className={ styles.tabText }>{ tab.get('title') || 'New Tab' }</span>
                                             <MdClose className={ styles.tabCloseButton }
-                                                 onClick={ this.handleTabClose.bind(this, tabData  ) } />
+                                                 onClick={ this.handleTabClose.bind( this, tabData  ) } />
                                     </div>)
                         })
                     }
