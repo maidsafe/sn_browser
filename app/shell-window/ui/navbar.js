@@ -626,6 +626,22 @@ function joinSegments (segments) {
   return str
 }
 
+function setAuthPopupAsScrollable() {
+  var popupBase = document.querySelector('.popup .popup-base .popup-i')
+  var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
+  var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
+  var popupContainerHeight = popupContMainHeight + popupContLsheight;
+  var popupPadBottom = 70
+  var popupListMarginTop = 40
+  if ((popupBase.offsetHeight - (popupPadBottom + popupListMarginTop)) < popupContainerHeight) {
+    popupBase.classList.add('scroll')
+  } else {
+    popupBase.classList.remove('scroll')
+  }
+}
+
+window.addEventListener('resize', function() { setAuthPopupAsScrollable(); });
+
 function countMatches (str, regex) {
   var matches = str.match(regex)
   return (matches) ? matches.length : 0
@@ -664,9 +680,11 @@ function togglePermissions(e) {
     return;
   }
   if (targetNode.classList.contains('show')) {
-    return targetNode.classList.remove('show');
+    targetNode.classList.remove('show');
+  } else {
+    targetNode.classList.add('show');
   }
-  targetNode.classList.add('show');
+  setAuthPopupAsScrollable()
 }
 
 // export function onClickToggleSafe ( e )
