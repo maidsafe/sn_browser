@@ -33,7 +33,6 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",
     "remarkable": "^1.6.2",
-    "safe-js": "^0.3.3",
     "speedometer": "^1.0.0",
     "unused-filename": "^0.1.0",
     "yo-yo": "^1.2.1",
