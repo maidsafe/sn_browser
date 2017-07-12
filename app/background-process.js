@@ -7,7 +7,7 @@ import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
+// import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
 
 // set setting does not trigger save
 import { updateSettings } from './background-process/safe-storage/settings'
@@ -30,7 +30,7 @@ import * as beakerFaviconProtocol from './background-process/protocols/beaker-fa
 
 import * as openURL from './background-process/open-url'
 
-import { auth } from 'safe-js'
+// import { auth } from 'safe-js'
 // import packageJson from './package.json'
 var packageJson = require( './package.json' );
 var mainWindow = null;
@@ -61,32 +61,32 @@ plugins.registerStandardSchemes()
 
 app.on('ready', function () {
 
-    let token = auth.authorise( safeBrowserApp ).then( tok =>
-  {
-        store.dispatch( updateSettings( { 'authSuccess': true } ) )
-        store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
-        store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
+  //   let token = auth.authorise( safeBrowserApp ).then( tok =>
+  // {
+  //       store.dispatch( updateSettings( { 'authSuccess': true } ) )
+  //       store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
+  //       store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
 
-        getStore( tok.token )
-            .then( json =>
-            {
-                reStore( json )
+  //       getStore( tok.token )
+  //           .then( json =>
+  //           {
+  //               reStore( json )
 
-            })
-            .catch( err =>
-            {
-                if( err.status === 404)
-                {
-                    store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher'  } ) )
-                }
-                else {
+  //           })
+  //           .catch( err =>
+  //           {
+  //               if( err.status === 404)
+  //               {
+  //                   store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher'  } ) )
+  //               }
+  //               else {
 
-                    store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) )
-                }
-            })
+  //                   store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) )
+  //               }
+  //           })
 
-  })
-  .catch( handleAuthError )
+  // })
+  // .catch( handleAuthError )
 
   // API initialisations
   sitedata.setup()

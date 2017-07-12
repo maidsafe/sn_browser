@@ -10,7 +10,7 @@ import { updateBookmark } from './bookmarks'
 import { updateSite } from './history'
 
 import rootReducer from './root-reducer'
-import { nfs } from 'safe-js'
+// import { nfs } from 'safe-js'
 
 export const SITE_DATA_ID = 'safe:safe-browser'
 export const SAFE_BROWSER_STATE_FILE = 'safeBrowserData.json'
@@ -57,36 +57,36 @@ const getTokenFromState = ( state = store.getState() ) =>
 
 export const getStore = ( token ) =>
 {
-    let currentToken = token || getTokenFromState()
+    // let currentToken = token || getTokenFromState()
     
-    if( currentToken )
-    {
-        return nfs.getFile( currentToken, SAFE_BROWSER_STATE_FILE, 'json' )
-    }
-    else {
+    // if( currentToken )
+    // {
+    //     return nfs.getFile( currentToken, SAFE_BROWSER_STATE_FILE, 'json' )
+    // }
+    // else {
         return Promise.reject( 'no token data found' )
-    }
+    // }
 }
 
 
 const save = ( ) =>
 {
-        let state = store.getState()
-        let currentToken = getTokenFromState( state )
+        // let state = store.getState()
+        // let currentToken = getTokenFromState( state )
 
-        if( currentToken )
-        {
-            let JSONToSave = JSON.stringify( state )
-            return nfs.createOrUpdateFile( currentToken, SAFE_BROWSER_STATE_FILE, JSONToSave, 'application/json' )
-                .then( bool => 
-                    {
-                        console.log( "success was had saving state:  ", bool )
-                        return bool
-                    } )
-        }
-        else {
+        // if( currentToken )
+        // {
+        //     let JSONToSave = JSON.stringify( state )
+        //     return nfs.createOrUpdateFile( currentToken, SAFE_BROWSER_STATE_FILE, JSONToSave, 'application/json' )
+        //         .then( bool => 
+        //             {
+        //                 console.log( "success was had saving state:  ", bool )
+        //                 return bool
+        //             } )
+        // }
+        // else {
             return Promise.reject( new Error( 'Unable to save data to the SAFE network, as no token found' ) )
-        }
+        // }
 }
 
 export const saveStore = _.debounce( save, 500 );
