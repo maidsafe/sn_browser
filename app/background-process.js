@@ -6,6 +6,7 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
+import winston from './winston-config';
 
 // import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
 
@@ -50,6 +51,9 @@ const safeBrowserApp =
     permissions : [ "SAFE_DRIVE_ACCESS"]
 };
 
+// An example of how to use winston to log objects along with variable name
+winston.info({safeBrowserApp});
+
 
 
 
@@ -60,6 +64,14 @@ log.setLevel('trace')
 plugins.registerStandardSchemes()
 
 app.on('ready', function () {
+  // winston log levels
+  winston.error('ERROR');
+  winston.warn('WARN');
+  winston.info('INFO');
+  winston.verbose('VERBOSE');
+  winston.debug('DEBUG');
+  winston.silly('SILLY');
+
 
   //   let token = auth.authorise( safeBrowserApp ).then( tok =>
   // {
