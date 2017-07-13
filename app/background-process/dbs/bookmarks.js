@@ -29,48 +29,48 @@ export function setup () {
 
 export function add (url, title) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.run(`
+      db.run(`
       INSERT OR REPLACE
         INTO bookmarks (url, title, num_visits)
         VALUES (?, ?, 0)
     `, [url, title], cb)
-  }))
+}))
 }
 
 export function changeTitle (url, title) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.run(`UPDATE bookmarks SET title = ? WHERE url = ?`, [title, url], cb)
-  }))
+      db.run(`UPDATE bookmarks SET title = ? WHERE url = ?`, [title, url], cb)
+}))
 }
 
 export function changeUrl (oldUrl, newUrl) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.run(`UPDATE bookmarks SET url = ? WHERE url = ?`, [newUrl, oldUrl], cb)
-  }))
+      db.run(`UPDATE bookmarks SET url = ? WHERE url = ?`, [newUrl, oldUrl], cb)
+}))
 }
 
 export function addVisit (url) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.run(`UPDATE bookmarks SET num_visits = num_visits + 1 WHERE url = ?`, url, cb)
-  }))
+      db.run(`UPDATE bookmarks SET num_visits = num_visits + 1 WHERE url = ?`, url, cb)
+}))
 }
 
 export function remove (url) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.run(`DELETE FROM bookmarks WHERE url = ?`, [url], cb)
-  }))
+      db.run(`DELETE FROM bookmarks WHERE url = ?`, [url], cb)
+}))
 }
 
 export function get (url) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.get(`SELECT url, title FROM bookmarks WHERE url = ?`, [url], cb)
-  }))
+      db.get(`SELECT url, title FROM bookmarks WHERE url = ?`, [url], cb)
+}))
 }
 
 export function list () {
   return setupPromise.then(v => cbPromise(cb => {
-    db.all(`SELECT url, title FROM bookmarks ORDER BY num_visits DESC`, cb)
-  }))
+      db.all(`SELECT url, title FROM bookmarks ORDER BY num_visits DESC`, cb)
+}))
 }
 
 // internal methods

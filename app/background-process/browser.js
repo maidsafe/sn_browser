@@ -77,9 +77,9 @@ export function setup () {
 
 export function getDefaultProtocolSettings () {
   return Promise.resolve(['http', 'dat', 'ipfs', 'view-dat'].reduce((res, x) => {
-    res[x] = app.isDefaultProtocolClient(x)
-    return res
-  }, {}))
+      res[x] = app.isDefaultProtocolClient(x)
+      return res
+    }, {}))
 }
 
 export function setAsDefaultProtocolClient (protocol) {
@@ -132,15 +132,15 @@ export function checkForUpdates () {
     autoUpdater.checkForUpdates()
     autoUpdater.once('update-not-available', () => {
       log.debug('[AUTO-UPDATE] No browser update available.')
-      isBrowserChecking = false
-      checkDone()
-    })
+    isBrowserChecking = false
+    checkDone()
+  })
     autoUpdater.once('update-downloaded', () => {
       log.debug('[AUTO-UPDATE] New browser version downloaded. Ready to install.')
-      isBrowserChecking = false
-      isBrowserUpdated = true
-      checkDone()
-    })
+    isBrowserChecking = false
+    isBrowserUpdated = true
+    checkDone()
+  })
 
     // cleanup
     autoUpdater.once('update-not-available', removeAutoUpdaterListeners)
@@ -241,11 +241,11 @@ function scheduledAutoUpdate () {
   settingsDb.get('auto_update_enabled').then(v => {
     // if auto updates are enabled, run the check
     if (+v === 1)
-      checkForUpdates()
+  checkForUpdates()
 
-    // schedule next check
-    setTimeout(scheduledAutoUpdate, SCHEDULED_AUTO_UPDATE_DELAY)
-  })
+  // schedule next check
+  setTimeout(scheduledAutoUpdate, SCHEDULED_AUTO_UPDATE_DELAY)
+})
 }
 
 // event handlers

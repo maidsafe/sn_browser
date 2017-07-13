@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain } from 'electron'
+import { app, BrowserWindow, screen, ipcMain, shell } from 'electron'
 import { register as registerShortcut, unregisterAll as unregisterAllShortcuts } from 'electron-localshortcut'
 import jetpack from 'fs-jetpack'
 import path from 'path'
@@ -27,9 +27,9 @@ export function setup () {
   ipcMain.on('shell-window-ready', e => {
     // if this is the first window opened (since app start or since all windows closing)
     if (numActiveWindows === 1) {
-      e.sender.webContents.send('command', 'load-pinned-tabs')
-    }
-  })
+    e.sender.webContents.send('command', 'load-pinned-tabs')
+  }
+})
 
   // create first shell window
   return createShellWindow()
@@ -38,7 +38,7 @@ export function setup () {
 export function createShellWindow () {
   // create window
   var { x, y, width, height } = ensureVisibleOnSomeDisplay(restoreState())
-  var win = new BrowserWindow({ 
+  var win = new BrowserWindow({
     titleBarStyle: 'hidden-inset',
     'standard-window': false,
     x, y, width, height,
@@ -49,49 +49,55 @@ export function createShellWindow () {
   })
 
 
-    //safe filter
-    let filter = {
-        urls: ['http://*/*', 'https://*/*' ]
-      
-    }
-    win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) => 
-    {
-        const parsedUrl = url.parse(details.url)
-        
-        if( typeof(win.webContents.isSafe) === 'undefined' )
-        {
-            win.webContents.isSafe = true
-        }
-       
-        if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
-        {
-            callback({})
-            return
-        }
-            
-        if( details.url.indexOf('http') > -1 )
-        {
-          callback({ cancel: true })
-          
-        }
-    })
-    
-    //extra shortcuts outside of menus
-    electronLocalshortcut.register(win, 'Alt+D', () => 
-    {
-        if (win) win.webContents.send('command', 'file:open-location')
-    })
-  
-    
-    store.subscribe( e => 
-    {        
-        saveStore();    
-        win.webContents.send('safeStore-updated')
+  //safe filter
+  let filter = {
+    urls: ['http://*/*', 'https://*/*' ]
 
-    })
+  }
+  win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
+  {
+    const parsedUrl = url.parse(details.url)
 
-  
-  
+    if( typeof(win.webContents.isSafe) === 'undefined' )
+  {
+    win.webContents.isSafe = true
+  }
+
+  if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
+  {
+    callback({})
+    return
+  }
+  if( details.url.indexOf('http') > -1 )
+  {
+    // FIXME shankar - temp handling for opening external links
+    // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+    //   return callback({ cancel: true })
+    // }
+    try {
+      shell.openExternal(details.url);
+    } catch (e) {};
+    callback({ cancel: false, redirectURL: 'beaker:start' })
+
+  }
+})
+
+  //extra shortcuts outside of menus
+  electronLocalshortcut.register(win, 'Alt+D', () =>
+  {
+    if (win) win.webContents.send('command', 'file:open-location')
+})
+
+
+  store.subscribe( e =>
+  {
+    saveStore();
+  win.webContents.send('safeStore-updated')
+
+})
+
+
+
   downloads.registerListener(win)
   loadURL(win, 'beaker:shell-window')
   numActiveWindows++
@@ -119,7 +125,7 @@ export function createShellWindow () {
 
 function loadURL (win, url) {
   win.loadURL(url)
-  log('Opening', url)  
+  log('Opening', url)
 }
 
 function getCurrentPosition (win) {

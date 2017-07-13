@@ -6,14 +6,14 @@ import permsPrompt from './ui/prompts/permission'
 
 export function setup () {
   ipcRenderer.on('safeStore-updated', (e, type) => {
-        return pages.handleSafeStoreChange();
-  })
-  
-  
+    return pages.handleSafeStoreChange();
+})
+
+
   ipcRenderer.on('command', function (event, type, arg1, arg2, arg3) {
     var page = pages.getActive()
     switch (type) {
-      case 'file:new-tab':           
+      case 'file:new-tab':
         var page = pages.create(arg1)
         pages.setActive(page)
         navbar.focusLocation(page)
@@ -30,7 +30,7 @@ export function setup () {
       case 'view:toggle-dev-tools':  return (page.isDevToolsOpened()) ? page.closeDevTools() : page.openDevTools()
       case 'history:back':           return page.goBack()
       case 'history:forward':        return page.goForward()
-      case 'window:toggle-safe-mode':  return pages.toggleSafe();
+      // case 'window:toggle-safe-mode':  return pages.toggleSafe();
       case 'window:disable-web-security':  return pages.toggleWebSecurity();
       case 'window:next-tab':        return pages.changeActiveBy(1)
       case 'window:prev-tab':        return pages.changeActiveBy(-1)
@@ -40,5 +40,3 @@ export function setup () {
     }
   })
 }
-
-

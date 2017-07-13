@@ -7,9 +7,11 @@ import emitStream from 'emit-stream'
 
 // globals
 // =
+const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
+const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 
 const PLUGIN_NODE_MODULES = path.join(__dirname, 'node_modules')
-console.log('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
+log.debug('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
 
 // find all modules named beaker-plugin-*
 var protocolModuleNames = []
@@ -23,13 +25,13 @@ protocolModuleNames.forEach(name => {
   // load module
   try {
     protocolModules.push(require(path.join(PLUGIN_NODE_MODULES, name)))
-  } catch (e) {
-    log.error('[PLUGINS] Failed to load plugin', name, e)
-    return
-  }
+} catch (e) {
+  log.error('[PLUGINS] Failed to load plugin', name, e)
+  return
+}
 
-  // load package.json
-  loadPackageJson(name)
+// load package.json
+loadPackageJson(name)
 })
 
 // exported api
@@ -47,16 +49,24 @@ export function getAllInfo (key) {
   caches[key] = []
   protocolModules.forEach(protocolModule => {
     if (!protocolModule[key])
-      return
+  return
+  // get the values from the module
+  var values = protocolModule[key]
+  if (!Array.isArray(values))
+    values = [values]
 
-    // get the values from the module
-    var values = protocolModule[key]
-    if (!Array.isArray(values))
-      values = [values]
+  if (key === 'webAPIs') {
+    values = values.map(val => {
+        if (typeof val === 'object' && !val.scheme) {
+      val['scheme'] = protocolModule.protocols[0].scheme; // FIXME: for more than one scheme within plugin
+    }
+    return val;
+  });
+  }
 
-    // add to list
-    caches[key] = caches[key].concat(values)
-  })
+  // add to list
+  caches[key] = caches[key].concat(values)
+})
   return caches[key]
 }
 
@@ -76,18 +86,35 @@ export function registerStandardSchemes () {
 export function setupProtocolHandlers () {
   getAllInfo('protocols').forEach(proto => {
     // run the module's protocol setup
-    log.debug('Registering protocol handler:', proto.scheme)
+    //log.debug('Registering protocol handler:', proto.scheme)
     proto.register()
-  })
+})
 }
 
 // setup all web APIs
 export function setupWebAPIs () {
   getAllInfo('webAPIs').forEach(api => {
     // run the module's protocol setup
-    log.debug('Wiring up Web API:', api.name)
-    rpc.exportAPI(api.name, api.manifest, api.methods)
-  })
+    //log.debug('Wiring up Web API:', api.name)
+
+    // We export functions with callbacks in a separate channel
+    // since they will be adapted on the rederer side to invoke the callbacks
+    let fnsToExport = [];
+  let fnsWithCallbacks = [];
+  let fnsWithAsyncCallbacks = [];
+  for (var fn in api.manifest) {
+    if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
+      fnsWithCallbacks[fn] = api.manifest[fn];
+    } else if (fn.startsWith(WITH_ASYNC_CALLBACK_TYPE_PREFIX)) {
+      fnsWithAsyncCallbacks[fn] = api.manifest[fn];
+    } else {
+      fnsToExport[fn] = api.manifest[fn];
+    }
+  }
+  rpc.exportAPI(api.name, fnsToExport, api.methods)
+  rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+  rpc.exportAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + api.name, fnsWithAsyncCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+})
 }
 
 // get web API manifests for the given protocol
@@ -105,9 +132,9 @@ export function getWebAPIManifests (scheme) {
   // collect manifests
   getAllInfo('webAPIs').forEach(api => {
     // just need to match isInternal for the api and the scheme
-    if (api.isInternal == proto.isInternal)
-      manifests[api.name] = api.manifest
-  })
+    if ((api.isInternal == proto.isInternal) && (api.scheme === scheme))
+  manifests[api.name] = api.manifest
+})
   return manifests
 }
 

@@ -13,7 +13,7 @@ export function imgToData (img, width, height) {
     height = width / ratio
   else
     width = height * ratio
-  
+
   var canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
