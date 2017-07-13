@@ -30,15 +30,7 @@
     $ npm run rebuild
     ```
 
-4. Build the SAFE Authenticator plugin.
-
-    ```bash
-    $ npm run pack-authenticator
-    ```
-    
-    To clean the cargo dependencies of Authenticator's native modules add `-- --clean` to above command.
-
-5. Build SAFE Browser and open it.
+4. Build SAFE Browser and open it.
   
     ```
     $ npm run build

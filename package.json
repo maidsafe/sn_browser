@@ -102,10 +102,7 @@
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules && npm i && npm run rebuild && npm run pack-authenticator && npm run build && npm run package",
     "package": "node ./scripts/main.js --package",
     "start": "gulp start",
-    "watch": "gulp start-watch",
-    "pack-authenticator:unix": "sh ./scripts/pack_authenticator.sh",
-    "pack-authenticator:windows": "powershell.exe -ExecutionPolicy Bypass -File \".\\scripts\\pack_authenticator.ps1\"",
-    "pack-authenticator": "node ./scripts/main.js --authenticator"
+    "watch": "gulp start-watch"
   },
   "dependencies": {
     "fs-extra": "^3.0.1",
