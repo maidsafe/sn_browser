@@ -332,6 +332,7 @@ function showSafeAuthPopup(isContainerReq) {
   </div>`
 
   yo.update(safeAuthPopupDiv, popupBase)
+  setAuthPopupAsScrollable()
 }
 
 // internal helpers
@@ -630,10 +631,11 @@ function setAuthPopupAsScrollable() {
   var popupBase = document.querySelector('.popup .popup-base .popup-i')
   var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
   var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
-  var popupContainerHeight = popupContMainHeight + popupContLsheight;
-  var popupPadBottom = 70
   var popupListMarginTop = 40
-  if ((popupBase.offsetHeight - (popupPadBottom + popupListMarginTop)) < popupContainerHeight) {
+  var footerHeight = 140
+  var popupCntAddedSpace = 30
+  var popupContainerHeight = popupContMainHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
+  if (popupBase.offsetHeight < popupContainerHeight) {
     popupBase.classList.add('scroll')
   } else {
     popupBase.classList.remove('scroll')
