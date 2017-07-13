@@ -21,20 +21,21 @@ export function setup () {
   ipcMain.on('get-web-api-manifests', (event, scheme) => {
     // hardcode the beaker: scheme, since that's purely for internal use
     if (scheme == 'beaker:') {
-      var protos = { 
-        beakerBrowser,
-        beakerBookmarks,
-        beakerDownloads,
-        beakerHistory,
-        beakerSitedata
-      }
-      if (datPlugin && datPlugin.webAPIs[0])
-        protos.datInternalAPI = datPlugin.webAPIs[0].manifest
-      event.returnValue = protos
-      return
+    var protos = {
+      beakerBrowser,
+      beakerBookmarks,
+      beakerDownloads,
+      beakerHistory,
+      beakerSitedata
     }
+    if (datPlugin && datPlugin.webAPIs[0])
+      protos.datInternalAPI = datPlugin.webAPIs[0].manifest
+    event.returnValue = protos
+    return
+  }
 
-    // for everything else, we'll use the plugins
-    event.returnValue = plugins.getWebAPIManifests(scheme)
-  })
+  // for everything else, we'll use the plugins
+  event.returnValue = plugins.getWebAPIManifests(scheme)
+})
 }
+

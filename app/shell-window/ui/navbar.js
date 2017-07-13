@@ -306,20 +306,20 @@ function showSafeAuthPopup(isContainerReq) {
             <div class="popup-cnt-ls">
               <span class="list">
                 ${
-                  safeAuthData[reqKey].containers.map(function(container) {
-                    if (typeof container.access === 'object') {
-                      const contObj = getCont(container.cont_name);
-                      return yo`<div class="list-i" onclick=${togglePermissions}>
+    safeAuthData[reqKey].containers.map(function(container) {
+      if (typeof container.access === 'object') {
+        const contObj = getCont(container.cont_name);
+        return yo`<div class="list-i" onclick=${togglePermissions}>
                                   <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
                                   <div class="list-i-b">
                                     <p>${contObj.desc}</p>
-                                    <ul>${arrToYo(container.access)}</ul> 
+                                    <ul>${arrToYo(container.access)}</ul>
                                   </div>
                                 </div>`;
-                    }
-                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-                  })
-                }
+      }
+      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+    })
+    }
               </span>
             </div>
           </div>
@@ -332,6 +332,7 @@ function showSafeAuthPopup(isContainerReq) {
   </div>`
 
   yo.update(safeAuthPopupDiv, popupBase)
+  setAuthPopupAsScrollable()
 }
 
 // internal helpers
@@ -480,8 +481,8 @@ function render (id, page) {
       <button class="toolbar-btn nav-forward-btn" ${forwardDisabled} onclick=${onClickForward}>
         <span class="icon icon-right-open-big"></span>
       </button>
-      ${reloadBtn}      
-      ${safeBtn}      
+      ${reloadBtn}
+      ${safeBtn}
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}
@@ -630,10 +631,11 @@ function setAuthPopupAsScrollable() {
   var popupBase = document.querySelector('.popup .popup-base .popup-i')
   var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
   var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
-  var popupContainerHeight = popupContMainHeight + popupContLsheight;
-  var popupPadBottom = 70
   var popupListMarginTop = 40
-  if ((popupBase.offsetHeight - (popupPadBottom + popupListMarginTop)) < popupContainerHeight) {
+  var footerHeight = 140
+  var popupCntAddedSpace = 30
+  var popupContainerHeight = popupContMainHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
+  if (popupBase.offsetHeight < popupContainerHeight) {
     popupBase.classList.add('scroll')
   } else {
     popupBase.classList.remove('scroll')

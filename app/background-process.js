@@ -43,13 +43,13 @@ const parseSafeUri = function(uri) {
 };
 
 const safeBrowserApp =
-{
+  {
     name: packageJson.name,
     id: packageJson.name,
     version: packageJson.version,
     vendor: packageJson.author.name,
     permissions : [ "SAFE_DRIVE_ACCESS"]
-};
+  };
 
 // An example of how to use winston to log objects along with variable name
 winston.info({safeBrowserApp});

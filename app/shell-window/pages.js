@@ -49,7 +49,7 @@ export function getPinned () {
 export function parseSafeAuthUrl(url, isClient) {
   var safeAuthUrl = {}
   var parsedUrl = new URL(url)
-  
+
   if (!(/^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test(parsedUrl.hostname))) {
     return { action: 'auth' };
   }
@@ -105,7 +105,7 @@ export function create (opts) {
       return safeAuthPage;
     }
   }
-    
+
   // create page object
   var id = (Math.random()*1000|0) + Date.now()
   var page = {
@@ -180,13 +180,13 @@ export function create (opts) {
   else
     pages.push(page)
 
-  // create proxies for webview methods
-  //   webviews need to be dom-ready before their methods work
-  //   this wraps the methods so the call isnt made if not ready
-  ;([
+    // create proxies for webview methods
+    //   webviews need to be dom-ready before their methods work
+    //   this wraps the methods so the call isnt made if not ready
+    ;([
     ['getURL', ''],
     ['getTitle', ''],
-    
+
     ['goBack'],
     ['canGoBack'],
     ['goForward'],
@@ -207,11 +207,11 @@ export function create (opts) {
     var name = methodSpec[0]
     var defaultReturn = methodSpec[1]
     page[name] = (...args) => {
-      if (page.isWebviewReady)
-        return page.webviewEl[name].apply(page.webviewEl, args)
-      return defaultReturn
-    }
-  })
+    if (page.isWebviewReady)
+      return page.webviewEl[name].apply(page.webviewEl, args)
+    return defaultReturn
+  }
+})
   hide(page) // hidden by default
   webviewsDiv.appendChild(page.webviewEl)
 
@@ -262,15 +262,15 @@ export function create (opts) {
 
 
 function handleStoreChange() {
-    var page = getAll();
+  var page = getAll();
 
-    pages.forEach( page =>
-    {
-	if( page.isWebviewReady && page.getURL().includes('beaker:') )
-	{
-	    page.reload()
-	}
-    })
+  pages.forEach( page =>
+  {
+    if( page.isWebviewReady && page.getURL().includes('beaker:') )
+  {
+    page.reload()
+  }
+})
 }
 
 
@@ -408,28 +408,28 @@ export function changeActiveTo (index) {
 // export function toggleSafe ( )
 // {
 //     var webContents = remote.getCurrentWindow().webContents;
-        
+
 //     if( typeof(webContents.isSafe) === 'undefined' )
 //     {
 //         webContents.isSafe = true;
 //     }
-    
+
 //     webContents.isSafe = ! webContents.isSafe;
 
 //     let pages = getAll();
-    
-//     pages.forEach( page => 
+
+//     pages.forEach( page =>
 //     {
 //         // if (page)
-//         page.reload()    
-        
+//         page.reload()
+
 //     })
 
 // }
 
 export function toggleWebSecurity( )
 {
-    webSecurityDisabled = !webSecurityDisabled;
+  webSecurityDisabled = !webSecurityDisabled;
 }
 
 export function getActive () {
@@ -470,9 +470,9 @@ export function getById (id) {
 
 export function loadPinnedFromDB () {
   return beakerBrowser.getSetting('pinned-tabs').then(json => {
-    try { JSON.parse(json).forEach(url => create({ url, isPinned: true })) }
-    catch (e) {}
-  })
+      try { JSON.parse(json).forEach(url => create({ url, isPinned: true })) }
+catch (e) {}
+})
 }
 
 export function savePinnedToDB () {
@@ -534,14 +534,14 @@ function onLoadCommit (e) {
   // ignore if this is a subresource
   if (!e.isMainFrame)
     return
-  
+
   var page = getByWebview(e.target)
   if (page) {
     // check if this page bookmarked
     beakerBookmarks.get(e.url).then(bookmark => {
       page.bookmark = bookmark
-      navbar.update(page)
-    })
+    navbar.update(page)
+  })
     // stop autocompleting
     navbar.clearAutocomplete()
     // close any prompts
@@ -562,7 +562,7 @@ function onDidStartLoading (e) {
 
 function onDidStopLoading (e) {
   var page = getByWebview(e.target)
-  if (page) {    
+  if (page) {
     // update history
     var url = page.getURL()
     if (!url.startsWith('beaker:')) {
@@ -691,8 +691,8 @@ function onPageFaviconUpdated (e) {
     page.favicons = e.favicons
     urlToData(e.favicons[0], 16, 16, (err, dataUrl) => {
       if (dataUrl)
-        beakerSitedata.set(page.getURL(), 'favicon', dataUrl)
-    })
+      beakerSitedata.set(page.getURL(), 'favicon', dataUrl)
+  })
   }
 }
 
@@ -726,12 +726,12 @@ function createWebviewEl (id, url) {
   el.dataset.id = id
   el.setAttribute('preload', 'file://'+path.join(remote.app.getAppPath(), 'webview-preload.build.js'))
   el.setAttribute('src', url || DEFAULT_URL)
-  
+
   if( webSecurityDisabled )
   {
-      el.setAttribute('disablewebsecurity', true)
+    el.setAttribute('disablewebsecurity', true)
   }
-  
+
   return el
 }
 

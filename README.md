@@ -17,7 +17,7 @@
     ```bash
     $ git clone -b dev https://github.com/maidsafe/safe_browser.git
     ```
-    
+
 2. Install the dependencies.
 
     ``` bash
@@ -25,34 +25,26 @@
     $ npm i
     ```
 3. Rebuild native modules
-    
+
     ```bash
     $ npm run rebuild
     ```
 
-4. Build the SAFE Authenticator plugin.
-
-    ```bash
-    $ npm run pack-authenticator
-    ```
-    
-    To clean the cargo dependencies of Authenticator's native modules add `-- --clean` to above command.
-
-5. Build SAFE Browser and open it.
+4. Build SAFE Browser and open it.
   
     ```
     $ npm run build
     $ npm start
     ```
-    
+
     If you're doing development, `npm run watch` to have assets build automatically.
 
 6. Package SAFE Browser.
- 
+
    ```
    $ npm run package
    ```
-   
+
     The packed SAFE Browser will be found inside `dist` folder.
 
 ### Updating

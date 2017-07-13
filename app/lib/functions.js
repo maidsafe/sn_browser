@@ -4,10 +4,10 @@
 export function cbPromise (method, b) {
   return new Promise((resolve, reject) => {
     method((err, value) => {
-      if (err) reject(err)
-      else     resolve(value)
-    })
+    if (err) reject(err)
+    else     resolve(value)
   })
+})
 }
 
 

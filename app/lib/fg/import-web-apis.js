@@ -11,11 +11,11 @@ const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 const readableToCallback = (rpcAPI) => {
   return (arg1, cb) => {
     return new Promise((resolve, reject) => {
-      var r = rpcAPI(arg1);
-      r.on('data', data => cb.apply(cb, data));
-      r.on('error', err => reject(err));
-      r.on('end', () => resolve());
-    });
+        var r = rpcAPI(arg1);
+    r.on('data', data => cb.apply(cb, data));
+    r.on('error', err => reject(err));
+    r.on('end', () => resolve());
+  });
   }
 }
 
@@ -24,18 +24,18 @@ const readableToCallback = (rpcAPI) => {
 const readableToAsyncCallback = (rpcAPI) => {
   return (arg1, cb) => {
     return new Promise((resolve, reject) => {
-      let firstValueReceived = false;
-      var r = rpcAPI(arg1);
-      r.on('data', data => {
-        if (!firstValueReceived) {
-          firstValueReceived = true;
-          resolve(data[0]);
-        } else {
-          cb.apply(cb, data);
-        }
-      });
-      r.on('error', err => reject(err));
-    });
+        let firstValueReceived = false;
+    var r = rpcAPI(arg1);
+    r.on('data', data => {
+      if (!firstValueReceived) {
+      firstValueReceived = true;
+      resolve(data[0]);
+    } else {
+      cb.apply(cb, data);
+    }
+  });
+    r.on('error', err => reject(err));
+  });
   }
 }
 

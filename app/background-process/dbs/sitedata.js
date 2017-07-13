@@ -29,28 +29,28 @@ export function setup () {
 
 export function set (url, key, value) {
   return setupPromise.then(v => cbPromise(cb => {
-    var origin = extractOrigin(url)
-    if (!origin)
-      return cb()
-    db.run(`
+      var origin = extractOrigin(url)
+      if (!origin)
+  return cb()
+  db.run(`
       INSERT OR REPLACE
         INTO sitedata (origin, key, value)
         VALUES (?, ?, ?)
     `, [origin, key, value], cb)
-  }))
+}))
 }
 
 export function get (url, key) {
   return setupPromise.then(v => cbPromise(cb => {
-    var origin = extractOrigin(url)
-    if (!origin)
-      return cb()
-    db.get(`SELECT value FROM sitedata WHERE origin = ? AND key = ?`, [origin, key], (err, res) => {
-      if (err)
-        return cb(err)
-      cb(null, res && res.value)
-    })
-  }))
+      var origin = extractOrigin(url)
+      if (!origin)
+  return cb()
+  db.get(`SELECT value FROM sitedata WHERE origin = ? AND key = ?`, [origin, key], (err, res) => {
+    if (err)
+    return cb(err)
+    cb(null, res && res.value)
+})
+}))
 }
 
 // internal methods

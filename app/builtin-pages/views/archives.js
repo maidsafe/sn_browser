@@ -1,12 +1,12 @@
 /*
-This uses the datInternalAPI API, which is exposed by webview-preload to all archives loaded over the beaker: protocol
-*/
+ This uses the datInternalAPI API, which is exposed by webview-preload to all archives loaded over the beaker: protocol
+ */
 
 import * as yo from 'yo-yo'
 import co from 'co'
 import emitStream from 'emit-stream'
 import { render as renderArchivesList } from '../com/archives-list'
-import * as editSiteModal from '../com/modals/edit-site' 
+import * as editSiteModal from '../com/modals/edit-site'
 
 // globals
 // =
@@ -91,9 +91,9 @@ function renderNotSupported () {
 function onClickCreateArchive (e) {
   editSiteModal.create({}, { title: 'New Files Archive', onSubmit: opts => {
     datInternalAPI.createNewArchive(opts).then(key => {
-      window.location = 'dat://' + key
-    })
-  }})
+    window.location = 'dat://' + key
+})
+}})
 }
 
 function onUpdateArchive (update) {
@@ -132,7 +132,7 @@ function onToggleServeArchive (archiveInfo) {
     if (archiveInfo.userSettings.isServing && !archiveInfo.userSettings.isSaved)
       archiveInfo.userSettings.isSaved = true
     datInternalAPI.setArchiveUserSettings(archiveInfo.key, archiveInfo.userSettings)
-    
+
     render()
   }
 }
@@ -141,7 +141,7 @@ function onDeleteArchive (archiveInfo) {
   return e => {
     e.preventDefault()
     e.stopPropagation()
-      
+
     archiveInfo.userSettings.isSaved = !archiveInfo.userSettings.isSaved
 
     // isServing must reflect isSaved
@@ -159,10 +159,10 @@ function onUndoDeletions (e) {
 
   archives.forEach(archiveInfo => {
     if (!archiveInfo.userSettings.isSaved) {
-      archiveInfo.userSettings.isSaved = true
-      datInternalAPI.setArchiveUserSettings(archiveInfo.key, archiveInfo.userSettings)
-    }
-  })
+    archiveInfo.userSettings.isSaved = true
+    datInternalAPI.setArchiveUserSettings(archiveInfo.key, archiveInfo.userSettings)
+  }
+})
   render()
 }
 

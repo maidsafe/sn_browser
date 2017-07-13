@@ -50,10 +50,10 @@ export function setup () {
       }
       if (horizontal > 0) {
         leftSwipeArrowEl.style.left = (-1 * ARROW_OFF_DIST) + 'px'
-        rightSwipeArrowEl.style.right = ((-1 * ARROW_OFF_DIST) + (hnorm * ARROW_OFF_DIST)) + 'px'        
+        rightSwipeArrowEl.style.right = ((-1 * ARROW_OFF_DIST) + (hnorm * ARROW_OFF_DIST)) + 'px'
       }
 
-      // highlight 
+      // highlight
       if (shouldGoBack()) leftSwipeArrowEl.classList.add('highlight')
       else                leftSwipeArrowEl.classList.remove('highlight')
       if (shouldGoForward()) rightSwipeArrowEl.classList.add('highlight')

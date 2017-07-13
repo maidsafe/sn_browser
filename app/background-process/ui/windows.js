@@ -27,9 +27,9 @@ export function setup () {
   ipcMain.on('shell-window-ready', e => {
     // if this is the first window opened (since app start or since all windows closing)
     if (numActiveWindows === 1) {
-      e.sender.webContents.send('command', 'load-pinned-tabs')
-    }
-  })
+    e.sender.webContents.send('command', 'load-pinned-tabs')
+  }
+})
 
   // create first shell window
   return createShellWindow()
@@ -49,52 +49,52 @@ export function createShellWindow () {
   })
 
 
-    //safe filter
-    let filter = {
-        urls: ['http://*/*', 'https://*/*' ]
+  //safe filter
+  let filter = {
+    urls: ['http://*/*', 'https://*/*' ]
 
-    }
-    win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
-    {
-        const parsedUrl = url.parse(details.url)
+  }
+  win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
+  {
+    const parsedUrl = url.parse(details.url)
 
-        if( typeof(win.webContents.isSafe) === 'undefined' )
-        {
-            win.webContents.isSafe = true
-        }
+    if( typeof(win.webContents.isSafe) === 'undefined' )
+  {
+    win.webContents.isSafe = true
+  }
 
-        if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
-        {
-            callback({})
-            return
-        }
-        if( details.url.indexOf('http') > -1 )
-        {
-          // FIXME shankar - temp handling for opening external links
-          // if (details.url.indexOf('safe_proxy.pac') !== -1) {
-          //   return callback({ cancel: true })
-          // }
-          try {
-            shell.openExternal(details.url);
-          } catch (e) {};
-          callback({ cancel: false, redirectURL: 'beaker:start' })
+  if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
+  {
+    callback({})
+    return
+  }
+  if( details.url.indexOf('http') > -1 )
+  {
+    // FIXME shankar - temp handling for opening external links
+    // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+    //   return callback({ cancel: true })
+    // }
+    try {
+      shell.openExternal(details.url);
+    } catch (e) {};
+    callback({ cancel: false, redirectURL: 'beaker:start' })
 
-        }
-    })
+  }
+})
 
-    //extra shortcuts outside of menus
-    electronLocalshortcut.register(win, 'Alt+D', () =>
-    {
-        if (win) win.webContents.send('command', 'file:open-location')
-    })
+  //extra shortcuts outside of menus
+  electronLocalshortcut.register(win, 'Alt+D', () =>
+  {
+    if (win) win.webContents.send('command', 'file:open-location')
+})
 
 
-    store.subscribe( e =>
-    {
-        saveStore();
-        win.webContents.send('safeStore-updated')
+  store.subscribe( e =>
+  {
+    saveStore();
+  win.webContents.send('safeStore-updated')
 
-    })
+})
 
 
 

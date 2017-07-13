@@ -9,11 +9,11 @@ export function setZoomFromSitedata (page) {
     return
   beakerSitedata.get(origin, 'zoom').then(v => {
     if (typeof v != 'undefined') {
-      page.zoom = +v
-      page.webviewEl.getWebContents().setZoomLevel(page.zoom)
-      navbar.update(page)
-    }
-  })
+    page.zoom = +v
+    page.webviewEl.getWebContents().setZoomLevel(page.zoom)
+    navbar.update(page)
+  }
+})
 }
 
 export function setZoom(page, z) {

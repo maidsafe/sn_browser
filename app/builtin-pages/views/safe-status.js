@@ -1,6 +1,6 @@
 /*
-This uses the beakerBookmarks APIs, which is exposed by webview-preload to all sites loaded over the beaker: protocol
-*/
+ This uses the beakerBookmarks APIs, which is exposed by webview-preload to all sites loaded over the beaker: protocol
+ */
 
 import * as yo from 'yo-yo'
 import co from 'co'
@@ -18,13 +18,13 @@ export function show () {
   document.title = 'SAFE Network'
 
 
-    co(function*() {
+  co(function*() {
 
-      authSuccess = authSuccess || false
-      authSuccess = yield beakerBrowser.getSetting( 'authSuccess' )
+    authSuccess = authSuccess || false
+    authSuccess = yield beakerBrowser.getSetting( 'authSuccess' )
 
-      render()
-    })
+    render()
+  })
 
 
   co(function*() {
@@ -49,7 +49,7 @@ function render () {
   var reAuthEl = ''
 
   if ( ! authSuccess ) {
-      reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer">
+    reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer">
         <span class="icon icon-rocket"></span> ${reAuthMessage}
       </div>`
   }
@@ -93,6 +93,6 @@ function onClickReAuth (i) {
     let check = beakerBrowser.reauthenticateSAFE( )
 
     check.then( r => console.log( r ) )
-        .catch( e => console.log( 'errors', e ))
+  .catch( e => console.log( 'errors', e ))
   }
 }

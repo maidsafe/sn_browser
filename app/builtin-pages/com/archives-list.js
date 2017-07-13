@@ -11,16 +11,16 @@ export function render (archives, opts={}) {
   archives.forEach((archive, index) => {
     // if not saved but in this listing, then it was recently deleted
     if (!archive.userSettings.isSaved) {
-      return numDeleted++
-    }
+    return numDeleted++
+  }
 
-    // render row
-    let title = archive.title||'Untitled'
-    let mtime = archive.mtime ? ucfirst(niceDate(archive.mtime)) : '--'
-    let serveToggleLabel = archive.userSettings.isServing
-      ? yo`<div><span class="icon icon-publish"></span> Stop Serving</div>`
-      : yo`<div><span class="icon icon-publish"></span> Serve</div>`
-    archiveEls.push(yo`<div class="ll-row archive">
+  // render row
+  let title = archive.title||'Untitled'
+  let mtime = archive.mtime ? ucfirst(niceDate(archive.mtime)) : '--'
+  let serveToggleLabel = archive.userSettings.isServing
+    ? yo`<div><span class="icon icon-publish"></span> Stop Serving</div>`
+    : yo`<div><span class="icon icon-publish"></span> Serve</div>`
+  archiveEls.push(yo`<div class="ll-row archive">
       <div class="ll-link">
         <img class="favicon" src=${'beaker-favicon:dat://'+archive.key} />
         <a class="ll-title" href=${'dat://'+archive.key} title=${title}>
@@ -31,9 +31,9 @@ export function render (archives, opts={}) {
       <div class="ll-symbol">${archive.isOwner ? yo`<span class="icon icon-pencil" title="You are the archive author"></span>` : '' }</div>
       <div class="ll-size">${archive.size ? prettyBytes(archive.size) : '0 B'}</div>
       <div class="ll-status">${archive.peers+' '+pluralize(archive.peers, 'peer')}</div>
-      <div class="ll-serve">${archive.userSettings.isServing 
-        ? yo`<a class="btn btn-primary glowing" onclick=${opts.onToggleServeArchive(archive)} title="Sharing"><span class="icon icon-share"></span> Sharing</a>` 
-        : yo`<a class="btn" onclick=${opts.onToggleServeArchive(archive)} title="Share"><span class="icon icon-share"></span> Share</a>` }</div>
+      <div class="ll-serve">${archive.userSettings.isServing
+    ? yo`<a class="btn btn-primary glowing" onclick=${opts.onToggleServeArchive(archive)} title="Sharing"><span class="icon icon-share"></span> Sharing</a>`
+    : yo`<a class="btn" onclick=${opts.onToggleServeArchive(archive)} title="Share"><span class="icon icon-share"></span> Share</a>` }</div>
       <div class="ll-dropdown">${toggleable(yo`
         <div class="dropdown-btn-container">
           <a class="toggleable btn"><span class="icon icon-down-open-mini"></span></a>
@@ -46,7 +46,7 @@ export function render (archives, opts={}) {
         </div>
       `)}</div>
     </div>`)
-  })
+})
 
   // if empty
   if (opts.renderEmpty && archiveEls.length == 0)
