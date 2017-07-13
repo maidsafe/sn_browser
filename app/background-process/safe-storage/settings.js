@@ -1,10 +1,10 @@
 import { app } from 'electron'
 import log from '../../log'
-import store, { handleAuthError } from './store'
+// import store, { handleAuthError } from './store'
 import { List, Map, fromJS } from 'immutable'
 
 import { createActions } from 'redux-actions'
-import { auth } from 'safe-js'
+// import { auth } from 'safe-js'
 
 const UPDATE_SETTINGS = 'UPDATE_SETTINGS'
 
@@ -43,9 +43,10 @@ export function set (key, value)
 {
 	return new Promise( (resolve, reject ) => 
 	{    
-		let setter = {}
-		setter[key] = value
-		store.dispatch( updateSettings( setter ) )
+		// let setter = {}
+		// setter[key] = value
+		// store.dispatch( updateSettings( setter ) )
+		resolve()
 	})
 }
 
@@ -53,20 +54,20 @@ export function get (key)
 {
 	return new Promise( ( resolve, reject) =>
 	{
-		let settings = store.getState()[ 'settings' ]
+		// let settings = store.getState()[ 'settings' ]
 		
-		if( settings )
-		{
-			let result = settings.get( key )
-			if( result )
-			{
-				resolve( settings.get( key ) )
-			}
+		// if( settings )
+		// {
+		// 	let result = settings.get( key )
+		// 	if( result )
+		// 	{
+		// 		resolve( settings.get( key ) )
+		// 	}
 			
-		}
-		else {
+		// }
+		// else {
 			resolve( 'undefined' )
-		}
+		// }
 	})
 	
 }
@@ -86,28 +87,29 @@ const safeBrowserApp =
 
 export function reauthenticateSAFE () {
 		
-	return auth.authorise( safeBrowserApp ).then( tok =>
-	{
-		store.dispatch( updateSettings( { 'authSuccess': true } ) )
+	return; 
+	// auth.authorise( safeBrowserApp ).then( tok =>
+	// {
+	// 	store.dispatch( updateSettings( { 'authSuccess': true } ) )
 
-		store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
-		store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
+	// 	store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
+	// 	store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
 
-	} )
+	// } )
 	// .catch( handleAuthError )
 }
 
 export function getAll () {
 	return new Promise( ( resolve, reject) =>
 	{
-		let settings = store.getState()[ 'settings' ]
+		// let settings = store.getState()[ 'settings' ]
 		
-		if( settings )
-		{
-			resolve( settings.toJS() )
-		}
-		else {
+		// if( settings )
+		// {
+		// 	resolve( settings.toJS() )
+		// }
+		// else {
 			resolve( {} )
-		}
+		// }
 	})
 }
