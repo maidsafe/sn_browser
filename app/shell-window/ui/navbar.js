@@ -14,6 +14,11 @@ const KEYCODE_ENTER = 13
 const KEYCODE_N = 78
 const KEYCODE_P = 80
 
+const CLIENT_TYPES = {
+  DESKTOP: 'DESKTOP',
+  WEB: 'WEB'
+};
+
 // globals
 // =
 
@@ -26,6 +31,74 @@ var sitePermsNavbarBtn = null
 var autocompleteCurrentValue = null
 var autocompleteCurrentSelection = 0
 var autocompleteResults = null // if set to an array, will render dropdown
+
+var isSafeAppAuthenticating = false
+var safeAuthNetworkState = -1
+var safeAuthData = null
+var safeAuthPopupDiv = yo`<div></div>`
+
+// safe app plugin
+ipcRenderer.send('registerSafeApp');
+
+ipcRenderer.on('webClientAuthReq', function(event, uri) {
+  handleSafeAuthAuthentication(uri, CLIENT_TYPES.WEB);
+})
+
+
+// safe authenticator plugin
+ipcRenderer.send('registerSafeNetworkListener');
+ipcRenderer.send('registerOnAuthReq');
+ipcRenderer.send('registerOnContainerReq');
+ipcRenderer.send('registerOnReqError');
+
+ipcRenderer.on('onNetworkStatus', function(event, status) {
+  safeAuthNetworkState = status
+  if (status === -1) {
+    hideSafeAuthPopup();
+  }
+  update()
+})
+
+ipcRenderer.on('onAuthReq', function(event, data) {
+  if (data) {
+    safeAuthData = data
+    showSafeAuthPopup()
+  }
+});
+
+ipcRenderer.on('onContainerReq', function(event, data) {
+  if (data) {
+    safeAuthData = data
+    showSafeAuthPopup(true)
+  }
+});
+
+ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientAuthRes', data.res);
+  }
+  update()
+});
+
+ipcRenderer.on('onContDecisionRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientContainerRes', data.res);
+  }
+  update()
+});
+
+ipcRenderer.on('onAuthResError', function(event, data) {
+  isSafeAppAuthenticating = false
+  if (data.res && data.res.toLowerCase() === 'unauthorised') {
+    onClickOpenSafeAuthHome()
+  }
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientErrorRes', data.res);
+  }
+  update()
+});
 
 // exported functions
 // =
@@ -63,7 +136,7 @@ export function showInpageFind (page) {
   // do we want it back?
   // -prf
   // if (el.value)
-    // page.findInPage(el.value)
+  // page.findInPage(el.value)
 }
 
 export function hideInpageFind (page) {
@@ -103,20 +176,177 @@ export function updateLocation (page) {
   }
 }
 
+export function handleSafeAuthAuthentication(url, type) {
+  ipcRenderer.send('decryptRequest', {
+    type: type || CLIENT_TYPES.DESKTOP,
+    data: url
+  })
+  clearAutocomplete()
+  // FIXME change to constant instand of -1
+  // if (safeAuthNetworkState === -1) {
+  //   onClickOpenSafeAuthHome()
+  // }
+}
+
+function authDecision(isAllowed, isContainerReq) {
+  isSafeAppAuthenticating = true
+  update()
+  if (isContainerReq) {
+    ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
+    return
+  }
+  ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+}
+
+function onClickAllowBtn(e) {
+  hideSafeAuthPopup()
+  authDecision(true, (parseInt(e.target.dataset.type, 10) === 0))
+}
+
+function onClickDenyBtn(e) {
+  hideSafeAuthPopup()
+  authDecision(false, (parseInt(e.target.dataset.type, 10) === 0))
+}
+
+function onClickSkipBtn(e) {
+  hideSafeAuthPopup()
+  ipcRenderer.send('skipAuthRequest', true);
+}
+
+function hideSafeAuthPopup() {
+  yo.update(safeAuthPopupDiv, yo`<div></div>`)
+}
+
+function showSafeAuthPopup(isContainerReq) {
+  var arrToYo = function(arr) {
+    var getPermissionPhrase = function(perm) {
+      switch (perm) {
+        case 'Read':
+          return yo`<span><b>Read</b> data</span>`;
+        case 'Insert':
+          return yo`<span><b>Store</b> data</span>`;
+        case 'Update':
+          return yo`<span><b>Update</b> existing data</span>`;
+        case 'Delete':
+          return yo`<span><b>Delete</b> data</span>`;
+        case 'ManagePermissions':
+          return yo`<span><b>Full control</b>  to read, store, delete data and manage permissions</span>`;
+      }
+    };
+
+    return arr.map(function(item) {
+      return yo`<li>${getPermissionPhrase(item)}</li>`;
+    })
+  }
+
+  const getCont = function(contName) {
+    const obj = {};
+    switch (contName) {
+      case '_documents':
+        obj['name'] = 'Document container'
+        obj['desc'] = 'Container for storing general documents'
+        obj['style'] = 'document'
+        break;
+      case '_downloads':
+        obj['name'] = 'Download container'
+        obj['desc'] = 'Container for downloaded files'
+        obj['style'] = 'download'
+        break;
+      case '_music':
+        obj['name'] = 'Music container'
+        obj['desc'] = 'Container for storing music files'
+        obj['style'] = 'music'
+        break;
+      case '_pictures':
+        obj['name'] = 'Pictures container'
+        obj['desc'] = 'Container for storing picture files'
+        obj['style'] = 'pictures'
+        break;
+      case '_videos':
+        obj['name'] = 'Videos container'
+        obj['desc'] = 'Container for storing video files'
+        obj['style'] = 'videos'
+        break;
+      case '_public':
+        obj['name'] = 'Public container'
+        obj['desc'] = 'Container for storing unencrypted data'
+        obj['style'] = 'public'
+        break;
+      case '_publicNames':
+        obj['name'] = 'Public names container'
+        obj['desc'] = 'Container for storing public profile related information. Public names and associated services are stored in this container'
+        obj['style'] = 'publicNames'
+        break;
+      default:
+        obj['name'] = contName
+        obj['desc'] = ''
+        obj['style'] = 'default'
+        break;
+    }
+    return obj;
+  }
+
+  var reqKey = isContainerReq ? 'contReq' : 'authReq';
+  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
+  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
+
+  var popupBase = yo`<div class="popup">
+      <div class="popup-base">
+        <div class="popup-i">
+          <div class="popup-cnt">
+            <div class="popup-skip">${skipBtn}</div>
+            <div class="popup-cnt-main">
+              <h3>${safeAuthData[reqKey].app.name.slice(0, 2)}</h3>
+              <h4><b>${safeAuthData[reqKey].app.name}</b> by <b>${safeAuthData[reqKey].app.vendor}</b></h4>
+              <h4>${contPara}</h4>
+              <h5>${safeAuthData[reqKey].app.id}</h5>
+            </div>
+            <div class="popup-cnt-ls">
+              <span class="list">
+                ${
+    safeAuthData[reqKey].containers.map(function(container) {
+      if (typeof container.access === 'object') {
+        const contObj = getCont(container.cont_name);
+        return yo`<div class="list-i" onclick=${togglePermissions}>
+                                  <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
+                                  <div class="list-i-b">
+                                    <p>${contObj.desc}</p>
+                                    <ul>${arrToYo(container.access)}</ul> 
+                                  </div>
+                                </div>`;
+      }
+      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+    })
+    }
+              </span>
+            </div>
+          </div>
+          <div class="popup-foot">
+            ${denyBtn}
+            ${allowBtn}
+          </div>
+        </div>
+      </div>
+  </div>`
+
+  yo.update(safeAuthPopupDiv, popupBase)
+}
+
 // internal helpers
 // =
 
 function render (id, page) {
   var isLoading = page && page.isLoading()
-  
+
   var webContents = remote.getCurrentWindow().webContents;
-  
-  var isSafe = webContents.isSafe;
-  
-  if( typeof isSafe === 'undefined' )
-  {
-      isSafe = true;
-  }
+  // var isSafe = webContents.isSafe;
+
+  // if( typeof isSafe === 'undefined' )
+  // {
+  //     isSafe = true;
+  // }
 
   // back/forward should be disabled if its not possible go back/forward
   var backDisabled = (page && page.canGoBack()) ? '' : 'disabled'
@@ -130,8 +360,19 @@ function render (id, page) {
     : yo`<button class="toolbar-btn nav-reload-btn" onclick=${onClickReload}>
         <span class="icon icon-ccw"></span>
       </button>`
-      
-      
+  var safeNetworkStatusBtn = (isSafeAppAuthenticating)
+    ? yo`<button class="toolbar-btn connecting" onclick=${onClickOpenSafeAuthHome}>
+        <span class="icon"></span>
+      </button>`
+    : yo`<button class="toolbar-btn ${(function() {
+      if (safeAuthNetworkState === 0) {
+        return 'connected'
+      } else if (safeAuthNetworkState === -1) {
+        return 'terminated'
+      }
+    })()}" onclick=${onClickOpenSafeAuthHome}>
+        <span class="icon"></span>
+      </button>`
   // render safe btn
   var safeBtn = (isSafe)
     ? yo`<button class="toolbar-btn safe-btn-safe" onclick=${onClickToggleSafe}>
@@ -191,36 +432,34 @@ function render (id, page) {
     autocompleteDropdown = yo`
       <div class="autocomplete-dropdown" onclick=${onClickAutocompleteDropdown}>
         ${autocompleteResults.map((r, i) => {
-          // content
-          var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
-          var contentColumn
-          if (r.search)
-            contentColumn = yo`<span class="result-search">${r.search}</span>`
-          else {
-            contentColumn = yo`<span class="result-url"></span>`
-            if (r.urlDecorated)
-              contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
-            else
-              contentColumn.textContent = r.url
-          }
-          var titleColumn = yo`<span class="result-title"></span>`
-          if (r.titleDecorated)
-            titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
-          else
-            titleColumn.textContent = r.title
-          
-          // selection
-          var rowCls = 'result'
-          if (i == autocompleteCurrentSelection)
-            rowCls += ' selected'
-
-          // result row
-          return yo`<div class=${rowCls} data-result-index=${i}>
+      // content
+      var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
+      var contentColumn
+      if (r.search)
+      contentColumn = yo`<span class="result-search">${r.search}</span>`
+      else {
+      contentColumn = yo`<span class="result-url"></span>`
+      if (r.urlDecorated)
+      contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
+      else
+      contentColumn.textContent = r.url
+      }
+      var titleColumn = yo`<span class="result-title"></span>`
+      if (r.titleDecorated)
+      titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
+      else
+      titleColumn.textContent = r.title
+      // selection
+      var rowCls = 'result'
+      if (i == autocompleteCurrentSelection)
+      rowCls += ' selected'
+      // result row
+      return yo`<div class=${rowCls} data-result-index=${i}>
             <span class=${iconCls}></span>
             ${contentColumn}
             ${titleColumn}
           </div>`
-        })}
+      })}
       </div>
     `
   }
@@ -291,7 +530,7 @@ function handleAutocompleteSearch (results) {
 
   // set the top results accordingly
   var gotoResult = { url: vWithProtocol, title: 'Go to '+v, isGuessingTheScheme }
-  var searchResult = { 
+  var searchResult = {
     search: v,
     title: 'DuckDuckGo Search',
     url: 'https://duckduckgo.com/?q=' + v.split(' ').join('+')
@@ -387,6 +626,22 @@ function joinSegments (segments) {
   return str
 }
 
+function setAuthPopupAsScrollable() {
+  var popupBase = document.querySelector('.popup .popup-base .popup-i')
+  var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
+  var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
+  var popupContainerHeight = popupContMainHeight + popupContLsheight;
+  var popupPadBottom = 70
+  var popupListMarginTop = 40
+  if ((popupBase.offsetHeight - (popupPadBottom + popupListMarginTop)) < popupContainerHeight) {
+    popupBase.classList.add('scroll')
+  } else {
+    popupBase.classList.remove('scroll')
+  }
+}
+
+window.addEventListener('resize', function() { setAuthPopupAsScrollable(); });
+
 function countMatches (str, regex) {
   var matches = str.match(regex)
   return (matches) ? matches.length : 0
@@ -419,9 +674,26 @@ function onClickReload (e) {
     page.reload()
 }
 
-export function onClickToggleSafe ( e )
-{
-    pages.toggleSafe();    
+function togglePermissions(e) {
+  var targetNode = e.currentTarget;
+  if (!targetNode.classList.contains('list-i')) {
+    return;
+  }
+  if (targetNode.classList.contains('show')) {
+    targetNode.classList.remove('show');
+  } else {
+    targetNode.classList.add('show');
+  }
+  setAuthPopupAsScrollable()
+}
+
+// export function onClickToggleSafe ( e )
+// {
+//     pages.toggleSafe();
+// }
+
+function onClickOpenSafeAuthHome(e) {
+  pages.setActive(pages.create(pages.SAFE_AUTH_DEFAULT_URL))
 }
 
 function onClickCancel (e) {
@@ -450,9 +722,9 @@ function onClickZoom (e) {
   const { Menu, MenuItem } = remote
   var menu = Menu.buildFromTemplate([
     { label: 'Reset Zoom', click: () => zoom.zoomReset(pages.getActive()) },
-    { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
-    { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
-  ])
+  { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
+  { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
+])
   menu.popup(remote.getCurrentWindow())
 }
 
@@ -492,7 +764,26 @@ function onKeydownLocation (e) {
     var page = getEventPage(e)
     if (page) {
       var selection = getAutocompleteSelection()
-      page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
+      // load safeauth page
+      if (new URL(selection.url).protocol === pages.SAFE_AUTH_SCHEME) {
+        if (pages.handleSafeAuthScheme(selection.url)) {
+          e.target.blur()
+          return
+        }
+      }
+
+      // add index.html to prefix if not found
+      var selectionUrl = selection.url
+      var parsedSelectionUrl = new URL(selection.url)
+      if (parsedSelectionUrl.pathname === '/') {
+        if (selectionUrl.slice(-1) !== '/') {
+          selectionUrl += '/index.html'
+        } else {
+          selectionUrl += 'index.html'
+        }
+      }
+
+      page.loadURL(selectionUrl, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }
     return

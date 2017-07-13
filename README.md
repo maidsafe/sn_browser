@@ -1,71 +1,71 @@
 # safe_browser
 
-> SAFE Browser Application is a browser designed to open safe:// websites on The SAFE Network. It is a fork of the [beaker browser](https://github.com/pfrazee/beaker/).
+> SAFE Browser is a browser designed to open safe:// websites on the SAFE Network.
 
-SAFE Beaker Browser uses [safe-js](https://github.com/joshuef/safe-js) to interact with the safe launcher.
+**Maintainer:** Krishna Kumar (krishna.kumar@maidsafe.net)
 
-You have three main APIs available to SAFE sites:
+## Development
 
-* `window.safeAuth`;
-* `window.safeNFS`;
-* `window.safeDNS`;
+### Prerequisites
 
-Each of these is a mapping to safejs functions, which you can find [here](https://github.com/maidsafe/safe_browser/blob/master/doc/SAFE-setup.md);
+  * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
+  * Rust stable (we recommend installing it from [rust-lang.org](https://www.rust-lang.org/en-US/))
+  * [Git](https://git-scm.com/)
 
+1. Clone this GitHub repository.
 
-## Development Install Instructions:
+    ```bash
+    $ git clone -b dev https://github.com/maidsafe/safe_browser.git
+    ```
+    
+2. Install the dependencies.
 
- 1. Install Git https://help.ubuntu.com/lts/serverguide/git.html
+    ``` bash
+    $ cd safe_browser
+    $ npm i
+    ```
+3. Rebuild native modules
+    
+    ```bash
+    $ npm run rebuild
+    ```
 
- 2. Sign up for https://github.com/
+4. Build the SAFE Authenticator plugin.
 
- 3. https://help.github.com/articles/set-up-git/#platform-linux
+    ```bash
+    $ npm run pack-authenticator
+    ```
+    
+    To clean the cargo dependencies of Authenticator's native modules add `-- --clean` to above command.
 
- 4. https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux
+5. Build SAFE Browser and open it.
+  
+    ```
+    $ npm run build
+    $ npm start
+    ```
+    
+    If you're doing development, `npm run watch` to have assets build automatically.
 
- 5. https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux
-
- 6. Install node js requires the latest version of node js Check to see what the latest version is [here](https://nodejs.org/en/download/)
-
- Use option one make sure to install the [latest version](http://www.hostingadvice.com/how-to/install-nodejs-ubuntu-14-04/#node-version-manager)
-
- 7. Open Terminal
-
- ``` shell
- $ git clone https://github.com/maidsafe/safe_browser.git
- $ cd safe_browser
- $ npm install
- $ npm run rebuild
- $ npm start
- ```
-
- 8. Any time you want to run the browser again all you have to do is open terminal
-
- ``` shell
- $ cd safe_browser
- $ npm start
-
- ```
-
- *Note 01: If you want to do a fresh install. Delete the beaker folder and start at Step 07:*
-
- *Note 02: Do not worry about any errors that appear.*
+6. Package SAFE Browser.
+ 
+   ```
+   $ npm run package
+   ```
+   
+    The packed SAFE Browser will be found inside `dist` folder.
 
 ### Updating
- If you pull latest from the repo and get weird module errors, do:
 
- ```
- npm run burnthemall
- ```
+If you pull latest from the repo and get weird module errors, do:
 
- This invokes [the mad king](http://nerdist.com/wp-content/uploads/2016/05/the-mad-king-game-of-thrones.jpg), who will torch your npm_modules, and do the full install/rebuild process for you.
- `npm start` should work afterwards.
-
- If you're doing development, `npm run watch` to have assets build automatically.
-
+```bash
+$ npm run burnthemall
+```
+This will remove your npm_modules, and do the full install, rebuild, build SAFE Authenticator and package  processes for you. `npm start` should work afterwards.
 
 ## License
 
-SAFE Beaker Browser is a lightly modified fork of the [decentralized beaker browser](https://www.beakerbrowser.net/).
+SAFE Browser is a lightly modified fork of the [beaker browser](https://www.beakerbrowser.com/).
 
 Modified MIT as per the [BeakerLicense](https://github.com/joshuef/beaker/blob/master/BEAKER_LICENSE.md)
