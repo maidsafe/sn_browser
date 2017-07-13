@@ -39,8 +39,8 @@ export default function (reqId, webContentsId, permission) {
 
   // create the prompt
   promptbar.add(page, {
-    type: 'permission:'+permission,
-    render: ({ rerender, onClose }) => {
+      type: 'permission:'+permission,
+      render: ({ rerender, onClose }) => {
       return yo`<div>
         <span class="icon icon-help-circled"></span>
         This site would like to ${permDesc}.
@@ -52,7 +52,7 @@ export default function (reqId, webContentsId, permission) {
       </div>`
     },
     onForceClose: () => {
-      respond(false)
-    }
-  })
+    respond(false)
+  }
+})
 }

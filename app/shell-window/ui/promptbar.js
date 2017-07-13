@@ -65,8 +65,8 @@ export function forceRemoveAll (page) {
   // find and remove
   page.prompts.forEach(p => {
     if (typeof p.onForceClose == 'function')
-      p.onForceClose()
-  })
+  p.onForceClose()
+})
   page.prompts = []
   update(page)
 }
@@ -88,12 +88,12 @@ function render (id, page) {
 
   return yo`<div data-id=${id} class=${page.isActive ? '' : 'hidden'}>
     ${page.prompts.map(prompt => {
-      return yo`<div class="promptbar">
+    return yo`<div class="promptbar">
         ${prompt.render({
-          rerender: () => update(page),
-          onClose: () => remove(page, prompt)
-        })}
+        rerender: () => update(page),
+      onClose: () => remove(page, prompt)
+      })}
       </div>`
-    })}
+  })}
   </div>`
 }

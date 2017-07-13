@@ -126,9 +126,9 @@ function repositionTabs (e) {
   // count the unpinned-tabs, and correct for the spacing and pinned-tabs
   allPages.forEach(p => {
     availableWidth -= TAB_SPACING
-    if (p.isPinned) availableWidth -= MIN_TAB_WIDTH
-    else            numUnpinnedTabs++
-  })
+  if (p.isPinned) availableWidth -= MIN_TAB_WIDTH
+  else            numUnpinnedTabs++
+})
   // now calculate a (clamped) size
   currentTabWidth = Math.min(MAX_TAB_WIDTH, Math.max(MIN_TAB_WIDTH, availableWidth / numUnpinnedTabs))|0
 
@@ -170,9 +170,9 @@ function onSetActive (page) {
     // set new tab active
     newTabEl.classList.add('chrome-tab-current')
 
-    // recalculate tab styles
-    repositionTabs()
-  })
+  // recalculate tab styles
+  repositionTabs()
+})
 }
 
 // ui events
@@ -211,8 +211,8 @@ function onClickCloseOtherTabs (page) {
     pages.setActive(page)
     pages.getAll().slice().forEach(p => {
       if (p != page)
-        pages.remove(p)
-    })
+    pages.remove(p)
+  })
   }
 }
 function onClickCloseTabsToTheRight (page) {

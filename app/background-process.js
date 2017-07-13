@@ -3,11 +3,11 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
-import { app, Menu } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
+// import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
 
 // set setting does not trigger save
 import { updateSettings } from './background-process/safe-storage/settings'
@@ -30,20 +30,25 @@ import * as beakerFaviconProtocol from './background-process/protocols/beaker-fa
 
 import * as openURL from './background-process/open-url'
 
-import { auth } from 'safe-js'
+// import { auth } from 'safe-js'
 // import packageJson from './package.json'
 var packageJson = require( './package.json' );
+var mainWindow = null;
 
-console.log( "packagejson" );
+log.debug( "packagejson" );
+
+const parseSafeUri = function(uri) {
+  return uri.replace('//', '').replace('==/', '==');
+};
 
 const safeBrowserApp =
-{
+  {
     name: packageJson.name,
     id: packageJson.name,
     version: packageJson.version,
     vendor: packageJson.author.name,
     permissions : [ "SAFE_DRIVE_ACCESS"]
-};
+  };
 
 
 
@@ -56,33 +61,32 @@ plugins.registerStandardSchemes()
 
 app.on('ready', function () {
 
-    let token = auth.authorise( safeBrowserApp ).then( tok =>
-	{
-        store.dispatch( updateSettings( { 'authSuccess': true } ) )
-        store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
-        store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
+  //   let token = auth.authorise( safeBrowserApp ).then( tok =>
+  // {
+  //       store.dispatch( updateSettings( { 'authSuccess': true } ) )
+  //       store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
+  //       store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
 
-        getStore( tok.token )
-            .then( json =>
-            {
-                reStore( json )
+  //       getStore( tok.token )
+  //           .then( json =>
+  //           {
+  //               reStore( json )
 
-            })
-            .catch( err =>
-            {
-                if( err.status === 404)
-                {
-                    store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher'  } ) )
-                }
-                else {
+  //           })
+  //           .catch( err =>
+  //           {
+  //               if( err.status === 404)
+  //               {
+  //                   store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher'  } ) )
+  //               }
+  //               else {
 
-                    store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) )
-                }
-            })
+  //                   store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) )
+  //               }
+  //           })
 
-	})
-	.catch( handleAuthError )
-
+  // })
+  // .catch( handleAuthError )
 
   // API initialisations
   sitedata.setup()
@@ -110,6 +114,30 @@ app.on('ready', function () {
 
   // listen OSX open-url event
   openURL.setup()
+
+  if((process.platform === 'linux') || (process.platform === 'win32')) {
+    if (process.argv[1] && (process.argv[1].indexOf('safe') !== -1)) {
+      openURL.open(parseSafeUri(process.argv[1]))
+    }
+  }
+
+  const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+    if (commandLine.length >= 2 && commandLine[1]) {
+      openURL.open(parseSafeUri(commandLine[1]));
+    }
+
+    mainWindow = BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]
+
+    // Someone tried to run a second instance, we should focus our window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  if (shouldQuit) {
+    app.quit();
+  }
 })
 
 app.on('window-all-closed', function () {

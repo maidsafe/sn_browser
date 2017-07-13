@@ -1,6 +1,6 @@
 /*
-This uses the beakerHistory API, which is exposed by webview-preload to all sites loaded over the beaker: protocol
-*/
+ This uses the beakerHistory API, which is exposed by webview-preload to all sites loaded over the beaker: protocol
+ */
 
 import * as yo from 'yo-yo'
 import * as moment from 'moment'
@@ -47,12 +47,12 @@ function fetchMore (cb) {
   beakerHistory.getVisitHistory({ offset: visits.length, limit: 100 }).then(rows => {
 
     if (rows.length == 0)
-      isAtEnd = true
-    else
-      visits = visits.concat(rows || [])
-    isFetching = false
-    cb()
-  })
+  isAtEnd = true
+else
+  visits = visits.concat(rows || [])
+  isFetching = false
+  cb()
+})
 }
 
 // rendering
@@ -67,11 +67,11 @@ function render () {
     var oldLastDate = lastDate
     lastDate = moment(row.ts).endOf('day')
     if (!lastDate.isSame(oldLastDate, 'day')) {
-      rowEls.push(yo`<div class="ll-heading">${ucfirst(niceDate(lastDate, { noTime: true }))}</div>`)
-    }
+    rowEls.push(yo`<div class="ll-heading">${ucfirst(niceDate(lastDate, { noTime: true }))}</div>`)
+  }
 
-    // render row
-    rowEls.push(yo`<div class="ll-row">
+  // render row
+  rowEls.push(yo`<div class="ll-row">
       <a class="ll-link" href=${row.url} title=${row.title}>
         <img class="favicon" src=${'beaker-favicon:'+row.url} />
         <span class="ll-title">${row.title}</span>
@@ -80,7 +80,7 @@ function render () {
         <span class="icon icon-cancel-squared" onclick=${onClickDelete.bind(window, i)} title="Remove from history"></span>
       </div>
     </div>`)
-  })
+})
 
   // empty state
   if (rowEls.length == 0) {

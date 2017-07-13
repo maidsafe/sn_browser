@@ -23,35 +23,35 @@ export function setup () {
 
 export function set (key, value) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.run(`
+      db.run(`
       INSERT OR REPLACE
         INTO settings (key, value, ts)
         VALUES (?, ?, ?)
     `, [key, value, Date.now()], cb)
-  }))
+}))
 }
 
 export function get (key) {
   return setupPromise.then(v => cbPromise(cb => {
-    db.get(`SELECT value FROM settings WHERE key = ?`, [key], (err, row) => {
+      db.get(`SELECT value FROM settings WHERE key = ?`, [key], (err, row) => {
       if (row)
-        row = row.value
+      row = row.value
       cb(err, row)
     })
-  }))
+}))
 }
 
 export function getAll () {
   return setupPromise.then(v => cbPromise(cb => {
     db.all(`SELECT key, value FROM settings`, (err, rows) => {
-      if (err)
-        return cb(err)
+    if (err)
+    return cb(err)
 
-      var obj = {}
-      rows.forEach(row => obj[row.key] = row.value)
-      cb(null, obj)
-    })
-  }))
+    var obj = {}
+    rows.forEach(row => obj[row.key] = row.value)
+  cb(null, obj)
+})
+}))
 }
 
 // internal methods

@@ -1,6 +1,6 @@
 /*
-This uses the beakerBrowser API, which is exposed by webview-preload to all sites loaded over the beaker: protocol
-*/
+ This uses the beakerBrowser API, which is exposed by webview-preload to all sites loaded over the beaker: protocol
+ */
 
 import * as yo from 'yo-yo'
 import co from 'co'
@@ -83,8 +83,8 @@ function renderProtocolSettings () {
 
   return yo`<div class="s-section">
     ${registered.length
-      ? yo`<div>Beaker is the default browser for <strong>${registered.join(', ')}</strong>.</div>`
-      : '' }
+    ? yo`<div>Beaker is the default browser for <strong>${registered.join(', ')}</strong>.</div>`
+    : '' }
     ${unregistered.map(proto => yo`<div>Make Beaker the default browser for <strong>${proto}</strong>? <a class="icon icon-check" onclick=${register(proto)}> Yes</a>.</div>`)}
   </div>`
 }
@@ -104,8 +104,8 @@ function renderAutoUpdater () {
         <button class="btn btn-default" onclick=${onClickCheckUpdates}>Check for updates</button>
         <span class="version-info">
           ${ browserInfo.updater.error
-            ? yo`<span><span class="icon icon-cancel"></span> ${browserInfo.updater.error}</span>`
-            : yo`<span>
+        ? yo`<span><span class="icon icon-cancel"></span> ${browserInfo.updater.error}</span>`
+        : yo`<span>
                 <span class="icon icon-check"></span>
                 <strong>Beaker v${browserInfo.version}</strong> is up-to-date
               </span>` }

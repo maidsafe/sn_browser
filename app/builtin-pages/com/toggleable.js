@@ -6,13 +6,13 @@ import * as yo from 'yo-yo'
 export default function toggleable (el) {
   Array.from(el.querySelectorAll('.toggleable')).forEach(el2 => {
     el2.addEventListener(el2.dataset.toggleOn||'click', onToggle)
-  })
+})
   Array.from(el.querySelectorAll('.toggleon')).forEach(el2 => {
     el2.addEventListener(el2.dataset.toggleOn||'click', onToggleOn)
-  })
+})
   Array.from(el.querySelectorAll('.toggleoff')).forEach(el2 => {
     el2.addEventListener(el2.dataset.toggleOn||'click', onToggleOff)
-  })
+})
   function onToggle (e) {
     e.preventDefault()
     e.stopPropagation()

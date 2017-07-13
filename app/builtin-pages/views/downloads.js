@@ -1,6 +1,6 @@
 /*
-This uses the beakerDownloads API, which is exposed by webview-preload to all sites loaded over the beaker: protocol
-*/
+ This uses the beakerDownloads API, which is exposed by webview-preload to all sites loaded over the beaker: protocol
+ */
 
 import * as yo from 'yo-yo'
 import co from 'co'
@@ -40,53 +40,53 @@ export function hide () {
 
 function render () {
   var downloadEls = downloads.map(d => {
-    var progress, actions
-    if (d.state == 'progressing') {
-      // progress
-      let speed = (d.isPaused) ? 'Paused' : (prettyBytes(d.downloadSpeed) + '/s')
-      progress = yo`<div class="download-item-progress">
+      var progress, actions
+      if (d.state == 'progressing') {
+    // progress
+    let speed = (d.isPaused) ? 'Paused' : (prettyBytes(d.downloadSpeed) + '/s')
+    progress = yo`<div class="download-item-progress">
         <progress value=${d.receivedBytes} max=${d.totalBytes}></progress>
         <small>${prettyBytes(d.receivedBytes) + ' / ' + prettyBytes(d.totalBytes)}</small>
         <small>${speed}</small>
       </div>`
 
-      // actions
-      actions = yo`<div>
+    // actions
+    actions = yo`<div>
         ${d.isPaused
-          ? yo`<button class="btn" onclick=${e => onResume(e, d)}>resume</button>`
-          : yo`<button class="btn" onclick=${e => onPause(e, d)}>pause</button>`}
+      ? yo`<button class="btn" onclick=${e => onResume(e, d)}>resume</button>`
+      : yo`<button class="btn" onclick=${e => onPause(e, d)}>pause</button>`}
         <button class="btn" onclick=${e => onCancel(e, d)}>cancel</button>
       </div>`
-    } else if (d.state == 'completed') {
-      // actions
-      if (!d.fileNotFound) {
-        actions = yo`<div class="bumpdown">
+  } else if (d.state == 'completed') {
+    // actions
+    if (!d.fileNotFound) {
+      actions = yo`<div class="bumpdown">
           <button class="btn" onclick=${e => onOpen(e, d)}>open file</button>
           <button class="btn" onclick=${e => onShow(e, d)}>show in folder</button>
         </div>`
-      } else {
-        actions = yo`<div>File not found (moved or deleted)</div>`
-      }
     } else {
-      // progress
-      progress = yo`<div class="download-item-progress">
+      actions = yo`<div>File not found (moved or deleted)</div>`
+    }
+  } else {
+    // progress
+    progress = yo`<div class="download-item-progress">
         ${ucfirst(d.state)}
       </div>`
-    }
+  }
 
-    // render download
-    return yo`<div class="download-item">
+  // render download
+  return yo`<div class="download-item">
       <div class="download-item-name">
         <strong><img src="beaker-favicon:"> ${d.name}</strong>
         ${d.state !== 'progressing'
-          ? yo`<a onclick=${e => onRemove(e, d)}><span class="icon icon-cancel"></span></a>`
-          : '' }
+    ? yo`<a onclick=${e => onRemove(e, d)}><span class="icon icon-cancel"></span></a>`
+    : '' }
       </div>
       <div class="download-item-url"><a href=${d.url} target="_blank">${d.url}</a></div>
       ${progress}
       ${actions}
     </div>`
-  }).reverse()
+}).reverse()
 
   // empty state
   if (downloadEls.length === 0) {
@@ -144,17 +144,17 @@ function onCancel (e, download) {
 function onShow (e, download) {
   beakerDownloads.showInFolder(download.id)
     .catch(err => {
-      download.fileNotFound = true
-      render()
-    })
+    download.fileNotFound = true
+  render()
+})
 }
 
 function onOpen (e, download) {
   beakerDownloads.open(download.id)
     .catch(err => {
-      download.fileNotFound = true
-      render()
-    })
+    download.fileNotFound = true
+  render()
+})
 }
 
 function onRemove (e, download) {

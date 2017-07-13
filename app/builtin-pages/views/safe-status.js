@@ -1,6 +1,6 @@
 /*
-This uses the beakerBookmarks APIs, which is exposed by webview-preload to all sites loaded over the beaker: protocol
-*/
+ This uses the beakerBookmarks APIs, which is exposed by webview-preload to all sites loaded over the beaker: protocol
+ */
 
 import * as yo from 'yo-yo'
 import co from 'co'
@@ -15,16 +15,16 @@ export function setup () {
 }
 
 export function show () {
-  document.title = 'SAFE Network Status'
+  document.title = 'SAFE Network'
 
 
-    co(function*() {
+  co(function*() {
 
-      authSuccess = authSuccess || false
-      authSuccess = yield beakerBrowser.getSetting( 'authSuccess' )
+    authSuccess = authSuccess || false
+    authSuccess = yield beakerBrowser.getSetting( 'authSuccess' )
 
-      render()
-    })
+    render()
+  })
 
 
   co(function*() {
@@ -49,25 +49,35 @@ function render () {
   var reAuthEl = ''
 
   if ( ! authSuccess ) {
-      reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer">
-      <span class="icon icon-rocket"></span> ${reAuthMessage}
+    reAuthEl = yo`<div class="ll-help" onclick=${onClickReAuth()} style="cursor: pointer">
+        <span class="icon icon-rocket"></span> ${reAuthMessage}
       </div>`
   }
 
   if (safeStatus && safeStatus.length > 0 ) {
-    statusEl = yo`<div class="ll-help">
-      <span class="icon icon-info-circled"></span> ${safeStatus}
+    statusEl = yo`<div class="safe-auth-desc">
+      <span class="icon icon-info-circled"></span> Manage Applications Using <a href="safe-auth://home/" target="_blank">Authenticator</a>
     </div>`
   }
 
   // render the top 9 big, the rest small
   yo.update(document.querySelector('#el-content'), yo`<div class="pane" id="el-content">
-    <div class="safe-status links-list">
-      <div class="ll-heading">
-	SAFE Network
+    <div class="safe-status">
+      <div class="safe-status-b">
+        <div class="heading">SAFE Network</div>
+        <h4 class="desc"><span>Privacy</span><span>Security</span><span>Freedom</span></h4>
+        <p class="desc-2">
+          The SAFE Network and Browser are still in test phases and may only work if you are using the latest version.
+        </p>
+        <div class="desc-lnk">
+          <p>Here are few <a href="https://github.com/maidsafe/safe_examples">example</a> applications to start with.</p>
+          <p>You can join the discussion on the <a href="https://safenetforum.org/">Community forum</a></p>
+          <p>If you'd like to contribute to the code or have found any issues, you can find us on <a href="https://github.com/maidsafe/safe_browser/issues">GitHub</a></p>
+        </div>
+        <div class="safe-status-f">
+          <p><span class="icon icon-info-circled"></span> Manage Applications Using <a href="safe-auth://home/" target="_blank">Authenticator</a></p>
+        </div>
       </div>
-      ${statusEl}
-      ${reAuthEl}
     </div>
   </div>`)
 }
@@ -83,6 +93,6 @@ function onClickReAuth (i) {
     let check = beakerBrowser.reauthenticateSAFE( )
 
     check.then( r => console.log( r ) )
-        .catch( e => console.log( 'errors', e ))
+  .catch( e => console.log( 'errors', e ))
   }
 }

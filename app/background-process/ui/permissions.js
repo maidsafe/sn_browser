@@ -17,15 +17,15 @@ export function setup () {
 }
 
 export function denyAllRequests (win) {
-  // remove all requests in the window, denying as we go 
+  // remove all requests in the window, denying as we go
   activeRequests = activeRequests.filter(req => {
-    if (req.win === win) {
-      log('Denying outstanding permission for closing window, req #'+req.id+' for '+req.permission)
-      req.cb(false)
-      return false
-    }
-    return true
-  })
+      if (req.win === win) {
+    log('Denying outstanding permission for closing window, req #'+req.id+' for '+req.permission)
+    req.cb(false)
+    return false
+  }
+  return true
+})
 }
 
 // event handlers

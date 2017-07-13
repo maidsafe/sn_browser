@@ -43,7 +43,7 @@ var fileMenu = {
       checked: true,
       accelerator: 'CmdOrCtrl+Shift+L',
       click: function (item, win) {
-          if (win) win.webContents.send('command', 'window:toggle-safe-mode')
+        if (win) win.webContents.send('command', 'window:toggle-safe-mode')
       }
     },
     {
@@ -53,8 +53,8 @@ var fileMenu = {
         if (win) {
           dialog.showOpenDialog({ title: 'Open file...', properties: ['openFile', 'createDirectory'] }, files => {
             if (files && files[0])
-              win.webContents.send('command', 'file:new-tab', 'file://'+files[0])
-          })
+          win.webContents.send('command', 'file:new-tab', 'file://'+files[0])
+        })
         }
       }
     },
@@ -109,46 +109,46 @@ var viewMenu = {
     label: 'Reload',
     accelerator: 'CmdOrCtrl+R',
     click: function (item, win) {
-      if (win) win.webContents.send('command', 'view:reload') 
+      if (win) win.webContents.send('command', 'view:reload')
     }
   },
-  {
-    label: 'Hard Reload (Clear Cache)',
-    accelerator: 'CmdOrCtrl+Shift+R',
-    click: function (item, win) {
-      if (win) win.webContents.send('command', 'view:hard-reload') 
-    }
-  },
-  { type: "separator" },
-  {
-    label: 'Zoom In',
-    accelerator: 'CmdOrCtrl+=',
-    click: function (item, win) {
-      if (win) win.webContents.send('command', 'view:zoom-in') 
-    }
-  },
-  {
-    label: 'Zoom Out',
-    accelerator: 'CmdOrCtrl+-',
-    click: function (item, win) {
-      if (win) win.webContents.send('command', 'view:zoom-out') 
-    }
-  },
-  {
-    label: 'Actual Size',
-    accelerator: 'CmdOrCtrl+0',
-    click: function (item, win) {
-      if (win) win.webContents.send('command', 'view:zoom-reset') 
-    }
-  },
-  { type: "separator" },
-  {
-    label: 'Toggle DevTools',
-    accelerator: 'Alt+CmdOrCtrl+I',
-    click: function (item, win) {
-      if (win) win.webContents.send('command', 'view:toggle-dev-tools') 
-    }
-  }]
+    {
+      label: 'Hard Reload (Clear Cache)',
+      accelerator: 'CmdOrCtrl+Shift+R',
+      click: function (item, win) {
+        if (win) win.webContents.send('command', 'view:hard-reload')
+      }
+    },
+    { type: "separator" },
+    {
+      label: 'Zoom In',
+      accelerator: 'CmdOrCtrl+=',
+      click: function (item, win) {
+        if (win) win.webContents.send('command', 'view:zoom-in')
+      }
+    },
+    {
+      label: 'Zoom Out',
+      accelerator: 'CmdOrCtrl+-',
+      click: function (item, win) {
+        if (win) win.webContents.send('command', 'view:zoom-out')
+      }
+    },
+    {
+      label: 'Actual Size',
+      accelerator: 'CmdOrCtrl+0',
+      click: function (item, win) {
+        if (win) win.webContents.send('command', 'view:zoom-reset')
+      }
+    },
+    { type: "separator" },
+    {
+      label: 'Toggle DevTools',
+      accelerator: 'Alt+CmdOrCtrl+I',
+      click: function (item, win) {
+        if (win) win.webContents.send('command', 'view:toggle-dev-tools')
+      }
+    }]
 }
 
 var historyMenu = {
@@ -228,7 +228,7 @@ var beakerDevMenu = {
   },{
     label: 'Toggle WebSecurity for new tabs',
     click: function ( item, win ) {
-        if (win) win.webContents.send('command', 'window:disable-web-security' )
+      if (win) win.webContents.send('command', 'window:disable-web-security' )
     }
   }]
 }

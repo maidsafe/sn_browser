@@ -30,8 +30,8 @@ window.history.replaceState = _wr('replaceState');
 
 // globals
 // =
-// 
-// 
+//
+//
 
 var views = { start: safeStatus, favorites, archives, history, downloads, settings }
 var currentView = getLocationView()

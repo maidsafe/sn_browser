@@ -2,16 +2,18 @@
   "name": "safe-browser",
   "productName": "SAFE Browser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
-  "homepage": "https://github.com/joshuef/beaker",
-  "version": "0.4.3",
+  "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
+  "version": "0.2.2",
+  "identifier": "net.maidsafe.safebrowser",
   "author": {
-      "name" : "Josh Wilson",
-      "email" : "joshuef@gmail.com",
-      "url" :"https://github.com/joshuef"
+    "name" : "MaidSafe.net Ltd",
+    "email" : "qa@maidsafe.net",
+    "url" :"https://maidsafe.net"
   },
   "main": "background-process.build.js",
   "dependencies": {
-    "beaker-plugin-safe": "0.2.3",
+    "beaker-plugin-safe-app": "https://github.com/krishnaIndia/beaker-plugin-safe-app/releases/download/test-0.1.0/beaker-plugin-safe-app-0.1.0.tgz",
+    "beaker-plugin-safe-authenticator": "https://github.com/krishnaIndia/beaker-plugin-safe-authenticator/releases/download/test-0.1.0/beaker-plugin-safe-authenticator-0.1.0.tgz",
     "browser-es-module-loader": "^0.1.6",
     "co": "^4.6.0",
     "electron-localshortcut": "^0.6.0",
@@ -31,7 +33,6 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",
     "remarkable": "^1.6.2",
-    "safe-js": "^0.3.3",
     "speedometer": "^1.0.0",
     "unused-filename": "^0.1.0",
     "yo-yo": "^1.2.1",
@@ -39,6 +40,8 @@
   },
   "devDependencies": {
     "lodash": "^4.16.6",
+    "ffi": "^2.2.0",
+    "ref": "^1.3.3",
     "redux-logger": "^2.7.0",
     "redux-node-logger": "^0.1.0"
   }
