@@ -8,3 +8,4 @@ importWebAPIs()
 setupUI(() => {
   ipcRenderer.send('shell-window-ready')
 })
+

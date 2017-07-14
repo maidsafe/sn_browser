@@ -26,7 +26,7 @@ export function setup (cb) {
   }
 
   const InputMenu = Menu.buildFromTemplate([{
-      label: 'Undo',
+    label: 'Undo',
       role: 'undo',
     }, {
       label: 'Redo',
@@ -50,20 +50,20 @@ export function setup (cb) {
     },
   ]);
 
-  document.body.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+document.body.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
 
-    let node = e.target;
+  let node = e.target;
 
-    while (node) {
-      if (node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
-        InputMenu.popup(remote.getCurrentWindow());
-        break;
-      }
-      node = node.parentNode;
+  while (node) {
+    if (node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
+      InputMenu.popup(remote.getCurrentWindow());
+      break;
     }
-  });
+    node = node.parentNode;
+  }
+});
 
   // setup subsystems
   tabs.setup()

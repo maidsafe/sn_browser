@@ -2,7 +2,7 @@ var isLoading = false
 var currentStr
 
 export function setup () {
-  
+
 }
 
 export function set (str) {
@@ -20,7 +20,7 @@ function render () {
   var str = currentStr
   if (!str && isLoading)
     str = 'Loading...'
-  
+
   if (str) {
     el.classList.remove('hidden')
     el.textContent = str

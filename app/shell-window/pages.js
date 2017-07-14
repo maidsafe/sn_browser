@@ -180,10 +180,10 @@ export function create (opts) {
   else
     pages.push(page)
 
-  // create proxies for webview methods
-  //   webviews need to be dom-ready before their methods work
-  //   this wraps the methods so the call isnt made if not ready
-  ;([
+    // create proxies for webview methods
+    //   webviews need to be dom-ready before their methods work
+    //   this wraps the methods so the call isnt made if not ready
+    ;([
     ['getURL', ''],
     ['getTitle', ''],
 
@@ -207,11 +207,11 @@ export function create (opts) {
     var name = methodSpec[0]
     var defaultReturn = methodSpec[1]
     page[name] = (...args) => {
-      if (page.isWebviewReady)
-        return page.webviewEl[name].apply(page.webviewEl, args)
-      return defaultReturn
-    }
-  })
+    if (page.isWebviewReady)
+      return page.webviewEl[name].apply(page.webviewEl, args)
+    return defaultReturn
+  }
+})
   hide(page) // hidden by default
   webviewsDiv.appendChild(page.webviewEl)
 
@@ -262,15 +262,15 @@ export function create (opts) {
 
 
 function handleStoreChange() {
-    var page = getAll();
+  var page = getAll();
 
-    pages.forEach( page =>
+  pages.forEach( page =>
+  {
+    if( page.isWebviewReady && page.getURL().includes('beaker:') )
     {
-    	if( page.isWebviewReady && page.getURL().includes('beaker:') )
-    	{
-    	    page.reloadIgnoringCache();
-    	}
-    })
+      page.reload()
+    }
+  })
 }
 
 
@@ -429,7 +429,7 @@ export function changeActiveTo (index) {
 
 export function toggleWebSecurity( )
 {
-    webSecurityDisabled = !webSecurityDisabled;
+  webSecurityDisabled = !webSecurityDisabled;
 }
 
 export function getActive () {
@@ -470,9 +470,9 @@ export function getById (id) {
 
 export function loadPinnedFromDB () {
   return beakerBrowser.getSetting('pinned-tabs').then(json => {
-    try { JSON.parse(json).forEach(url => create({ url, isPinned: true })) }
-    catch (e) {}
-  })
+      try { JSON.parse(json).forEach(url => create({ url, isPinned: true })) }
+catch (e) {}
+})
 }
 
 export function savePinnedToDB () {
@@ -699,8 +699,8 @@ function onPageFaviconUpdated (e) {
     page.favicons = e.favicons
     urlToData(e.favicons[0], 16, 16, (err, dataUrl) => {
       if (dataUrl)
-        beakerSitedata.set(page.getURL(), 'favicon', dataUrl)
-    })
+      beakerSitedata.set(page.getURL(), 'favicon', dataUrl)
+  })
   }
 }
 
@@ -737,7 +737,7 @@ function createWebviewEl (id, url) {
 
   if( webSecurityDisabled )
   {
-      el.setAttribute('disablewebsecurity', true)
+    el.setAttribute('disablewebsecurity', true)
   }
 
   return el

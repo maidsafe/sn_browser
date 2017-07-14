@@ -274,7 +274,7 @@ function showSafeAuthPopup(isContainerReq) {
         break;
       case '_publicNames':
         obj['name'] = 'Public names container'
-        obj['desc'] = 'Container for storing pubic profile related information. Public names and associated services are stored in this container'
+        obj['desc'] = 'Container for storing public profile related information. Public names and associated services are stored in this container'
         obj['style'] = 'publicNames'
         break;
       default:
@@ -306,20 +306,20 @@ function showSafeAuthPopup(isContainerReq) {
             <div class="popup-cnt-ls">
               <span class="list">
                 ${
-                  safeAuthData[reqKey].containers.map(function(container) {
-                    if (typeof container.access === 'object') {
-                      const contObj = getCont(container.cont_name);
-                      return yo`<div class="list-i" onclick=${togglePermissions}>
+    safeAuthData[reqKey].containers.map(function(container) {
+      if (typeof container.access === 'object') {
+        const contObj = getCont(container.cont_name);
+        return yo`<div class="list-i" onclick=${togglePermissions}>
                                   <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
                                   <div class="list-i-b">
                                     <p>${contObj.desc}</p>
-                                    <ul>${arrToYo(container.access)}</ul> 
+                                    <ul>${arrToYo(container.access)}</ul>
                                   </div>
                                 </div>`;
-                    }
-                    return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-                  })
-                }
+      }
+      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+    })
+    }
               </span>
             </div>
           </div>
@@ -332,6 +332,7 @@ function showSafeAuthPopup(isContainerReq) {
   </div>`
 
   yo.update(safeAuthPopupDiv, popupBase)
+  setAuthPopupAsScrollable()
 }
 
 // internal helpers
@@ -480,8 +481,8 @@ function render (id, page) {
       <button class="toolbar-btn nav-forward-btn" ${forwardDisabled} onclick=${onClickForward}>
         <span class="icon icon-right-open-big"></span>
       </button>
-      ${reloadBtn}      
-      ${safeBtn}      
+      ${reloadBtn}
+      ${safeBtn}
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}
@@ -626,6 +627,23 @@ function joinSegments (segments) {
   return str
 }
 
+function setAuthPopupAsScrollable() {
+  var popupBase = document.querySelector('.popup .popup-base .popup-i')
+  var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
+  var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
+  var popupListMarginTop = 40
+  var footerHeight = 140
+  var popupCntAddedSpace = 30
+  var popupContainerHeight = popupContMainHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
+  if (popupBase.offsetHeight < popupContainerHeight) {
+    popupBase.classList.add('scroll')
+  } else {
+    popupBase.classList.remove('scroll')
+  }
+}
+
+window.addEventListener('resize', function() { setAuthPopupAsScrollable(); });
+
 function countMatches (str, regex) {
   var matches = str.match(regex)
   return (matches) ? matches.length : 0
@@ -664,9 +682,11 @@ function togglePermissions(e) {
     return;
   }
   if (targetNode.classList.contains('show')) {
-    return targetNode.classList.remove('show');
+    targetNode.classList.remove('show');
+  } else {
+    targetNode.classList.add('show');
   }
-  targetNode.classList.add('show');
+  setAuthPopupAsScrollable()
 }
 
 // export function onClickToggleSafe ( e )

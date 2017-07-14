@@ -3,7 +3,7 @@ import * as modal from '../modal'
 
 export function create (values, { title, onSubmit }) {
   var el = modal.create(({ close }) => {
-    return yo`<div class="edit-site-modal">
+      return yo`<div class="edit-site-modal">
       <h2>${title}</h2>
       <div class="esm-section">
         <form onsubmit=${onsubmit}>
@@ -26,15 +26,15 @@ export function create (values, { title, onSubmit }) {
       </div>
     </div>`
 
-    function onsubmit (e) {
-      e.preventDefault()
-      var form = e.target
-      onSubmit({
-        title: form.title.value,
-        description: form.desc.value
-      })
-      close()
-    }
-  })
+      function onsubmit (e) {
+    e.preventDefault()
+    var form = e.target
+    onSubmit({
+      title: form.title.value,
+      description: form.desc.value
+    })
+    close()
+  }
+})
   el.querySelector('input').focus()
 }

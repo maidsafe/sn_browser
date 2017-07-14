@@ -58,42 +58,42 @@ export function registerListener (win, opts = {}) {
 
       // track rate of download
       item.downloadSpeed(item.getReceivedBytes() - lastBytes)
-      lastBytes = item.getReceivedBytes()
+    lastBytes = item.getReceivedBytes()
 
-      // emit
-      downloadsEvents.emit('updated', toJSON(item))
-      downloadsEvents.emit('sum-progress', sumProgress)
-      win.setProgressBar(sumProgress.receivedBytes / sumProgress.totalBytes)
-    })
+    // emit
+    downloadsEvents.emit('updated', toJSON(item))
+    downloadsEvents.emit('sum-progress', sumProgress)
+    win.setProgressBar(sumProgress.receivedBytes / sumProgress.totalBytes)
+  })
 
     item.on('done', (e, state) => {
       downloadsEvents.emit('done', toJSON(item))
 
-      // replace entry with a clone that captures the final state
-      downloads.splice(downloads.indexOf(item), 1, capture(item))
+    // replace entry with a clone that captures the final state
+    downloads.splice(downloads.indexOf(item), 1, capture(item))
 
-      // reset progress bar when done
-      if (isNoActiveDownloads() && !win.isDestroyed()) {
-        win.setProgressBar(-1)
+    // reset progress bar when done
+    if (isNoActiveDownloads() && !win.isDestroyed()) {
+      win.setProgressBar(-1)
+    }
+
+    // inform users of error conditions
+    if (state === 'interrupted') {
+      dialog.showErrorBox('Download error', `The download of ${item.getFilename()} was interrupted`)
+    }
+
+    if (state === 'completed') {
+      // flash the dock on osx
+      if (process.platform === 'darwin') {
+        app.dock.downloadFinished(filePath)
       }
 
-      // inform users of error conditions
-      if (state === 'interrupted') {
-        dialog.showErrorBox('Download error', `The download of ${item.getFilename()} was interrupted`)
+      // optional, for one-time downloads
+      if (opts.unregisterWhenDone) {
+        webContents.session.removeListener('will-download', listener)
       }
-
-      if (state === 'completed') {
-        // flash the dock on osx
-        if (process.platform === 'darwin') {
-          app.dock.downloadFinished(filePath)
-        }
-
-        // optional, for one-time downloads
-        if (opts.unregisterWhenDone) {
-          webContents.session.removeListener('will-download', listener)
-        }
-      }
-    })
+    }
+  })
   }
 
   win.webContents.session.prependListener('will-download', listener)
@@ -148,40 +148,40 @@ function remove (id) {
 
 function open (id) {
   return new Promise((resolve, reject) => {
-    // find the download
-    var download = downloads.find(d => d.id == id)
-    if (!download || download.state != 'completed')
-      return reject()
+      // find the download
+      var download = downloads.find(d => d.id == id)
+  if (!download || download.state != 'completed')
+    return reject()
 
-    // make sure the file is still there
-    fs.stat(download.getSavePath(), err => {
-      if (err)
-        return reject()
+  // make sure the file is still there
+  fs.stat(download.getSavePath(), err => {
+    if (err)
+    return reject()
 
-      // open
-      shell.openItem(download.getSavePath())
-      resolve()
-    })
-  })
+    // open
+    shell.openItem(download.getSavePath())
+  resolve()
+})
+})
 }
 
 function showInFolder (id) {
   return new Promise((resolve, reject) => {
-    // find the download
-    var download = downloads.find(d => d.id == id)
-    if (!download || download.state != 'completed')
-      return reject()
+      // find the download
+      var download = downloads.find(d => d.id == id)
+  if (!download || download.state != 'completed')
+    return reject()
 
-    // make sure the file is still there
-    fs.stat(download.getSavePath(), err => {
-      if (err)
-        return reject()
+  // make sure the file is still there
+  fs.stat(download.getSavePath(), err => {
+    if (err)
+    return reject()
 
-      // open
-      shell.showItemInFolder(download.getSavePath())
-      resolve()
-    })
-  })
+    // open
+    shell.showItemInFolder(download.getSavePath())
+  resolve()
+})
+})
 }
 
 // internal helpers
@@ -218,12 +218,12 @@ function capture (item) {
 
 // sum of received bytes
 function getSumReceivedBytes () {
-  return getActiveDownloads().reduce((acc, item) => acc + item.getReceivedBytes(), 0) 
+  return getActiveDownloads().reduce((acc, item) => acc + item.getReceivedBytes(), 0)
 }
 
 // sum of total bytes
 function getSumTotalBytes () {
-  return getActiveDownloads().reduce((acc, item) => acc + item.getTotalBytes(), 0) 
+  return getActiveDownloads().reduce((acc, item) => acc + item.getTotalBytes(), 0)
 }
 
 function getActiveDownloads () {

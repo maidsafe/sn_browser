@@ -6,11 +6,11 @@ import history from './history'
 
 
 const rootReducer = combineReducers({
-    
-    bookmarks
-    , history
-    , settings
-    , sitedata
+
+  bookmarks
+  , history
+  , settings
+  , sitedata
 })
 
 export default rootReducer

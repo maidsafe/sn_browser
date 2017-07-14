@@ -126,13 +126,19 @@
         top: 0;
         left: 0;
         margin: 0;
-        padding: 0;
+        padding: 0 0 70px;
         background-color: #fdfdfd;
         overflow: auto;
+        box-sizing: border-box;
         .popup-i {
-          padding-bottom: 80px;
+          position: relative;
+          height: 100%;
+          padding-bottom: 70px;
+          overflow: hidden;
           .popup-cnt {
+            position: relative;
             min-height: 150px;
+            overflow: auto;
             .popup-skip {
               position: absolute;
               top: 0;
@@ -315,6 +321,7 @@
             margin-top: 50px;
             padding: 16px;
             text-align: right;
+            background-color: #fdfdfd;
             button {
               border: 0;
               background: transparent;
@@ -332,6 +339,16 @@
               &.allow-btn {
                 color: #5592d7;
               }
+            }
+          }
+          &.scroll {
+            .popup-cnt {
+              height: 100%;
+            }
+            .popup-foot {
+              position: absolute;
+              bottom: 0;
+              left: 0;
             }
           }
         }
