@@ -362,7 +362,7 @@ function indexOfLastPinnedTab () {
 export function reorderTab (page, offset) {
   // only allow increments of 1
   if (offset > 1 || offset < -1)
-    return console.warn('reorderTabBy isnt allowed to offset more than -1 or 1; this is a coding error')
+    return console.warn('reorderTabBy isn\'t allowed to offset more than -1 or 1; this is a coding error')
 
   // first check if reordering can happen
   var srcIndex = pages.indexOf(page)
