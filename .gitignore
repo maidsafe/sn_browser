@@ -11,4 +11,4 @@ Thumbs.db
 app/stylesheets/*.css
 app/stylesheets/builtin-pages/*.css
 .idea
-winston-log
+winston-logs

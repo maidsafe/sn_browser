@@ -2,6 +2,10 @@
 // https://www.npmjs.com/package/winston
 // https://www.npmjs.com/package/winston-daily-rotate-file
 
+// The architecture of electron doesn't allow for this singleton module to be shared between renderer and main
+// winston is set on global object in main, global.winston = winston
+// Any renderer that wants to call winston can use: let winston = remote.getGlobal('winston');
+
 'use strict';
 let winstonModule = require('winston');
 let fs = require('fs');
@@ -22,7 +26,7 @@ let winston = new (winstonModule.Logger)({
     new (winstonModule.transports.Console)({
       colorize: true,
       timestamp: timeStampFormat,
-      level: 'silly'
+      level: env === 'dev' ? 'silly': 'info'
     }),
     new (require('winston-daily-rotate-file'))({
       filename: `${logDir}/-safe-browser.log`,
@@ -31,7 +35,7 @@ let winston = new (winstonModule.Logger)({
       // For example, if datePattern is 'dd-MM-yyyy-mm',a new -safe-browser.log file will be generated each new minute
       datePattern: 'dd-MM-yyyy',
       prepend: true,
-      level: env === 'dev' ? 'silly' : 'warn',
+      level: env === 'dev' ? 'silly' : 'info',
       handleExceptions: true,
       humanReadableUnhandledException: true,
       json: true

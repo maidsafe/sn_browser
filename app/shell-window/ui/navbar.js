@@ -7,6 +7,8 @@ import { UpdatesNavbarBtn } from './navbar/updates'
 import { DownloadsNavbarBtn } from './navbar/downloads'
 import { SitePermsNavbarBtn } from './navbar/site-perms'
 
+let winston = remote.getGlobal('winston');
+
 const KEYCODE_DOWN = 40
 const KEYCODE_UP = 38
 const KEYCODE_ESC = 27
@@ -41,6 +43,7 @@ var safeAuthPopupDiv = yo`<div></div>`
 ipcRenderer.send('registerSafeApp');
 
 ipcRenderer.on('webClientAuthReq', function(event, uri) {
+  winston.info('webClientAuthReq', uri);
   handleSafeAuthAuthentication(uri, CLIENT_TYPES.WEB);
 })
 
@@ -61,6 +64,7 @@ ipcRenderer.on('onNetworkStatus', function(event, status) {
 
 ipcRenderer.on('onAuthReq', function(event, data) {
   if (data) {
+    winston.info('onAuthReq', data);
     safeAuthData = data
     showSafeAuthPopup()
   }
@@ -91,6 +95,7 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
 
 ipcRenderer.on('onAuthResError', function(event, data) {
   isSafeAppAuthenticating = false
+  winston.error('onAuthResError', data);
   if (data.res && data.res.toLowerCase() === 'unauthorised') {
     onClickOpenSafeAuthHome()
   }
