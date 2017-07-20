@@ -222,6 +222,7 @@ var beakerDevMenu = {
     }
   },{
     label: 'Toggle Shell-Window DevTools',
+    accelerator: "CmdOrCtrl+Shift+I",
     click: function () {
       BrowserWindow.getFocusedWindow().toggleDevTools()
     }
