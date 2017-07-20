@@ -1,5 +1,7 @@
-import { ipcRenderer, webFrame } from 'electron'
+import { ipcRenderer, webFrame, remote } from 'electron'
 import rpc from 'pauls-electron-rpc'
+
+let winston = remote.getGlobal('winston');
 
 // it would be better to import this from package.json
 const BEAKER_VERSION = '0.0.1'
@@ -46,6 +48,7 @@ export default function () {
   // webFrame.registerURLSchemeAsSecure('safe');
   window.beaker = { version: BEAKER_VERSION }
   var webAPIs = ipcRenderer.sendSync('get-web-api-manifests', window.location.protocol)
+  winston.info("ipcRenderer.sendSync('get-web-api-manifests')");
 
   for (var k in webAPIs) {
 
