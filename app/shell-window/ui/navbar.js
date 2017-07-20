@@ -774,16 +774,7 @@ function onKeydownLocation (e) {
         }
       }
 
-      // add index.html to prefix if not found
       var selectionUrl = selection.url
-      var parsedSelectionUrl = new URL(selection.url)
-      if (parsedSelectionUrl.pathname === '/') {
-        if (selectionUrl.slice(-1) !== '/') {
-          selectionUrl += '/index.html'
-        } else {
-          selectionUrl += 'index.html'
-        }
-      }
 
       page.loadURL(selectionUrl, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
