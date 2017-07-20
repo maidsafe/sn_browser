@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=SAFE Browser
+Version=1.0
+GenericName=SAFE Network Browser
+X-GNOME-FullName=$APP_NAME
+Comment=Browse the SAFE Network
+Encoding=UTF-8
+Type=Application
+Icon=safeicon
+Terminal=false
+Path=$APP_PATH
+Exec=$EXEC_PATH %U
+StartupNotify=false
+Categories=Network;Browser;P2P;
+MimeType=x-scheme-handler/safe;x-scheme-handler/safe-auth;
