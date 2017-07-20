@@ -29,7 +29,9 @@
     "category": "public.app-category.productivity",
     "copyright": "© 2017, MaidSafe.net Ltd",
     "npmRebuild": false,
-    "extraResources": ["build"],
+    "extraResources": [
+      "build"
+    ],
     "asar": false,
     "dmg": {
       "contents": [
