@@ -98,7 +98,7 @@ export function setupWebAPIs () {
     //log.debug('Wiring up Web API:', api.name)
 
     // We export functions with callbacks in a separate channel
-    // since they will be adapted on the rederer side to invoke the callbacks
+    // since they will be adapted to invoke the callbacks
     let fnsToExport = [];
   let fnsWithCallbacks = [];
   let fnsWithAsyncCallbacks = [];

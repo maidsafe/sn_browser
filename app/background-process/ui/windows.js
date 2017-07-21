@@ -104,7 +104,9 @@ export function createShellWindow () {
 
   // register shortcuts
   for (var i=1; i <= 9; i++)
+  {
     registerShortcut(win, 'CmdOrCtrl+'+i, onTabSelect(win, i-1))
+  }
   registerShortcut(win, 'Ctrl+Tab', onNextTab(win))
   registerShortcut(win, 'Ctrl+Shift+Tab', onPrevTab(win))
 
