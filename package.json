@@ -31,46 +31,6 @@
     "copyright": "© 2017, MaidSafe.net Ltd",
     "npmRebuild": false,
     "asar": false,
-    "dmg": {
-      "contents": [
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 220,
-          "type": "file",
-          "path": "dist/mac/Beaker Browser.app"
-        },
-        {
-          "x": 50,
-          "y": 400,
-          "type": "position",
-          "path": ".background"
-        },
-        {
-          "x": 150,
-          "y": 400,
-          "type": "position",
-          "path": ".DS_Store"
-        },
-        {
-          "x": 250,
-          "y": 400,
-          "type": "position",
-          "path": ".Trashes"
-        },
-        {
-          "x": 350,
-          "y": 400,
-          "type": "position",
-          "path": ".VolumeIcon.icns"
-        }
-      ]
-    },
     "protocols": {
       "name": "SAFE Network URL",
       "schemes": [
@@ -79,20 +39,14 @@
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "freebsd"
-      ],
+      "target": "dir",
       "category": "WebBrowser"
     },
     "win": {
-      "target": "nsis"
-    },
-    "nsis": {
-      "perMachine": true
+      "target": "dir"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dir"
     }
   },
   "scripts": {
