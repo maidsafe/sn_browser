@@ -86,7 +86,7 @@ const postPackage = () => {
   const addVersionFile = () => {
     try {
       const file = path.resolve(packageDistDir, releaseFolderName, 'version');
-      fs.outputFileSync(file, `v${pkg.version}`);
+      fs.outputFileSync(file, pkg.version);
     } catch (err) {
       console.error('Adding version file error ::', err);
     }
