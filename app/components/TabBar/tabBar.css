@@ -64,8 +64,7 @@
 
 .addTab
 {
-    composes: tab;
-
+    padding-left: 5px;
 }
 
 
