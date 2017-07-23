@@ -1,60 +1,75 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 // @flow
-import { app, BrowserWindow, ipcMain, webContents  } from 'electron';
+import { app, BrowserWindow, ipcMain, webContents } from 'electron';
 import MenuBuilder from './menu';
-import windowStateKeeper from 'electron-window-state'
+import windowStateKeeper from 'electron-window-state';
 import loadCorePackages from './corePackageLoader';
 
 import configureStore from './store/configureStore';
 import { mainSync } from './store/electronStoreSyncer';
 
 
+// here we would load middlewares, eg. nonsense
+const loadMiddlewarePackages = [];
 
-
-// const nonsense = store => next => action =>
-// {
-//     console.log( 'this is happening with every action dispatch );
-//     let result = next(action);
-//   return result
-// }
-
-
-//here we would load middlewares, eg. nonsense
-let loadMiddlewarePackages = [ ]
-
-let initialState = {};
+const initialState = {};
 const store = configureStore( initialState, loadMiddlewarePackages );
 mainSync( store );
 
 
-
 let mainWindow = null;
 
-export function openWindow()
+function getNewWindowPosition( mainWindowState )
 {
+    //for both x and y, we start at 0
+    const defaultWindowPosition = 0;
 
-    let mainWindowState = windowStateKeeper({
-       defaultWidth: 2048,
-       defaultHeight: 1024
-    });
+    const noOfBrowserWindows   = BrowserWindow.getAllWindows().length;
+    const windowCascadeSpacing = 20;
+
+    let newWindowPosition;
+
+    if ( noOfBrowserWindows === 0 )
+    {
+        newWindowPosition = { x: mainWindowState.x, y: mainWindowState.y };
+    }
+    else
+    {
+        newWindowPosition =
+        {   x : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows ),
+            y : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows )
+        };
+    }
+
+    return newWindowPosition;
+}
+
+export default function openWindow()
+{
+    const mainWindowState = windowStateKeeper( {
+        defaultWidth  : 2048,
+        defaultHeight : 1024
+    } );
+
+    const newWindowPosition = getNewWindowPosition( mainWindowState );
 
     mainWindow = new BrowserWindow( {
         show              : false,
-        'x'               : mainWindowState.x,
-        'y'               : mainWindowState.y,
-        'width'           : mainWindowState.width,
-        'height'          : mainWindowState.height,
+        x                 : newWindowPosition.x,
+        y                 : newWindowPosition.y,
+        width             : mainWindowState.width,
+        height            : mainWindowState.height,
         titleBarStyle     : 'hidden-inset',
-        'standard-window' : false
+        'standard-window' : false,
+
     } );
 
-    mainWindowState.manage(mainWindow);
-
+    mainWindowState.manage( mainWindow );
 
     mainWindow.loadURL( `file://${__dirname}/app.html` );
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+    // @TODO: Use 'ready-to-show' event
+    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
 
     mainWindow.webContents.on( 'did-finish-load', () =>
     {
@@ -63,7 +78,7 @@ export function openWindow()
             throw new Error( '"mainWindow" is not defined' );
         }
 
-        //before show lets load state
+        // before show lets load state
         mainWindow.show();
         mainWindow.focus();
     } );
@@ -73,13 +88,9 @@ export function openWindow()
         mainWindow = null;
     } );
 
-    const menuBuilder = new MenuBuilder( mainWindow , openWindow, store );
+    const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();
 }
-
-
-
-
 
 
 if ( process.env.NODE_ENV === 'production' )
@@ -106,17 +117,17 @@ const installExtensions = async () =>
     ];
 
     return Promise
-    .all( extensions.map( name => installer.default( installer[name], forceDownload ) ) )
-    .catch( console.log );
+        .all( extensions.map( name => installer.default( installer[name], forceDownload ) ) )
+        .catch( console.log );
 };
 
 
 app.on( 'window-all-closed', () =>
 {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
+    // Respect the OSX convention of having the application in memory even
+    // after all windows have been closed
     if ( process.platform !== 'darwin' )
-{
+    {
         app.quit();
     }
 } );
@@ -137,5 +148,4 @@ app.on( 'ready', async () =>
     // Many things could be passed here for customisation...
     loadCorePackages( store );
     openWindow();
-
 } );
