@@ -2,6 +2,7 @@ const path = require('path');
 const spawn = require('child_process').spawn;
 const os = require('os');
 const fs = require('fs-extra');
+const modclean = require('modclean');
 const pkg = require('../app/package.json');
 
 const osPlatform = os.platform();
@@ -101,11 +102,36 @@ const postPackage = () => {
       console.warn('Rename release folder error ::', err);
     }
   };
+
   return new Promise((resolve) => {
     renameReleaseFolder();
     addVersionFile();
     removeLicenseFiles();
     resolve();
+  });
+};
+
+const beforeBuild = () => {
+  const cleanNodeModules = (cb) => {
+    try {
+      modclean({
+        modulesDir: 'app'
+      }, cb);
+    } catch (err) {
+      console.warn('Clean node_modules error ::', eee);
+    }
+  };
+  return new Promise((resolve, reject) => {
+    cleanNodeModules((err, results) => {
+      if(err) {
+        console.error(err);
+        reject();
+        return;
+      }
+
+      console.log(`${results.length} files removed!`);
+      resolve();
+    });
   });
 };
 
@@ -126,7 +152,13 @@ const package = () => {
       throw new Error('Safe Browser is not supported to this platform.');
       break;
   }
-  runSpawn('Release Safe Browser', cmd).then(() => postPackage());
+  runSpawn('Release Safe Browser', cmd)
+    .then(() => postPackage());
+};
+
+const build = () => {
+  beforeBuild()
+    .then(() => runSpawn('Build Safe Browser', 'gulp build'));
 };
 
 switch (targetScript) {
@@ -135,6 +167,9 @@ switch (targetScript) {
   }
   case '--package': {
     return package();
+  }
+  case '--build': {
+    return build();
   }
   default:
     throw new Error('Unknown script');
