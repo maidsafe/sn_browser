@@ -62,6 +62,9 @@ export default merge.smart( baseConfig, {
                         options : {
                             sourceMap : true,
                         },
+                    },
+                    {
+                        loader : 'postcss-loader'
                     }
                 ]
             },

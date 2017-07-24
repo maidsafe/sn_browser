@@ -170,12 +170,17 @@
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
+    "autoprefixer": "^7.1.2",
     "electron-debug": "^1.1.0",
     "electron-window-state": "^4.1.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "font-awesome": "^4.7.0",
     "history": "^4.6.1",
     "immutable": "^3.8.1",
+    "postcss": "^6.0.8",
+    "postcss-loader": "^2.0.6",
+    "postcss-scss": "^1.0.2",
+    "precss": "^2.0.0",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

@@ -1,9 +1,11 @@
 // @flow
 import url from 'url';
 import React, { Component } from 'react';
+import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import appPackage from 'appPackage';
+
 import MdNavigateBefore from 'react-icons/lib/md/navigate-before';
 import MdNavigateNext from 'react-icons/lib/md/navigate-next';
 import MdRefresh from 'react-icons/lib/md/refresh';
@@ -23,6 +25,9 @@ export default class AddressBar extends Component
         this.handleChange = ::this.handleChange;
         this.handleFocus = ::this.handleFocus;
         this.handleKeyPress = ::this.handleKeyPress;
+        this.handleBack = ::this.handleBack;
+        this.handleForward = ::this.handleForward;
+        this.handleRefresh = ::this.handleRefresh;
 
         this.state = {
             address : props.address
@@ -86,6 +91,25 @@ export default class AddressBar extends Component
         return `${finalProtocol}://${finalHost}${everythingAfterHost}`;
     }
 
+    handleBack( tabData, event )
+    {
+        event.stopPropagation();
+        ipcRenderer.send( 'goBackActiveTab' );
+
+    }
+
+    handleForward( tabData, event )
+    {
+        event.stopPropagation();
+        ipcRenderer.send( 'goForwardActiveTab' );
+    }
+
+    handleRefresh( tabData, event )
+    {
+        event.stopPropagation();
+        ipcRenderer.send( 'refreshActiveTab' );
+    }
+
     handleChange( event )
     {
         this.setState( { address: event.target.value } );
@@ -118,13 +142,15 @@ export default class AddressBar extends Component
         return (
             <div className={ styles.container } >
                 <div className={ styles.leftButtons }>
-                    <div className={ styles.button }>
+                    <div className={ styles.button }
+                        onClick={ this.handleBack }>
                         <MdNavigateBefore className={ styles.buttonIcon }/>
                     </div>
-                    <div className={ styles.button }>
+                    <div className={ styles.button }
+                            onClick={ this.handleForward }>
                         <MdNavigateNext className={ styles.buttonIcon }/>
                     </div>
-                    <div className={ styles.button }>
+                    <div className={ styles.button } onClick={ this.handleRefresh }>
                         <MdRefresh className={ styles.buttonIcon }/>
                     </div>
                 </div>
