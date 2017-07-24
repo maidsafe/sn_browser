@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ipcRenderer, ipcMain } from 'electron';
 import styles from './tabBar.css';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
@@ -25,6 +24,9 @@ export default class TabBar extends Component
         {
             tabInFocus : 0 // to update when many tabs can exist
         };
+
+        this.handleAddTabClick = ::this.handleAddTabClick;
+
     }
 
 

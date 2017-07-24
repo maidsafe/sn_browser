@@ -1,6 +1,7 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import { reopenTab, getLastClosedTab, setActiveTab } from './reducers/tabs';
+import { commands } from './commands'
 
 export default class MenuBuilder
 {
@@ -45,14 +46,14 @@ export default class MenuBuilder
             const { x, y } = props;
 
             Menu
-        .buildFromTemplate( [{
-            label : 'Inspect element',
-            click : () =>
-            {
-                this.mainWindow.inspectElement( x, y );
-            }
-        }] )
-        .popup( this.mainWindow );
+                .buildFromTemplate( [{
+                    label : 'Inspect element',
+                    click : () =>
+                    {
+                        this.mainWindow.inspectElement( x, y );
+                    }
+                }] )
+                .popup( this.mainWindow );
         } );
     }
 
@@ -63,14 +64,14 @@ export default class MenuBuilder
         const subMenuAbout = {
             label   : 'Peruse',
             submenu : [
-        { label: 'About ElectronReact', selector: 'orderFrontStandardAboutPanel:' },
-        { type: 'separator' },
-        { label: 'Services', submenu: [] },
-        { type: 'separator' },
-        { label: 'Hide ElectronReact', accelerator: 'Command+H', selector: 'hide:' },
-        { label: 'Hide Others', accelerator: 'Command+Shift+H', selector: 'hideOtherApplications:' },
-        { label: 'Show All', selector: 'unhideAllApplications:' },
-        { type: 'separator' },
+                { label: 'About Peruse', selector: 'orderFrontStandardAboutPanel:' },
+                { type: 'separator' },
+                { label: 'Services', submenu: [] },
+                { type: 'separator' },
+                { label: 'Hide ElectronReact', accelerator: 'Command+H', selector: 'hide:' },
+                { label: 'Hide Others', accelerator: 'Command+Shift+H', selector: 'hideOtherApplications:' },
+                { label: 'Show All', selector: 'unhideAllApplications:' },
+                { type: 'separator' },
                 { label       : 'Quit',
                     accelerator : 'Command+Q',
                     click       : () =>
@@ -87,7 +88,7 @@ export default class MenuBuilder
                     accelerator : 'Command+N',
                     click       : ( item, win ) =>
                     {
-                        if( this.openWindow ) this.openWindow();
+                        if ( this.openWindow ) this.openWindow();
                     }
                 },
                 {
@@ -120,17 +121,19 @@ export default class MenuBuilder
                     accelerator : 'Command+Shift+T',
                     click( item, win )
                     {
-                        let lastTab = getLastClosedTab( store.getState().tabs );
-                        let windowToFocus = lastTab.get('windowId');
+                        const lastTab = getLastClosedTab( store.getState().tabs );
+                        let windowToFocus = lastTab.get( 'windowId' );
                         windowToFocus = BrowserWindow.fromId( windowToFocus );
 
-                        if( windowToFocus )
+                        if ( windowToFocus )
+                        {
                             windowToFocus.focus();
+                        }
 
                         // here. we find last tab && update store to be open.
                         store.dispatch( reopenTab() );
                         // store.dispatch( setActiveTab( lastTab ) );
-                        //need window ID to focus it
+                        // need window ID to focus it
 
                         // if ( win ) win.webContents.send( 'command', 'file:reopen-tab' );
                         console.log( 'TODO: Add history to all tabs... go back in time. Redux goodness??' );
@@ -150,13 +153,13 @@ export default class MenuBuilder
         const subMenuEdit = {
             label   : 'Edit',
             submenu : [
-        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
-        { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
+                { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
+                { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+                { type: 'separator' },
+                { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
+                { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
+                { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+                { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
             ]
         };
         const subMenuViewDev = {
@@ -196,10 +199,10 @@ export default class MenuBuilder
         const subMenuWindow = {
             label   : 'Window',
             submenu : [
-        { label: 'Minimize', accelerator: 'Command+M', selector: 'performMiniaturize:' },
-        { label: 'Close', accelerator: 'Command+Shift+W', selector: 'performClose:' },
-        { type: 'separator' },
-        { label: 'Bring All to Front', selector: 'arrangeInFront:' }
+                { label: 'Minimize', accelerator: 'Command+M', selector: 'performMiniaturize:' },
+                { label: 'Close', accelerator: 'Command+Shift+W', selector: 'performClose:' },
+                { type: 'separator' },
+                { label: 'Bring All to Front', selector: 'arrangeInFront:' }
             ]
         };
         const subMenuHelp = {
@@ -229,8 +232,8 @@ export default class MenuBuilder
         };
 
         const subMenuView = process.env.NODE_ENV === 'development'
-      ? subMenuViewDev
-      : subMenuViewProd;
+            ? subMenuViewDev
+            : subMenuViewProd;
 
         return [
             subMenuAbout,

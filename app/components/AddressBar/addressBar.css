@@ -1,10 +1,17 @@
 .container
 {
     width: 100%;
-    padding: 3px;
-    padding-left: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     background-color: rgba( 246, 246, 246, 1);
     border:             1px solid rgba( 127, 127, 127, 1);
+    display:            flex;
+    flex:  none;
+    align-content: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+    border-right: 0;
+
 }
 
 .input
@@ -16,5 +23,59 @@
     font-size: 14px;
     max-width: 800px;
     width: 100%;
+    height: 20px;
 
 }
+
+
+.buttonBlock
+{
+    display: flex;
+
+}
+
+.rightButtons,
+.leftButtons
+{
+    composes: buttonBlock;
+}
+
+
+.button
+{
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin-right: 2px;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.button.disabled
+{
+    cursor: default;
+}
+
+
+.buttonIcon
+{
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill:  rgba( 127, 127, 127, 1);
+
+}
+
+.button:hover .buttonIcon{
+    fill: black;
+}
+
+
+
+/* buttons themselves */
+/*.back,
+.forward,
+.reload
+{
+    composes: button;
+}*/

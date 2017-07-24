@@ -7,7 +7,7 @@ import loadCorePackages from './corePackageLoader';
 
 import configureStore from './store/configureStore';
 import { mainSync } from './store/electronStoreSyncer';
-
+import handleCommands from './commandHandling';
 
 // here we would load middlewares, eg. nonsense
 const loadMiddlewarePackages = [];
@@ -140,7 +140,6 @@ app.on( 'ready', async () =>
         await installExtensions();
     }
 
-
     // Pass store to packages for use.
     // Peruse-tab can be passed to target webview partitions. This could be made
     // more flexible...
@@ -148,4 +147,5 @@ app.on( 'ready', async () =>
     // Many things could be passed here for customisation...
     loadCorePackages( store );
     openWindow();
+    handleCommands( store );
 } );

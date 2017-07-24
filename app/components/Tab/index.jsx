@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { remote } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import styles from './tab.css';
 
 
@@ -10,10 +10,6 @@ const {Menu, MenuItem} = remote;
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt(process.env.DEVTOOLS, 10) > 1;
-
-
-
-
 
 export default class Tab extends Component {
     static propTypes =
@@ -48,12 +44,30 @@ export default class Tab extends Component {
             }
         };
 
+        // this.domReady = ::this.domReady;
         this.goBack = ::this.goBack;
         this.goForward = ::this.goForward;
         this.reload = ::this.reload;
         this.stop = ::this.stop;
         this.openDevTools = ::this.openDevTools;
         this.loadURL = ::this.loadURL;
+        this.reloadIfActive = ::this.reloadIfActive;
+    }
+
+    listenToCommands()
+    {
+        ipcRenderer.on( 'refreshActiveTab', this.reloadIfActive );
+    }
+
+    reloadIfActive()
+    {
+        console.log("RELOADIFACTIVEEE");
+        const { isActiveTab } = this.props;
+
+        if( ! isActiveTab )
+            return
+
+        this.reload();
     }
 
     componentWillReceiveProps(nextProps)
@@ -174,7 +188,7 @@ export default class Tab extends Component {
     }
 
     domReady() {
-        const { url } = this.props;
+        const { url, updateTab, index } = this.props;
         const { webview } = this;
 
         const webContents = webview.getWebContents();
@@ -185,6 +199,10 @@ export default class Tab extends Component {
         }
 
         this.updateBrowserState({ loading: false, mountedAndReady : true });
+
+        const webContentsId = webview.getWebContents().id;
+        //lets add the webContents id for easy manipulation
+        updateTab( { index, webContentsId: webContentsId } );
 
         // if (currentSession !== webContents.session) {
         //     this.setupItchInternal(webContents.session)

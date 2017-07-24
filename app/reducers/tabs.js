@@ -37,7 +37,7 @@ const initialState = fromJS( initialAppState.tabs );
 
 
 const getActiveTabIndex = ( state ) =>
-state.findIndex( tab => tab.get( 'isActiveTab' ) );
+    state.findIndex( tab => tab.get( 'isActiveTab' ) );
 
 export function _deactivateOldTab( state )
 {
