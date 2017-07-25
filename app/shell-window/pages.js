@@ -114,6 +114,7 @@ export function create (opts) {
     webviewEl: createWebviewEl(id, url),
     navbarEl: navbar.createEl(id),
     promptbarEl: promptbar.createEl(id),
+    safeAppGroupId: null, // to be set by import-web-apis.js to idenfity the safeApp objects created in this page
 
     // page state
     loadingURL: false, // what URL is being loaded, if any?
@@ -483,8 +484,14 @@ export function savePinnedToDB () {
 
 function onDomReady (e) {
   var page = getByWebview(e.target)
+
   if (page) {
     page.isWebviewReady = true
+    let webview = e.target;
+    webview.executeJavaScript(`window.safeAppGroupId`, false, (id) => {
+      page.safeAppGroupId = id;
+    })
+
     zoom.setZoomFromSitedata(page)
   }
 }

@@ -11,31 +11,31 @@ const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 const readableToCallback = (rpcAPI) => {
   return (arg1, cb) => {
     return new Promise((resolve, reject) => {
-        var r = rpcAPI(arg1);
-    r.on('data', data => cb.apply(cb, data));
-    r.on('error', err => reject(err));
-    r.on('end', () => resolve());
-  });
+      var r = rpcAPI(arg1);
+      r.on('data', data => cb.apply(cb, data));
+      r.on('error', err => reject(err));
+      r.on('end', () => resolve());
+    });
   }
 }
 
 // Use a readable RPC stream to invoke a provided callback function even after
 // resolving the promise.
-const readableToAsyncCallback = (rpcAPI) => {
+const readableToAsyncCallback = (rpcAPI, safeAppGroupId) => {
   return (arg1, cb) => {
     return new Promise((resolve, reject) => {
-        let firstValueReceived = false;
-    var r = rpcAPI(arg1);
-    r.on('data', data => {
-      if (!firstValueReceived) {
-      firstValueReceived = true;
-      resolve(data[0]);
-    } else {
-      cb.apply(cb, data);
-    }
-  });
-    r.on('error', err => reject(err));
-  });
+      let firstValueReceived = false;
+      var r = rpcAPI(arg1, safeAppGroupId);
+      r.on('data', data => {
+        if (!firstValueReceived) {
+        firstValueReceived = true;
+        resolve(data[0]);
+      } else {
+        cb.apply(cb, data);
+      }
+    });
+      r.on('error', err => reject(err));
+    });
   }
 }
 
@@ -46,6 +46,10 @@ export default function () {
   // webFrame.registerURLSchemeAsSecure('safe');
   window.beaker = { version: BEAKER_VERSION }
   var webAPIs = ipcRenderer.sendSync('get-web-api-manifests', window.location.protocol)
+
+  // create an id to group all safeApp objects
+  const safeAppGroupId = (Math.random()*1000|0) + Date.now();
+  window.safeAppGroupId = safeAppGroupId;
 
   for (var k in webAPIs) {
 
@@ -67,7 +71,9 @@ export default function () {
         let rpcAPI = rpc.importAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false })
         // We expose the function removing the WITH_ASYNC_CALLBACK_TYPE_PREFIX prefix
         let newFnName = fn.replace(WITH_ASYNC_CALLBACK_TYPE_PREFIX, '');
-        fnsWithAsyncCallback[newFnName] = readableToAsyncCallback(rpcAPI[fn]);
+        // Provide the safeAppGroupId to map it to all safeApp instances created,
+        // so they can be automatically freed when the page is closed or refreshed
+        fnsWithAsyncCallback[newFnName] = readableToAsyncCallback(rpcAPI[fn], safeAppGroupId);
       } else {
         fnsToImport[fn] = webAPIs[k][fn];
       }

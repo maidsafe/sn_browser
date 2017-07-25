@@ -1,7 +1,8 @@
 import * as yo from 'yo-yo'
 import * as pages from '../pages'
 import * as navbar from './navbar'
-import { remote } from 'electron'
+import { ipcRenderer, remote } from 'electron'
+
 import { debounce, throttle } from '../../lib/functions'
 
 // constants
@@ -146,11 +147,13 @@ function onAddTab (page) {
 }
 
 function onRemoveTab (page) {
+  ipcRenderer.send('onTabRemove', page.safeAppGroupId);
   getTabEl(page, tabEl => tabEl.parentNode.removeChild(tabEl))
   repositionTabs()
 }
 
 function onUpdateTab (page) {
+  ipcRenderer.send('onTabUpdate', page.safeAppGroupId);
   getTabEl(page, tabEl => yo.update(tabEl, drawTab(page)))
 }
 
