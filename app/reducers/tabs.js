@@ -1,10 +1,10 @@
 // @flow
 
-import { List, Map, fromJS } from 'immutable';
-
-import { createActions } from 'redux-actions';
-import initialAppState 			from './initialAppState.json';
 import { remote } from 'electron';
+import { List, Map, fromJS } from 'immutable';
+import { createActions } from 'redux-actions';
+
+import initialAppState 			from './initialAppState.json';
 // import updateAddress from './address';
 
 const ADD_TAB = 'ADD_TAB';
@@ -211,8 +211,6 @@ export function _updateTab( state, payload )
 
     updatedTab = _updateTabHistory( updatedTab, url );
 
-
-    // console.log( 'updating tab', updatedTab.toJS() );
     return state.set( index, updatedTab );
 }
 

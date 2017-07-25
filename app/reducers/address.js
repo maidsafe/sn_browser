@@ -18,10 +18,10 @@ export default function address( state: array = initialState, action )
     switch ( action.type )
     {
         case UPDATE_ADDRESS :
-            {
-                let address = payload;
-                return address || '';
-            }
+        {
+            let address = payload;
+            return address || '';
+        }
 
         default:
             return state;

@@ -13,7 +13,6 @@ import MdMenu from 'react-icons/lib/md/menu';
 import MdStarOutline from 'react-icons/lib/md/star-outline';
 import MdStar from 'react-icons/lib/md/star';
 
-
 import styles from './addressBar.css';
 
 

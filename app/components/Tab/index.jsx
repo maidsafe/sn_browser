@@ -61,7 +61,6 @@ export default class Tab extends Component {
 
     reloadIfActive()
     {
-        console.log("RELOADIFACTIVEEE");
         const { isActiveTab } = this.props;
 
         if( ! isActiveTab )
@@ -86,13 +85,11 @@ export default class Tab extends Component {
             const { webview } = this;
             if (!webview)
             {
-                console.log( 'no webview, but props'  );
                 return;
             }
 
             if (webview.src === '' || webview.src === 'about:blank' ||
             webview.src !== nextProps.url) {
-                console.log( 'props received' );
                 // we didn't have a proper url but now do
                 this.loadURL(nextProps.url);
             }
@@ -214,13 +211,14 @@ export default class Tab extends Component {
         }
     }
 
-    didStartLoading() {
+    didStartLoading( ) {
+
+        const { updateTab, index } = this.props;
+
         this.updateBrowserState({ loading: true });
-        const { webview } = this;
-        const { addTab } = this.props;
     }
 
-    didStopLoading() {
+    didStopLoading( ) {
         this.updateBrowserState({ loading: false });
     }
 
@@ -241,12 +239,12 @@ export default class Tab extends Component {
     }
 
     didNavigate(e) {
-        const { updateTab, index } = this.props;
+        const { updateTab, index, updateAddress } = this.props;
         const { url } = e;
-
         this.updateBrowserState({ url });
 
         updateTab({ index, url });
+        updateAddress( url );
     }
 
     willNavigate(e) {
@@ -329,7 +327,7 @@ export default class Tab extends Component {
         tabReloaded(index);
     }
 
-    goBack() {
+    goBack( e ) {
         this.with((wv) => wv.goBack());
     }
 

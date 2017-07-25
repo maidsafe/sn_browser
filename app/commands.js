@@ -19,5 +19,6 @@ export function activeTabBackwards( store )
 
 export function activeTabForwards( store )
 {
+    console.log("GO FORWARRRRDDDSSSSS??", getActiveTabWebContents( store ).canGoForward() );
     getActiveTabWebContents( store ).goForward();
 }
