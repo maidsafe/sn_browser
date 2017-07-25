@@ -1,6 +1,24 @@
+const path = require('path');
 const spawn = require('child_process').spawn;
-const osPlatform = require('os').platform();
+const os = require('os');
 const fs = require('fs-extra');
+const modclean = require('modclean');
+const pkg = require('../app/package.json');
+
+const osPlatform = os.platform();
+const OSName = {
+  darwin: 'osx',
+  linux: 'linux',
+  win32: 'win'
+};
+
+const releaseFolderNameForPlatforms = {
+  darwin: 'mac',
+  linux: 'linux-unpacked',
+  win32: 'windows-unpacked'
+};
+
+const packageDistDir = path.resolve(__dirname, '..', 'dist');
 
 const runSpawn = (title, cmdStr) => {
   return new Promise((resolve) => {
@@ -50,7 +68,75 @@ const packAuthenticator = () => {
   }
 };
 
+const postPackage = () => {
+  const releaseFolderName = `${pkg.name}-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
+
+  const removeLicenseFiles = () => {
+    try {
+      const files = ['LICENSE', 'LICENSES.chromium.html'];
+      const releaseFolder = path.resolve(packageDistDir, releaseFolderName);
+      for (let i = 0; i < files.length; i++) {
+        const filePath = path.resolve(releaseFolder, files[i]);
+        fs.removeSync(filePath);
+      }
+    } catch (err) {
+      console.error('Remove License files error ::', err);
+    }
+  };
+
+  const addVersionFile = () => {
+    try {
+      const file = path.resolve(packageDistDir, releaseFolderName, 'version');
+      fs.outputFileSync(file, pkg.version);
+    } catch (err) {
+      console.error('Adding version file error ::', err);
+    }
+  };
+
+  const renameReleaseFolder = () => {
+    try {
+      const srcDir = path.resolve(packageDistDir, releaseFolderNameForPlatforms[osPlatform]);
+      const resourceDir = path.resolve(packageDistDir, releaseFolderName);
+      fs.moveSync(srcDir, resourceDir, { overwrite: true });
+    } catch (err) {
+      console.warn('Rename release folder error ::', err);
+    }
+  };
+
+  return new Promise((resolve) => {
+    renameReleaseFolder();
+    addVersionFile();
+    removeLicenseFiles();
+    resolve();
+  });
+};
+
+const beforeBuild = () => {
+  const cleanNodeModules = (cb) => {
+    try {
+      modclean({
+        modulesDir: 'app'
+      }, cb);
+    } catch (err) {
+      console.warn('Clean node_modules error ::', eee);
+    }
+  };
+  return new Promise((resolve, reject) => {
+    cleanNodeModules((err, results) => {
+      if(err) {
+        console.error(err);
+        reject();
+        return;
+      }
+
+      console.log(`${results.length} files removed!`);
+      resolve();
+    });
+  });
+};
+
 const package = () => {
+  fs.emptydirSync(packageDistDir);
   let cmd = '';
   switch (osPlatform) {
     case 'darwin':
@@ -66,7 +152,13 @@ const package = () => {
       throw new Error('Safe Browser is not supported to this platform.');
       break;
   }
-  runSpawn('Release Safe Browser', cmd);
+  runSpawn('Release Safe Browser', cmd)
+    .then(() => postPackage());
+};
+
+const build = () => {
+  beforeBuild()
+    .then(() => runSpawn('Build Safe Browser', 'gulp build'));
 };
 
 switch (targetScript) {
@@ -75,6 +167,9 @@ switch (targetScript) {
   }
   case '--package': {
     return package();
+  }
+  case '--build': {
+    return build();
   }
   default:
     throw new Error('Unknown script');

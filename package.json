@@ -30,46 +30,8 @@
     "category": "public.app-category.productivity",
     "copyright": "© 2017, MaidSafe.net Ltd",
     "npmRebuild": false,
-    "asar": false,
-    "dmg": {
-      "contents": [
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 220,
-          "type": "file",
-          "path": "dist/mac/Beaker Browser.app"
-        },
-        {
-          "x": 50,
-          "y": 400,
-          "type": "position",
-          "path": ".background"
-        },
-        {
-          "x": 150,
-          "y": 400,
-          "type": "position",
-          "path": ".DS_Store"
-        },
-        {
-          "x": 250,
-          "y": 400,
-          "type": "position",
-          "path": ".Trashes"
-        },
-        {
-          "x": 350,
-          "y": 400,
-          "type": "position",
-          "path": ".VolumeIcon.icns"
-        }
-      ]
+    "asar": {
+      "unpack": "@(*.dylib|*.so|*.dll)"
     },
     "protocols": {
       "name": "SAFE Network URL",
@@ -78,35 +40,36 @@
         "safe-auth"
       ]
     },
+    "files": [
+      "**/*",
+      "!**/node_modules/{*/node_modules,beaker-plugin-safe-authenticator/dist.zip,ajv/scripts,ajv/.tonic_example.js,asn1/tst,autolinker/src,autolinker/Gruntfile.js,browser-es-module-loader/src,core-util-is/test.js,ecc-jsbn/test.js,enum/enum-2.4.0.js,enum/enum-2.4.0.min.js,hawk/images,hoek/images,boom/images,intl/dist,loglevel/dist,zxcvbn/dist,taskgroup/docs,sprintf-js/demo,sprintf-js/dist,react/dist,react-dom/dist,react-redux/dist,react-router-redux/dist,renderkid/docs,async/*.js,async/internal}",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.flowconfig,.yarn-metadata.json,.idea,.vs,appveyor.yml,.travis.yml,circle.yml,npm-debug.log,.nyc_output,yarn.lock,.yarn-integrity}"
+    ],
     "linux": {
-      "target": [
-        "AppImage",
-        "freebsd"
-      ],
+      "target": "dir",
       "category": "WebBrowser"
     },
     "win": {
-      "target": "nsis"
-    },
-    "nsis": {
-      "perMachine": true
+      "target": "dir"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dir"
     }
   },
   "scripts": {
     "postinstall": "cd app && npm install",
-    "build": "gulp build",
+    "build": "node ./scripts/main.js --build",
     "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
-    "burnthemall": "rm -Rf ./node_modules ./app/node_modules && npm i && npm run rebuild && npm run pack-authenticator && npm run build && npm run package",
+    "burnthemall": "rm -Rf ./node_modules ./app/node_modules && npm i && npm run rebuild && npm run build && npm run package",
     "package": "node ./scripts/main.js --package",
     "start": "gulp start",
     "watch": "gulp start-watch"
   },
   "dependencies": {
     "fs-extra": "^3.0.1",
+    "modclean": "^2.1.0",
     "rollup-plugin-async": "^1.1.0"
   }
 }
