@@ -6,6 +6,9 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
+import winston from './winston-config';
+
+global.winston = winston;
 
 // import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
 
@@ -50,9 +53,6 @@ const safeBrowserApp =
     permissions : [ "SAFE_DRIVE_ACCESS"]
   };
 
-
-
-
 // // configure logging
 log.setLevel('trace')
 
@@ -60,6 +60,10 @@ log.setLevel('trace')
 plugins.registerStandardSchemes()
 
 app.on('ready', function () {
+
+  winston.info('App ready and running configurations...');
+
+
 
   //   let token = auth.authorise( safeBrowserApp ).then( tok =>
   // {

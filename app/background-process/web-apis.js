@@ -5,6 +5,7 @@ import beakerDownloads from './api-manifests/downloads'
 import beakerHistory from './api-manifests/history'
 import beakerSitedata from './api-manifests/sitedata'
 import * as plugins from './plugins'
+import winston from '../winston-config'
 
 // dat-plugin is an optional internal dependency
 var datPlugin
@@ -19,6 +20,7 @@ export function setup () {
   // register a message-handler for setting up the client
   // - see lib/fg/import-web-apis.js
   ipcMain.on('get-web-api-manifests', (event, scheme) => {
+    winston.info("ipcMain.on('get-web-api-manifests')");
     // hardcode the beaker: scheme, since that's purely for internal use
     if (scheme == 'beaker:') {
     var protos = {
