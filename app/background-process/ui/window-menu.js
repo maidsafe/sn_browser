@@ -40,7 +40,7 @@ var fileMenu = {
     },
     {
       label: 'Toggle SAFE Browsing',
-      checked: true,
+      checked: global.browserStatus.safeModeOn,
       accelerator: 'CmdOrCtrl+Shift+L',
       click: function (item, win) {
         if (win) win.webContents.send('command', 'window:toggle-safe-mode')
@@ -222,6 +222,7 @@ var beakerDevMenu = {
     }
   },{
     label: 'Toggle Shell-Window DevTools',
+    accelerator: "CmdOrCtrl+Shift+I",
     click: function () {
       BrowserWindow.getFocusedWindow().toggleDevTools()
     }

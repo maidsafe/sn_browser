@@ -12,6 +12,7 @@ import _ from 'lodash'
 // constants
 // =
 
+
 const ERR_ABORTED = -3
 const ERR_CONNECTION_REFUSED = -102
 const ERR_INSECURE_RESPONSE = -501
@@ -400,32 +401,30 @@ export function changeActiveTo (index) {
     setActive(pages[index])
 }
 
-// export function getActive () {
-//   return activePage
-// }
 
+export function toggleSafe ( )
+{
+    var webContents = remote.getCurrentWindow().webContents;
 
-// export function toggleSafe ( )
-// {
-//     var webContents = remote.getCurrentWindow().webContents;
+    //must explicitly be set on global like this.
+    remote.getGlobal('browserStatus').safeModeOn = ! remote.getGlobal('browserStatus').safeModeOn;
 
-//     if( typeof(webContents.isSafe) === 'undefined' )
-//     {
-//         webContents.isSafe = true;
-//     }
+    let pages = getAll();
 
-//     webContents.isSafe = ! webContents.isSafe;
+    pages.forEach( page =>
+    {
+        if( page.getURL().indexOf( 'http' ) === 0  )
+        {
+          page.loadURL( DEFAULT_URL );
+        }
+        else
+        {
+          page.reload();
+        }
 
-//     let pages = getAll();
+    })
 
-//     pages.forEach( page =>
-//     {
-//         // if (page)
-//         page.reload()
-
-//     })
-
-// }
+}
 
 export function toggleWebSecurity( )
 {
