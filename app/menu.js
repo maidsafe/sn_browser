@@ -1,7 +1,6 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import { reopenTab, getLastClosedTab, setActiveTab } from './reducers/tabs';
-import { commands } from './commands'
 
 export default class MenuBuilder
 {
