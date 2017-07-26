@@ -10,8 +10,8 @@ import initialAppState from 'reducers/initialAppState.json';
 import styles from './browser.css';
 
 
-export default class Browser extends Component {
-
+export default class Browser extends Component
+{
     static propTypes =
     {
         addTab : PropTypes.func.isRequired
@@ -37,8 +37,8 @@ export default class Browser extends Component {
 
     componentDidMount( )
     {
-        const { addTab, closeTab, closeActiveTab,  reopenTab } = this.props;
-        const addressBar = this.address.refs.addressBar ;
+        const { addTab, closeTab, closeActiveTab, reopenTab } = this.props;
+        const addressBar = this.address.refs.addressBar;
 
         ipcRenderer.on( 'command', ( ...args ) =>
         {
@@ -46,37 +46,41 @@ export default class Browser extends Component {
             // console.log( 'ipc args' , args );
             const event = args[0];
             const type = args[1];
+            const { tabContents } = this;
+            const activeTab = tabContents.getActiveTab();
 
-            console.log( 'type'  , type );
-            const extraArgs = args.slice(2);
+            console.log( 'type', type );
+            const extraArgs = args.slice( 2 );
 
             // console.log( 'extraArgs'  , extraArgs );
 
             switch ( type )
             {
+                // TODO: Should this actually be passed as an array of browser actions to be dealt with>?
+                // TODO: to the store?
+                // TODO: And then parsed/removed?
                 case 'file:new-tab':
-                    {
-                        console.log( 'command new tabb' )
-                        addTab( { url: 'about:blank', isActiveTab: true } );
-                        addressBar.focus();
-                        return;
-                    }
+                {
+                    console.log( 'command new tabb' );
+                    addTab( { url: 'about:blank', isActiveTab: true } );
+                    console.log( 'ADDING TABBB, addressbar in focus? ', addressBar );
+                    addressBar.focus();
+                    return;
+                }
                 case 'file:close-tab':
-                    {
-                        console.log( 'closing tabbb' )
-                        closeTab( { index: extraArgs[0] } );
-                        // addressBar.focus();
-                        return;
-
-                    }
+                {
+                    console.log( 'closing tabbb' );
+                    closeTab( { index: extraArgs[0] } );
+                    // addressBar.focus();
+                    return;
+                }
                 case 'file:close-active-tab':
-                    {
-                        console.log( 'closing active tabbb' )
-                        closeActiveTab( );
-                        // addressBar.focus();
-                        return;
-
-                    }
+                {
+                    console.log( 'closing active tabbb' );
+                    closeActiveTab( );
+                    // addressBar.focus();
+                    return;
+                }
                 // case 'file:reopen-tab':
                 //     {
                 //         // console.log( 'closing tabbb' )
@@ -85,21 +89,21 @@ export default class Browser extends Component {
                 //         return;
                 //     }
                 case 'file:focus-location':
-                    {
-                        addressBar.focus();
-                        return;
-                    }
+                {
+                    addressBar.focus();
+                    return;
+                }
                 // case 'file:close-tab':         return pages.remove(page)
                 // case 'file:reopen-closed-tab': return pages.reopenLastRemoved()
                 // case 'edit:find':              return navbar.showInpageFind(page)
-                // case 'view:reload':            return page.reload()
-                // case 'view:hard-reload':       return page.reloadIgnoringCache()
+                case 'view:reload': return activeTab.reload();
+                case 'view:hard-reload': return activeTab.reloadIgnoringCache();
                 // case 'view:zoom-in':           return zoom.zoomIn(page)
                 // case 'view:zoom-out':          return zoom.zoomOut(page)
                 // case 'view:zoom-reset':        return zoom.zoomReset(page)
-                // case 'view:toggle-dev-tools':  return (page.isDevToolsOpened()) ? page.closeDevTools() : page.openDevTools()
-                // case 'history:back':           return page.goBack()
-                // case 'history:forward':        return page.goForward()
+                case 'view:toggle-dev-tools': return ( activeTab.isDevToolsOpened() ) ? activeTab.closeDevTools() : activeTab.openDevTools();
+                case 'history:back': return activeTab.goBack();
+                case 'history:forward': return activeTab.goForward();
                 // case 'window:toggle-safe-mode':  return pages.toggleSafe();
                 // case 'window:disable-web-security':  return pages.toggleWebSecurity();
                 // case 'window:next-tab':        return pages.changeActiveBy(1)
@@ -112,15 +116,13 @@ export default class Browser extends Component {
         } );
     }
 
-    render() {
-
+    render()
+    {
         const { addTab, address, closeTab, tabs, setActiveTab,
             updateActiveTab, updateTab, updateAddress } = this.props;
-        // const { tabInFocus }  = this.state;
-        // console.log( "props in Browser component", this.props );
 
         return (
-            <div className={styles.container}>
+            <div className={ styles.container }>
                 <TabBar
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
@@ -128,19 +130,30 @@ export default class Browser extends Component {
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
                     closeTab={ closeTab }
-                    tabs={ tabs } />
+                    tabs={ tabs }
+                />
                 <AddressBar
                     address={ address }
                     updateAddress={ updateAddress }
                     updateActiveTab={ updateActiveTab }
-                    ref={(c) => { this.address = c; }} />
-                <TabContents    updateActiveTab={ updateActiveTab }
+                    ref={ ( c ) =>
+                    {
+                        this.address = c;
+                    } }
+                />
+                <TabContents
+                    updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     updateAddress={ updateAddress }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
-                    tabs={ tabs } />
+                    tabs={ tabs }
+                    ref={ ( c ) =>
+                    {
+                        this.tabContents = c;
+                    } }
+                />
             </div>
-                    );
-                }
-            }
+        );
+    }
+}

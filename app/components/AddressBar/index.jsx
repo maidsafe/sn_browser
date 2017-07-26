@@ -93,20 +93,21 @@ export default class AddressBar extends Component
     handleBack( tabData, event )
     {
         event.stopPropagation();
-        ipcRenderer.send( 'goBackActiveTab' );
+        ipcRenderer.send( 'command', 'history:back' );
 
     }
 
     handleForward( tabData, event )
     {
         event.stopPropagation();
-        ipcRenderer.send( 'goForwardActiveTab' );
+        ipcRenderer.send( 'command', 'history:forward' );
     }
 
     handleRefresh( tabData, event )
     {
+        //TODO: if cmd or so clicked, hard.
         event.stopPropagation();
-        ipcRenderer.send( 'refreshActiveTab' );
+        ipcRenderer.send( 'command', 'view:reload' );
     }
 
     handleChange( event )

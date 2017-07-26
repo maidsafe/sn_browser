@@ -162,14 +162,15 @@ export default class MenuBuilder
                 { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
             ]
         };
-        const subMenuViewDev = {
+        const subMenuView = {
             label   : 'View',
             submenu : [
                 { label       : 'Reload',
                     accelerator : 'Command+R',
-                    click       : () =>
+                    click       : ( item, win ) =>
                     {
-                        this.mainWindow.webContents.reload();
+                        if ( win ) win.webContents.send( 'command', 'view:reload' );
+
                     } },
                 { label       : 'Toggle Full Screen',
                     accelerator : 'Ctrl+Command+F',
@@ -179,20 +180,9 @@ export default class MenuBuilder
                     } },
                 { label       : 'Toggle Developer Tools',
                     accelerator : 'Alt+Command+I',
-                    click       : () =>
+                    click       : ( item, win ) =>
                     {
-                        this.mainWindow.toggleDevTools();
-                    } }
-            ]
-        };
-        const subMenuViewProd = {
-            label   : 'View',
-            submenu : [
-                { label       : 'Toggle Full Screen',
-                    accelerator : 'Ctrl+Command+F',
-                    click       : () =>
-                    {
-                        this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
+                        if ( win ) win.webContents.send( 'command', 'view:toggle-dev-tools' );
                     } }
             ]
         };
@@ -230,10 +220,6 @@ export default class MenuBuilder
                     } }
             ]
         };
-
-        const subMenuView = process.env.NODE_ENV === 'development'
-            ? subMenuViewDev
-            : subMenuViewProd;
 
         return [
             subMenuAbout,

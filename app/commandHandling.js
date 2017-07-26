@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron';
-import { refreshActiveTab, activeTabForwards, activeTabBackwards } from './commands';
 
 /**
  * handle commands from ipc comms.
@@ -7,8 +6,9 @@ import { refreshActiveTab, activeTabForwards, activeTabBackwards } from './comma
  */
 export default function handleCommands( store )
 {
-    //TODO: These actions dont necessarily update the store. This should be handled in tab.
-    ipcMain.on( 'refreshActiveTab', () => refreshActiveTab( store ) );
-    ipcMain.on( 'goForwardActiveTab', () => activeTabForwards( store ) );
-    ipcMain.on( 'goBackActiveTab', () => activeTabBackwards( store ) );
+    ipcMain.on( 'command', (e, commandToBounce ) =>
+    {
+        e.sender.send( 'command', commandToBounce );
+    });
+
 }

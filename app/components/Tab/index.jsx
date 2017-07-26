@@ -284,10 +284,13 @@ export default class Tab extends Component {
     }
 
     newWindow(e) {
-        const { navigate } = this.props;
+        const { navigate, addTab } = this.props;
         const { url } = e;
         // navigate('url/' + url)
-        this.props.addTab(event.url);
+        // addTab( { url, isActiveTab: true } );
+        this.goForward();
+
+        console.log("webcontents historyyyy", this.webview.getWebContents().history );
     }
 
     isFrozen(e) {
@@ -323,8 +326,6 @@ export default class Tab extends Component {
         this.with((wv) => {
             wv.reload();
         });
-        const { index, tabReloaded } = this.props;
-        tabReloaded(index);
     }
 
     goBack( e ) {
