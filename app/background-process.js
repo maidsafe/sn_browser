@@ -11,6 +11,7 @@ import env from './env'
 
 // set setting does not trigger save
 import { updateSettings } from './background-process/safe-storage/settings'
+import registerProtocolHandlers from './registerProtocolHandlers'
 
 import * as beakerBrowser from './background-process/browser'
 import * as plugins from './background-process/plugins'
@@ -87,6 +88,9 @@ app.on('ready', function () {
 
   // })
   // .catch( handleAuthError )
+
+  //init protocols
+  registerProtocolHandlers();
 
   // API initialisations
   sitedata.setup()
