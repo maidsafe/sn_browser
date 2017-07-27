@@ -14,6 +14,7 @@ import _ from 'lodash'
 
 
 const ERR_ABORTED = -3
+const ERR_BLOCKED_BY_CLIENT = -20
 const ERR_CONNECTION_REFUSED = -102
 const ERR_INSECURE_RESPONSE = -501
 
@@ -659,6 +660,14 @@ function onDidFailLoad (e) {
   // ignore if this is a subresource
   if (!e.isMainFrame)
     return
+
+
+  // ignore blocked by client error when in safemode
+  if ( remote.getGlobal('browserStatus').safeModeOn &&
+      ( e.errorDescription == 'ERR_BLOCKED_BY_CLIENT' || e.errorCode == ERR_BLOCKED_BY_CLIENT ) )
+  {
+    return
+  }
 
   // ignore aborts. why:
   // - sometimes, aborts are caused by redirects. no biggy
