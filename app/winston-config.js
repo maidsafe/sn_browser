@@ -2,17 +2,19 @@
 // https://www.npmjs.com/package/winston
 // https://www.npmjs.com/package/winston-daily-rotate-file
 
-// The architecture of electron doesn't allow for this singleton module to be shared between renderer and main
+// The architecture of electron doesn't allow for /
+// this singleton module to be shared between renderer and main
 // winston is set on global object in main, global.winston = winston
 // Any renderer that wants to call winston can use: let winston = remote.getGlobal('winston');
 
-'use strict';
-let winstonModule = require('winston');
-let fs = require('fs');
-let env = process.env.NODE_ENV || 'development';
-let logDir = 'winston-logs';
+const winstonModule = require('winston');
+const fs = require('fs');
+const DailyRotateFile = require('winston-daily-rotate-file');
 
-let timeStampFormat = () => (new Date()).toUTCString();
+const env = process.env.NODE_ENV || 'development';
+const logDir = 'winston-logs';
+
+const timeStampFormat = () => (new Date()).toUTCString();
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
@@ -21,18 +23,19 @@ if (!fs.existsSync(logDir)) {
 // winston log levels
 // { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
 
-let winston = new (winstonModule.Logger)({
+const winston = new (winstonModule.Logger)({
   transports: [
     new (winstonModule.transports.Console)({
       colorize: true,
       timestamp: timeStampFormat,
-      level: env === 'dev' ? 'silly': 'info'
+      level: env === 'dev' ? 'silly' : 'info'
     }),
-    new (require('winston-daily-rotate-file'))({
+    new (DailyRotateFile)({
       filename: `${logDir}/-safe-browser.log`,
       timestamp: timeStampFormat,
       // The most specific part of the date pattern determines the frequency of file creationg
-      // For example, if datePattern is 'dd-MM-yyyy-mm',a new -safe-browser.log file will be generated each new minute
+      // For example, if datePattern is 'dd-MM-yyyy-mm' /
+      // a new -safe-browser.log file will be generated each new minute
       datePattern: 'dd-MM-yyyy',
       prepend: true,
       level: env === 'dev' ? 'silly' : 'info',
@@ -44,4 +47,4 @@ let winston = new (winstonModule.Logger)({
   exitOnError: false
 });
 
-export default winston
+export default winston;
