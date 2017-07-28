@@ -2,82 +2,96 @@ import { app, ipcMain } from 'electron'
 import url from 'url'
 import zerr from 'zerr'
 import rpc from 'pauls-electron-rpc'
-import manifest from '../api-manifests/history'
-import log from '../../log'
+import manifest from '../../api-manifests/history'
 
-import store from './store'
-import { List, Map, fromJS } from 'immutable'
+import store from '../store'
 import { createAction, createActions } from 'redux-actions'
+
+import ACTION_TYPES from '../actions/action_types';
 
 const BadParam = zerr('BadParam', '% must be a %')
 const InvalidCmd = zerr('InvalidCommand', '% is not a valid command')
 
 
-const initialHistoryState = List( [
-  Map( {
+const initialHistoryState = [
+  {
     url: 'https://safenetforum.org/',
     title : "Safenet Forum",
-    visits: List([]),
+    visits: [],
     last_visit: new Date()
 
-  })
-] )
+  }
+]
 
-
-
-const UPDATE_SITE = 'UPDATE_SITE'
-const DELETE_SITE = 'DELETE_SITE'
-const DELETE_ALL  = 'DELETE_ALL'
-
-export const { updateSite, deleteSite, deleteAll } = createActions( UPDATE_SITE, DELETE_SITE, DELETE_ALL )
+export const { updateSite, deleteSite, deleteAll } =
+    createActions( ACTION_TYPES.UPDATE_SITE, ACTION_TYPES.DELETE_SITE, ACTION_TYPES.DELETE_ALL );
 
 export default function history(state = initialHistoryState, action) {
-  let payload = fromJS(  action.payload )
+  let payload = action.payload;
 
   if( action.error )
   {
-    return state
+    return state;
   }
 
   switch (action.type) {
-    case UPDATE_SITE :
+    case ACTION_TYPES.GET_CONFIG:
     {
+      if( payload && payload.history )
+      {
+        const newHistory = payload.history;
+
+        //here we should probably combine the visits
+        return _.uniqBy( [ ...state , ...newHistory ], 'url' ) ;
+
+      }
+      return state;
+    }
+    case ACTION_TYPES.UPDATE_SITE :
+    {
+      let newState = [ ...state ];
+
       let index = state.findIndex( site => {
-          return site.get('url') === payload.get( 'url' )
+          return site.url === payload.url
         })
 
       if( index > -1 )
       {
-        let siteToMerge = state.get( index )
-        let updatedSite = siteToMerge.mergeDeep( payload ) //updates last visit, url, title
-        let lastVisit   = payload.get('last_visit')
-        // // beter parsing of things that will be always there
-        if( payload.get('last_visit') && ! updatedSite.get('visits').includes( lastVisit ) )
+        let siteToMerge = state[ index ];
+        let updatedSite = { ...siteToMerge, ...payload }
+        let lastVisit   = payload.last_visit;
+
+        if( lastVisit && ! updatedSite.visits.includes( lastVisit ) )
         {
-          let updatedSiteVisits = updatedSite.get( 'visits' ).push( lastVisit )
-          updatedSite = updatedSite.set( 'visits', updatedSiteVisits )
+          updatedSite.visits.push( lastVisit )
         }
 
-        updatedSite = updatedSite.set( 'last_visit', payload.get('last_visit') )
+        updatedSite.last_visit = payload.last_visit;
 
-        return state.set( index, updatedSite )
+        newState[ index ] = updatedSite;
+
+        return newState;
 
       }
 
-      payload = payload.set( 'visits', List([ payload.get('last_visit') ] ))
+      payload.visits = [ payload.last_visit ];
 
-      return state.push( payload )
+      newState.push( payload )
+      return newState;
     }
-    case DELETE_SITE:
+    case ACTION_TYPES.DELETE_SITE:
     {
-      let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) )
+      let index = state.findIndex( site => site.url === payload.url )
 
-      return state.delete( index )
+      let newState = [ ...state ];
+
+      newState.splice( index )
+      return newState;
     }
 
-    case DELETE_ALL:
+    case ACTION_TYPES.DELETE_ALL:
     {
-      return state.clear()
+      return []
     }
     default:
       return state
@@ -101,25 +115,29 @@ export function addVisit ( {url, title } ) {
   // each visit has a timestamp
   return new Promise( (resolve, reject ) =>
     {
-      let site = { url, title, last_visit: new Date() }
-      return store.dispatch( updateSite( site ) )
+        if( url === 'about:blank')
+        {
+            return;
+        }
+        let site = { url, title, last_visit: new Date() }
+        return store.dispatch( updateSite( site ) )
     })
 }
 
 export function getVisitHistory ({ offset, limit }) {
 
-  return new Promise( (resolve, reject ) =>
+    return new Promise( (resolve, reject ) =>
     {
-      let history = store.getState()[ 'history' ]
+        let history = store.getState()[ 'history' ]
 
-      let filteredHistory = history.filter( (value, key) =>
+        let filteredHistory = history.filter( (value, key) =>
         {
-          return ( key >= offset && key <= limit  )
-} )
+            return ( key >= offset && key <= limit  )
+        } )
 
   if( filteredHistory )
   {
-    resolve( filteredHistory.toJS() )
+    resolve( filteredHistory )
   }
   else {
     resolve( undefined )
@@ -145,7 +163,7 @@ export function getMostVisited ({ offset, limit }) {
 
 export function search (q)
 {
-  let history = store.getState()[ 'history' ].toJS()
+  let history = store.getState()[ 'history' ]
 
   let filteredHistory = history.filter( (value, key) =>
     {

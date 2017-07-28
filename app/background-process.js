@@ -7,11 +7,9 @@ import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-// import store, { getStore, reStore, saveStore, handleAuthError } from './background-process/safe-storage/store'
-
-// set setting does not trigger save
-import { updateSettings } from './background-process/safe-storage/settings'
 import registerProtocolHandlers from './registerProtocolHandlers'
+
+import logInRenderer from './background-process/logInRenderer'
 
 import * as beakerBrowser from './background-process/browser'
 import * as plugins from './background-process/plugins'
@@ -21,37 +19,26 @@ import buildWindowMenu from './background-process/ui/window-menu'
 import registerContextMenu from './background-process/ui/context-menu'
 import * as downloads from './background-process/ui/downloads'
 import * as permissions from './background-process/ui/permissions'
-import * as settings from './background-process/safe-storage/settings'
-import * as sitedata from './background-process/safe-storage/sitedata'
-import * as bookmarks from './background-process/safe-storage/bookmarks'
-import * as history from './background-process/safe-storage/history'
+
+import { APP_STATUS } from './background-process/safe-storage/constants';
+import * as settings from './background-process/safe-storage/reducers/settings'
+import * as sitedata from './background-process/safe-storage/reducers/sitedata'
+import * as bookmarks from './background-process/safe-storage/reducers/bookmarks'
+import * as history from './background-process/safe-storage/reducers/history'
+import store from './background-process/safe-storage/store'
+import { saveConfigAndQuit } from './background-process/safe-storage/actions/initializer_actions'
+
 
 import * as beakerProtocol from './background-process/protocols/beaker'
 import * as beakerFaviconProtocol from './background-process/protocols/beaker-favicon'
 
 import * as openURL from './background-process/open-url'
 
-// import { auth } from 'safe-js'
-// import packageJson from './package.json'
-var packageJson = require( './package.json' );
 var mainWindow = null;
-
-log.debug( "packagejson" );
 
 const parseSafeUri = function(uri) {
   return uri.replace('//', '').replace('==/', '==');
 };
-
-const safeBrowserApp =
-  {
-    name: packageJson.name,
-    id: packageJson.name,
-    version: packageJson.version,
-    vendor: packageJson.author.name,
-    permissions : [ "SAFE_DRIVE_ACCESS"]
-  };
-
-
 
 
 // // configure logging
@@ -61,33 +48,6 @@ log.setLevel('trace')
 plugins.registerStandardSchemes()
 
 app.on('ready', function () {
-
-  //   let token = auth.authorise( safeBrowserApp ).then( tok =>
-  // {
-  //       store.dispatch( updateSettings( { 'authSuccess': true } ) )
-  //       store.dispatch( updateSettings( { 'authToken' : tok.token } ) )
-  //       store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher' } ) )
-
-  //       getStore( tok.token )
-  //           .then( json =>
-  //           {
-  //               reStore( json )
-
-  //           })
-  //           .catch( err =>
-  //           {
-  //               if( err.status === 404)
-  //               {
-  //                   store.dispatch( updateSettings( { 'authMessage': 'Authorised with SAFE Launcher'  } ) )
-  //               }
-  //               else {
-
-  //                   store.dispatch( updateSettings( { 'authMessage': 'Problems getting browser settings from the network, ' + err.staus + ', ' + err.statusText  } ) )
-  //               }
-  //           })
-
-  // })
-  // .catch( handleAuthError )
 
   //init protocols
   registerProtocolHandlers();
@@ -151,4 +111,19 @@ app.on('window-all-closed', function () {
 
 app.on('open-url', function (e, url) {
   openURL.open(url)
+})
+
+
+let savedBeforeQuit = false;
+app.on('before-quit', function (e, url) {
+
+  const appStatus = store.getState().initializer.appStatus;
+
+  if( appStatus == APP_STATUS.READY && !savedBeforeQuit )
+  {
+    e.preventDefault();
+    savedBeforeQuit = true;
+    store.dispatch( saveConfigAndQuit() );
+  }
+
 })

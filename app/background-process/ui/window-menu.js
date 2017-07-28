@@ -238,6 +238,6 @@ var beakerDevMenu = {
 export default function buildWindowMenu (env) {
   var menus = [fileMenu, editMenu, viewMenu, historyMenu, windowMenu]
   if (process.platform === 'darwin') menus.unshift(darwinMenu)
-  if (env.name !== 'production') menus.push(beakerDevMenu)
+  menus.push(beakerDevMenu)
   return menus
 }
