@@ -4,7 +4,7 @@ import fs from 'fs';
 import os from 'os';
 import env from './env';
 
-const BUILD_FOLDER = './resources/build/';
+const BUILD_FOLDER = path.resolve( __dirname, '../../resources/build/' );
 const APP_NAME = 'maidsafe-safebrowser';
 const ICON_FILE = 'safeicon.png';
 
@@ -36,7 +36,7 @@ function installLinuxDesktopFile () {
   const escapedExecPath = process.execPath.replace(/\s/g, '\\ ');
   const escapedExecDir = path.dirname(process.execPath).replace(/\s/g, '\\ ');
 
-  var templatePath =  `${BUILD_FOLDER}${APP_NAME}.desktop`
+  var templatePath =  `${BUILD_FOLDER}/${APP_NAME}.desktop`
 
   var desktopFile = fs.readFileSync(templatePath, 'utf8')
 
@@ -48,7 +48,7 @@ function installLinuxDesktopFile () {
 }
 
 function installLinuxDesktopIcon () {
-  var iconStaticPath =  `${BUILD_FOLDER}${ICON_FILE}`;
+  var iconStaticPath =  `${BUILD_FOLDER}/${ICON_FILE}`;
 
   var iconFile = fs.readFileSync(iconStaticPath)
 
