@@ -101,9 +101,8 @@
   "scripts": {
     "postinstall": "cd app && npm install",
     "build": "gulp build",
-    "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
-    "burnthemall": "rm -Rf ./node_modules ./app/node_modules && npm i && npm run rebuild && npm run pack-authenticator && npm run build && npm run package",
+    "burnthemall": "rm -Rf ./node_modules ./app/node_modules ./dist && npm i && npm run rebuild && npm run build && npm run package",
     "package": "node ./scripts/main.js --package",
     "start": "gulp start",
     "watch": "gulp start-watch"
