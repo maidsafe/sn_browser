@@ -214,30 +214,34 @@ if (process.platform == 'darwin') {
 }
 
 
-var beakerDevMenu = {
-  label: 'BeakerDev',
-  submenu: [{
-    label: 'Reload Shell-Window',
-    click: function () {
-      BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache()
+var devMenu = {
+  label: 'Developer Tools',
+  submenu:
+  [
+    {
+      label: 'Reload Shell-Window',
+      click: function ()
+      {
+        BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache()
+      }
+    },
+    {
+      label: 'Toggle Shell-Window DevTools',
+      accelerator: "CmdOrCtrl+Shift+I",
+      click: function ()
+      {
+        BrowserWindow.getFocusedWindow().toggleDevTools()
+      }
     }
-  },{
-    label: 'Toggle Shell-Window DevTools',
-    accelerator: "CmdOrCtrl+Shift+I",
-    click: function () {
-      BrowserWindow.getFocusedWindow().toggleDevTools()
-    }
-  },{
-    label: 'Toggle WebSecurity for new tabs',
-    click: function ( item, win ) {
-      if (win) win.webContents.send('command', 'window:disable-web-security' )
-    }
-  }]
+  ]
 }
 
 export default function buildWindowMenu (env) {
   var menus = [fileMenu, editMenu, viewMenu, historyMenu, windowMenu]
   if (process.platform === 'darwin') menus.unshift(darwinMenu)
-  menus.push(beakerDevMenu)
+  windowMenu.submenu.push({
+    type: 'separator'
+  })
+  windowMenu.submenu.push(devMenu)
   return menus
 }
