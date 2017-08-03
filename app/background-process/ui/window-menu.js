@@ -39,7 +39,7 @@ var fileMenu = {
       }
     },
     {
-      label: 'Toggle SAFE Browsing',
+      label: 'SAFE Browsing Enabled',
       checked: global.browserStatus.safeModeOn,
       accelerator: 'CmdOrCtrl+Shift+L',
       type: 'checkbox',
