@@ -2,9 +2,9 @@ import { app, BrowserWindow, dialog } from 'electron'
 import { createShellWindow } from './windows'
 
 var darwinMenu = {
-  label: 'Beaker',
+  label: 'SAFE Browser',
   submenu: [
-    { label: 'About Beaker', role: 'about' },
+    { label: 'About the SAFE Browser', role: 'about' },
     { type: 'separator' },
     { label: 'Services', role: 'services', submenu: [] },
     { type: 'separator' },
