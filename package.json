@@ -3,6 +3,7 @@
     "asar": "^0.11.0",
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
+    "cross-env": "^5.0.3",
     "electron": "1.4.1",
     "electron-builder": "6.5.2",
     "electron-localshortcut": "^1.0.0",
@@ -104,8 +105,8 @@
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.4.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules ./dist && npm i && npm run rebuild && npm run build && npm run package",
     "package": "node ./scripts/main.js --package",
-    "start": "gulp start",
-    "watch": "gulp start-watch"
+    "start": "cross-env NODE_ENV=dev gulp start",
+    "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },
   "dependencies": {
     "fs-extra": "^3.0.1",
