@@ -1,5 +1,7 @@
 import { app, BrowserWindow, dialog } from 'electron'
 import { createShellWindow } from './windows'
+import store from '../safe-storage/store'
+import { saveConfig, saveConfigAndQuit } from '../safe-storage/actions/initializer_actions'
 
 var darwinMenu = {
   label: 'SAFE Browser',
@@ -12,7 +14,13 @@ var darwinMenu = {
     { label: 'Hide Others', accelerator: 'Command+Alt+H', role: 'hideothers' },
     { label: 'Show All', role: 'unhide' },
     { type: 'separator' },
-    { label: 'Quit', accelerator: 'Command+Q', click() { app.quit() } }
+    { label: 'Save Browser State', accelerator: 'Command+S', click() {
+      store.dispatch( saveConfig() );
+    } },
+    { label: 'Save Browser State and Close', accelerator: 'Command+Q', click() {
+      store.dispatch( saveConfigAndQuit() );
+    } },
+    { label: 'Quit without saving', accelerator: 'Command+Shift+Q', click() { app.quit() } }
   ]
 }
 

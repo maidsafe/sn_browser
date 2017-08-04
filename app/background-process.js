@@ -112,18 +112,3 @@ app.on('window-all-closed', function () {
 app.on('open-url', function (e, url) {
   openURL.open(url)
 })
-
-
-let savedBeforeQuit = false;
-app.on('before-quit', function (e, url) {
-
-  const appStatus = store.getState().initializer.appStatus;
-
-  if( appStatus == APP_STATUS.READY && !savedBeforeQuit )
-  {
-    e.preventDefault();
-    savedBeforeQuit = true;
-    store.dispatch( saveConfigAndQuit() );
-  }
-
-})

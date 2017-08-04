@@ -26,25 +26,25 @@ const safeMutableDataEntries = getAPI('safeMutableDataEntries');
 const safeMutableDataMutation = getAPI('safeMutableDataMutation');
 
 export const authoriseApp = () => {
+  logInRenderer('Authorising app.')
+  return new Promise( (resolve, reject ) =>
+  {
+    appObj = {};
+    let dataStream =  safeApp.initialise(appInfo);
+    dataStream.on('data', ( datum ) =>
+    {
+      let token = datum[0];
+      appObj.token = token;
 
-      return new Promise( (resolve, reject ) =>
-      {
-        appObj = {};
-        let dataStream =  safeApp.initialise(appInfo);
-        dataStream.on('data', ( datum ) =>
-        {
-          let token = datum[0];
-          appObj.token = token;
+      safeApp.authorise( token, appInfo.permissions, appInfo.opts )
+        .then((authUri) => {
+          appObj.authUri = authUri;
+          return safeApp.connectAuthorised( appToken, authUri )
 
-          safeApp.authorise( token, appInfo.permissions, appInfo.opts )
-            .then((authUri) => {
-              appObj.authUri = authUri;
-              return safeApp.connectAuthorised( appToken, authUri )
-
-            })
-          resolve( token );
         })
-      })
+      resolve( token );
+    })
+  })
 };
 
 
@@ -74,17 +74,24 @@ export const saveConfigToSafe = ( state, quit ) =>
   if( !app || !app.token || !app.authUri )
   {
     logInRenderer("Not authorised to save to the network.")
+    console.log("Not authorised to save to the network.")
+
+    if( quit )
+    {
+      browserInstance.quit();
+    }
+
     return Promise.reject();
   }
 
-  safeApp.connectAuthorised( app.token, app.authUri )
+  return safeApp.connectAuthorised( app.token, app.authUri )
   .then( () =>
   {
-    safeApp.getHomeContainer( app.token )
+    return safeApp.getHomeContainer( app.token )
     .then( homeMdHandle =>
       {
         let mutationHandle;
-        safeMutableData.getEntries(homeMdHandle)
+        return safeMutableData.getEntries(homeMdHandle)
          .then((entriesHandle) => safeMutableDataEntries.mutate(entriesHandle))
          .then((h) => mutationHandle = h)
          .then(_ => safeMutableData.get( homeMdHandle, STATE_KEY ) )
@@ -92,17 +99,22 @@ export const saveConfigToSafe = ( state, quit ) =>
          .then(_ => safeMutableData.applyEntriesMutation(homeMdHandle, mutationHandle))
          .then( (done) =>
          {
-              if( quit )
-              {
-                browserInstance.quit();
-              }
-             return done
+            if( quit )
+            {
+              browserInstance.quit();
+            }
+
+           return Promise.resolve();
          } )
-         .catch( e => logInRenderer('Problems saving data to the network: ', e.message ))
     })
     .catch( e =>
       {
-        logInRenderer(e.message)
+        logInRenderer('Problems saving data to the network: ', e.message )
+
+        if( quit )
+        {
+          browserInstance.quit();
+        }
       })
 
   })
@@ -117,8 +129,9 @@ export const readConfig = ( app ) =>
 {
   if( !app || !app.token || !app.authUri )
   {
-    return Promise.reject('ups');
+    return Promise.reject('Not authorised to read from the network.');
   }
+
   return safeApp.connectAuthorised( app.token, app.authUri )
   .then( () =>
   {

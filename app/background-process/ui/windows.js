@@ -137,7 +137,7 @@ export function createShellWindow () {
   store.subscribe( e =>
   {
     let newState = store.getState();
-
+    logInRenderer( store.getState() );
     win.webContents.send('safeStore-updated')
 
   })

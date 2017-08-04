@@ -81,7 +81,7 @@ export const saveConfigAndQuit = () => {
   return function (dispatch, getState) {
     let state = getState();
     return dispatch({
-      type: ACTION_TYPES.SAVE_CONFIG,
+      type: ACTION_TYPES.SAVE_CONFIG_AND_QUIT,
       payload: saveConfigToSafe(state, quit )
     });
   };

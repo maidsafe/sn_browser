@@ -1,5 +1,6 @@
 import ACTION_TYPES from '../actions/action_types';
 import { MESSAGES, APP_STATUS, CONSTANTS, SAFE_APP_ERROR_CODES } from '../constants';
+import { logInRenderer } from '../../logInRenderer'
 
 const initialState = {
   appStatus: null,
@@ -12,7 +13,7 @@ const initialState = {
 const initializer = (state = initialState, action) => {
   if( action.error )
   {
-    console.error( 'Error in initializer reducer: ', action.error );
+    logInRenderer( 'Error in initializer reducer: ', action, action.error );
     return state;
   }
 
