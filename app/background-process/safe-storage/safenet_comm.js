@@ -84,40 +84,35 @@ export const saveConfigToSafe = ( state, quit ) =>
     return Promise.reject();
   }
 
-  return safeApp.connectAuthorised( app.token, app.authUri )
-  .then( () =>
-  {
-    return safeApp.getHomeContainer( app.token )
-    .then( homeMdHandle =>
-      {
-        let mutationHandle;
-        return safeMutableData.getEntries(homeMdHandle)
-         .then((entriesHandle) => safeMutableDataEntries.mutate(entriesHandle))
-         .then((h) => mutationHandle = h)
-         .then(_ => safeMutableData.get( homeMdHandle, STATE_KEY ) )
-         .then((value) => safeMutableDataMutation.update(mutationHandle, STATE_KEY, JSONToSave, value.version + 1))
-         .then(_ => safeMutableData.applyEntriesMutation(homeMdHandle, mutationHandle))
-         .then( (done) =>
-         {
-            if( quit )
-            {
-              browserInstance.quit();
-            }
+  return safeApp.getHomeContainer( app.token )
+  .then( homeMdHandle =>
+    {
+      let mutationHandle;
+      return safeMutableData.getEntries(homeMdHandle)
+       .then((entriesHandle) => safeMutableDataEntries.mutate(entriesHandle))
+       .then((h) => mutationHandle = h)
+       .then(_ => safeMutableData.get( homeMdHandle, STATE_KEY ) )
+       .then((value) => safeMutableDataMutation.update(mutationHandle, STATE_KEY, JSONToSave, value.version + 1))
+       .then(_ => safeMutableData.applyEntriesMutation(homeMdHandle, mutationHandle))
+       .then( (done) =>
+       {
+          if( quit )
+          {
+            browserInstance.quit();
+          }
 
-           return Promise.resolve();
-         } )
-    })
-    .catch( e =>
-      {
-        logInRenderer('Problems saving data to the network: ', e.message )
-
-        if( quit )
-        {
-          browserInstance.quit();
-        }
-      })
-
+         return Promise.resolve();
+       } )
   })
+  .catch( e =>
+    {
+      logInRenderer('Problems saving data to the network: ', e.message )
+
+      if( quit )
+      {
+        browserInstance.quit();
+      }
+    })
 
 }
 
