@@ -1,10 +1,12 @@
 import { app, BrowserWindow, dialog } from 'electron'
 import { createShellWindow } from './windows'
+import store from '../safe-storage/store'
+import { saveConfig, saveConfigAndQuit } from '../safe-storage/actions/initializer_actions'
 
 var darwinMenu = {
-  label: 'Beaker',
+  label: 'SAFE Browser',
   submenu: [
-    { label: 'About Beaker', role: 'about' },
+    { label: 'About the SAFE Browser', role: 'about' },
     { type: 'separator' },
     { label: 'Services', role: 'services', submenu: [] },
     { type: 'separator' },
@@ -12,7 +14,13 @@ var darwinMenu = {
     { label: 'Hide Others', accelerator: 'Command+Alt+H', role: 'hideothers' },
     { label: 'Show All', role: 'unhide' },
     { type: 'separator' },
-    { label: 'Quit', accelerator: 'Command+Q', click() { app.quit() } }
+    { label: 'Save Browser State', accelerator: 'Command+S', click() {
+      store.dispatch( saveConfig() );
+    } },
+    { label: 'Save Browser State and Close', accelerator: 'Command+Q', click() {
+      store.dispatch( saveConfigAndQuit() );
+    } },
+    { label: 'Quit without saving', accelerator: 'Command+Shift+Q', click() { app.quit() } }
   ]
 }
 
@@ -214,30 +222,34 @@ if (process.platform == 'darwin') {
 }
 
 
-var beakerDevMenu = {
-  label: 'BeakerDev',
-  submenu: [{
-    label: 'Reload Shell-Window',
-    click: function () {
-      BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache()
+var devMenu = {
+  label: 'Developer Tools',
+  submenu:
+  [
+    {
+      label: 'Reload Shell-Window',
+      click: function ()
+      {
+        BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache()
+      }
+    },
+    {
+      label: 'Toggle Shell-Window DevTools',
+      accelerator: "CmdOrCtrl+Shift+I",
+      click: function ()
+      {
+        BrowserWindow.getFocusedWindow().toggleDevTools()
+      }
     }
-  },{
-    label: 'Toggle Shell-Window DevTools',
-    accelerator: "CmdOrCtrl+Shift+I",
-    click: function () {
-      BrowserWindow.getFocusedWindow().toggleDevTools()
-    }
-  },{
-    label: 'Toggle WebSecurity for new tabs',
-    click: function ( item, win ) {
-      if (win) win.webContents.send('command', 'window:disable-web-security' )
-    }
-  }]
+  ]
 }
 
 export default function buildWindowMenu (env) {
   var menus = [fileMenu, editMenu, viewMenu, historyMenu, windowMenu]
   if (process.platform === 'darwin') menus.unshift(darwinMenu)
-  if (env.name !== 'production') menus.push(beakerDevMenu)
+  windowMenu.submenu.push({
+    type: 'separator'
+  })
+  windowMenu.submenu.push(devMenu)
   return menus
 }
