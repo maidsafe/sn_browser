@@ -24,6 +24,10 @@ const safeApp = getAPI('safeApp');
 const safeMutableData = getAPI('safeMutableData');
 const safeMutableDataEntries = getAPI('safeMutableDataEntries');
 const safeMutableDataMutation = getAPI('safeMutableDataMutation');
+const safeCrypto = getAPI('safeCrypto');
+const safeCryptoPubEncKey = getAPI('safeCryptoPubEncKey');
+const safeCryptoKeyPair = getAPI('safeCryptoKeyPair');
+const safeCryptoSecEncKey = getAPI('safeCryptoSecEncKey');
 
 export const authoriseApp = () => {
   logInRenderer('Authorising app.')
@@ -63,11 +67,66 @@ export const reconnect = (app) => {
 }
 
 
+/**
+ * Adds an encrypted value mutation to an existing mutation handle + key for a given MD.
+ * Encrypts both the handle and the key.
+ * @param  { String } md      mutableDataHandle
+ * @param  { String } mut     mutationHandle
+ * @param  { String } key     key to encrypt and store the value as
+ * @param  { String } value   String or Buffer to encrypt and store
+ * @param  { Int } version   [optional] version of the data if updating (then required)
+ * @return { Promise }
+ */
+const updateOrCreateEncrypted = (mutableDataHandle, mutationHandle, key, value, version) => {
+  let encryptedValue;
+
+  return new Promise( (resolve, reject ) =>
+  {
+    safeMutableData.encryptKey( mutableDataHandle, key )
+    .then((encryptedKey) => safeMutableData.encryptValue( mutableDataHandle, value)
+    .then( res =>
+      {
+        encryptedValue = res;
+
+        if( version )
+        {
+          safeMutableDataMutation.update( mutationHandle, encryptedKey, encryptedValue, version )
+            .then( resolve )
+        }
+        else
+        {
+          safeMutableDataMutation.insert( mutationHandle, encryptedKey, encryptedValue )
+            .then( resolve )
+        }
+      })
+    )
+    .catch( e =>
+      {
+        logInRenderer('Problems updating/inserting encrypted: ', e,  e.message )
+        reject( e );
+      })
+
+  } )
+}
+
+
+/**
+ * Parses the browser state to json (removes initializer) and saves to an MD on the app Homecontainer,
+ * encrypting as it goes.
+ * @param  { Object } state App state
+ * @param  { Bool } quit  to quit or not to quit...
+ * @return {[type]}       Promise
+ */
 export const saveConfigToSafe = ( state, quit ) =>
 {
   const stateToSave = { ...state, initializer: {} };
   const JSONToSave = JSON.stringify( stateToSave )
+  let encryptedData;
+  let encryptedKey;
+  let homeMdHandle;
 
+  return new Promise( ( resolve, reject ) =>
+  {
   const initializer = state.initializer;
   const app = initializer.app;
 
@@ -81,36 +140,53 @@ export const saveConfigToSafe = ( state, quit ) =>
       browserInstance.quit();
     }
 
-    return Promise.reject();
+    return reject( 'Not authorised to save data' );
   }
 
-  return safeApp.connectAuthorised( app.token, app.authUri )
-  .then( () =>
-  {
-    return safeApp.getHomeContainer( app.token )
-    .then( homeMdHandle =>
-      {
-        let mutationHandle;
-        return safeMutableData.getEntries(homeMdHandle)
-         .then((entriesHandle) => safeMutableDataEntries.mutate(entriesHandle))
-         .then((h) => mutationHandle = h)
-         .then(_ => safeMutableData.get( homeMdHandle, STATE_KEY ) )
-         .then((value) => safeMutableDataMutation.update(mutationHandle, STATE_KEY, JSONToSave, value.version + 1))
-         .then(_ => safeMutableData.applyEntriesMutation(homeMdHandle, mutationHandle))
-         .then( (done) =>
-         {
-            if( quit )
-            {
-              browserInstance.quit();
-            }
+  logInRenderer("Attempting to save state to the network.")
 
-           return Promise.resolve();
-         } )
+  safeApp.getHomeContainer( app.token )
+    .then( res => homeMdHandle = res )
+    .then( data => encryptedData = data )
+    .then( () =>
+    {
+      let mutationHandle;
+      return safeMutableData.getEntries(homeMdHandle)
+      .then((entriesHandle) => safeMutableDataEntries.mutate(entriesHandle))
+      .then((res) => mutationHandle = res)
+      .then( () => safeMutableData.encryptKey( homeMdHandle, STATE_KEY ) )
+      .then( res => encryptedKey = res )
+      .then( () => safeMutableData.get( homeMdHandle, encryptedKey ) )
+      .catch( e => logInRenderer(e.code, e.message))
+      .then((value) =>
+      {
+        let version = null;
+
+        if( value )
+        {
+          version = value.version + 1
+        }
+
+        return updateOrCreateEncrypted( homeMdHandle, mutationHandle, STATE_KEY, JSONToSave, version )
+      } )
+      .then(_ => safeMutableData.applyEntriesMutation(homeMdHandle, mutationHandle))
+      .then( (done) =>
+      {
+        logInRenderer("Successfully save data to the network.")
+        resolve();
+
+        if( quit )
+        {
+          browserInstance.quit();
+        }
+
+        return Promise.resolve();
+      } )
     })
     .catch( e =>
       {
-        logInRenderer('Problems saving data to the network: ', e.message )
-
+        logInRenderer('Problems saving data to the network: ', e.message );
+        reject( e );
         if( quit )
         {
           browserInstance.quit();
@@ -118,7 +194,6 @@ export const saveConfigToSafe = ( state, quit ) =>
       })
 
   })
-
 }
 
 /**
@@ -127,22 +202,40 @@ export const saveConfigToSafe = ( state, quit ) =>
  */
 export const readConfig = ( app ) =>
 {
-  if( !app || !app.token || !app.authUri )
+  return new Promise( (resolve, reject) =>
   {
-    return Promise.reject('Not authorised to read from the network.');
-  }
+    if( !app || !app.token || !app.authUri )
+    {
+      reject('Not authorised to read from the network.');
+    }
 
-  return safeApp.connectAuthorised( app.token, app.authUri )
-  .then( () =>
-  {
-    return safeApp.getHomeContainer( app.token )
-      .then( homeMdHandle => safeMutableData.get( homeMdHandle, STATE_KEY ) )
-      .then( browserState => JSON.parse(  browserState.buf.toString() ) )
+    let homeMdHandle;
+    let encryptedKey;
+    let encryptedValue;
+
+    safeApp.connectAuthorised( app.token, app.authUri )
+    .then( () =>
+    {
+      return safeApp.getHomeContainer( app.token )
+      .then( res => homeMdHandle = res )
+      .then( () => safeMutableData.encryptKey( homeMdHandle, STATE_KEY ) )
+      .then( res => encryptedKey = res )
+      .then( () => safeMutableData.get( homeMdHandle, encryptedKey ) )
+      .then( res => encryptedValue = res )
+      .then( () => safeMutableData.decrypt( homeMdHandle, encryptedValue.buf ) )
+      .then( browserState => JSON.parse( browserState.toString() ) )
       .then( json => {
         logInRenderer("State retrieved: ", json  );
-        return   json;
+        resolve( json );
       })
-      .catch( e => logInRenderer( 'Failure getting config from the network: ', e.message))
+      .catch( e =>
+        {
+          logInRenderer( 'Failure getting config from the network: ', e.message )
+          logInRenderer( 'Failure getting config from the network: ', e.stack )
+          reject( e );
+        })
+
+      })
 
   })
 }

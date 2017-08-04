@@ -13,14 +13,7 @@ var darwinMenu = {
     { label: 'Hide Beaker', accelerator: 'Command+H', role: 'hide' },
     { label: 'Hide Others', accelerator: 'Command+Alt+H', role: 'hideothers' },
     { label: 'Show All', role: 'unhide' },
-    { type: 'separator' },
-    { label: 'Save Browser State', accelerator: 'Command+S', click() {
-      store.dispatch( saveConfig() );
-    } },
-    { label: 'Save Browser State and Close', accelerator: 'Command+Q', click() {
-      store.dispatch( saveConfigAndQuit() );
-    } },
-    { label: 'Quit without saving', accelerator: 'Command+Shift+Q', click() { app.quit() } }
+    { type: 'separator' }
   ]
 }
 
@@ -55,6 +48,15 @@ var fileMenu = {
         if (win) win.webContents.send('command', 'window:toggle-safe-mode')
       }
     },
+    { type: 'separator' },
+    { label: 'Save Browser State', accelerator: 'CmdOrCtrl+S', click() {
+      store.dispatch( saveConfig() );
+    } },
+    { label: 'Save Browser State and Close', accelerator: 'Ctrl+Shift+Q', click() {
+      store.dispatch( saveConfigAndQuit() );
+    } },
+    { label: 'Quit without saving', accelerator: 'CmdOrCtrl+Q', click() { app.quit() } },
+    { type: 'separator' },
     {
       label: 'Open File',
       accelerator: 'CmdOrCtrl+O',
