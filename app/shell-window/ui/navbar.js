@@ -19,6 +19,12 @@ const CLIENT_TYPES = {
   WEB: 'WEB'
 };
 
+const REQ_TYPES = {
+  AUTH: 'AUTH',
+  CONTAINER: 'CONTAINER',
+  MDATA: 'MDATA'
+};
+
 // globals
 // =
 
@@ -49,6 +55,7 @@ ipcRenderer.on('webClientAuthReq', function(event, uri) {
 ipcRenderer.send('registerSafeNetworkListener');
 ipcRenderer.send('registerOnAuthReq');
 ipcRenderer.send('registerOnContainerReq');
+ipcRenderer.send('registerOnSharedMDataReq');
 ipcRenderer.send('registerOnReqError');
 
 ipcRenderer.on('onNetworkStatus', function(event, status) {
@@ -62,14 +69,21 @@ ipcRenderer.on('onNetworkStatus', function(event, status) {
 ipcRenderer.on('onAuthReq', function(event, data) {
   if (data) {
     safeAuthData = data
-    showSafeAuthPopup()
+    showSafeAuthPopup(REQ_TYPES.AUTH)
   }
 });
 
 ipcRenderer.on('onContainerReq', function(event, data) {
   if (data) {
     safeAuthData = data
-    showSafeAuthPopup(true)
+    showSafeAuthPopup(REQ_TYPES.CONTAINER)
+  }
+});
+
+ipcRenderer.on('onSharedMDataReq', function(event, data) {
+  if (data) {
+    safeAuthData = data
+    showSafeAuthPopup(REQ_TYPES.MDATA)
   }
 });
 
@@ -85,6 +99,14 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
   isSafeAppAuthenticating = false
   if (data.type === CLIENT_TYPES.WEB) {
     ipcRenderer.send('webClientContainerRes', data.res);
+  }
+  update()
+});
+
+ipcRenderer.on('onSharedMDataRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientSharedMDataRes', data.res);
   }
   update()
 });
@@ -188,24 +210,25 @@ export function handleSafeAuthAuthentication(url, type) {
   // }
 }
 
-function authDecision(isAllowed, isContainerReq) {
+function authDecision(isAllowed, reqType) {
   isSafeAppAuthenticating = true
   update()
-  if (isContainerReq) {
-    ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
-    return
+  if (reqType === REQ_TYPES.AUTH) {
+    return ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+  } else if (reqType === REQ_TYPES.CONTAINER) {
+    return ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
   }
-  ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+  ipcRenderer.send('registerSharedMDataDecision', safeAuthData, isAllowed);
 }
 
 function onClickAllowBtn(e) {
   hideSafeAuthPopup()
-  authDecision(true, (parseInt(e.target.dataset.type, 10) === 0))
+  authDecision(true, e.target.dataset.type)
 }
 
 function onClickDenyBtn(e) {
   hideSafeAuthPopup()
-  authDecision(false, (parseInt(e.target.dataset.type, 10) === 0))
+  authDecision(false, e.target.dataset.type)
 }
 
 function onClickSkipBtn(e) {
@@ -217,7 +240,7 @@ function hideSafeAuthPopup() {
   yo.update(safeAuthPopupDiv, yo`<div></div>`)
 }
 
-function showSafeAuthPopup(isContainerReq) {
+function showSafeAuthPopup(reqType) {
   var arrToYo = function(arr) {
     var getPermissionPhrase = function(perm) {
       switch (perm) {
@@ -286,11 +309,55 @@ function showSafeAuthPopup(isContainerReq) {
     return obj;
   }
 
-  var reqKey = isContainerReq ? 'contReq' : 'authReq';
-  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
-  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
+  var reqKey = 'authReq';
+  if (reqType === REQ_TYPES.CONTAINER) {
+    reqKey = 'contReq'
+  } else if (reqType === REQ_TYPES.MDATA) {
+    reqKey = 'mDataReq'
+  }
+  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${reqType}">Allow</button>`
+  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${reqType}">Deny</button>`
   var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
+
+  var listCont = null;
+  if (reqType !== REQ_TYPES.MDATA) {
+    listCont = yo `${
+      safeAuthData[reqKey].containers.map(function(container) {
+        if (typeof container.access === 'object') {
+          const contObj = getCont(container.cont_name);
+          return yo`<div class="list-i" onclick=${togglePermissions}>
+            <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
+            <div class="list-i-b">
+              <p>${contObj.desc}</p>
+              <ul>${arrToYo(container.access)}</ul> 
+            </div>
+          </div>`;
+        }
+        return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+      })
+      }`;
+  } else {
+    var data = safeAuthData[reqKey].mdata;
+    var perms = [];
+    Object.keys(data.perms).map(function (key) {
+      if (data.perms[key] === 'SET') {
+        perms.push(key);
+      }
+    });
+    listCont = yo`<div class="list-i" onclick=${togglePermissions}>
+      <h3 class="default"><span class="icon"></span>${data.name}</h3>
+      <div class="list-i-b">
+        <ul>
+          ${
+            perms.map(function (p) {
+              return yo`<li><span>${p}</span></li>`;
+            })
+          }
+        </ul> 
+      </div>
+    </div>`;
+  }
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
@@ -304,23 +371,7 @@ function showSafeAuthPopup(isContainerReq) {
               <h5>${safeAuthData[reqKey].app.id}</h5>
             </div>
             <div class="popup-cnt-ls">
-              <span class="list">
-                ${
-    safeAuthData[reqKey].containers.map(function(container) {
-      if (typeof container.access === 'object') {
-        const contObj = getCont(container.cont_name);
-        return yo`<div class="list-i" onclick=${togglePermissions}>
-                                  <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
-                                  <div class="list-i-b">
-                                    <p>${contObj.desc}</p>
-                                    <ul>${arrToYo(container.access)}</ul> 
-                                  </div>
-                                </div>`;
-      }
-      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-    })
-    }
-              </span>
+              <span class="list">${listCont}</span>
             </div>
           </div>
           <div class="popup-foot">
