@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import createCLILogger from 'redux-cli-logger'
 import rootReducer from '../reducers';
 import { toJS } from 'immutable';
@@ -56,12 +56,12 @@ export default ( initialState = {}, middleware = [] ) =>
     if( inRendererProcess )
     {
         // Logging Middleware
-        logger = createLogger( {
-            level     : 'info',
-            collapsed : true,
-            stateTransformer: stateTransformer
-            // actionTransformer: ( action ) => action.toJS()
-        } );
+        // logger = createLogger( {
+        //     level     : 'info',
+        //     collapsed : true,
+        //     stateTransformer: stateTransformer
+        //     // actionTransformer: ( action ) => action.toJS()
+        // } );
 
     }
     else
@@ -73,9 +73,9 @@ export default ( initialState = {}, middleware = [] ) =>
 
         logger = createCLILogger(loggerOptions)
 
+        middleware.push( logger );
     }
 
-    middleware.push( logger );
 
   // Router Middleware
     const router = routerMiddleware( hashHistory );

@@ -12,10 +12,6 @@ export default class TabBar extends Component
         tabInFocus : 0
     }
 
-    // static propTypes =
-    // {
-    //     addTab :
-    // }
 
     constructor( props )
     {
@@ -65,19 +61,18 @@ export default class TabBar extends Component
 
         return (
             <div className={ styles.container }>
-                <div className={ styles.dragZone } />
                 <div className={ styles.tabBar }>
                     {
                         tabs.map( ( tab, i ) =>
                         {
-                            if ( tab.get( 'isClosed' ) )
+                            if ( tab.isClosed )
                             {
                                 return;
                             }
 
-                            const isActiveTab = tab.get( 'isActiveTab' );
+                            const isActiveTab = tab.isActiveTab;
                             let tabStyleClass = styles.tab;
-                            const tabData = { key: i, url: tab.get( 'url' ) };
+                            const tabData = { key: i, url: tab.url };
                             if ( isActiveTab )
                             {
                                 tabStyleClass = styles.activeTab;
@@ -87,7 +82,7 @@ export default class TabBar extends Component
                                 className={ tabStyleClass }
                                 onClick={ this.handleTabClick.bind( this, tabData ) }
                             >
-                                <span className={ styles.tabText }>{ tab.get( 'title' ) || 'New Tab' }</span>
+                                <span className={ styles.tabText }>{ tab.title || 'New Tab' }</span>
                                 <MdClose
                                     className={ styles.tabCloseButton }
                                     onClick={ this.handleTabClose.bind( this, tabData ) }

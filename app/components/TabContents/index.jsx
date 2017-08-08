@@ -7,18 +7,7 @@ import Tab from 'components/Tab';
 
 export default class TabContents extends Component
 {
-    // constructor( props )
-    // {
-    //     super( props );
-    //     this.state = {
-    //         tabInFocus : 0 //to update when many tabs can exist
-    //     }
-    // }
-    //
-    // static defaultProps =
-    // {
-    //     tabInFocus : 0
-    // }
+
     getActiveTab()
     {
         return this.activeTab;
@@ -28,14 +17,13 @@ export default class TabContents extends Component
     {
         const { addTab, tabs, updateActiveTab, updateTab, updateAddress } = this.props;
 
-        // console.log( "props in TabContainer component", this.props );
         const tabComponents = tabs.map( ( tab, i ) =>
         {
-            if ( !tab.get( 'isClosed' ) )
+            if ( !tab.isClosed )
             {
-                const isActiveTab = tab.get( 'isActiveTab' );
+                const isActiveTab = tab.isActiveTab;
                 const TheTab = ( <Tab
-                    url={ tab.get( 'url' ) }
+                    url={ tab.url }
                     isActiveTab={ isActiveTab }
                     addTab={ addTab }
                     updateTab={ updateTab }

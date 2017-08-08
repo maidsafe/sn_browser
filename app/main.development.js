@@ -1,6 +1,6 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 // @flow
-import { app, BrowserWindow, ipcMain, webContents } from 'electron';
+import { app, BrowserWindow, BrowserView, ipcMain, webContents } from 'electron';
 import MenuBuilder from './menu';
 import windowStateKeeper from 'electron-window-state';
 import loadCorePackages from './corePackageLoader';
@@ -81,7 +81,22 @@ export default function openWindow()
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
+
+
     } );
+
+
+    //for each tab in the store...
+    // let view = new BrowserView({
+    //     //   webPreferences: {
+    //     //     nodeIntegration: false
+    //     //   }
+    // })
+    // // mainWindow.setBrowserView(view)
+    // // view.setBounds(0, 0, 800, 900)
+    // // view.webContents.loadURL('https://electron.atom.io')
+
+
 
     mainWindow.on( 'closed', () =>
     {
