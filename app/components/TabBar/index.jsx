@@ -86,14 +86,15 @@ export default class TabBar extends Component
                                 <MdClose
                                     className={ styles.tabCloseButton }
                                     onClick={ this.handleTabClose.bind( this, tabData ) }
+                                    title="Close"
                                 />
                             </div> );
                         } )
                     }
                     <div className={ styles.addTab } onClick={ this.handleAddTabClick.bind( this ) }>
-                        <div className={ styles.tabBox }>
-                            <MdAdd className={ styles.tabAddButton } />
-                        </div>
+                            <MdAdd  className={ styles.tabAddButton }
+                                    title="New Tab"
+                            />
                     </div>
                 </div>
             </div>
