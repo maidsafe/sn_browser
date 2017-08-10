@@ -160,7 +160,7 @@ export function addVisit (url) {
 
   }
   else {
-    return Promise.reject('bookmark does not exist')
+    return Promise.resolve()
   }
 
 
