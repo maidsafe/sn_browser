@@ -265,20 +265,24 @@ export function create (opts) {
 
 
 function handleStoreChange() {
-  var page = getAll();
+  var pages = getAll();
+
 
   pages.forEach( page =>
   {
-    beakerBookmarks.get( page.getURL() ).then(bookmark => {
+
+    beakerBookmarks.get( page.getURL() )
+    .then(bookmark =>
+    {
       page.bookmark = bookmark
-    navbar.update(page)
-  })
+      navbar.update(page)
+    })
 
     if( page.isWebviewReady && page.getURL().includes('beaker:') )
-  {
-    page.reload()
-  }
-})
+    {
+      page.reload()
+    }
+  })
 }
 
 

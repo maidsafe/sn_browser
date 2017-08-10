@@ -1761,9 +1761,9 @@ path-type@^1.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-pauls-electron-rpc@~2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/pauls-electron-rpc/-/pauls-electron-rpc-2.0.2.tgz#47c4740833e5300a5f7c56f6b0126d202c5cb3a5"
+pauls-electron-rpc@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/pauls-electron-rpc/-/pauls-electron-rpc-4.0.1.tgz#81f4cd1a7be2fce1842db00d14c67aeaa5f8ab3a"
 
 pend@~1.2.0:
   version "1.2.0"

@@ -32,7 +32,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.13.0",
     "multicb": "^1.2.1",
-    "pauls-electron-rpc": "~2.0.0",
+    "pauls-electron-rpc": "^4.0.1",
     "pretty-bytes": "^3.0.1",
     "redux": "^3.6.0",
     "redux-actions": "^0.13.0",
@@ -43,8 +43,8 @@
     "socket.io": "^2.0.2",
     "speedometer": "^1.0.0",
     "unused-filename": "^0.1.0",
-    "winreg": "^1.2.4",
     "urlsafe-base64": "^1.0.0",
+    "winreg": "^1.2.4",
     "yo-yo": "^1.2.1",
     "zerr": "^1.0.4"
   },

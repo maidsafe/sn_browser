@@ -181,8 +181,7 @@ export function get (url) {
     let bookmarkedSite = bookmarks.find( site => site.url === url )
     if( bookmarkedSite )
     {
-      let datum = bookmarkedSite.data.key
-      resolve( datum )
+      resolve( bookmarkedSite )
     }
     else {
       resolve( undefined )
