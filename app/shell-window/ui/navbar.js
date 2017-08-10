@@ -345,6 +345,13 @@ function showSafeAuthPopup(reqType) {
       })
       }`;
   } else {
+    var formatXorName = (name) => {
+      const subLen = 10;
+      if (name.length <= subLen) {
+        return name;
+      }
+      return name.substr(0, subLen) + '...' + name.substr(subLen * -1)
+    }
     var getPerms = (data) => {
       var perms = [];
       Object.keys(data).map(function (key) {
@@ -358,19 +365,21 @@ function showSafeAuthPopup(reqType) {
       safeAuthData[reqKey].mdata.map(function (mdata) {
         var perms = getPerms(mdata.perms);
         return yo`<div class="list-i" onclick=${togglePermissions}>
-            <h3 class="default"><span class="icon"></span>${mdata.name}</h3>
+            <h3 class="default"><span class="icon"></span>${formatXorName(mdata.name)}</h3>
             <div class="list-i-b">
               <p>${mdata.metaData}</p>
               <ul>${
                 perms.map(function (p) {
                   return yo`<li><span>${p}</span></li>`;
                 })
-              }</ul> 
+              }</ul>
             </div>
           </div>`;
       })
     }`;
   }
+
+  var mdataWarn = (reqType === REQ_TYPES.MDATA) ? yo`<div class="mdata-warn">Note: Authenticator does not guarantee that the Mutable Data requested is the same as mentioned in the description. Grant the permission only if you trust the application</div>` : null;
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
@@ -383,6 +392,7 @@ function showSafeAuthPopup(reqType) {
               <h4>${contPara}</h4>
               <h5>${safeAuthData[reqKey].app.id}</h5>
             </div>
+            ${mdataWarn}
             <div class="popup-cnt-ls">
               <span class="list">${listCont}</span>
             </div>
@@ -698,10 +708,13 @@ function setAuthPopupAsScrollable() {
   var popupBase = document.querySelector('.popup .popup-base .popup-i')
   var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
   var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
+  var popupMdataWarn = document.querySelector('.popup .popup-base .popup-i .popup-cnt .mdata-warn')
+  var popupMdataWarnHeight = popupMdataWarn ? popupMdataWarn.offsetHeight : 0
+
   var popupListMarginTop = 40
   var footerHeight = 140
   var popupCntAddedSpace = 30
-  var popupContainerHeight = popupContMainHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
+  var popupContainerHeight = popupContMainHeight + popupMdataWarnHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
   if (popupBase.offsetHeight < popupContainerHeight) {
     popupBase.classList.add('scroll')
   } else {
