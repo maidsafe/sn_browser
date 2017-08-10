@@ -10,24 +10,42 @@ import co from 'co'
 
 // bookmarks, cached in memory
 var bookmarks = []
-
+var PAGE_TITLE = 'Favorites';
 
 // exported API
 // =
+
+//update from safe store
+function updateFromStore()
+{
+  if( document.title === PAGE_TITLE )
+  {
+    getBookmarks( render )
+  }
+};
+
+
+function getBookmarks( cb )
+{
+  co(function*() {
+    // get the bookmarks, ordered by # of views
+    bookmarks = yield beakerBookmarks.list()
+    bookmarks = bookmarks || []
+
+    cb()
+  })
+}
+
 
 export function setup () {
 }
 
 export function show () {
 
-  document.title = 'Favorites'
-  co(function*() {
-    // get the bookmarks, ordered by # of views
-    bookmarks = yield beakerBookmarks.list()
-    bookmarks = bookmarks || []
+  document.title = PAGE_TITLE;
+  window.updateFromStore = updateFromStore;
 
-    render()
-  })
+  getBookmarks( render );
 }
 
 export function hide () {
