@@ -81,6 +81,7 @@ ipcRenderer.on('onContainerReq', function(event, data) {
 });
 
 ipcRenderer.on('onSharedMDataReq', function(event, data) {
+  console.log('onSharedMDataReq', data)
   if (data) {
     safeAuthData = data
     showSafeAuthPopup(REQ_TYPES.MDATA)
@@ -315,12 +316,15 @@ function showSafeAuthPopup(reqType) {
   } else if (reqType === REQ_TYPES.MDATA) {
     reqKey = 'mDataReq'
   }
+
+  var contOrPermLen = (reqType === REQ_TYPES.MDATA) ? safeAuthData[reqKey].mdata.length : safeAuthData[reqKey].containers.length;
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${reqType}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${reqType}">Deny</button>`
-  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  var contPara = (contOrPermLen === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
 
   var listCont = null;
+  console.log('reqKey', reqKey, reqType, REQ_TYPES.MDATA)
   if (reqType !== REQ_TYPES.MDATA) {
     listCont = yo `${
       safeAuthData[reqKey].containers.map(function(container) {
@@ -338,7 +342,8 @@ function showSafeAuthPopup(reqType) {
       })
       }`;
   } else {
-    var data = safeAuthData[reqKey].mdata;
+    var data = safeAuthData[reqKey].mdata[0];
+    console.log('data', data, safeAuthData[reqKey].mdata)
     var perms = [];
     Object.keys(data.perms).map(function (key) {
       if (data.perms[key] === 'SET') {
