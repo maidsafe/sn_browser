@@ -13,6 +13,21 @@ import { ucfirst } from '../../lib/strings'
 
 var downloads
 
+var PAGE_TITLE = 'Downloads';
+
+// exported API
+// =
+
+//update from safe store
+function updateFromStore()
+{
+  if( document.title === PAGE_TITLE )
+  {
+    getDownloads( render )
+  }
+};
+
+
 // exported API
 // =
 
@@ -23,12 +38,19 @@ export function setup () {
   dlEvents.on('done', onUpdate)
 }
 
-export function show () {
-  document.title = 'Downloads'
+function getDownloads( cb )
+{
   co(function* () {
     downloads = yield beakerDownloads.getDownloads()
-    render()
+    cb()
   })
+}
+
+export function show () {
+  document.title = PAGE_TITLE;
+  getDownloads( render );
+
+  window.updateFromStore = updateFromStore;
 }
 
 export function hide () {
