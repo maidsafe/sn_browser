@@ -321,6 +321,9 @@ function showSafeAuthPopup(reqType) {
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${reqType}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${reqType}">Deny</button>`
   var contPara = (contOrPermLen === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  if (reqType === REQ_TYPES.MDATA) {
+    contPara = contPara.replace('containers', 'Mutable Data');
+  }
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
 
   var listCont = null;
@@ -342,26 +345,31 @@ function showSafeAuthPopup(reqType) {
       })
       }`;
   } else {
-    var data = safeAuthData[reqKey].mdata[0];
-    console.log('data', data, safeAuthData[reqKey].mdata)
-    var perms = [];
-    Object.keys(data.perms).map(function (key) {
-      if (data.perms[key] === 'SET') {
-        perms.push(key);
-      }
-    });
-    listCont = yo`<div class="list-i" onclick=${togglePermissions}>
-      <h3 class="default"><span class="icon"></span>${data.name}</h3>
-      <div class="list-i-b">
-        <ul>
-          ${
-            perms.map(function (p) {
-              return yo`<li><span>${p}</span></li>`;
-            })
-          }
-        </ul> 
-      </div>
-    </div>`;
+    var getPerms = (data) => {
+      var perms = [];
+      Object.keys(data).map(function (key) {
+        if (data[key] === 'SET') {
+          perms.push(key);
+        }
+      });
+      return perms;
+    }
+    listCont = yo`${
+      safeAuthData[reqKey].mdata.map(function (mdata) {
+        var perms = getPerms(mdata.perms);
+        return yo`<div class="list-i" onclick=${togglePermissions}>
+            <h3 class="default"><span class="icon"></span>${mdata.name}</h3>
+            <div class="list-i-b">
+              <p>${mdata.metaData}</p>
+              <ul>${
+                perms.map(function (p) {
+                  return yo`<li><span>${p}</span></li>`;
+                })
+              }</ul> 
+            </div>
+          </div>`;
+      })
+    }`;
   }
 
   var popupBase = yo`<div class="popup">
