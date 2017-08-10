@@ -19,6 +19,12 @@ const CLIENT_TYPES = {
   WEB: 'WEB'
 };
 
+const REQ_TYPES = {
+  AUTH: 'AUTH',
+  CONTAINER: 'CONTAINER',
+  MDATA: 'MDATA'
+};
+
 // globals
 // =
 
@@ -49,6 +55,7 @@ ipcRenderer.on('webClientAuthReq', function(event, uri) {
 ipcRenderer.send('registerSafeNetworkListener');
 ipcRenderer.send('registerOnAuthReq');
 ipcRenderer.send('registerOnContainerReq');
+ipcRenderer.send('registerOnSharedMDataReq');
 ipcRenderer.send('registerOnReqError');
 
 ipcRenderer.on('onNetworkStatus', function(event, status) {
@@ -62,14 +69,22 @@ ipcRenderer.on('onNetworkStatus', function(event, status) {
 ipcRenderer.on('onAuthReq', function(event, data) {
   if (data) {
     safeAuthData = data
-    showSafeAuthPopup()
+    showSafeAuthPopup(REQ_TYPES.AUTH)
   }
 });
 
 ipcRenderer.on('onContainerReq', function(event, data) {
   if (data) {
     safeAuthData = data
-    showSafeAuthPopup(true)
+    showSafeAuthPopup(REQ_TYPES.CONTAINER)
+  }
+});
+
+ipcRenderer.on('onSharedMDataReq', function(event, data) {
+  console.log('onSharedMDataReq', data)
+  if (data) {
+    safeAuthData = data
+    showSafeAuthPopup(REQ_TYPES.MDATA)
   }
 });
 
@@ -85,6 +100,14 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
   isSafeAppAuthenticating = false
   if (data.type === CLIENT_TYPES.WEB) {
     ipcRenderer.send('webClientContainerRes', data.res);
+  }
+  update()
+});
+
+ipcRenderer.on('onSharedMDataRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  if (data.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientSharedMDataRes', data.res);
   }
   update()
 });
@@ -188,24 +211,25 @@ export function handleSafeAuthAuthentication(url, type) {
   // }
 }
 
-function authDecision(isAllowed, isContainerReq) {
+function authDecision(isAllowed, reqType) {
   isSafeAppAuthenticating = true
   update()
-  if (isContainerReq) {
-    ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
-    return
+  if (reqType === REQ_TYPES.AUTH) {
+    return ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+  } else if (reqType === REQ_TYPES.CONTAINER) {
+    return ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
   }
-  ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+  ipcRenderer.send('registerSharedMDataDecision', safeAuthData, isAllowed);
 }
 
 function onClickAllowBtn(e) {
   hideSafeAuthPopup()
-  authDecision(true, (parseInt(e.target.dataset.type, 10) === 0))
+  authDecision(true, e.target.dataset.type)
 }
 
 function onClickDenyBtn(e) {
   hideSafeAuthPopup()
-  authDecision(false, (parseInt(e.target.dataset.type, 10) === 0))
+  authDecision(false, e.target.dataset.type)
 }
 
 function onClickSkipBtn(e) {
@@ -217,7 +241,7 @@ function hideSafeAuthPopup() {
   yo.update(safeAuthPopupDiv, yo`<div></div>`)
 }
 
-function showSafeAuthPopup(isContainerReq) {
+function showSafeAuthPopup(reqType) {
   var arrToYo = function(arr) {
     var getPermissionPhrase = function(perm) {
       switch (perm) {
@@ -286,11 +310,76 @@ function showSafeAuthPopup(isContainerReq) {
     return obj;
   }
 
-  var reqKey = isContainerReq ? 'contReq' : 'authReq';
-  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
-  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
-  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  var reqKey = 'authReq';
+  if (reqType === REQ_TYPES.CONTAINER) {
+    reqKey = 'contReq'
+  } else if (reqType === REQ_TYPES.MDATA) {
+    reqKey = 'mDataReq'
+  }
+
+  var contOrPermLen = (reqType === REQ_TYPES.MDATA) ? safeAuthData[reqKey].mdata.length : safeAuthData[reqKey].containers.length;
+  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${reqType}">Allow</button>`
+  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${reqType}">Deny</button>`
+  var contPara = (contOrPermLen === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  if (reqType === REQ_TYPES.MDATA) {
+    contPara = contPara.replace('containers', 'Mutable Data');
+  }
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
+
+  var listCont = null;
+  console.log('reqKey', reqKey, reqType, REQ_TYPES.MDATA)
+  if (reqType !== REQ_TYPES.MDATA) {
+    listCont = yo `${
+      safeAuthData[reqKey].containers.map(function(container) {
+        if (typeof container.access === 'object') {
+          const contObj = getCont(container.cont_name);
+          return yo`<div class="list-i" onclick=${togglePermissions}>
+            <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
+            <div class="list-i-b">
+              <p>${contObj.desc}</p>
+              <ul>${arrToYo(container.access)}</ul> 
+            </div>
+          </div>`;
+        }
+        return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+      })
+      }`;
+  } else {
+    var formatXorName = (name) => {
+      const subLen = 10;
+      if (name.length <= subLen) {
+        return name;
+      }
+      return name.substr(0, subLen) + '...' + name.substr(subLen * -1)
+    }
+    var getPerms = (data) => {
+      var perms = [];
+      Object.keys(data).map(function (key) {
+        if (data[key] === 'SET') {
+          perms.push(key);
+        }
+      });
+      return perms;
+    }
+    listCont = yo`${
+      safeAuthData[reqKey].mdata.map(function (mdata) {
+        var perms = getPerms(mdata.perms);
+        return yo`<div class="list-i" onclick=${togglePermissions}>
+            <h3 class="default"><span class="icon"></span>${formatXorName(mdata.name)}</h3>
+            <div class="list-i-b">
+              <p>${mdata.metaData}</p>
+              <ul>${
+          perms.map(function (p) {
+            return yo`<li><span>${p}</span></li>`;
+          })
+          }</ul>
+            </div>
+          </div>`;
+      })
+      }`;
+  }
+
+  var mdataWarn = (reqType === REQ_TYPES.MDATA) ? yo`<div class="mdata-warn">Note: Authenticator does not guarantee that the Mutable Data requested is the same as mentioned in the description. Grant the permission only if you trust the application</div>` : null;
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
@@ -303,24 +392,9 @@ function showSafeAuthPopup(isContainerReq) {
               <h4>${contPara}</h4>
               <h5>${safeAuthData[reqKey].app.id}</h5>
             </div>
+            ${mdataWarn}
             <div class="popup-cnt-ls">
-              <span class="list">
-                ${
-    safeAuthData[reqKey].containers.map(function(container) {
-      if (typeof container.access === 'object') {
-        const contObj = getCont(container.cont_name);
-        return yo`<div class="list-i" onclick=${togglePermissions}>
-                                  <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
-                                  <div class="list-i-b">
-                                    <p>${contObj.desc}</p>
-                                    <ul>${arrToYo(container.access)}</ul> 
-                                  </div>
-                                </div>`;
-      }
-      return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-    })
-    }
-              </span>
+              <span class="list">${listCont}</span>
             </div>
           </div>
           <div class="popup-foot">
@@ -437,30 +511,30 @@ function render (id, page) {
       var iconCls = 'icon icon-' + ((r.search) ? 'search' : 'window')
       var contentColumn
       if (r.search)
-      contentColumn = yo`<span class="result-search">${r.search}</span>`
+        contentColumn = yo`<span class="result-search">${r.search}</span>`
       else {
-      contentColumn = yo`<span class="result-url"></span>`
-      if (r.urlDecorated)
-      contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
-      else
-      contentColumn.textContent = r.url
+        contentColumn = yo`<span class="result-url"></span>`
+        if (r.urlDecorated)
+          contentColumn.innerHTML = r.urlDecorated // use innerHTML so our decoration can show
+        else
+          contentColumn.textContent = r.url
       }
       var titleColumn = yo`<span class="result-title"></span>`
       if (r.titleDecorated)
-      titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
+        titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
       else
-      titleColumn.textContent = r.title
+        titleColumn.textContent = r.title
       // selection
       var rowCls = 'result'
       if (i == autocompleteCurrentSelection)
-      rowCls += ' selected'
+        rowCls += ' selected'
       // result row
       return yo`<div class=${rowCls} data-result-index=${i}>
             <span class=${iconCls}></span>
             ${contentColumn}
             ${titleColumn}
           </div>`
-      })}
+    })}
       </div>
     `
   }
@@ -634,10 +708,13 @@ function setAuthPopupAsScrollable() {
   var popupBase = document.querySelector('.popup .popup-base .popup-i')
   var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
   var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
+  var popupMdataWarn = document.querySelector('.popup .popup-base .popup-i .popup-cnt .mdata-warn')
+  var popupMdataWarnHeight = popupMdataWarn ? popupMdataWarn.offsetHeight : 0
+
   var popupListMarginTop = 40
   var footerHeight = 140
   var popupCntAddedSpace = 30
-  var popupContainerHeight = popupContMainHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
+  var popupContainerHeight = popupContMainHeight + popupMdataWarnHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
   if (popupBase.offsetHeight < popupContainerHeight) {
     popupBase.classList.add('scroll')
   } else {
@@ -727,9 +804,9 @@ function onClickZoom (e) {
   const { Menu, MenuItem } = remote
   var menu = Menu.buildFromTemplate([
     { label: 'Reset Zoom', click: () => zoom.zoomReset(pages.getActive()) },
-  { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
-  { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
-])
+    { label: 'Zoom In', click: () => zoom.zoomIn(pages.getActive()) },
+    { label: 'Zoom Out', click: () => zoom.zoomOut(pages.getActive()) }
+  ])
   menu.popup(remote.getCurrentWindow())
 }
 
