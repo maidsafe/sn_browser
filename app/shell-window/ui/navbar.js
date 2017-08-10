@@ -313,7 +313,7 @@ function showSafeAuthPopup(isContainerReq) {
                                   <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
                                   <div class="list-i-b">
                                     <p>${contObj.desc}</p>
-                                    <ul>${arrToYo(container.access)}</ul> 
+                                    <ul>${arrToYo(container.access)}</ul>
                                   </div>
                                 </div>`;
       }
@@ -481,8 +481,8 @@ function render (id, page) {
       <button class="toolbar-btn nav-forward-btn" ${forwardDisabled} onclick=${onClickForward}>
         <span class="icon icon-right-open-big"></span>
       </button>
-      ${reloadBtn}      
-      ${safeBtn}      
+      ${reloadBtn}
+      ${safeBtn}
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}

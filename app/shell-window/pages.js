@@ -269,6 +269,11 @@ function handleStoreChange() {
 
   pages.forEach( page =>
   {
+    beakerBookmarks.get( page.getURL() ).then(bookmark => {
+      page.bookmark = bookmark
+    navbar.update(page)
+  })
+
     if( page.isWebviewReady && page.getURL().includes('beaker:') )
   {
     page.reload()
