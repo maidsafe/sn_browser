@@ -4,7 +4,8 @@
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
     "devtron": "^1.4.0",
-    "electron": "^1.6.11",
+    "cross-env": "^5.0.3",
+    "electron": "1.6.11",
     "electron-builder": "6.5.2",
     "electron-localshortcut": "^1.0.0",
     "electron-rebuild": "^1.4.0",
@@ -108,8 +109,8 @@
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.6.11 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules ./dist && npm i && npm run rebuild && npm run build && npm run package",
     "package": "node ./scripts/main.js --package",
-    "start": "gulp start",
-    "watch": "gulp start-watch"
+    "start": "cross-env NODE_ENV=dev gulp start",
+    "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },
   "dependencies": {
     "babel-preset-stage-0": "^6.24.1",
