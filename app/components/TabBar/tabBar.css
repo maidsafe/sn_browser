@@ -5,6 +5,7 @@
     height: 100%;
     padding-top:     20px;
     padding-left:     75px;
+    padding-right:     10px;
     background: rgba( 207, 208, 209, 1);
 
     font-size: 1.4rem;
@@ -21,49 +22,53 @@
     position: relative;
     top: 1px;
     -webkit-app-region: no-drag;
+}
 
+
+.tabBox
+{
+    padding-right:      7px;
+    padding-left:       7px;
+    min-height:         25px;
+    padding-top:        4px;
+    padding-bottom:     5px;
+
+    box-sizing:         border-box;
+    border-top:         1px solid rgba( 127, 127, 127, 1);
+    border-right:       1px solid rgba( 127, 127, 127, 1);
+}
+
+.tabBox:hover:not(.activeTab)
+{
+    background-color: rgba( 246, 246, 246, 0.5);
 }
 
 
 .tab
 {
-    padding-right:    7px;
-    padding-left:     7px;
-    padding-top:      5px;
-    padding-bottom:      3px;
-    box-sizing: border-box;
-    min-height:         25px;
+    composes: tabBox;
     display: flex;
     overflow:hidden;
     position: relative;
     max-width: 400px;
     text-align: left;
 
-    border-top: 1px solid rgba( 127, 127, 127, 1);
-    border-right: 1px solid rgba( 127, 127, 127, 1);
-
-    cursor: pointer;
-
+    flex-basis: 100%;
+    justify-content: space-between;
 }
 
 .tab:first-child
 {
     border-left: 1px solid rgba( 127, 127, 127, 1);
-;
-
 }
 
 
 .addTab
 {
-    padding-left: 5px;
+    composes: tabBox;
 }
 
 
-.tabBox
-{
-
-}
 
 .tabText
 {
@@ -75,10 +80,25 @@
     user-select: none;
 }
 
+
 .tabAddButton,
 .tabCloseButton
 {
-    flex: 0 0 1.6em;
+    padding: 1px;
+    flex: 0 0 14px;
+    border-radius: 100%;
+}
+
+.addTab:hover .tabAddButton
+{
+    color: white;
+    background-color: rgba(54, 125, 62, 0.9);
+}
+
+.tabCloseButton:hover
+{
+    color: white;
+    background-color: rgba(187, 45, 0, 0.9);
 }
 
 
