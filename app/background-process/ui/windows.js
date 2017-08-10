@@ -16,6 +16,7 @@ var userDataDir
 var stateStoreFile = 'shell-window-state.json'
 var numActiveWindows = 0
 
+global.browserStatus = { safeModeOn: true };
 // exported methods
 // =
 
@@ -49,52 +50,48 @@ export function createShellWindow () {
   })
 
 
-    //safe filter
-  let filter = {
-      urls: ['http://*/*', 'https://*/*' ]
+//safe filter
+let filter = {
+  urls: ['http://*/*', 'https://*/*' ]
+
+}
+
+win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
+{
+  const parsedUrl = url.parse(details.url)
+
+  if( ! global.browserStatus.safeModeOn || parsedUrl.host.indexOf( 'localhost' ) === 0 )
+  {
+    callback({});
+  }
+  else if( details.url.indexOf('http') > -1 )
+  {
+    // FIXME shankar - temp handling for opening external links
+    // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+    //   return callback({ cancel: true })
+    // }
+    try {
+      shell.openExternal(details.url);
+    } catch (e) {};
+
+    callback({ cancel: true, redirectURL: 'beaker:start' })
 
   }
-  win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
-  {
-      const parsedUrl = url.parse(details.url)
+})
 
-      if( typeof(win.webContents.isSafe) === 'undefined' )
-      {
-          win.webContents.isSafe = true
-      }
-
-      if( ! win.webContents.isSafe || parsedUrl.host.indexOf( 'localhost' ) === 0 )
-      {
-          callback({})
-          return
-      }
-      if( details.url.indexOf('http') > -1 )
-      {
-        // FIXME shankar - temp handling for opening external links
-        // if (details.url.indexOf('safe_proxy.pac') !== -1) {
-        //   return callback({ cancel: true })
-        // }
-        try {
-          shell.openExternal(details.url);
-        } catch (e) {};
-        callback({ cancel: false, redirectURL: 'beaker:start' })
-
-      }
-  })
-
-  //extra shortcuts outside of menus
-  electronLocalshortcut.register(win, 'Alt+D', () =>
-  {
-      if (win) win.webContents.send('command', 'file:open-location')
-  })
+//extra shortcuts outside of menus
+electronLocalshortcut.register(win, 'Alt+D', () =>
+{
+  if (win) win.webContents.send('command', 'file:open-location')
+})
 
 
-  store.subscribe( e =>
-  {
-      saveStore();
-      win.webContents.send('safeStore-updated')
+store.subscribe( e =>
+{
+  saveStore();
+  win.webContents.send('safeStore-updated')
 
-  })
+})
 
 
 
@@ -104,7 +101,9 @@ export function createShellWindow () {
 
   // register shortcuts
   for (var i=1; i <= 9; i++)
+  {
     registerShortcut(win, 'CmdOrCtrl+'+i, onTabSelect(win, i-1))
+  }
   registerShortcut(win, 'Ctrl+Tab', onNextTab(win))
   registerShortcut(win, 'Ctrl+Shift+Tab', onPrevTab(win))
 

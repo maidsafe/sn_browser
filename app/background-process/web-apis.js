@@ -38,4 +38,3 @@ export function setup () {
   event.returnValue = plugins.getWebAPIManifests(scheme)
 })
 }
-

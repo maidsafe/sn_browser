@@ -12,7 +12,9 @@ import _ from 'lodash'
 // constants
 // =
 
+
 const ERR_ABORTED = -3
+const ERR_BLOCKED_BY_CLIENT = -20
 const ERR_CONNECTION_REFUSED = -102
 const ERR_INSECURE_RESPONSE = -501
 
@@ -113,6 +115,7 @@ export function create (opts) {
     webviewEl: createWebviewEl(id, url),
     navbarEl: navbar.createEl(id),
     promptbarEl: promptbar.createEl(id),
+    safeAppGroupId: null, // to be set by import-web-apis.js to idenfity the safeApp objects created in this page
 
     // page state
     loadingURL: false, // what URL is being loaded, if any?
@@ -362,7 +365,7 @@ function indexOfLastPinnedTab () {
 export function reorderTab (page, offset) {
   // only allow increments of 1
   if (offset > 1 || offset < -1)
-    return console.warn('reorderTabBy isnt allowed to offset more than -1 or 1; this is a coding error')
+    return console.warn('reorderTabBy isn\'t allowed to offset more than -1 or 1; this is a coding error')
 
   // first check if reordering can happen
   var srcIndex = pages.indexOf(page)
@@ -400,32 +403,30 @@ export function changeActiveTo (index) {
     setActive(pages[index])
 }
 
-// export function getActive () {
-//   return activePage
-// }
 
+export function toggleSafe ( )
+{
+    var webContents = remote.getCurrentWindow().webContents;
 
-// export function toggleSafe ( )
-// {
-//     var webContents = remote.getCurrentWindow().webContents;
+    //must explicitly be set on global like this.
+    remote.getGlobal('browserStatus').safeModeOn = ! remote.getGlobal('browserStatus').safeModeOn;
 
-//     if( typeof(webContents.isSafe) === 'undefined' )
-//     {
-//         webContents.isSafe = true;
-//     }
+    let pages = getAll();
 
-//     webContents.isSafe = ! webContents.isSafe;
+    pages.forEach( page =>
+    {
+        if( page.getURL().indexOf( 'http' ) === 0  )
+        {
+          page.loadURL( DEFAULT_URL );
+        }
+        else
+        {
+          page.reload();
+        }
 
-//     let pages = getAll();
+    })
 
-//     pages.forEach( page =>
-//     {
-//         // if (page)
-//         page.reload()
-
-//     })
-
-// }
+}
 
 export function toggleWebSecurity( )
 {
@@ -484,8 +485,14 @@ export function savePinnedToDB () {
 
 function onDomReady (e) {
   var page = getByWebview(e.target)
+
   if (page) {
     page.isWebviewReady = true
+    let webview = e.target;
+    webview.executeJavaScript(`window.safeAppGroupId`, false, (id) => {
+      page.safeAppGroupId = id;
+    })
+
     zoom.setZoomFromSitedata(page)
   }
 }
@@ -661,6 +668,14 @@ function onDidFailLoad (e) {
   // ignore if this is a subresource
   if (!e.isMainFrame)
     return
+
+
+  // ignore blocked by client error when in safemode
+  if ( remote.getGlobal('browserStatus').safeModeOn &&
+      ( e.errorDescription == 'ERR_BLOCKED_BY_CLIENT' || e.errorCode == ERR_BLOCKED_BY_CLIENT ) )
+  {
+    return
+  }
 
   // ignore aborts. why:
   // - sometimes, aborts are caused by redirects. no biggy

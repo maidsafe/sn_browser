@@ -47,22 +47,32 @@ export function getAllInfo (key) {
 
   // construct
   caches[key] = []
+
   protocolModules.forEach(protocolModule => {
     if (!protocolModule[key])
-      return
-    // get the values from the module
-    var values = protocolModule[key]
-    if (!Array.isArray(values))
-      values = [values]
+  return
+  // get the values from the module
+  var values = protocolModule[key]
 
-    if (key === 'webAPIs') {
-      values = values.map(val => {
-        if (typeof val === 'object' && !val.scheme) {
-          val['scheme'] = protocolModule.protocols[0].scheme; // FIXME: for more than one scheme within plugin
+  if (!Array.isArray(values))
+    values = [values]
+
+  if (key === 'webAPIs') {
+    values = values.map(val => {
+      if (typeof val === 'object' && !val.scheme)
+      {
+        if( Array.isArray( protocolModule.protocols ) && protocolModule.protocols.length == 1 )
+        {
+          val['scheme'] = protocolModule.protocols[0].scheme;
         }
-        return val;
-      });
-    }
+        else
+        {
+          val['schemes'] = protocolModule.protocols.map( proto => proto.scheme );
+        }
+      }
+    return val;
+  });
+  }
 
     // add to list
     caches[key] = caches[key].concat(values)
@@ -86,7 +96,7 @@ export function registerStandardSchemes () {
 export function setupProtocolHandlers () {
   getAllInfo('protocols').forEach(proto => {
     // run the module's protocol setup
-    //log.debug('Registering protocol handler:', proto.scheme)
+    // log.debug('Registering protocol handler:', proto.scheme)
     proto.register()
 })
 }
@@ -95,10 +105,10 @@ export function setupProtocolHandlers () {
 export function setupWebAPIs () {
   getAllInfo('webAPIs').forEach(api => {
     // run the module's protocol setup
-    //log.debug('Wiring up Web API:', api.name)
+    // log.debug('Wiring up Web API:', api.name, api.scheme)
 
     // We export functions with callbacks in a separate channel
-    // since they will be adapted on the rederer side to invoke the callbacks
+    // since they will be adapted to invoke the callbacks
     let fnsToExport = [];
   let fnsWithCallbacks = [];
   let fnsWithAsyncCallbacks = [];
@@ -120,20 +130,22 @@ export function setupWebAPIs () {
 // get web API manifests for the given protocol
 export function getWebAPIManifests (scheme) {
   var manifests = {}
-
   // massage input
   scheme = scheme.replace(/:/g, '')
 
   // get the protocol description
   var proto = getAllInfo('protocols').find(proto => proto.scheme == scheme)
+
   if (!proto)
     return manifests
 
   // collect manifests
   getAllInfo('webAPIs').forEach(api => {
     // just need to match isInternal for the api and the scheme
-    if ((api.isInternal == proto.isInternal) && (api.scheme === scheme))
+    if ((api.isInternal == proto.isInternal) && (api.scheme === scheme || ( api.schemes && api.schemes.includes( scheme ) ) ))
+    {
       manifests[api.name] = api.manifest
+    }
 })
   return manifests
 }

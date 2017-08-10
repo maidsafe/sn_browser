@@ -523,7 +523,10 @@ function handleAutocompleteSearch (results) {
   if (isProbablyUrl && !v.includes('://') && !(v.startsWith('beaker:') || v.startsWith('ipfs:/'))) {
     if (isHashRegex.test(v))
       vWithProtocol = 'dat://'+v
-    else {
+    else if (!remote.getGlobal('browserStatus').safeModeOn) {
+      vWithProtocol = 'http://' + v
+      isGuessingTheScheme = true
+    } else {
       vWithProtocol = 'safe://'+v
       isGuessingTheScheme = true // note that we're guessing so that, if this fails, we can try http://
     }
@@ -774,16 +777,7 @@ function onKeydownLocation (e) {
         }
       }
 
-      // add index.html to prefix if not found
       var selectionUrl = selection.url
-      var parsedSelectionUrl = new URL(selection.url)
-      if (parsedSelectionUrl.pathname === '/') {
-        if (selectionUrl.slice(-1) !== '/') {
-          selectionUrl += '/index.html'
-        } else {
-          selectionUrl += 'index.html'
-        }
-      }
 
       page.loadURL(selectionUrl, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()

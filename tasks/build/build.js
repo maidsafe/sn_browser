@@ -1,12 +1,14 @@
 'use strict';
 
 var pathUtil = require('path');
+var os = require('os');
 var Q = require('q');
 var gulp = require('gulp');
 var less = require('gulp-less');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
 var plumber = require('gulp-plumber');
+var exec = require('gulp-exec');
 var jetpack = require('fs-jetpack');
 
 var bundle = require('./bundle');
@@ -57,10 +59,32 @@ var lessTask = function () {
     buildLess('app/stylesheets/builtin-pages.less', srcDir.path('stylesheets'))
   ])
 };
+
+var createLocalesFolder = function () {
+  console.log('os.platform', os.platform())
+  if (os.platform() !== 'darwin') {
+    return;
+  }
+  var options = {
+    continueOnError: false,
+    pipeStdout: false,
+    customTemplatingThing: "test"
+  };
+  var reportOptions = {
+    err: true,
+    stderr: true,
+    stdout: true
+  }
+  return gulp.src('./')
+    .pipe(exec('mkdir -p ./app/node_modules/locales/ && echo "{}" > ./app/node_modules/locales/en.json', options))
+    .pipe(exec.reporter(reportOptions));
+}
+
+gulp.task('locales-fix', createLocalesFolder);
 gulp.task('less', lessTask);
 gulp.task('less-watch', lessTask);
 
-gulp.task('build', ['bundle', 'less']);
+gulp.task('build', ['locales-fix', 'bundle', 'less']);
 
 gulp.task('watch', ['build'], function () {
   watch('app/**/*.js', batch(function (events, done) {

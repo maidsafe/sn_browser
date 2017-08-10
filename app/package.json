@@ -3,17 +3,17 @@
   "productName": "SAFE Browser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
   "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "identifier": "net.maidsafe.safebrowser",
   "author": {
-    "name" : "MaidSafe.net Ltd",
-    "email" : "qa@maidsafe.net",
-    "url" :"https://maidsafe.net"
+    "name": "MaidSafe.net Ltd",
+    "email": "qa@maidsafe.net",
+    "url": "https://maidsafe.net"
   },
   "main": "background-process.build.js",
   "dependencies": {
-    "beaker-plugin-safe-app": "https://github.com/maidsafe/beaker-plugin-safe-app/releases/download/0.1.0-dev.0/beaker-plugin-safe-app-0.1.0-dev.0.tgz",
-    "beaker-plugin-safe-authenticator": "https://github.com/maidsafe/beaker-plugin-safe-authenticator/releases/download/0.1.0-dev.0/beaker-plugin-safe-authenticator-0.1.0-dev.0.tgz",
+    "beaker-plugin-safe-app": "https://github.com/maidsafe/beaker-plugin-safe-app/releases/download/0.1.0-dev.1/beaker-plugin-safe-app-0.1.0-dev.1.tgz",
+    "beaker-plugin-safe-authenticator": "https://github.com/maidsafe/beaker-plugin-safe-authenticator/releases/download/0.1.0-dev.1/beaker-plugin-safe-authenticator-0.1.0-dev.1.tgz",
     "browser-es-module-loader": "^0.1.6",
     "co": "^4.6.0",
     "electron-localshortcut": "^2.0.2",
@@ -38,11 +38,13 @@
     "remarkable": "^1.6.2",
     "speedometer": "^1.0.0",
     "unused-filename": "^1.0.0",
+    "winreg": "^1.2.4",
     "yo-yo": "^1.2.1",
     "zerr": "^1.0.4"
   },
   "devDependencies": {
     "ffi": "^2.2.0",
-    "lodash": "^4.16.6"
+    "lodash": "^4.16.6",
+    "ref": "^1.3.3"
   }
 }

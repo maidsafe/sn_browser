@@ -26,11 +26,11 @@ build_script:
   - node --version
   - set NODE_ENV=production
   - npm --version
-  - npm run release:windows
+  - npm run package
 
- 
- 
- 
+
+
+
 after_build:
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - dir dist
@@ -38,12 +38,12 @@ after_build:
   - cd dist
   - dir
   - rename win-unpacked safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64
-  - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip 
+  - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
   - dir
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
 
-artifacts: 
+artifacts:
   - path: dist/*.zip
 
 before_deploy:

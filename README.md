@@ -9,7 +9,6 @@
 ### Prerequisites
 
   * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
-  * Rust stable (we recommend installing it from [rust-lang.org](https://www.rust-lang.org/en-US/))
   * [Git](https://git-scm.com/)
   * [Yarn](https://yarnpkg.com) (As a replacement for `npm`).
 
@@ -17,7 +16,7 @@
 1. Clone this GitHub repository.
 
     ```bash
-    $ git clone -b dev https://github.com/maidsafe/safe_browser.git
+    $ git clone https://github.com/maidsafe/safe_browser.git
     ```
 
 2. Install the dependencies.
@@ -27,15 +26,9 @@
     $ yarn
     ```
 
-3. Build the SAFE Authenticator plugin.
+    If you are working on a development environment and want to use the `MockVault`, you need to run `NODE_ENV=dev npm run rebuild` instead.
 
-    ```bash
-    $ yarn run pack-authenticator
-    ```
-
-    To clean the cargo dependencies of Authenticator's native modules add `-- --clean` to above command.
-
-5. Build SAFE Browser and open it.
+3. Build SAFE Browser and open it.
 
     ```
     $ yarn run build
