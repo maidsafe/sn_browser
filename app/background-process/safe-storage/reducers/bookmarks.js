@@ -71,7 +71,7 @@ export default function bookmarks(state = initialBookmarkState, action) {
           newVisitCount++
           updatedSite.num_visits = newVisitCount
         }
-        newState[ index ] = updateSite;
+        newState[ index ] = updatedSite;
 
         return  newState;
 
@@ -124,7 +124,6 @@ export function add (url, title) {
 }
 
 export function changeTitle (url, title) {
-
   return new Promise( (resolve, reject) =>
     {
       let bookmark = { url, title }
@@ -134,7 +133,6 @@ export function changeTitle (url, title) {
 }
 
 export function changeUrl (oldUrl, newUrl) {
-
   return new Promise( (resolve, reject) =>
     {
       let bookmark = {
