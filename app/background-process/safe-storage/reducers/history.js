@@ -85,7 +85,7 @@ export default function history(state = initialHistoryState, action) {
 
       let newState = [ ...state ];
 
-      newState.splice( index )
+      newState.splice( index, 1 );
       return newState;
     }
 

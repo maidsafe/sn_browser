@@ -90,7 +90,10 @@ export default function bookmarks(state = initialBookmarkState, action) {
     {
       let index = state.findIndex( site => site.url === payload.url )
 
-      return state.delete( index )
+      let newState = [ ...state ];
+
+      newState.splice( index, 1 )
+      return newState;
     }
     default:
       return state
