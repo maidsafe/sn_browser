@@ -109,7 +109,7 @@
     "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },
   "dependencies": {
-    "fs-extra": "^3.0.1",
+    "fs-extra": "^4.0.1",
     "rollup-plugin-async": "^1.1.0"
   }
 }
