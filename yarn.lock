@@ -1610,7 +1610,7 @@ electron-rebuild@^1.4.0:
     spawn-rx "^2.0.10"
     yargs "^7.0.2"
 
-electron@^1.6.11:
+electron@1.6.11:
   version "1.6.11"
   resolved "https://registry.yarnpkg.com/electron/-/electron-1.6.11.tgz#be79c0ebdcefedb5bf28117409800fa53baceffa"
   dependencies:
