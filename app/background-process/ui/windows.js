@@ -2,13 +2,27 @@ import { app, BrowserWindow, screen, ipcMain, shell } from 'electron'
 import { register as registerShortcut, unregisterAll as unregisterAllShortcuts } from 'electron-localshortcut'
 import jetpack from 'fs-jetpack'
 import path from 'path'
+import url from 'url'
+
+import env from '../../env';
 import * as downloads from './downloads'
 import * as permissions from './permissions'
 import log from '../../log'
-import url from 'url'
 import electronLocalshortcut from 'electron-localshortcut'
+import { MESSAGES, APP_STATUS, CONSTANTS } from '../safe-storage/constants';
 
-import store, { saveStore } from '../safe-storage/store'
+import { setRenderLoggerTarget, logInRenderer } from '../logInRenderer'
+
+import store from '../safe-storage/store'
+import {
+  setInitializerTask,
+  authoriseApplication,
+  receiveResponse,
+  onAuthFailure,
+  getConfig,
+  saveConfig
+} from '../safe-storage/actions/initializer_actions';
+
 
 // globals
 // =
@@ -17,6 +31,26 @@ var stateStoreFile = 'shell-window-state.json'
 var numActiveWindows = 0
 
 global.browserStatus = { safeModeOn: true };
+
+let authTargetContents;
+
+ipcMain.on('webClientAuthRes', (event, response) => {
+
+  if( event.sender == authTargetContents )
+  {
+    if (response && response.indexOf('safe-') == 0) {
+      store.dispatch(receiveResponse(response));
+      store.dispatch( getConfig() );
+    } else {
+      store.dispatch(onAuthFailure(new Error('Authorisation failed')));
+    }
+
+  }
+  // handle respon
+});
+
+
+
 // exported methods
 // =
 
@@ -29,6 +63,18 @@ export function setup () {
     // if this is the first window opened (since app start or since all windows closing)
     if (numActiveWindows === 1) {
     e.sender.webContents.send('command', 'load-pinned-tabs')
+
+    //open devtools by defualt in dev
+    if( env.name !== 'production'  )
+    {
+      BrowserWindow.getFocusedWindow().toggleDevTools()
+    }
+
+    setRenderLoggerTarget( e.sender.webContents );
+    authTargetContents = e.sender.webContents ;
+
+    store.dispatch( setInitializerTask(MESSAGES.INITIALIZE.AUTHORISE_APP) );
+    store.dispatch( authoriseApplication() );
   }
 })
 
@@ -50,48 +96,51 @@ export function createShellWindow () {
   })
 
 
-//safe filter
-let filter = {
-  urls: ['http://*/*', 'https://*/*' ]
-
-}
-
-win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
-{
-  const parsedUrl = url.parse(details.url)
-
-  if( ! global.browserStatus.safeModeOn || parsedUrl.host.indexOf( 'localhost' ) === 0 )
-  {
-    callback({});
-  }
-  else if( details.url.indexOf('http') > -1 )
-  {
-    // FIXME shankar - temp handling for opening external links
-    // if (details.url.indexOf('safe_proxy.pac') !== -1) {
-    //   return callback({ cancel: true })
-    // }
-    try {
-      shell.openExternal(details.url);
-    } catch (e) {};
-
-    callback({ cancel: true, redirectURL: 'beaker:start' })
+  //safe filter
+  let filter = {
+    urls: ['http://*/*', 'https://*/*' ]
 
   }
-})
 
-//extra shortcuts outside of menus
-electronLocalshortcut.register(win, 'Alt+D', () =>
-{
-  if (win) win.webContents.send('command', 'file:open-location')
-})
+  win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
+  {
+    const parsedUrl = url.parse(details.url)
+
+    if( ! global.browserStatus.safeModeOn || parsedUrl.host.indexOf( 'localhost' ) === 0 )
+    {
+      callback({});
+    }
+    else if( details.url.indexOf('http') > -1 )
+    {
+      // FIXME shankar - temp handling for opening external links
+      // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+      //   return callback({ cancel: true })
+      // }
+      try {
+        shell.openExternal(details.url);
+      } catch (e) {};
+
+      callback({ cancel: true, redirectURL: 'beaker:start' })
+
+    }
+  })
 
 
-store.subscribe( e =>
-{
-  saveStore();
-  win.webContents.send('safeStore-updated')
+  //extra shortcuts outside of menus
+  electronLocalshortcut.register(win, 'Alt+D', () =>
+  {
+    if (win) win.webContents.send('command', 'file:open-location')
+  })
 
-})
+  let previousNetworkStatus = null;
+
+  store.subscribe( e =>
+  {
+    let newState = store.getState();
+    logInRenderer( store.getState() );
+    win.webContents.send('safeStore-updated')
+
+  })
 
 
 
@@ -193,7 +242,6 @@ function onClose (win) {
     // if quitting multiple windows at once, the final saved state is unpredictable
     if (!win.isMinimized() && !win.isMaximized()) {
       var state = getCurrentPosition(win)
-      userDataDir.write(stateStoreFile, state, { atomic: true })
     }
   }
 }

@@ -9,12 +9,11 @@ export function setup () {
     return pages.handleSafeStoreChange();
 })
 
-
-  ipcRenderer.on('command', function (event, type, arg1, arg2, arg3) {
+  ipcRenderer.on('command', function (event, type, ...args ) {
     var page = pages.getActive()
     switch (type) {
       case 'file:new-tab':
-        var page = pages.create(arg1)
+        var page = pages.create(...args)
         pages.setActive(page)
         navbar.focusLocation(page)
         return
@@ -34,9 +33,10 @@ export function setup () {
       case 'window:disable-web-security':  return pages.toggleWebSecurity();
       case 'window:next-tab':        return pages.changeActiveBy(1)
       case 'window:prev-tab':        return pages.changeActiveBy(-1)
-      case 'set-tab':                return pages.changeActiveTo(arg1)
+      case 'set-tab':                return pages.changeActiveTo(...args)
       case 'load-pinned-tabs':       return pages.loadPinnedFromDB()
-      case 'perms:prompt':           return permsPrompt(arg1, arg2, arg3)
+      case 'perms:prompt':           return permsPrompt( ...args )
+      case 'log':                    return console.log( ...args )
     }
   })
 }
