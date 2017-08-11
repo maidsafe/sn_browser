@@ -343,13 +343,6 @@ function showSafeAuthPopup(reqType) {
       })
       }`;
   } else {
-    var formatXorName = (name) => {
-      const subLen = 10;
-      if (name.length <= subLen) {
-        return name;
-      }
-      return name.substr(0, subLen) + '...' + name.substr(subLen * -1)
-    }
     var getPerms = (data) => {
       var perms = [];
       Object.keys(data).map(function (key) {
@@ -365,8 +358,9 @@ function showSafeAuthPopup(reqType) {
       safeAuthData[reqKey].mdata.map(function (mdata, i) {
         var perms = getPerms(mdata.perms);
         var meta = metaArr[i]
+        console.log('meta', meta)
         return yo`<div class="list-i" onclick=${togglePermissions}>
-            <h3 class="default"><span class="icon"></span>${formatXorName(meta.name || mdata.name)}</h3>
+            <h3 class="default"><span class="icon"></span>${meta.name || mdata.name}</h3>
             <div class="list-i-b">
               <p>${meta.description}</p>
               <ul>${
