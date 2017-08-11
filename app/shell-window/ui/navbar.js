@@ -550,8 +550,8 @@ function render (id, page) {
       <button class="toolbar-btn nav-forward-btn" ${forwardDisabled} onclick=${onClickForward}>
         <span class="icon icon-right-open-big"></span>
       </button>
-      ${reloadBtn}      
-      ${safeBtn}      
+      ${reloadBtn}
+      ${safeBtn}
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}

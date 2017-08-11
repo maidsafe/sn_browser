@@ -16,6 +16,7 @@ const BEGIN_LOAD_OFFSET = 500
 // visits, cached in memory
 var visits = []
 var isAtEnd = false
+var PAGE_TITLE = 'History'
 
 // exported API
 // =
@@ -23,9 +24,21 @@ var isAtEnd = false
 export function setup () {
 }
 
+
+//update from safe store
+function updateFromStore()
+{
+  if( document.title === PAGE_TITLE )
+  {
+    fetchMore( render )
+  }
+};
+
 export function show () {
-  document.title = 'History'
+  document.title = PAGE_TITLE
   fetchMore(render)
+
+  window.updateFromStore = updateFromStore;
 }
 
 export function hide () {
