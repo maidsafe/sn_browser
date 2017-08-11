@@ -81,7 +81,6 @@ ipcRenderer.on('onContainerReq', function(event, data) {
 });
 
 ipcRenderer.on('onSharedMDataReq', function(event, data) {
-  console.log('onSharedMDataReq', data)
   if (data) {
     safeAuthData = data
     showSafeAuthPopup(REQ_TYPES.MDATA)
@@ -327,7 +326,6 @@ function showSafeAuthPopup(reqType) {
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
 
   var listCont = null;
-  console.log('reqKey', reqKey, reqType, REQ_TYPES.MDATA)
   if (reqType !== REQ_TYPES.MDATA) {
     listCont = yo `${
       safeAuthData[reqKey].containers.map(function(container) {
@@ -355,19 +353,22 @@ function showSafeAuthPopup(reqType) {
     var getPerms = (data) => {
       var perms = [];
       Object.keys(data).map(function (key) {
-        if (data[key] === 'SET') {
+        if (data[key]) {
           perms.push(key);
         }
       });
       return perms;
     }
+    var metaArr = safeAuthData['metaData'] || [];
+
     listCont = yo`${
-      safeAuthData[reqKey].mdata.map(function (mdata) {
+      safeAuthData[reqKey].mdata.map(function (mdata, i) {
         var perms = getPerms(mdata.perms);
+        var meta = metaArr[i]
         return yo`<div class="list-i" onclick=${togglePermissions}>
-            <h3 class="default"><span class="icon"></span>${formatXorName(mdata.name)}</h3>
+            <h3 class="default"><span class="icon"></span>${formatXorName(meta.name || mdata.name)}</h3>
             <div class="list-i-b">
-              <p>${mdata.metaData}</p>
+              <p>${meta.description}</p>
               <ul>${
           perms.map(function (p) {
             return yo`<li><span>${p}</span></li>`;
