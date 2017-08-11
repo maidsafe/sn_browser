@@ -264,9 +264,8 @@ export function create (opts) {
 }
 
 
-function handleStoreChange() {
-  var pages = getAll();
-
+function triggerBeakerPageUpdates() {
+  var page = getAll();
 
   pages.forEach( page =>
   {
@@ -280,13 +279,18 @@ function handleStoreChange() {
 
     if( page.isWebviewReady && page.getURL().includes('beaker:') )
     {
-      page.reload()
+      //lets execute updateFromStore to reload the page.
+      page.webviewEl.executeJavaScript(
+        `if( typeof window.updateFromStore !== 'undefined' )
+        {
+          window.updateFromStore();
+        }`)
     }
   })
 }
 
 
-export const handleSafeStoreChange = _.debounce( handleStoreChange, 200 );
+export const handleSafeStoreChange = _.debounce( triggerBeakerPageUpdates, 200 );
 
 
 

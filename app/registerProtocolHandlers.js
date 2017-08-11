@@ -1,6 +1,6 @@
 // Example taken from: https://github.com/electron/electron/issues/4857#issuecomment-200608167
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 import os from 'os';
 import env from './env';
 
@@ -43,7 +43,10 @@ function installLinuxDesktopFile () {
   desktopFile = desktopFile.replace(/\$APP_PATH/g, escapedExecDir )
   desktopFile = desktopFile.replace(/\$EXEC_PATH/g, escapedExecPath )
 
-  var desktopFilePath = path.join(os.homedir(), '.local', 'share', 'applications', `${APP_NAME}.desktop`)
+  var desktopFilePathLocation = path.join(os.homedir(), '.local', 'share', 'applications' )
+  var desktopFilePath = path.join( desktopFilePathLocation, `${APP_NAME}.desktop`)
+
+  fs.ensureDirSync(desktopFilePathLocation)
   fs.writeFileSync(desktopFilePath, desktopFile)
 }
 
@@ -52,7 +55,9 @@ function installLinuxDesktopIcon () {
 
   var iconFile = fs.readFileSync(iconStaticPath)
 
-  var iconFilePath = path.join(os.homedir(), '.local', 'share', 'icons', ICON_FILE)
+  var iconFilePathLocation = path.join(os.homedir(), '.local', 'share', 'icons' )
+  var iconFilePath = path.join( iconFilePathLocation, ICON_FILE)
+  fs.ensureDirSync(iconFilePathLocation)
   fs.writeFileSync(iconFilePath, iconFile)
 }
 
