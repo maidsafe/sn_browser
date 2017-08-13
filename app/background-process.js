@@ -30,6 +30,7 @@ import * as beakerProtocol from './background-process/protocols/beaker'
 import * as beakerFaviconProtocol from './background-process/protocols/beaker-favicon'
 
 import * as openURL from './background-process/open-url'
+import logger from './logger';
 
 // import { auth } from 'safe-js'
 // import packageJson from './package.json'
@@ -126,6 +127,7 @@ app.on('ready', function () {
   }
 
   const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+    logger.debug(`Command line argument received - ${commandLine.join(' ')}`);
     if (commandLine.length >= 2 && commandLine[1]) {
       openURL.open(parseSafeUri(commandLine[1]));
     }
