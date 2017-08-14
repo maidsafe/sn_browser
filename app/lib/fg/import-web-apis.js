@@ -21,11 +21,11 @@ const readableToCallback = (rpcAPI) => {
 
 // Use a readable RPC stream to invoke a provided callback function even after
 // resolving the promise.
-const readableToAsyncCallback = (rpcAPI, options, safeAppGroupId) => {
+const readableToAsyncCallback = (rpcAPI, safeAppGroupId, options) => {
   return (arg1, cb) => {
     return new Promise((resolve, reject) => {
       let firstValueReceived = false;
-      var r = rpcAPI(arg1, options, safeAppGroupId);
+      var r = rpcAPI(arg1, safeAppGroupId, options);
       r.on('data', data => {
         if (!firstValueReceived) {
         firstValueReceived = true;
@@ -74,7 +74,7 @@ export default function () {
         // Provide the safeAppGroupId to map it to all safeApp instances created,
         // so they can be automatically freed when the page is closed or refreshed
         // Provide an options object to configure logging
-        fnsWithAsyncCallback[newFnName] = readableToAsyncCallback(rpcAPI[fn], options, safeAppGroupId);
+        fnsWithAsyncCallback[newFnName] = readableToAsyncCallback(rpcAPI[fn], safeAppGroupId, options);
       } else {
         fnsToImport[fn] = webAPIs[k][fn];
       }
