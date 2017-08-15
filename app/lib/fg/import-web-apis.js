@@ -22,10 +22,10 @@ const readableToCallback = (rpcAPI) => {
 // Use a readable RPC stream to invoke a provided callback function even after
 // resolving the promise.
 const readableToAsyncCallback = (rpcAPI, safeAppGroupId) => {
-  return (arg1, arg2, cb) => {
+  return (arg1, cb, arg2) => {
     return new Promise((resolve, reject) => {
       let firstValueReceived = false;
-      var r = rpcAPI(arg1, arg2, safeAppGroupId);
+      var r = rpcAPI(arg1, null, arg2, safeAppGroupId);
       r.on('data', data => {
         if (!firstValueReceived) {
         firstValueReceived = true;
