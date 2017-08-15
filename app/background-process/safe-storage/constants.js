@@ -1,0 +1,34 @@
+export const CONSTANTS = {
+  DATE_FORMAT: 'h:MM-mmm dd',
+  NET_STATUS_CONNECTED: 'Connected',
+  STATE_KEY: 'browserState'
+
+};
+
+export const APP_STATUS = {
+  AUTHORISING: 'AUTHORISING',
+  AUTHORISATION_FAILED: 'AUTHORISATION_FAILED',
+  AUTHORISATION_DENIED: 'AUTHORISATION_DENIED',
+  AUTHORISED: 'AUTHORISED',
+  READING_CONFIG: 'READING_CONFIG',
+  READY: 'READY'
+}
+
+export const SAFE_APP_ERROR_CODES = {
+  ERR_AUTH_DENIED: -200,
+  ENTRY_ALREADY_EXISTS: -107,
+  ERR_NO_SUCH_ENTRY: -106,
+  ERR_DATA_EXISTS: -104,
+  ERR_DATA_NOT_FOUND: -103,
+  ERR_OPERATION_ABORTED: -14
+}
+
+export const MESSAGES = {
+  INITIALIZE: {
+    AUTHORISE_APP: 'Authorising Application',
+    CHECK_CONFIGURATION: 'Checking configuration'
+  },
+  AUTHORISATION_ERROR: 'Failed to authorise',
+  AUTHORISATION_DENIED: 'The authorisation request was denied',
+  CHECK_CONFIGURATION_ERROR: 'Failed to retrieve configuration'
+};

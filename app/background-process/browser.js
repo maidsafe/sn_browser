@@ -10,7 +10,7 @@ import globalModulesDir from 'global-modules'
 import co from 'co'
 import manifest from './api-manifests/browser'
 import { cbPromise } from '../lib/functions'
-import * as settingsDb from './safe-storage/settings'
+import * as settingsDb from './safe-storage/reducers/settings'
 import * as plugins from './plugins'
 
 // constants

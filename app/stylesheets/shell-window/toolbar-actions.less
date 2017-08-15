@@ -57,6 +57,8 @@
     }
     &.nav-reload-btn {
       font-size: 20px;
+      transform: rotate3d(1, 1, 0, 180deg);
+      transform-origin: center;
     }
     &.nav-cancel-btn {
       padding: 2px 5px 5px;
@@ -139,6 +141,14 @@
             position: relative;
             min-height: 150px;
             overflow: auto;
+            .mdata-warn {
+              color: #ef9e01;
+              font-size: 14px;
+              text-align: left;
+              background: #fff9e4;
+              padding: 8px;
+              margin-bottom: 8px;
+            }
             .popup-skip {
               position: absolute;
               top: 0;
@@ -234,6 +244,7 @@
                     cursor: pointer;
                     line-height: 30px;
                     padding-left: 40px;
+                    padding-right: 50px;
                     position: relative;
                     &:before {
                       content: "";

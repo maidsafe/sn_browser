@@ -1,5 +1,4 @@
 import { app } from 'electron'
-import log from '../../log'
 // import store, { handleAuthError } from './store'
 import { List, Map, fromJS } from 'immutable'
 
