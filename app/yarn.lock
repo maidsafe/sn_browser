@@ -1582,9 +1582,9 @@ path-type@^1.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-pauls-electron-rpc@^4.0.1:
+"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#IPCErrorPassing":
   version "4.0.1"
-  resolved "https://registry.yarnpkg.com/pauls-electron-rpc/-/pauls-electron-rpc-4.0.1.tgz#81f4cd1a7be2fce1842db00d14c67aeaa5f8ab3a"
+  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#cc6ad7b89746ecdccb28ba52b7437d288e02923a"
 
 pend@~1.2.0:
   version "1.2.0"
@@ -1615,9 +1615,11 @@ pretty-bytes@^1.0.2:
     get-stdin "^4.0.1"
     meow "^3.1.0"
 
-pretty-bytes@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
+pretty-bytes@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-3.0.1.tgz#27d0008d778063a0b4811bb35c79f1bd5d5fbccf"
+  dependencies:
+    number-is-nan "^1.0.0"
 
 process-nextick-args@~1.0.6:
   version "1.0.7"
