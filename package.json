@@ -84,6 +84,7 @@
       ]
     },
     "linux": {
+      "executableName": "SAFE Browser",
       "target": [
         "AppImage",
         "freebsd"
