@@ -326,22 +326,40 @@ function showSafeAuthPopup(reqType) {
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
 
   var listCont = null;
+  var noContainerDesc = 'Application is requesting for reading public unencrypted data on your behalf.';
+  var ownContainerInfo = {
+    name: 'Apps root container',
+    desc: 'Container used by the application to store application specific information such as config files etc',
+    access: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
+  }
+  var ownContainer = safeAuthData[reqKey].app_container ? yo`<div class="list-i" onclick=${togglePermissions}>
+      <h3 class="default" title=${ownContainerInfo.name}><span class="icon"></span>${ownContainerInfo.name}</h3>
+      <div class="list-i-b">
+        <p>${ownContainerInfo.desc}</p>
+        <ul>${arrToYo(ownContainerInfo.access)}</ul> 
+      </div>
+    </div>`: null;
+
   if (reqType !== REQ_TYPES.MDATA) {
-    listCont = yo `${
-      safeAuthData[reqKey].containers.map(function(container) {
-        if (typeof container.access === 'object') {
-          const contObj = getCont(container.cont_name);
-          return yo`<div class="list-i" onclick=${togglePermissions}>
-            <h3 class=${contObj.style}><span class="icon"></span>${contObj.name}</h3>
-            <div class="list-i-b">
-              <p>${contObj.desc}</p>
-              <ul>${arrToYo(container.access)}</ul> 
-            </div>
-          </div>`;
-        }
-        return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
-      })
-      }`;
+    if (!safeAuthData[reqKey].app_container && (safeAuthData[reqKey].containers.length === 0)) {
+      listCont = yo`<div class="list-i default">${noContainerDesc}</div>`
+    } else {
+      listCont = yo `${
+        safeAuthData[reqKey].containers.map(function(container) {
+          if (typeof container.access === 'object') {
+            const contObj = getCont(container.cont_name);
+            return yo`<div class="list-i" onclick=${togglePermissions}>
+              <h3 class=${contObj.style} title=${contObj.name}><span class="icon"></span>${contObj.name}</h3>
+              <div class="list-i-b">
+                <p>${contObj.desc}</p>
+                <ul>${arrToYo(container.access)}</ul> 
+              </div>
+            </div>`;
+          }
+          return yo`<div class="list-i"><h3>${container.cont_name}</h3></div>`;
+        })
+        }`;
+    }
   } else {
     var getPerms = (data) => {
       var perms = [];
@@ -353,19 +371,21 @@ function showSafeAuthPopup(reqType) {
       return perms;
     }
     var metaArr = safeAuthData['metaData'] || [];
-
+    var capitalizeName = function(name) {
+      return name[0].toUpperCase() + name.substr(1)
+    }
     listCont = yo`${
       safeAuthData[reqKey].mdata.map(function (mdata, i) {
         var perms = getPerms(mdata.perms);
         var meta = metaArr[i]
-        console.log('meta', meta)
+        var name = meta.name || mdata.name
         return yo`<div class="list-i" onclick=${togglePermissions}>
-            <h3 class="default"><span class="icon"></span>${meta.name || mdata.name}</h3>
+            <h3 class="default" title=${name}><span class="icon"></span>${name}</h3>
             <div class="list-i-b">
               <p>${meta.description}</p>
               <ul>${
           perms.map(function (p) {
-            return yo`<li><span>${p}</span></li>`;
+            return yo`<li><span>${capitalizeName(p)}</span></li>`;
           })
           }</ul>
             </div>
@@ -373,7 +393,7 @@ function showSafeAuthPopup(reqType) {
       })
       }`;
   }
-
+console.log('listCont', listCont)
   var mdataWarn = (reqType === REQ_TYPES.MDATA) ? yo`<div class="mdata-warn">Note: Authenticator does not guarantee that the Mutable Data requested is the same as mentioned in the description. Grant the permission only if you trust the application</div>` : null;
 
   var popupBase = yo`<div class="popup">
@@ -389,7 +409,10 @@ function showSafeAuthPopup(reqType) {
             </div>
             ${mdataWarn}
             <div class="popup-cnt-ls">
-              <span class="list">${listCont}</span>
+              <span class="list">
+                ${ownContainer}
+                ${listCont}
+              </span>
             </div>
           </div>
           <div class="popup-foot">
