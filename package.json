@@ -1,15 +1,15 @@
 {
   "devDependencies": {
     "asar": "^0.13.0",
+    "babel-preset-stage-0": "^6.24.1",
     "browserify": "^14.4.0",
     "chai": "^4.1.1",
     "cross-env": "^5.0.5",
     "devtron": "^1.4.0",
-    "electron-builder": "^19.22.1",
-    "electron-localshortcut": "^2.0.2",
-    "babel-preset-stage-0": "^6.24.1",
     "electron": "1.7.5",
+    "electron-builder": "^19.22.1",
     "electron-debug": "^1.4.0",
+    "electron-localshortcut": "^2.0.2",
     "fs-jetpack": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-batch": "^1.0.5",
@@ -113,7 +113,6 @@
     "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },
   "dependencies": {
-
     "fs-extra": "^4.0.1",
     "rollup-plugin-async": "^1.1.0"
   }
