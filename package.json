@@ -5,7 +5,7 @@
     "chai": "^4.0.2",
     "cross-env": "^5.0.3",
     "devtron": "^1.4.0",
-    "electron": "1.7.4",
+    "electron": "^1.7.5",
     "electron-builder": "^19.11.1",
     "electron-localshortcut": "^2.0.2",
     "fs-jetpack": "^1.1.0",
