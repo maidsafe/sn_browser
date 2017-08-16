@@ -1,87 +1,99 @@
 import { app } from 'electron'
 import url from 'url'
 import rpc from 'pauls-electron-rpc'
-import manifest from '../api-manifests/bookmarks'
-import log from '../../log'
+import manifest from '../../api-manifests/bookmarks'
+import logInRenderer from '../../logInRenderer';
+
+import ACTION_TYPES from '../actions/action_types';
 
 
-import store from './store'
-import { List, Map, fromJS } from 'immutable'
+import store from '../store'
 import { createActions } from 'redux-actions'
 
-const initialBookmarkState = List( [
-  Map( {
+const initialBookmarkState = [
+   {
     url: 'https://safenetforum.org/',
     title : "Safenet Forum",
     num_visits : 0
-  }),
-  Map( {
+  },
+   {
     url: 'safe://dir.yvette/',
     title : "SAFE Network Directory",
     num_visits : 0
-  })
-] )
+  }
+];
 
 
-const UPDATE_BOOKMARK = 'UPDATE_BOOKMARK'
-const DELETE_BOOKMARK = 'DELETE_BOOKMARK'
 
-export const { updateBookmark, deleteBookmark } = createActions( UPDATE_BOOKMARK, DELETE_BOOKMARK )
+export const { updateBookmark, deleteBookmark } =
+  createActions( ACTION_TYPES.UPDATE_BOOKMARK, ACTION_TYPES.DELETE_BOOKMARK )
 
 export default function bookmarks(state = initialBookmarkState, action) {
-
-  let payload =  fromJS( action.payload )
+  let payload =  action.payload
 
   if( action.error )
   {
-    //trigger error action
     return state
   }
 
   switch (action.type) {
-    case UPDATE_BOOKMARK :
+    case ACTION_TYPES.GET_CONFIG:
     {
+      if( payload && payload.bookmarks )
+      {
+        const newBookmarks = payload.bookmarks;
+        return _.uniqBy( [ ...state , ...newBookmarks ], 'url' ) ;
 
-      let newState
-      let newBookmarks
+      }
+      return state;
+    }
+    case ACTION_TYPES.UPDATE_BOOKMARK :
+    {
+      let newState = [ ...state ];
 
       let index = state.findIndex( site => {
-          return site.get('url') === payload.get( 'url' )
+          return site.url === payload.url
         })
 
       if( index > -1 )
       {
-        let siteToMerge = state.get( index )
-        let updatedSite = siteToMerge.mergeDeep( payload )
+        let siteToMerge = state[ index ];
+        let updatedSite = { ...siteToMerge, ...payload };
 
-        if( payload.get('newUrl') )
+        if( payload.newUrl )
         {
-          updatedSite = updatedSite.set( 'url', payload.get('newUrl') )
+          updatedSite.url = payload.newUrl
         }
 
-        if( payload.get('num_visits') )
+        if( payload.num_visits )
         {
-          let newVisitCount = siteToMerge.get('num_visits') || 0
+          let newVisitCount = siteToMerge.num_visits || 0
           newVisitCount++
-          updatedSite = updatedSite.set( 'num_visits', newVisitCount )
+          updatedSite.num_visits = newVisitCount
         }
+        newState[ index ] = updatedSite;
 
-        return state.set( index, updatedSite )
+        return  newState;
 
       }
 
-      if( payload.get( 'num_visits' ) )
+      if( payload.num_visits )
       {
-        return state
+        //what case is this?
+        return newState
       }
 
-      return state.push( payload )
+      newState.push( { ...payload } )
+      return newState;
     }
-    case DELETE_BOOKMARK:
+    case ACTION_TYPES.DELETE_BOOKMARK:
     {
-      let index = state.findIndex( site => site.get('url') === payload.get( 'url' ) )
+      let index = state.findIndex( site => site.url === payload.url )
 
-      return state.delete( index )
+      let newState = [ ...state ];
+
+      newState.splice( index, 1 )
+      return newState;
     }
     default:
       return state
@@ -112,7 +124,6 @@ export function add (url, title) {
 }
 
 export function changeTitle (url, title) {
-
   return new Promise( (resolve, reject) =>
     {
       let bookmark = { url, title }
@@ -122,7 +133,6 @@ export function changeTitle (url, title) {
 }
 
 export function changeUrl (oldUrl, newUrl) {
-
   return new Promise( (resolve, reject) =>
     {
       let bookmark = {
@@ -136,7 +146,7 @@ export function changeUrl (oldUrl, newUrl) {
 
 export function addVisit (url) {
 
-  let site = store.getState()[ 'bookmarks' ].find( site => site.get('url') === url )
+  let site = store.getState()[ 'bookmarks' ].find( site => site.url === url )
   if( site )
   {
     return new Promise( (resolve, reject) =>
@@ -148,7 +158,7 @@ export function addVisit (url) {
 
   }
   else {
-    return Promise.reject('bookmark does not exist')
+    return Promise.resolve()
   }
 
 
@@ -165,27 +175,24 @@ export function remove (url) {
 }
 
 export function get (url) {
-
   return new Promise( ( resolve, reject) =>
+  {
+    let bookmarks = store.getState().bookmarks;
+    let bookmarkedSite = bookmarks.find( site => site.url === url )
+    if( bookmarkedSite )
     {
-      let site = store.getState()[ 'bookmarks' ].find( site => site.get('url') === url )
-
-      if( site )
-      {
-        let datum = site.get( 'data' ).get( key )
-        resolve( datum )
-      }
-      else {
-        resolve( undefined )
-      }
-})
+      resolve( bookmarkedSite )
+    }
+    else {
+      resolve( undefined )
+    }
+  })
 
 }
 
 export function list () {
 
-  let sites = store.getState()[ 'bookmarks' ].toJS()
-
+  let sites = store.getState()[ 'bookmarks' ]
   return new Promise( (resolve, reject ) => resolve( sites ))
 
 }

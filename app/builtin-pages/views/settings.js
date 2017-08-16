@@ -14,25 +14,42 @@ var browserInfo
 var browserEvents
 var defaultProtocolSettings
 
+var PAGE_TITLE = 'Settings'
 // exported API
 // =
+
+//update from safe store
+function updateFromStore()
+{
+  if( document.title === PAGE_TITLE )
+  {
+    updateSettings( render )
+  }
+};
+
+function updateSettings( cb )
+{
+  co(function* () {
+    browserInfo = yield beakerBrowser.getInfo()
+    settings = yield beakerBrowser.getSettings()
+    defaultProtocolSettings = yield beakerBrowser.getDefaultProtocolSettings()
+
+    cb()
+  })
+}
 
 export function setup () {
   // wire up events
   browserEvents = emitStream(beakerBrowser.eventsStream())
   browserEvents.on('updater-state-changed', onUpdaterStateChanged)
   browserEvents.on('updater-error', onUpdaterError)
+
 }
 
 export function show () {
-  document.title = 'Settings'
-  co(function* () {
-    browserInfo = yield beakerBrowser.getInfo()
-    settings = yield beakerBrowser.getSettings()
-    defaultProtocolSettings = yield beakerBrowser.getDefaultProtocolSettings()
-
-    render()
-  })
+  document.title = PAGE_TITLE;
+  updateSettings( render );
+  window.updateFromStore = updateFromStore;
 }
 
 export function hide () {

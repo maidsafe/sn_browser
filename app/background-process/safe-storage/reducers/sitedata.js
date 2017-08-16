@@ -1,10 +1,9 @@
 import { app, ipcMain } from 'electron'
 import url from 'url'
 import rpc from 'pauls-electron-rpc'
-import manifest from '../api-manifests/sitedata'
-import log from '../../log'
+import manifest from '../../api-manifests/sitedata'
 
-import store from './store'
+import store from '../store'
 import { createActions } from 'redux-actions'
 import { List, Map, fromJS } from 'immutable'
 

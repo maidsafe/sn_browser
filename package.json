@@ -4,6 +4,7 @@
     "browserify": "^14.4.0",
     "chai": "^4.0.2",
     "cross-env": "^5.0.3",
+    "devtron": "^1.4.0",
     "electron": "1.7.4",
     "electron-builder": "^19.11.1",
     "electron-localshortcut": "^2.0.2",
@@ -95,8 +96,11 @@
     }
   },
   "scripts": {
-    "postinstall": "cd app && yarn install && cd .. && yarn build && yarn rebuild",
+    "postinstall": "cd app && yarn install && cd .. && yarn rebuild",
     "build": "gulp build",
+    "copy-bin:unix": "cp -f ./authenticator/src/ffi/*system_uri* ./app/node_modules/beaker-plugin-safe-authenticator/dist && cp -f ./authenticator/src/ffi/*safe_authenticator* ./app/node_modules/beaker-plugin-safe-authenticator/dist",
+    "copy-bin:win": "powershell.exe \"Copy-Item -Path .\\authenticator\\src\\ffi\\system_uri.dll -Destination .\\app\\node_modules\\beaker-plugin-safe-authenticator\\dist -force; if ($?) {Copy-Item -Path .\\authenticator\\src\\ffi\\safe_authenticator.dll -Destination .\\app\\node_modules\\beaker-plugin-safe-authenticator\\dist -force; if ($?) {Copy-Item -Path .\\authenticator\\src\\ffi\\libwinpthread-1.dll -Destination .\\app\\node_modules\\beaker-plugin-safe-authenticator\\dist -force;}}\"",
+    "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.7.4 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules ./dist && npm i && npm run rebuild && npm run build && npm run package",
     "package": "node ./scripts/main.js --package",
@@ -104,7 +108,9 @@
     "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },
   "dependencies": {
-    "fs-extra": "^3.0.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "electron-debug": "^1.1.0",
+    "fs-extra": "^4.0.1",
     "rollup-plugin-async": "^1.1.0"
   }
 }
