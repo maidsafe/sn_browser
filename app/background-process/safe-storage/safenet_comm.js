@@ -145,7 +145,7 @@ export const saveConfigToSafe = ( state, quit ) =>
 
   logInRenderer("Attempting to save state to the network.")
 
-  safeApp.getHomeContainer( app.token )
+  safeApp.getOwnContainer( app.token )
     .then( res => homeMdHandle = res )
     .then( data => encryptedData = data )
     .then( () =>
@@ -216,7 +216,7 @@ export const readConfig = ( app ) =>
     safeApp.connectAuthorised( app.token, app.authUri )
     .then( () =>
     {
-      return safeApp.getHomeContainer( app.token )
+      return safeApp.getOwnContainer( app.token )
       .then( res => homeMdHandle = res )
       .then( () => safeMutableData.encryptKey( homeMdHandle, STATE_KEY ) )
       .then( res => encryptedKey = res )
