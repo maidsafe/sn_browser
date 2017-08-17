@@ -336,7 +336,7 @@ function showSafeAuthPopup(reqType) {
       <h3 class="default" title=${ownContainerInfo.name}><span class="icon"></span>${ownContainerInfo.name}</h3>
       <div class="list-i-b">
         <p>${ownContainerInfo.desc}</p>
-        <ul>${arrToYo(ownContainerInfo.access)}</ul> 
+        <ul>${arrToYo(ownContainerInfo.access)}</ul>
       </div>
     </div>`: null;
 
@@ -352,7 +352,7 @@ function showSafeAuthPopup(reqType) {
               <h3 class=${contObj.style} title=${contObj.name}><span class="icon"></span>${contObj.name}</h3>
               <div class="list-i-b">
                 <p>${contObj.desc}</p>
-                <ul>${arrToYo(container.access)}</ul> 
+                <ul>${arrToYo(container.access)}</ul>
               </div>
             </div>`;
           }
@@ -724,8 +724,10 @@ function joinSegments (segments) {
 
 function setAuthPopupAsScrollable() {
   var popupBase = document.querySelector('.popup .popup-base .popup-i')
-  var popupContMainHeight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main').offsetHeight
-  var popupContLsheight = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls').offsetHeight
+  var popupContMain = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-main')
+  var popupContMainHeight = popupContMain ? popupContMain.offsetHeight : 0
+  var popupContLs = document.querySelector('.popup .popup-base .popup-i .popup-cnt .popup-cnt-ls')
+  var popupContLsheight = popupContLs ? popupContLs.offsetHeight : 0
   var popupMdataWarn = document.querySelector('.popup .popup-base .popup-i .popup-cnt .mdata-warn')
   var popupMdataWarnHeight = popupMdataWarn ? popupMdataWarn.offsetHeight : 0
 
@@ -733,9 +735,11 @@ function setAuthPopupAsScrollable() {
   var footerHeight = 140
   var popupCntAddedSpace = 30
   var popupContainerHeight = popupContMainHeight + popupMdataWarnHeight + popupContLsheight + popupListMarginTop + popupCntAddedSpace + footerHeight;
-  if (popupBase.offsetHeight < popupContainerHeight) {
+
+
+  if ( popupBase && popupBase.offsetHeight < popupContainerHeight) {
     popupBase.classList.add('scroll')
-  } else {
+  } else if( popupBase ) {
     popupBase.classList.remove('scroll')
   }
 }
