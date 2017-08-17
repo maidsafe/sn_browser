@@ -8,12 +8,11 @@
     outline: none;
     position: absolute;
     transform: translateX(0); // put the webview in another compositing layer, to reduce layout render times
+    z-index: 1;
 
     &.hidden {
-      // use visiblity instead of display: none
-      // (this ensures that, even if hidden, the webview will do work)
       display: flex; // the default display type
-      visibility: hidden;
+      z-index: 0;
 
       // this is what electron's docs recommend...
       // causes the pages to relayout on unhide, though, which sucks
