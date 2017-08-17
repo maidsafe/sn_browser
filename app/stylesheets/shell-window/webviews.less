@@ -8,19 +8,20 @@
     outline: none;
     position: absolute;
     transform: translateX(0); // put the webview in another compositing layer, to reduce layout render times
-    z-index: 1;
+    background: #fff; // so that something is painted during load
 
-    &.hidden {
-      display: flex; // the default display type
-      z-index: 0;
-
-      // this is what electron's docs recommend...
-      // causes the pages to relayout on unhide, though, which sucks
-      // but, keep an eye out for bugs that would make the following better
-      // -prf
-      /*flex: 0 1;
-      width: 0px;
-      height: 0px;*/
-    }
+     // HACK
+     // to address https://github.com/electron/electron/issues/8505
+     // the default way of hiding content will be by z-index
+     // but can then switch to visibility: hidden after the initial render
+     z-index: 1;
+     &.hidden {
+       display: flex; // the default display type
+       z-index: 0;
+     }
+     &.can-hide.hidden {
+       display: flex; // the default display type
+       visibility: hidden;
+     }
   }
 }
