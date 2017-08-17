@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog } from 'electron'
 import { createShellWindow } from './windows'
 import store from '../safe-storage/store'
 import { saveConfig, saveConfigAndQuit } from '../safe-storage/actions/initializer_actions'
+import * as openURL from '../open-url'
 
 var darwinMenu = {
   label: 'SAFE Browser',
@@ -46,6 +47,13 @@ var fileMenu = {
       type: 'checkbox',
       click: function (item, win) {
         if (win) win.webContents.send('command', 'window:toggle-safe-mode')
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Show SAFE Logs',
+      click: function (item, win) {
+        openURL.open('safe-logs:list')
       }
     },
     { type: 'separator' },
