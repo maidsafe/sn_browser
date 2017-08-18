@@ -102,28 +102,47 @@ export function createShellWindow () {
 
   }
 
-  win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
-  {
-    const parsedUrl = url.parse(details.url)
-
-    if( ! global.browserStatus.safeModeOn || parsedUrl.host.indexOf( 'localhost' ) === 0 )
+    const isLocal = ( requestDetails ) =>
     {
-      callback({});
+      const parsedUrl = url.parse( requestDetails.url );
+      return parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1'
     }
-    else if( details.url.indexOf('http') > -1 )
+
+
+    win.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, cb ) =>
     {
-      // FIXME shankar - temp handling for opening external links
-      // if (details.url.indexOf('safe_proxy.pac') !== -1) {
-      //   return callback({ cancel: true })
-      // }
-      try {
-        shell.openExternal(details.url);
-      } catch (e) {};
+      let requestHeaders = { ...details.requestHeaders  }
 
-      callback({ cancel: true, redirectURL: 'beaker:start' })
+      if( isLocal( details ) )
+      {
+        //prevent localhost triggering CORS Accept-Origin + causing webview crash
+        delete requestHeaders.Origin;
+      }
 
-    }
-  })
+      cb( { requestHeaders } )
+    })
+
+
+    win.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
+    {
+      if( ! global.browserStatus.safeModeOn || isLocal( details ) )
+      {
+        callback({});
+      }
+      else if( details.url.indexOf('http') > -1 )
+      {
+        // FIXME shankar - temp handling for opening external links
+        // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+        //   return callback({ cancel: true })
+        // }
+        try {
+          shell.openExternal(details.url);
+        } catch (e) {};
+
+        callback({ cancel: true, redirectURL: 'beaker:start' })
+
+      }
+    })
 
 
   //extra shortcuts outside of menus
