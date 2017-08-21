@@ -43,7 +43,7 @@ export const authoriseApp = () => {
       safeApp.authorise( token, appInfo.permissions, appInfo.opts )
         .then((authUri) => {
           appObj.authUri = authUri;
-          return safeApp.connectAuthorised( appToken, authUri )
+          return safeApp.connectAuthorised( token, authUri )
 
         })
       resolve( token );
