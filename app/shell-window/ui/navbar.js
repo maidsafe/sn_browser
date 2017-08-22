@@ -257,7 +257,10 @@ function showSafeAuthPopup(reqType) {
       }
     };
 
-    return arr.map(function(item) {
+    return Object.keys(arr).map(function(item) {
+      if (!arr[item]) {
+        return;
+      }
       return yo`<li>${getPermissionPhrase(item)}</li>`;
     })
   }
