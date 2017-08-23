@@ -196,6 +196,12 @@ export const saveConfigToSafe = ( state, quit ) =>
   })
 }
 
+function delay(t) {
+   return new Promise(function(resolve) {
+       setTimeout(resolve, t)
+   });
+}
+
 /**
  * Read the configuration from the netowrk
  * @param  {[type]} app SafeApp reference, with token and authUri
@@ -216,7 +222,11 @@ export const readConfig = ( app ) =>
     safeApp.connectAuthorised( app.token, app.authUri )
     .then( () =>
     {
-      return safeApp.getOwnContainer( app.token )
+      // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
+      // logic when dealing with the callbacks.
+      // Research and remove this ASAP.
+      return delay(5000)
+      .then((r) => safeApp.getOwnContainer( app.token ))
       .then( res => homeMdHandle = res )
       .then( () => safeMutableData.encryptKey( homeMdHandle, STATE_KEY ) )
       .then( res => encryptedKey = res )
