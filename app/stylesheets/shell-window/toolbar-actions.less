@@ -228,6 +228,14 @@
                       margin: 0 0 16px;
                       padding: 0;
                     }
+                    &.show-apps {
+                      ul.apps {
+                        display: block;
+                      }
+                      ul.perms {
+                        display: none;
+                      }
+                    }
                   }
                   &.show {
                     .list-i-b {
@@ -238,7 +246,7 @@
                     }
                     h3 .icon {
                       color: inherit;
-                      background-image: url("beaker:auth-popup-info-hover-icon");
+                      transform: rotate(-90deg);
                     }
                   }
                   h3 {
@@ -275,17 +283,13 @@
                       width: 20px;
                       height: 20px;
                       top: 5px;
-                      background-image: url("beaker:auth-popup-info-icon");
+                      background-image: url("beaker:auth-popup-expand-arrow");
                       background-repeat: no-repeat;
                       background-size: contain;
                       background-position: center;
                     }
                     &:hover {
                       color: #5592d7;
-                      .icon {
-                        color: inherit;
-                        background-image: url("beaker:auth-popup-info-hover-icon");
-                      }
                     }
                     &.document:before {
                       background-image: url("beaker:auth-popup-documents-icon");
@@ -318,10 +322,33 @@
                     opacity: 0.8;
                     padding-left: 15px;
                     display: block;
+                    min-height: 80px;
+                    &.apps {
+                      display: none;
+                    }
                     li {
                       line-height: 24px;
                       b {
                         font-weight: 500;
+                      }
+                    }
+                  }
+                  .app-toggle {
+                    button {
+                      width: 33px;
+                      height: 16px;
+                      border: 0;
+                      background-image: url("beaker:auth-popup-toggle-info");
+                      background-color: transparent;
+                      background-position: center;
+                      background-size: contain;
+                      background-repeat: no-repeat;
+                      cursor: pointer;
+                      outline: 0;
+                    }
+                    &.app {
+                      button {
+                        background-image: url("beaker:auth-popup-toggle-app");
                       }
                     }
                   }

@@ -244,15 +244,15 @@ function showSafeAuthPopup(reqType) {
   var arrToYo = function(arr) {
     var getPermissionPhrase = function(perm) {
       switch (perm) {
-        case 'Read':
+        case 'read':
           return yo`<span><b>Read</b> data</span>`;
-        case 'Insert':
+        case 'insert':
           return yo`<span><b>Store</b> data</span>`;
-        case 'Update':
+        case 'update':
           return yo`<span><b>Update</b> existing data</span>`;
-        case 'Delete':
+        case 'delete':
           return yo`<span><b>Delete</b> data</span>`;
-        case 'ManagePermissions':
+        case 'managepermissions':
           return yo`<span><b>Full control</b>  to read, store, delete data and manage permissions</span>`;
       }
     };
@@ -261,7 +261,7 @@ function showSafeAuthPopup(reqType) {
       if (!arr[item]) {
         return;
       }
-      return yo`<li>${getPermissionPhrase(item)}</li>`;
+      return yo`<li>${getPermissionPhrase(item.toLowerCase())}</li>`;
     })
   }
 
@@ -331,9 +331,9 @@ function showSafeAuthPopup(reqType) {
   var listCont = null;
   var noContainerDesc = 'Application is requesting for reading public unencrypted data on your behalf.';
   var ownContainerInfo = {
-    name: 'Apps root container',
+    name: 'Apps own container',
     desc: 'Container used by the application to store application specific information such as config files etc',
-    access: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
+    access: {'Read': true, 'Insert': true, 'Update': true, 'Delete': true, 'ManagePermissions': true}
   }
   var ownContainer = safeAuthData[reqKey].app_container ? yo`<div class="list-i" onclick=${togglePermissions}>
       <h3 class="default" title=${ownContainerInfo.name}><span class="icon"></span>${ownContainerInfo.name}</h3>
@@ -351,8 +351,8 @@ function showSafeAuthPopup(reqType) {
         safeAuthData[reqKey].containers.map(function(container) {
           if (typeof container.access === 'object') {
             const contObj = getCont(container.cont_name);
-            return yo`<div class="list-i" onclick=${togglePermissions}>
-              <h3 class=${contObj.style} title=${contObj.name}><span class="icon"></span>${contObj.name}</h3>
+            return yo`<div class="list-i">
+              <h3 class=${contObj.style} title=${contObj.name} onclick=${togglePermissions}><span class="icon"></span>${contObj.name}</h3>
               <div class="list-i-b">
                 <p>${contObj.desc}</p>
                 <ul>${arrToYo(container.access)}</ul>
@@ -374,29 +374,40 @@ function showSafeAuthPopup(reqType) {
       return perms;
     }
     var metaArr = safeAuthData['metaData'] || [];
+    var appAccessArr = safeAuthData['appAccess'] || [];
     var capitalizeName = function(name) {
       return name[0].toUpperCase() + name.substr(1)
     }
+    var parseAppName = function(name) {
+      return capitalizeName(name.replace(/-|_/g, ' '));
+    }
+    var toggleAppBtn = yo`<button onclick=${toggleApp}></button>`
     listCont = yo`${
       safeAuthData[reqKey].mdata.map(function (mdata, i) {
         var perms = getPerms(mdata.perms);
+        var appAccess = appAccessArr[i]
         var meta = metaArr[i]
         var name = meta.name || mdata.name
-        return yo`<div class="list-i" onclick=${togglePermissions}>
-            <h3 class="default" title=${name}><span class="icon"></span>${name}</h3>
+        return yo`<div class="list-i">
+            <h3 class="default" title=${name} onclick=${togglePermissions}><span class="icon"></span>${name}</h3>
             <div class="list-i-b">
               <p>${meta.description}</p>
-              <ul>${
-          perms.map(function (p) {
-            return yo`<li><span>${capitalizeName(p)}</span></li>`;
-          })
-          }</ul>
+              <ul class="perms">${
+                perms.map(function (p) {
+                  return yo`<li><span>${capitalizeName(p)}</span></li>`;
+                })
+              }</ul>
+              <ul class="apps">${
+                appAccess.map(function(acc) {
+                  return yo`<li><span>${parseAppName(acc.app_name)}</span></li>`;
+                })
+              }</ul>
+              <div class="app-toggle">${toggleAppBtn}</div>
             </div>
           </div>`;
       })
       }`;
   }
-console.log('listCont', listCont)
   var mdataWarn = (reqType === REQ_TYPES.MDATA) ? yo`<div class="mdata-warn">Note: Authenticator does not guarantee that the Mutable Data requested is the same as mentioned in the description. Grant the permission only if you trust the application</div>` : null;
 
   var popupBase = yo`<div class="popup">
@@ -782,16 +793,41 @@ function onClickReload (e) {
 }
 
 function togglePermissions(e) {
-  var targetNode = e.currentTarget;
-  if (!targetNode.classList.contains('list-i')) {
+  e.preventDefault();
+  var targetNode = e.target.tagName === 'H3' ? e.target : null;
+  if (!targetNode && e.target.parentElement.tagName === 'H3') {
+    targetNode = e.target.parentElement
+  }
+  if (!targetNode) {
     return;
   }
-  if (targetNode.classList.contains('show')) {
-    targetNode.classList.remove('show');
+  var list = targetNode.parentElement
+  if (list.classList.contains('show')) {
+    list.classList.remove('show');
   } else {
-    targetNode.classList.add('show');
+    list.classList.add('show');
   }
   setAuthPopupAsScrollable()
+}
+
+function toggleApp(e) {
+  e.preventDefault();
+  var btn = e.target.tagName === 'BUTTON' ? e.target : null;
+  if (!btn) {
+    return;
+  }
+  var appToggleEle = btn.parentElement;
+  var listBase = appToggleEle.parentElement;
+  if (!listBase.classList.contains('list-i-b')) {
+    return;
+  }
+  if (listBase.classList.contains('show-apps')) {
+    appToggleEle.classList.remove('app');
+    listBase.classList.remove('show-apps');
+  } else {
+    appToggleEle.classList.add('app');
+    listBase.classList.add('show-apps');
+  }
 }
 
 // export function onClickToggleSafe ( e )
