@@ -1997,9 +1997,9 @@ path-type@^1.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#IPCErrorPassing":
+"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#1.0.1":
   version "4.0.1"
-  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#cc6ad7b89746ecdccb28ba52b7437d288e02923a"
+  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#0853f148ab97d2a1bd65734da817186402935052"
 
 pend@~1.2.0:
   version "1.2.0"
