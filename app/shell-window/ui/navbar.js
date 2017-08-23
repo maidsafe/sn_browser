@@ -331,7 +331,7 @@ function showSafeAuthPopup(reqType) {
   var listCont = null;
   var noContainerDesc = 'Application is requesting for reading public unencrypted data on your behalf.';
   var ownContainerInfo = {
-    name: 'Apps own container',
+    name: 'App\'s own container',
     desc: 'Container used by the application to store application specific information such as config files etc',
     access: {'Read': true, 'Insert': true, 'Update': true, 'Delete': true, 'ManagePermissions': true}
   }
