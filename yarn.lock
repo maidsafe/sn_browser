@@ -1503,8 +1503,8 @@ electron-builder-util@19.24.0, electron-builder-util@~19.24.0:
     tunnel-agent "^0.6.0"
 
 electron-builder@^19.22.1:
-  version "19.24.3"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.3.tgz#c27ea1cfe368a254979606aa925e41f4e37caa78"
+  version "19.24.4"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.4.tgz#8a8e0dc72da1142a5377c56714b3089d81325a3e"
   dependencies:
     "7zip-bin" "^2.2.3"
     ajv "^5.2.2"
@@ -1525,6 +1525,7 @@ electron-builder@^19.22.1:
     electron-publish "19.24.0"
     fs-extra-p "^4.4.0"
     hosted-git-info "^2.5.0"
+    iconv-lite "^0.4.18"
     is-ci "^1.0.10"
     isbinaryfile "^3.0.2"
     js-yaml "^3.9.1"
@@ -2437,7 +2438,7 @@ humanize-plus@^1.8.1:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/humanize-plus/-/humanize-plus-1.8.2.tgz#a65b34459ad6367adbb3707a82a3c9f916167030"
 
-iconv-lite@~0.4.13:
+iconv-lite@^0.4.18, iconv-lite@~0.4.13:
   version "0.4.18"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
 
@@ -2640,8 +2641,8 @@ is-glob@^3.1.0:
     is-extglob "^2.1.0"
 
 is-my-json-valid@^2.13.1:
-  version "2.16.0"
-  resolved "https://registry.yarnpkg.com/is-my-json-valid/-/is-my-json-valid-2.16.0.tgz#f079dd9bfdae65ee2038aae8acbc86ab109e3693"
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/is-my-json-valid/-/is-my-json-valid-2.16.1.tgz#5a846777e2c2620d1e69104e5d3a03b1f6088f11"
   dependencies:
     generate-function "^2.0.0"
     generate-object-property "^1.1.0"
