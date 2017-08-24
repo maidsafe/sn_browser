@@ -172,19 +172,19 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-"beaker-plugin-safe-app@https://github.com/maidsafe/beaker-plugin-safe-app/releases/download/0.1.0-dev.2/beaker-plugin-safe-app-0.1.0-dev.2.tgz":
-  version "0.1.0-dev.2"
-  resolved "https://github.com/maidsafe/beaker-plugin-safe-app/releases/download/0.1.0-dev.2/beaker-plugin-safe-app-0.1.0-dev.2.tgz#47303c5f297d4c49c5640fdcabbd774ad2ade20a"
+"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz":
+  version "0.2.0"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#b33275d595ef2ec5c78ba0e6e7b9746dffad65d0"
   dependencies:
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
     mime "^1.3.4"
-    safe-app "https://github.com/maidsafe/safe_app_nodejs/releases/download/0.1.0-dev.2/safe-app-0.1.0-dev.2.tgz"
+    safe-app "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz"
     url "^0.11.0"
 
-"beaker-plugin-safe-authenticator@https://github.com/maidsafe/beaker-plugin-safe-authenticator/releases/download/0.1.0-dev.2/beaker-plugin-safe-authenticator-0.1.0-dev.2.tgz":
-  version "0.1.0-dev.2"
-  resolved "https://github.com/maidsafe/beaker-plugin-safe-authenticator/releases/download/0.1.0-dev.2/beaker-plugin-safe-authenticator-0.1.0-dev.2.tgz#4b9974c1c0a7a8e09c976da764abfb50e090aea0"
+"beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz":
+  version "0.2.0"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#bcd6d819852cc2519eae75301558042d0f57345b"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "git+https://github.com/maidsafe/deps_downloader.git"
@@ -2656,9 +2656,9 @@ rimraf@2, rimraf@^2.2.8:
   dependencies:
     glob "^7.0.5"
 
-"safe-app@https://github.com/maidsafe/safe_app_nodejs/releases/download/0.1.0-dev.2/safe-app-0.1.0-dev.2.tgz":
-  version "0.1.0-dev.2"
-  resolved "https://github.com/maidsafe/safe_app_nodejs/releases/download/0.1.0-dev.2/safe-app-0.1.0-dev.2.tgz#08aa6c44a988932ae28a2fbe4f60be5ecbf1e376"
+"safe-app@https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz":
+  version "0.2.0"
+  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz#b12f8114f40f467a5c7295a1ed3dd66d1af92183"
   dependencies:
     deps_downloader "git+https://github.com/maidsafe/deps_downloader.git"
     enum "^2.3.0"
