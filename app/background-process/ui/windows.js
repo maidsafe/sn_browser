@@ -153,13 +153,16 @@ export function createShellWindow () {
 
   let previousNetworkStatus = null;
 
-  store.subscribe( e =>
+  let unsubscribeFromStore = store.subscribe( () =>
   {
     let newState = store.getState();
     logInRenderer( store.getState() );
     win.webContents.send('safeStore-updated')
 
-  })
+  });
+
+  global.windowStoreUnsubscribers[ win.webContents.id ] =  unsubscribeFromStore;
+
 
 
 
