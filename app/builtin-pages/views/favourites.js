@@ -10,7 +10,7 @@ import co from 'co'
 
 // bookmarks, cached in memory
 var bookmarks = []
-var PAGE_TITLE = 'Favorites';
+var PAGE_TITLE = 'Favourites';
 
 // exported API
 // =
@@ -89,7 +89,7 @@ function render () {
   yo.update(document.querySelector('#el-content'), yo`<div class="pane" id="el-content">
     <div class="favorites links-list">
       <div class="ll-heading">
-        Favorites
+        Favourites
         <small class="ll-heading-right">
           <a href="https://forum.safedev.org/t/safe-browser-feedback/174" title="Feedback and Discussion"><span class="icon icon-megaphone"></span> Feedback & Discussion</a>
           <a href="https://github.com/joshuef/beaker/issues" title="Report Bug"><span class="icon icon-attention"></span> Report Bug</a>

@@ -241,6 +241,12 @@ function hideSafeAuthPopup() {
 }
 
 function showSafeAuthPopup(reqType) {
+  var capitalizeName = function(name) {
+    return name[0].toUpperCase() + name.substr(1)
+  }
+  var parseName = function(name) {
+    return capitalizeName(name.replace(/-|_/g, ' '));
+  }
   var arrToYo = function(arr) {
     var getPermissionPhrase = function(perm) {
       switch (perm) {
@@ -253,7 +259,9 @@ function showSafeAuthPopup(reqType) {
         case 'delete':
           return yo`<span><b>Delete</b> data</span>`;
         case 'managepermissions':
-          return yo`<span><b>Full control</b>  to read, store, delete data and manage permissions</span>`;
+          return yo`<span><b>Manage Permissions</b></span>`;
+        default:
+          return yo`<span>${parseName(perm)}</span>`;
       }
     };
 
@@ -347,7 +355,7 @@ function showSafeAuthPopup(reqType) {
     if (!safeAuthData[reqKey].app_container && (safeAuthData[reqKey].containers.length === 0)) {
       listCont = yo`<div class="list-i default">${noContainerDesc}</div>`
     } else {
-      listCont = yo `${
+      listCont = yo`${
         safeAuthData[reqKey].containers.map(function(container) {
           if (typeof container.access === 'object') {
             const contObj = getCont(container.cont_name);
@@ -375,12 +383,6 @@ function showSafeAuthPopup(reqType) {
     }
     var metaArr = safeAuthData['metaData'] || [];
     var appAccessArr = safeAuthData['appAccess'] || [];
-    var capitalizeName = function(name) {
-      return name[0].toUpperCase() + name.substr(1)
-    }
-    var parseAppName = function(name) {
-      return capitalizeName(name.replace(/-|_/g, ' '));
-    }
     var toggleAppBtn = yo`<button onclick=${toggleApp}></button>`
     listCont = yo`${
       safeAuthData[reqKey].mdata.map(function (mdata, i) {
@@ -399,7 +401,7 @@ function showSafeAuthPopup(reqType) {
               }</ul>
               <ul class="apps">${
                 appAccess.map(function(acc) {
-                  return yo`<li><span>${parseAppName(acc.app_name)}</span></li>`;
+                  return yo`<li><span>${parseName(acc.app_name)}</span></li>`;
                 })
               }</ul>
               <div class="app-toggle">${toggleAppBtn}</div>
