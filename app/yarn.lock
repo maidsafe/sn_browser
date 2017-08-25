@@ -3,8 +3,8 @@
 
 
 "@types/node@^7.0.18":
-  version "7.0.42"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.42.tgz#051ff1cdbd1e1b7523ba425bc388147483344dbf"
+  version "7.0.43"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.43.tgz#a187e08495a075f200ca946079c914e1a5fe962c"
 
 abbrev@1:
   version "1.1.0"
@@ -181,7 +181,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#b33275d595ef2ec5c78ba0e6e7b9746dffad65d0"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#f71f8af181a53f141d981c02aea5cb5c574baebb"
   dependencies:
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
@@ -191,10 +191,10 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#f0c206882b64d407717cc6832837250a2c810be7"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#fb3a7bc0d2dd8d5b6b8fef6d21ca0f3a6c8bc81b"
   dependencies:
     classnames "^2.2.5"
-    deps_downloader "git+https://github.com/maidsafe/deps_downloader.git"
+    deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
     i18n "^0.8.3"
     lodash "^4.17.4"
@@ -321,8 +321,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000717"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000717.tgz#27ddf5feccdd338c99a62c9788c2694f99f67ed7"
+  version "1.0.30000718"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000718.tgz#86cdd97987302554934c61e106f4e470f16f993c"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -609,8 +609,8 @@ dashdash@^1.12.0:
     assert-plus "^1.0.0"
 
 debug@*:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.0.0.tgz#1d2feae53349047b08b264ec41906ba17a8516e4"
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.0.1.tgz#0564c612b521dc92d9f2988f0549e34f9c98db64"
   dependencies:
     ms "2.0.0"
 
@@ -650,12 +650,12 @@ depd@1.1.1, depd@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
 
-"deps_downloader@git+https://github.com/maidsafe/deps_downloader.git":
+"deps_downloader@https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz":
   version "0.1.0"
-  resolved "git+https://github.com/maidsafe/deps_downloader.git#ba86649cf95c1978b53d3ccd837317b06e0109d7"
+  resolved "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz#5d2dacd4b2810b72dba5c56e51b1b37d140defb9"
   dependencies:
     async "^2.1.5"
-    electron-download "git+https://github.com/krishnaIndia/electron-download#dev"
+    electron-download-fork "https://s3.eu-west-2.amazonaws.com/electron-download-fork/electron-download-fork-4.1.0.tgz"
     extend "^3.0.0"
     minimalist "^1.0.0"
     unzip "^0.1.11"
@@ -742,6 +742,20 @@ electron-debug@^1.1.0:
     electron-is-dev "^0.3.0"
     electron-localshortcut "^3.0.0"
 
+"electron-download-fork@https://s3.eu-west-2.amazonaws.com/electron-download-fork/electron-download-fork-4.1.0.tgz":
+  version "4.1.0"
+  resolved "https://s3.eu-west-2.amazonaws.com/electron-download-fork/electron-download-fork-4.1.0.tgz#905bb52bb17bc9e52fd8dd0206523cfdbe78566b"
+  dependencies:
+    debug "^2.2.0"
+    env-paths "^1.0.0"
+    fs-extra "^2.0.0"
+    minimist "^1.2.0"
+    nugget "^2.0.0"
+    path-exists "^3.0.0"
+    rc "^1.1.2"
+    semver "^5.3.0"
+    sumchecker "^2.0.1"
+
 electron-download@^3.0.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/electron-download/-/electron-download-3.3.0.tgz#2cfd54d6966c019c4d49ad65fbe65cc9cdef68c8"
@@ -755,20 +769,6 @@ electron-download@^3.0.1:
     rc "^1.1.2"
     semver "^5.3.0"
     sumchecker "^1.2.0"
-
-"electron-download@git+https://github.com/krishnaIndia/electron-download#dev":
-  version "4.1.0"
-  resolved "git+https://github.com/krishnaIndia/electron-download#9af1e2351bb07ff96aabe4742365d5b5d2ebd437"
-  dependencies:
-    debug "^2.2.0"
-    env-paths "^1.0.0"
-    fs-extra "^2.0.0"
-    minimist "^1.2.0"
-    nugget "^2.0.0"
-    path-exists "^3.0.0"
-    rc "^1.1.2"
-    semver "^5.3.0"
-    sumchecker "^2.0.1"
 
 electron-is-accelerator@^0.1.0:
   version "0.1.2"
@@ -891,8 +891,8 @@ error-ex@^1.2.0:
     is-arrayish "^0.2.1"
 
 es5-ext@^0.10.14, es5-ext@^0.10.9, es5-ext@~0.10.14:
-  version "0.10.29"
-  resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.29.tgz#768eb2dfc4957bcf35fa0568f193ab71ede53fd8"
+  version "0.10.30"
+  resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.30.tgz#7141a16836697dbabfaaaeee41495ce29f52c939"
   dependencies:
     es6-iterator "2"
     es6-symbol "~3.1"
@@ -2665,9 +2665,9 @@ rimraf@2, rimraf@^2.2.8:
 
 "safe-app@https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz#b12f8114f40f467a5c7295a1ed3dd66d1af92183"
+  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz#8c11b4e98267d5f492f7574ebee501428ce58640"
   dependencies:
-    deps_downloader "git+https://github.com/maidsafe/deps_downloader.git"
+    deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
     ffi "^2.2.0"
     ref "^1.3.3"
