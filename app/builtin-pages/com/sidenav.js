@@ -6,7 +6,7 @@ import co from 'co'
 
 var navItems = [
   { href: 'beaker:start', label: 'Home', icon: 'home' },
-  { href: 'beaker:favorites', label: 'Favorites', icon: 'star' },
+  { href: 'beaker:favourites', label: 'Favourites', icon: 'star' },
   { href: 'beaker:downloads', label: 'Downloads', icon: 'down-circled' },
   { href: 'beaker:history', label: 'History', icon: 'back-in-time' },
   { href: 'beaker:settings', label: 'Settings', icon: 'list' }
