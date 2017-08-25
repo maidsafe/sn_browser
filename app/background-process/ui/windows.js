@@ -161,7 +161,8 @@ export function createShellWindow () {
 
   });
 
-  global.unsubscribeFromSafeStore = unsubscribeFromStore;
+  global.windowStoreUnsubscribers[ win.webContents.id ] =  unsubscribeFromStore;
+
 
 
 

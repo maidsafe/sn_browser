@@ -40,6 +40,7 @@ const parseSafeUri = function(uri) {
   return uri.replace('//', '').replace('==/', '==');
 };
 
+global.windowStoreUnsubscribers = {};
 
 // // configure logging
 log.setLevel('trace')
@@ -105,7 +106,15 @@ app.on('ready', function () {
 })
 
 app.on('window-all-closed', function () {
-  global.unsubscribeFromSafeStore();
+  let allUnsubscribers = global.windowStoreUnsubscribers;
+
+  Object.values( allUnsubscribers ).forEach( unSubscriber =>
+  {
+    unSubscriber();
+  });
+
+  // reset the obj
+  global.windowStoreUnsubscribers = {};
 
   if (process.platform !== 'darwin')
     app.quit()
