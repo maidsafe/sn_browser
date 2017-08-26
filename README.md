@@ -56,4 +56,4 @@ This will remove your node_modules, and do the full install, rebuild, build SAFE
 
 SAFE Browser is a lightly modified fork of the [beaker browser](https://www.beakerbrowser.com/).
 
-Modified MIT as per the [BeakerLicense](https://github.com/joshuef/beaker/blob/master/BEAKER_LICENSE.md)
+Modified MIT as per the [BeakerLicense](https://github.com/maidsafe/safe_browser/blob/master/BEAKER_LICENSE.md)
