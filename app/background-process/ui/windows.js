@@ -34,6 +34,12 @@ global.browserStatus = { safeModeOn: true };
 
 let authTargetContents;
 
+//forward webview clicked events to current shell window
+ipcMain.on('webview-clicked', (event, response) => {
+  let win = BrowserWindow.getFocusedWindow();
+  win.webContents.send('webview-clicked');
+});
+
 ipcMain.on('webClientAuthRes', (event, response) => {
 
   if( event.sender == authTargetContents )

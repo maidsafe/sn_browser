@@ -39,6 +39,7 @@ const readableToAsyncCallback = (rpcAPI, safeAppGroupId) => {
   }
 }
 
+
 // method which will populate window.beaker with the APIs deemed appropriate for the protocol
 export default function () {
 

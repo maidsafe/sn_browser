@@ -1,4 +1,5 @@
 import * as yo from 'yo-yo'
+import { ipcRenderer } from 'electron'
 import emitStream from 'emit-stream'
 import prettyBytes from 'pretty-bytes'
 import { ucfirst } from '../../../lib/strings'
@@ -6,6 +7,8 @@ import * as pages from '../../pages'
 
 // there can be many downloads btns rendered at once, but they are all showing the same information
 // the DownloadsNavbarBtn manages all instances, and you should only create one
+
+
 
 export class DownloadsNavbarBtn {
   constructor() {
@@ -114,9 +117,33 @@ export class DownloadsNavbarBtn {
   )
   }
 
+
   onClickDownloads(e) {
     this.isDropdownOpen = !this.isDropdownOpen
+    let self = this;
+    e.stopPropagation();
+
+    if( this.isDropdownOpen )
+    {
+      ipcRenderer.once( 'webview-clicked', () =>
+      {
+        self.closeDownloadMenu();
+      } );
+
+      window.addEventListener( 'click', function fn(event) {
+        window.removeEventListener( 'click', fn);
+        self.closeDownloadMenu();
+      });
+    }
+
     this.shouldPersistProgressBar = false // stop persisting if we were, the user clicked
+    this.updateActives()
+  }
+
+
+  closeDownloadMenu()
+  {
+    this.isDropdownOpen = false;
     this.updateActives()
   }
 
