@@ -339,7 +339,7 @@ function showSafeAuthPopup(reqType) {
   var listCont = null;
   var isAuthorised = (safeAuthData.hasOwnProperty('isAuthorized') && safeAuthData.isAuthorized);
   var noContainerDesc = 'Application is requesting for reading public unencrypted data on your behalf.';
-  var isAuthorisedDesc = 'Application is requesting for re-authorisation';
+  var isAuthorisedDesc = 'This app is one that you have previously authorised. Please note it is not requesting any new permissions, it requires re-authorisation as it is starting a new SAFE Network session.';
   var ownContainerInfo = {
     name: 'App\'s own container',
     desc: 'Container used by the application to store application specific information such as config files etc',
