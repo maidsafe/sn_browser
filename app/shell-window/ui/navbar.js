@@ -335,15 +335,17 @@ function showSafeAuthPopup(reqType) {
     contPara = contPara.replace('containers', 'Mutable Data');
   }
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
-
+  
   var listCont = null;
+  var isAuthorised = (safeAuthData.hasOwnProperty('isAuthorized') && safeAuthData.isAuthorized);
   var noContainerDesc = 'Application is requesting for reading public unencrypted data on your behalf.';
+  var isAuthorisedDesc = 'Application is requesting for re-authorisation';
   var ownContainerInfo = {
     name: 'App\'s own container',
     desc: 'Container used by the application to store application specific information such as config files etc',
     access: {'Read': true, 'Insert': true, 'Update': true, 'Delete': true, 'ManagePermissions': true}
   }
-  var ownContainer = safeAuthData[reqKey].app_container ? yo`<div class="list-i" onclick=${togglePermissions}>
+  var ownContainer = (safeAuthData[reqKey].app_container && !isAuthorised) ? yo`<div class="list-i" onclick=${togglePermissions}>
       <h3 class="default" title=${ownContainerInfo.name}><span class="icon"></span>${ownContainerInfo.name}</h3>
       <div class="list-i-b">
         <p>${ownContainerInfo.desc}</p>
@@ -352,7 +354,9 @@ function showSafeAuthPopup(reqType) {
     </div>`: null;
 
   if (reqType !== REQ_TYPES.MDATA) {
-    if (!safeAuthData[reqKey].app_container && (safeAuthData[reqKey].containers.length === 0)) {
+    if (isAuthorised) {
+      listCont = yo`<div class="list-i default">${isAuthorisedDesc}</div>`
+    } else if (!safeAuthData[reqKey].app_container && (safeAuthData[reqKey].containers.length === 0)) {
       listCont = yo`<div class="list-i default">${noContainerDesc}</div>`
     } else {
       listCont = yo`${
