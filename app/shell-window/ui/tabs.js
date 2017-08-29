@@ -40,7 +40,7 @@ export function setup () {
   pages.on('remove', onRemoveTab)
   pages.on('set-active', onSetActive)
   pages.on('pin-updated', onPinUpdated)
-  pages.on('did-start-loading', onUpdateTab)
+  pages.on('did-start-loading', onLoadingTab)
   pages.on('did-stop-loading', onUpdateTab)
   pages.on('page-title-updated', onUpdateTab)
   pages.on('page-favicon-updated', onUpdateTab)
@@ -153,6 +153,10 @@ function onRemoveTab (page) {
 }
 
 function onUpdateTab (page) {
+  getTabEl(page, tabEl => yo.update(tabEl, drawTab(page)))
+}
+
+function onLoadingTab (page) {
   ipcRenderer.send('onTabUpdate', page.safeAppGroupId);
   getTabEl(page, tabEl => yo.update(tabEl, drawTab(page)))
 }
