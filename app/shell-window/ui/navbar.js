@@ -105,7 +105,7 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
 
 ipcRenderer.on('onUnAuthDecisionRes', function (event, data) {
   if (data.type === CLIENT_TYPES.WEB) {
-    electron.ipcRenderer.send('webClientAuthRes', data.res);
+    ipcRenderer.send('webClientAuthRes', data.res);
   }
 });
 
@@ -130,7 +130,7 @@ ipcRenderer.on('onAuthResError', function(event, data) {
 
 ipcRenderer.on('onUnAuthResError', function (event, data) {
   if (data.type === CLIENT_TYPES.WEB) {
-    electron.ipcRenderer.send('webClientErrorRes', data.res);
+    ipcRenderer.send('webClientErrorRes', data.res);
   }
 });
 
