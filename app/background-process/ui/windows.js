@@ -71,10 +71,10 @@ export function setup () {
     e.sender.webContents.send('command', 'load-pinned-tabs')
 
     //open devtools by defualt in dev
-    if( env.name !== 'production'  )
-    {
-      BrowserWindow.getFocusedWindow().toggleDevTools()
-    }
+    // if( env.name !== 'production'  )
+    // {
+    //   BrowserWindow.getFocusedWindow().toggleDevTools()
+    // }
 
     setRenderLoggerTarget( e.sender.webContents );
     authTargetContents = e.sender.webContents ;
