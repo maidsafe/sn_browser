@@ -46,8 +46,8 @@ var safeAuthPopupDiv = yo`<div></div>`
 // safe app plugin
 ipcRenderer.send('registerSafeApp');
 
-ipcRenderer.on('webClientAuthReq', function(event, uri) {
-  handleSafeAuthAuthentication(uri, CLIENT_TYPES.WEB);
+ipcRenderer.on('webClientAuthReq', function(event, uri, isUnRegisteredClient) {
+  handleSafeAuthAuthentication(uri, CLIENT_TYPES.WEB, isUnRegisteredClient);
 })
 
 
@@ -103,6 +103,12 @@ ipcRenderer.on('onContDecisionRes', function(event, data) {
   update()
 });
 
+electron.ipcRenderer.on('onUnAuthDecisionRes', function (event, data) {
+  if (data.type === CLIENT_TYPES.WEB) {
+    electron.ipcRenderer.send('webClientAuthRes', data.res);
+  }
+});
+
 ipcRenderer.on('onSharedMDataRes', function(event, data) {
   isSafeAppAuthenticating = false
   if (data.type === CLIENT_TYPES.WEB) {
@@ -120,6 +126,12 @@ ipcRenderer.on('onAuthResError', function(event, data) {
     ipcRenderer.send('webClientErrorRes', data.res);
   }
   update()
+});
+
+electron.ipcRenderer.on('onUnAuthResError', function (event, data) {
+  if (data.type === CLIENT_TYPES.WEB) {
+    electron.ipcRenderer.send('webClientErrorRes', data.res);
+  }
 });
 
 // exported functions
@@ -198,11 +210,11 @@ export function updateLocation (page) {
   }
 }
 
-export function handleSafeAuthAuthentication(url, type) {
+export function handleSafeAuthAuthentication(url, type, isUnRegisteredClient) {
   ipcRenderer.send('decryptRequest', {
     type: type || CLIENT_TYPES.DESKTOP,
     data: url
-  })
+  }, isUnRegisteredClient)
   clearAutocomplete()
   // FIXME change to constant instand of -1
   // if (safeAuthNetworkState === -1) {
