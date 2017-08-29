@@ -181,7 +181,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#af880e2071493f07a4e74cb85e560d8740afcd69"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#2a608cdf49cce864244e2e9e85a9c2e8660b0e54"
   dependencies:
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
@@ -191,7 +191,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#a29a9cbc96b37afb66070be11982450a224457d7"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#4f915475db59b9406fed51d4454533a821de3f2c"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"

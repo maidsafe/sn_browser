@@ -4499,8 +4499,8 @@ tar@^2.2.1:
     inherits "2"
 
 temp-file@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/temp-file/-/temp-file-2.0.2.tgz#952951ae822b05b1c4374cdfac289495b5eeff7a"
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/temp-file/-/temp-file-2.0.3.tgz#0de2540629fc77a6406ca56f50214d1f224947ac"
   dependencies:
     async-exit-hook "^2.0.1"
     bluebird-lst "^1.0.3"
