@@ -46,8 +46,8 @@ var safeAuthPopupDiv = yo`<div></div>`
 // safe app plugin
 ipcRenderer.send('registerSafeApp');
 
-ipcRenderer.on('webClientAuthReq', function(event, uri, isUnRegisteredClient) {
-  handleSafeAuthAuthentication(uri, CLIENT_TYPES.WEB, isUnRegisteredClient);
+ipcRenderer.on('webClientAuthReq', function(event, req) {
+  handleSafeAuthAuthentication(req, CLIENT_TYPES.WEB);
 })
 
 
@@ -87,50 +87,50 @@ ipcRenderer.on('onSharedMDataReq', function(event, data) {
   }
 });
 
-ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+ipcRenderer.on('onAuthDecisionRes', function(event, res) {
   isSafeAppAuthenticating = false
-  if (data.type === CLIENT_TYPES.WEB) {
-    ipcRenderer.send('webClientAuthRes', data.res);
+  if (res.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientAuthRes', res);
   }
   update()
 });
 
-ipcRenderer.on('onContDecisionRes', function(event, data) {
+ipcRenderer.on('onContDecisionRes', function(event, res) {
   isSafeAppAuthenticating = false
-  if (data.type === CLIENT_TYPES.WEB) {
-    ipcRenderer.send('webClientContainerRes', data.res);
+  if (res.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientContainerRes', res);
   }
   update()
 });
 
-ipcRenderer.on('onUnAuthDecisionRes', function (event, data) {
-  if (data.type === CLIENT_TYPES.WEB) {
-    ipcRenderer.send('webClientAuthRes', data.res);
+ipcRenderer.on('onUnAuthDecisionRes', function (event, res) {
+  if (res.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientAuthRes', res);
   }
 });
 
-ipcRenderer.on('onSharedMDataRes', function(event, data) {
+ipcRenderer.on('onSharedMDataRes', function(event, res) {
   isSafeAppAuthenticating = false
-  if (data.type === CLIENT_TYPES.WEB) {
-    ipcRenderer.send('webClientSharedMDataRes', data.res);
+  if (res.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientSharedMDataRes', res);
   }
   update()
 });
 
-ipcRenderer.on('onAuthResError', function(event, data) {
+ipcRenderer.on('onAuthResError', function(event, res) {
   isSafeAppAuthenticating = false
-  if (data.res && data.res.toLowerCase() === 'unauthorised') {
+  if (res && res.error && (res.error.toLowerCase() === 'unauthorised')) {
     onClickOpenSafeAuthHome()
   }
-  if (data.type === CLIENT_TYPES.WEB) {
-    ipcRenderer.send('webClientErrorRes', data.res);
+  if (res.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientErrorRes', res);
   }
   update()
 });
 
-ipcRenderer.on('onUnAuthResError', function (event, data) {
-  if (data.type === CLIENT_TYPES.WEB) {
-    ipcRenderer.send('webClientErrorRes', data.res);
+ipcRenderer.on('onUnAuthResError', function (event, res) {
+  if (res.type === CLIENT_TYPES.WEB) {
+    ipcRenderer.send('webClientErrorRes', res);
   }
 });
 
@@ -210,11 +210,8 @@ export function updateLocation (page) {
   }
 }
 
-export function handleSafeAuthAuthentication(url, type, isUnRegisteredClient) {
-  ipcRenderer.send('decryptRequest', {
-    type: type || CLIENT_TYPES.DESKTOP,
-    data: url
-  }, isUnRegisteredClient)
+export function handleSafeAuthAuthentication(req, type) {
+  ipcRenderer.send('decryptRequest', req, type || CLIENT_TYPES.DESKTOP)
   clearAutocomplete()
   // FIXME change to constant instand of -1
   // if (safeAuthNetworkState === -1) {
