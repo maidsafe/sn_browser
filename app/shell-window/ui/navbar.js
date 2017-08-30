@@ -339,12 +339,12 @@ function showSafeAuthPopup(reqType) {
   var contOrPermLen = (reqType === REQ_TYPES.MDATA) ? safeAuthData[reqKey].mdata.length : safeAuthData[reqKey].containers.length;
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${reqType}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${reqType}">Deny</button>`
-  var contPara = (contOrPermLen === 0) ? 'is requesting for authorisation.' : 'is requesting access for the following containers';
+  var contPara = (contOrPermLen === 0) ? 'is requesting authorisation.' : 'is requesting access to the following containers';
   if (reqType === REQ_TYPES.MDATA) {
     contPara = contPara.replace('containers', 'Mutable Data');
   }
   var skipBtn = yo`<button type="button" onclick=${onClickSkipBtn}>Skip</button>`
-  
+
   var listCont = null;
   var isAuthorised = (safeAuthData.hasOwnProperty('isAuthorized') && safeAuthData.isAuthorized);
   var noContainerDesc = 'Application is requesting for reading public unencrypted data on your behalf.';

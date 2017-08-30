@@ -11,7 +11,7 @@ const STATE_KEY = CONSTANTS.STATE_KEY;
 const appInfo = {
   id: 'net.maidsafe.app.browser',
   name: 'SAFE Browser',
-  vendor: 'MaidSafe Ltd',
+  vendor: 'MaidSafe.net Ltd',
   opts: {
       own_container: true
     },
