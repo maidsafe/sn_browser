@@ -1513,8 +1513,8 @@ electron-builder-http@19.23.0, electron-builder-http@~19.23.0:
     fs-extra-p "^4.4.0"
 
 electron-builder@^19.22.1:
-  version "19.27.0"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.27.0.tgz#1e54043debb7324a797ac65629a1074536769477"
+  version "19.27.1"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.27.1.tgz#21682e7050d312214cb106aaff4c6cf49cba1aa8"
   dependencies:
     "7zip-bin" "^2.2.3"
     asar-integrity "0.1.2"
@@ -1544,7 +1544,7 @@ electron-builder@^19.22.1:
     read-config-file "1.1.0"
     sanitize-filename "^1.6.1"
     semver "^5.4.1"
-    temp-file "^2.0.2"
+    temp-file "^2.0.3"
     update-notifier "^2.2.0"
     uuid-1345 "^0.99.6"
     yargs "^8.0.2"
@@ -3349,8 +3349,8 @@ murmur-32@^0.1.0:
     imul "^1.0.0"
 
 nan@^2.3.0, nan@^2.3.2, nan@^2.4.0:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"
 
 natives@^1.1.0:
   version "1.1.0"
@@ -4339,8 +4339,8 @@ stream-consume@~0.1.0:
   resolved "https://registry.yarnpkg.com/stream-consume/-/stream-consume-0.1.0.tgz#a41ead1a6d6081ceb79f65b061901b6d8f3d1d0f"
 
 stream-exhaust@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/stream-exhaust/-/stream-exhaust-1.0.1.tgz#c0c4455e54ce5a179ca8736e73334b4e7fd67553"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/stream-exhaust/-/stream-exhaust-1.0.2.tgz#acdac8da59ef2bc1e17a2c0ccf6c320d120e555d"
 
 stream-http@^2.0.0:
   version "2.7.2"
@@ -4498,7 +4498,7 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-temp-file@^2.0.2:
+temp-file@^2.0.2, temp-file@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/temp-file/-/temp-file-2.0.3.tgz#0de2540629fc77a6406ca56f50214d1f224947ac"
   dependencies:
