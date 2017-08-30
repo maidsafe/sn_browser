@@ -181,7 +181,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#2a608cdf49cce864244e2e9e85a9c2e8660b0e54"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#c317d75fdb51ecfc6bc212fbcddb7e6503786623"
   dependencies:
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
@@ -191,7 +191,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#4f915475db59b9406fed51d4454533a821de3f2c"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#fd6047395be1b4dc65a6befd640de8205672e640"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
@@ -321,8 +321,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000718"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000718.tgz#86cdd97987302554934c61e106f4e470f16f993c"
+  version "1.0.30000721"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000721.tgz#cdc52efe8f82dd13916615b78e86f704ece61802"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -503,8 +503,8 @@ css-color-names@0.0.4:
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
 css-loader@^0.28.4:
-  version "0.28.5"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.5.tgz#dd02bb91b94545710212ef7f6aaa66663113d754"
+  version "0.28.6"
+  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.6.tgz#9cc15eeee3f8d2f4eeb4c37556581ac84f39bad1"
   dependencies:
     babel-code-frame "^6.11.0"
     css-selector-tokenizer "^0.7.0"
@@ -1577,14 +1577,14 @@ klaw@^1.0.0:
     graceful-fs "^4.1.9"
 
 libsodium-wrappers@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/libsodium-wrappers/-/libsodium-wrappers-0.5.2.tgz#7f8e839ba31dd5d66c7fcf239db4d2b5f46663d7"
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/libsodium-wrappers/-/libsodium-wrappers-0.5.4.tgz#0059bf219c3a37b228f823342399b1607a4c5ba4"
   dependencies:
-    libsodium "0.5.2"
+    libsodium "0.5.4"
 
-libsodium@0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/libsodium/-/libsodium-0.5.2.tgz#e0dc0494e1de38a19bd3e02d2510e131220bda8a"
+libsodium@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/libsodium/-/libsodium-0.5.4.tgz#874413435ee40c512dd59ea6db9b75970f8aec02"
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -1832,8 +1832,8 @@ mustache@*:
   resolved "https://registry.yarnpkg.com/mustache/-/mustache-2.3.0.tgz#4028f7778b17708a489930a6e52ac3bca0da41d0"
 
 nan@2, nan@^2.0.5:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"
 
 natives@^1.1.0:
   version "1.1.0"
@@ -2571,8 +2571,8 @@ ref-struct@1, ref-struct@^1.1.0:
     ref "1"
 
 ref@1, ref@^1.3.3:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/ref/-/ref-1.3.4.tgz#724d2bf8ac85f8c8db194d3d85be6efe416bc1e5"
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/ref/-/ref-1.3.5.tgz#0e33f080cdb94a3d95312b2b3b1fd0f82044ca0f"
   dependencies:
     bindings "1"
     debug "2"
