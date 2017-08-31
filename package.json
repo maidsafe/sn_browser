@@ -33,7 +33,8 @@
     "copyright": "© 2017, MaidSafe.net Ltd",
     "npmRebuild": false,
     "extraResources": [
-      "build"
+      "build",
+      "app/node_modules/locales"
     ],
     "asar": false,
     "dmg": {
