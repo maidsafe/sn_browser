@@ -181,7 +181,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#c317d75fdb51ecfc6bc212fbcddb7e6503786623"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#4e0625b80d69e672d225b002afa68b128627335a"
   dependencies:
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
@@ -191,7 +191,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#fd6047395be1b4dc65a6befd640de8205672e640"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz#feadd0f1961ac68b98d3dc445c6bd8895c2280b2"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
@@ -503,8 +503,8 @@ css-color-names@0.0.4:
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
 css-loader@^0.28.4:
-  version "0.28.6"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.6.tgz#9cc15eeee3f8d2f4eeb4c37556581ac84f39bad1"
+  version "0.28.7"
+  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.7.tgz#5f2ee989dd32edd907717f953317656160999c1b"
   dependencies:
     babel-code-frame "^6.11.0"
     css-selector-tokenizer "^0.7.0"
@@ -799,12 +799,12 @@ electron-log@^2.2.6:
   resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.7.tgz#8da0d2586b53b175392ae6b91dc510a67c195341"
 
 electron-to-chromium@^1.2.7:
-  version "1.3.18"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.18.tgz#3dcc99da3e6b665f6abbc71c28ad51a2cd731a9c"
+  version "1.3.19"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.19.tgz#73d97b0e8b05aa776cedf3cdce7fdc0538037675"
 
 electron@^1.6.11:
-  version "1.7.6"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.6.tgz#fb69ea31bd03df0eff247f26f0b538bd29b6ee72"
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.7.tgz#cfd89ca9eba79d763ac0b0c6dcc583792097b9b6"
   dependencies:
     "@types/node" "^7.0.18"
     electron-download "^3.0.1"
@@ -2665,7 +2665,7 @@ rimraf@2, rimraf@^2.2.8:
 
 "safe-app@https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz#4fedef1d695994eea369be5c841882522950e415"
+  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz#deef3473ffe480f42dde7cec02bd21c09ff19c90"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
@@ -2938,8 +2938,8 @@ supports-color@^3.2.3:
     has-flag "^1.0.0"
 
 supports-color@^4.0.0, supports-color@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.2.1.tgz#65a4bb2631e90e02420dba5554c375a4754bb836"
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"
   dependencies:
     has-flag "^2.0.0"
 
