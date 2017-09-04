@@ -45,7 +45,7 @@ ipcMain.on('webClientAuthRes', (event, response) => {
   if( event.sender == authTargetContents )
   {
     if (response && response.res && response.res.indexOf('safe-') == 0) {
-      store.dispatch(receiveResponse(response));
+      store.dispatch(receiveResponse(response.res));
       store.dispatch( getConfig() );
     } else {
       store.dispatch(onAuthFailure(new Error('Authorisation failed')));
