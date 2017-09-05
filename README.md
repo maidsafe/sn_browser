@@ -54,6 +54,11 @@ yarn run burnthemall
 
 This will remove your `node_modules` and do the full install, rebuild, build SAFE Authenticator, and package processes for you. After this, `yarn start` should work again.
 
+## Further Help
+
+You can discuss development-related questions on the [SAFE Dev Forum](https://forum.safedev.org/).
+Here's a good post to get started: [How to develop for the SAFE Network](https://forum.safedev.org/t/how-to-develop-for-the-safe-network-draft/843).
+
 ## License
 
 SAFE Browser is a lightly modified fork of the [Beaker Browser](https://www.beakerbrowser.com/).
