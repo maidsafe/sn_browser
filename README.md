@@ -6,19 +6,19 @@ A browser designed to open `safe://` websites on the SAFE Network.
 
 ## Development
 
-### Prerequisites
+1. Prerequisites:
 
-  * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
-  * [Git](https://git-scm.com/)
-  * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
+    * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
+    * [Git](https://git-scm.com/)
+    * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
 
-1. Clone this GitHub repository:
+2. Clone this GitHub repository:
 
     ```bash
     git clone https://github.com/maidsafe/safe_browser.git
     ```
 
-2. Install the dependencies:
+3. Install the dependencies:
 
     ``` bash
     cd safe_browser
@@ -27,7 +27,7 @@ A browser designed to open `safe://` websites on the SAFE Network.
 
     If you're actively developing, you can run `NODE_ENV=dev yarn` instead in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
 
-3. Build the SAFE Browser and open it:
+4. Build the SAFE Browser and open it:
 
     ```bash
     yarn run build
@@ -36,7 +36,7 @@ A browser designed to open `safe://` websites on the SAFE Network.
 
     If you're actively developing, you can use `yarn run watch` to have assets built automatically when they change.
 
-6. Package the SAFE Browser for production:
+5. Package the SAFE Browser for production:
 
     ```bash
     yarn run package
