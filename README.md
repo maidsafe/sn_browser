@@ -15,31 +15,31 @@ A browser designed to open `safe://` websites on the SAFE Network.
 1. Clone this GitHub repository.
 
     ```bash
-    $ git clone https://github.com/maidsafe/safe_browser.git
+    git clone https://github.com/maidsafe/safe_browser.git
     ```
 
 2. Install the dependencies.
 
     ``` bash
-    $ cd safe_browser
-    $ yarn
+    cd safe_browser
+    yarn
     ```
 
     If you are working on a development environment, you can run `NODE_ENV=dev yarn` instead in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
 
 3. Build SAFE Browser and open it.
 
-    ```
-    $ yarn run build
-    $ yarn start
+    ```bash
+    yarn run build
+    yarn start
     ```
 
     If you're doing development, `yarn run watch` to have assets build automatically.
 
 6. Package SAFE Browser.
 
-    ```
-    $ yarn run package
+    ```bash
+    yarn run package
     ```
 
     The packed SAFE Browser will be found inside `dist` folder.
@@ -49,7 +49,7 @@ A browser designed to open `safe://` websites on the SAFE Network.
 If you pull latest from the repo and get weird module errors, do:
 
 ```bash
-$ yarn run burnthemall
+yarn run burnthemall
 ```
 
 This will remove your node_modules, and do the full install, rebuild, build SAFE Authenticator and package processes for you. `yarn start` should work afterwards.
