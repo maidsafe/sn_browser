@@ -1,6 +1,6 @@
 # safe_browser
 
-> SAFE Browser is a browser designed to open safe:// websites on the SAFE Network.
+A browser designed to open `safe://` websites on the SAFE Network.
 
 **Maintainer:** Krishna Kumar (krishna.kumar@maidsafe.net)
 
@@ -11,7 +11,6 @@
   * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
   * [Git](https://git-scm.com/)
   * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
-
 
 1. Clone this GitHub repository.
 
