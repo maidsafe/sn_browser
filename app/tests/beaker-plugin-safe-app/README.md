@@ -1,0 +1,4 @@
+- `cd ./tests/beaker-plugin-safe-app`
+- `yarn install`
+- `yarn run gulp`
+- Access test page in SAFE browser at `localhost://p:3001`
