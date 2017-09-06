@@ -1,7 +1,7 @@
 let should = require('should');
 let testHelpers = require('./helpers');
 
-describe('window safeApp', () => {
+describe('window.safeApp', () => {
   it('initialises application', () => {
       testHelpers.initialiseApp().should.be.fulfilled();
   });
