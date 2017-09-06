@@ -12,10 +12,34 @@ describe('window safeApp', () => {
       })
   });
 
-  it('should throw informative error, if App info is malformed', () => {
+  it('should throw informative error, if App info is missing', () => {
     const malformedAppInfo = {
       id: 'net.maidsafe.test.javascript.id',
       named: 'JS Test'
+    };
+
+    should.throws(window.safeApp.initialise(malformedAppInfo));
+  });
+
+  it('should throw informative error, if App properties, excepting scope, are empty', () => {
+    const malformedAppInfo = {
+      id: 'net.maidsafe.test.javascript.id',
+      name: 'JS Test',
+      vendor: ' ',
+      scope: null
+    };
+
+    should.throws(window.safeApp.initialise(malformedAppInfo));
+  });
+
+  it('should throw informative error, if appInfo structure is malformed', () => {
+    const malformedAppInfo = {
+      info: {
+        id: 'net.maidsafe.test.javascript.id',
+        name: 'JS Test',
+        vendor: 'vendor value',
+        scope: null
+      }
     };
 
     should.throws(window.safeApp.initialise(malformedAppInfo));
@@ -71,7 +95,7 @@ describe('window safeApp', () => {
       should(permissions._videos).have.property("Delete", false);
       should(permissions._videos).have.property("ManagePermissions", false);
     })
-  })
+  });
 
   it.skip('can request permissions for a Mutable Data structure created by another app', function() {
     this.timeout(30000);
@@ -88,17 +112,73 @@ describe('window safeApp', () => {
       ];
       return window.safeApp.authoriseShareMd(appHandle, permissions)
     })
-  })
+  });
 
-  //
-  // it('should throw informative error, if App properties, excepting scope, are empty', () => {
-  //   const test = () => appHelpers.autoref(new App({
-  //     id: 'net.maidsafe.test.javascript.id',
-  //     name: 'JS Test',
-  //     vendor: ' ',
-  //     scope: null
-  //   }));
-  //
-  //   should.throws(test);
-  // });
+  it('confirms if app is registered with network', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => {
+      should(window.safeApp.isRegistered(appHandle)).be.true;
+    })
+  });
+
+  it('returns network state', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => window.safeApp.networkState(appHandle))
+    .then(networkState => {
+      networkState.should.be.equal('Connected');
+    })
+  });
+
+  it('can confirm container access', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => window.safeApp.canAccessContainer(appHandle, "_public", ["Insert"]))
+    .then(canAccessContainer => {
+      canAccessContainer.should.be.true;
+    })
+  });
+
+  // QUESTION: What is the purpose of refreshContainersPermissions?
+  // I don't see any noticeable differnce before and after
+  it.skip('refreshes container permissions', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => {
+      return window.safeApp.getContainersPermissions(appHandle)
+      .then(console.log)
+      .then(() => window.safeApp.refreshContainersPermissions(appHandle))
+      .then(() => window.safeApp.getContainersPermissions(appHandle))
+      .then(console.log)
+    })
+  });
+
+  it('returns a JSON object list of app permissions', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => {
+      should(window.safeApp.getContainersPermissions(appHandle)).be.fulfilled();
+    })
+  });
+
+  it('returns Mutable Data handle to root container of app', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => window.safeApp.getOwnContainer(appHandle))
+    .then(mdHandle => {
+      should(mdHandle.length).equal(64);
+    })
+  });
+
+  it('returns core client library log path as string', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => window.safeApp.logPath(appHandle))
+    .then(logPath => {
+      should(typeof logPath).equal("string");
+    })
+  });
+
+  it('frees app handle from memory', function() {
+    return testHelpers.authoriseAndConnect()
+    .then(appHandle => {
+      window.safeApp.free(appHandle)
+      should(window.safeApp.connect(appHandle)).be.rejected();
+    });
+  });
+
 });
