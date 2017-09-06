@@ -1,32 +1,32 @@
 platform:
   - x64
 
-image: Visual Studio 2015
+image: Visual Studio 2017
 os: unstable
 environment:
-  nodejs_version: "6.3.1"
+  nodejs_version: "Stable"
 
 cache:
+  - "%LOCALAPPDATA%\\Yarn"
   - node_modules
   - app\node_modules
-  - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
 install:
-  - ps: Install-Product node 6.3.1 x64
+  - ps: Install-Product node $env:nodejs_version
   - node --version
   - npm --version
-  - npm install npm@next -g
-  - npm install
-  # - npm run rebuild:only
-  - npm run build
+  - yarn --version
+  - yarn add windows-build-tools --global
+  - yarn --ignore-optional
 
 
 build_script:
   - node --version
   - set NODE_ENV=production
-  - npm --version
-  - npm run package
+  - yarn --version
+  - yarn run build
+  - yarn run package
 
 
 
@@ -52,15 +52,15 @@ before_deploy:
 deploy:
   release: $(appveyor_repo_tag_name)
   tag: $(appveyor_repo_tag_name)
-  description: 'Safe Beaker Browser'
+  description: 'SAFE Browser'
   provider: GitHub
   auth_token:
     secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
  # your encrypted token from GitHub
-  artifact: 'dist\*.zip'
-  draft: false
-  prerelease: false
+  # artifact: /.*\.zip/
+  draft: true
+  prerelease: true
   on:
-    # branch: release                  # release branch only
+    branch: PackagingProcess
     appveyor_repo_tag:  true        # deploy on tag push only
     # appveyor_repo_tag:  true        # deploy on tag push only

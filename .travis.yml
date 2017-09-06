@@ -1,66 +1,58 @@
 sudo: required
 dist: trusty
 
-matrix:
-  include:
-  - os: osx
-
+os:
+- osx
+- linux
 node_js:
-    - '6.3.1'
-
-    
+- node
 cache:
+  yarn: true
   directories:
   - node_modules
   - app/node_modules
   - $HOME/.electron
   - $HOME/.cache
-  
 language: node_js
-
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
-      
+    - g++-4.8
 before_script:
-  # - cd app && npm install
-  - npm run rebuild
-  - export NODE_ENV=production
-
+- export NODE_ENV=production
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
-
+- yarn build
+- yarn package
 before_deploy:
-  - ls dist
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv dist/mac/*.dmg dist/mac/safe-browser-${TRAVIS_TAG}-osx-x64.dmg; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv dist/linux-unpacked dist/safe-browser-${TRAVIS_TAG}-linux-x64; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd dist && zip -r ./safe-browser-${TRAVIS_TAG}-linux-x64.zip ./safe-browser-${TRAVIS_TAG}-linux-x64; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv *.freebsd safe-browser-${TRAVIS_TAG}-x64.freebsd; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv *.AppImage safe-browser-${TRAVIS_TAG}-x64.AppImage; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rm -rf ./safe-browser-${TRAVIS_TAG}-linux-x64; fi # remove folder to not try and deploy it
-  - ls
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="safe*"; fi
-  - echo "deploying ${RELEASE_PKG} to GitHub releases"
+- ls dist
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv dist/*.dmg dist/safe-browser-${TRAVIS_TAG}-osx-x64.dmg;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/*.dmg);
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv dist/*.zip dist/safe-browser-${TRAVIS_TAG}-linux-x64.zip;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rm -rf dist/linux-unpacked;
+  fi
+- ls
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="$(ls dist/safe*)";
+  fi
+- echo "deploying ${RELEASE_PKG} to GitHub releases"
 deploy:
-  skip_cleanup: true
   provider: releases
+  skip_cleanup: true
   api_key:
-    secure: Rm1xf0UrI1oPjHQAWrgqEHohh/As8QwDfoK8Ijov+hfAVIsBfl0qhtuaO7/6q1KLgORNHIaXpwVDwoBsWeNscdgfQSbs/ddE3Y+f4LVbMJDU59Q25wvAZNw+ad0/ZuRlhSn/a/hbN+TYmCkZI/+QgmmWFZQGf8ZMTDgY7bU49fCstbtYHeLnWvKpASk/6tmctYLhj92kdcqADvvLLZzaUQrUReoWs9atImuLOJkB4ShKkzpNw2onBsCCCJjjeRaseKUNm0KLP2jZG/kv7ZV8tDJ7DEqLgsI/wc2OBh7h5bR13xOOO6wvYlBoRM7pGy/0KPY15+0DX+Lc9td1Fqm04fr8ZCEehX0kRkbrUUZoHSiEAvnQ/2tm0opAC+6z6tB3ZNGi9qRa5ipqzlQoSUbUYRsTyWwUK0Ca4eeGPETDKkpMFIOxfHPaRK+6qKrNGa0H/Tnoi5kpXIJeIa1ZLLy6tJMqbQWDknwo9AB08QfVbZFk0ws7FR526VOELmhvngk6v0ySjtgxGCFcs6QEWNTa4clswiOZKDOP9vpvMFcrYWBRUt29GBV/Mqa4E+J6CdG2O8nrCiZA+KZ9LNxXFBBW3beo+UxFKwBiJFwzL40zw/hirnzRd5oaNU+o1dZCAUZ1S3xKwOC+wBdPHGF0LgN7EXFHHTwT0UV4sZHNo8pbymk=
-  file_glob: true
+    secure: dNUJgCh8UYnwLH09f7W3Wu/ZhO2wPBHkFlN8Z9n5uIXm1CH/FkZl6uqBZ1LTUov6K1kqhlDTpJvKd2lbQkYkbMcLqa5LN3vrXiJX0jmTmoIz4ujSpYcKeSfMSc8S7NBI4/w+hD6Z8d+3fUwNlQgZjrSQbkabpm/zmE7ShGGu9VjmrCXXGDWOxRBLWVP6ujzLTuLns2kC1gdtz7p7ceeZ5flXe24iSc4O8TZhUJkuC3vLvUuLiTfSoWAbtwNXZ1mjIj45M7cixTpsAyBmduEH6X/o2fCy8AuFuRTNHo24u0t1jie0OyVXqyDOVVQ+cIvzvgQCiyCljbx7ZxnOKum/PJ0QchkWSX6b9R14+EIPDiNDpshBrul+SKQDWlfKYkCpcQVsEIJrENuUpynrNZx8rQ41EF1d/uqpWAgBNG78MprqZ+9jZR+XSrz7zPn4/iBH3GZjtkwlRCm81exyF6jJypVyPkUFHh0npPRzoFdk6CR3ywk0EsSa6vWR04E2HzZBvBs5MOk2UHM5G7NUAsXLo3JGp1aLsBgU0+C2SIjmyvfielEKzUgmhLZFCItAada92QcEJU/6ekjGwL1uxVO7mqVth3iRatHS7Dk6x9t92rXNPihW7h0qGpA+Skg7PXTBP6QiIPOA4fAFzpG6GcDu4RWZnUPxBQluIvcnJdPwemw=
   file: "${RELEASE_PKG}"
-      
+  draft: true
+  tag_name: $TRAVIS_TAG
   on:
-    repo: joshuef/beaker
-    branch: release
-    tags:   true
-
-
+    all_branches: true
+    tag: true
 notifications:
   email:
-    on_success: [change] # default: change
-    on_failure: [change] # default: always
+    on_success:
+    - change
+    on_failure:
+    - change
