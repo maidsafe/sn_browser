@@ -1,5 +1,6 @@
 // handle OSX open-url event
 import { ipcMain } from 'electron'
+import { createShellWindow } from './ui/windows'
 
 var queue = []
 var commandReceiver
@@ -37,5 +38,9 @@ export function open (url) {
     commandReceiver.send('command', 'file:new-tab', url)
   } else {
     queue.push(url)
+  }
+
+  if( url.startsWith('safe-') ) {
+    createShellWindow()
   }
 }
