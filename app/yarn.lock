@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@types/node@^7.0.18":
-  version "7.0.43"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.43.tgz#a187e08495a075f200ca946079c914e1a5fe962c"
+"@types/node@^8.0.24":
+  version "8.0.27"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.27.tgz#13fbe7e92afeecebb843d7cea6c15b521e0000e1"
 
 abbrev@1:
   version "1.1.0"
@@ -179,14 +179,14 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz":
-  version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.0.tgz#4e0625b80d69e672d225b002afa68b128627335a"
+"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.1.tgz":
+  version "0.2.1"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.1.tgz#9b2a595e94b88bfba90ff285417227142ddd0054"
   dependencies:
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
     mime "^1.3.4"
-    safe-app "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz"
+    safe-app "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.1.tgz"
     url "^0.11.0"
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz":
@@ -321,8 +321,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000721"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000721.tgz#cdc52efe8f82dd13916615b78e86f704ece61802"
+  version "1.0.30000726"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000726.tgz#9bb742f8d026a62df873bc03c06843d2255b60d7"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -795,18 +795,18 @@ electron-localshortcut@^3.0.0:
     keyboardevents-areequal "^0.2.1"
 
 electron-log@^2.2.6:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.7.tgz#8da0d2586b53b175392ae6b91dc510a67c195341"
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.8.tgz#2296cccd8da046268a199c1a302dcb8cb16f2b72"
 
 electron-to-chromium@^1.2.7:
-  version "1.3.19"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.19.tgz#73d97b0e8b05aa776cedf3cdce7fdc0538037675"
+  version "1.3.20"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.20.tgz#2eedd5ccbae7ddc557f68ad1fce9c172e915e4e5"
 
 electron@^1.6.11:
-  version "1.7.7"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.7.tgz#cfd89ca9eba79d763ac0b0c6dcc583792097b9b6"
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.8.0.tgz#896f429b1e664f496f62b9cc7ee6a67a71375f31"
   dependencies:
-    "@types/node" "^7.0.18"
+    "@types/node" "^8.0.24"
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
@@ -858,8 +858,8 @@ engine.io-parser@~2.1.0, engine.io-parser@~2.1.1:
     has-binary2 "~1.0.2"
 
 engine.io@~3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-3.1.0.tgz#5ca438e3ce9fdbc915c4a21c8dd9e1266706e57e"
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-3.1.1.tgz#08051ffb951907a3267e72e0bcb3d0f377e4660b"
   dependencies:
     accepts "1.3.3"
     base64id "1.0.0"
@@ -1749,15 +1749,15 @@ methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
-mime-db@~1.29.0:
-  version "1.29.0"
-  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.29.0.tgz#48d26d235589651704ac5916ca06001914266878"
+mime-db@~1.30.0:
+  version "1.30.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.30.0.tgz#74c643da2dd9d6a45399963465b26d5ca7d71f01"
 
 mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.15, mime-types@~2.1.16, mime-types@~2.1.7:
-  version "2.1.16"
-  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.16.tgz#2b858a52e5ecd516db897ac2be87487830698e23"
+  version "2.1.17"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.17.tgz#09d7a393f03e995a79f8af857b70a9e0ab16557a"
   dependencies:
-    mime-db "~1.29.0"
+    mime-db "~1.30.0"
 
 mime@1.3.4:
   version "1.3.4"
@@ -1927,8 +1927,8 @@ on-finished@~2.3.0:
     ee-first "1.1.1"
 
 on-load@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/on-load/-/on-load-3.2.0.tgz#dd3145d3a5c2faa5666920d1df674b69f0c2f66f"
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/on-load/-/on-load-3.2.1.tgz#0b34b217ccc8b838b9398fe3429c7c47aa15aaab"
   dependencies:
     global "^4.3.0"
 
@@ -2269,12 +2269,12 @@ postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.13, postcss@^5.0
     supports-color "^3.2.3"
 
 postcss@^6.0.1:
-  version "6.0.10"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.10.tgz#c311b89734483d87a91a56dc9e53f15f4e6e84e4"
+  version "6.0.11"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.11.tgz#f48db210b1d37a7f7ab6499b7a54982997ab6f72"
   dependencies:
     chalk "^2.1.0"
     source-map "^0.5.7"
-    supports-color "^4.2.1"
+    supports-color "^4.4.0"
 
 prepend-http@^1.0.0:
   version "1.0.4"
@@ -2663,9 +2663,9 @@ rimraf@2, rimraf@^2.2.8:
   dependencies:
     glob "^7.0.5"
 
-"safe-app@https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz":
-  version "0.2.0"
-  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.0.tgz#deef3473ffe480f42dde7cec02bd21c09ff19c90"
+"safe-app@https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.1.tgz":
+  version "0.2.1"
+  resolved "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.1.tgz#82a7b2ab44a478d7dbd0b4030af4e1879f995e04"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
@@ -2937,7 +2937,7 @@ supports-color@^3.2.3:
   dependencies:
     has-flag "^1.0.0"
 
-supports-color@^4.0.0, supports-color@^4.2.1:
+supports-color@^4.0.0, supports-color@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"
   dependencies:
