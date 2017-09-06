@@ -116,8 +116,6 @@ app.on('window-all-closed', function () {
   // reset the obj
   global.windowStoreUnsubscribers = {};
 
-  openURL.unsetReceiver();
-
   if (process.platform !== 'darwin')
     app.quit()
 })
