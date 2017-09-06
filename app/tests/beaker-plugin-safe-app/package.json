@@ -12,6 +12,7 @@
     "babelify": "^7.3.0",
     "body-parser": "^1.17.2",
     "browserify": "^14.4.0",
+    "crypto": "^1.0.1",
     "express": "^4.15.4",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",

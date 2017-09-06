@@ -33,7 +33,7 @@ gulp.task('js', function () {
     destinationDirectory = __dirname + '/build/js',
     outputFile = 'test-modules.js';
 
-    var bundler = browserify(sourceDirectory + '/testMe.js').transform(babelify);
+    var bundler = browserify([sourceDirectory + '/app.js']).transform(babelify);
 
     return bundler.bundle()
       .on('error', function(err) {
