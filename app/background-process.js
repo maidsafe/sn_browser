@@ -120,6 +120,8 @@ app.on('window-all-closed', function () {
 
   if (process.platform !== 'darwin')
     app.quit()
+
+  global.macAllWindowsClosed = true;
 })
 
 app.on('open-url', function (e, url) {

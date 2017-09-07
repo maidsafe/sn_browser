@@ -64,6 +64,7 @@ ipcMain.on('webClientAuthRes', (event, response) => {
 export function setup () {
   // config
   userDataDir = jetpack.cwd(app.getPath('userData'))
+  global.macAllWindowsClosed = false;
 
   // load pinned tabs
   ipcMain.on('shell-window-ready', e => {
@@ -92,6 +93,8 @@ export function setup () {
 }
 
 export function createShellWindow () {
+
+  global.macAllWindowsClosed = false;
 
   // create window
   var { x, y, width, height } = ensureVisibleOnSomeDisplay(restoreState())
