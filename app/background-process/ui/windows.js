@@ -17,10 +17,7 @@ import store from '../safe-storage/store'
 import {
   setInitializerTask,
   authoriseApplication,
-  receiveResponse,
-  onAuthFailure,
-  getConfig,
-  saveConfig
+  getConfig
 } from '../safe-storage/actions/initializer_actions';
 
 
@@ -38,21 +35,6 @@ let authTargetContents;
 ipcMain.on('webview-clicked', (event, response) => {
   let win = BrowserWindow.getFocusedWindow();
   win.webContents.send('webview-clicked');
-});
-
-ipcMain.on('webClientAuthRes', (event, response) => {
-
-  if( event.sender == authTargetContents )
-  {
-    if (response && response.res && response.res.indexOf('safe-') == 0) {
-      store.dispatch(receiveResponse(response.res));
-      store.dispatch( getConfig() );
-    } else {
-      store.dispatch(onAuthFailure(new Error('Authorisation failed')));
-    }
-
-  }
-  // handle respon
 });
 
 
@@ -157,13 +139,21 @@ export function createShellWindow () {
     if (win) win.webContents.send('command', 'file:open-location')
   })
 
-  let previousNetworkStatus = null;
-
+  let prevState = store.getState();
   let unsubscribeFromStore = store.subscribe( () =>
   {
     let newState = store.getState();
     logInRenderer( store.getState() );
+
     win.webContents.send('safeStore-updated')
+
+    if ( prevState.initializer.appStatus !== APP_STATUS.AUTHORISED &&
+        newState.initializer.appStatus === APP_STATUS.AUTHORISED )
+    {
+      store.dispatch( getConfig() );
+    }
+
+    prevState = newState;
 
   });
 

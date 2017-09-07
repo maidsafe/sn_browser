@@ -29,7 +29,7 @@ const logger = createNodeLogger({
 })
 
 let enhancer = compose(
-  applyMiddleware(thunk, logger, promiseMiddleware)
+  applyMiddleware(thunk, promiseMiddleware)
 )
 
 let store = createStore(rootReducer, enhancer)
