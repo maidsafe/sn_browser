@@ -10,6 +10,7 @@ import * as permissions from './permissions'
 import log from '../../log'
 import electronLocalshortcut from 'electron-localshortcut'
 import { MESSAGES, APP_STATUS, CONSTANTS } from '../safe-storage/constants';
+import * as openURL from '../open-url'
 
 import { setRenderLoggerTarget, logInRenderer } from '../logInRenderer'
 
@@ -63,12 +64,15 @@ ipcMain.on('webClientAuthRes', (event, response) => {
 export function setup () {
   // config
   userDataDir = jetpack.cwd(app.getPath('userData'))
+  global.macAllWindowsClosed = false;
 
   // load pinned tabs
   ipcMain.on('shell-window-ready', e => {
     // if this is the first window opened (since app start or since all windows closing)
     if (numActiveWindows === 1) {
     e.sender.webContents.send('command', 'load-pinned-tabs')
+
+    openURL.updateReceiver( e.sender );
 
     //open devtools by defualt in dev
     // if( env.name !== 'production'  )
@@ -89,6 +93,9 @@ export function setup () {
 }
 
 export function createShellWindow () {
+
+  global.macAllWindowsClosed = false;
+
   // create window
   var { x, y, width, height } = ensureVisibleOnSomeDisplay(restoreState())
   var win = new BrowserWindow({
@@ -168,8 +175,6 @@ export function createShellWindow () {
   });
 
   global.windowStoreUnsubscribers[ win.webContents.id ] =  unsubscribeFromStore;
-
-
 
 
   downloads.registerListener(win)
