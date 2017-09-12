@@ -50,7 +50,6 @@ export const authoriseApp = () => {
           appObj.authUri = authUri;
           return safeApp.connectAuthorised( handle, authUri )
             .then( r => resolve( appObj ) )
-
         })
     })
   })
@@ -223,13 +222,10 @@ export const readConfig = ( app ) =>
     let encryptedKey;
     let encryptedValue;
 
-    safeApp.connectAuthorised( app.handle, app.authUri )
-    .then( () =>
-    {
-      // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
-      // logic when dealing with the callbacks.
-      // Research and remove this ASAP.
-      return delay(5000)
+    // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
+    // logic when dealing with the callbacks.
+    // Research and remove this ASAP.
+    return delay(5000)
       .then((r) => safeApp.getOwnContainer( app.handle ))
       .then( res => homeMdHandle = res )
       .then( () => safeMutableData.encryptKey( homeMdHandle, STATE_KEY ) )
@@ -248,8 +244,5 @@ export const readConfig = ( app ) =>
           logInRenderer( 'Failure getting config from the network: ', e.stack )
           reject( e );
         })
-
       })
-
-  })
 }
