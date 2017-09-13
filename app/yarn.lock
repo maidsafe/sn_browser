@@ -193,7 +193,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.2.tgz":
   version "0.2.2"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.2.tgz#f329e2b7d8671d1a60adaa13eaabf91db9dac501"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.2.tgz#ca2d95ac3893c4ee7b46be233e7a311dc8f6657c"
   dependencies:
     "@maidsafe/safe-node-app" "^0.2.1"
     css-loader "^0.28.4"
