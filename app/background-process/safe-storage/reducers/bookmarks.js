@@ -10,18 +10,7 @@ import ACTION_TYPES from '../actions/action_types';
 import store from '../store'
 import { createActions } from 'redux-actions'
 
-const initialBookmarkState = [
-   {
-    url: 'https://safenetforum.org/',
-    title : "Safenet Forum",
-    num_visits : 0
-  },
-   {
-    url: 'safe://dir.yvette/',
-    title : "SAFE Network Directory",
-    num_visits : 0
-  }
-];
+const initialBookmarkState = [];
 
 
 
