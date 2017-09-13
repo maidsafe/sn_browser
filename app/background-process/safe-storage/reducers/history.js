@@ -13,15 +13,7 @@ const BadParam = zerr('BadParam', '% must be a %')
 const InvalidCmd = zerr('InvalidCommand', '% is not a valid command')
 
 
-const initialHistoryState = [
-  {
-    url: 'https://safenetforum.org/',
-    title : "Safenet Forum",
-    visits: [],
-    last_visit: new Date()
-
-  }
-]
+const initialHistoryState = [];
 
 export const { updateSite, deleteSite, deleteAll } =
     createActions( ACTION_TYPES.UPDATE_SITE, ACTION_TYPES.DELETE_SITE, ACTION_TYPES.DELETE_ALL );
@@ -52,22 +44,22 @@ export default function history(state = initialHistoryState, action) {
       let newState = [ ...state ];
 
       let index = state.findIndex( site => {
-          return site.url === payload.url
+          return site.url === payload.url;
         })
-
+        
       if( index > -1 )
       {
         let siteToMerge = state[ index ];
         let updatedSite = { ...siteToMerge, ...payload }
         let lastVisit   = payload.last_visit;
-
+        
         if( lastVisit && ! updatedSite.visits.includes( lastVisit ) )
         {
           updatedSite.visits.push( lastVisit )
         }
 
         updatedSite.last_visit = payload.last_visit;
-
+          
         newState[ index ] = updatedSite;
 
         return newState;
@@ -82,7 +74,7 @@ export default function history(state = initialHistoryState, action) {
     case ACTION_TYPES.DELETE_SITE:
     {
       let index = state.findIndex( site => site.url === payload.url )
-
+      
       let newState = [ ...state ];
 
       newState.splice( index, 1 );
@@ -96,32 +88,28 @@ export default function history(state = initialHistoryState, action) {
     default:
       return state
   }
-
-
 }
-
-
-
-
-
-
 
 export function setup () {
   // wire up RPC
   rpc.exportAPI('beakerHistory', manifest, { addVisit, getVisitHistory, getMostVisited, search, removeVisit, removeAllVisits })
 }
 
-export function addVisit ( {url, title } ) {
+export function addVisit ( {url, title} ) {
   // each visit has a timestamp
   return new Promise( (resolve, reject ) =>
     {
-        if( url === 'about:blank')
-        {
+        if( url === 'safe-auth://home/#/login') // filters out `Safe Authenticator Home` entry
+          {
             return;
-        }
+          }
         let site = { url, title, last_visit: new Date() }
+        if( site.url.length < 1 ) // filters out `about:blank` entry
+          {
+            return;
+          }
         return store.dispatch( updateSite( site ) )
-    })
+    }) 
 }
 
 export function getVisitHistory ({ offset, limit }) {
