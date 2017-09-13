@@ -223,7 +223,11 @@ export function create (opts) {
   // handle unsafe tab creation
   if ( safeModeOn && url && (new URL(url).protocol.startsWith( 'http' ) )) {
     // create the webview to trigger url behaviour, but dont add it.
-     setTimeout( ()=> webviewsDiv.removeChild(page.webviewEl), 500)
+    setTimeout( () => {
+       var i = pages.indexOf(page);
+       pages.splice(i, 1);
+       webviewsDiv.removeChild(page.webviewEl);
+    }, 500);
     return;
   }
 
