@@ -46,12 +46,6 @@ export default function history(state = initialHistoryState, action) {
       let index = state.findIndex( site => {
           return site.url === payload.url;
         })
-      console.log(payload);
-      // if(payload.url === '')
-      //   {
-      //     return;
-      //   }
-
         
       if( index > -1 )
       {
@@ -105,12 +99,12 @@ export function addVisit ( {url, title} ) {
   // each visit has a timestamp
   return new Promise( (resolve, reject ) =>
     {
-        if( url === 'safe-auth://home/#/login')
+        if( url === 'safe-auth://home/#/login') // filters out `Safe Authenticator Home` entry
           {
             return;
           }
         let site = { url, title, last_visit: new Date() }
-        if( site.url.length < 1 )
+        if( site.url.length < 1 ) // filters out `about:blank` entry
           {
             return;
           }
