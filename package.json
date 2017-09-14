@@ -35,8 +35,14 @@
     "extraResources": [
       "build",
       "app/node_modules/locales",
-      { "from": "build/log.toml", "to": "log.toml"},
-      { "from": "build/SAFE Browser.crust.config", "to": "${productName}.crust.config"}
+      {
+        "from": "build/log.toml",
+        "to": "log.toml"
+      },
+      {
+        "from": "build/SAFE Browser.crust.config",
+        "to": "${productName}.crust.config"
+      }
     ],
     "asar": false,
     "dmg": {
