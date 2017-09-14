@@ -3,7 +3,7 @@
   "productName": "SAFE Browser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
   "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "identifier": "net.maidsafe.safebrowser",
   "author": {
     "name": "MaidSafe.net Ltd",
@@ -13,7 +13,7 @@
   "main": "background-process.build.js",
   "dependencies": {
     "beaker-plugin-safe-app": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.2.2.tgz",
-    "beaker-plugin-safe-authenticator": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.0.tgz",
+    "beaker-plugin-safe-authenticator": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.2.1.tgz",
     "browser-es-module-loader": "^0.4.1",
     "co": "^4.6.0",
     "crypto": "^1.0.1",
@@ -43,7 +43,7 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",
     "remarkable": "^1.6.2",
-    "safe-app": "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.1.tgz",
+    "safe-app": "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.2.tgz",
     "socket.io": "^2.0.2",
     "speedometer": "^1.0.0",
     "unused-filename": "^1.0.0",
