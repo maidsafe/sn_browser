@@ -10,20 +10,18 @@ describe('window.safeImmutableData', () => {
     })
   });
 
-  // it('fetches an existing immutable data from the network', () => {
-  //
-  // })
-
-  it('reads contents of immutable data', () => {
+  it('writes to immutable data, closes it, and reads contents of immutable data', () => {
     return testHelpers.authoriseAndConnect()
     .then(appHandle => window.safeImmutableData.create(appHandle)
       .then(writerHandle => window.safeImmutableData.write(writerHandle, 'immutable data content')
         .then(() => window.safeCipherOpt.newPlainText(appHandle))
-        .then((cipherOptHandle) => window.safeImmutableData.closeWriter(appHandle, writerHandle))
+        .then((cipherOptHandle) => window.safeImmutableData.closeWriter(writerHandle, cipherOptHandle))
       )
+      .then(idAddress => window.safeImmutableData.fetch(appHandle, idAddress))
+      .then(readerHandle => window.safeImmutableData.read(readerHandle))
+      .then((buffer) => {
+        should(String.fromCharCode.apply(null, new Uint8Array(buffer))).be.equal('immutable data content');
+      })
     )
-    .then(idAddress => window.safeImmutableData.fetch(idAddress))
-    .then(readerHandle => window.safeImmutableData.read(readerHandle))
-    .then(console.log)
   })
 });
