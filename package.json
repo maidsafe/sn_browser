@@ -34,7 +34,9 @@
     "npmRebuild": false,
     "extraResources": [
       "build",
-      "app/node_modules/locales"
+      "app/node_modules/locales",
+      { "from": "build/log.toml", "to": "log.toml"},
+      { "from": "build/SAFE Browser.crust.config", "to": "${productName}.crust.config"}
     ],
     "asar": false,
     "dmg": {
@@ -85,10 +87,8 @@
       ]
     },
     "linux": {
-      "executableName": "SAFE Browser",
       "target": [
-        "AppImage",
-        "freebsd"
+        "zip"
       ],
       "category": "WebBrowser"
     },
@@ -110,7 +110,7 @@
     "build-safe-app": "cd ./app/node_modules/beaker-plugin-safe-app && npm i && npm run build",
     "rebuild": "cd app && npm rebuild --runtime=electron --target=1.7.5 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules ./dist && yarn install --force &&  yarn run rebuild && yarn run build && yarn run package",
-    "package": "node ./scripts/main.js --package",
+    "package": "node ./scripts/main.js --package --harmony",
     "start": "cross-env NODE_ENV=dev gulp start",
     "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },

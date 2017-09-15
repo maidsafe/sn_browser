@@ -29,28 +29,31 @@ const safeCryptoPubEncKey = getAPI('safeCryptoPubEncKey');
 const safeCryptoKeyPair = getAPI('safeCryptoKeyPair');
 const safeCryptoSecEncKey = getAPI('safeCryptoSecEncKey');
 
+
+
+// Has to hack via the datastream as that's actually returned by the func,
+// not converted to promise as via the RPC.
 export const authoriseApp = () => {
   logInRenderer('Authorising app.')
   return new Promise( (resolve, reject ) =>
   {
     appObj = {};
     let dataStream =  safeApp.initialise(appInfo);
+
     dataStream.on('data', ( datum ) =>
     {
-      let token = datum[0];
-      appObj.token = token;
+      let handle = datum[0];
+      appObj.handle = handle;
 
-      safeApp.authorise( token, appInfo.permissions, appInfo.opts )
+      safeApp.authorise( handle, appInfo.permissions, appInfo.opts )
         .then((authUri) => {
           appObj.authUri = authUri;
-          return safeApp.connectAuthorised( token, authUri )
-
+          return safeApp.connectAuthorised( handle, authUri )
+            .then( r => resolve( appObj ) )
         })
-      resolve( token );
     })
   })
 };
-
 
 
 export const connect = (uri, netStatusCallback) => {
@@ -130,7 +133,7 @@ export const saveConfigToSafe = ( state, quit ) =>
   const initializer = state.initializer;
   const app = initializer.app;
 
-  if( !app || !app.token || !app.authUri )
+  if( !app || !app.handle || !app.authUri )
   {
     logInRenderer("Not authorised to save to the network.")
     console.log("Not authorised to save to the network.")
@@ -145,7 +148,7 @@ export const saveConfigToSafe = ( state, quit ) =>
 
   logInRenderer("Attempting to save state to the network.")
 
-  safeApp.getOwnContainer( app.token )
+  safeApp.getOwnContainer( app.handle )
     .then( res => homeMdHandle = res )
     .then( data => encryptedData = data )
     .then( () =>
@@ -204,13 +207,13 @@ function delay(t) {
 
 /**
  * Read the configuration from the netowrk
- * @param  {[type]} app SafeApp reference, with token and authUri
+ * @param  {[type]} app SafeApp reference, with handle and authUri
  */
 export const readConfig = ( app ) =>
 {
   return new Promise( (resolve, reject) =>
   {
-    if( !app || !app.token || !app.authUri )
+    if( !app || !app.handle || !app.authUri )
     {
       reject('Not authorised to read from the network.');
     }
@@ -219,14 +222,11 @@ export const readConfig = ( app ) =>
     let encryptedKey;
     let encryptedValue;
 
-    safeApp.connectAuthorised( app.token, app.authUri )
-    .then( () =>
-    {
-      // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
-      // logic when dealing with the callbacks.
-      // Research and remove this ASAP.
-      return delay(5000)
-      .then((r) => safeApp.getOwnContainer( app.token ))
+    // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
+    // logic when dealing with the callbacks.
+    // Research and remove this ASAP.
+    return delay(5000)
+      .then((r) => safeApp.getOwnContainer( app.handle ))
       .then( res => homeMdHandle = res )
       .then( () => safeMutableData.encryptKey( homeMdHandle, STATE_KEY ) )
       .then( res => encryptedKey = res )
@@ -244,8 +244,5 @@ export const readConfig = ( app ) =>
           logInRenderer( 'Failure getting config from the network: ', e.stack )
           reject( e );
         })
-
       })
-
-  })
 }

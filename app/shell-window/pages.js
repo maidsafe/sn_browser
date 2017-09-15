@@ -100,7 +100,7 @@ export function create (opts) {
   } else
     opts = {}
 
-  // handle safeauth protocol
+
   if (url && (new URL(url).protocol === SAFE_AUTH_SCHEME)) {
     var safeAuthPage = handleSafeAuthScheme(url);
     if (safeAuthPage) {
@@ -217,6 +217,20 @@ export function create (opts) {
 })
   hide(page) // hidden by default
   webviewsDiv.appendChild(page.webviewEl)
+
+  const safeModeOn = remote.getGlobal('browserStatus').safeModeOn;
+
+  // handle unsafe tab creation
+  if ( safeModeOn && url && (new URL(url).protocol.startsWith( 'http' ) )) {
+    // create the webview to trigger url behaviour, but dont add it.
+    setTimeout( () => {
+       var i = pages.indexOf(page);
+       pages.splice(i, 1);
+       webviewsDiv.removeChild(page.webviewEl);
+    }, 500);
+    return;
+  }
+
 
   // emit
   events.emit('update')

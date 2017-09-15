@@ -39,7 +39,10 @@ export const authoriseApplication = () => {
       type: ACTION_TYPES.AUTHORISE_APP,
       payload:  new Promise((resolve, reject) => {
         authoriseApp()
-          .then(token => resolve( { token: token }) )
+          .then( appObj =>
+            {
+              resolve( appObj )
+            })
           .catch(reject);
       })
     })

@@ -1,59 +1,63 @@
 # safe_browser
 
-> SAFE Browser is a browser designed to open safe:// websites on the SAFE Network.
+A browser designed to open `safe://` websites on the SAFE Network.
 
 **Maintainer:** Krishna Kumar (krishna.kumar@maidsafe.net)
 
 ## Development
 
-### Prerequisites
+1. Prerequisites:
 
-  * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
-  * [Git](https://git-scm.com/)
-  * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
+    * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
+    * [Git](https://git-scm.com/)
+    * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
 
-
-1. Clone this GitHub repository.
+2. Clone this GitHub repository:
 
     ```bash
-    $ git clone https://github.com/maidsafe/safe_browser.git
+    git clone https://github.com/maidsafe/safe_browser.git
     ```
 
-2. Install the dependencies.
+3. Install the dependencies:
 
     ``` bash
-    $ cd safe_browser
-    $ yarn
+    cd safe_browser
+    yarn
     ```
 
-    If you are working on a development environment, you can run `NODE_ENV=dev yarn` instead in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
+    If you're actively developing, you can run `NODE_ENV=dev yarn` instead in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
 
-3. Build SAFE Browser and open it.
+4. Build the SAFE Browser and open it:
 
+    ```bash
+    yarn run build
+    yarn start
     ```
-    $ yarn run build
-    $ yarn start
-    ```
 
-    If you're doing development, `yarn run watch` to have assets build automatically.
+    If you're actively developing, you can use `yarn run watch` to have assets built automatically when they change.
 
-6. Package SAFE Browser.
+5. Package the SAFE Browser for production:
 
-    ```
-    $ yarn run package
+    ```bash
+    yarn run package
     ```
 
     The packed SAFE Browser will be found inside `dist` folder.
 
-### Updating
+### Troubleshooting
 
-If you pull latest from the repo and get weird module errors, do:
+If you pull the latest from the repo and get weird module errors, try:
 
 ```bash
-$ yarn run burnthemall
+yarn run burnthemall
 ```
 
-This will remove your node_modules, and do the full install, rebuild, build SAFE Authenticator and package processes for you. `yarn start` should work afterwards.
+This will remove your `node_modules` and do the full install, rebuild, build SAFE Authenticator, and package processes for you. After this, `yarn start` should work again.
+
+## Further Help
+
+You can discuss development-related questions on the [SAFE Dev Forum](https://forum.safedev.org/).
+Here's a good post to get started: [How to develop for the SAFE Network](https://forum.safedev.org/t/how-to-develop-for-the-safe-network-draft/843).
 
 ## License
 
