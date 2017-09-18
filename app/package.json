@@ -43,7 +43,6 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",
     "remarkable": "^1.6.2",
-    "safe-app": "https://s3.eu-west-2.amazonaws.com/safe-app-nodejs/safe-app-0.2.2.tgz",
     "socket.io": "^2.0.2",
     "speedometer": "^1.0.0",
     "unused-filename": "^1.0.0",

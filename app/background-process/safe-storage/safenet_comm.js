@@ -1,6 +1,5 @@
 import { shell, ipcMain, webContents, app as browserInstance } from 'electron';
 import { CONSTANTS, APP_STATUS, MESSAGES, SAFE_APP_ERROR_CODES } from './constants';
-import { fromAuthURI  } from 'safe-app';
 
 import store from './store';
 import logInRenderer from '../logInRenderer';
@@ -54,16 +53,6 @@ export const authoriseApp = () => {
     })
   })
 };
-
-
-export const connect = (uri, netStatusCallback) => {
-  let registeredApp;
-  return fromAuthURI(APP_INFO.info, uri, netStatusCallback)
-          .then((app) => registeredApp = app)
-          .then(() => saveAuthData(uri))
-          .then(() => registeredApp.auth.refreshContainersPermissions())
-          .then(() => registeredApp);
-}
 
 export const reconnect = (app) => {
   return app.reconnect();
