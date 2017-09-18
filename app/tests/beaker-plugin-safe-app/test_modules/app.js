@@ -45,17 +45,15 @@ describe('window.safeApp', () => {
     should.throws(window.safeApp.initialise(malformedAppInfo));
   });
 
-  it('should build an alternative if there is a scope', function() {
+  it('should build an alternative if there is a scope', async function () {
     this.timeout(30000);
-    let firstAuthUri = null;
-    let secondAuthUri = null;
-    return testHelpers.initialiseApp()
-    .then(appHandle => testHelpers.authoriseApp(appHandle).then(({appHandle, authUri}) => firstAuthUri = authUri))
-    .then(() => testHelpers.initialiseApp('website'))
-    .then(appHandle => testHelpers.authoriseApp(appHandle).then(({appHandle, authUri}) => secondAuthUri = authUri))
-    .then(() => {
-      firstAuthUri.should.not.equal(secondAuthUri)
-    })
+
+    let appHandle = await testHelpers.initialiseApp();
+    const firstAuthUri = await testHelpers.authoriseApp(appHandle);
+    appHandle = await testHelpers.initialiseApp('website')
+    const secondAuthUri = await testHelpers.authoriseApp(appHandle);
+
+    firstAuthUri.should.not.equal(secondAuthUri)
   });
 
   it('connects an unauthorised app to an unregistered session on the network', () => {
@@ -65,39 +63,37 @@ describe('window.safeApp', () => {
       })
   })
 
-  it('authorises application and return some authentication uri', function() {
+  it('authorises application and return some authentication uri', async function() {
     this.timeout(30000);
-    return testHelpers.initialiseApp()
-    .then(appHandle => testHelpers.authoriseApp(appHandle))
-    .then(({appHandle, authUri}) => {
-      should(authUri).startWith('safe-')
-    });
+    const appHandle = await testHelpers.initialiseApp();
+    const authUri = await testHelpers.authoriseApp(appHandle);
+    should(authUri).startWith('safe-')
   });
 
   it('connects an authorised app to a registered session on the network', () => {
     testHelpers.authoriseAndConnect().should.be.fulfilled();
   })
 
-  it('requests further container permissions', function() {
+  it('requests further container permissions', async function() {
     this.timeout(30000);
     const permissions = {
       _videos: ['Read', 'Insert', 'Update']
     };
 
-    return testHelpers.authoriseAndConnect()
-    .then(appHandle => window.safeApp.authoriseContainer(appHandle, permissions).then(() => appHandle))
-    .then(appHandle => window.safeApp.getContainersPermissions(appHandle))
-    .then(permissions => {
-      should(permissions).have.property("_videos");
-      should(permissions._videos).have.property("Read", true);
-      should(permissions._videos).have.property("Insert", true);
-      should(permissions._videos).have.property("Update", true);
-      should(permissions._videos).have.property("Delete", false);
-      should(permissions._videos).have.property("ManagePermissions", false);
-    })
+    const appHandle = await testHelpers.authoriseAndConnect();
+    await window.safeApp.authoriseContainer(appHandle, permissions);
+    const permsObject = await window.safeApp.getContainersPermissions(appHandle);
+
+    should(permsObject).have.property("_videos");
+    should(permsObject._videos).have.property("Read", true);
+    should(permsObject._videos).have.property("Insert", true);
+    should(permsObject._videos).have.property("Update", true);
+    should(permsObject._videos).have.property("Delete", false);
+    should(permsObject._videos).have.property("ManagePermissions", false);
   });
 
   it.skip('can request permissions for a Mutable Data structure created by another app', function() {
+    // TODO: Why skipped? Because of this issue: https://maidsafe.atlassian.net/browse/MAID-2316
     this.timeout(30000);
 
     return testHelpers.createUnownedMutableData()
@@ -138,7 +134,7 @@ describe('window.safeApp', () => {
   });
 
   // QUESTION: What is the purpose of refreshContainersPermissions?
-  // I don't see any noticeable differnce before and after
+  // I don't see any noticeable differnce before and after so I'm not sure how to test this.
   it.skip('refreshes container permissions', function() {
     return testHelpers.authoriseAndConnect()
     .then(appHandle => {

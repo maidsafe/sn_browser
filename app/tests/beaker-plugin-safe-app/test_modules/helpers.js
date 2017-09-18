@@ -14,6 +14,8 @@ const appInfo2 = {
   scope: null
 }
 
+const MD_DNS_TYPE_TAG = 15001;
+
 const permissions = {
     _public: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions'],
     _publicNames: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
@@ -32,23 +34,41 @@ const initialiseApp = (scope) => {
 }
 
 const authoriseApp = (appHandle) => {
-  return window.safeApp.authorise(appHandle, permissions, ownContainer).then(authUri => ({appHandle, authUri}));
+  return window.safeApp.authorise(appHandle, permissions, ownContainer);
 }
 
-const authoriseAndConnect = () => {
-  return initialiseApp()
-  .then(appHandle => authoriseApp(appHandle))
-  .then(({appHandle, authUri}) => window.safeApp.connectAuthorised(appHandle, authUri))
+const authoriseAndConnect = async () => {
+  let appHandle = await initialiseApp();
+  let authUri = await authoriseApp(appHandle);
+  return window.safeApp.connectAuthorised(appHandle, authUri);
 }
 
-const createUnownedMutableData = () => {
-  return window.safeApp.initialise(appInfo2)
-  .then(appHandle => authoriseApp(appHandle))
-  .then(({appHandle, authUri}) => window.safeApp.connectAuthorised(appHandle, authUri))
-  .then(appHandle => window.safeMutableData.newRandomPublic(appHandle, 15001))
-  .then(mdHandle => window.safeMutableData.quickSetup(mdHandle, {entryFrom: 'different application'}))
-  .then(mdHandle => window.safeMutableData.getNameAndTag(mdHandle))
+const createUnownedMutableData = async () => {
+  let appHandle = await window.safeApp.initialise(appInfo2);
+  let authUri = await authoriseApp(appHandle);
+  await window.safeApp.connectAuthorised(appHandle, authUri);
+  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, MD_DNS_TYPE_TAG);
+  await window.safeMutableData.quickSetup(mdHandle, {entryFrom: 'different application'});
+  return window.safeMutableData.getNameAndTag(mdHandle);
 }
+
+const createRandomPrivateMutableData = async () => {
+  const appHandle = await window.safeApp.initialise(appInfo2);
+  const authUri = await authoriseApp(appHandle);
+  await window.safeApp.connectAuthorised(appHandle, authUri);
+  const mdHandle = await window.safeMutableData.newRandomPrivate(appHandle, MD_DNS_TYPE_TAG);
+  return window.safeMutableData.quickSetup(mdHandle, {});
+}
+
+const createRandomPublicMutableData = async () => {
+  const appHandle = await window.safeApp.initialise(appInfo2);
+  const authUri = await authoriseApp(appHandle);
+  await window.safeApp.connectAuthorised(appHandle, authUri);
+  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, MD_DNS_TYPE_TAG);
+  return window.safeMutableData.quickSetup(mdHandle, {});
+}
+
+const createRandomXorName = () => crypto.randomBytes(32);
 
 module.exports = {
   permissions,
@@ -56,5 +76,9 @@ module.exports = {
   initialiseApp,
   authoriseApp,
   authoriseAndConnect,
-  createUnownedMutableData
+  createUnownedMutableData,
+  MD_DNS_TYPE_TAG,
+  createRandomPrivateMutableData,
+  createRandomPublicMutableData,
+  createRandomXorName
 };
