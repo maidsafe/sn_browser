@@ -13,10 +13,9 @@ async function createRandomDomain(appHandle, content, path, service) {
   const publicIdMDHandle = await window.safeMutableData.newPublic(appHandle, dnsName, testHelpers.TAG_TYPE_DNS);
   const serviceNameAndTag = await window.safeMutableData.getNameAndTag(serviceMdHandle);
   let entry = {};
-  Object.defineProperty(entry, service, {
-    value: serviceNameAndTag.name.buffer
-  });
-  await window.safeMutableData.quickSetup(publicIdMDHandle, entry);
+  entry[service] = serviceNameAndTag.name.buffer;
+  const mdIsNowSaved = await window.safeMutableData.quickSetup(publicIdMDHandle, entry);
+  const entriesHandle = await window.safeMutableData.getEntries(publicIdMDHandle);
 
   return domain;
 }
@@ -130,7 +129,7 @@ describe('window.safeApp', () => {
     })
   });
 
-  it('fetches SAFE conventional web site from network', async () => {
+  it.only('fetches SAFE conventional web site from network', async () => {
     const appHandle = await testHelpers.authoriseAndConnect()
     const domain = await createRandomDomain(appHandle, 'Hello, SAFE world!', 'index.html', 'site');
     console.log(`safe://site.${domain}/index.html`);
