@@ -129,7 +129,7 @@ describe('window.safeApp', () => {
     })
   });
 
-  it.only('fetches SAFE conventional web site from network', async () => {
+  it('fetches SAFE conventional web site from network', async () => {
     const appHandle = await testHelpers.authoriseAndConnect()
     const domain = await createRandomDomain(appHandle, 'Hello, SAFE world!', 'index.html', 'site');
     console.log(`safe://site.${domain}/index.html`);
