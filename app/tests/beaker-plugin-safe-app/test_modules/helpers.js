@@ -17,6 +17,21 @@ const appInfo2 = {
 const TAG_TYPE_DNS = 15001;
 const TAG_TYPE_WWW = 15002;
 
+//  Replaces the entire content of the file when writing data.
+const OPEN_MODE_OVERWRITE = 1;
+
+//  Appends to existing data in the file.
+const OPEN_MODE_APPEND = 2;
+
+//  Open file to read.
+const OPEN_MODE_READ = 4;
+
+//  Read the file from the beginning.
+const FILE_READ_FROM_BEGIN = 0;
+
+//  Read entire contents of a file.
+const FILE_READ_TO_END = 0;
+
 const permissions = {
     _public: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions'],
     _publicNames: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
@@ -44,13 +59,9 @@ const authoriseAndConnect = async () => {
   return window.safeApp.connectAuthorised(appHandle, authUri);
 }
 
-const createUnownedMutableData = async () => {
-  let appHandle = await window.safeApp.initialise(appInfo2);
-  let authUri = await authoriseApp(appHandle);
-  await window.safeApp.connectAuthorised(appHandle, authUri);
-  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
-  await window.safeMutableData.quickSetup(mdHandle, {entryFrom: 'different application'});
-  return window.safeMutableData.getNameAndTag(mdHandle);
+const createNfsEmulation = async () => {
+  const mdHandle = await createRandomPublicMutableData();
+  return window.safeMutableData.emulateAs(mdHandle, 'NFS');
 }
 
 const createRandomPrivateMutableData = async () => {
@@ -68,8 +79,16 @@ const createRandomPublicMutableData = async () => {
   const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
   return window.safeMutableData.quickSetup(mdHandle, {});
 }
-
 const createRandomXorName = () => crypto.randomBytes(32);
+
+const createUnownedMutableData = async () => {
+  let appHandle = await window.safeApp.initialise(appInfo2);
+  let authUri = await authoriseApp(appHandle);
+  await window.safeApp.connectAuthorised(appHandle, authUri);
+  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
+  await window.safeMutableData.quickSetup(mdHandle, {entryFrom: 'different application'});
+  return window.safeMutableData.getNameAndTag(mdHandle);
+}
 
 module.exports = {
   permissions,
@@ -82,5 +101,11 @@ module.exports = {
   TAG_TYPE_WWW,
   createRandomPrivateMutableData,
   createRandomPublicMutableData,
-  createRandomXorName
+  createRandomXorName,
+  createNfsEmulation,
+  OPEN_MODE_OVERWRITE,
+  OPEN_MODE_APPEND,
+  OPEN_MODE_READ,
+  FILE_READ_FROM_BEGIN,
+  FILE_READ_TO_END
 };
