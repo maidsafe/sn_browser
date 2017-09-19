@@ -72,12 +72,12 @@ const createRandomPrivateMutableData = async () => {
   return window.safeMutableData.quickSetup(mdHandle, {});
 }
 
-const createRandomPublicMutableData = async () => {
+const createRandomPublicMutableData = async (entriesObject) => {
   const appHandle = await window.safeApp.initialise(appInfo2);
   const authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
   const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
-  return window.safeMutableData.quickSetup(mdHandle, {});
+  return window.safeMutableData.quickSetup(mdHandle, entriesObject || {});
 }
 const createRandomXorName = () => crypto.randomBytes(32);
 
