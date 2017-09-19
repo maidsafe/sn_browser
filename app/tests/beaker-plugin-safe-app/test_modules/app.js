@@ -1,6 +1,26 @@
 let should = require('should');
 let testHelpers = require('./helpers');
 
+async function createRandomDomain(appHandle, content, path, service) {
+  const domain = `test_${Math.round(Math.random() * 100000)}`;
+
+  const serviceMdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_WWW);
+  await window.safeMutableData.quickSetup(serviceMdHandle, {})
+  const nfsHandle = await window.safeMutableData.emulateAs(serviceMdHandle, 'NFS');
+  const fileHandle = await window.safeNfs.create(nfsHandle, content);
+  await window.safeNfs.insert(nfsHandle, fileHandle, path);
+  const dnsName = await window.safeCrypto.sha3Hash(appHandle, domain);
+  const publicIdMDHandle = await window.safeMutableData.newPublic(appHandle, dnsName, testHelpers.TAG_TYPE_DNS);
+  const serviceNameAndTag = await window.safeMutableData.getNameAndTag(serviceMdHandle);
+  let entry = {};
+  Object.defineProperty(entry, service, {
+    value: serviceNameAndTag.name.buffer
+  });
+  await window.safeMutableData.quickSetup(publicIdMDHandle, entry);
+
+  return domain;
+}
+
 describe('window.safeApp', () => {
   it('initialises application', () => {
       testHelpers.initialiseApp().should.be.fulfilled();
@@ -108,6 +128,14 @@ describe('window.safeApp', () => {
       ];
       return window.safeApp.authoriseShareMd(appHandle, permissions)
     })
+  });
+
+  it('fetches SAFE conventional web site from network', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect()
+    const domain = await createRandomDomain(appHandle, 'Hello, SAFE world!', 'index.html', 'site');
+    console.log(`safe://site.${domain}/index.html`);
+    const fileData = await window.safeApp.webFetch(appHandle, `safe://site.${domain}/index.html`);
+    console.log(fileData);
   });
 
   it('confirms if app is registered with network', function() {

@@ -14,7 +14,8 @@ const appInfo2 = {
   scope: null
 }
 
-const MD_DNS_TYPE_TAG = 15001;
+const TAG_TYPE_DNS = 15001;
+const TAG_TYPE_WWW = 15002;
 
 const permissions = {
     _public: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions'],
@@ -47,7 +48,7 @@ const createUnownedMutableData = async () => {
   let appHandle = await window.safeApp.initialise(appInfo2);
   let authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
-  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, MD_DNS_TYPE_TAG);
+  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
   await window.safeMutableData.quickSetup(mdHandle, {entryFrom: 'different application'});
   return window.safeMutableData.getNameAndTag(mdHandle);
 }
@@ -56,7 +57,7 @@ const createRandomPrivateMutableData = async () => {
   const appHandle = await window.safeApp.initialise(appInfo2);
   const authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
-  const mdHandle = await window.safeMutableData.newRandomPrivate(appHandle, MD_DNS_TYPE_TAG);
+  const mdHandle = await window.safeMutableData.newRandomPrivate(appHandle, TAG_TYPE_DNS);
   return window.safeMutableData.quickSetup(mdHandle, {});
 }
 
@@ -64,7 +65,7 @@ const createRandomPublicMutableData = async () => {
   const appHandle = await window.safeApp.initialise(appInfo2);
   const authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
-  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, MD_DNS_TYPE_TAG);
+  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
   return window.safeMutableData.quickSetup(mdHandle, {});
 }
 
@@ -77,7 +78,8 @@ module.exports = {
   authoriseApp,
   authoriseAndConnect,
   createUnownedMutableData,
-  MD_DNS_TYPE_TAG,
+  TAG_TYPE_DNS,
+  TAG_TYPE_WWW,
   createRandomPrivateMutableData,
   createRandomPublicMutableData,
   createRandomXorName

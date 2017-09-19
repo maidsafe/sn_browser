@@ -21,7 +21,7 @@ describe('window.safeMutableData', () => {
   it('creates a public Mutable Data, taking an argument to custom-define it\'s name', async () => {
     const customName = testHelpers.createRandomXorName();
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newPublic(appHandle, customName, testHelpers.MD_DNS_TYPE_TAG);
+    const mdHandle = await window.safeMutableData.newPublic(appHandle, customName, testHelpers.TAG_TYPE_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {});
     const nameAndTag = await window.safeMutableData.getNameAndTag(mdHandle);
     should(nameAndTag.name.buffer.toString()).be.equal(customName.toString());
