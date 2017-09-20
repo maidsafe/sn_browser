@@ -10,7 +10,7 @@ describe('window.safeCryptoPubEncKey', () => {
     should(rawKey.buffer.length).be.equal(32);
   });
 
-  it('encrypts with a sealed box', async () => {
+  it('encrypts with a sealed box, using recipient\'s public key', async () => {
     // NOTE: read about sealed boxes here: https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
@@ -19,7 +19,7 @@ describe('window.safeCryptoPubEncKey', () => {
     .be.fulfilled();
   });
 
-  it.skip('encrypts with a given secret key', async () => {
+  it.skip('encrypts with sender\'s secret key and recipient\'s public key', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
     const pubEncKeyHandle = await window.safeCryptoKeyPair.getPubEncKey(encKeyPairHandle);
