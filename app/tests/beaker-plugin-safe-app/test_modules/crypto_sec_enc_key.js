@@ -18,7 +18,7 @@ describe('window.safeCryptoSecEncKey', () => {
     const rawSecretKey = await window.safeCryptoSecEncKey.getRaw(secEncKeyHandle);
     // evidently, rawSecretKey is the wrong argument to pass.
     // QUESTION: a u64 should be passed to safe_client_libs, but i thought/
-    // safe_app_nodejs took care of that with the secret key value a ref type?
+    // safe_app_nodejs took care of that in native by turning the secret key into a ref type?
     const cipher = await window.safeCryptoPubEncKey.encrypt(pubEncKeyHandle, 'deciphered', rawSecretKey);
     const deciphered = await window.safeCryptoSecEncKey.decrypt(secEncKeyHandle, cipher, pubEncKeyHandle)
     console.log(String.fromCharCode.apply(null, deciphered.buffer));

@@ -30,7 +30,7 @@ describe('window.safeImmutableData', () => {
     should(dataSize).be.equal(22);
   });
 
-  it('frees reader handle from memory', async () => {
+  it('frees reader object from memory', async () => {
     const appHandle = await testHelpers.authoriseAndConnect()
     const writerHandle = await window.safeImmutableData.create(appHandle);
     await window.safeImmutableData.write(writerHandle, 'immutable data content');

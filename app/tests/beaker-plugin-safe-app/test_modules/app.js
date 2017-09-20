@@ -196,7 +196,7 @@ describe('window.safeApp', () => {
     })
   });
 
-  it('frees app handle from memory', function() {
+  it('frees app object from memory', function() {
     return testHelpers.authoriseAndConnect()
     .then(appHandle => {
       window.safeApp.free(appHandle)
