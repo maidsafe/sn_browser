@@ -26,4 +26,10 @@ describe('window.safeMutableData', () => {
     const nameAndTag = await window.safeMutableData.getNameAndTag(mdHandle);
     should(nameAndTag.name.buffer.toString()).be.equal(customName.toString());
   });
+
+  it('returns a handle to a mutation object to be used with safeMutableDataMutation module', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const mutationHandle = await window.safeMutableData.newMutation(appHandle);
+    should(mutationHandle.length).be.equal(64);
+  });
 });

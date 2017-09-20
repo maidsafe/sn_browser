@@ -79,6 +79,7 @@ const createRandomPublicMutableData = async (entriesObject) => {
   const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
   return window.safeMutableData.quickSetup(mdHandle, entriesObject || {});
 }
+
 const createRandomXorName = () => crypto.randomBytes(32);
 
 const createUnownedMutableData = async () => {
