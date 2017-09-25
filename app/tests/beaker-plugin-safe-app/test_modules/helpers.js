@@ -39,13 +39,16 @@ const permissions = {
 
 const ownContainer =  { own_container: true };
 
-const initialiseApp = (scope) => {
-  const appInfo = {
+const initialiseApp = (customAppInfo, scope) => {
+  const fixed = {
       id: 'net.maidsafe.beaker_plugin_safe_app.test',
       name: 'beaker_plugin_safe_app_test',
-      vendor: 'MaidSafe Ltd.',
-      scope: scope
+      vendor: 'MaidSafe Ltd.'
   };
+
+  const appInfo = customAppInfo || fixed;
+
+  appInfo.scope = scope;
   return window.safeApp.initialise(appInfo);
 }
 

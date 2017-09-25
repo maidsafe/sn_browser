@@ -21,5 +21,8 @@
     "mocha": "^3.5.0",
     "should": "^13.0.1",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "glob": "^7.1.2"
   }
 }

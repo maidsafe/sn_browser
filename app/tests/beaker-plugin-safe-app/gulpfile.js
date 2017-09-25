@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+  glob = require('glob'),
   concat = require('gulp-concat'),
   nodemon = require('gulp-nodemon'),
   watch = require('gulp-watch'),
@@ -33,32 +34,16 @@ gulp.task('js', function () {
     destinationDirectory = __dirname + '/build/js',
     outputFile = 'test-modules.js';
 
-    var bundler = browserify([
-      sourceDirectory + '/app.js',
-      sourceDirectory + '/immutable_data.js',
-      sourceDirectory + '/mutable_data.js',
-      sourceDirectory + '/cipher_opt.js',
-      sourceDirectory + '/crypto.js',
-      sourceDirectory + '/crypto_keypair.js',
-      sourceDirectory + '/crypto_pub_enc_key.js',
-      sourceDirectory + '/crypto_sec_enc_key.js',
-      sourceDirectory + '/crypto_sign_key.js',
-      sourceDirectory + '/mutable_data_entries.js',
-      sourceDirectory + '/mutable_data_keys.js',
-      sourceDirectory + '/mutable_data_mutation.js',
-      sourceDirectory + '/mutable_data_permissions.js',
-      sourceDirectory + '/mutable_data_permissions_set.js',
-      sourceDirectory + '/mutable_data_values.js',
-      sourceDirectory + '/nfs.js',
-      sourceDirectory + '/nfs_file.js'
-    ]).transform(babelify);
+    glob(sourceDirectory + '/**/*.spec.js', function(err, files) {
+      var bundler = browserify(files).transform(babelify);
 
-    return bundler.bundle()
-      .on('error', function(err) {
-        console.log(err);
-      })
-      .pipe(source('test-modules.js'))
-      .pipe(gulp.dest(destinationDirectory))
+      return bundler.bundle()
+        .on('error', function(err) {
+          console.log(err);
+        })
+        .pipe(source('test-modules.js'))
+        .pipe(gulp.dest(destinationDirectory));
+    });
 
 });
 
