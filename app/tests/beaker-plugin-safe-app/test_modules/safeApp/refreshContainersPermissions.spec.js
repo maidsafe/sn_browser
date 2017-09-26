@@ -2,22 +2,36 @@ let should = require('should');
 let testHelpers = require('../helpers');
 
 describe('window.safeApp.refreshContainersPermissions', () => {
-  // QUESTION: What is the purpose of refreshContainersPermissions?
-  // I don't see any noticeable differnce before and after so I'm not sure how to test this.
-  it.skip('refreshes container permissions', async () => {
-    const appHandle = await testHelpers.authoriseAndConnect();
-    let permsObject = await window.safeApp.getContainersPermissions(appHandle);
-    console.log(permsObject);
-    const containerHandle = await window.safeApp.getContainer(appHandle, '_public');
-    const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
-    const permissionsSetHandle = await window.safeMutableData.getUserPermissions(containerHandle, appPubSignKeyHandle);
-    await window.safeMutableDataPermissionsSet.setDeny(permissionsSetHandle, 'Insert');
-    const mdVersion = await window.safeMutableData.getVersion(containerHandle);
+  it('refreshes container permissions', async function() {
+    this.timeout(30000);
+    const permissions = {
+        _public: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
+    }
 
-    await window.safeMutableData.setUserPermissions(containerHandle, appPubSignKeyHandle, permissionsSetHandle, mdVersion + 1);
+    const appInfo = {
+        id: `random net.maidsafe.beaker_plugin_safe_app.test${Math.round(Math.random() * 100000)}`,
+        name: `random beaker_plugin_safe_app_test${Math.round(Math.random() * 100000)}`,
+        vendor: 'MaidSafe Ltd.'
+    };
+    const appHandle = await window.safeApp.initialise(appInfo);
+    const authUri = await window.safeApp.authorise(appHandle, permissions, {});
+    await window.safeApp.connectAuthorised(appHandle, authUri);
+
     await window.safeApp.refreshContainersPermissions(appHandle);
+
+    const containerHandle = await window.safeApp.getContainer(appHandle, '_public');
+    let permsObject = await window.safeApp.getContainersPermissions(appHandle);
+    should.not.exist(permsObject['_publicNames']);
+
+    const updatePermissions = {
+        _publicNames: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
+    }
+
+    await window.safeApp.authoriseContainer(appHandle, updatePermissions);
+    await window.safeApp.refreshContainersPermissions(appHandle);
+
     permsObject = await window.safeApp.getContainersPermissions(appHandle);
-    console.log(permsObject);
+    should.exist(permsObject['_publicNames']);
   });
 
   it('exists', () => {
