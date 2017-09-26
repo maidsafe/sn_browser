@@ -192,7 +192,7 @@ describe('window.safeMutableData', () => {
   it('sets users permissions for a specific key', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
 
-    /** manually creating Mutable Data without quickSetup, to set signing key as null *****/
+    /** creating Mutable Data without quickSetup, to set signing key as null *****/
     const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
     let permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
     await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'ManagePermissions');
@@ -200,7 +200,6 @@ describe('window.safeMutableData', () => {
     await window.safeMutableDataPermissions.insertPermissionsSet(permissionsHandle, null, permissionsSetHandle);
     const entriesHandle = await window.safeMutableData.newEntries(appHandle);
     await window.safeMutableData.put(mdHandle, permissionsHandle, entriesHandle);
-    /***************************************************************************************/
 
     const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
     const version = await window.safeMutableData.getVersion(mdHandle);

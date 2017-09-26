@@ -1,13 +1,6 @@
 let should = require('should');
 let testHelpers = require('../helpers');
 
-const permissions = {
-    _public: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions'],
-    _publicNames: ['Read', 'Insert', 'Update', 'Delete', 'ManagePermissions']
-}
-
-const ownContainer =  { own_container: true };
-
 describe('window.safeApp.authorise', () => {
   it('authorises application and return some authentication uri', async function() {
     this.timeout(30000);
@@ -32,7 +25,7 @@ describe('window.safeApp.authorise', () => {
         vendor: 'MaidSafe Ltd.'
     };
     const appHandle = await window.safeApp.initialise(appInfo);
-    const authUri = await window.safeApp.authorise(appHandle, misspelledPermissions, ownContainer);
+    const authUri = await window.safeApp.authorise(appHandle, misspelledPermissions, {});
     await window.safeApp.connectAuthorised(appHandle, authUri);
     const permObjects = await window.safeApp.getContainersPermissions(appHandle);
     should(permObjects._public['ManagePermissions']).be.false();

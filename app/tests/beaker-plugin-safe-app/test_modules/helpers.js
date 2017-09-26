@@ -76,11 +76,25 @@ const createRandomPrivateMutableData = async () => {
 }
 
 const createRandomPublicMutableData = async (entriesObject) => {
-  const appHandle = await window.safeApp.initialise(appInfo2);
+  const appHandle = await initialiseApp();
   const authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
   const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
   return window.safeMutableData.quickSetup(mdHandle, entriesObject || {});
+}
+
+const createMutableDataWithCustomPermissions = async (appHandle, permsArray) => {
+  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
+  let permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
+  permsArray.map(async (perm) => {
+    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, perm);
+  })
+  const permissionsHandle = await window.safeMutableData.newPermissions(appHandle);
+  const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
+  await window.safeMutableDataPermissions.insertPermissionsSet(permissionsHandle, appPubSignKeyHandle, permissionsSetHandle);
+  const entriesHandle = await window.safeMutableData.newEntries(appHandle);
+  await window.safeMutableData.put(mdHandle, permissionsHandle, entriesHandle);
+  return mdHandle;
 }
 
 const createRandomXorName = () => crypto.randomBytes(32);
@@ -100,6 +114,7 @@ module.exports = {
   initialiseApp,
   authoriseApp,
   authoriseAndConnect,
+  createMutableDataWithCustomPermissions,
   createUnownedMutableData,
   TAG_TYPE_DNS,
   TAG_TYPE_WWW,

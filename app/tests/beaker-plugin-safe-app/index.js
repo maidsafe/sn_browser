@@ -13,5 +13,5 @@ app.get('/', function(req, res) {
 let PORT = 3001;
 
 app.listen(PORT, function() {
-  console.log("Listening on port ", PORT);
+  console.log(`Listening on port ${PORT}. Open localhost://p:${PORT} in SAFE Browser to run tests.` );
 })
