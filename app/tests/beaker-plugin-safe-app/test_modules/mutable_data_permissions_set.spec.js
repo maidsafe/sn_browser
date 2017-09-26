@@ -2,7 +2,6 @@ let should = require('should');
 let testHelpers = require('./helpers');
 
 describe('window.safeMutableDataPermissionsSet', () => {
-  // QUESTION: Please review the following statement. Is it accurate?
   it('sets allowable actions on a Mutable Data structure for an app (represented via the app\'s signing key)', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);

@@ -16,7 +16,6 @@ describe('window.safeCipherOpt', () => {
 
   it('returns handle to asymmetric cipher object', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    // QUESTION: Is this correct, should I be using app's public encryption key?
     const pubEncKey = await window.safeCrypto.getAppPubEncKey(appHandle);
     const asymmetricCipherOptHandle = await window.safeCipherOpt.newAsymmetric(pubEncKey);
     should(asymmetricCipherOptHandle.length).be.equal(64);

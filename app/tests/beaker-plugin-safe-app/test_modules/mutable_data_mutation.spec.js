@@ -28,9 +28,6 @@ describe('window.safeMutableDataMutation', () => {
     await window.safeMutableDataMutation.remove(mutationHandle, 'key1', value.version + 1);
     await window.safeMutableData.applyEntriesMutation(mdHandle, mutationHandle);
     value = await window.safeMutableData.get(mdHandle, 'key1');
-    // QUESTION: Is it the expected behavior that this transaction only/
-    //removes the entry's value by replacing it with an empty buffer?
-    // See console.log(value);
     should(String.fromCharCode.apply(null, value.buf)).be.equal('');
   });
 
