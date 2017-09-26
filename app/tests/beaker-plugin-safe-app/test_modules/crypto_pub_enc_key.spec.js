@@ -19,16 +19,13 @@ describe('window.safeCryptoPubEncKey', () => {
     .be.fulfilled();
   });
 
-  it.skip('encrypts with sender\'s secret key and recipient\'s public key', async () => {
+  it('encrypts with sender\'s secret key and recipient\'s public key', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
     const pubEncKeyHandle = await window.safeCryptoKeyPair.getPubEncKey(encKeyPairHandle);
     const secEncKeyHandle = await window.safeCryptoKeyPair.getSecEncKey(encKeyPairHandle);
-    const rawSecretKey = await window.safeCryptoSecEncKey.getRaw(secEncKeyHandle);
-    // evidently, rawSecretKey is the wrong argument to pass.
-    // QUESTION: a u64 should be passed to safe_client_libs, but i thought/
-    // safe_app_nodejs took care of that in native by turning the secret key into a ref type?
-    should(window.safeCryptoPubEncKey.encrypt(pubEncKeyHandle, 'encrypt this data', rawSecretKey))
+
+    should(window.safeCryptoPubEncKey.encrypt(pubEncKeyHandle, 'encrypt this data', secEncKeyHandle))
     .be.fulfilled();
   });
 
