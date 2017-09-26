@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
 gulp.task('js-deps', function () {
   gulp.src([
-      './node_modules/mocha/mocha.js'
+      '../../node_modules/mocha/mocha.js'
     ])
     .pipe(gulp.dest('./build/js'));
 });
@@ -23,7 +23,7 @@ gulp.task('html', function () {
 
 gulp.task('css-deps', function () {
   gulp.src([
-      './node_modules/mocha/mocha.css',
+      '../../node_modules/mocha/mocha.css',
     ])
     .pipe(concat('deps.css'))
     .pipe(gulp.dest('./build/css'));
@@ -59,7 +59,7 @@ gulp.task('serve', function () {
 });
 
 gulp.task('watch', function () {
-  watch(['./test_modules/*.js'], function () {
+  watch(['./test_modules/**/*.js'], function () {
     gulp.start('js');
   });
 
