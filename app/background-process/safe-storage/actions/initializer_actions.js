@@ -1,6 +1,6 @@
 import ACTION_TYPES from './action_types';
 
-import { connect, authoriseApp, reconnect, readConfig, saveConfigToSafe } from '../safenet_comm';
+import { authoriseApp, reconnect, readConfig, saveConfigToSafe } from '../safenet_comm';
 
 export const setInitializerTask = (task) => ({
   type: ACTION_TYPES.SET_INITIALIZER_TASK,
