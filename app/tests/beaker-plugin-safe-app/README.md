@@ -1,0 +1,3 @@
+- `cd ./app`
+- `yarn run test-safe-app`
+- Access test page in SAFE browser at `localhost://p:3001`
