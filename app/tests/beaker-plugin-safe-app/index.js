@@ -4,10 +4,10 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static('./build'))
+app.use(express.static('./test_assets'))
 
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + './build/index.html');
+  res.sendFile(__dirname + './test_assets/index.html');
 })
 
 let PORT = 3001;

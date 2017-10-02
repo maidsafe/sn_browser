@@ -11,14 +11,14 @@ gulp.task('js-deps', function () {
   gulp.src([
       '../../node_modules/mocha/mocha.js'
     ])
-    .pipe(gulp.dest('./build/js'));
+    .pipe(gulp.dest('./test_assets/js'));
 });
 
 gulp.task('html', function () {
   gulp.src(
     './index.html'
     )
-    .pipe(gulp.dest('./build'));
+    .pipe(gulp.dest('./test_assets'));
 });
 
 gulp.task('css-deps', function () {
@@ -26,12 +26,12 @@ gulp.task('css-deps', function () {
       '../../node_modules/mocha/mocha.css',
     ])
     .pipe(concat('deps.css'))
-    .pipe(gulp.dest('./build/css'));
+    .pipe(gulp.dest('./test_assets/css'));
 });
 
 gulp.task('js', function () {
   var sourceDirectory = __dirname + '/test_modules',
-    destinationDirectory = __dirname + '/build/js',
+    destinationDirectory = __dirname + '/test_assets/js',
     outputFile = 'test-modules.js';
 
     glob(sourceDirectory + '/**/*.spec.js', function(err, files) {
@@ -51,7 +51,7 @@ gulp.task('serve', function () {
   nodemon({
     script: './index.js',
     ext: 'html js',
-    ignore: ['build/**/*.*'],
+    ignore: ['test_assets/**/*.*'],
     tasks: []
   }).on('restart', function () {
     console.log('server restarted....');
