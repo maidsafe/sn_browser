@@ -49,10 +49,12 @@ describe('window.safeNfs', async () => {
     should(window.safeNfs.fetch(nfsHandle, 'index.html')).be.rejected();
   });
 
-  it('opens a file for use with safeNfsFile module', async () => {
+  it('opens a file for use with safeNfsFile module, returns the same handle', async () => {
     const nfsHandle = await testHelpers.createNfsEmulation();
     let fileHandle = await window.safeNfs.create(nfsHandle, 'Hello, SAFE world!');
+    let oldFileHandle = fileHandle;
     fileHandle = await window.safeNfs.open(nfsHandle, fileHandle, testHelpers.OPEN_MODE_READ);
+    should(fileHandle).be.equal(oldFileHandle);
     should(window.safeNfsFile.read(fileHandle, testHelpers.FILE_READ_FROM_BEGIN, testHelpers.FILE_READ_TO_END))
     .be.fulfilled();
   });
