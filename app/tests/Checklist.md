@@ -1,8 +1,8 @@
 # Browser Functionality Testing Checklist
 
 ## Check beaker-plugin-safe-app
-- Run `yarn test-safe-app` to run our test page server.
-  - Visit `localhost://p:3001` and run all tests.
+- Run `yarn test-safe-app` to run our test page server (inside of the `browser/app` folder).
+- Visit `localhost://p:3001` and run all tests.
 
 ## Basic Manual Testing
 
