@@ -7,8 +7,6 @@ import { app, BrowserWindow, Menu } from 'electron'
 import log from 'loglevel'
 import env from './env'
 
-import registerProtocolHandlers from './registerProtocolHandlers'
-
 import logInRenderer from './background-process/logInRenderer'
 
 import * as beakerBrowser from './background-process/browser'
@@ -27,7 +25,6 @@ import * as bookmarks from './background-process/safe-storage/reducers/bookmarks
 import * as history from './background-process/safe-storage/reducers/history'
 import store from './background-process/safe-storage/store'
 import { saveConfigAndQuit } from './background-process/safe-storage/actions/initializer_actions'
-
 
 import * as beakerProtocol from './background-process/protocols/beaker'
 import * as beakerFaviconProtocol from './background-process/protocols/beaker-favicon'
@@ -49,10 +46,6 @@ log.setLevel('trace')
 plugins.registerStandardSchemes()
 
 app.on('ready', function () {
-
-  //init protocols
-  registerProtocolHandlers();
-
   // API initialisations
   sitedata.setup()
   bookmarks.setup()
@@ -81,14 +74,16 @@ app.on('ready', function () {
   openURL.setup()
 
   if((process.platform === 'linux') || (process.platform === 'win32')) {
-    if (process.argv[1] && (process.argv[1].indexOf('safe') !== -1)) {
-      openURL.open(parseSafeUri(process.argv[1]))
+    let uriArg = process.argv[process.argv.length-1];
+    if (process.argv.length >= 2 && uriArg && (uriArg.indexOf('safe') == 0)) {
+      openURL.open(parseSafeUri(uriArg));
     }
   }
 
   const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-    if (commandLine.length >= 2 && commandLine[1]) {
-      openURL.open(parseSafeUri(commandLine[1]));
+    let uriArg = commandLine[commandLine.length-1];
+    if (commandLine.length >= 2 && uriArg) {
+      openURL.open(parseSafeUri(uriArg));
     }
 
     mainWindow = BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]
