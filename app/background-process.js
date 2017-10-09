@@ -82,7 +82,7 @@ app.on('ready', function () {
 
   const shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
     let uriArg = commandLine[commandLine.length-1];
-    if (commandLine.length >= 2 && uriArg) {
+    if (commandLine.length >= 2 && uriArg && (uriArg.indexOf('safe') == 0)) {
       openURL.open(parseSafeUri(uriArg));
     }
 
