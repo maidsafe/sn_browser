@@ -48,6 +48,7 @@
     "unused-filename": "^1.0.0",
     "urlsafe-base64": "^1.0.0",
     "winreg": "^1.2.4",
+    "winston": "^2.3.1",
     "yo-yo": "^1.2.1",
     "zerr": "^1.0.4"
   },

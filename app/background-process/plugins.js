@@ -4,6 +4,7 @@ import fs from 'fs'
 import log from 'loglevel'
 import rpc from 'pauls-electron-rpc'
 import emitStream from 'emit-stream'
+import logger from '../logger';
 
 // globals
 // =
@@ -96,8 +97,10 @@ export function registerStandardSchemes () {
 export function setupProtocolHandlers () {
   getAllInfo('protocols').forEach(proto => {
     // run the module's protocol setup
-    // log.debug('Registering protocol handler:', proto.scheme)
-    proto.register()
+    logger.verbose(`Registering protocol handler: ${proto.scheme}`)
+    proto.register({
+      log: logger
+    });
 })
 }
 
@@ -105,26 +108,26 @@ export function setupProtocolHandlers () {
 export function setupWebAPIs () {
   getAllInfo('webAPIs').forEach(api => {
     // run the module's protocol setup
-    // log.debug('Wiring up Web API:', api.name, api.scheme)
+    logger.verbose(`Wiring up Web API: ${api.scheme}, ${api.name}`);
 
     // We export functions with callbacks in a separate channel
     // since they will be adapted to invoke the callbacks
     let fnsToExport = [];
-  let fnsWithCallbacks = [];
-  let fnsWithAsyncCallbacks = [];
-  for (var fn in api.manifest) {
-    if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
-      fnsWithCallbacks[fn] = api.manifest[fn];
-    } else if (fn.startsWith(WITH_ASYNC_CALLBACK_TYPE_PREFIX)) {
-      fnsWithAsyncCallbacks[fn] = api.manifest[fn];
-    } else {
-      fnsToExport[fn] = api.manifest[fn];
+    let fnsWithCallbacks = [];
+    let fnsWithAsyncCallbacks = [];
+    for (var fn in api.manifest) {
+      if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
+        fnsWithCallbacks[fn] = api.manifest[fn];
+      } else if (fn.startsWith(WITH_ASYNC_CALLBACK_TYPE_PREFIX)) {
+        fnsWithAsyncCallbacks[fn] = api.manifest[fn];
+      } else {
+        fnsToExport[fn] = api.manifest[fn];
+      }
     }
-  }
-  rpc.exportAPI(api.name, fnsToExport, api.methods)
-  rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
-  rpc.exportAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + api.name, fnsWithAsyncCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
-})
+    rpc.exportAPI(api.name, fnsToExport, api.methods)
+    rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+    rpc.exportAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + api.name, fnsWithAsyncCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+  })
 }
 
 // get web API manifests for the given protocol
