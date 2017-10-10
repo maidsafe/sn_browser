@@ -8,6 +8,7 @@ import * as statusBar from './ui/statusbar'
 import { urlToData } from '../lib/fg/img'
 import errorPage from '../lib/error-page'
 import _ from 'lodash'
+import urlModule from 'url'
 
 // constants
 // =
@@ -50,7 +51,7 @@ export function getPinned () {
 
 export function parseSafeAuthUrl(url, isClient) {
   var safeAuthUrl = {}
-  var parsedUrl = new URL(url)
+  var parsedUrl = parseURL(url)
 
   if (!(/^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test(parsedUrl.hostname))) {
     return { action: 'auth' };
@@ -59,13 +60,13 @@ export function parseSafeAuthUrl(url, isClient) {
   safeAuthUrl['protocol'] = parsedUrl.protocol
   safeAuthUrl['action'] = parsedUrl.hostname
 
-  var data = parsedUrl.pathname.split('/')
-  if (!isClient) {
+  var data = parsedUrl.pathname ? parsedUrl.pathname.split('/') : null;
+  if (!isClient && !!data) {
     safeAuthUrl['appId'] = data[1]
     safeAuthUrl['payload'] = data[2]
   } else {
     safeAuthUrl['appId'] = parsedUrl.protocol.split('-').slice(-1)[0]
-    safeAuthUrl['payload'] = data[1]
+    safeAuthUrl['payload'] = null;
   }
   safeAuthUrl['search'] = parsedUrl.search
   return safeAuthUrl
@@ -82,7 +83,7 @@ export function handleSafeAuthScheme(url) {
     if (!page.getURL()) {
       return
     }
-    return new URL(page.getURL()).protocol === SAFE_AUTH_SCHEME
+    return parseURL(page.getURL()).protocol === SAFE_AUTH_SCHEME
   });
   if (safeAuthPage.length > 0) {
     setActive(safeAuthPage[0]);
@@ -101,7 +102,7 @@ export function create (opts) {
     opts = {}
 
 
-  if (url && (new URL(url).protocol === SAFE_AUTH_SCHEME)) {
+  if (url && (parseURL(url).protocol === SAFE_AUTH_SCHEME)) {
     var safeAuthPage = handleSafeAuthScheme(url);
     if (safeAuthPage) {
       return safeAuthPage;
@@ -221,7 +222,7 @@ export function create (opts) {
   const safeModeOn = remote.getGlobal('browserStatus').safeModeOn;
 
   // handle unsafe tab creation
-  if ( safeModeOn && url && (new URL(url).protocol.startsWith( 'http' ) )) {
+  if ( safeModeOn && url && (parseURL(url).protocol.startsWith( 'http' ) )) {
     // create the webview to trigger url behaviour, but dont add it.
     setTimeout( () => {
        var i = pages.indexOf(page);
@@ -789,6 +790,6 @@ function warnIfError (label) {
 }
 
 function parseURL (str) {
-  try { return new URL(str) }
+  try { return urlModule.parse(str) }
   catch (e) { return {} }
 }
