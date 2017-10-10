@@ -94,11 +94,15 @@ export function registerStandardSchemes () {
 
 // register all protocol handlers
 export function setupProtocolHandlers () {
-  getAllInfo('protocols').forEach(proto => {
-    // run the module's protocol setup
-    // log.debug('Registering protocol handler:', proto.scheme)
-    proto.register()
-})
+  return getAllInfo('protocols').reduce(function (promise, proto) {
+      return promise.then(function () {
+        // run the module's protocol setup
+        // We do it sequentially to avoid race conditions in
+        // plugins trying to get a safeApp connection, e.g. safe & safe-logs.
+        // log.debug('Registering protocol handler:', proto.scheme)
+        return proto.register();
+      });
+    }, Promise.resolve());
 }
 
 // setup all web APIs
