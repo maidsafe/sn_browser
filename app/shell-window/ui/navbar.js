@@ -931,7 +931,8 @@ function onKeydownLocation (e) {
       }
 
       var selectionUrl = selection.url
-
+      selectionUrl = selectionUrl.replace(/\/?(\?|#|$)/, '/$1');
+      
       page.loadURL(selectionUrl, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }
