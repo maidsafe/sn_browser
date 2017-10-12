@@ -12,8 +12,8 @@
   },
   "main": "background-process.build.js",
   "dependencies": {
-    "beaker-plugin-safe-app": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.3.0.tgz",
-    "beaker-plugin-safe-authenticator": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.3.0.tgz",
+    "beaker-plugin-safe-app": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.3.1.tgz",
+    "beaker-plugin-safe-authenticator": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.3.1.tgz",
     "browser-es-module-loader": "^0.4.1",
     "co": "^4.6.0",
     "crypto": "^1.0.1",
