@@ -21,6 +21,16 @@ describe('window.safeMutableDataEntries', () => {
     should(entries.length).be.equal(2);
   });
 
+  it('applies "insert" action to a Mutable Data and commits to network', async () => {
+    const mdHandle = await testHelpers.createRandomPublicMutableData({key1: 'value1', key2: 'value2'});
+    const entriesHandle = await window.safeMutableData.getEntries(mdHandle);
+
+    await window.safeMutableDataEntries.insert('key3', 'value3');
+
+    const keysLen = await window.safeMutableDataEntries.len(entriesHandle);
+    should(keysLen).be.equal(3);
+  });
+
   it('frees MD entries object from memory', async () => {
     const mdHandle = await testHelpers.createRandomPublicMutableData({key1: 'value1', key2: 'value2'});
     const entriesHandle = await window.safeMutableData.getEntries(mdHandle);
