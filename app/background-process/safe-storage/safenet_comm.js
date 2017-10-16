@@ -8,13 +8,18 @@ import { getAPI } from './helpers';
 const STATE_KEY = CONSTANTS.STATE_KEY;
 
 const appInfo = {
-  id: 'net.maidsafe.app.browser',
-  name: 'SAFE Browser',
-  vendor: 'MaidSafe.net Ltd',
-  opts: {
-      own_container: true
-    },
-  permissions :{}
+  initInfo: {
+    id: 'net.maidsafe.app.browser',
+    name: 'SAFE Browser',
+    vendor: 'MaidSafe.net Ltd'
+  },
+  initOpts: {
+    registerScheme: false
+  },
+  authOpts: {
+    own_container: true
+  },
+  permissions: {}
 };
 
 let appObj = null;
@@ -37,14 +42,14 @@ export const authoriseApp = () => {
   return new Promise( (resolve, reject ) =>
   {
     appObj = {};
-    let dataStream =  safeApp.initialise(appInfo);
+    let dataStream =  safeApp.initialise(appInfo.initInfo, null, appInfo.initOpts);
 
     dataStream.on('data', ( datum ) =>
     {
       let handle = datum[0];
       appObj.handle = handle;
 
-      safeApp.authorise( handle, appInfo.permissions, appInfo.opts )
+      safeApp.authorise( handle, appInfo.permissions, appInfo.authOpts )
         .then((authUri) => {
           appObj.authUri = authUri;
           return safeApp.connectAuthorised( handle, authUri )

@@ -32,7 +32,6 @@ export function updateReceiver( webContents )
 }
 
 export function open (url) {
-
   if (commandReceiver && commandReceiver !== null) {
     commandReceiver.send('command', 'file:new-tab', url)
   } else {

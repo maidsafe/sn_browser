@@ -50,7 +50,6 @@ export function setup () {
     autoUpdater.once('update-available', onUpdateAvailable)
     autoUpdater.on('error', onUpdateError)
   } catch (e) {
-    log.error('[AUTO-UPDATE]', e.toString())
     isBrowserUpdatesSupported = false
   }
   setTimeout(scheduledAutoUpdate, 15e3) // wait 15s for first run
