@@ -89,7 +89,8 @@
       "name": "SAFE Network URL",
       "schemes": [
         "safe",
-        "safe-auth"
+        "safe-auth",
+        "localhost"
       ]
     },
     "linux": {
@@ -122,6 +123,7 @@
   },
   "dependencies": {
     "fs-extra": "^4.0.1",
-    "rollup-plugin-async": "^1.1.0"
+    "rollup-plugin-async": "^1.1.0",
+    "rollup-plugin-json": "2.3.0"
   }
 }
