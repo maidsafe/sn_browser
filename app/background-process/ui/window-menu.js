@@ -162,7 +162,7 @@ var viewMenu = {
     },
     { type: "separator" },
     {
-      label: 'Toggle DevTools',
+      label: 'Toggle Web Page DevTools',
       accelerator: 'Alt+CmdOrCtrl+I',
       click: function (item, win) {
         if (win) win.webContents.send('command', 'view:toggle-dev-tools')
@@ -237,14 +237,22 @@ var devMenu = {
   submenu:
   [
     {
-      label: 'Reload Shell-Window',
+      label: 'Toggle Web Page DevTools',
+      accelerator: 'Alt+CmdOrCtrl+I',
+      click: function (item, win) {
+        if (win) win.webContents.send('command', 'view:toggle-dev-tools')
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Reload Safe Browser Window',
       click: function ()
       {
         BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache()
       }
     },
     {
-      label: 'Toggle Shell-Window DevTools',
+      label: 'Toggle Safe Browser Window DevTools',
       accelerator: "CmdOrCtrl+Shift+I",
       click: function ()
       {
