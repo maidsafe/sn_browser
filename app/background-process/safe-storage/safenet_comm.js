@@ -1,9 +1,10 @@
 import { shell, ipcMain, webContents, app as browserInstance } from 'electron';
+
 import { CONSTANTS, APP_STATUS, MESSAGES, SAFE_APP_ERROR_CODES } from './constants';
 
 import store from './store';
 import logInRenderer from '../logInRenderer';
-import { getAPI } from './helpers';
+import { getAPI, authReconnect } from './helpers';
 
 const STATE_KEY = CONSTANTS.STATE_KEY;
 
@@ -33,7 +34,18 @@ const safeCryptoPubEncKey = getAPI('safeCryptoPubEncKey');
 const safeCryptoKeyPair = getAPI('safeCryptoKeyPair');
 const safeCryptoSecEncKey = getAPI('safeCryptoSecEncKey');
 
+ipcMain.on('safeReconnectApp', () =>
+{
+  let state = store.getState();
+  authReconnect();
 
+  let app = state.initializer.app;
+
+  if( app && app.handle )
+  {
+    reconnect( app.handle );
+  }
+})
 
 // Has to hack via the datastream as that's actually returned by the func,
 // not converted to promise as via the RPC.
@@ -60,7 +72,7 @@ export const authoriseApp = () => {
 };
 
 export const reconnect = (app) => {
-  return app.reconnect();
+  return safeApp.reconnect();
 }
 
 

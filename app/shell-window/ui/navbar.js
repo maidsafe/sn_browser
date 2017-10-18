@@ -6,6 +6,12 @@ import emitStream from 'emit-stream'
 import { UpdatesNavbarBtn } from './navbar/updates'
 import { DownloadsNavbarBtn } from './navbar/downloads'
 import { SitePermsNavbarBtn } from './navbar/site-perms'
+import {
+  safeConnectionMessage,
+  startSafeConnectionCountdown,
+  setupSafeReconnectionHandlers,
+  getSafeConnectionIntervalId
+} from './safe-reconnect'
 
 const KEYCODE_DOWN = 40
 const KEYCODE_UP = 38
@@ -43,9 +49,11 @@ var safeAuthNetworkState = -1
 var safeAuthData = null
 var safeAuthPopupDiv = yo`<div></div>`
 
+
+
 // safe app plugin
 ipcRenderer.send('registerSafeApp');
-
+setupSafeReconnectionHandlers( update )
 ipcRenderer.on('webClientAuthReq', function(event, req) {
   handleSafeAuthAuthentication(req, CLIENT_TYPES.WEB);
 })
@@ -62,7 +70,13 @@ ipcRenderer.on('onNetworkStatus', function(event, status) {
   safeAuthNetworkState = status
   if (status === -1) {
     hideSafeAuthPopup();
+    startSafeConnectionCountdown();
   }
+  else{
+    let safeConnectionIntervalId = getSafeConnectionIntervalId();
+    clearInterval( safeConnectionIntervalId )
+  }
+
   update()
 })
 
@@ -498,11 +512,17 @@ function render (id, page) {
         <span class="icon"></span>
       </button>`
 
+
   // render safe btn
   var safeBtn = yo`<span class="safe-btn-safe">
       ${safeNetworkStatusBtn}
       ${safeAuthPopupDiv}
       </span>`
+
+  // SAFE add messages as needed
+  var safeMessageBox = yo`<div class="safe-message-box">
+      ${safeConnectionMessage()}
+    </div>`
 
   // `page` is null on initial render
   // and the toolbar should be hidden on initial render
@@ -604,6 +624,7 @@ function render (id, page) {
       </button>
       ${reloadBtn}
       ${safeBtn}
+      ${safeMessageBox}
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}
