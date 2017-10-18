@@ -4,7 +4,7 @@ import fs from 'fs'
 import log from 'loglevel'
 import rpc from 'pauls-electron-rpc'
 import emitStream from 'emit-stream'
-
+import {sendToShellWindow} from './logInRenderer'
 // globals
 // =
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
@@ -100,7 +100,7 @@ export function setupProtocolHandlers () {
         // We do it sequentially to avoid race conditions in
         // plugins trying to get a safeApp connection, e.g. safe & safe-logs.
         // log.debug('Registering protocol handler:', proto.scheme)
-        return proto.register();
+        return proto.register(sendToShellWindow);
       });
     }, Promise.resolve());
 }
