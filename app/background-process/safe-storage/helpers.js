@@ -16,6 +16,15 @@ export const authReconnect = ( ) =>
   reconnect();
 }
 
+export const getAuthenticatorStatus = ( ) =>
+{
+  const authApi = authAPIs.find( api =>  api.name === 'safeAuthenticator' )
+
+  let getNetworkState = authApi.methods.getNetworkState;
+
+  getNetworkState();
+}
+
 export const getAPI = ( name ) =>
 {
   const relevantApi = allAPIs.find( api =>  api.name === name )

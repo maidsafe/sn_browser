@@ -4,9 +4,11 @@ import { CONSTANTS, APP_STATUS, MESSAGES, SAFE_APP_ERROR_CODES } from './constan
 
 import store from './store';
 import logInRenderer from '../logInRenderer';
-import { getAPI, authReconnect } from './helpers';
+import { getAPI, authReconnect, getAuthenticatorStatus } from './helpers';
 
 const STATE_KEY = CONSTANTS.STATE_KEY;
+const DISCONNECTED = 'Disconnected';
+const CONNECTED = 'Connected';
 
 const appInfo = {
   initInfo: {
@@ -37,11 +39,18 @@ const safeCryptoSecEncKey = getAPI('safeCryptoSecEncKey');
 ipcMain.on('safeReconnectApp', () =>
 {
   let state = store.getState();
-  authReconnect();
+
+  let authStatus = getAuthenticatorStatus();
+
+  if( authStatus = DISCONNECTED)
+  {
+    authReconnect();
+  }
 
   let app = state.initializer.app;
+  let status = state.initializer.networkStatus;
 
-  if( app && app.handle )
+  if( app && app.handle && status === DISCONNECTED )
   {
     reconnect( app.handle );
   }
