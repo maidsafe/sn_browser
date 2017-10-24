@@ -130,6 +130,7 @@ export function create (opts) {
     zoom: 0, // what's the current zoom level?
     favicons: null, // what are the favicons of the page?
     archiveInfo: null, // if a dat archive, includes the metadata
+    prevUrl: null, // for SAFE, tracking when a URL has actually changed or just hash (eg).
 
     // prompts
     prompts: [], // list of active prompts

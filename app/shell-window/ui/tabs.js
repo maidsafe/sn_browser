@@ -2,9 +2,9 @@ import * as yo from 'yo-yo'
 import * as pages from '../pages'
 import * as navbar from './navbar'
 import { ipcRenderer, remote } from 'electron'
-
+import { parse as urlParse } from 'url'
 import { debounce, throttle } from '../../lib/functions'
-
+import pkg from '../../../package.json'
 // constants
 // =
 
@@ -156,8 +156,49 @@ function onUpdateTab (page) {
   getTabEl(page, tabEl => yo.update(tabEl, drawTab(page)))
 }
 
+/**
+ * Check if the page url has changed to a different service or public ID to avoid triggering freeing of handles
+ * for webapps (using pushstate/or hash url changes).
+ *
+ * This assumes that no one would be having a different webapp at the same service/id on a different path. We need
+ * to assume this to enable pushstate.
+ * @param  {String} url  string of the new url
+ * @param  {String} prevUrl string of page's previous url
+ * @return {Bool}      has the page changed for SAFE's concerns / to free the app handles automatically?
+ */
+function pageURLChangedForSafe(url, prevUrl)
+{
+  if(!url || !prevUrl)
+  {
+    return false
+  }
+
+  const protocols = pkg.build.protocols.schemes;
+
+  let newUrlObj = urlParse(url)
+  let prevUrlObj = urlParse(prevUrl)
+
+  // strip ':'
+  let newProtocol = newUrlObj.protocol.substring(0, newUrlObj.protocol.length - 1);
+
+  if( !protocols.includes( newProtocol ))
+    return false;
+
+  return newUrlObj.hostname !== prevUrlObj.hostname
+}
+
 function onLoadingTab (page) {
-  ipcRenderer.send('onTabUpdate', page.safeAppGroupId);
+
+  let url = page.getIntendedURL();
+  let prev = page.prevUrl;
+  page.prevUrl = url;
+
+  // SAFE: Only pass onTabUpdate when we're changing the site base or main publicID
+  if( pageURLChangedForSafe( url, prev ) )
+  {
+    ipcRenderer.send('onTabUpdate', page.safeAppGroupId);
+  }
+
   getTabEl(page, tabEl => yo.update(tabEl, drawTab(page)))
 }
 
