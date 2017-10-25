@@ -5,7 +5,9 @@ image: Visual Studio 2017
 os: unstable
 environment:
   nodejs_version: "Stable"
-
+  matrix:
+    - NODE_ENV: "dev"
+    - NODE_ENV: "production"
 cache:
   - "%LOCALAPPDATA%\\Yarn"
   - node_modules
@@ -34,17 +36,14 @@ build_script:
 after_build:
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - dir dist
-  - echo dist\safe-browser-%APPVEYOR_REPO_TAG_NAME%-win
   - cd dist
-  - dir
-  - rename win-unpacked safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64
   - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
   - dir
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
 
 artifacts:
-  - path: dist/*.zip
+  - path: dist/*
 
 before_deploy:
     # - dir dist
@@ -61,6 +60,6 @@ deploy:
   draft: true
   prerelease: true
   on:
-    branch: PackagingProcess
+    branch: AddMockTravisBuild
     appveyor_repo_tag:  true        # deploy on tag push only
     # appveyor_repo_tag:  true        # deploy on tag push only
