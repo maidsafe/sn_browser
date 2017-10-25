@@ -13,8 +13,7 @@ export function setRenderLoggerTarget( webContents )
 
 /**
  * Set the target webcontents to log to
- * @param  {[type]} args [description]
- * @return {[type]}      [description]
+ * @param  {[String/Array]} args params to log in render, can be string or array like
  */
 export function logInRenderer( ...args )
 {
@@ -25,6 +24,18 @@ export function logInRenderer( ...args )
   }
 
   target.send( 'command', 'log', ...args );
+}
+
+
+export function sendToShellWindow( ...args )
+{
+  let target = targetContents || webContents.getFocusedWebContents();
+  if( ! target )
+  {
+    return;
+  }
+
+  target.send( ...args );
 }
 
 export default logInRenderer;

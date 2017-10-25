@@ -1,11 +1,15 @@
 import { shell, ipcMain, webContents, app as browserInstance } from 'electron';
+
 import { CONSTANTS, APP_STATUS, MESSAGES, SAFE_APP_ERROR_CODES } from './constants';
 
 import store from './store';
 import logInRenderer from '../logInRenderer';
-import { getAPI } from './helpers';
+import { getAPI, authReconnect, getAuthenticatorStatus } from './helpers';
+import { newNetStatusCallback } from './actions/initializer_actions';
 
 const STATE_KEY = CONSTANTS.STATE_KEY;
+const DISCONNECTED = 'Disconnected';
+const CONNECTED = 'Connected';
 
 const appInfo = {
   initInfo: {
@@ -33,16 +37,40 @@ const safeCryptoPubEncKey = getAPI('safeCryptoPubEncKey');
 const safeCryptoKeyPair = getAPI('safeCryptoKeyPair');
 const safeCryptoSecEncKey = getAPI('safeCryptoSecEncKey');
 
+let browserNetworkState = '';
+
+ipcMain.on('safeReconnectApp', () =>
+{
+  let state = store.getState();
+
+  let authStatus = getAuthenticatorStatus();
+
+  if( authStatus = DISCONNECTED)
+  {
+    authReconnect();
+  }
+
+  let app = state.initializer.app;
+
+  // TODO: Make less hacky. We should check against state/init/networkStatus, but right now we cannot get
+  // networkStatus updates. So we'll force a reconnect as long as registered previously.
+  // It should trigger via store, but dispatch doesnt exist for the data stream...
+  if( app && app.handle && browserNetworkState == DISCONNECTED )
+  {
+    reconnect( app.handle );
+  }
+})
+
 
 
 // Has to hack via the datastream as that's actually returned by the func,
 // not converted to promise as via the RPC.
-export const authoriseApp = () => {
+export const authoriseApp = ( ) => {
   logInRenderer('Authorising app.')
   return new Promise( (resolve, reject ) =>
   {
     appObj = {};
-    let dataStream =  safeApp.initialise(appInfo.initInfo, null, appInfo.initOpts);
+    let dataStream = safeApp.initialise(appInfo.initInfo, null, appInfo.initOpts);
 
     dataStream.on('data', ( datum ) =>
     {
@@ -53,14 +81,23 @@ export const authoriseApp = () => {
         .then((authUri) => {
           appObj.authUri = authUri;
           return safeApp.connectAuthorised( handle, authUri )
-            .then( r => resolve( appObj ) )
+            .then( r => {
+              browserNetworkState = CONNECTED;
+              return resolve( appObj )
+            })
         })
+
+      if( datum[0] == DISCONNECTED || datum[0] == CONNECTED )
+      {
+        logInRenderer('Browser net state changed to: ', datum);
+        browserNetworkState = datum;
+      }
     })
   })
 };
 
-export const reconnect = (app) => {
-  return app.reconnect();
+export const reconnect = ( handle ) => {
+  return safeApp.reconnect( handle );
 }
 
 
