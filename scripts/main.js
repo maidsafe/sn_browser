@@ -15,7 +15,7 @@ const OSName = {
 const releaseFolderNameForPlatforms = {
   darwin: 'mac',
   linux: 'linux-unpacked',
-  win32: 'windows-unpacked'
+  win32: 'win-unpacked'
 };
 
 const packageDistDir = path.resolve(__dirname, '..', 'dist');
