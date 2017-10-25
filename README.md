@@ -8,7 +8,7 @@ A browser designed to open `safe://` websites on the SAFE Network.
 
 1. Prerequisites:
 
-    * Node.js 6.5.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
+    * Node.js 7.10.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
     * [Git](https://git-scm.com/)
     * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
 
