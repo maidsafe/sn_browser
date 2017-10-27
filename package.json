@@ -83,7 +83,6 @@
     "watch": "cross-env NODE_ENV=dev gulp start-watch"
   },
   "dependencies": {
-    "fs-extra": "^4.0.1",
-    "modclean": "2.1.0"
+    "fs-extra": "^4.0.1"
   }
 }
