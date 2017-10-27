@@ -438,7 +438,7 @@ bcrypt-pbkdf@^1.0.0:
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.3.1.tgz":
   version "0.3.1"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.3.1.tgz#1a02ad2c78942e4f861d060b080ce620c072b6c3"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.3.1.tgz#7b9288d20ffb5b27c8a8344eb06fb24530931301"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
@@ -787,8 +787,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000751"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000751.tgz#1919a40bc17e91d87c8c09869577c680f9f1befd"
+  version "1.0.30000752"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000752.tgz#daa129d54ce700e94ad14388bdef514ec1e2dd54"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
