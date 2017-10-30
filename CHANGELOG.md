@@ -1,6 +1,6 @@
 # SAFE Browser Changelog
 
-# 0.6.1
+# 0.7.0
 
 - Fix the issue with favicons which are now loaded and displayed for safe:// sites.
 - Warn the user upon a network disconnection event in the browser, not only from the Authenticator page but in any open tab, and attempt to automatically reconnect every 30 secs if the user doesn’t explicitly do it.
