@@ -187,7 +187,7 @@ describe( 'tabs reducer', () =>
     {
         const activeTab = { ...basicTab, isActiveTab: true };
 
-        it( 'should set the last closed tab to be not closed', () =>
+        it( 'should update the active tab\'s properties', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
@@ -201,6 +201,8 @@ describe( 'tabs reducer', () =>
                     title : 'hi'
                 }
             );
+
+            expect( newState[2] ).toHaveProperty('history');
         } );
     } );
 
@@ -209,20 +211,22 @@ describe( 'tabs reducer', () =>
     {
         const activeTab = { ...basicTab, isActiveTab: true };
 
-        it( 'should set the last closed tab to be not closed', () =>
+        it( 'should update the tab specified in the payload', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_TAB,
-                payload : { url: 'changed!', title: 'hi', index: 2 }
+                payload : { url: 'changed again!', title: 'hi', index: 2 }
             } );
-
-            expect( newState[2] ).toMatchObject(
+            const updatedTab = newState[2];
+            expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url   : 'changed!',
+                    url   : 'changed again!',
                     title : 'hi'
                 }
             );
+
+            expect( updatedTab ).toHaveProperty('history');
         } );
     } );
 } );

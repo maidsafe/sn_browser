@@ -176,11 +176,12 @@ const updateActiveTab = ( state, payload ) =>
 
     const tabToMerge = state[index];
 
-    let updatedTab = { ...tabToMerge, ...payload };
+    let updatedTab = { ...tabToMerge };
 
     const url = payload.url;
 
     updatedTab = updateTabHistory( updatedTab, url );
+    updatedTab = { ...updatedTab, ...payload };
 
     const updatedState = [...state];
 
@@ -200,11 +201,12 @@ const updateTab = ( state, payload ) =>
 
     const tabToMerge = state[index];
 
-    let updatedTab = { ...tabToMerge, ...payload };
+    let updatedTab = { ...tabToMerge };
 
     const url = payload.url;
 
     updatedTab = updateTabHistory( updatedTab, url );
+    updatedTab = { ...updatedTab, ...payload };
 
     const updatedState = [...state];
 
