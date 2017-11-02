@@ -30,7 +30,7 @@ export default class TabBar extends Component
     {
         event.stopPropagation();
 
-        this.props.setActiveTab( tabData.key );
+        this.props.setActiveTab( { index: tabData.key } );
         this.props.updateAddress( event.target.value );
     }
 

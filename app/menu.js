@@ -131,7 +131,7 @@ export default class MenuBuilder
 
                         // here. we find last tab && update store to be open.
                         store.dispatch( reopenTab() );
-                        // store.dispatch( setActiveTab( lastTab ) );
+                        // store.dispatch( setActiveTab( {index:  lastTab } ) );
                         // need window ID to focus it
 
                         // if ( win ) win.webContents.send( 'command', 'file:reopen-tab' );

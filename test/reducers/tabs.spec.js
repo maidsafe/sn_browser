@@ -1,148 +1,228 @@
 /* eslint-disable func-names */
-import { expect } from 'chai';
-import * as tabs from 'reducers/tabs';
+import tabs from 'reducers/tabs';
+import { TYPES } from 'actions/tabs_actions';
+import initialState from 'reducers/initialAppState.json';
 
-describe( '_deactivateOldActiveTab', () =>
+describe( 'tabs reducer', () =>
 {
+    const basicTab = {
+        url      : 'hello',
+        windowId : 1,
+    };
 
-    it( 'should exist', () =>
+    it( 'should return the initial state', () =>
     {
-        expect( tabs._deactivateOldActiveTab ).to.exist;
+        expect( tabs( undefined, {} ) ).toEqual( initialState.tabs );
     } );
 
-    it( 'should return a tabs state array', () =>
+    describe( 'ADD_TAB', () =>
     {
-        let state = [ { isActiveTab: true } ];
+        it( 'should handle adding a tab', () =>
+        {
+            expect(
+                tabs( [], {
+                    type    : TYPES.ADD_TAB,
+                    payload : { url: 'hello' }
+                } )
+            ).toEqual( [
+                basicTab
+            ] );
+        } );
 
-        expect( tabs._deactivateOldActiveTab(  state  ) ).to.be.an.Array;
-        expect( tabs._deactivateOldActiveTab(  state  ) ).to.not.be.undefined;
+        it( 'should handle adding a second tab', () =>
+        {
+            expect(
+                tabs(
+                    [basicTab],
+                    {
+                        type    : TYPES.ADD_TAB,
+                        payload : {
+                            url : 'another-url'
+                        }
+                    }
+                )
+            ).toEqual( [
+                basicTab,
+                {
+                    url      : 'another-url',
+                    windowId : 1, // sets initial window it
+                }
+            ] );
+        } );
     } );
 
-    it( 'should deactivate any tab with isActive set', () =>
+
+    describe( 'SET_ACTIVE_TAB', () =>
     {
-        let state = [ { isActiveTab: true } ];
+        const activeTab = { ...basicTab, isActiveTab: true };
 
-        expect( tabs._deactivateOldActiveTab( state ) ).to.be.an.Array;
-        expect( tabs._deactivateOldActiveTab( state ) ).to.not.equal( state );
-        expect( tabs._deactivateOldActiveTab( state )[0] ).to.be.an.Object;
+        it( 'should set the active tab', () =>
+        {
+            expect(
+                tabs( [basicTab], {
+                    type    : TYPES.SET_ACTIVE_TAB,
+                    payload : { index: 0 }
+                } )
+            ).toEqual( [
+                {
+                    ...basicTab,
+                    isActiveTab : true,
+                    isClosed    : false
+                }
+            ] );
+        } );
 
-        state.push( {isActiveTab: true } );
-        expect( tabs._deactivateOldActiveTab( state )[0] ).to.deep.equal( { isActiveTab: false } );
+        it( 'deactivate the previous active tab', () =>
+        {
+            expect(
+                tabs( [activeTab, basicTab], {
+                    type    : TYPES.SET_ACTIVE_TAB,
+                    payload : { index: 1 }
+                } )
+            ).toEqual( [
+                { ...basicTab, isActiveTab: false },
+                {
+                    ...basicTab,
+                    isActiveTab : true,
+                    isClosed    : false
+                }
+            ] );
+        } );
     } );
 
-    it( 'should have the same length array', () =>
-    {
-        let state = [ { isActiveTab: true }, { isActiveTab: true } ];
 
-        expect( tabs._deactivateOldActiveTab( state ) ).to.be.an.Array;
-        expect( tabs._deactivateOldActiveTab( state ).size ).to.equal( 2 );
+    describe( 'CLOSE_TAB', () =>
+    {
+        const activeTab = { ...basicTab, isActiveTab: true };
+
+        it( 'should set the tab as closed and inactive', () =>
+        {
+            const newTabState = tabs( [activeTab], {
+                type    : TYPES.CLOSE_TAB,
+                payload : { index: 0 }
+            } )[0];
+
+            expect( newTabState ).toMatchObject(
+                {
+                    ...activeTab,
+                    isActiveTab : false,
+                    isClosed    : true
+                }
+            );
+
+            expect( newTabState ).toHaveProperty( 'closedTime' );
+        } );
+
+        it( 'should set another tab as active', () =>
+        {
+            const newState = tabs( [activeTab, basicTab], {
+                type    : TYPES.CLOSE_TAB,
+                payload : { index: 0 }
+            } );
+
+            expect( newState[0] ).toMatchObject(
+                {
+                    ...activeTab,
+                    isActiveTab : false,
+                    isClosed    : true
+                }
+            );
+
+            expect( newState[1] ).toMatchObject(
+                {
+                    ...basicTab,
+                    isActiveTab : true,
+                    isClosed    : false
+                }
+            );
+        } );
     } );
 
-    it( 'should return an immutable array', () =>
-    {
-        let state = [{isActiveTab: false}];
 
-        //isImmutable not working...
-        expect( tabs._setActiveTab( 0, state ) ).to.exist;
-    });
+    describe( 'CLOSE_ACTIVE_TAB', () =>
+    {
+        const activeTab = { ...basicTab, isActiveTab: true };
+
+        it( 'should set the active tab as closed and inactive', () =>
+        {
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type : TYPES.CLOSE_ACTIVE_TAB
+            } );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    isActiveTab : false,
+                    isClosed    : true
+                }
+            );
+
+            expect( newState[2] ).toHaveProperty( 'closedTime' );
+        } );
+    } );
+
+
+    describe( 'REOPEN_TAB', () =>
+    {
+        const closedTab = { ...basicTab, isClosed: true, closedTime: '100' };
+        const closedTabOlder = { ...basicTab, isClosed: true, closedTime: '10' };
+
+        it( 'should set the last closed tab to be not closed', () =>
+        {
+            const newState = tabs( [basicTab, closedTabOlder, closedTab], {
+                type : TYPES.REOPEN_TAB
+            } );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...closedTab,
+                    isClosed   : false,
+                    closedTime : null
+                }
+            );
+        } );
+    } );
+
+    describe( 'UPDATE_ACTIVE_TAB', () =>
+    {
+        const activeTab = { ...basicTab, isActiveTab: true };
+
+        it( 'should set the last closed tab to be not closed', () =>
+        {
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed!', title: 'hi' }
+            } );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url   : 'changed!',
+                    title : 'hi'
+                }
+            );
+        } );
+    } );
+
+
+    describe( 'UPDATE_TAB', () =>
+    {
+        const activeTab = { ...basicTab, isActiveTab: true };
+
+        it( 'should set the last closed tab to be not closed', () =>
+        {
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_TAB,
+                payload : { url: 'changed!', title: 'hi', index: 2 }
+            } );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url   : 'changed!',
+                    title : 'hi'
+                }
+            );
+        } );
+    } );
 } );
-
-
-
-
-
-
-describe( '_setActiveTab', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._setActiveTab ).to.exist;
-    });
-
-    it( 'should return an immutable array', () =>
-    {
-        let state = [{isActiveTab: false}];
-
-        //isImmutable not working...
-        expect( tabs._setActiveTab( 0, state ) ).to.exist;
-    });
-
-    it( 'should set index as Active.', () =>
-    {
-        let state = [{isActiveTab: false}, {isActiveTab: false}];
-
-        expect( tabs._setActiveTab( 0, state )[0].isActiveTab ).to.be.true;
-    });
-
-    it( 'should deactivate old tab', () =>
-    {
-        let state = [{isActiveTab: false}, {isActiveTab: true}];
-
-        expect( tabs._setActiveTab( 0, state )[0].isActiveTab ).to.be.true;
-        expect( tabs._setActiveTab( 0, state )[1].isActiveTab ).to.be.false;
-    });
-
-});
-
-
-
-
-describe( '_updateTabHistory', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._updateTabHistory ).to.exist;
-    });
-    xit( 'should add a history array if it doesnt exist' );
-    xit( 'should add a new url' );
-    xit( 'should return an immutable array' );
-    xit( 'should not add a url if its the same as the previous one' );
-    xit( 'should allow a url to exist twice as long as they are not consecutive' );
-});
-
-
-describe( '_addTab', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._addTab ).to.exist;
-    });
-    xit( 'should add a tab' );
-});
-
-describe( '_closeTab', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._closeTab ).to.exist;
-    });
-    xit( 'should close a tab' );
-});
-
-describe( '_reopenTab', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._reopenTab ).to.exist;
-    });
-    xit( 'should reopen a tab' );
-});
-
-describe( '_updateActiveTab', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._updateActiveTab ).to.exist;
-    });
-    xit( 'should update the active tab' );
-    xit( 'should not update any other tab' );
-});
-
-describe( '_updateTab', () =>
-{
-    it( 'should exist', () =>
-    {
-        expect( tabs._updateTab ).to.exist;
-    });
-    xit( 'should update a tab' );
-});

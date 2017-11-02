@@ -1,28 +1,45 @@
 {
   "presets": [
     ["env", {
-      "targets": { "node": 6 },
+      "targets": { "node": 8 },
       "useBuiltIns": true
     }],
     "stage-0",
     "react"
   ],
-  "plugins": ["add-module-exports", [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ] ],
+  "plugins": ["add-module-exports" ],
   "env": {
     "production": {
       "presets": ["react-optimize"],
-      "plugins": ["babel-plugin-dev-expression"]
+      "plugins": ["babel-plugin-dev-expression",  [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ]]
     },
     "development": {
       "plugins": [
         "transform-class-properties",
         "transform-es2015-classes",
         "react-hot-loader/babel",
+         [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ],
         ["flow-runtime", {
           "assert": true,
           "annotate": true
         }]
       ]
+  },
+  "test" : {
+        "presets" : [
+            ["env", {
+              "targets": { "node": 8 },
+              "useBuiltIns": true
+            }],
+          "stage-0",
+          "es2015",
+          "react"
+      ],
+      "plugins": [
+          "transform-es2015-modules-commonjs",
+          "transform-class-properties",
+          "transform-es2015-classes"
+        ]
     }
   }
 }

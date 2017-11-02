@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as TabActions from '../reducers/tabs';
+import * as TabActions from '../actions/tabs_actions';
 import * as AddressActions from '../reducers/address';
 import Browser from '../components/Browser';
 

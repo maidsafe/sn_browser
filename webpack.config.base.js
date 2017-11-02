@@ -167,6 +167,7 @@ export default {
         extensions : ['.js', '.jsx', '.json'],
         alias      :
         {
+            actions    : path.join( __dirname, 'app/actions' ),
             appPackage : path.join( __dirname, 'package.json' ),
             components : path.join( __dirname, 'app/components' ),
             containers : path.join( __dirname, 'app/containers' ),
