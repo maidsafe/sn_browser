@@ -85,6 +85,34 @@ export default function openWindow()
 
     } );
 
+    let filter = {
+      urls: ['*://*' ]
+
+    }
+
+    // mainWindow.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
+    // {
+    //
+    //     // console.log("DETAIILLSSS", details);
+    // //   if( ! global.browserStatus.safeModeOn || isLocal( details ) )
+    // //   {
+    //     callback({});
+    // //   }
+    // //   else if( details.url.indexOf('http') > -1 )
+    // //   {
+    // //     // FIXME shankar - temp handling for opening external links
+    // //     // if (details.url.indexOf('safe_proxy.pac') !== -1) {
+    // //     //   return callback({ cancel: true })
+    // //     // }
+    // //     try {
+    // //       shell.openExternal(details.url);
+    // //     } catch (e) {};
+    //   //
+    // //     callback({ cancel: true, redirectURL: 'beaker:start' })
+    //   //
+    // //   }
+    // })
+
 
     //for each tab in the store...
     // let view = new BrowserView({

@@ -71,9 +71,9 @@ export default ( initialState = {}, middleware = [] ) =>
             stateTransformer: stateTransformer
         };
 
-        logger = createCLILogger(loggerOptions)
+        // logger = createCLILogger(loggerOptions)
 
-        middleware.push( logger );
+        // middleware.push( logger );
     }
 
 

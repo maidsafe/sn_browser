@@ -5,22 +5,23 @@ import { remote, ipcRenderer } from 'electron';
 import styles from './tab.css';
 
 
-const {Menu, MenuItem} = remote;
+const { Menu, MenuItem } = remote;
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
-const SHOW_DEVTOOLS = parseInt(process.env.DEVTOOLS, 10) > 1;
+const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
 
-export default class Tab extends Component {
+export default class Tab extends Component
+{
     static propTypes =
     {
         isActiveTab : PropTypes.bool.isRequired,
         url         : PropTypes.string.isRequired,
-        index    : PropTypes.number.isRequired,
+        index       : PropTypes.number.isRequired,
         // className   : PropTypes.string,
         // navigate    : PropTypes.any,
-        updateTab : PropTypes.func.isRequired,
-        addTab          : PropTypes.func.isRequired
+        updateTab   : PropTypes.func.isRequired,
+        addTab      : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -31,8 +32,9 @@ export default class Tab extends Component {
     }
 
 
-    constructor(props) {
-        super(props);
+    constructor( props )
+    {
+        super( props );
 
         this.state = {
             browserState : {
@@ -63,40 +65,45 @@ export default class Tab extends Component {
     {
         const { isActiveTab } = this.props;
 
-        if( ! isActiveTab )
-            return
-
-        this.reload();
-    }
-
-    componentWillReceiveProps(nextProps)
-    {
-
-        if( JSON.stringify(nextProps) === JSON.stringify( this.props ) )
+        if ( !isActiveTab )
         {
             return;
         }
 
-        if( !this.state.browserState.mountedAndReady )
+        this.reload();
+    }
+
+    componentWillReceiveProps( nextProps )
+    {
+        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
+        {
             return;
+        }
 
-        if (nextProps.url) {
+        if ( !this.state.browserState.mountedAndReady )
+        {
+            return;
+        }
 
+        if ( nextProps.url )
+        {
             const { webview } = this;
-            if (!webview)
+            if ( !webview )
             {
                 return;
             }
 
-            if (webview.src === '' || webview.src === 'about:blank' ||
-            webview.src !== nextProps.url) {
+            if ( webview.src === '' || webview.src === 'about:blank' ||
+            webview.src !== nextProps.url )
+            {
                 // we didn't have a proper url but now do
-                this.loadURL(nextProps.url);
+                this.loadURL( nextProps.url );
             }
         }
     }
 
-    componentDidMount() {
+    componentDidMount()
+    {
         const { webviewShell } = this.refs;
         const { index } = this.props;
 
@@ -105,20 +112,20 @@ export default class Tab extends Component {
         let rightClickPosition;
 
         // cf. https://github.com/electron/electron/issues/6046
-        webviewShell.innerHTML = `<webview style="height: 100%; display: flex; flex: 1 1;"/>`;
-        const wv = webviewShell.querySelector('webview');
+        webviewShell.innerHTML = '<webview style="height: 100%; display: flex; flex: 1 1;"/>';
+        const wv = webviewShell.querySelector( 'webview' );
         this.webview = wv;
 
         const { meId } = this.props;
-        const partition = `persist:peruse-tab`;
+        const partition = 'persist:peruse-tab';
 
-        wv.partition = partition
+        // wv.partition = partition
         // wv.useragent = useragent
         wv.plugins = true;
         // wv.preload = injectPath
         //
 
-        const menu = Menu.buildFromTemplate([
+        const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
             { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
             { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
@@ -128,50 +135,56 @@ export default class Tab extends Component {
                 label : 'Inspect element',
                 click : ( e ) =>
                 {
-                    wv.inspectElement(rightClickPosition.x, rightClickPosition.y);
+                    wv.inspectElement( rightClickPosition.x, rightClickPosition.y );
                 }
             }
-        ]);
+        ] );
 
 
-        const callbackSetup = () => {
-            wv.addEventListener('did-start-loading', ::this.didStartLoading);
-            wv.addEventListener('did-stop-loading', ::this.didStopLoading);
-            wv.addEventListener('will-navigate', ::this.willNavigate);
-            wv.addEventListener('did-navigate', ::this.didNavigate);
-            wv.addEventListener('page-title-updated', ::this.pageTitleUpdated);
-            wv.addEventListener('page-favicon-updated', ::this.pageFaviconUpdated);
-            wv.addEventListener('new-window', ::this.newWindow);
+        const callbackSetup = () =>
+        {
+            wv.addEventListener( 'did-start-loading', ::this.didStartLoading );
+            wv.addEventListener( 'did-stop-loading', ::this.didStopLoading );
+            wv.addEventListener( 'will-navigate', ::this.willNavigate );
+            wv.addEventListener( 'did-navigate', ::this.didNavigate );
+            wv.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
+            wv.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
+            wv.addEventListener( 'new-window', ::this.newWindow );
 
-            wv.addEventListener('contextmenu', (e) => {
-                    e.preventDefault()
-                    rightClickPosition = {x: e.x, y: e.y}
-                    menu.popup(remote.getCurrentWindow())
-              }, false);
+            wv.addEventListener( 'contextmenu', ( e ) =>
+            {
+                e.preventDefault();
+                rightClickPosition = { x: e.x, y: e.y };
+                menu.popup( remote.getCurrentWindow() );
+            }, false );
 
             this.domReady();
 
-            wv.removeEventListener('dom-ready', callbackSetup);
+            wv.removeEventListener( 'dom-ready', callbackSetup );
         };
-        wv.addEventListener('dom-ready', callbackSetup);
+        wv.addEventListener( 'dom-ready', callbackSetup );
 
-        wv.addEventListener('dom-ready', () => {
+        wv.addEventListener( 'dom-ready', () =>
+        {
             // wv.executeJavaScript(`window.__itchInit && window.__itchInit(${JSON.stringify(index)})`)
-            this.didStopLoading()
-        });
+            this.didStopLoading();
+        } );
 
         wv.src = 'about:blank';
     }
 
 
     //
-    updateBrowserState(props = {}) {
+    updateBrowserState( props = {} )
+    {
         const { webview } = this;
-        if (!webview) {
+        if ( !webview )
+        {
             return;
         }
-        if (!webview.partition || webview.partition === '') {
-            console.warn(`${this.props.index}: webview has empty partition`);
+        if ( !webview.partition || webview.partition === '' )
+        {
+            console.warn( `${this.props.index}: webview has empty partition` );
         }
 
         const browserState = {
@@ -181,48 +194,53 @@ export default class Tab extends Component {
             ...props
         };
 
-        this.setState({ browserState });
+        this.setState( { browserState } );
     }
 
-    domReady() {
+    domReady()
+    {
         const { url, updateTab, index } = this.props;
         const { webview } = this;
 
         const webContents = webview.getWebContents();
-        if (!webContents || webContents.isDestroyed()) return;
+        if ( !webContents || webContents.isDestroyed() ) return;
 
-        if (SHOW_DEVTOOLS) {
-            webContents.openDevTools({ detach: true });
+        if ( SHOW_DEVTOOLS )
+        {
+            webContents.openDevTools( { detach: true } );
         }
 
-        this.updateBrowserState({ loading: false, mountedAndReady : true });
+        this.updateBrowserState( { loading: false, mountedAndReady: true } );
 
         const webContentsId = webview.getWebContents().id;
-        //lets add the webContents id for easy manipulation
-        updateTab( { index, webContentsId: webContentsId } );
+        // lets add the webContents id for easy manipulation
+        updateTab( { index, webContentsId } );
 
         // if (currentSession !== webContents.session) {
         //     this.setupItchInternal(webContents.session)
         // }
 
-        if (url && url !== 'about:blank') {
-            this.loadURL(url)
-            .catch(err => console.log('err in loadurl', err));
+        if ( url && url !== 'about:blank' )
+        {
+            this.loadURL( url )
+                .catch( err => console.log( 'err in loadurl', err ) );
         }
     }
 
-    didStartLoading( ) {
-
+    didStartLoading( )
+    {
         const { updateTab, index } = this.props;
 
-        this.updateBrowserState({ loading: true });
+        this.updateBrowserState( { loading: true } );
     }
 
-    didStopLoading( ) {
-        this.updateBrowserState({ loading: false });
+    didStopLoading( )
+    {
+        this.updateBrowserState( { loading: false } );
     }
 
-    pageTitleUpdated(e) {
+    pageTitleUpdated( e )
+    {
         const title = e.title;
         const { updateTab, index, isActiveTab } = this.props;
 
@@ -233,22 +251,26 @@ export default class Tab extends Component {
         updateTab( tabUpdate );
     }
 
-    pageFaviconUpdated(e) {
+    pageFaviconUpdated( e )
+    {
         // const {index, tabDataFetched} = this.props
         // tabDataFetched(index, {webFavicon: e.favicons[0]})
     }
 
-    didNavigate(e) {
+    didNavigate( e )
+    {
         const { updateTab, index, updateAddress } = this.props;
         const { url } = e;
-        this.updateBrowserState({ url });
+        this.updateBrowserState( { url } );
 
-        updateTab({ index, url });
+        updateTab( { index, url } );
         updateAddress( url );
     }
 
-    willNavigate(e) {
-        if (!this.isFrozen()) {
+    willNavigate( e )
+    {
+        if ( !this.isFrozen() )
+        {
             return;
         }
 
@@ -256,11 +278,13 @@ export default class Tab extends Component {
         const { url } = e;
 
         // sometimes we get double will-navigate events because life is fun?!
-        if (this.lastNavigationUrl === url && e.timeStamp - this.lastNavigationTimeStamp < WILL_NAVIGATE_GRACE_PERIOD) {
-            this.with((wv) => {
+        if ( this.lastNavigationUrl === url && e.timeStamp - this.lastNavigationTimeStamp < WILL_NAVIGATE_GRACE_PERIOD )
+        {
+            this.with( ( wv ) =>
+            {
                 wv.stop();
-                wv.loadURL(this.props.url);
-            });
+                wv.loadURL( this.props.url );
+            } );
             return;
         }
         this.lastNavigationUrl = url;
@@ -268,22 +292,24 @@ export default class Tab extends Component {
 
         const index = this.props.index;
 
-        this.props.updateTab({ index, url });
+        this.props.updateTab( { index, url } );
 
-        if( this.props.isActiveTab )
+        if ( this.props.isActiveTab )
         {
             this.props.updateAddress( url );
         }
 
         // our own little preventDefault
         // cf. https://github.com/electron/electron/issues/1378
-        this.with((wv) => {
+        this.with( ( wv ) =>
+        {
             wv.stop();
             wv.loadURL( url );
-        });
+        } );
     }
 
-    newWindow(e) {
+    newWindow( e )
+    {
         const { navigate, addTab } = this.props;
         const { url } = e;
         // navigate('url/' + url)
@@ -291,56 +317,65 @@ export default class Tab extends Component {
 
         this.goForward();
 
-        //TODO: Negate bug
-        console.log("webcontents historyyyy", this.webview.getWebContents().history );
+        // TODO: Negate bug
+        console.log( 'webcontents historyyyy', this.webview.getWebContents().history );
     }
 
-    isFrozen(e) {
-        const {index} = this.props
+    isFrozen( e )
+    {
+        const { index } = this.props;
         const frozen = !index;
         // const frozen = staticTabData[index] || !index
         return frozen;
     }
 
-    with(cb, opts = { insist: false }) {
+    with( cb, opts = { insist: false } )
+    {
         const { webview } = this;
-        if (!webview) return;
+        if ( !webview ) return;
 
         const webContents = webview.getWebContents();
-        if (!webContents) {
+        if ( !webContents )
+        {
             return;
         }
 
-        if (webContents.isDestroyed()) return;
+        if ( webContents.isDestroyed() ) return;
 
-        cb(webview, webContents);
+        cb( webview, webContents );
     }
 
-    openDevTools() {
-        this.with((wv, wc) => wc.openDevTools({ detach: true }));
+    openDevTools()
+    {
+        this.with( ( wv, wc ) => wc.openDevTools( { detach: true } ) );
     }
 
-    stop() {
-        this.with((wv) => wv.stop());
+    stop()
+    {
+        this.with( ( wv ) => wv.stop() );
     }
 
-    reload() {
-        this.with((wv) => {
+    reload()
+    {
+        this.with( ( wv ) =>
+        {
             wv.reload();
-        });
+        } );
     }
 
-    goBack( e ) {
-        this.with((wv) => wv.goBack());
+    goBack( e )
+    {
+        this.with( ( wv ) => wv.goBack() );
     }
 
-    goForward() {
-        console.warn( 'Electron bug preventing goForward: https://github.com/electron/electron/issues/9999')
-        this.with((wv) => wv.goForward());
+    goForward()
+    {
+        console.warn( 'Electron bug preventing goForward: https://github.com/electron/electron/issues/9999' );
+        this.with( ( wv ) => wv.goForward() );
     }
 
-    async loadURL(input) {
-
+    async loadURL( input )
+    {
         const { navigate } = this.props;
         // const url = await transformUrl(input)
 
@@ -350,41 +385,44 @@ export default class Tab extends Component {
         //     navigate(`url/${url}`)
         // } else {
         const browserState = { ...this.state.browserState, url };
-        this.setState({ browserState });
+        this.setState( { browserState } );
 
 
         const { webview } = this;
 
-        //prevent looping over attempted url loading
-        if (webview && url !== 'about:blank') {
+        // prevent looping over attempted url loading
+        if ( webview && url !== 'about:blank' )
+        {
             // webview.src = url;
-            webview.loadURL(url);
+            webview.loadURL( url );
         }
         // }
     }
 
     shouldComponentUpdate( newProps )
     {
-        if( newProps.isActiveTab !== this.props.isActiveTab )
+        if ( newProps.isActiveTab !== this.props.isActiveTab )
+        {
             return true;
+        }
 
         return false;
     }
 
 
-
-    render() {
+    render()
+    {
         const { isActiveTab, tabData, tabPath, controls } = this.props;
         const { browserState } = this.state;
 
         let moddedClass = styles.tab;
-        if (isActiveTab) {
+        if ( isActiveTab )
+        {
             moddedClass = styles.activeTab;
         }
 
         const context = '';
 
-        return <div className={moddedClass} ref="webviewShell" />;
+        return <div className={ moddedClass } ref="webviewShell" />;
     }
-
 }

@@ -1,0 +1,109 @@
+body
+{
+	display:        block;
+  width:          80%;
+  margin:         0 auto;
+  max-width:      30rem;
+  margin-top:     10rem;
+	color:          rgb( 51, 51, 51);
+	font-family:    system, -apple-system, ".SFNSDisplay-Regular", "Helvetica Neue", Helvetica, "Segoe UI", sans-serif;
+}
+
+h1, h2, h3, h4
+{
+	font-weight:     normal;
+}
+
+h1
+{
+	border:          0;
+	font-size:       36px;
+	text-align:      center;
+	color:           #5592d7;
+	font-weight:     300;
+	margin-bottom:   0;
+}
+
+h4
+{
+	font-size:       18px;
+}
+
+.desc {
+  text-align:     center;
+  margin:         0;
+  padding:        0;
+	margin-bottom:  50px;
+}
+
+.desc span::after
+{
+	content:       "";
+  width:         5px;
+  height:        5px;
+  background-color: black;
+  position:      absolute;
+  bottom:        5px;
+  right:         -2.5px;
+  border-radius: 100%;
+}
+
+.desc span
+{
+	font-size:       14px;
+  font-weight:     normal;
+  opacity:         0.5;
+  padding:         0 16px;
+  position:        relative;
+}
+
+.desc span:last-child::after
+{
+  display:         none;
+}
+
+
+
+a
+{
+  cursor: pointer;
+  color: #016fde;
+  text-decoration: none;
+}
+
+a:hover
+{
+  text-decoration: underline;
+  color: #0091ff;
+}
+
+a:active,
+a:hover
+{
+    outline: 0;
+}
+
+
+
+
+
+ul
+{
+  padding-left: 0;
+}
+
+li
+{
+  list-style-type: none;
+  margin: 20px 0 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+
+
+.log-body
+{
+  max-width: 60em;
+  width: 90%;
+}

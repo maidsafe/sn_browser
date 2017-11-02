@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title><%= message %></title>
+		<style><%= css %></style>
+
+	</head>
+	<body>
+		<h1>SAFE Network</h1>
+		<h4 class="desc"><span>Privacy</span><span>Security</span><span>Freedom</span></h4>
+    <%if ( typeof code !== 'undefined' ) { %>
+       <h2>Error: <%= code %></h2>
+    <% } %>
+    <%if ( typeof message !== 'undefined' ) { %>
+      <h3><%= message %></h3>
+    <% } %>
+	</body>
+</html>

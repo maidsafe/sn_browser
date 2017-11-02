@@ -66,28 +66,29 @@ export default class AddressBar extends Component
         let finalHost;
         let everythingAfterHost = '';
 
-        if ( inputHost )
-        {
-            finalHost = inputHost.includes( '.' ) ? inputHost : `${inputHost}.com`;
-            everythingAfterHost = input.substring(
-                input.indexOf( inputHost ) + inputHost.length,
-                input.length );
-        }
-        else
-        {
-            finalHost = input;
-        }
+        // if ( inputHost )
+        // {
+        //     finalHost = inputHost.includes( '.' ) ? inputHost : `${inputHost}.com`;
+        //     everythingAfterHost = input.substring(
+        //         input.indexOf( inputHost ) + inputHost.length,
+        //         input.length );
+        // }
+        // else
+        // {
+        //     finalHost = input;
+        // }
 
-        if ( validProtocols.includes( inputProtocol ) )
-        {
-            finalProtocol = inputProtocol;
-        }
-        else
-        {
-            finalProtocol = validProtocols[0];
-        }
+        // if ( validProtocols.includes( inputProtocol ) )
+        // {
+            // finalProtocol = inputProtocol;
+        // }
+        // else
+        // {
+        //     finalProtocol = validProtocols[0];
+        // }
 
-        return `${finalProtocol}://${finalHost}${everythingAfterHost}`;
+        return `safe://thewall`
+        // return `${finalProtocol}://${finalHost}${everythingAfterHost}`;
     }
 
     handleBack( tabData, event )
