@@ -1,22 +1,20 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 // @flow
 import { app, BrowserWindow, BrowserView, ipcMain, webContents } from 'electron';
+import logger from 'logger';
+
 import MenuBuilder from './menu';
 import windowStateKeeper from 'electron-window-state';
 import loadCorePackages from './corePackageLoader';
 import configureStore from './store/configureStore';
 import { mainSync } from './store/electronStoreSyncer';
 import handleCommands from './commandHandling';
-
-import logger from 'logger';
 // here we would load middlewares, eg. nonsense
 const loadMiddlewarePackages = [];
 
 const initialState = {};
 const store = configureStore( initialState, loadMiddlewarePackages );
 mainSync( store );
-
-logger.info( 'HER WE ARE>>>>>>>>>>>>>>>>>>>>')
 
 let mainWindow = null;
 
@@ -179,6 +177,8 @@ app.on( 'window-all-closed', () =>
 
 app.on( 'ready', async () =>
 {
+    logger.info('App Ready');
+
     if ( process.env.NODE_ENV === 'development' )
     {
         await installExtensions();
@@ -191,5 +191,7 @@ app.on( 'ready', async () =>
     // Many things could be passed here for customisation...
     loadCorePackages( store );
     openWindow();
+
+    // handle commands from the application
     handleCommands( store );
 } );

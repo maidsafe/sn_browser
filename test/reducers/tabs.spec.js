@@ -1,50 +1,49 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
 import * as tabs from 'reducers/tabs';
-import { fromJS } from 'immutable';
 
-describe( '_deactivateOldTab', () =>
+describe( '_deactivateOldActiveTab', () =>
 {
 
     it( 'should exist', () =>
     {
-        expect( tabs._deactivateOldTab ).to.exist;
+        expect( tabs._deactivateOldActiveTab ).to.exist;
     } );
 
     it( 'should return a tabs state array', () =>
     {
-        let state = fromJS( [ { isActiveTab: true } ] );
+        let state = [ { isActiveTab: true } ];
 
-        expect( tabs._deactivateOldTab(  state  ) ).to.be.an.Array;
-        expect( tabs._deactivateOldTab(  state  ) ).to.not.be.undefined;
+        expect( tabs._deactivateOldActiveTab(  state  ) ).to.be.an.Array;
+        expect( tabs._deactivateOldActiveTab(  state  ) ).to.not.be.undefined;
     } );
 
     it( 'should deactivate any tab with isActive set', () =>
     {
-        let state = fromJS( [ { isActiveTab: true } ] );
+        let state = [ { isActiveTab: true } ];
 
-        expect( tabs._deactivateOldTab( state ) ).to.be.an.Array;
-        expect( tabs._deactivateOldTab( state ) ).to.not.equal( state );
-        expect( tabs._deactivateOldTab( state ).get( 0 ).toJS() ).to.be.an.Object;
+        expect( tabs._deactivateOldActiveTab( state ) ).to.be.an.Array;
+        expect( tabs._deactivateOldActiveTab( state ) ).to.not.equal( state );
+        expect( tabs._deactivateOldActiveTab( state )[0] ).to.be.an.Object;
 
         state.push( {isActiveTab: true } );
-        expect( tabs._deactivateOldTab( state ).get( 0 ).toJS() ).to.deep.equal( { isActiveTab: false } );
+        expect( tabs._deactivateOldActiveTab( state )[0] ).to.deep.equal( { isActiveTab: false } );
     } );
 
     it( 'should have the same length array', () =>
     {
-        let state = fromJS( [ { isActiveTab: true }, { isActiveTab: true } ] );
+        let state = [ { isActiveTab: true }, { isActiveTab: true } ];
 
-        expect( tabs._deactivateOldTab( state ) ).to.be.an.Array;
-        expect( tabs._deactivateOldTab( state ).size ).to.equal( 2 );
+        expect( tabs._deactivateOldActiveTab( state ) ).to.be.an.Array;
+        expect( tabs._deactivateOldActiveTab( state ).size ).to.equal( 2 );
     } );
 
     it( 'should return an immutable array', () =>
     {
-        let state = fromJS( [{isActiveTab: false}] );
+        let state = [{isActiveTab: false}];
 
         //isImmutable not working...
-        expect( tabs._setActiveTab( 0, state ).toJS ).to.exist;
+        expect( tabs._setActiveTab( 0, state ) ).to.exist;
     });
 } );
 
@@ -62,25 +61,25 @@ describe( '_setActiveTab', () =>
 
     it( 'should return an immutable array', () =>
     {
-        let state = fromJS( [{isActiveTab: false}] );
+        let state = [{isActiveTab: false}];
 
         //isImmutable not working...
-        expect( tabs._setActiveTab( 0, state ).toJS ).to.exist;
+        expect( tabs._setActiveTab( 0, state ) ).to.exist;
     });
 
     it( 'should set index as Active.', () =>
     {
-        let state = fromJS( [{isActiveTab: false}, {isActiveTab: false}] );
+        let state = [{isActiveTab: false}, {isActiveTab: false}];
 
-        expect( tabs._setActiveTab( 0, state ).toJS()[0].isActiveTab ).to.be.true;
+        expect( tabs._setActiveTab( 0, state )[0].isActiveTab ).to.be.true;
     });
 
     it( 'should deactivate old tab', () =>
     {
-        let state = fromJS( [{isActiveTab: false}, {isActiveTab: true}] );
+        let state = [{isActiveTab: false}, {isActiveTab: true}];
 
-        expect( tabs._setActiveTab( 0, state ).toJS()[0].isActiveTab ).to.be.true;
-        expect( tabs._setActiveTab( 0, state ).toJS()[1].isActiveTab ).to.be.false;
+        expect( tabs._setActiveTab( 0, state )[0].isActiveTab ).to.be.true;
+        expect( tabs._setActiveTab( 0, state )[1].isActiveTab ).to.be.false;
     });
 
 });

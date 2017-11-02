@@ -27,7 +27,7 @@ const appInfo = {
 const LIB_PATH = path.resolve( __dirname, '../../node_modules/@maidsafe/safe-node-app/src/native')
 
 
-console.log("LIB PATH IN THE APPPPPPP????", LIB_PATH);
+// console.log("LIB PATH IN THE APPPPPPP????", LIB_PATH);
 
 protocol.registerStandardSchemes( ['safe'] ); //register it as standard ayye. should be done for all
 
@@ -191,7 +191,7 @@ const initSafeBrowsing = ( store ) =>
     store.subscribe( () =>
     {
         // might not be needed with middleware option.
-        console.log( 'SAFE package listening to the store' );
+        // console.log( 'SAFE package listening to the store' );
     } );
 };
 
