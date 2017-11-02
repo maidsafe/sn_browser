@@ -1,13 +1,15 @@
 import { createActions } from 'redux-actions';
 
 export const TYPES = {
-    ADD_TAB           : 'ADD_TAB',
-    CLOSE_TAB         : 'CLOSE_TAB',
-    CLOSE_ACTIVE_TAB  : 'CLOSE_ACTIVE_TAB',
-    UPDATE_TAB        : 'UPDATE_TAB',
-    UPDATE_ACTIVE_TAB : 'UPDATE_ACTIVE_TAB',
-    SET_ACTIVE_TAB    : 'SET_ACTIVE_TAB',
-    REOPEN_TAB        : 'REOPEN_TAB'
+    ADD_TAB             : 'ADD_TAB',
+    ACTIVE_TAB_FORWARDS : 'ACTIVE_TAB_FORWARDS',
+    ACTIVE_TAB_BACKWARDS : 'ACTIVE_TAB_BACKWARDS',
+    CLOSE_TAB           : 'CLOSE_TAB',
+    CLOSE_ACTIVE_TAB    : 'CLOSE_ACTIVE_TAB',
+    UPDATE_TAB          : 'UPDATE_TAB',
+    UPDATE_ACTIVE_TAB   : 'UPDATE_ACTIVE_TAB',
+    SET_ACTIVE_TAB      : 'SET_ACTIVE_TAB',
+    REOPEN_TAB          : 'REOPEN_TAB'
 };
 
 export const {

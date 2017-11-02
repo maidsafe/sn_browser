@@ -9,6 +9,33 @@ const initialState = initialAppState.tabs;
 const getActiveTab = ( state ) => state.find( tab => tab.isActiveTab );
 const getActiveTabIndex = ( state ) => state.findIndex( tab => tab.isActiveTab );
 
+const addTab = ( state, tab ) =>
+{
+    const currentWindowId = remote ? remote.getCurrentWindow().id : 1;
+    const newTab = { ...tab, windowId: currentWindowId };
+
+    let newState = [...state];
+
+    if ( newTab.isActiveTab )
+    {
+        newState = deactivateOldActiveTab( newState );
+    }
+
+    newState.push( newTab );
+
+
+    return newState;
+};
+
+
+const closeActiveTab = ( state ) =>
+{
+    const activeTabIndex = getActiveTabIndex( state );
+
+    return setTabAsClosed( state, { index: activeTabIndex } );
+};
+
+
 const deactivateOldActiveTab = ( state ) =>
 {
     const activeTabIndex = getActiveTabIndex( state );
@@ -25,6 +52,103 @@ const deactivateOldActiveTab = ( state ) =>
 
     return state;
 };
+
+export function getLastClosedTab( state )
+{
+    let i = 0;
+    const tabAndIndex = {
+        lastTabIndex : 0
+    };
+
+    const tab = state.reduce( ( prev, current ) =>
+    {
+        let tab;
+        if ( !prev.closedTime || current.closedTime > prev.closedTime )
+        {
+            tabAndIndex.lastTabIndex = i;
+            tab = current;
+        }
+        else
+        {
+            tab = prev;
+        }
+
+        i += 1;
+        return tab;
+    }, state[0] );
+
+    tabAndIndex.lastTab = tab;
+
+    return tabAndIndex;
+}
+
+
+const moveActiveTabForward = ( state ) =>
+{
+    const tab = getActiveTab( state );
+    const index = getActiveTabIndex( state );
+    const updatedTab = { ...tab };
+
+    const history = updatedTab.history;
+
+    const nextHistoryIndex = updatedTab.historyIndex + 1 || 1;
+
+    // -1 historyIndex signifies latest page
+    if ( !history || history.length < 2 || !history[nextHistoryIndex] )
+    {
+        return state;
+    }
+
+    const newUrl = history[nextHistoryIndex];
+
+    const updatedState = [...state];
+
+    updatedTab.historyIndex = nextHistoryIndex;
+    updatedTab.url = newUrl;
+
+    updatedState[index] = updatedTab;
+    return updatedState;
+};
+
+
+const moveActiveTabBackwards = ( state ) =>
+{
+    const tab = getActiveTab( state );
+    const index = getActiveTabIndex( state );
+    const updatedTab = { ...tab };
+    const history = updatedTab.history;
+    const nextHistoryIndex = updatedTab.historyIndex - 1 || 0;
+
+    // -1 historyIndex signifies latest page
+    if ( !history || history.length < 2 || !history[nextHistoryIndex] ||
+        nextHistoryIndex < 0 )
+    {
+        return state;
+    }
+
+    const newUrl = history[nextHistoryIndex];
+
+    const updatedState = [...state];
+
+    updatedTab.historyIndex = nextHistoryIndex;
+    updatedTab.url = newUrl;
+
+    updatedState[index] = updatedTab;
+    return updatedState;
+};
+
+const reopenTab = ( state ) =>
+{
+    let { lastTab, lastTabIndex } = getLastClosedTab( state );
+
+    lastTab = { ...lastTab, isClosed: false, closedTime: null };
+    const updatedState = [...state];
+
+    updatedState[lastTabIndex] = lastTab;
+
+    return updatedState;
+};
+
 
 /**
  * set active tab to a given index
@@ -43,43 +167,6 @@ const setActiveTab = ( state, payload ) =>
     updatedState[index] = { ...newActiveTab, isActiveTab: true, isClosed: false };
 
     return updatedState;
-};
-
-
-const updateTabHistory = ( tabToMerge, url ) =>
-{
-    const updatedTab = { ...tabToMerge };
-    if ( url && url !== tabToMerge.url )
-    {
-        if ( updatedTab.history )
-        {
-            updatedTab.history.push( url );
-        }
-        else
-        {
-            updatedTab.history = [url];
-        }
-    }
-    return updatedTab;
-};
-
-
-const addTab = ( state, tab ) =>
-{
-    const currentWindowId = remote ? remote.getCurrentWindow().id : 1;
-    const newTab = { ...tab, windowId: currentWindowId };
-
-    let newState = [...state];
-
-    if ( newTab.isActiveTab )
-    {
-        newState = deactivateOldActiveTab( newState );
-    }
-
-    newState.push( newTab );
-
-
-    return newState;
 };
 
 /**
@@ -115,54 +202,23 @@ const setTabAsClosed = ( state, payload ) =>
     return updatedState;
 };
 
-const closeActiveTab = ( state ) =>
+
+const updateTabHistory = ( tabToMerge, url ) =>
 {
-    const activeTabIndex = getActiveTabIndex( state );
-
-    return setTabAsClosed( state, { index: activeTabIndex } );
-};
-
-
-const reopenTab = ( state ) =>
-{
-    let { lastTab, lastTabIndex } = getLastClosedTab( state );
-
-    lastTab = { ...lastTab, isClosed: false, closedTime: null };
-    const updatedState = [...state];
-
-    updatedState[lastTabIndex] = lastTab;
-
-    return updatedState;
-};
-
-export function getLastClosedTab( state )
-{
-    let i = 0;
-    const tabAndIndex = {
-        lastTabIndex : 0
-    };
-
-    const tab = state.reduce( ( prev, current ) =>
+    const updatedTab = { ...tabToMerge };
+    if ( url && url !== tabToMerge.url )
     {
-        let tab;
-        if ( !prev.closedTime || current.closedTime > prev.closedTime )
+        if ( updatedTab.history )
         {
-            tabAndIndex.lastTabIndex = i;
-            tab = current;
+            updatedTab.history.push( url );
         }
         else
         {
-            tab = prev;
+            updatedTab.history = [url];
         }
-
-        i += 1;
-        return tab;
-    }, state[0] );
-
-    tabAndIndex.lastTab = tab;
-
-    return tabAndIndex;
-}
+    }
+    return updatedTab;
+};
 
 
 const updateActiveTab = ( state, payload ) =>
@@ -261,6 +317,14 @@ export default function tabs( state: array = initialState, action )
         case TYPES.UPDATE_TAB :
         {
             return updateTab( state, payload );
+        }
+        case TYPES.ACTIVE_TAB_FORWARDS :
+        {
+            return moveActiveTabForward( state );
+        }
+        case TYPES.ACTIVE_TAB_BACKWARDS :
+        {
+            return moveActiveTabBackwards( state );
         }
         default:
             return state;

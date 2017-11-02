@@ -202,7 +202,7 @@ describe( 'tabs reducer', () =>
                 }
             );
 
-            expect( newState[2] ).toHaveProperty('history');
+            expect( newState[2] ).toHaveProperty( 'history' );
         } );
     } );
 
@@ -226,7 +226,118 @@ describe( 'tabs reducer', () =>
                 }
             );
 
-            expect( updatedTab ).toHaveProperty('history');
+            expect( updatedTab ).toHaveProperty( 'history' );
+        } );
+    } );
+
+
+    describe( 'ACTIVE_TAB_FORWARDS', () =>
+    {
+        const activeTab = {
+            ...basicTab,
+            isActiveTab  : true,
+            history      : ['hello', 'forward', 'forward again'],
+            historyIndex : 0
+        };
+
+        it( 'should move the active tab forwards', () =>
+        {
+            const firstUpdate = tabs( [basicTab, basicTab, activeTab], {
+                type : TYPES.ACTIVE_TAB_FORWARDS
+            } );
+
+            const updatedTab = firstUpdate[2];
+            expect( updatedTab ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'forward',
+                    historyIndex : 1
+                }
+            );
+
+            expect( updatedTab ).toHaveProperty( 'history' );
+
+            const secondUpdate = tabs( firstUpdate, {
+                type : TYPES.ACTIVE_TAB_FORWARDS
+            } );
+
+            const updatedTabAgain = secondUpdate[2];
+            expect( updatedTabAgain ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'forward again',
+                    historyIndex : 2
+                }
+            );
+
+
+            const thirdUpdate = tabs( secondUpdate, {
+                type : TYPES.ACTIVE_TAB_FORWARDS
+            } );
+
+            const updatedTabThree = thirdUpdate[2];
+            expect( updatedTabThree ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'forward again',
+                    historyIndex : 2
+                }
+            );
+        } );
+    } );
+
+    describe( 'ACTIVE_TAB_BACKWARDS', () =>
+    {
+        const activeTab = {
+            ...basicTab,
+            isActiveTab  : true,
+            history      : ['hello', 'forward', 'forward again'],
+            historyIndex : 2,
+            url          : 'forward again'
+        };
+
+        it( 'should move the active tab backwards in time', () =>
+        {
+            const firstUpdate = tabs( [basicTab, basicTab, activeTab], {
+                type : TYPES.ACTIVE_TAB_BACKWARDS
+            } );
+
+            const updatedTab = firstUpdate[2];
+            expect( updatedTab ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'forward',
+                    historyIndex : 1
+                }
+            );
+
+            expect( updatedTab ).toHaveProperty( 'history' );
+
+            const secondState = tabs( firstUpdate, {
+                type : TYPES.ACTIVE_TAB_BACKWARDS
+            } );
+
+            const updatedTabAgain = secondState[2];
+            expect( updatedTabAgain ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'hello',
+                    historyIndex : 0
+                }
+            );
+
+            const thirdState = tabs( secondState, {
+                type : TYPES.ACTIVE_TAB_BACKWARDS
+            } );
+
+            const updatedTabThree = thirdState[2];
+            expect( updatedTabThree ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'hello',
+                    historyIndex : 0
+                }
+            );
         } );
     } );
 } );
