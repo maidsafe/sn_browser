@@ -7,7 +7,7 @@
     "stage-0",
     "react"
   ],
-  "plugins": ["add-module-exports"],
+  "plugins": ["add-module-exports", [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ] ],
   "env": {
     "production": {
       "presets": ["react-optimize"],

@@ -172,6 +172,7 @@
   "dependencies": {
     "@maidsafe/safe-node-app": "^0.3.0",
     "autoprefixer": "^7.1.2",
+    "babel-plugin-webpack-alias": "2.1.2",
     "crypto": "^1.0.1",
     "ejs-loader": "^0.3.0",
     "electron-debug": "^1.4.0",
@@ -198,7 +199,8 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
     "source-map-support": "^0.4.10",
-    "stream": "^0.0.2"
+    "stream": "^0.0.2",
+    "winston": "3.0.0-rc1"
   },
   "devEngines": {
     "node": ">=6.x",

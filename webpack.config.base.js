@@ -170,6 +170,7 @@ export default {
             appPackage : path.join( __dirname, 'package.json' ),
             components : path.join( __dirname, 'app/components' ),
             containers : path.join( __dirname, 'app/containers' ),
+            logger     : path.join( __dirname, 'app/logger' ),
             constants  : path.join( __dirname, 'app/constants' ),
             store      : path.join( __dirname, 'app/store' ),
             reducers   : path.join( __dirname, 'app/reducers' )
@@ -182,5 +183,5 @@ export default {
 
     plugins : [
         new webpack.NamedModulesPlugin(),
-    ],
+    ]
 };

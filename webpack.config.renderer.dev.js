@@ -28,8 +28,8 @@ const manifest = path.resolve( dll, 'vendor.json' );
 if ( !( fs.existsSync( dll ) && fs.existsSync( manifest ) ) )
 {
     console.log( chalk.black.bgYellow.bold(
-    'The DLL files are missing. Sit back while we build them for you with "npm run build-dll"'
-  ) );
+        'The DLL files are missing. Sit back while we build them for you with "npm run build-dll"'
+    ) );
     execSync( 'npm run build-dll' );
 }
 
@@ -49,142 +49,6 @@ export default merge.smart( baseConfig, {
         publicPath : `http://localhost:${port}/dist/`
     },
 
-    // module : {
-    //     rules : [
-    //         {
-    //             test : /\.global\.css$/,
-    //             use  : [
-    //                 {
-    //                     loader : 'style-loader'
-    //                 },
-    //                 {
-    //                     loader  : 'css-loader',
-    //                     options : {
-    //                         sourceMap : true,
-    //                     },
-    //                 },
-    //                 {
-    //                     loader : 'postcss-loader'
-    //                 }
-    //             ]
-    //         },
-    //         {
-    //             test: /\.ejs$/,
-    //             loader: 'ejs-loader'
-    //         },
-    //         {
-    //             test : /^((?!\.global).)*\.css$/,
-    //             use  : [
-    //                 {
-    //                     loader : 'style-loader'
-    //                 },
-    //                 {
-    //                     loader  : 'css-loader',
-    //                     options : {
-    //                         modules        : true,
-    //                         sourceMap      : true,
-    //                         importLoaders  : 1,
-    //                         localIdentName : '[name]__[local]__[hash:base64:5]',
-    //                     }
-    //                 },
-    //             ]
-    //         },
-    //   // Add SASS support  - compile all .global.scss files and pipe it to style.css
-    //         {
-    //             test : /\.global\.scss$/,
-    //             use  : [
-    //                 {
-    //                     loader : 'style-loader'
-    //                 },
-    //                 {
-    //                     loader  : 'css-loader',
-    //                     options : {
-    //                         sourceMap : true,
-    //                     },
-    //                 },
-    //                 {
-    //                     loader : 'sass-loader'
-    //                 }
-    //             ]
-    //         },
-    //   // Add SASS support  - compile all other .scss files and pipe it to style.css
-    //         {
-    //             test : /^((?!\.global).)*\.scss$/,
-    //             use  : [
-    //                 {
-    //                     loader : 'style-loader'
-    //                 },
-    //                 {
-    //                     loader  : 'css-loader',
-    //                     options : {
-    //                         modules        : true,
-    //                         sourceMap      : true,
-    //                         importLoaders  : 1,
-    //                         localIdentName : '[name]__[local]__[hash:base64:5]',
-    //                     }
-    //                 },
-    //                 {
-    //                     loader : 'sass-loader'
-    //                 }
-    //             ]
-    //         },
-    //   // WOFF Font
-    //         {
-    //             test : /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-    //             use  : {
-    //                 loader  : 'url-loader',
-    //                 options : {
-    //                     limit    : 10000,
-    //                     mimetype : 'application/font-woff',
-    //                 }
-    //             },
-    //         },
-    //   // WOFF2 Font
-    //         {
-    //             test : /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-    //             use  : {
-    //                 loader  : 'url-loader',
-    //                 options : {
-    //                     limit    : 10000,
-    //                     mimetype : 'application/font-woff',
-    //                 }
-    //             }
-    //         },
-    //   // TTF Font
-    //         {
-    //             test : /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-    //             use  : {
-    //                 loader  : 'url-loader',
-    //                 options : {
-    //                     limit    : 10000,
-    //                     mimetype : 'application/octet-stream'
-    //                 }
-    //             }
-    //         },
-    //   // EOT Font
-    //         {
-    //             test : /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-    //             use  : 'file-loader',
-    //         },
-    //   // SVG Font
-    //         {
-    //             test : /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-    //             use  : {
-    //                 loader  : 'url-loader',
-    //                 options : {
-    //                     limit    : 10000,
-    //                     mimetype : 'image/svg+xml',
-    //                 }
-    //             }
-    //         },
-    //   // Common Image Formats
-    //         {
-    //             test : /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-    //             use  : 'url-loader',
-    //         }
-    //     ]
-    // },
-
     plugins : [
         new webpack.DllReferencePlugin( {
             context    : process.cwd(),
@@ -192,7 +56,7 @@ export default merge.smart( baseConfig, {
             sourceType : 'var',
         } ),
 
-    /**
+        /**
      * https://webpack.js.org/concepts/hot-module-replacement/
      */
         new webpack.HotModuleReplacementPlugin( {
@@ -201,7 +65,7 @@ export default merge.smart( baseConfig, {
 
         new webpack.NoEmitOnErrorsPlugin(),
 
-    /**
+        /**
      * Create global constants which can be configured at compile time.
      *
      * Useful for allowing different behaviour between development builds and
@@ -246,16 +110,16 @@ export default merge.smart( baseConfig, {
             disableDotRule : false,
         },
         setup()
-{
+        {
             if ( process.env.START_HOT )
-{
+            {
                 spawn(
-          'npm',
-          ['run', 'start-hot-renderer'],
-          { shell: true, env: process.env, stdio: 'inherit' }
-        )
-        .on( 'close', code => process.exit( code ) )
-        .on( 'error', spawnError => console.error( spawnError ) );
+                    'npm',
+                    ['run', 'start-hot-renderer'],
+                    { shell: true, env: process.env, stdio: 'inherit' }
+                )
+                    .on( 'close', code => process.exit( code ) )
+                    .on( 'error', spawnError => console.error( spawnError ) );
             }
         }
     },

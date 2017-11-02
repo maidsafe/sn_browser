@@ -4,11 +4,11 @@ import { app, BrowserWindow, BrowserView, ipcMain, webContents } from 'electron'
 import MenuBuilder from './menu';
 import windowStateKeeper from 'electron-window-state';
 import loadCorePackages from './corePackageLoader';
-
 import configureStore from './store/configureStore';
 import { mainSync } from './store/electronStoreSyncer';
 import handleCommands from './commandHandling';
 
+import logger from 'logger';
 // here we would load middlewares, eg. nonsense
 const loadMiddlewarePackages = [];
 
@@ -16,6 +16,7 @@ const initialState = {};
 const store = configureStore( initialState, loadMiddlewarePackages );
 mainSync( store );
 
+logger.info( 'HER WE ARE>>>>>>>>>>>>>>>>>>>>')
 
 let mainWindow = null;
 
