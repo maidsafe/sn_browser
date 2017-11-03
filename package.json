@@ -5,7 +5,9 @@
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --notify",
+    "test2": "cross-env NODE_ENV=test jest --notify",
+    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
+    "test-e2e": "yarn test e2e",
     "test-watch": "yarn test --watch",
     "test-all": "npm run lint && npm run flow && npm run test && npm run build",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
@@ -43,7 +45,8 @@
     "protocols": {
       "name": "HTTP/S",
       "schemes": [
-        "safe"
+        "http",
+        "https"
       ]
     },
     "dmg": {

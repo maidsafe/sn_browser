@@ -1,5 +1,6 @@
 import { ipcRenderer, ipcMain, remote, webContents } from 'electron';
 
+//This is preventing e2e testing so far....why?
 const electronSyncerMiddleware = store => next => action =>
 {
     const meta = action.meta;

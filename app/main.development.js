@@ -1,137 +1,33 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-// @flow
-import { app, BrowserWindow, BrowserView, ipcMain, webContents } from 'electron';
+
+/**
+ * This module executes inside of electron's main process. You can start
+ * electron renderer process from here and communicate with the other processes
+ * through IPC.
+ *
+ * When running `npm run build` or `npm run build-main`, this file is compiled to
+ * `./app/main.prod.js` using webpack. This gives us some performance wins.
+ *
+ * @flow
+ */
+import { app, BrowserWindow } from 'electron';
 import logger from 'logger';
 
-import MenuBuilder from './menu';
-import windowStateKeeper from 'electron-window-state';
+import openWindow from './openWindow';
 import loadCorePackages from './corePackageLoader';
 import configureStore from './store/configureStore';
-import { mainSync } from './store/electronStoreSyncer';
 import handleCommands from './commandHandling';
 
-// here we would load middlewares
-const loadMiddlewarePackages = [];
-
 const initialState = {};
+// add middleware; perhaps from a plugin?
+const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
-mainSync( store );
+
+// TODO: Why/how is this breaking e2e tests?
+import { mainSync } from './store/electronStoreSyncer';
 
 let mainWindow = null;
-
-function getNewWindowPosition( mainWindowState )
-{
-    // for both x and y, we start at 0
-    const defaultWindowPosition = 0;
-
-    const noOfBrowserWindows = BrowserWindow.getAllWindows().length;
-    const windowCascadeSpacing = 20;
-
-    let newWindowPosition;
-
-    if ( noOfBrowserWindows === 0 )
-    {
-        newWindowPosition = { x: mainWindowState.x, y: mainWindowState.y };
-    }
-    else
-    {
-        newWindowPosition =
-        { x : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows ),
-            y : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows )
-        };
-    }
-
-    return newWindowPosition;
-}
-
-export default function openWindow()
-{
-    const mainWindowState = windowStateKeeper( {
-        defaultWidth  : 2048,
-        defaultHeight : 1024
-    } );
-
-    const newWindowPosition = getNewWindowPosition( mainWindowState );
-
-    mainWindow = new BrowserWindow( {
-        show              : false,
-        x                 : newWindowPosition.x,
-        y                 : newWindowPosition.y,
-        width             : mainWindowState.width,
-        height            : mainWindowState.height,
-        titleBarStyle     : 'hidden-inset',
-        'standard-window' : false,
-
-    } );
-
-    mainWindowState.manage( mainWindow );
-
-    mainWindow.loadURL( `file://${__dirname}/app.html` );
-
-    // @TODO: Use 'ready-to-show' event
-    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-
-    mainWindow.webContents.on( 'did-finish-load', () =>
-    {
-        if ( !mainWindow )
-        {
-            throw new Error( '"mainWindow" is not defined' );
-        }
-
-        // before show lets load state
-        mainWindow.show();
-        mainWindow.focus();
-    } );
-
-    const filter = {
-        urls : ['*://*']
-
-    };
-
-    // mainWindow.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
-    // {
-    //
-    //     // console.log("DETAIILLSSS", details);
-    // //   if( ! global.browserStatus.safeModeOn || isLocal( details ) )
-    // //   {
-    //     callback({});
-    // //   }
-    // //   else if( details.url.indexOf('http') > -1 )
-    // //   {
-    // //     // FIXME shankar - temp handling for opening external links
-    // //     // if (details.url.indexOf('safe_proxy.pac') !== -1) {
-    // //     //   return callback({ cancel: true })
-    // //     // }
-    // //     try {
-    // //       shell.openExternal(details.url);
-    // //     } catch (e) {};
-    //   //
-    // //     callback({ cancel: true, redirectURL: 'beaker:start' })
-    //   //
-    // //   }
-    // })
-
-
-    // for each tab in the store...
-    // let view = new BrowserView({
-    //     //   webPreferences: {
-    //     //     nodeIntegration: false
-    //     //   }
-    // })
-    // // mainWindow.setBrowserView(view)
-    // // view.setBounds(0, 0, 800, 900)
-    // // view.webContents.loadURL('https://electron.atom.io')
-
-
-    mainWindow.on( 'closed', () =>
-    {
-        mainWindow = null;
-    } );
-
-    const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
-    menuBuilder.buildMenu();
-}
-
+mainSync( store );
 
 if ( process.env.NODE_ENV === 'production' )
 {
@@ -139,7 +35,7 @@ if ( process.env.NODE_ENV === 'production' )
     sourceMapSupport.install();
 }
 
-if ( process.env.NODE_ENV === 'development' )
+if ( process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true' )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -162,8 +58,14 @@ const installExtensions = async () =>
 };
 
 
+/**
+ * Add event listeners...
+ */
+
 app.on( 'window-all-closed', () =>
 {
+    logger.info( 'All windows closed' );
+
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
     if ( process.platform !== 'darwin' )
@@ -177,19 +79,13 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( process.env.NODE_ENV === 'development' )
+    if ( process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true' )
     {
         await installExtensions();
     }
 
-    // Pass store to packages for use.
-    // Peruse-tab can be passed to target webview partitions. This could be made
-    // more flexible...
-    //
-    // Many things could be passed here for customisation...
-    loadCorePackages( store );
     openWindow();
 
-    // handle commands from the application
+    loadCorePackages( store );
     handleCommands( store );
 } );
