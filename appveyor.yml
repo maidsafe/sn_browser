@@ -1,13 +1,18 @@
 os: unstable
 
 environment:
+  nodejs_version: "Stable"
   matrix:
-    - nodejs_version: 7
-    - nodejs_version: 6
+    - NODE_ENV: "dev"
+    - NODE_ENV: "production"
 
 cache:
   - node_modules -> package.json
   - app/node_modules -> app/package.json
+  - "%LOCALAPPDATA%\\Yarn"
+  - node_modules
+  - app\node_modules
+  - '%USERPROFILE%\.electron'
 
 # Enable when https://github.com/yarnpkg/yarn/issues/1233 and
 # https://github.com/yarnpkg/yarn/issues/1059 are resolved and disable npm cache
@@ -31,7 +36,12 @@ install:
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
-  - npm install
+  - node --version
+  - npm --version
+  - yarn --version
+  - yarn add windows-build-tools --global
+  - yarn --ignore-optional
+  - yarn
 
 # Enable when https://github.com/yarnpkg/yarn/issues/1233 and
 # https://github.com/yarnpkg/yarn/issues/1059 are resolved and disable npm cache
@@ -45,8 +55,8 @@ install:
 
 test_script:
   - node --version
-  - npm run lint
+  # - npm run lint
   - npm run test
   - npm run build
-  - npm run test-e2e
+  # - npm run test-e2e
   - npm run package
