@@ -5,7 +5,7 @@ import logger from 'logger';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as TabActions from '../actions/tabs_actions';
-import * as AddressActions from '../reducers/address';
+import * as AddressActions from '../actions/address_actions';
 import Browser from '../components/Browser';
 
 class BrowserWindow extends Component

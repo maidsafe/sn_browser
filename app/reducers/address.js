@@ -1,14 +1,10 @@
 // @flow
-import { createActions } 		from 'redux-actions';
-import initialAppState 			from './initialAppState.json';
+import { createActions }from 'redux-actions';
+import initialAppState from './initialAppState.json';
 
-const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
-
-export const { updateAddress } = createActions( UPDATE_ADDRESS );
-
+import { TYPES } from 'actions/address_actions';
 
 const initialState = initialAppState.address;
-
 
 export default function address( state: array = initialState, action )
 {
@@ -16,7 +12,7 @@ export default function address( state: array = initialState, action )
 
     switch ( action.type )
     {
-        case UPDATE_ADDRESS :
+        case TYPES.UPDATE_ADDRESS :
         {
             const address = payload;
             return address || '';
