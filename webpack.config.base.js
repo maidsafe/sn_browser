@@ -174,6 +174,7 @@ export default {
             logger     : path.join( __dirname, 'app/logger' ),
             constants  : path.join( __dirname, 'app/constants' ),
             store      : path.join( __dirname, 'app/store' ),
+            utils      : path.join( __dirname, 'app/utils' ),
             reducers   : path.join( __dirname, 'app/reducers' )
         },
         modules : [

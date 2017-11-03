@@ -12,7 +12,7 @@ const getActiveTabIndex = ( state ) => state.findIndex( tab => tab.isActiveTab )
 const addTab = ( state, tab ) =>
 {
     const currentWindowId = remote ? remote.getCurrentWindow().id : 1;
-    const newTab = { ...tab, windowId: currentWindowId };
+    const newTab = { ...tab, windowId: currentWindowId, historyIndex: 0, history: [ tab.url ] };
 
     let newState = [...state];
 
@@ -210,11 +210,8 @@ const updateTabHistory = ( tabToMerge, url ) =>
     {
         if ( updatedTab.history )
         {
+            updatedTab.historyIndex = updatedTab.historyIndex + 1;
             updatedTab.history.push( url );
-        }
-        else
-        {
-            updatedTab.history = [url];
         }
     }
     return updatedTab;

@@ -3,7 +3,8 @@
     "address" : "http://guardian.co.uk",
     "tabs"    : [ {
         "url": "http://guardian.co.uk",
-        "history" : [],
+        "history" : ["http://guardian.co.uk"],
+        "historyIndex": 0,
         "isActiveTab" : true,
         "isClosed" : false,
         "windowId" : 1

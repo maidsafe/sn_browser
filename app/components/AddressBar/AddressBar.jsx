@@ -55,7 +55,7 @@ export default class AddressBar extends Component
     {
         const validProtocols = appPackage.build.protocols.schemes || ['http'];
 
-        const parser = document.createElement( 'a' );
+        let parser = document.createElement( 'a' );
         parser.href = input;
 
         const inputProtocol = parser.protocol;
@@ -63,7 +63,7 @@ export default class AddressBar extends Component
 
         let finalProtocol;
         let finalHost;
-        const everythingAfterHost = '';
+        let everythingAfterHost = '';
 
         if ( inputHost )
         {
@@ -79,7 +79,7 @@ export default class AddressBar extends Component
 
         if ( validProtocols.includes( inputProtocol ) )
         {
-        finalProtocol = inputProtocol;
+            finalProtocol = inputProtocol;
         }
         else
         {

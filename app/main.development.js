@@ -84,7 +84,7 @@ app.on( 'ready', async () =>
         await installExtensions();
     }
 
-    openWindow();
+    openWindow(store);
 
     loadCorePackages( store );
     handleCommands( store );

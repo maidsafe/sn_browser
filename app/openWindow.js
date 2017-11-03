@@ -30,7 +30,7 @@ function getNewWindowPosition( mainWindowState )
     return newWindowPosition;
 }
 
-const openWindow = () =>
+const openWindow = ( store ) =>
 {
     const mainWindowState = windowStateKeeper( {
         defaultWidth  : 2048,

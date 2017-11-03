@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { remote, ipcRenderer } from 'electron';
+import { removeTrailingSlash } from 'utils/urlHelpers';
+
 import styles from './tab.css';
 
 
@@ -42,7 +44,8 @@ export default class Tab extends Component
                 canGoForward    : false,
                 loading         : true,
                 mountedAndReady : false,
-                url             : ''
+                url             : '',
+                redirects       : []
             }
         };
 
@@ -59,6 +62,16 @@ export default class Tab extends Component
     listenToCommands()
     {
         ipcRenderer.on( 'refreshActiveTab', this.reloadIfActive );
+    }
+
+    isDevToolsOpened = () =>
+    {
+        const { webview } = this;
+
+        if( webview )
+        {
+            return webview.isDevToolsOpened();
+        }
     }
 
     reloadIfActive()
@@ -147,6 +160,7 @@ export default class Tab extends Component
             wv.addEventListener( 'did-stop-loading', ::this.didStopLoading );
             wv.addEventListener( 'will-navigate', ::this.willNavigate );
             wv.addEventListener( 'did-navigate', ::this.didNavigate );
+            wv.addEventListener( 'did-get-redirect-request', ::this.didGetRedirectRequest );
             wv.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
             wv.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
             wv.addEventListener( 'new-window', ::this.newWindow );
@@ -210,6 +224,8 @@ export default class Tab extends Component
             webContents.openDevTools( { detach: true } );
         }
 
+        console.log('"mountedAndRea"');
+
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
 
         const webContentsId = webview.getWebContents().id;
@@ -261,10 +277,32 @@ export default class Tab extends Component
     {
         const { updateTab, index, updateAddress } = this.props;
         const { url } = e;
-        this.updateBrowserState( { url } );
 
-        updateTab( { index, url } );
-        updateAddress( url );
+        let nowUrl = removeTrailingSlash(url);
+
+        //TODO: Actually overwrite history for redirect
+        if( !this.state.browserState.redirects.includes( url ) )
+        {
+            console.log('"DID NAVIGAAATEEE" for reals', url, e );
+            this.updateBrowserState( { nowUrl } );
+            updateTab( { index, nowUrl } );
+            updateAddress( nowUrl );
+        }
+
+    }
+
+    didGetRedirectRequest( e )
+    {
+        const { oldURL, newURL } = e;
+
+        let prev = removeTrailingSlash(oldURL);
+        let next  = removeTrailingSlash(newURL);
+
+        if( prev === this.state.browserState.url )
+        {
+            this.updateBrowserState( { redirects: [ next ] } );
+        }
+
     }
 
     willNavigate( e )

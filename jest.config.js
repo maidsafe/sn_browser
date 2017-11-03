@@ -7,6 +7,7 @@ module.exports = {
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
         '^@reducers(.*)$'   : '<rootDir>/app/reducers$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
-        '^@logger(.*)$'     : '<rootDir>/app/logger$1'
+        '^@logger(.*)$'     : '<rootDir>/app/logger$1',
+        '^@utils(.*)$'     : '<rootDir>/app/utils$1'
     }
 };

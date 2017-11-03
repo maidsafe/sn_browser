@@ -65,7 +65,7 @@ before_script:
 
 script:
   # - yarn run lint
-  - yarn run test
   - yarn run build
-  # - yarn run test-e2e
+  - yarn run test
+  - yarn run test-e2e
   - yarn run package

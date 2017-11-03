@@ -2,6 +2,11 @@ import { BROWSER_UI } from './constants';
 
 const addressInput = ( app ) => app.client.element(BROWSER_UI.ADDRESS_INPUT);
 
+export const setToShellWindow = async( app ) =>
+{
+    const { client } = app;
+    await client.windowByIndex( 0 );
+}
 
 export const setAddress = async( app, url ) =>
 {

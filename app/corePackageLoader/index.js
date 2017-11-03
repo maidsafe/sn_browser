@@ -9,7 +9,7 @@ const allPackages = [];
 
 const loadCorePackages = ( store ) =>
 {
-    logger.info( 'Loading core packages' );
+    logger.info( 'Loading core packages', store );
     allPackages.forEach( pack => pack( store ) );
 };
 

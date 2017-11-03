@@ -8,6 +8,8 @@ describe( 'tabs reducer', () =>
     const basicTab = {
         url      : 'hello',
         windowId : 1,
+        historyIndex : 0,
+        history: ['hello']
     };
 
     it( 'should return the initial state', () =>
@@ -45,7 +47,9 @@ describe( 'tabs reducer', () =>
                 basicTab,
                 {
                     url      : 'another-url',
-                    windowId : 1, // sets initial window it
+                    windowId : 1,
+                    historyIndex : 0,
+                    history : [ 'another-url'],
                 }
             ] );
         } );
@@ -198,7 +202,8 @@ describe( 'tabs reducer', () =>
                 {
                     ...activeTab,
                     url   : 'changed!',
-                    title : 'hi'
+                    title : 'hi',
+                    historyIndex: 1
                 }
             );
 
@@ -222,7 +227,8 @@ describe( 'tabs reducer', () =>
                 {
                     ...activeTab,
                     url   : 'changed again!',
-                    title : 'hi'
+                    title : 'hi',
+                    historyIndex: 1
                 }
             );
 

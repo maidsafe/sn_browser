@@ -47,12 +47,22 @@ const logger = createLogger( {
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 if ( process.env.NODE_ENV !== 'production' )
 {
+    //TODO add exception h
     logger.add( new transports.Console( {
         format : combine(
             colorize(),
             simple()
         )
     } ) );
+
+    logger.exceptions.handle(
+        new transports.Console( {
+            format : combine(
+                colorize(),
+                simple()
+            )
+        }
+    ) );
 }
 
 
