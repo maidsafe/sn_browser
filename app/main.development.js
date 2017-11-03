@@ -9,7 +9,8 @@ import loadCorePackages from './corePackageLoader';
 import configureStore from './store/configureStore';
 import { mainSync } from './store/electronStoreSyncer';
 import handleCommands from './commandHandling';
-// here we would load middlewares, eg. nonsense
+
+// here we would load middlewares
 const loadMiddlewarePackages = [];
 
 const initialState = {};
@@ -20,10 +21,10 @@ let mainWindow = null;
 
 function getNewWindowPosition( mainWindowState )
 {
-    //for both x and y, we start at 0
+    // for both x and y, we start at 0
     const defaultWindowPosition = 0;
 
-    const noOfBrowserWindows   = BrowserWindow.getAllWindows().length;
+    const noOfBrowserWindows = BrowserWindow.getAllWindows().length;
     const windowCascadeSpacing = 20;
 
     let newWindowPosition;
@@ -35,7 +36,7 @@ function getNewWindowPosition( mainWindowState )
     else
     {
         newWindowPosition =
-        {   x : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows ),
+        { x : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows ),
             y : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows )
         };
     }
@@ -80,14 +81,12 @@ export default function openWindow()
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
-
-
     } );
 
-    let filter = {
-      urls: ['*://*' ]
+    const filter = {
+        urls : ['*://*']
 
-    }
+    };
 
     // mainWindow.webContents.session.webRequest.onBeforeRequest(filter, (details, callback) =>
     // {
@@ -113,7 +112,7 @@ export default function openWindow()
     // })
 
 
-    //for each tab in the store...
+    // for each tab in the store...
     // let view = new BrowserView({
     //     //   webPreferences: {
     //     //     nodeIntegration: false
@@ -122,7 +121,6 @@ export default function openWindow()
     // // mainWindow.setBrowserView(view)
     // // view.setBounds(0, 0, 800, 900)
     // // view.webContents.loadURL('https://electron.atom.io')
-
 
 
     mainWindow.on( 'closed', () =>
@@ -177,7 +175,7 @@ app.on( 'window-all-closed', () =>
 
 app.on( 'ready', async () =>
 {
-    logger.info('App Ready');
+    logger.info( 'App Ready' );
 
     if ( process.env.NODE_ENV === 'development' )
     {

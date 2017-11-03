@@ -10,7 +10,7 @@ export default class App extends Component
     };
 
     render()
-{
+    {
         return (
             <div className={ styles.container }>
                 { this.props.children }

@@ -18,7 +18,7 @@ export default function address( state: array = initialState, action )
     {
         case UPDATE_ADDRESS :
         {
-            let address = payload;
+            const address = payload;
             return address || '';
         }
 

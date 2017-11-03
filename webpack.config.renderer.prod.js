@@ -37,14 +37,14 @@ export default merge.smart( baseConfig, {
             'process.env.NODE_ENV' : JSON.stringify( process.env.NODE_ENV || 'production' )
         } ),
 
-    /**
+        /**
      * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
      */
         new BabiliPlugin(),
 
         new ExtractTextPlugin( 'style.css' ),
 
-    /**
+        /**
      * Dynamically generate index.html page
      */
         new HtmlWebpackPlugin( {

@@ -3,12 +3,12 @@ import logger from 'logger';
 import initSafeBrowsing from './safeBrowsing.js';
 
 // here add your packages for extensibility.
-const allPackages = [ initSafeBrowsing ];
+const allPackages = [initSafeBrowsing];
 
 
 const loadCorePackages = ( store ) =>
 {
-    logger.info( 'Loading core packages');
+    logger.info( 'Loading core packages' );
     allPackages.forEach( pack => pack( store ) );
 };
 

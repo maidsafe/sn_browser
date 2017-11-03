@@ -16,7 +16,7 @@ const levels = {
 
 // TODO: provide override for logging
 const logger = createLogger( {
-    level     : 'info',
+    level      : 'info',
     levels,
     transports : [
     //

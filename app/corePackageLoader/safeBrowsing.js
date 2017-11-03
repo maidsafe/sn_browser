@@ -4,7 +4,7 @@
 // import {app} from 'electron';
 import path from 'path';
 import safeApp from '@maidsafe/safe-node-app';
-import url  from 'url';
+import url from 'url';
 import mime from 'mime';
 import logger from 'logger';
 
@@ -26,12 +26,12 @@ const appInfo = {
 };
 
 
-const LIB_PATH = path.resolve( __dirname, '../../node_modules/@maidsafe/safe-node-app/src/native')
+const LIB_PATH = path.resolve( __dirname, '../../node_modules/@maidsafe/safe-node-app/src/native' );
 
 
 // console.log("LIB PATH IN THE APPPPPPP????", LIB_PATH);
 
-protocol.registerStandardSchemes( ['safe'] ); //register it as standard ayye. should be done for all
+protocol.registerStandardSchemes( ['safe'] ); // register it as standard ayye. should be done for all
 
 
 let appObj = null;
@@ -46,7 +46,7 @@ const authoriseApp = () =>
         }
         return safeApp.initializeApp( appInfo, ( state ) =>
         {
-            console.log("initttedd");
+            console.log( 'initttedd' );
             console.log( 'Network state changed to: ', state );
         },
         // {
@@ -96,7 +96,7 @@ const handleError = ( err, mimeType, cb ) =>
 
 const registerSafeLocalProtocol = () =>
 {
-    let safeSession = session.fromPartition('persist:peruse-tab')
+    const safeSession = session.fromPartition( 'persist:peruse-tab' );
 
     protocol.registerHttpProtocol( safeLocalScheme, ( req, cb ) =>
     {
@@ -117,11 +117,10 @@ const registerSafeLocalProtocol = () =>
 
 const registerSafeProtocol = () =>
 {
-
-    console.log("regitering protocollll");
+    console.log( 'regitering protocollll' );
     protocol.registerBufferProtocol( safeScheme, ( req, cb ) =>
     {
-        console.log("and this is the reqqqqq", req.url);
+        console.log( 'and this is the reqqqqq', req.url );
         const parsedUrl = url.parse( req.url );
         const fileExt = path.extname( path.basename( parsedUrl.pathname ) ) || 'html';
         const mimeType = mime.getType( fileExt );
@@ -137,25 +136,24 @@ const registerSafeProtocol = () =>
 };
 
 
-
 const filter = {
     urls : ['*://*']
 };
 
 const applySafeProtocolStandardsToAll = () =>
 {
-    //peruse-tab is partition for all webviews in the browser (for now...)
-    let safeSession = session.fromPartition('persist:peruse-tab')
+    // peruse-tab is partition for all webviews in the browser (for now...)
+    const safeSession = session.fromPartition( 'persist:peruse-tab' );
 
     // catch all version
     // session.defaultSession.webRequest.onBeforeSendHeaders( filter, ( details, callback ) =>
-    safeSession.webRequest.onBeforeRequest(filter, (details, callback) =>
+    safeSession.webRequest.onBeforeRequest( filter, ( details, callback ) =>
     // safeSession.webRequest.onBeforeSendHeaders(filter, (details, callback) =>
     {
         const referrer = url.parse( details.referrer );
         const target = url.parse( details.url );
 
-        console.log('DEETS==>', details.url );
+        console.log( 'DEETS==>', details.url );
 
         // if ( target.hostname === 'safe'
         //     || details.requestHeaders.Origin === 'chrome-devtools://devtools' )

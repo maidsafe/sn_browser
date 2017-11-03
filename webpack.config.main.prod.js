@@ -14,13 +14,13 @@ export default merge.smart( baseConfig, {
 
     entry : ['babel-polyfill', './app/main.development'],
 
-  // 'main.js' in root
+    // 'main.js' in root
     output : {
         path     : __dirname,
         filename : './app/main.js'
     },
 
-    stats: 'errors-only',
+    stats : 'errors-only',
 
     plugins : [
     /**
@@ -28,7 +28,7 @@ export default merge.smart( baseConfig, {
      */
         new BabiliPlugin(),
 
-    /**
+        /**
      * Create global constants which can be configured at compile time.
      *
      * Useful for allowing different behaviour between development builds and
@@ -42,7 +42,7 @@ export default merge.smart( baseConfig, {
         } )
     ],
 
-  /**
+    /**
    * Disables webpack processing of __dirname and __filename.
    * If you run the bundle in node.js it falls back to these values of node.js.
    * https://github.com/webpack/webpack/issues/2010

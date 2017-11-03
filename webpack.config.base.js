@@ -24,7 +24,7 @@ export default {
             },
             {
                 test : /\.ejs$/,
-                use  :  'ejs-loader'
+                use  : 'ejs-loader'
             },
             {
                 test : /\.global\.css$/,

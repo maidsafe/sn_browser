@@ -5,7 +5,7 @@ describe( 'tab actions', () =>
     it( 'should have types', () =>
     {
         expect( actions.TYPES ).toBeDefined();
-    });
+    } );
 
     it( 'should create an action to add a tab', () =>
     {

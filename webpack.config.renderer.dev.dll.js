@@ -24,7 +24,7 @@ export default merge.smart( baseConfig, {
             'babel-polyfill',
             ...Object.keys( dependencies )
         ]
-    .filter( dependency => dependency !== 'font-awesome' ),
+            .filter( dependency => dependency !== 'font-awesome' ),
     },
 
     output : {
@@ -40,7 +40,7 @@ export default merge.smart( baseConfig, {
             name : '[name]',
         } ),
 
-    /**
+        /**
      * Create global constants which can be configured at compile time.
      *
      * Useful for allowing different behaviour between development builds and

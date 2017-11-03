@@ -174,7 +174,6 @@ export default class MenuBuilder
                     click       : ( item, win ) =>
                     {
                         if ( win ) win.webContents.send( 'command', 'view:reload' );
-
                     } },
                 { label       : 'Toggle Full Screen',
                     accelerator : 'Ctrl+Command+F',
@@ -200,7 +199,7 @@ export default class MenuBuilder
                     {
                         if ( win )
                         {
-                            //todo check window id
+                            // todo check window id
                             store.dispatch( activeTabForwards() );
                         }
                     }
@@ -212,7 +211,7 @@ export default class MenuBuilder
                     {
                         if ( win )
                         {
-                            //todo check window id
+                            // todo check window id
                             store.dispatch( activeTabBackwards() );
                         }
                     }

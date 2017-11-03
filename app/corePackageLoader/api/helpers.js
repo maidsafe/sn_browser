@@ -4,7 +4,7 @@ const crypto = require( 'crypto' ); // electron deps will be available inside br
 const { Readable } = require( 'stream' );
 
 const handles = new Map();
-const LIB_PATH = path.resolve( __dirname, '../../../node_modules/@maidsafe/safe-node-app/src/native')
+const LIB_PATH = path.resolve( __dirname, '../../../node_modules/@maidsafe/safe-node-app/src/native' );
 
 export const genRandomString = () => ( crypto.randomBytes( 32 ).toString( 'hex' ) );
 
@@ -162,8 +162,8 @@ export const netStateCallbackHelper = ( safeApp, appInfo, enableLog, groupId ) =
         } );
     }, {
         log            : enableLog,
-        registerScheme : false
-        ,libPath: LIB_PATH
+        registerScheme : false,
+        libPath        : LIB_PATH
     } )
         .then( ( app ) =>
         {
