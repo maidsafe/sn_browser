@@ -64,7 +64,7 @@ before_script:
   - sleep 3
 
 script:
-  - yarn run lint
+  # - yarn run lint
   - yarn run test
   - yarn run build
   # - yarn run test-e2e

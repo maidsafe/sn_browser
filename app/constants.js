@@ -20,6 +20,6 @@ let libPath;
 // }
 
 const LIB_PATH = libPath;
-const constants =  { 'LIB_PATH': path.resolve( __dirname, '../node_modules/@maidsafe/safe-node-app/src/native') };
+export const constants =  { 'LIB_PATH': path.resolve( __dirname, '../node_modules/@maidsafe/safe-node-app/src/native') };
 
-export constants;
+// export constants;
