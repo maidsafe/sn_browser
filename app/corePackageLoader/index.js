@@ -1,3 +1,4 @@
+import logger from 'logger';
 // TODO: This should load all packages either from here or from node_modules etc...
 import initSafeBrowsing from './safeBrowsing.js';
 
@@ -7,6 +8,7 @@ const allPackages = [ initSafeBrowsing ];
 
 const loadCorePackages = ( store ) =>
 {
+    logger.info( 'Loading core packages');
     allPackages.forEach( pack => pack( store ) );
 };
 

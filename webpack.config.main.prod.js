@@ -20,6 +20,8 @@ export default merge.smart( baseConfig, {
         filename : './app/main.js'
     },
 
+    stats: 'errors-only',
+
     plugins : [
     /**
      * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)

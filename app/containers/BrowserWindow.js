@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import logger from 'logger';
 // import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,7 +11,7 @@ import Browser from '../components/Browser';
 class BrowserWindow extends Component
 {
     render()
-{
+    {
         return (
             <Browser { ...this.props } />
         );

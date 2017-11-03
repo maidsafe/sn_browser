@@ -6,6 +6,8 @@ import path from 'path';
 import safeApp from '@maidsafe/safe-node-app';
 import url  from 'url';
 import mime from 'mime';
+import logger from 'logger';
+
 import ipc from './api/ipc';
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
 import { protocol, session } from 'electron';
@@ -175,7 +177,7 @@ const applySafeProtocolStandardsToAll = () =>
 
 const initSafeBrowsing = ( store ) =>
 {
-    console.log( 'Registering SAFE Network Protocols' );
+    logger.info( 'Registering SAFE Network Protocols' );
 
     registerSafeProtocol();
     applySafeProtocolStandardsToAll();
@@ -186,10 +188,11 @@ const initSafeBrowsing = ( store ) =>
     //     throw ProtocolSetupError(err, 'Failed to create protocol: safe')
     // } );
 
-
     // if we want to do something with the store, we would do it here.
     store.subscribe( () =>
     {
+
+        // logger.debug( 'store changed')
         // might not be needed with middleware option.
         // console.log( 'SAFE package listening to the store' );
     } );

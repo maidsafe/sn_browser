@@ -1,6 +1,6 @@
 {
   "name": "peruse",
-  "productName": "Peruse",
+  "productName": "Peruse Container",
   "version": "0.10.0",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
