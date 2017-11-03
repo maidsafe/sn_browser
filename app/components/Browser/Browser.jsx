@@ -117,8 +117,18 @@ export default class Browser extends Component
 
     render()
     {
-        const { addTab, address, closeTab, tabs, setActiveTab,
-            updateActiveTab, updateTab, updateAddress } = this.props;
+        const {
+            addTab,
+            address,
+            closeTab,
+            tabs,
+            setActiveTab,
+            updateActiveTab,
+            updateTab,
+            updateAddress,
+            activeTabBackwards,
+            activeTabForwards
+        } = this.props;
 
         return (
             <div className={ styles.container }>
@@ -135,6 +145,8 @@ export default class Browser extends Component
                     address={ address }
                     updateAddress={ updateAddress }
                     updateActiveTab={ updateActiveTab }
+                    activeTabBackwards={activeTabBackwards }
+                    activeTabForwards={activeTabForwards }
                     ref={ ( c ) =>
                     {
                         this.address = c;

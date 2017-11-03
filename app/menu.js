@@ -1,6 +1,11 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
-import { reopenTab, getLastClosedTab, setActiveTab } from './reducers/tabs';
+import {
+    reopenTab,
+    activeTabForwards,
+    activeTabBackwards
+} from './actions/tabs_actions';
+import { getLastClosedTab } from './reducers/tabs';
 
 export default class MenuBuilder
 {
@@ -185,6 +190,35 @@ export default class MenuBuilder
                     } }
             ]
         };
+        const subMenuHistory = {
+            label   : 'History',
+            submenu : [
+                {
+                    label       : 'Forward',
+                    accelerator : 'CommandOrControl + ]',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            //todo check window id
+                            store.dispatch( activeTabForwards() );
+                        }
+                    }
+                },
+                {
+                    label       : 'Backward',
+                    accelerator : 'CommandOrControl + [',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            //todo check window id
+                            store.dispatch( activeTabBackwards() );
+                        }
+                    }
+                }
+            ]
+        };
         const subMenuWindow = {
             label   : 'Window',
             submenu : [
@@ -225,6 +259,7 @@ export default class MenuBuilder
             subMenuFile,
             subMenuEdit,
             subMenuView,
+            subMenuHistory,
             subMenuWindow,
             subMenuHelp
         ];

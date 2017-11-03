@@ -24,8 +24,6 @@ export default class AddressBar extends Component
         this.handleChange = ::this.handleChange;
         this.handleFocus = ::this.handleFocus;
         this.handleKeyPress = ::this.handleKeyPress;
-        this.handleBack = ::this.handleBack;
-        this.handleForward = ::this.handleForward;
         this.handleRefresh = ::this.handleRefresh;
 
         this.state = {
@@ -64,7 +62,7 @@ export default class AddressBar extends Component
 
         let finalProtocol;
         let finalHost;
-        let everythingAfterHost = '';
+        const everythingAfterHost = '';
 
         // if ( inputHost )
         // {
@@ -80,33 +78,32 @@ export default class AddressBar extends Component
 
         // if ( validProtocols.includes( inputProtocol ) )
         // {
-            // finalProtocol = inputProtocol;
+        // finalProtocol = inputProtocol;
         // }
         // else
         // {
         //     finalProtocol = validProtocols[0];
         // }
 
-        return `safe://thewall`
+        return 'safe://thewall';
         // return `${finalProtocol}://${finalHost}${everythingAfterHost}`;
     }
 
-    handleBack( tabData, event )
+    handleBack = ( tabData, event ) =>
     {
-        event.stopPropagation();
-        ipcRenderer.send( 'command', 'history:back' );
-
+        const { activeTabBackwards } = this.props;
+        activeTabBackwards();
     }
 
-    handleForward( tabData, event )
+    handleForward = ( tabData, event ) =>
     {
-        event.stopPropagation();
-        ipcRenderer.send( 'command', 'history:forward' );
+        const { activeTabForwards } = this.props;
+        activeTabForwards();
     }
 
     handleRefresh( tabData, event )
     {
-        //TODO: if cmd or so clicked, hard.
+        // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
         ipcRenderer.send( 'command', 'view:reload' );
     }
@@ -143,16 +140,20 @@ export default class AddressBar extends Component
         return (
             <div className={ styles.container } >
                 <div className={ styles.leftButtons }>
-                    <div className={ styles.button }
-                        onClick={ this.handleBack }>
-                        <MdNavigateBefore className={ styles.buttonIcon }/>
+                    <div
+                        className={ styles.button }
+                        onClick={ this.handleBack }
+                    >
+                        <MdNavigateBefore className={ styles.buttonIcon } />
                     </div>
-                    <div className={ styles.button }
-                            onClick={ this.handleForward }>
-                        <MdNavigateNext className={ styles.buttonIcon }/>
+                    <div
+                        className={ styles.button }
+                        onClick={ this.handleForward }
+                    >
+                        <MdNavigateNext className={ styles.buttonIcon } />
                     </div>
                     <div className={ styles.button } onClick={ this.handleRefresh }>
-                        <MdRefresh className={ styles.buttonIcon }/>
+                        <MdRefresh className={ styles.buttonIcon } />
                     </div>
                 </div>
                 <input
@@ -165,11 +166,11 @@ export default class AddressBar extends Component
                     onKeyPress={ this.handleKeyPress }
                 />
                 <div className={ styles.button }>
-                    <MdStarOutline className={ styles.buttonIcon }/>
+                    <MdStarOutline className={ styles.buttonIcon } />
                 </div>
                 <div className={ styles.rightButtons }>
                     <div className={ styles.button }>
-                        <MdMenu className={ styles.buttonIcon }/>
+                        <MdMenu className={ styles.buttonIcon } />
                     </div>
                 </div>
             </div>
