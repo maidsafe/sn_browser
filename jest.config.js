@@ -5,6 +5,7 @@ module.exports = {
     moduleDirectories    : ['app', 'test', 'node_modules'],
     moduleNameMapper     : {
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
+        '^@extensions(.*)$'   : '<rootDir>/app/extensions$1',
         '^@reducers(.*)$'   : '<rootDir>/app/reducers$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
         '^@logger(.*)$'     : '<rootDir>/app/logger$1',

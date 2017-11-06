@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
-const ipcMain = require( 'electron' ).ipcMain; // electron deps will be avaible inside browser
+import { ipcMain } from 'electron';
+
 /* eslint-enable import/no-extraneous-dependencies, import/no-unresolved */
 const { genRandomString, freePageObjs } = require( './helpers' );
 

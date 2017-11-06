@@ -117,8 +117,9 @@ describe( 'tabs reducer', () =>
             expect( newTabState ).toHaveProperty( 'closedTime' );
         } );
 
-        it( 'should set another tab as active', () =>
+        it( 'should set another tab as active if was active and trigger address update', () =>
         {
+            //TODO Mock address update action?
             const newState = tabs( [activeTab, basicTab], {
                 type    : TYPES.CLOSE_TAB,
                 payload : { index: 0 }

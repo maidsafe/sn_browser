@@ -5,6 +5,7 @@ import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import appPackage from 'appPackage';
+import { removeTrailingSlash } from 'utils/urlHelpers';
 
 import MdNavigateBefore from 'react-icons/lib/md/navigate-before';
 import MdNavigateNext from 'react-icons/lib/md/navigate-next';
@@ -15,6 +16,51 @@ import MdStarOutline from 'react-icons/lib/md/star-outline';
 
 import styles from './addressBar.css';
 
+/**
+ * Takes input and adds requisite url portions as needed, comparing to package.json defined
+ * protocols, or defaulting to http
+ * @param  {String} input address bar input
+ * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
+ */
+const makeValidUrl = ( input )=>
+{
+    const validProtocols = appPackage.build.protocols.schemes || ['http'];
+
+    const parser = document.createElement( 'a' );
+    parser.href = input;
+
+    const inputProtocol = parser.protocol;
+    const inputHost = parser.host;
+
+    let finalProtocol;
+    let finalHost;
+    let everythingAfterHost = '';
+
+    if ( inputHost )
+    {
+        finalHost = inputHost.includes( '.' ) ? inputHost : `${inputHost}.com`;
+        everythingAfterHost = input.substring(
+            input.indexOf( inputHost ) + inputHost.length,
+            input.length );
+    }
+    else
+    {
+        finalHost = input;
+    }
+
+    if ( validProtocols.includes( inputProtocol ) )
+    {
+        finalProtocol = inputProtocol;
+    }
+    else
+    {
+        finalProtocol = validProtocols[0];
+    }
+
+    const endUrl = `${finalProtocol}://${finalHost}/${everythingAfterHost}`
+
+    return removeTrailingSlash( endUrl );
+}
 
 export default class AddressBar extends Component
 {
@@ -43,51 +89,6 @@ export default class AddressBar extends Component
         {
             this.setState( { address: props.address } );
         }
-    }
-
-    /**
-     * Takes input and adds requisite url portions as needed, comparing to package.json defined
-     * protocols, or defaulting to http
-     * @param  {String} input address bar input
-     * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
-     */
-    makeValidUrl( input )
-    {
-        const validProtocols = appPackage.build.protocols.schemes || ['http'];
-
-        let parser = document.createElement( 'a' );
-        parser.href = input;
-
-        const inputProtocol = parser.protocol;
-        const inputHost = parser.host;
-
-        let finalProtocol;
-        let finalHost;
-        let everythingAfterHost = '';
-
-        if ( inputHost )
-        {
-            finalHost = inputHost.includes( '.' ) ? inputHost : `${inputHost}.com`;
-            everythingAfterHost = input.substring(
-                input.indexOf( inputHost ) + inputHost.length,
-                input.length );
-        }
-        else
-        {
-            finalHost = input;
-        }
-
-        if ( validProtocols.includes( inputProtocol ) )
-        {
-            finalProtocol = inputProtocol;
-        }
-        else
-        {
-            finalProtocol = validProtocols[0];
-        }
-
-        // return 'safe://thewall';
-        return `${finalProtocol}://${finalHost}${everythingAfterHost}`;
     }
 
     handleBack = ( tabData, event ) =>
@@ -128,7 +129,7 @@ export default class AddressBar extends Component
 
         const input = event.target.value;
 
-        const url = this.makeValidUrl( input );
+        const url = makeValidUrl( input );
 
         this.props.updateAddress( url );
         this.props.updateActiveTab( { url } );

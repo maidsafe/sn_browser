@@ -6,6 +6,7 @@ import { removeTrailingSlash } from 'utils/urlHelpers';
 
 import styles from './tab.css';
 
+const log = require( 'electron-log' );
 
 const { Menu, MenuItem } = remote;
 
@@ -68,7 +69,7 @@ export default class Tab extends Component
     {
         const { webview } = this;
 
-        if( webview )
+        if ( webview )
         {
             return webview.isDevToolsOpened();
         }
@@ -86,35 +87,6 @@ export default class Tab extends Component
         this.reload();
     }
 
-    componentWillReceiveProps( nextProps )
-    {
-        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
-        {
-            return;
-        }
-
-        if ( !this.state.browserState.mountedAndReady )
-        {
-            return;
-        }
-
-        if ( nextProps.url )
-        {
-            const { webview } = this;
-            if ( !webview )
-            {
-                return;
-            }
-
-            if ( webview.src === '' || webview.src === 'about:blank' ||
-            webview.src !== nextProps.url )
-            {
-                // we didn't have a proper url but now do
-                this.loadURL( nextProps.url );
-            }
-        }
-    }
-
     componentDidMount()
     {
         const { webviewShell } = this.refs;
@@ -130,9 +102,11 @@ export default class Tab extends Component
         this.webview = wv;
 
         const { meId } = this.props;
-        const partition = 'persist:peruse-tab';
 
-        // wv.partition = partition
+        // TODO: Setup up render constants
+        const partition = 'persist:safe-tab';
+
+        wv.partition = partition;
         // wv.useragent = useragent
         wv.plugins = true;
         // wv.preload = injectPath
@@ -187,6 +161,35 @@ export default class Tab extends Component
         wv.src = 'about:blank';
     }
 
+    componentWillReceiveProps( nextProps )
+    {
+        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
+        {
+            return;
+        }
+
+        if ( !this.state.browserState.mountedAndReady )
+        {
+            return;
+        }
+
+        if ( nextProps.url )
+        {
+            const { webview } = this;
+            if ( !webview )
+            {
+                return;
+            }
+
+            if ( webview.src === '' || webview.src === 'about:blank' ||
+            webview.src !== nextProps.url )
+            {
+                // we didn't have a proper url but now do
+                this.loadURL( nextProps.url );
+            }
+        }
+    }
+
 
     //
     updateBrowserState( props = {} )
@@ -223,8 +226,6 @@ export default class Tab extends Component
         {
             webContents.openDevTools( { detach: true } );
         }
-
-        console.log('"mountedAndRea"');
 
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
 
@@ -277,32 +278,32 @@ export default class Tab extends Component
     {
         const { updateTab, index, updateAddress } = this.props;
         const { url } = e;
+        const noTrailingSlashUrl = removeTrailingSlash( url );
 
-        let nowUrl = removeTrailingSlash(url);
-
-        //TODO: Actually overwrite history for redirect
-        if( !this.state.browserState.redirects.includes( url ) )
+        // TODO: Actually overwrite history for redirect
+        if ( !this.state.browserState.redirects.includes( url ) )
         {
-            console.log('"DID NAVIGAAATEEE" for reals', url, e );
-            this.updateBrowserState( { nowUrl } );
-            updateTab( { index, nowUrl } );
-            updateAddress( nowUrl );
+            this.updateBrowserState( { url } );
+            updateTab( { index, url } );
+            updateAddress( noTrailingSlashUrl );
         }
-
     }
 
     didGetRedirectRequest( e )
     {
         const { oldURL, newURL } = e;
 
-        let prev = removeTrailingSlash(oldURL);
-        let next  = removeTrailingSlash(newURL);
+        // TODO: cleanup
+        // let prev = removeTrailingSlash(oldURL);
+        // let next  = removeTrailingSlash(newURL);
 
-        if( prev === this.state.browserState.url )
+        const prev = oldURL;
+        const next = newURL;
+
+        if ( prev === this.state.browserState.url )
         {
-            this.updateBrowserState( { redirects: [ next ] } );
+            this.updateBrowserState( { redirects: [next] } );
         }
-
     }
 
     willNavigate( e )
@@ -334,7 +335,8 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            this.props.updateAddress( url );
+            // TODO ensure url structure in reducer, as opposed to here/everywhere
+            this.props.updateAddress( removeTrailingSlash( url ) );
         }
 
         // our own little preventDefault

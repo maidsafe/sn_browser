@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import logger from 'logger';
+// import logger from 'logger';
 // import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

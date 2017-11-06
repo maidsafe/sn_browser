@@ -9,6 +9,7 @@ import TabContents from 'components/TabContents';
 import initialAppState from 'reducers/initialAppState.json';
 import styles from './browser.css';
 
+const log = require( 'electron-log' );
 
 export default class Browser extends Component
 {
@@ -130,6 +131,9 @@ export default class Browser extends Component
             activeTabForwards
         } = this.props;
 
+        //TODO: Remove Address reducer and just go off of active tab
+        const activeTabAddress = tabs.find( tab => tab.isActiveTab ).url;
+
         return (
             <div className={ styles.container }>
                 <TabBar
@@ -142,7 +146,7 @@ export default class Browser extends Component
                     tabs={ tabs }
                 />
                 <AddressBar
-                    address={ address }
+                    address={ activeTabAddress }
                     updateAddress={ updateAddress }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={activeTabBackwards }

@@ -9,6 +9,16 @@ import configureStore from './store/configureStore';
 import './app.global.css';
 import { rendererSync } from './store/electronStoreSyncer';
 
+var log = require( 'electron-log' );
+
+log.info('Starting render process');
+window.onerror = function(error, url, line) {
+    log.error(error);
+    log.error(url);
+    log.error(line);
+
+};
+
 const store = configureStore();
 const history = syncHistoryWithStore( hashHistory, store );
 

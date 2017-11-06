@@ -1,69 +1,42 @@
-import { createLogger, format, transports } from 'winston';
-// const { createLogger, format, transports } = require('winston');
-const { combine, label, timestamp, colorize, simple } = format;
+import {app} from 'electron';
+import util from 'util';
+import { env } from 'constants';
+// error, warn, info, verbose, debug, silly
 
-const levels = {
-    error   : 0,
-    warn    : 1,
-    data    : 2,
-    info    : 3,
-    help    : 4,
-    verbose : 5,
-    debug   : 6,
-    silly   : 7,
-    trace   : 8
-};
+//must be require?
+var log = require('electron-log');
+// Log level
+log.transports.console.level = 'verbose';
 
-// TODO: provide override for logging
-const logger = createLogger( {
-    level      : 'info',
-    levels,
-    transports : [
-    //
-    // - Write to all logs with level `info` and below to `combined.log`
-    // - Write all logs error (and below) to `error.log`.
-    //
-        new transports.File( { filename: 'error.log', level: 'error' } ),
-        new transports.File( {
-            filename : 'combined.log',
-            format   : combine(
-                timestamp(),
-                label(),
-                simple()
-            ) } )
-    ],
-    exceptionHandlers : [
-        new transports.File( {
-            filename : 'combined.log',
-            format   : combine(
-                timestamp(),
-                label(),
-                simple()
-            ) } )
-    ]
-} );
+/**
+ * Set output format template. Available variables:
+ * Main: {level}, {text}
+ * Date: {y},{m},{d},{h},{i},{s},{ms}
+ */
+log.transports.console.format = '{h}:{i}:{s}:{ms} {text}';
 
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-if ( process.env.NODE_ENV !== 'production' )
-{
-    //TODO add exception h
-    logger.add( new transports.Console( {
-        format : combine(
-            colorize(),
-            simple()
-        )
-    } ) );
+// Set a function which formats output
+log.transports.console.format = (msg) => util.format.apply(util, msg.data);
+//
+//
+//
+// // Same as for console transport
+log.transports.file.level = 'verbose';
+log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 
-    logger.exceptions.handle(
-        new transports.Console( {
-            format : combine(
-                colorize(),
-                simple()
-            )
-        }
-    ) );
-}
+// Set approximate maximum log size in bytes. When it exceeds,
+// the archived log will be saved as the log.old.log file
+log.transports.file.maxSize = 5 * 1024 * 1024;
+
+log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+log.info( `      Started with node env: ${env}`);
+log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 
-export default logger;
+
+process.on('uncaughtException', (err) => {
+  log.error('whoops! there was an error');
+  log.error(err);
+});
+
+export default log;

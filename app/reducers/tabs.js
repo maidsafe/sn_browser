@@ -32,7 +32,7 @@ const closeActiveTab = ( state ) =>
 {
     const activeTabIndex = getActiveTabIndex( state );
 
-    return setTabAsClosed( state, { index: activeTabIndex } );
+    return closeTab( state, { index: activeTabIndex } );
 };
 
 
@@ -174,7 +174,7 @@ const setActiveTab = ( state, payload ) =>
  * @param { array } state
  * @param { object } payload
  */
-const setTabAsClosed = ( state, payload ) =>
+const closeTab = ( state, payload ) =>
 {
     const index = payload.index;
 
@@ -297,7 +297,7 @@ export default function tabs( state: array = initialState, action )
         }
         case TYPES.CLOSE_TAB :
         {
-            return setTabAsClosed( state, payload );
+            return closeTab( state, payload );
         }
         case TYPES.CLOSE_ACTIVE_TAB :
         {

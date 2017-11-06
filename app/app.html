@@ -19,8 +19,8 @@
     <div id="root"></div>
     <script>
       {
-        // Dynamically include DLL if in development
-        if (process.env.NODE_ENV === 'development') {
+        // Dynamically include DLL if in development/live-dev
+        if (process.env.IS_UNPACKED === 'true') {
           const dllScript = document.createElement('script');
           dllScript.src = '../dll/vendor.dll.js';
           document.body.appendChild(dllScript);

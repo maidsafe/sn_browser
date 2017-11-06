@@ -8,6 +8,29 @@ import { dependencies as externals } from './app/package.json';
 
 export default {
     externals : Object.keys( externals || {} ),
+    /**
+   * Determine the array of extensions that should be used to resolve modules.
+   */
+    resolve : {
+        extensions : ['.js', '.jsx', '.json'],
+        alias      :
+        {
+            actions    : path.join( __dirname, 'app/actions' ),
+            appPackage : path.join( __dirname, 'package.json' ),
+            components : path.join( __dirname, 'app/components' ),
+            containers : path.join( __dirname, 'app/containers' ),
+            constants  : path.join( __dirname, 'app/constants' ),
+            extensions : path.join( __dirname, 'app/extensions' ),
+            logger     : path.join( __dirname, 'app/logger' ),
+            store      : path.join( __dirname, 'app/store' ),
+            utils      : path.join( __dirname, 'app/utils' ),
+            reducers   : path.join( __dirname, 'app/reducers' )
+        },
+        modules : [
+            path.join( __dirname, 'app' ),
+            'node_modules',
+        ],
+    },
 
     module : {
         rules :
@@ -158,29 +181,6 @@ export default {
         filename      : 'bundle.js',
         // https://github.com/webpack/webpack/issues/1114
         libraryTarget : 'commonjs2'
-    },
-
-    /**
-   * Determine the array of extensions that should be used to resolve modules.
-   */
-    resolve : {
-        extensions : ['.js', '.jsx', '.json'],
-        alias      :
-        {
-            actions    : path.join( __dirname, 'app/actions' ),
-            appPackage : path.join( __dirname, 'package.json' ),
-            components : path.join( __dirname, 'app/components' ),
-            containers : path.join( __dirname, 'app/containers' ),
-            logger     : path.join( __dirname, 'app/logger' ),
-            constants  : path.join( __dirname, 'app/constants' ),
-            store      : path.join( __dirname, 'app/store' ),
-            utils      : path.join( __dirname, 'app/utils' ),
-            reducers   : path.join( __dirname, 'app/reducers' )
-        },
-        modules : [
-            path.join( __dirname, 'app' ),
-            'node_modules',
-        ],
     },
 
     plugins : [

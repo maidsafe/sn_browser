@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
 // import { createLogger } from 'redux-logger';
-import createCLILogger from 'redux-cli-logger';
+// import createCLILogger from 'redux-cli-logger';
 import rootReducer from '../reducers';
 // import { toJS } from 'immutable';
 import electronSyncerMiddleware from './electronStoreSyncer';

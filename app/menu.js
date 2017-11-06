@@ -5,8 +5,9 @@ import {
     activeTabForwards,
     activeTabBackwards
 } from './actions/tabs_actions';
+import { isRunningDevelopment, env } from 'constants';
 import { getLastClosedTab } from './reducers/tabs';
-
+import logger from 'logger';
 export default class MenuBuilder
 {
     // mainWindow: BrowserWindow;
@@ -20,7 +21,8 @@ export default class MenuBuilder
 
     buildMenu()
     {
-        if ( process.env.NODE_ENV === 'development' )
+        logger.info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^, test env', env, process.env.DEBUG_PROD)
+        if ( isRunningDevelopment )
         {
             this.setupDevelopmentEnvironment();
         }

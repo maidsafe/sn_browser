@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "main": "./main.js",
+  "scripts" : {
+      "rebuild" : "npm rebuild --runtime=electron --disturl=https://atom.io/download/atom-shell --build-from-source"
+  },
   "author": {
     "name": "Josh Wilson",
     "email": "joshuef@gmail.com",
@@ -11,6 +14,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@maidsafe/safe-node-app": "0.4.1",
     "react-icons": "^2.2.3"
   }
 }

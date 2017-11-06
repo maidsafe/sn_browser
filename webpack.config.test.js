@@ -7,7 +7,6 @@ const nodeExternals = require( 'webpack-node-externals' );
 
 const devConfig = require( './webpack.config.renderer.dev' );
 
-// console.log( 'devConfig.resolve'  , devConfig.resolve );
 module.exports = {
     target : 'node',
     output : {
