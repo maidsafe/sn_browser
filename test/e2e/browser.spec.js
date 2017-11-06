@@ -30,10 +30,10 @@ describe( 'main window', () =>
 
     afterAll( () =>
     {
-        // if ( app && app.isRunning() )
-        // {
-        //     return app.stop();
-        // }
+        if ( app && app.isRunning() )
+        {
+            return app.stop();
+        }
     } );
 
     test( 'window loaded', async () => await app.browserWindow.isVisible() );
@@ -53,7 +53,7 @@ describe( 'main window', () =>
     } );
 
 
-    test( 'can open a new tab + set address', async () =>
+    it( 'can open a new tab + set address', async () =>
     {
         const { client } = app;
         const tabIndex = await newTab( app );
@@ -71,7 +71,7 @@ describe( 'main window', () =>
     } );
 
 
-    test( 'can go backwards', async () =>
+    it( 'can go backwards', async () =>
     {
         const { client } = app;
         await setToShellWindow(app);
@@ -90,7 +90,7 @@ describe( 'main window', () =>
     } );
 
 
-    test( 'can go forwards', async () =>
+    it( 'can go forwards', async () =>
     {
         const { client } = app;
         await setToShellWindow(app);
@@ -111,7 +111,7 @@ describe( 'main window', () =>
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.waitForExist( BROWSER_UI.FORWARDS );
 
-        // TODO: why is testing needing two clicks?
+        // TODO: why is iting needing two clicks?
         await client.click( BROWSER_UI.FORWARDS );
         await client.click( BROWSER_UI.FORWARDS );
 
@@ -122,5 +122,36 @@ describe( 'main window', () =>
     } );
 
 
+    it( 'can close a tab', async() =>
+    {
+        const { client } = app;
+        await setToShellWindow(app);
+        const tabIndex = await newTab( app );
 
+        await navigateTo( app, 'bbc.com' );
+        await client.waitForExist( BROWSER_UI.CLOSE_TAB );
+
+        await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
+        await client.pause( 500 ); // need to wait a sec for the UI to catch up
+
+        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
+        expect( address ).not.toBe( 'http://bbc.com' )
+
+    });
+
+
+    xtest( 'closes the window', async() =>
+    {
+        const { client } = app;
+        await setToShellWindow(app);
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        await client.pause( 500 ); // need to wait a sec for the UI to catch up
+        await client.click( BROWSER_UI.ADDRESS_INPUT );
+
+        //mac - cmd doesnt work...
+        await client.keys( ['\ue03d', '\ue008', 'w'] ); // shift + cmd + w
+        //rest - to test on ci...
+        await client.keys( ['\ue008','\ue009', 'w'] ); // shift + ctrl + w
+
+    } )
 } );

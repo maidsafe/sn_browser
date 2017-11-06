@@ -7,7 +7,11 @@ export const BROWSER_UI =
     ADDRESS_INPUT : '.js-address__input',
     FAVOURITE     : '.js-address__favourite',
     MENU          : '.js-address__menu',
-    ADD_TAB       : '.js-tabBar__add-tab'
+    ADD_TAB       : '.js-tabBar__add-tab',
+    CLOSE_TAB     : '.js-tabBar__close-tab',
+    TAB           : '.js-tab',
+    ACTIVE_TAB    : '.js-tabBar__active-tab'
+
 };
 
 export const AUTH_UI =

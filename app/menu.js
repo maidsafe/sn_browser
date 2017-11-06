@@ -9,7 +9,7 @@ import { getLastClosedTab } from './reducers/tabs';
 
 export default class MenuBuilder
 {
-    mainWindow: BrowserWindow;
+    // mainWindow: BrowserWindow;
 
     constructor( mainWindow: BrowserWindow, openWindow, store )
     {
@@ -111,15 +111,15 @@ export default class MenuBuilder
                         if ( win ) win.webContents.send( 'command', 'file:close-active-tab' );
                     }
                 },
-                // {
-                //     label       : 'Close Window',
-                //     accelerator : 'Command+Shift+W',
-                //     click       : ( item, win ) =>
-                //     {
-                //         if ( win ) win.close();
-                //     }
-                // },
-                // { type: 'separator' },
+                {
+                    label       : 'Close Window',
+                    accelerator : 'Command+Shift+W',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win ) win.close();
+                    }
+                },
+                { type: 'separator' },
                 {
                     label       : 'Reopen Last Tab',
                     accelerator : 'Command+Shift+T',

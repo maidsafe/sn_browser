@@ -76,16 +76,16 @@ export default class TabBar extends Component
                             const tabData = { key: i, url: tab.url };
                             if ( isActiveTab )
                             {
-                                tabStyleClass = styles.activeTab;
+                                tabStyleClass = `${styles.activeTab} js-tabBar__active-tab`;
                             }
                             return ( <div
                                 key={ i }
-                                className={ tabStyleClass }
+                                className={ `${tabStyleClass} js-tab` }
                                 onClick={ this.handleTabClick.bind( this, tabData ) }
                             >
                                 <span className={ styles.tabText }>{ tab.title || 'New Tab' }</span>
                                 <MdClose
-                                    className={ styles.tabCloseButton }
+                                    className={ `${styles.tabCloseButton} js-tabBar__close-tab` }
                                     onClick={ this.handleTabClose.bind( this, tabData ) }
                                     title="Close"
                                 />

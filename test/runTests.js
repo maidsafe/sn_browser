@@ -8,7 +8,7 @@ const pattern = process.argv[2] === 'e2e'
 
 const result = spawn.sync(
     path.normalize( './node_modules/.bin/jest' ),
-    [`--testPathPattern=${pattern}`, ...process.argv.slice( 2 )],
+    [`--testPathPattern=${pattern}`, ...process.argv.slice( 2 ), '--notify'],
     { stdio: 'inherit' }
 );
 
