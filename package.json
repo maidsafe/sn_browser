@@ -43,36 +43,20 @@
       "package.json"
     ],
     "protocols": {
-      "name": "HTTP/S",
+      "name": "SAFE",
       "schemes": [
-        "http",
-        "https"
-      ]
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
+        "safe",
+        "safe-auth"
       ]
     },
     "win": {
-      "target": [
-        "nsis"
-      ]
+      "target": "dir"
     },
     "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
+      "target": "dir"
+    },
+    "mac": {
+      "target": "dir"
     },
     "directories": {
       "buildResources": "resources",
