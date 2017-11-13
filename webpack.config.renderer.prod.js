@@ -22,6 +22,7 @@ export default merge.smart( baseConfig, {
         publicPath : '../dist/'
     },
 
+    stats : 'errors-only',
 
     plugins : [
     /**
