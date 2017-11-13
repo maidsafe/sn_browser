@@ -49,6 +49,15 @@ There are 'live-dev' configs for running against NODE_ENV=production but without
 - `yarn test e2e` runs spectron integration tests.
 - `yarn lint` ...lints...
 
+### Logging
+
+Via electron-log, in main process: `import logger from 'logger'`, and you can `logger.info('things')`.
+
+In render process `const log = require('electron-log')`, and you can `log.info('things')`.
+
+Logs are printed to both render console and stdout. Logs are also written to a log file per system.
+
+`yarn log-osx` will tail the file. Similar commands (as yet untested) exist for linux/windows.
 
 
 ## SAFE Network
