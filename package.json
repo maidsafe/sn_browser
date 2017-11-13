@@ -1,6 +1,6 @@
 {
   "name": "peruse",
-  "identifier": "net.maidsafe.peruse-browser",
+  "identifier": "neeeet.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
   "version": "0.10.0",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",

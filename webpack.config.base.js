@@ -8,6 +8,9 @@ import { dependencies as externals } from './app/package.json';
 
 export default {
     externals : Object.keys( externals || {} ),
+
+    stats : 'errors-only',
+
     /**
    * Determine the array of extensions that should be used to resolve modules.
    */

@@ -23,7 +23,6 @@ export default class MenuBuilder
 
     buildMenu()
     {
-        logger.info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^, test env', env, process.env.DEBUG_PROD)
         if ( isRunningDevelopment )
         {
             this.setupDevelopmentEnvironment();

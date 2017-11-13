@@ -3,6 +3,9 @@ import { BrowserWindow } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
 
+//TODO: Move this // abstract
+import {authFromQueue} from './extensions/safe/network';
+
 let mainWindow = null;
 
 function getNewWindowPosition( mainWindowState )
@@ -67,6 +70,8 @@ const openWindow = ( store ) =>
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
+
+        authFromQueue();
     } );
 
     mainWindow.on( 'closed', () =>

@@ -5,7 +5,23 @@ import { app } from 'electron';
 
 import { openExternal } from './api/utils';
 
-let appObj;
+let appObj = null;
+const queue = [];
+
+
+export const authFromQueue = async() =>
+{
+    if( queue.length )
+    {
+        authFromRes( queue[0] ); //hack for testing
+    }
+}
+
+
+const authFromRes = async( res ) =>
+{
+    appObj = await appObj.auth.loginFromURI( res );
+}
 
 // ipcRenderer.on( 'simulate-mock-res', () =>
 // {
@@ -30,21 +46,40 @@ const getMDataValueForKey = async ( md, key ) =>
 };
 
 export const getAppObj = () =>
-{
-    return appObj;
-}
+    appObj;
 
-export const handleIPCResponse = async( res ) =>
+export const handleIPCResponse = async ( res ) =>
 {
     try
     {
-        logger.info( `Received URL response` );
-        appObj = await appObj.auth.loginFromURI( res );
+        logger.info( 'Received URL response: ', res );
+
+        if ( appObj )
+        {
+            authFromRes( res );
+        }
+        else
+        {
+            queue.push( res );
+        }
     }
-    catch(e)
+    catch ( e )
     {
-        logger.error(e)
+        logger.error( e );
     }
+
+
+    // TODO: Handle passing urls etc, once we have safe://
+
+
+    // osx only for the still open but all windows closed state
+    // if( process.platform === 'darwin' && global.macAllWindowsClosed )
+    // {
+    //   if( url.startsWith('safe-') ) {
+    //     createShellWindow()
+    //   }
+    //
+    // }
 };
 
 export const initAnon = async () =>
@@ -53,10 +88,12 @@ export const initAnon = async () =>
 
     try
     {
-        // TODO: register scheme
-        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH, registerScheme: false, logger } );
+        // TODO: register scheme. Use genConnUri not genAuth
+        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH, logger } );
+
         const authReq = await appObj.auth.genAuthUri( {} );
 
+        logger.info( 'auth req generated:', authReq );
         // commented out until system_uri open issue is solved for osx
         // await appObj.auth.openUri(resp.uri);
         openExternal( authReq.uri );
@@ -69,23 +106,22 @@ export const initAnon = async () =>
     }
 };
 
-export const fetchData = async( app, url ) =>
+export const fetchData = async ( app, url ) =>
 {
-    logger.verbose( `Fetching: ${url}`)
+    logger.verbose( `Fetching: ${url}` );
 
     if ( !app )
     {
         return Promise.reject( new Error( 'Must login to Authenticator for viewing SAFE sites' ) );
     }
 
-    try{
-
-        let data = await app.webFetch( url );
-    }
-    catch( e)
+    try
     {
-        logger.error('PROBLEM IN FETCHLAND')
-        logger.error(e)
+        const data = await app.webFetch( url );
+    }
+    catch ( e )
+    {
+        logger.error( e );
     }
 };
 
@@ -228,11 +264,12 @@ export const reconnect = ( app ) =>
  */
 export const initMock = async () =>
 {
+    logger.info('initing mock')
     try
     {
-        let app = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
-        app = await app.auth.loginForTest( APP_INFO.permissions );
-        return app;
+        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        appObj = await appObj.auth.loginForTest( APP_INFO.permissions );
+        return appObj;
     }
     catch ( err )
     {

@@ -91,7 +91,10 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     if ( commandLine.length >= 2 && commandLine[1] )
     {
-        sendResponse( commandLine[1] );
+        // sendResponse( commandLine[1] );
+
+        handleIPCResponse( parseSafeUri( commandLine[1] ) );
+
     }
 
     // Someone tried to run a second instance, we should focus our window
@@ -116,8 +119,8 @@ app.on( 'ready', async () =>
         const uriArg = process.argv[process.argv.length - 1];
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
-            logger.info( 'redceived safe uriii', uriArg );
-            handleIPCResponse.open( parseSafeUri( uriArg ) );
+            logger.info( 'received safe uriii', uriArg );
+            handleIPCResponse( parseSafeUri( uriArg ) );
         }
     }
 
@@ -136,5 +139,5 @@ app.on( 'open-url', ( e, url ) =>
 {
     // TODO. Queue incase of not started.
     // Also parse out and deal with safe:// urls and auth response etc.
-    handleIPCResponse( url );
+    handleIPCResponse( parseSafeUri(url) );
 } );

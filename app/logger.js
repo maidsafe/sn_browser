@@ -28,6 +28,7 @@ log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 // the archived log will be saved as the log.old.log file
 log.transports.file.maxSize = 5 * 1024 * 1024;
 
+//TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
 log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 log.info( `      Started with node env: ${env}`);
 log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
