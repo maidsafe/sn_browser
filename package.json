@@ -40,8 +40,7 @@
   },
   "browserslist": "electron 1.4",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "appId": "org.develar.PeruseBrowser",
     "asarUnpack": [
       "**/@maidsafe/**/*",
       "**/weak/**/*"
