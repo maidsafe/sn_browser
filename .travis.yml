@@ -52,5 +52,6 @@ script:
   # - yarn run lint
   - yarn run build
   - yarn run test
-  - yarn run test-e2e
+  - if [[ "$NODE_ENV" !== "prod" ]]; then yarn run test-e2e;
+  fi
   - yarn run package
