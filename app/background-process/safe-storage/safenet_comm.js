@@ -34,7 +34,6 @@ const safeMutableDataEntries = getAPI('safeMutableDataEntries');
 const safeMutableDataMutation = getAPI('safeMutableDataMutation');
 const safeCrypto = getAPI('safeCrypto');
 const safeCryptoPubEncKey = getAPI('safeCryptoPubEncKey');
-const safeCryptoKeyPair = getAPI('safeCryptoKeyPair');
 const safeCryptoSecEncKey = getAPI('safeCryptoSecEncKey');
 
 let browserNetworkState = '';

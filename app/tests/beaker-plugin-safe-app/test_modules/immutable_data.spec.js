@@ -29,16 +29,4 @@ describe('window.safeImmutableData', () => {
     const dataSize = await window.safeImmutableData.size(readerHandle);
     should(dataSize).be.equal(22);
   });
-
-  it('frees reader object from memory', async () => {
-    const appHandle = await testHelpers.authoriseAndConnect()
-    const writerHandle = await window.safeImmutableData.create(appHandle);
-    await window.safeImmutableData.write(writerHandle, 'immutable data content');
-    const cipherOptHandle = await window.safeCipherOpt.newPlainText(appHandle);
-    const idAddress = await window.safeImmutableData.closeWriter(writerHandle, cipherOptHandle);
-    const readerHandle = await window.safeImmutableData.fetch(appHandle, idAddress);
-    window.safeImmutableData.free(readerHandle);
-    should.throws(window.safeImmutableData.size(readerHandle));
-  });
-
 });

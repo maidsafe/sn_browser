@@ -2,11 +2,9 @@ let should = require('should');
 let testHelpers = require('../helpers');
 
 describe('window.safeApp.authorise', () => {
-  it('authorises application and return some authentication uri', async function() {
-    this.timeout(30000);
+  it('authorises application and return some authentication uri', async () => {
     const appHandle = await testHelpers.initialiseApp();
-    const authUri = await testHelpers.authoriseApp(appHandle);
-    should(authUri).startWith('safe-')
+    should(testHelpers.authoriseApp(appHandle)).be.fulfilled();
   });
 
   it('exists', () => {
@@ -25,10 +23,6 @@ describe('window.safeApp.authorise', () => {
         vendor: 'MaidSafe Ltd.'
     };
     const appHandle = await window.safeApp.initialise(appInfo);
-    const authUri = await window.safeApp.authorise(appHandle, misspelledPermissions, {});
-    await window.safeApp.connectAuthorised(appHandle, authUri);
-    const permObjects = await window.safeApp.getContainersPermissions(appHandle);
-    should(permObjects._public['ManagePermissions']).be.false();
-    should(permObjects._publicNames['Insert']).be.false();
+    should(window.safeApp.authorise(appHandle, misspelledPermissions, {})).be.rejected();
   });
-});
+}).timeout(15000);

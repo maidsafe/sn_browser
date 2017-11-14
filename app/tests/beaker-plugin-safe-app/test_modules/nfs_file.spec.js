@@ -34,13 +34,4 @@ describe('window.safeNfsFile', () => {
     const fileHandle = await window.safeNfs.create(nfsHandle, 'Hello, SAFE world!');
     should(window.safeNfsFile.metadata(fileHandle)).be.fulfilled();
   });
-
-  it('frees file object from memory', async () => {
-    const nfsHandle = await testHelpers.createNfsEmulation();
-    const fileHandle = await window.safeNfs.create(nfsHandle, 'Hello, SAFE world!');
-    window.safeNfsFile.free(fileHandle);
-    should(window.safeNfsFile.size(fileHandle)).be.rejected();
-  });
-
-
 });

@@ -20,11 +20,4 @@ describe('window.safeMutableDataEntries', () => {
     });
     should(entries.length).be.equal(2);
   });
-
-  it('frees MD entries object from memory', async () => {
-    const mdHandle = await testHelpers.createRandomPublicMutableData({key1: 'value1', key2: 'value2'});
-    const entriesHandle = await window.safeMutableData.getEntries(mdHandle);
-    window.safeMutableDataEntries.free(entriesHandle);
-    should(window.safeMutableDataEntries.len(entriesHandle)).be.rejected();
-  });
 });

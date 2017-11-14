@@ -14,8 +14,8 @@ const appInfo2 = {
   scope: null
 }
 
-const TAG_TYPE_DNS = 15001;
-const TAG_TYPE_WWW = 15002;
+const TYPE_TAG_DNS = 15001;
+const TYPE_TAG_WWW = 15002;
 
 //  Replaces the entire content of the file when writing data.
 const OPEN_MODE_OVERWRITE = 1;
@@ -71,7 +71,7 @@ const createRandomPrivateMutableData = async () => {
   const appHandle = await window.safeApp.initialise(appInfo2);
   const authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
-  const mdHandle = await window.safeMutableData.newRandomPrivate(appHandle, TAG_TYPE_DNS);
+  const mdHandle = await window.safeMutableData.newRandomPrivate(appHandle, TYPE_TAG_DNS);
   return window.safeMutableData.quickSetup(mdHandle, {});
 }
 
@@ -79,12 +79,12 @@ const createRandomPublicMutableData = async (entriesObject) => {
   const appHandle = await initialiseApp();
   const authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
-  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
+  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TYPE_TAG_DNS);
   return window.safeMutableData.quickSetup(mdHandle, entriesObject || {});
 }
 
 const createMutableDataWithCustomPermissions = async (appHandle, permsArray) => {
-  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
+  const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TYPE_TAG_DNS);
   let permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
   permsArray.map(async (perm) => {
     await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, perm);
@@ -103,7 +103,7 @@ const createUnownedMutableData = async () => {
   let appHandle = await window.safeApp.initialise(appInfo2);
   let authUri = await authoriseApp(appHandle);
   await window.safeApp.connectAuthorised(appHandle, authUri);
-  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TAG_TYPE_DNS);
+  let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, TYPE_TAG_DNS);
   await window.safeMutableData.quickSetup(mdHandle, {entryFrom: 'different application'});
   return window.safeMutableData.getNameAndTag(mdHandle);
 }
@@ -116,8 +116,8 @@ module.exports = {
   authoriseAndConnect,
   createMutableDataWithCustomPermissions,
   createUnownedMutableData,
-  TAG_TYPE_DNS,
-  TAG_TYPE_WWW,
+  TYPE_TAG_DNS,
+  TYPE_TAG_WWW,
   createRandomPrivateMutableData,
   createRandomPublicMutableData,
   createRandomXorName,
