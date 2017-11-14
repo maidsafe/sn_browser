@@ -1,4 +1,4 @@
-import { UI, COPY } from './constants';
+import { UI, COPY } from 'tants';
 
 // AUTH
 export const setAppToAuthTab = async ( app ) =>

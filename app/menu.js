@@ -5,7 +5,7 @@ import {
     activeTabForwards,
     activeTabBackwards
 } from './actions/tabs_actions';
-import { isRunningDevelopment, env } from 'constants';
+import { isRunningDevelopment, isHot } from 'constants';
 import { getLastClosedTab } from './reducers/tabs';
 import logger from 'logger';
 import appPackage from 'appPackage';
@@ -23,7 +23,7 @@ export default class MenuBuilder
 
     buildMenu()
     {
-        if ( isRunningDevelopment )
+        if ( isRunningDevelopment || isHot )
         {
             this.setupDevelopmentEnvironment();
         }

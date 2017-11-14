@@ -1,9 +1,8 @@
 {
-    "addressSafe" : "safe://aaa.testtt",
-    "address" : "http://guardian.co.uk",
+    "address" : "safe-auth://home/",
     "tabs"    : [ {
-        "url": "http://guardian.co.uk",
-        "history" : ["http://guardian.co.uk"],
+        "url": "safe-auth://home/",
+        "history" : ["safe-auth://home/"],
         "historyIndex": 0,
         "isActiveTab" : true,
         "isClosed" : false,

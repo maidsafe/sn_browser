@@ -16,6 +16,8 @@ import MdStarOutline from 'react-icons/lib/md/star-outline';
 
 import styles from './addressBar.css';
 
+const log = require('electron-log');
+
 /**
  * Takes input and adds requisite url portions as needed, comparing to package.json defined
  * protocols, or defaulting to http
@@ -29,35 +31,39 @@ const makeValidUrl = ( input )=>
     const parser = document.createElement( 'a' );
     parser.href = input;
 
-    const inputProtocol = parser.protocol;
-    const inputHost = parser.host;
-
+    const inputProtocol =  parser.protocol.replace( ':', '' );
     let finalProtocol;
-    let finalHost;
-    let everythingAfterHost = '';
+    let everythingAfterProtocol = '';
 
-    if ( inputHost )
+    if ( validProtocols.includes( inputProtocol ) )
     {
-        finalHost = inputHost.includes( '.' ) ? inputHost : `${inputHost}.com`;
-        everythingAfterHost = input.substring(
-            input.indexOf( inputHost ) + inputHost.length,
+        let fullProto = '://';
+        let shortProto = ':';
+
+        finalProtocol = inputProtocol;
+
+        let protocolPos;
+
+        if( input.indexOf( fullProto ) > -1 )
+        {
+            protocolPos = input.indexOf( fullProto ) + 3;
+        }
+        else
+        {
+            protocolPos = input.indexOf( shortProto );
+        }
+
+        everythingAfterProtocol = input.substring(
+            protocolPos,
             input.length );
     }
     else
     {
-        finalHost = input;
-    }
-
-    if ( validProtocols.includes( inputProtocol ) )
-    {
-        finalProtocol = inputProtocol;
-    }
-    else
-    {
         finalProtocol = validProtocols[0];
+        everythingAfterProtocol = input;
     }
 
-    const endUrl = `${finalProtocol}://${finalHost}/${everythingAfterHost}`
+    const endUrl = `${finalProtocol}://${everythingAfterProtocol}`
 
     return removeTrailingSlash( endUrl );
 }
@@ -167,14 +173,14 @@ export default class AddressBar extends Component
                     onChange={ this.handleChange }
                     onKeyPress={ this.handleKeyPress }
                 />
-                <div className={ `${styles.button} js-address__favourite` }>
+                {/* <div className={ `${styles.button} js-address__favourite` }>
                     <MdStarOutline className={ styles.buttonIcon } />
                 </div>
                 <div className={ styles.rightButtons }>
                     <div className={ `${styles.button} js-address__menu` }>
                         <MdMenu className={ styles.buttonIcon } />
                     </div>
-                </div>
+                </div> */}
             </div>
         );
     }

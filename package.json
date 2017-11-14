@@ -18,17 +18,18 @@
     "log-windows": "Get-Content -Path \"%USERPROFILE%\\AppData\\Roaming\\Peruse\\log.log\" -Wait",
     "hot-updates-server": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack.config.renderer.dev.js",
     "hot-updates-server-live": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack.config.renderer.live.dev.js",
-    "build": "concurrently \"yarn run build-main\" \"yarn run build-renderer\"",
+    "build": "concurrently \"yarn run build-main\" \"yarn run build-renderer\" \"yarn run build-preload\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --progress --profile --colors",
     "build-dll-live": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.live.dev.dll.js --progress --profile --colors",
     "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.main.prod.js --progress --profile --colors",
     "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.prod.js --progress --profile --colors",
+    "build-preload": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.preload.js --progress --profile --colors",
     "start": "cross-env NODE_ENV=production electron ./app/",
     "flow": "flow",
     "flow-typed": "flow-typed install",
     "start-hot-renderer": "cross-env HOT=1 NODE_ENV=development IS_UNPACKED=true electron -r babel-register -r babel-polyfill ./app/main.development",
     "start-hot-renderer-live": "cross-env HOT=1 NODE_ENV=production IS_UNPACKED=true electron -r babel-register -r babel-polyfill ./app/main.development",
-    "postinstall": "concurrently \"yarn run build-dll\" \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
+    "postinstall": "concurrently \"yarn run build-dll\" \"yarn run build-preload\" \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
     "dev": "cross-env START_HOT=1 yarn run hot-updates-server",
     "live-dev": "cross-env START_HOT=1 yarn run hot-updates-server-live",
     "package": "yarn run build && build --publish never",
@@ -36,6 +37,7 @@
     "package-linux": "yarn run build && build --linux",
     "package-all": "yarn run build && build -mwl",
     "cleanup": "mop -v",
+    "put-live-net-files-for-dev": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/MacOS/Electron.crust.config && cp resources/log.toml node_modules/electron/dist/Electron.app/Contents/Resources/log.toml",
     "rebuild": "npm rebuild --runtime=electron --target=1.7.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild --target=1.7.8"
   },
   "browserslist": "electron 1.4",
@@ -44,6 +46,30 @@
     "asarUnpack": [
       "**/@maidsafe/**/*",
       "**/weak/**/*"
+    ],
+    "extraResources": [
+      "app/node_modules/locales",
+      {
+        "from": "resources/log.toml",
+        "to": "log.toml"
+      },
+      {
+        "from": "resources/crust.config",
+        "to": "${productName}.crust.config"
+      },
+      {
+        "from": "app/extensions/safe/dist",
+        "to": "extensions/safe/dist"
+    },
+      {
+        "from": "app/extensions/safe/auth-web-app/temp_dist",
+        "to": "extensions/safe/auth-web-app/temp_dist"
+    },
+     {
+        "from": "app/webPreload.js",
+        "to": "webPreload.js"
+    }
+
     ],
     "files": [
       "dist/",
@@ -57,8 +83,7 @@
       "name": "SAFE",
       "schemes": [
         "safe",
-        "safe-auth",
-        "safe-bmV0Lm1haWRzYWZlLnBlcnVzZS1icm93c2Vy"
+        "safe-auth"
       ]
     },
     "win": {
@@ -186,7 +211,10 @@
     "crypto": "^1.0.1",
     "electron-log": "2.2.11",
     "font-awesome": "^4.7.0",
+    "i18n": "0.8.3",
+    "inert": "4.2.1",
     "prop-types": "^15.5.8",
+    "pauls-electron-rpc": "git+https://github.com/joshuef/pauls-electron-rpc.git#1.0.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-hot-loader": "3.0.0-beta.6",

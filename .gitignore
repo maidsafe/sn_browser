@@ -37,6 +37,8 @@ app/node_modules
 release
 app/main.js
 app/main.js.map
+app/webPreload.js
+app/webPreload.js.map
 app/bundle.js
 app/bundle.js.map
 app/style.css
@@ -45,6 +47,7 @@ dist
 dll
 main.js
 main.js.map
+locales
 
 .idea
 npm-debug.log.*

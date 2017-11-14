@@ -1,27 +1,28 @@
 import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
-import { APP_INFO, CONFIG, SAFE } from 'constants';
+import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'constants';
 import logger from 'logger';
+import { parse as parseURL } from 'url';
 import { app } from 'electron';
+// import { executeScriptInBackground } from 'utils/background-process';
 
-import { openExternal } from './api/utils';
+import { callIPC } from './ffi/ipc';
+import AUTH_CONSTANTS from './auth-constants';
 
-let appObj = null;
 const queue = [];
+let appObj;
 
-
-export const authFromQueue = async() =>
+export const authFromQueue = async () =>
 {
-    if( queue.length )
+    if ( queue.length )
     {
-        authFromRes( queue[0] ); //hack for testing
+        authFromRes( queue[0] ); // hack for testing
     }
-}
+};
 
-
-const authFromRes = async( res ) =>
+const authFromRes = async ( res ) =>
 {
     appObj = await appObj.auth.loginFromURI( res );
-}
+};
 
 // ipcRenderer.on( 'simulate-mock-res', () =>
 // {
@@ -48,11 +49,70 @@ const getMDataValueForKey = async ( md, key ) =>
 export const getAppObj = () =>
     appObj;
 
-export const handleIPCResponse = async ( res ) =>
+
+export const handleSafeAuthAuthentication = ( uri, type ) =>
 {
+    callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP )
+};
+
+export const initAnon = async () =>
+{
+    logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
+
     try
     {
-        logger.info( 'Received URL response: ', res );
+        appObj = await initializeApp( APP_INFO.info, null, {
+            libPath: CONFIG.LIB_PATH,
+            joinedSchemes: [ PROTOCOLS.SAFE ],
+            logger
+        } );
+
+        // TODO, do we even need to generate this?
+        const authReq = await appObj.auth.genConnUri( {} );
+
+        const authType = parseSafeAuthUrl( authReq.uri );
+
+        if ( authType.action === 'auth' )
+        {
+            handleSafeAuthAuthentication( authReq.uri );
+        }
+
+        return appObj;
+    }
+    catch ( e )
+    {
+        logger.error( e );
+        throw e;
+    }
+};
+
+
+export const handleAnonConnResponse = ( url ) => handleOpenUrl( url );
+
+
+
+export const handleOpenUrl = async ( res ) =>
+{
+    let authUrl = null;
+    logger.info( 'Received URL response: ', res );
+
+    if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` )
+    {
+        authUrl = parseSafeAuthUrl( res );
+
+        if ( authUrl.action === 'auth' )
+        {
+            return handleSafeAuthAuthentication( authUrl );
+        }
+    }
+
+
+    // TODO: Open URL proper. IF AUTH. We send req to handle in auth
+    // handleSafeAuthAuthentication(url);
+
+    // IF NOT + is safe, we handle that.
+    try
+    {
 
         if ( appObj )
         {
@@ -82,29 +142,41 @@ export const handleIPCResponse = async ( res ) =>
     // }
 };
 
-export const initAnon = async () =>
+
+
+export function parseSafeAuthUrl( url, isClient )
 {
-    logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
-
-    try
+    if( typeof url !== 'string' )
     {
-        // TODO: register scheme. Use genConnUri not genAuth
-        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH, logger } );
-
-        const authReq = await appObj.auth.genAuthUri( {} );
-
-        logger.info( 'auth req generated:', authReq );
-        // commented out until system_uri open issue is solved for osx
-        // await appObj.auth.openUri(resp.uri);
-        openExternal( authReq.uri );
-        return appObj;
+        throw new Error('URl should be a string to parse')
     }
-    catch ( e )
+
+    const safeAuthUrl = {};
+    const parsedUrl = parseURL( url );
+
+    if ( !( /^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test( parsedUrl.hostname ) ) )
     {
-        logger.error( e );
-        throw e;
+        return { action: 'auth' };
     }
-};
+
+    safeAuthUrl.protocol = parsedUrl.protocol;
+    safeAuthUrl.action = parsedUrl.hostname;
+
+    const data = parsedUrl.pathname ? parsedUrl.pathname.split( '/' ) : null;
+    if ( !isClient && !!data )
+    {
+        safeAuthUrl.appId = data[1];
+        safeAuthUrl.payload = data[2];
+    }
+    else
+    {
+        safeAuthUrl.appId = parsedUrl.protocol.split( '-' ).slice( -1 )[0];
+        safeAuthUrl.payload = null;
+    }
+    safeAuthUrl.search = parsedUrl.search;
+    return safeAuthUrl;
+}
+
 
 export const fetchData = async ( app, url ) =>
 {
@@ -124,24 +196,24 @@ export const fetchData = async ( app, url ) =>
         logger.error( e );
     }
 };
-
-export const requestAuth = async () =>
-{
-    try
-    {
-        const app = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
-        const resp = await app.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
-        // commented out until system_uri open issue is solved for osx
-        // await app.auth.openUri(resp.uri);
-        openExternal( resp.uri );
-        return;
-    }
-    catch ( err )
-    {
-        console.error( err );
-        throw err;
-    }
-};
+//
+// export const requestAuth = async () =>
+// {
+//     try
+//     {
+//         const app = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+//         const resp = await app.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
+//         // commented out until system_uri open issue is solved for osx
+//         // await app.auth.openUri(resp.uri);
+//         // openExternal( resp.uri );
+//         return;
+//     }
+//     catch ( err )
+//     {
+//         console.error( err );
+//         throw err;
+//     }
+// };
 
 /*
 * A request to share access to a Mutable Data structure becomes necessary when\
@@ -190,7 +262,7 @@ export const requestSharedMDAuth = async ( app, publicName ) =>
         const resp = await app.auth.genShareMDataUri( mdPermissions );
         // commented out until system_uri open issue is solved for osx
         // await app.auth.openUri(resp.uri);
-        openExternal( resp.uri );
+        // openExternal( resp.uri );
         return;
     }
     catch ( err )
@@ -210,8 +282,6 @@ export const connectAuthed = async ( uri, netStatusCallback ) =>
     {
         return Promise.reject( new Error( 'Invalid Auth response' ) );
     }
-
-    logger.info( 'Connecting to safe...' );
 
     try
     {
@@ -264,7 +334,7 @@ export const reconnect = ( app ) =>
  */
 export const initMock = async () =>
 {
-    logger.info('initing mock')
+    logger.info( 'Init mock app' );
     try
     {
         appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );

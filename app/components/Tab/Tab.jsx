@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { remote, ipcRenderer } from 'electron';
 import { removeTrailingSlash } from 'utils/urlHelpers';
-
+import path from 'path';
 import styles from './tab.css';
 
 const log = require( 'electron-log' );
@@ -91,8 +91,10 @@ export default class Tab extends Component
     {
         const { webviewShell } = this.refs;
         const { index } = this.props;
+        const preloadFile = remote.getGlobal( 'preloadFile' );
 
-        const injectPath = ''; // js well be chucking in
+        log.info( 'preloadFile', preloadFile );
+        const injectPath = `file://${preloadFile}` ; // js we'll be chucking in
 
         let rightClickPosition;
 
@@ -109,7 +111,7 @@ export default class Tab extends Component
         wv.partition = partition;
         // wv.useragent = useragent
         wv.plugins = true;
-        // wv.preload = injectPath
+        wv.preload = injectPath
         //
 
         const menu = Menu.buildFromTemplate( [

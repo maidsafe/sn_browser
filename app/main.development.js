@@ -18,9 +18,12 @@ import openWindow from './openWindow';
 import loadExtensions from './extensions';
 import configureStore from './store/configureStore';
 import handleCommands from './commandHandling';
-
+import { setupWebAPIs } from './webAPIs';
 // TODO: This should be handled in an extensible fashion
-import { handleIPCResponse } from './extensions/safe/network';
+import { handleOpenUrl } from './extensions/safe/network';
+
+import { setupServerVars, startServer } from './server';
+
 
 const initialState = {};
 
@@ -28,13 +31,13 @@ const initialState = {};
 const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
 
-// TODO: Why/how is this breaking e2e tests?
 import { mainSync } from './store/electronStoreSyncer';
 
 const mainWindow = null;
 mainSync( store );
 
-protocol.registerStandardSchemes(['safe']);
+// TODO: Register schemes from extension
+protocol.registerStandardSchemes(['safe', 'safe-auth'], {secure: true});
 
 if ( isRunningPackaged )
 {
@@ -77,7 +80,7 @@ app.on( 'window-all-closed', () =>
     // after all windows have been closed
     if ( process.platform !== 'darwin' )
     {
-        app.quit();
+        app.exit();
     }
 } );
 
@@ -93,7 +96,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
     {
         // sendResponse( commandLine[1] );
 
-        handleIPCResponse( parseSafeUri( commandLine[1] ) );
+        handleOpenUrl( parseSafeUri( commandLine[1] ) );
 
     }
 
@@ -120,7 +123,7 @@ app.on( 'ready', async () =>
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
             logger.info( 'received safe uriii', uriArg );
-            handleIPCResponse( parseSafeUri( uriArg ) );
+            handleOpenUrl( parseSafeUri( uriArg ) );
         }
     }
 
@@ -129,9 +132,15 @@ app.on( 'ready', async () =>
         app.quit();
     }
 
-    openWindow( store );
 
-    loadExtensions( store );
+    const server = await setupServerVars();
+
+    openWindow( store );
+    loadExtensions( server, store );
+    startServer( server );
+
+    setupWebAPIs();
+
     handleCommands( store );
 } );
 
@@ -139,5 +148,5 @@ app.on( 'open-url', ( e, url ) =>
 {
     // TODO. Queue incase of not started.
     // Also parse out and deal with safe:// urls and auth response etc.
-    handleIPCResponse( parseSafeUri(url) );
+    handleOpenUrl( parseSafeUri(url) );
 } );

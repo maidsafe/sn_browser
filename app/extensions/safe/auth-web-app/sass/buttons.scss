@@ -1,0 +1,52 @@
+.btn {
+  border: 0;
+  outline: 0;
+  background-color: $default-btn-bg;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font: {
+    size: 15px;
+    weight: bold;
+  };
+  &:disabled {
+    background-color: $primary-gray !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &.primary {
+    background-color: $btn-primary-bg;
+    color: white;
+    &:active {
+      background-color: $btn-primary-active;
+    }
+    &:hover {
+      background-color: $btn-primary-hover;
+    }
+  }
+  &.long {
+    width: 100%;
+    line-height: 50px;
+    border-radius: 10px;
+  }
+  &.flat {
+    background-color: transparent !important;
+    color: $default-btn-clr;
+    padding-left: 0;
+    padding-right: 0;
+    &:hover {
+      color: $default-btn-hover-clr;
+    }
+    &.danger {
+      color: $btn-danger-clr;
+    }
+    &.primary {
+      color: $btn-primary-clr;
+      &:hover {
+        color: $btn-primary-hover;
+      }
+    }
+  }
+}
