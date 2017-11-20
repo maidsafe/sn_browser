@@ -44,7 +44,9 @@ describe('window.safeMutableData', () => {
     const mdHandle = await window.safeMutableData.newPublic(appHandle, customName, testHelpers.TYPE_TAG_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {});
     const nameAndTag = await window.safeMutableData.getNameAndTag(mdHandle);
-    should(nameAndTag.name.buffer.toString()).be.equal(customName.toString());
+    console.log(customName);
+    const equalTypedArrays = nameAndTag.name.buffer.every((value, i) => customName[i] === value);
+    should(equalTypedArrays).be.true;
   });
 
   it('creates new permissions object and returns handle, to be used with safeMutableDataPermissions functions', async () => {
