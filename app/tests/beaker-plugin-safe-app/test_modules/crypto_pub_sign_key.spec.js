@@ -20,4 +20,12 @@ describe('window.safeCryptoPubSignKey', () => {
     const dataAsString = String.fromCharCode.apply(null, new Uint8Array(verifiedData));
     should(dataAsString).be.equal(data);
   });
+
+  it('frees app\'s public signing key object from memory', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
+    window.safeCryptoPubSignKey.free(appPubSignKeyHandle);
+    should(window.safeCryptoPubSignKey.getRaw(appPubSignKeyHandle))
+    .be.rejected();
+  });
 });

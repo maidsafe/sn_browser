@@ -42,4 +42,12 @@ describe('window.safeMutableDataMutation', () => {
     value = await window.safeMutableData.get(mdHandle, 'key1');
     should(String.fromCharCode.apply(null, value.buf)).be.equal('replacement_value1');
   });
+
+  it('frees mutation object from memory', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const mutationHandle = await window.safeMutableData.newMutation(appHandle);
+    window.safeMutableDataMutation.free(mutationHandle);
+    should(window.safeMutableDataMutation.insert(mutationHandle, 'key1', 'value1'))
+    .be.rejected();
+  });
 });

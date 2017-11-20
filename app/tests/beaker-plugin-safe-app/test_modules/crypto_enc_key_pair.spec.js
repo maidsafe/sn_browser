@@ -26,4 +26,12 @@ describe('window.safeCryptoEncKeyPair', () => {
     should(String.fromCharCode.apply(null, new Uint8Array(deciphered)))
     .be.equal('encrypt this data');
   });
+
+  it('frees enccryption key pair object from memory', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
+    window.safeCryptoEncKeyPair.free(encKeyPairHandle);
+    should(window.safeCryptoEncKeyPair.getPubEncKey(encKeyPairHandle))
+    .be.rejected();
+  });
 });

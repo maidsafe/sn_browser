@@ -20,4 +20,13 @@ describe('window.safeCryptoSecEncKey', () => {
     const deciphered = await window.safeCryptoSecEncKey.decrypt(secEncKeyHandle, cipher, pubEncKeyHandle)
     should(String.fromCharCode.apply(null, new Uint8Array(deciphered))).be.equal('deciphered');
   });
+
+  it('frees secret key object from memory', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
+    const secEncKeyHandle = await window.safeCryptoEncKeyPair.getSecEncKey(encKeyPairHandle);
+    window.safeCryptoSecEncKey.free(secEncKeyHandle);
+    should(window.safeCryptoSecEncKey.getRaw(secEncKeyHandle))
+    .be.rejected();
+  });
 });

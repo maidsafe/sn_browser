@@ -68,4 +68,13 @@ describe('window.safeMutableDataPermissions', () => {
     const permissionsEntries = await window.safeMutableDataPermissions.listPermissionSets(permissionsHandle);
     should(permissionsEntries.length).be.equal(2);
   });
+
+  it('frees permissions objects from memory', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
+    const permissionsHandle = await window.safeMutableData.newPermissions(appHandle);
+    window.safeMutableDataPermissions.free(permissionsHandle);
+    should(window.safeMutableDataPermissions.len(permissionsHandle))
+    .be.rejected();
+  });
 }).timeout(15000);

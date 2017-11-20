@@ -5,7 +5,7 @@ describe('window.safeApp.clearObjectCache', () => {
   it('resets the object cache kept by the underlyging library', async () => { 
     const appHandle = await testHelpers.authoriseAndConnect();
     
-    should(await window.safeApp.clearObjectCache(appHandle)).be.fulfilled();
+    should(window.safeApp.clearObjectCache(appHandle)).be.fulfilled();
   });
 
   it('exists', () => {

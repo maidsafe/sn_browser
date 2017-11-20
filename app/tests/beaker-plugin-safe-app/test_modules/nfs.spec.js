@@ -58,4 +58,10 @@ describe('window.safeNfs', async () => {
     should(window.safeNfsFile.read(fileHandle, testHelpers.FILE_READ_FROM_BEGIN, testHelpers.FILE_READ_TO_END))
     .be.fulfilled();
   });
+
+  it('free nfs object from memory', async () => {
+    const nfsHandle = await testHelpers.createNfsEmulation();
+    window.safeNfs.free(nfsHandle);
+    should(window.safeNfs.create(nfsHandle, 'Hello, SAFE world!')).be.rejected();
+  });
 });

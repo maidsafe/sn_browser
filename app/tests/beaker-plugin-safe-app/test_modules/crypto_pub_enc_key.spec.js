@@ -28,4 +28,13 @@ describe('window.safeCryptoPubEncKey', () => {
     should(window.safeCryptoPubEncKey.encrypt(pubEncKeyHandle, 'encrypt this data', secEncKeyHandle))
     .be.fulfilled();
   });
+
+  it('frees public encryption key object from memory', async () => {
+    const appHandle = await testHelpers.authoriseAndConnect();
+    const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
+    const pubEncKeyHandle = await window.safeCryptoEncKeyPair.getPubEncKey(encKeyPairHandle);
+    window.safeCryptoPubEncKey.free(pubEncKeyHandle);
+    should(window.safeCryptoPubEncKey.getRaw(pubEncKeyHandle))
+    .be.rejected();
+  });
 });
