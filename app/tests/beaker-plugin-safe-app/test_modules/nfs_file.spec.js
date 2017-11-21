@@ -41,6 +41,4 @@ describe('window.safeNfsFile', () => {
     window.safeNfsFile.free(fileHandle);
     should(window.safeNfsFile.size(fileHandle)).be.rejected();
   });
-
-
 });

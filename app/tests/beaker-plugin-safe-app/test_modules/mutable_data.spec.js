@@ -22,9 +22,9 @@ describe('window.safeMutableData', () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const nonce = await window.safeCrypto.generateNonce(appHandle);
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
-    const secEncKeyHandle = await window.safeCryptoKeyPair.getSecEncKey(encKeyPairHandle);
+    const secEncKeyHandle = await window.safeCryptoEncKeyPair.getSecEncKey(encKeyPairHandle);
     const rawSecEncKey = await window.safeCryptoSecEncKey.getRaw(secEncKeyHandle);
-    const mdHandle = await window.safeMutableData.newPrivate(appHandle, customName, testHelpers.TAG_TYPE_DNS, rawSecEncKey.buffer, nonce.buffer);
+    const mdHandle = await window.safeMutableData.newPrivate(appHandle, customName, testHelpers.TYPE_TAG_DNS, rawSecEncKey.buffer, nonce.buffer);
     const encryptedKey = await window.safeMutableData.encryptKey(mdHandle, 'encrypted_key_1');
     const encryptedValue = await window.safeMutableData.encryptValue(mdHandle, 'encrypted_value_2');
     let entry = {};
@@ -41,22 +41,18 @@ describe('window.safeMutableData', () => {
   it('creates a public Mutable Data that can be custom-defined', async () => {
     const customName = testHelpers.createRandomXorName();
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newPublic(appHandle, customName, testHelpers.TAG_TYPE_DNS);
+    const mdHandle = await window.safeMutableData.newPublic(appHandle, customName, testHelpers.TYPE_TAG_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {});
     const nameAndTag = await window.safeMutableData.getNameAndTag(mdHandle);
-    should(nameAndTag.name.buffer.toString()).be.equal(customName.toString());
+    console.log(customName);
+    const equalTypedArrays = nameAndTag.name.buffer.every((value, i) => customName[i] === value);
+    should(equalTypedArrays).be.true;
   });
 
   it('creates new permissions object and returns handle, to be used with safeMutableDataPermissions functions', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const permissionsHandle = await window.safeMutableData.newPermissions(appHandle);
     should(permissionsHandle.length).be.equal(64);
-  });
-
-  it('creates new permission-set object and returns handle, to be used with safeMutableDataPermissionsSet functions', async () => {
-    const appHandle = await testHelpers.authoriseAndConnect();
-    const permissionSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
-    should(permissionSetHandle.length).be.equal(64);
   });
 
   it('creates new mutation object and returns handle, to be used with safeMutableDataMutation functions', async () => {
@@ -73,7 +69,7 @@ describe('window.safeMutableData', () => {
 
   it('provides a helper function to abstract the Mutable Data creation process', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
     should(window.safeMutableData.quickSetup(mdHandle, {})).be.fulfilled();
   });
 
@@ -108,7 +104,7 @@ describe('window.safeMutableData', () => {
   it('retrieves name and tag of a Mutable Data', async () => {
     const mdHandle = await testHelpers.createRandomPublicMutableData();
     const nameAndTag = await window.safeMutableData.getNameAndTag(mdHandle);
-    should(nameAndTag.tag).be.equal(testHelpers.TAG_TYPE_DNS);
+    should(nameAndTag.type_tag).be.equal(testHelpers.TYPE_TAG_DNS);
   });
 
   it('returns version number of Mutable Data', async () => {
@@ -126,18 +122,11 @@ describe('window.safeMutableData', () => {
 
   it('puts a Mutable Data structure to the network, the process for which quickSetup abstracts', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
-
-    const permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
-
-    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'Insert');
-    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'Update');
-    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'Delete');
-    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'ManagePermissions');
-
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
+    const permissionSet = ['Insert', 'Update', 'Delete', 'ManagePermissions'];
     const permissionsHandle = await window.safeMutableData.newPermissions(appHandle);
     const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
-    await window.safeMutableDataPermissions.insertPermissionsSet(permissionsHandle, appPubSignKeyHandle, permissionsSetHandle);
+    await window.safeMutableDataPermissions.insertPermissionsSet(permissionsHandle, appPubSignKeyHandle, permissionSet);
 
     const entriesHandle = await window.safeMutableData.newEntries(appHandle);
     should(window.safeMutableData.put(mdHandle, permissionsHandle, entriesHandle))
@@ -150,16 +139,14 @@ describe('window.safeMutableData', () => {
     should(entriesHandle.length).be.equal(64);
   });
 
-  it('gets a keys object for an existing Mutable Data, returns handle to be used with safeMutableDataKeys functions', async () => {
+  it('returns array of entry keys', async () => {
     const mdHandle = await testHelpers.createRandomPublicMutableData({key1: 'value1'});
-    const keysHandle = await window.safeMutableData.getKeys(mdHandle);
-    should(keysHandle.length).be.equal(64);
+    should(window.safeMutableData.getKeys(mdHandle)).be.fulfilled();
   });
 
-  it('gets a values object for an existing Mutable Data, returns handle to be used with safeMutableDataValues functions', async () => {
+  it('returns array of entry values', async () => {
     const mdHandle = await testHelpers.createRandomPublicMutableData({key1: 'value1'});
-    const valuesHandle = await window.safeMutableData.getValues(mdHandle);
-    should(valuesHandle.length).be.equal(64);
+    should(window.safeMutableData.getValues(mdHandle)).be.fulfilled();
   });
 
   it('gets a permissions object for an existing Mutable Data, returns handle to be used with safeMutableDataPermissions functions', async () => {
@@ -168,18 +155,18 @@ describe('window.safeMutableData', () => {
     should(permissionsHandle.length).be.equal(64);
   });
 
-  it('gets a permissions-set object for a specified signing key, returns handle to be used with safeMutableDataPermissionsSet functions', async () => {
+  it('gets a permissions object for a specified signing key, returns handle to be used with safeMutableDataPermissions functions', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {key1: 'value1'});
     const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
-    const permissionsSetHandle = await window.safeMutableData.getUserPermissions(mdHandle, appPubSignKeyHandle);
-    should(permissionsSetHandle.length).be.equal(64);
+    const permissionsHandle = await window.safeMutableData.getUserPermissions(mdHandle, appPubSignKeyHandle);
+    should(permissionsHandle.length).be.equal(64);
   });
 
   it('deletes a permissions-set for a specific signing key', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {key1: 'value1'});
     const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
     const version = await window.safeMutableData.getVersion(mdHandle);
@@ -193,21 +180,18 @@ describe('window.safeMutableData', () => {
     const appHandle = await testHelpers.authoriseAndConnect();
 
     /** creating Mutable Data without quickSetup, to set signing key as null *****/
-    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
-    let permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
-    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'ManagePermissions');
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
+    let permissionSet = ['ManagePermissions'];
     const permissionsHandle = await window.safeMutableData.newPermissions(appHandle);
-    await window.safeMutableDataPermissions.insertPermissionsSet(permissionsHandle, null, permissionsSetHandle);
+    await window.safeMutableDataPermissions.insertPermissionsSet(permissionsHandle, null, permissionSet);
     const entriesHandle = await window.safeMutableData.newEntries(appHandle);
     await window.safeMutableData.put(mdHandle, permissionsHandle, entriesHandle);
 
     const appPubSignKeyHandle = await window.safeCrypto.getAppPubSignKey(appHandle);
     const version = await window.safeMutableData.getVersion(mdHandle);
 
-    permissionsSetHandle = await window.safeMutableData.newPermissionSet(appHandle);
-    await window.safeMutableDataPermissionsSet.setAllow(permissionsSetHandle, 'Insert');
-
-    await window.safeMutableData.setUserPermissions(mdHandle, appPubSignKeyHandle, permissionsSetHandle, version + 1)
+    permissionSet = ['Insert'];
+    await window.safeMutableData.setUserPermissions(mdHandle, appPubSignKeyHandle, permissionSet, version + 1)
 
     mutationHandle = await window.safeMutableData.newMutation(appHandle);
     await window.safeMutableDataMutation.insert(mutationHandle, 'key2', 'value2');
@@ -216,7 +200,7 @@ describe('window.safeMutableData', () => {
 
   it('applies mutation actions to a Mutable Data and commits to network', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
+    const mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {});
 
     const mutationHandle = await window.safeMutableData.newMutation(appHandle);
@@ -234,11 +218,10 @@ describe('window.safeMutableData', () => {
 
   it('returns a mdHandle from a serialised Mutable Data', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
-    let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TAG_TYPE_DNS);
+    let mdHandle = await window.safeMutableData.newRandomPublic(appHandle, testHelpers.TYPE_TAG_DNS);
     await window.safeMutableData.quickSetup(mdHandle, {});
 
     const rawBuffer = await window.safeMutableData.serialise(mdHandle);
-    window.safeMutableData.free(mdHandle);
     mdHandle = await window.safeMutableData.fromSerial(appHandle, rawBuffer);
     should(mdHandle.length).be.equal(64);
   });
@@ -247,12 +230,5 @@ describe('window.safeMutableData', () => {
     const mdHandle = await testHelpers.createRandomPublicMutableData();
     const nfsHandle = await window.safeMutableData.emulateAs(mdHandle, 'NFS');
     should(nfsHandle.length).be.equal(64);
-  });
-
-  it('frees Mutable Data object from memory', async () => {
-    const mdHandle = await testHelpers.createRandomPublicMutableData();
-    window.safeMutableData.free(mdHandle);
-    should(window.safeMutableData.emulateAs(mdHandle, 'NFS')).
-    be.rejected();
   });
 });

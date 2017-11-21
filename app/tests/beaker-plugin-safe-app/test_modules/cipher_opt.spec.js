@@ -25,7 +25,7 @@ describe('window.safeCipherOpt', () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const plainTextCipherOptHandle = await window.safeCipherOpt.newPlainText(appHandle);
     window.safeCipherOpt.free(plainTextCipherOptHandle);
-
+ 
     const writerHandle = await window.safeImmutableData.create(appHandle);
     await window.safeImmutableData.write(writerHandle, 'immutable data content');
     should.throws(window.safeImmutableData.closeWriter(writerHandle, plainTextCipherOptHandle));

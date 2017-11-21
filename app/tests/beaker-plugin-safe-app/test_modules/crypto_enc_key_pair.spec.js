@@ -1,18 +1,18 @@
 let should = require('should');
 let testHelpers = require('./helpers');
 
-describe('window.safeCryptoKeyPair', () => {
+describe('window.safeCryptoEncKeyPair', () => {
   it('returns handle to public encryption key object', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
-    should(window.safeCryptoKeyPair.getPubEncKey(encKeyPairHandle))
+    should(window.safeCryptoEncKeyPair.getPubEncKey(encKeyPairHandle))
     .be.fulfilled();
   });
 
   it('returns handle to secret encryption key object', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
-    should(window.safeCryptoKeyPair.getSecEncKey(encKeyPairHandle))
+    should(window.safeCryptoEncKeyPair.getSecEncKey(encKeyPairHandle))
     .be.fulfilled();
   });
 
@@ -20,18 +20,18 @@ describe('window.safeCryptoKeyPair', () => {
     // NOTE: read about sealed boxes here: https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
-    const pubEncKeyHandle = await window.safeCryptoKeyPair.getPubEncKey(encKeyPairHandle);
+    const pubEncKeyHandle = await window.safeCryptoEncKeyPair.getPubEncKey(encKeyPairHandle);
     const cipher = await window.safeCryptoPubEncKey.encryptSealed(pubEncKeyHandle, 'encrypt this data');
-    const deciphered = await window.safeCryptoKeyPair.decryptSealed(encKeyPairHandle, cipher);
+    const deciphered = await window.safeCryptoEncKeyPair.decryptSealed(encKeyPairHandle, cipher);
     should(String.fromCharCode.apply(null, new Uint8Array(deciphered)))
     .be.equal('encrypt this data');
   });
 
-  it('frees key pair object from memory', async () => {
+  it('frees enccryption key pair object from memory', async () => {
     const appHandle = await testHelpers.authoriseAndConnect();
     const encKeyPairHandle = await window.safeCrypto.generateEncKeyPair(appHandle);
-    window.safeCryptoKeyPair.free(encKeyPairHandle);
-    should(window.safeCryptoKeyPair.getPubEncKey(encKeyPairHandle))
+    window.safeCryptoEncKeyPair.free(encKeyPairHandle);
+    should(window.safeCryptoEncKeyPair.getPubEncKey(encKeyPairHandle))
     .be.rejected();
   });
 });

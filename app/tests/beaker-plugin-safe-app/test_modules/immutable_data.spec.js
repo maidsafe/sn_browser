@@ -40,5 +40,4 @@ describe('window.safeImmutableData', () => {
     window.safeImmutableData.free(readerHandle);
     should.throws(window.safeImmutableData.size(readerHandle));
   });
-
 });
