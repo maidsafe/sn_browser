@@ -1,7 +1,9 @@
-import { session } from 'electron';
+import { session, app } from 'electron';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, PROTOCOLS } from 'constants';
+import { CONFIG, PROTOCOLS,APP_INFO, isRunningPackaged } from 'constants';
+
+// import sysUri from '../ffi/sys_uri';
 
 const registerSafeProtocol = () =>
 {

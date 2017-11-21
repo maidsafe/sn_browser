@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, PROTOCOLS } from 'constants';
+import { CONFIG, PROTOCOLS, isRunningUnpacked } from 'constants';
 
 import { session, app } from 'electron';
 /* eslint-enable import/extensions */
@@ -11,20 +11,25 @@ import { session, app } from 'electron';
 // If it is, is it not happening early enough?
 import sysUri from '../ffi/sys_uri';
 
-const isDevMode = process.execPath.match( /[\\/]electron/ );
+// const isDevMode = process.execPath.match( /[\\/]electron/ );
 
 const appInfo = {
     id     : 'net.maidsafe.app.browser.authenticator',
-    exec   : isDevMode ? `${process.execPath} ${app.getAppPath()}` : app.getPath( 'exe' ),
+    exec   : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` : app.getAppPath(),
     vendor : 'MaidSafe.net Ltd',
     name   : 'SAFE Browser Authenticator plugin',
     icon   : 'iconPath'
 };
 
 // OSX: Add bundle for electron in dev mode
-if ( isDevMode && process.platform === 'darwin' )
+if ( isRunningUnpacked && process.platform === 'darwin' )
 {
     appInfo.bundle = 'com.github.electron';
+}
+else if( process.platform === 'darwin' )
+{
+    appInfo.bundle = 'com.electron.peruse';
+
 }
 
 export const registerSafeAuthProtocol = () =>

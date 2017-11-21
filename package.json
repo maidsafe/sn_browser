@@ -1,6 +1,6 @@
 {
   "name": "peruse",
-  "identifier": "neeeet.maidsafe.peruse-browser",
+  "identifier": "net.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
   "version": "0.10.0",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
@@ -42,7 +42,6 @@
   },
   "browserslist": "electron 1.4",
   "build": {
-    "appId": "org.develar.PeruseBrowser",
     "asarUnpack": [
       "**/@maidsafe/**/*",
       "**/weak/**/*"
@@ -80,7 +79,7 @@
       "package.json"
     ],
     "protocols": {
-      "name": "SAFE",
+      "name": "SAFE Network URL",
       "schemes": [
         "safe",
         "safe-auth"

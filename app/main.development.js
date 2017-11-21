@@ -37,7 +37,7 @@ const mainWindow = null;
 mainSync( store );
 
 // TODO: Register schemes from extension
-protocol.registerStandardSchemes(['safe', 'safe-auth'], {secure: true});
+protocol.registerStandardSchemes( ['safe', 'safe-auth'], { secure: true } );
 
 if ( isRunningPackaged )
 {
@@ -97,7 +97,6 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
         // sendResponse( commandLine[1] );
 
         handleOpenUrl( parseSafeUri( commandLine[1] ) );
-
     }
 
     // Someone tried to run a second instance, we should focus our window
@@ -148,5 +147,26 @@ app.on( 'open-url', ( e, url ) =>
 {
     // TODO. Queue incase of not started.
     // Also parse out and deal with safe:// urls and auth response etc.
-    handleOpenUrl( parseSafeUri(url) );
+    handleOpenUrl( parseSafeUri( url ) );
+
+
+    // osx only for the still open but all windows closed state
+    if ( process.platform === 'darwin' && global.macAllWindowsClosed )
+    {
+        if ( url.startsWith( 'safe-' ) )
+        {
+            openWindow( store );
+        }
+    }
+} );
+
+
+app.on( 'window-all-closed', () =>
+{
+    if ( process.platform !== 'darwin' )
+    {
+        app.quit();
+    }
+
+    global.macAllWindowsClosed = true;
 } );

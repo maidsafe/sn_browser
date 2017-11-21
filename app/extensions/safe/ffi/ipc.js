@@ -6,7 +6,7 @@ import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import config from '../config';
 import logger from 'logger';
-import {handleAnonConnResponse} from '../network';
+import { handleAnonConnResponse } from '../network';
 
 config.i18n();
 
@@ -21,16 +21,12 @@ const parseResUrl = ( url ) =>
 
 const openExternal = ( uri ) =>
 {
-    //TODO. check if URI is from browser, and negate openExternal
-    handleAnonConnResponse(uri);
-
     if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || reqQ.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
     {
         return;
     }
     try
     {
-
         shell.openExternal( parseResUrl( uri ) );
     }
     catch ( err )
@@ -105,11 +101,20 @@ class ReqQueue
             {
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
-            openExternal( res );
+
+            if ( this.req.uri === global.browserReqUri )
+            {
+                handleAnonConnResponse( parseResUrl( res ) );
+            }
+            else
+            {
+                openExternal( res );
+            }
+
             self.next();
         } ).catch( ( err ) =>
         {
-            logger.error('here is an error', err)
+            logger.error( err );
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
 

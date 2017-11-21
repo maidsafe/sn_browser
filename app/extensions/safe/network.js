@@ -52,6 +52,11 @@ export const getAppObj = () =>
 
 export const handleSafeAuthAuthentication = ( uri, type ) =>
 {
+    if( typeof uri !== 'string' )
+    {
+        throw new Error('Auth URI should be a string');
+    }
+
     callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP )
 };
 
@@ -63,14 +68,16 @@ export const initAnon = async () =>
     {
         appObj = await initializeApp( APP_INFO.info, null, {
             libPath: CONFIG.LIB_PATH,
-            joinedSchemes: [ PROTOCOLS.SAFE ],
-            logger
+            registerScheme: false,
+            joinSchemes: [ PROTOCOLS.SAFE ]
         } );
 
         // TODO, do we even need to generate this?
         const authReq = await appObj.auth.genConnUri( {} );
 
         const authType = parseSafeAuthUrl( authReq.uri );
+
+        global.browserReqUri = authReq.uri;
 
         if ( authType.action === 'auth' )
         {
@@ -87,59 +94,27 @@ export const initAnon = async () =>
 };
 
 
-export const handleAnonConnResponse = ( url ) => handleOpenUrl( url );
+export const handleAnonConnResponse = ( url ) => authFromRes( url );
 
 
 
 export const handleOpenUrl = async ( res ) =>
 {
     let authUrl = null;
-    logger.info( 'Received URL response: ', res );
+    logger.info( 'Received URL response: ', res, parseURL( res ).protocol );
 
     if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` )
     {
+        logger.info('Thatisan auth reqqqqqqqq')
         authUrl = parseSafeAuthUrl( res );
 
         if ( authUrl.action === 'auth' )
         {
-            return handleSafeAuthAuthentication( authUrl );
+            return handleSafeAuthAuthentication( res );
         }
     }
-
-
-    // TODO: Open URL proper. IF AUTH. We send req to handle in auth
-    // handleSafeAuthAuthentication(url);
-
-    // IF NOT + is safe, we handle that.
-    try
-    {
-
-        if ( appObj )
-        {
-            authFromRes( res );
-        }
-        else
-        {
-            queue.push( res );
-        }
-    }
-    catch ( e )
-    {
-        logger.error( e );
-    }
-
 
     // TODO: Handle passing urls etc, once we have safe://
-
-
-    // osx only for the still open but all windows closed state
-    // if( process.platform === 'darwin' && global.macAllWindowsClosed )
-    // {
-    //   if( url.startsWith('safe-') ) {
-    //     createShellWindow()
-    //   }
-    //
-    // }
 };
 
 
@@ -177,25 +152,6 @@ export function parseSafeAuthUrl( url, isClient )
     return safeAuthUrl;
 }
 
-
-export const fetchData = async ( app, url ) =>
-{
-    logger.verbose( `Fetching: ${url}` );
-
-    if ( !app )
-    {
-        return Promise.reject( new Error( 'Must login to Authenticator for viewing SAFE sites' ) );
-    }
-
-    try
-    {
-        const data = await app.webFetch( url );
-    }
-    catch ( e )
-    {
-        logger.error( e );
-    }
-};
 //
 // export const requestAuth = async () =>
 // {
@@ -215,61 +171,6 @@ export const fetchData = async ( app, url ) =>
 //     }
 // };
 
-/*
-* A request to share access to a Mutable Data structure becomes necessary when\
-* that structure was created by the same user, however, in a foreign application
-*
-* This function will cause a shared MD auth popup to appear in SAFE Browser
-*/
-export const requestSharedMDAuth = async ( app, publicName ) =>
-{
-    const mdPermissions = [];
-    if ( !publicName )
-    {
-        return Promise.reject( new Error( 'Invalid publicName' ) );
-    }
-    try
-    {
-        const pubNamesCntr = await app.auth.getContainer( CONSTANTS.ACCESS_CONTAINERS.PUBLIC_NAMES );
-        const servCntrName = await getMDataValueForKey( pubNamesCntr, publicName );
-
-        // Add service container to request array
-        mdPermissions.push( {
-            type_tag : CONSTANTS.TYPE_TAG.DNS,
-            name     : servCntrName,
-            perms    : ['Insert', 'Update', 'Delete'],
-        } );
-
-        const servCntr = await app.mutableData.newPublic( servCntrName, CONSTANTS.TYPE_TAG.DNS );
-        const services = await servCntr.getEntries();
-        await services.forEach( ( key, val ) =>
-        {
-            const service = key.toString();
-
-            // check service is not an email or deleted
-            if ( ( service.indexOf( CONSTANTS.MD_EMAIL_PREFIX ) !== -1 )
-        || ( val.buf.length === 0 ) || service === CONSTANTS.MD_META_KEY )
-            {
-                return;
-            }
-            mdPermissions.push( {
-                type_tag : CONSTANTS.TYPE_TAG.WWW,
-                name     : val.buf,
-                perms    : ['Insert', 'Update', 'Delete'],
-            } );
-        } );
-
-        const resp = await app.auth.genShareMDataUri( mdPermissions );
-        // commented out until system_uri open issue is solved for osx
-        // await app.auth.openUri(resp.uri);
-        // openExternal( resp.uri );
-        return;
-    }
-    catch ( err )
-    {
-        throw err;
-    }
-};
 
 export const connectAuthed = async ( uri, netStatusCallback ) =>
 {
@@ -294,23 +195,6 @@ export const connectAuthed = async ( uri, netStatusCallback ) =>
     {
         logger.error( `Error connecting to safe... ${err}` );
 
-        throw err;
-    }
-};
-
-export const connectWithSharedMd = async ( app, uri ) =>
-{
-    if ( !resUri )
-    {
-        return Promise.reject( new Error( 'Invalid Shared Mutable Data Auth response' ) );
-    }
-    try
-    {
-        await fromAuthURI( APP_INFO.info, uri, { libPath: CONFIG.LIB_PATH } );
-        return;
-    }
-    catch ( err )
-    {
         throw err;
     }
 };

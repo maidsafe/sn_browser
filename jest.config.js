@@ -2,6 +2,7 @@ module.exports = {
     verbose              : true,
     testMatch            : ['**/test/**/*'],
     moduleFileExtensions : ['js', 'jsx'],
+    testPathIgnorePatterns : ['node_modules', '<rootDir>/app/extensions'],
     moduleDirectories    : ['app', 'test', 'node_modules', 'app/node_modules'],
     moduleNameMapper     : {
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',

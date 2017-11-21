@@ -8,6 +8,7 @@ import ffi from 'ffi';
 import crypto from 'crypto';
 import lodash from 'lodash';
 import i18n from 'i18n';
+import logger from 'logger';
 
 import SafeLib from './safe_lib';
 import Listener from './listeners';
@@ -326,6 +327,7 @@ class Authenticator extends SafeLib
             {
                 return reject( new Error( 'Invalid URI' ) );
             }
+            logger.info('uriiiiiiiiii receiiveeddddd', uri);
             const parsedURI = uri.replace( 'safe-auth://', '' ).replace( 'safe-auth:', '' ).replace( '/', '' );
 
             if ( !this.registeredClientHandle )

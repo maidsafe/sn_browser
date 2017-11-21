@@ -37,7 +37,6 @@ export const CONFIG = {
     PORT           : 3984,
     SAFE_PARTITION : 'persist:safe-tab',
     LIB_PATH       : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' )
-    // AUTH_BUILD     : path.resolve( __dirname,  )
 };
 
 export const LIB_PATH = {
@@ -60,9 +59,9 @@ const appInfo = {
         id     : pkg.identifier,
         scope  : null,
         name   : pkg.productName,
-        vendor : pkg.author.name
+        vendor : pkg.author.name,
         // customSearchPath : isRunningUnpacked ? process.execPath : app.getPath( 'exe' )
-        // customExecPath : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` : app.getPath( 'exe' )
+        customExecPath : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` : app.getAppPath()
     },
     opt : {
         own_container : false,
@@ -82,6 +81,18 @@ const appInfo = {
         ],
     },
 };
+
+// OSX: Add bundle for electron in dev mode
+if ( isRunningUnpacked && process.platform === 'darwin' )
+{
+    appInfo.info.bundle = 'com.github.electron';
+}
+else if( process.platform === 'darwin' )
+{
+    appInfo.info.bundle = 'com.electron.peruse';
+}
+
+export const APP_INFO = appInfo;
 
 export const SAFE = {
     APP_STATUS : {
@@ -104,11 +115,3 @@ export const SAFE = {
         ERR_AUTH_DENIED : -200,
     }
 };
-
-// OSX: Add bundle for electron in dev mode
-if ( isRunningUnpacked && process.platform === 'darwin' )
-{
-    appInfo.bundle = 'com.github.electron';
-}
-
-export const APP_INFO = appInfo;
