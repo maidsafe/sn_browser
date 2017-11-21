@@ -68,6 +68,6 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "test-safe-app": "./node_modules/.bin/gulp --gulpfile ./tests/beaker-plugin-safe-app/gulpfile.js"
+    "serve:safe-app-tests": "gulp --gulpfile ./tests/beaker-plugin-safe-app/gulpfile.js"
   }
 }
