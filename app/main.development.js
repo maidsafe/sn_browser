@@ -112,7 +112,7 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( isRunningDevelopment || process.env.DEBUG_PROD === 'true' )
+    if ( isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
     {
         await installExtensions();
     }
@@ -122,7 +122,6 @@ app.on( 'ready', async () =>
         const uriArg = process.argv[process.argv.length - 1];
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
-            logger.info( 'received safe uriii', uriArg );
             handleOpenUrl( parseSafeUri( uriArg ) );
         }
     }

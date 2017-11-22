@@ -5,7 +5,7 @@ import {
     activeTabForwards,
     activeTabBackwards
 } from './actions/tabs_actions';
-import { isRunningDevelopment, isHot } from 'constants';
+import { isRunningDevelopment, isHot, isRunningSpectronTest } from 'constants';
 import { getLastClosedTab } from './reducers/tabs';
 import logger from 'logger';
 import appPackage from 'appPackage';
@@ -23,7 +23,7 @@ export default class MenuBuilder
 
     buildMenu()
     {
-        if ( isRunningDevelopment || isHot )
+        if ( isHot  )
         {
             this.setupDevelopmentEnvironment();
         }
@@ -221,13 +221,24 @@ export default class MenuBuilder
                 }
             ]
         };
+
         const subMenuWindow = {
             label   : 'Window',
             submenu : [
                 { label: 'Minimize', accelerator: 'Command+M', selector: 'performMiniaturize:' },
                 { label: 'Close', accelerator: 'Command+Shift+W', selector: 'performClose:' },
                 { type: 'separator' },
-                { label: 'Bring All to Front', selector: 'arrangeInFront:' }
+                { label: 'Bring All to Front', selector: 'arrangeInFront:' },
+                { type: 'separator' },
+                { label: 'Toggle Peruse-shell Devtools (not for web dev debug)',
+                    click : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            win.toggleDevTools();
+                        }
+                    }
+                }
             ]
         };
         const subMenuHelp = {

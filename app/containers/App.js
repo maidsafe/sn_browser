@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './app.css';
+import nessieStyles from 'nessie-ui/dist/styles.css';
+import { SpriteMap } from 'nessie-ui';
 
 export default class App extends Component
 {
@@ -13,6 +15,7 @@ export default class App extends Component
     {
         return (
             <div className={ styles.container }>
+                <SpriteMap/>
                 { this.props.children }
             </div>
         );

@@ -27,7 +27,8 @@ const blockNonSAFERequests = () =>
     {
         const target = url.parse( details.url );
 
-        if ( target.protocol === 'safe:' || target.protocol === 'safe-auth:' || target.protocol === 'chrome-devtools:' ||
+        if ( target.protocol === 'safe:' || target.protocol === 'safe-auth:' ||
+            target.protocol === 'chrome-devtools:' || target.protocol === 'file:' ||
             isForSafeServer(target) )
         {
             logger.debug( `Allowing url ${details.url}` );

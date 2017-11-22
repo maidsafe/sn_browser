@@ -93,7 +93,6 @@ export default class Tab extends Component
         const { index } = this.props;
         const preloadFile = remote.getGlobal( 'preloadFile' );
 
-        log.info( 'preloadFile', preloadFile );
         const injectPath = `file://${preloadFile}` ; // js we'll be chucking in
 
         let rightClickPosition;

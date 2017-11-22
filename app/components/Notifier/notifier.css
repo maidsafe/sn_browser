@@ -1,0 +1,14 @@
+
+.container
+{
+    flex: 0 0 0%;
+    height: 100%;
+    /* padding-top:     20px;
+    padding-left:     75px;
+    padding-right:     10px; */
+    background: rgba( 207, 208, 209, 1);
+
+    font-size: 1.4rem;
+    -webkit-app-region: drag;
+
+}

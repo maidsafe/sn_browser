@@ -78,7 +78,8 @@ export default {
                             modules        : true,
                             sourceMap      : true,
                             importLoaders  : 1,
-                            localIdentName : '[name]__[local]__[hash:base64:5]',
+                            localIdentName : '[name]__[local]', //remove for now for nessie styles
+                            // localIdentName : '[name]__[local]__[hash:base64:5]',
                         }
                     },
                 ]

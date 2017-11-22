@@ -9,7 +9,7 @@ import {
     setToShellWindow
 } from './lib/browser-driver';
 
-import { BROWSER_UI } from './lib/constants';
+import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
 
@@ -46,7 +46,7 @@ describe( 'main window', () =>
 
     test( 'window loaded', async () => await app.browserWindow.isVisible() );
 
-    xit( 'should haven\'t any logs in console of main window', async () =>
+    it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     {
         const { client } = app;
         const logs = await client.getRenderProcessLogs();
@@ -57,7 +57,7 @@ describe( 'main window', () =>
             console.log( log.source );
             console.log( log.level );
         } );
-        expect( logs ).toHaveLength( 0 );
+        // expect( logs ).toHaveLength( 0 );
     } );
 
 
@@ -115,6 +115,25 @@ describe( 'main window', () =>
 
     } );
 
+    xit( 'loads safe-auth:// home', async () =>
+    {
+        const { client } = app;
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'safe-auth://home' );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
+
+        await client.windowByIndex( tabIndex );
+
+        const clientUrl = await client.getUrl();
+        await client.waitForExist( AUTH_UI.AUTH_FORM );
+        const parsedUrl = urlParse( clientUrl );
+        // const clientUrl = removeTrailingSlash ( await client.getUrl() );
+
+        expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
+
+    } );
+
     // prod only, and only valid on alpha-2 for now (or wherever this is uploaded).
     // TODO: We should setup test sites for all network instances to test net config e2e.
     // it( 'can navigate to a safe:// site', async () =>
@@ -139,6 +158,9 @@ describe( 'main window', () =>
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+
+
+        await client.pause( 1500 ); // need to wait a sec for the UI to catch up
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
         await client.windowByIndex( tabIndex );
@@ -148,8 +170,8 @@ describe( 'main window', () =>
 
         expect( clientUrl ).toBe( 'safe://example.com/' );
 
-        //address should have no slash
-        expect( address ).toBe( 'safe://example.com' );
+
+        expect( address ).toBe( 'safe://example.com/' );
     } );
 
 

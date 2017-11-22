@@ -1,5 +1,10 @@
 {
     "address" : "safe-auth://home/",
+    "notifications" : [
+        {
+            "text":"helloooooo"
+        }
+    ],
     "tabs"    : [ {
         "url": "safe-auth://home/",
         "history" : ["safe-auth://home/"],

@@ -5,9 +5,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AddressBar from 'components/AddressBar';
 import TabBar from 'components/TabBar';
+import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 import initialAppState from 'reducers/initialAppState.json';
 import styles from './browser.css';
+import setupAuthHandling from 'extensions/safe/authIPCHandling';
 
 const log = require( 'electron-log' );
 
@@ -25,35 +27,24 @@ export default class Browser extends Component
     }
 
 
-    // /**
-    //  * [constructor description]
-    //  * @param  {object} props props
-    //  * @return {[type]}       [description]
-    //  */
-    // constructor( props )
-    // {
-    //     super( props );
-    //     // this.address = {};
-    // }
+    //
 
     componentDidMount( )
     {
-        const { addTab, closeTab, closeActiveTab, reopenTab } = this.props;
+        const { addTab, closeTab, closeActiveTab, reopenTab, addNotification, clearNotification } = this.props;
         const addressBar = this.address.refs.addressBar;
+
+        setupAuthHandling( addNotification, clearNotification );
 
         ipcRenderer.on( 'command', ( ...args ) =>
         {
-            // var args = [...arguments;
-            // console.log( 'ipc args' , args );
             const event = args[0];
             const type = args[1];
             const { tabContents } = this;
             const activeTab = tabContents.getActiveTab();
 
-            console.log( 'type', type );
             const extraArgs = args.slice( 2 );
 
-            // console.log( 'extraArgs'  , extraArgs );
 
             switch ( type )
             {
@@ -128,8 +119,13 @@ export default class Browser extends Component
             updateTab,
             updateAddress,
             activeTabBackwards,
-            activeTabForwards
+            activeTabForwards,
+            notifications,
+            // addNotification
         } = this.props;
+
+        // only show the first notification
+        const notification = notifications[0];
 
         //TODO: Remove Address reducer and just go off of active tab
         const activeTabAddress = tabs.find( tab => tab.isActiveTab ).url;
@@ -155,6 +151,9 @@ export default class Browser extends Component
                     {
                         this.address = c;
                     } }
+                />
+                <Notifier
+                    notification={ notification }
                 />
                 <TabContents
                     updateActiveTab={ updateActiveTab }

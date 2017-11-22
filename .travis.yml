@@ -1,37 +1,21 @@
 sudo: required
 dist: trusty
-
 os:
 - osx
 - linux
-
 env:
-- NODE_ENV=dev
+# - NODE_ENV=dev
 - NODE_ENV=prod
-
-
 language: node_js
-
 node_js:
-  - 8
-
+- 8
 cache:
   yarn: true
   directories:
   - node_modules
   - app/node_modules
-  - $HOME/.electron
-  - $HOME/.cache
-
-language: node_js
-
-# Enable when https://github.com/yarnpkg/yarn/issues/1233 and
-# https://github.com/yarnpkg/yarn/issues/1059 are resolved and disable npm cache
-#
-# cache:
-#   directories:
-#   - $HOME/.yarn-cache
-
+  - "$HOME/.electron"
+  - "$HOME/.cache"
 addons:
   apt:
     sources:
@@ -42,39 +26,31 @@ addons:
     - graphicsmagick
     - xz-utils
     - xorriso
-
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start &
-  - sleep 3
-
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start &
+- sleep 3
 script:
-  # - yarn run lint
-  - yarn run build
-  - yarn run test
-  # - yarn run test-e2e // e2e tests not running reliably
-  # - if [[ "$NODE_ENV" == "dev" ]]; then yarn run test-e2e; fi
-  - yarn run package
-
+- yarn run build
+- yarn run test
+# - yarn run test e2e
+- yarn run package
 before_deploy:
 - ls release
 - export DIST_FOLDER="$(ls release)";
 - zip -r -q release/$(ls release).zip release/$(ls release);
 - rm -rf release/$DIST_FOLDER
-- if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release);
-  fi
+- if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release); fi
 - ls release
 - export RELEASE_DIR="$(ls release/*.zip)";
 - echo "deploying ${RELEASE_DIR} to GitHub releases as tagged with ${TRAVIS_TAG}"
-
-# deploy:
-#   provider: releases
-#   skip_cleanup: true
-#   api_key:
-#     secure: dNUJgCh8UYnwLH09f7W3Wu/ZhO2wPBHkFlN8Z9n5uIXm1CH/FkZl6uqBZ1LTUov6K1kqhlDTpJvKd2lbQkYkbMcLqa5LN3vrXiJX0jmTmoIz4ujSpYcKeSfMSc8S7NBI4/w+hD6Z8d+3fUwNlQgZjrSQbkabpm/zmE7ShGGu9VjmrCXXGDWOxRBLWVP6ujzLTuLns2kC1gdtz7p7ceeZ5flXe24iSc4O8TZhUJkuC3vLvUuLiTfSoWAbtwNXZ1mjIj45M7cixTpsAyBmduEH6X/o2fCy8AuFuRTNHo24u0t1jie0OyVXqyDOVVQ+cIvzvgQCiyCljbx7ZxnOKum/PJ0QchkWSX6b9R14+EIPDiNDpshBrul+SKQDWlfKYkCpcQVsEIJrENuUpynrNZx8rQ41EF1d/uqpWAgBNG78MprqZ+9jZR+XSrz7zPn4/iBH3GZjtkwlRCm81exyF6jJypVyPkUFHh0npPRzoFdk6CR3ywk0EsSa6vWR04E2HzZBvBs5MOk2UHM5G7NUAsXLo3JGp1aLsBgU0+C2SIjmyvfielEKzUgmhLZFCItAada92QcEJU/6ekjGwL1uxVO7mqVth3iRatHS7Dk6x9t92rXNPihW7h0qGpA+Skg7PXTBP6QiIPOA4fAFzpG6GcDu4RWZnUPxBQluIvcnJdPwemw=
-#   file: "${RELEASE_DIR}"
-#   draft: true
-#   tag_name: $TRAVIS_TAG
-#   on:
-#     all_branches: true
-#     tag: true
+deploy:
+  provider: releases
+  api_key:
+    secure: i7J0VE/UAxfpei1AjMNrCP440wQNh2iLGFMip8FPotFIPBqHxxJlxmz9FCkVim/3XgtdgdQbT5M29IqkIt1pwtLn4xwx5LXgVNGy5/yW7uvqR2pnowhu2/G9YdOEZti+ZPLFnWCjqgMjdvbg8CE4K6is/Qa613EeDP1PBvCf2e0lvathNX9LOKDZk0G8DpTgFKp7ndCYBH4JmPLVbyWn2D9w4nmzpaYI2sk4ma+O7yrkDaE9u+AKrLn/RtshjgBovBSfMFqlaYUipIhkukAPYynArOUOCEoGNsOxthMbyPYOlH0PqY4OWEt2pSqQOYDOq14zemeskmcoGJeKmpw2WWHdz5ZKGBex6HSq6RbxOaPot0PSfnZxis2q/P9CwlPoTBjtk16UI+Y/ZPreL2dC+PRz2+NCTqVcl2yUKs6Z8HeuCG6ntnUlcWxqURzW5kdfD/lWxJMEtyqi1MAfieLyNpZiBsF08uOJeHfjW/QwB9zL6nSzkUznUWpvKQmS19yEb2bmUyFogyQj8KRnBhJTq74HMgRAbCT/fPnvIGvq63bwjKekqF1fAViTe/z8WL5l2B5D1cFJWy+l6VUlW6O8DpFe04jmzWo3vFYWmqNok2MzesMXQHLe6yE/Mo5+wfbUr5BS87sjCAw4GXF9ThcbYk0MjLKzfOBFafTFQoiM/Rs=
+  file: "${RELEASE_DIR}"
+  draft: true
+  tag_name: $TRAVIS_TAG
+  on:
+    # all_branches: true
+    tag: true

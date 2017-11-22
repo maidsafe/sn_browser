@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as TabActions from '../actions/tabs_actions';
 import * as AddressActions from '../actions/address_actions';
+import * as NotificationActions from '../actions/notification_actions';
 import Browser from '../components/Browser';
 
 class BrowserWindow extends Component
@@ -21,8 +22,9 @@ class BrowserWindow extends Component
 function mapStateToProps( state )
 {
     return {
-        tabs    : state.tabs,
-        address : state.address
+        address : state.address,
+        notifications : state.notifications,
+        tabs    : state.tabs
     };
 }
 
@@ -31,6 +33,7 @@ function mapDispatchToProps( dispatch )
     const actions =
         {
             ...AddressActions,
+            ...NotificationActions,
             ...TabActions
         };
     return bindActionCreators( actions, dispatch );
