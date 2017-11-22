@@ -12,7 +12,8 @@
  */
 import { app, BrowserWindow, protocol } from 'electron';
 import logger from 'logger';
-import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged } from 'constants';
+import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'constants';
+import { parse as parseURL } from 'url';
 
 import openWindow from './openWindow';
 import loadExtensions from './extensions';
@@ -21,7 +22,7 @@ import handleCommands from './commandHandling';
 import { setupWebAPIs } from './webAPIs';
 // TODO: This should be handled in an extensible fashion
 import { handleOpenUrl } from './extensions/safe/network';
-
+import { addTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
 
 
@@ -147,8 +148,15 @@ app.on( 'open-url', ( e, url ) =>
 {
     // TODO. Queue incase of not started.
     // Also parse out and deal with safe:// urls and auth response etc.
-    handleOpenUrl( parseSafeUri( url ) );
+    handleOpenUrl( url );
 
+    let parsedUrl = parseURL( url );
+
+    // TODO: Use constants // 'shouldOpenUrl...'
+    if( parsedUrl.protocol === 'safe:')
+    {
+        store.dispatch( addTab({url}) );
+    }
 
     // osx only for the still open but all windows closed state
     if ( process.platform === 'darwin' && global.macAllWindowsClosed )

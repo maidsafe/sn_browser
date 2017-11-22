@@ -108,13 +108,12 @@ export const handleOpenUrl = async ( res ) =>
         logger.info('Thatisan auth reqqqqqqqq')
         authUrl = parseSafeAuthUrl( res );
 
+        // Q: Do we need this check?
         if ( authUrl.action === 'auth' )
         {
             return handleSafeAuthAuthentication( res );
         }
     }
-
-    // TODO: Handle passing urls etc, once we have safe://
 };
 
 
