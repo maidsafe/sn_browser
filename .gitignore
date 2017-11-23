@@ -47,7 +47,7 @@ dist
 dll
 main.js
 main.js.map
-locales
+node_modules/locales
 
 .idea
 npm-debug.log.*

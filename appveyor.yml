@@ -1,10 +1,11 @@
 os: unstable
+image: Visual Studio 2017
 
 environment:
   nodejs_version: "Stable"
   matrix:
-    - NODE_ENV: "dev"
-    - NODE_ENV: "production"
+    # - NODE_ENV: "dev"
+    - NODE_ENV: "prod"
 
 cache:
   - node_modules -> package.json
@@ -20,12 +21,12 @@ cache:
 # cache:
 #   - "%LOCALAPPDATA%/Yarn"
 
-matrix:
-  fast_finish: true
+# matrix:
+#   fast_finish: true
 
-build: off
+# build: off
 
-version: '{build}'
+# version: '{build}'
 
 shallow_clone: true
 
@@ -34,7 +35,7 @@ clone_depth: 1
 install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
-  - npm install -g npm@latest
+  # - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
   - node --version
   - npm --version
@@ -56,7 +57,49 @@ install:
 test_script:
   - node --version
   # - yarn run lint
-  - yarn run test
   - yarn run build
+  - yarn run test
   # - yarn run test-e2e
-  # - yarn run package
+
+
+
+build_script:
+  - node --version
+  - set NODE_ENV=production
+  - yarn --version
+  - yarn run package
+
+
+after_build:
+  - ps: Get-ChildItem release
+  - ps: Get-ChildItem release | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - dir release
+  - cd release
+  - 7z a peruse-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
+  - dir
+  - echo %APPVEYOR_REPO_TAG%
+  - echo %APPVEYOR_REPO_TAG_NAME%
+
+
+artifacts:
+  - path: release/*
+
+
+before_deploy:
+    # - dir dist
+
+deploy:
+  release: $(appveyor_repo_tag_name)
+  tag: $(appveyor_repo_tag_name)
+  description: 'Peruse [Safe] Browser'
+  provider: GitHub
+  auth_token:
+    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+ # your encrypted token from GitHub
+  # artifact: /.*\.zip/
+  draft: true
+  prerelease: true
+  on:
+    branch: AuthenticatorImplementation
+    appveyor_repo_tag:  true        # deploy on tag push only
+    # appveyor_repo_tag:  true        # deploy on tag push only

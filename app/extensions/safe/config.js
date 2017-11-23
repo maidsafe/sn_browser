@@ -6,7 +6,7 @@ export default {
     {
         i18n.configure( {
             locales        : ['en'],
-            directory      : path.resolve( __dirname, '../../', 'locales' ),
+            directory      : path.resolve( __dirname, '../', 'locales' ),
             objectNotation : true //,
             // logWarnFn( msg )
             // {

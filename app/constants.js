@@ -61,7 +61,7 @@ const appInfo = {
         name   : pkg.productName,
         vendor : pkg.author.name,
         // customSearchPath : isRunningUnpacked ? process.execPath : app.getPath( 'exe' )
-        customExecPath : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` : app.getAppPath()
+        customExecPath : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' )
     },
     opt : {
         own_container : false,

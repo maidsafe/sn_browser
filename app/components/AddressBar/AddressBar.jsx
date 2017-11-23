@@ -9,13 +9,6 @@ import { removeTrailingSlash } from 'utils/urlHelpers';
 
 import { Column, IconButton, Row, InputField } from 'nessie-ui';
 
-// import IconButton iconType="left" from 'react-icons/lib/md/navigate-before';
-// import MdNavigateNext from 'react-icons/lib/md/navigate-next';
-import MdRefresh from 'react-icons/lib/md/refresh';
-import MdMenu from 'react-icons/lib/md/menu';
-import MdStarOutline from 'react-icons/lib/md/star-outline';
-// import MdStar from 'react-icons/lib/md/star';
-
 import styles from './addressBar.css';
 
 const log = require( 'electron-log' );
@@ -81,7 +74,6 @@ export default class AddressBar extends Component
     {
         super( props );
         this.handleChange = ::this.handleChange;
-        // this.handleFocus = ::this.handleFocus;
         this.handleKeyPress = ::this.handleKeyPress;
         this.handleRefresh = ::this.handleRefresh;
 
@@ -185,7 +177,6 @@ export default class AddressBar extends Component
                             type="text"
                             ref={ ( c ) =>
                             {
-                                console.log( this );
                                 this.addressBar = c;
                             } }
                             onFocus={ this.handleFocus }
@@ -194,14 +185,6 @@ export default class AddressBar extends Component
                         />
                     </Column>
                 </Row>
-                {/* <div className={ `${styles.button} js-address__favourite` }>
-                    <MdStarOutline className={ styles.buttonIcon } />
-                </div>
-                <div className={ styles.rightButtons }>
-                    <div className={ `${styles.button} js-address__menu` }>
-                        <MdMenu className={ styles.buttonIcon } />
-                    </div>
-                </div> */}
             </div>
         );
     }

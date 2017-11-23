@@ -3,6 +3,7 @@
   "identifier": "net.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
   "version": "0.10.0",
+  "vendor" : "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
   "scripts": {
@@ -29,15 +30,17 @@
     "flow-typed": "flow-typed install",
     "start-hot-renderer": "cross-env HOT=1 NODE_ENV=development IS_UNPACKED=true electron -r babel-register -r babel-polyfill ./app/main.development",
     "start-hot-renderer-live": "cross-env HOT=1 NODE_ENV=production IS_UNPACKED=true electron -r babel-register -r babel-polyfill ./app/main.development",
-    "postinstall": "concurrently \"yarn run build-dll\" \"yarn run build-preload\" \"electron-builder install-app-deps install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
+    "postinstall": "concurrently \"yarn run build-dll\" \"yarn run build-preload\" \"yarn run electron-builder install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
     "dev": "cross-env START_HOT=1 yarn run hot-updates-server",
     "live-dev": "cross-env START_HOT=1 yarn run hot-updates-server-live",
     "package": "yarn run build && build --publish never",
+    "package-only": "build --publish never",
     "package-win": "yarn run build && build --win --x64",
     "package-linux": "yarn run build && build --linux",
     "package-all": "yarn run build && build -mwl",
     "cleanup": "mop -v",
     "put-live-net-files-for-dev": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/MacOS/Electron.crust.config && cp resources/log.toml node_modules/electron/dist/Electron.app/Contents/Resources/log.toml",
+    "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
     "rebuild": "npm rebuild --runtime=electron --target=1.7.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild --target=1.7.8"
   },
   "browserslist": "electron 1.4",
@@ -47,11 +50,24 @@
       "**/weak/**/*",
       "**/nessie-ui/dist/styles.css"
     ],
-    "extraResources": [
-      "app/node_modules/locales",
+    "extraFiles": [
       {
         "from": "resources/log.toml",
         "to": "log.toml"
+      },
+      {
+        "from": "resources/crust.config",
+        "to": "${name}.crust.config"
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "resources/log.toml",
+        "to": "log.toml"
+      },
+      {
+        "from": "resources/locales",
+        "to": "locales"
       },
       {
         "from": "resources/crust.config",

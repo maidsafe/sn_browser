@@ -37,6 +37,23 @@ import { mainSync } from './store/electronStoreSyncer';
 const mainWindow = null;
 mainSync( store );
 
+const handleSafeUrls = ( url ) =>
+{
+    // TODO. Queue incase of not started.
+    // Also parse out and deal with safe:// urls and auth response etc.
+    handleOpenUrl( url );
+
+    let parsedUrl = parseURL( url );
+
+    // TODO: Use constants // 'shouldOpenUrl...'
+    if( parsedUrl.protocol === 'safe:')
+    {
+        store.dispatch( addTab({url, isActiveTab: true }) );
+    }
+
+}
+
+
 // TODO: Register schemes from extension
 protocol.registerStandardSchemes( ['safe', 'safe-auth'], { secure: true } );
 
@@ -95,9 +112,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     if ( commandLine.length >= 2 && commandLine[1] )
     {
-        // sendResponse( commandLine[1] );
-
-        handleOpenUrl( parseSafeUri( commandLine[1] ) );
+        handleSafeUrls( parseSafeUri( commandLine[1] ) )
     }
 
     // Someone tried to run a second instance, we should focus our window
@@ -122,13 +137,13 @@ app.on( 'ready', async () =>
         const uriArg = process.argv[process.argv.length - 1];
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
-            handleOpenUrl( parseSafeUri( uriArg ) );
+            handleSafeUrls( parseSafeUri( uriArg ) );
         }
     }
 
     if ( shouldQuit )
     {
-        app.quit();
+        app.exit();
     }
 
 
@@ -145,18 +160,7 @@ app.on( 'ready', async () =>
 
 app.on( 'open-url', ( e, url ) =>
 {
-    // TODO. Queue incase of not started.
-    // Also parse out and deal with safe:// urls and auth response etc.
-    handleOpenUrl( url );
-
-    let parsedUrl = parseURL( url );
-
-    // TODO: Use constants // 'shouldOpenUrl...'
-    if( parsedUrl.protocol === 'safe:')
-    {
-        store.dispatch( addTab({url}) );
-    }
-
+    handleSafeUrls( url );
     // osx only for the still open but all windows closed state
     if ( process.platform === 'darwin' && global.macAllWindowsClosed )
     {
