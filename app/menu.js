@@ -12,8 +12,6 @@ import appPackage from 'appPackage';
 
 export default class MenuBuilder
 {
-    // mainWindow: BrowserWindow;
-
     constructor( mainWindow: BrowserWindow, openWindow, store )
     {
         this.mainWindow = mainWindow;

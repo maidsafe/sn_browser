@@ -81,7 +81,7 @@ export default class AddressBar extends Component
     {
         super( props );
         this.handleChange = ::this.handleChange;
-        this.handleFocus = ::this.handleFocus;
+        // this.handleFocus = ::this.handleFocus;
         this.handleKeyPress = ::this.handleKeyPress;
         this.handleRefresh = ::this.handleRefresh;
 
@@ -123,9 +123,9 @@ export default class AddressBar extends Component
         this.setState( { address: event.target.value } );
     }
 
-    handleFocus( event )
+    handleFocus = ( event ) =>
     {
-        this.refs.addressBar.select();
+        event.target.select();
     }
 
     handleKeyPress( event )
@@ -158,7 +158,6 @@ export default class AddressBar extends Component
                                     iconType="left"
                                     iconSize="L"
                                     onClick={ this.handleBack }
-                                    // className={ styles.buttonIcon }
                                 />
                             </Column>
                             <Column>
@@ -167,7 +166,6 @@ export default class AddressBar extends Component
                                     iconSize="L"
                                     iconType="right"
                                     onClick={ this.handleForward }
-                                    // className={ styles.buttonIcon }
                                 />
                             </Column>
                             <Column>
@@ -176,7 +174,6 @@ export default class AddressBar extends Component
                                     iconSize="L"
                                     iconType="reset"
                                     onClick={ this.handleRefresh }
-                                    // className={ styles.buttonIcon }
                                 />
                             </Column>
                         </Row>
@@ -188,6 +185,7 @@ export default class AddressBar extends Component
                             type="text"
                             ref={ ( c ) =>
                             {
+                                console.log( this );
                                 this.addressBar = c;
                             } }
                             onFocus={ this.handleFocus }
