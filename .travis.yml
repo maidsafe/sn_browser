@@ -52,5 +52,5 @@ deploy:
   draft: true
   tag_name: $TRAVIS_TAG
   on:
-    # all_branches: true
+    all_branches: true
     tag: true
