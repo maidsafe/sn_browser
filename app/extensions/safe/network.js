@@ -4,12 +4,13 @@ import logger from 'logger';
 import { parse as parseURL } from 'url';
 import { app } from 'electron';
 // import { executeScriptInBackground } from 'utils/background-process';
-
+import { addNotification, clearNotification } from 'actions/notification_actions';
 import { callIPC } from './ffi/ipc';
 import AUTH_CONSTANTS from './auth-constants';
 
 const queue = [];
 let appObj;
+let store;
 
 export const authFromQueue = async () =>
 {
@@ -21,7 +22,23 @@ export const authFromQueue = async () =>
 
 const authFromRes = async ( res ) =>
 {
-    appObj = await appObj.auth.loginFromURI( res );
+    logger.info('ressssss', res)
+
+    try{
+        appObj = await appObj.auth.loginFromURI( res );
+    }
+    catch( err )
+    {
+        if( store )
+        {
+            //TODO: Store not syncing.
+            store.dispatch( addNotification({ text: err.message, onDismiss: clearNotification }) )
+        }
+
+        // logger.error( store.getState().notifications )
+        logger.error( err.message || err )
+        logger.error( `>>>>>>>>>>>>>`)
+    }
 };
 
 // ipcRenderer.on( 'simulate-mock-res', () =>
@@ -60,8 +77,10 @@ export const handleSafeAuthAuthentication = ( uri, type ) =>
     callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP )
 };
 
-export const initAnon = async () =>
+export const initAnon = async ( passedStore ) =>
 {
+    store = passedStore;
+
     logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
 
     try
@@ -69,11 +88,16 @@ export const initAnon = async () =>
         appObj = await initializeApp( APP_INFO.info, null, {
             libPath: CONFIG.LIB_PATH,
             registerScheme: false,
-            joinSchemes: [ PROTOCOLS.SAFE ]
+            joinSchemes: [ PROTOCOLS.SAFE ],
+            configPath: CONFIG.CONFIG_PATH
         } );
 
+        logger.info( 'CONFIGGG???????????', CONFIG.CONFIG_PATH)
         // TODO, do we even need to generate this?
         const authReq = await appObj.auth.genConnUri( {} );
+
+
+        logger.info( 'authreqq???????????', authReq );
 
         const authType = parseSafeAuthUrl( authReq.uri );
 

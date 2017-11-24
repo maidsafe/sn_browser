@@ -65,15 +65,21 @@ export const ContainersReq = StructType({
   containers_cap: usize
 });
 
+export const ContainersReqPointer = ref.refType(ContainersReq);
+
 export const FfiResult = StructType({
   error_code: int32,
   description: CString
 });
 
+export const FfiResultPointer = ref.refType(FfiResult);
+
 export const AccountInfo = StructType({
   mutations_done: u64,
   mutations_available: u64
 });
+
+export const AccountInfoPointer = ref.refType(AccountInfo);
 
 export const ShareMData = StructType({
   type_tag: u64,
@@ -86,6 +92,8 @@ export const ShareMDataReq = StructType({
   mdata: ref.refType(ShareMData),
   mdata_len: usize
 });
+
+export const ShareMDataReqPointer = ref.refType(ShareMDataReq);
 
 export const UserMetadata = StructType({
   name: CString,
@@ -101,12 +109,6 @@ export const AppAccess = StructType({
   app_id: u8Pointer,
   app_id_len: usize
 });
-
-export const AccountInfoPointer = ref.refType(AccountInfo);
-
-export const ContainersReqPointer = ref.refType(ContainersReq);
-
-export const ShareMDataReqPointer = ref.refType(ShareMDataReq);
 
 export const AppAccessPointer = ref.refType(AppAccess);
 

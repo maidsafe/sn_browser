@@ -5,16 +5,16 @@ import { isHot, isRunningPackaged, isRunningSpectronTest } from 'constants';
 
 let libLocaleModifier = '';
 
-if( isHot )
+if ( isHot )
 {
     // libLocaleModifier = 'extensions/safe/';
     // TODO. Questions about mock. Hmm
 }
-else if( isRunningSpectronTest )
+else if ( isRunningSpectronTest )
 {
     libLocaleModifier = 'extensions/safe/';
 }
-else if( isRunningPackaged )
+else if ( isRunningPackaged )
 {
     libLocaleModifier = '../extensions/safe/';
 }

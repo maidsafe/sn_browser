@@ -56,11 +56,11 @@ const init = async( store ) =>
 
         if ( isRunningProduction )
         {
-            await initAnon();
+            await initAnon( store );
         }
         else
         {
-            await initMock();
+            await initMock( store );
         }
     }
     catch(e){

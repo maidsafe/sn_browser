@@ -36,7 +36,8 @@ export const PROTOCOLS = {
 export const CONFIG = {
     PORT           : 3984,
     SAFE_PARTITION : 'persist:safe-tab',
-    LIB_PATH       : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' )
+    LIB_PATH       : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' ),
+    CONFIG_PATH    : path.resolve( __dirname, '../resources' )
 };
 
 export const LIB_PATH = {

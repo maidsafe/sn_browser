@@ -59,7 +59,8 @@ process.on( 'uncaughtException', ( err ) =>
 process.on( 'unhandledRejection', ( reason, p ) =>
 {
     log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    log.error( 'Unhandled Rejection at:', p, 'reason:', reason );
+    log.error( 'Unhandled Rejection. Reason:', reason.message || reason );
+    log.error( 'At:', p );
     log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
 } );
 

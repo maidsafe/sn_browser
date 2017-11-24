@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@maidsafe/safe-node-app": "0.4.1",
+    "@maidsafe/safe-node-app": "https://github.com/bochaco/safe_app_nodejs#app-id-unreg-auth-reqs",
     "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz",
     "enum": "2.5.0",
     "ffi": "2.2.0",
@@ -25,13 +25,13 @@
   "download_deps": {
     "system_uri": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/system-uri",
-      "version": "v0.2.3",
+      "version": "v0.3.0",
       "targetDir": "extensions/safe/dist",
       "filePattern": "^.*\\.(dll|so|dylib)$"
     },
     "safe_authenticator": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/safe-client-libs",
-      "version": "v0.4.0",
+      "version": "57f3afb",
       "targetDir": "extensions/safe/dist",
       "filename": "safe_authenticator",
       "filePattern": "^.*\\.(dll|so|dylib)$",

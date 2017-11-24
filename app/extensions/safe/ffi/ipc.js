@@ -5,8 +5,8 @@ import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import config from '../config';
-import logger from 'logger';
 import { handleAnonConnResponse } from '../network';
+import logger from 'logger';
 
 config.i18n();
 
@@ -31,7 +31,7 @@ const openExternal = ( uri ) =>
     }
     catch ( err )
     {
-        console.error( err.message );
+        logger.error( err.message );
     }
 };
 
@@ -102,6 +102,7 @@ class ReqQueue
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
+            logger.info('this.req.uri', this.req.uri, res)
             if ( this.req.uri === global.browserReqUri )
             {
                 handleAnonConnResponse( parseResUrl( res ) );
@@ -110,15 +111,14 @@ class ReqQueue
             {
                 openExternal( res );
             }
-
             self.next();
         } ).catch( ( err ) =>
         {
-            logger.error( err );
+            logger.error( err.message || err );
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
 
-            if ( ipcEvent )
+            if( ipcEvent )
             {
                 ipcEvent.sender.send( self.errChannelName, self.req );
             }
@@ -211,7 +211,7 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
         {
             reqQ.req.error = err;
             e.sender.send( 'onAuthDecisionRes', reqQ.req );
-            console.error( 'Auth decision error :: ', err.message );
+            logger.error( 'Auth decision error :: ', err.message );
             reqQ.next();
         } );
 };
@@ -240,7 +240,7 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         {
             reqQ.req.error = err;
             e.sender.send( 'onContDecisionRes', reqQ.req );
-            console.error( 'Container decision error :: ', err.message );
+            logger.error( 'Container decision error :: ', err.message );
             reqQ.next();
         } );
 };
@@ -268,6 +268,7 @@ const onSharedMDataDecision = ( e, data, isAllowed ) =>
         .catch( ( err ) =>
         {
             reqQ.req.error = err;
+            logger.error( err );
             e.sender.send( 'onSharedMDataRes', reqQ.req );
             reqQ.next();
         } );
