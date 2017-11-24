@@ -16,8 +16,8 @@ const authRoute = {
             logger.verbose( 'safe-auth path: ', linkUrl.path );
 
             // account for asar packaging, as hapi cant unpack. We move the folders via package.json 'extraResources'
-            const authDistLocale = isRunningPackaged ? `${__dirname}/../extensions/safe/` : `${__dirname}/../`;
-            const authDist = path.resolve(  authDistLocale, 'auth-web-app/temp_dist/' );
+            const authDistLocale = isRunningPackaged ? `../extensions/safe/` : `../`;
+            const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/temp_dist/' );
 
             switch ( linkUrl.path )
             {
