@@ -10,8 +10,6 @@ import CONST from '../../../app/extensions/safe/auth-constants';
 
 const to = helper.to;
 
-
-// import * as ffiLoader from '../../../app/extensions/safe/api/ffiLoader';
 import ffiLoader from '../../../app/extensions/safe/ffi/lib';
 
 // ffiLoader;

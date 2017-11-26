@@ -8,7 +8,7 @@ import registerSafeAuthProtocol from './protocols/safe-auth';
 import ipc  from './ffi/ipc';
 import { initAnon, initMock } from './network';
 
-import * as authAPI from './api';
+import * as authAPI from './auth-api';
 
 const isForSafeServer = ( parsedUrlObject ) =>
 {

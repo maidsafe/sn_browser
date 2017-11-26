@@ -2,7 +2,7 @@
 import { ipcMain } from 'electron';
 import logger from 'logger';
 import rpc from 'pauls-electron-rpc';
-import { safeAuthApi } from 'extensions/safe/api';
+import { safeAuthApi } from 'extensions/safe/auth-api';
 
 // globals
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
