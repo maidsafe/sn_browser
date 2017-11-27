@@ -1,3 +1,5 @@
+import logger from 'logger';
+
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
 const ipcMain = require('electron').ipcMain; // electron deps will be avaible inside browser
 /* eslint-enable import/no-extraneous-dependencies, import/no-unresolved */
@@ -22,6 +24,7 @@ class AuthRequest {
 
 const add = (uri, isUnregistered, cb) => {
   const req = new AuthRequest(uri, isUnregistered, cb);
+
   if (ipcEvent) {
     reqsSent.set(req.id, req);
     ipcEvent.sender.send('webClientAuthReq', req);

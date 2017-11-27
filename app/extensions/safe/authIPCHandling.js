@@ -28,7 +28,7 @@ export const handleSafeAuthAuthentication = ( req, type ) =>
 function authDecision( isAllowed, data, reqType )
 {
     isSafeAppAuthenticating = true;
-    // update();
+
     if ( reqType === REQ_TYPES.AUTH )
     {
         return ipcRenderer.send( 'registerAuthDecision', data, isAllowed );
@@ -69,7 +69,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
     }
 
     // safe app plugin
-    // ipcRenderer.send( 'registerSafeApp' );
+    ipcRenderer.send( 'registerSafeApp' );
     // setupSafeReconnectionHandlers( update );
     ipcRenderer.on( 'webClientAuthReq', ( event, req ) =>
     {
@@ -141,7 +141,6 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         {
             ipcRenderer.send( 'webClientAuthRes', res );
         }
-        // update();
     } );
 
     ipcRenderer.on( 'onContDecisionRes', ( event, res ) =>
@@ -152,7 +151,6 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         {
             ipcRenderer.send( 'webClientContainerRes', res );
         }
-        // update();
     } );
 
     ipcRenderer.on( 'onUnAuthDecisionRes', ( event, res ) =>
@@ -172,7 +170,6 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         {
             ipcRenderer.send( 'webClientSharedMDataRes', res );
         }
-        // update();
     } );
 
     ipcRenderer.on( 'onAuthResError', ( event, res ) =>
@@ -187,7 +184,6 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         {
             ipcRenderer.send( 'webClientErrorRes', res );
         }
-        // update();
     } );
 
     ipcRenderer.on( 'onUnAuthResError', ( event, res ) =>
