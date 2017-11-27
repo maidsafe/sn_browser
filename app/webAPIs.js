@@ -3,12 +3,13 @@ import { ipcMain } from 'electron';
 import logger from 'logger';
 import rpc from 'pauls-electron-rpc';
 import { safeAuthApi } from 'extensions/safe/auth-api';
+import safeApis from 'extensions/safe/api';
 
 // globals
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 
-const allAPIs = [safeAuthApi];
+const allAPIs = [safeAuthApi, safeApis];
 
 // fetch a complete listing of the plugin info
 // - each plugin module can export arrays of values. this is a helper to create 1 list of all of them
@@ -36,11 +37,17 @@ export function getAllInfo( key )
 
         if ( key === 'webAPIs' )
         {
-            values = [ protocolModule ];
+            if( ! Array.isArray( protocolModule ) )
+            {
+                values = [ protocolModule ];
+            }
+            else
+            {
+                values = protocolModule;
+            }
         }
 
         caches[key] = caches[key].concat( values );
-
     } );
 
     return caches[key];
@@ -51,18 +58,18 @@ const setupIpcListener = () =>
     ipcMain.on( 'get-web-api-manifests', ( event, scheme ) =>
     {
         // hardcode the beaker: scheme, since that's purely for internal use
-        if ( scheme == 'safe:' )
-        {
-            const protos = {
-                // beakerBrowser,
-                // beakerBookmarks,
-                // beakerDownloads,
-                // beakerHistory,
-                // beakerSitedata
-            };
-            event.returnValue = protos;
-            return;
-        }
+        // if ( scheme == 'safe:' )
+        // {
+        //     const protos = {
+        //         // beakerBrowser,
+        //         // beakerBookmarks,
+        //         // beakerDownloads,
+        //         // beakerHistory,
+        //         // beakerSitedata
+        //     };
+        //     event.returnValue = protos;
+        //     return;
+        // }
 
         const manifest = getWebAPIManifests( scheme );
 
@@ -79,13 +86,15 @@ export function setupWebAPIs()
     getAllInfo( 'webAPIs' ).forEach( api =>
     {
         // run the module's protocol setup
-        // logger.debug('Wiring up Web API:', api.name, api.scheme)
+        logger.debug('Wiring up Web API:', api.name, api.scheme)
 
         // We export functions with callbacks in a separate channel
         // since they will be adapted to invoke the callbacks
         const fnsToExport = [];
         const fnsWithCallbacks = [];
         const fnsWithAsyncCallbacks = [];
+
+        //here we have array instead of obj as auth
         // for ( const fn in api.manifest )
         Object.keys( api.manifest ).forEach( fn =>
         {

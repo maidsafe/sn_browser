@@ -66,8 +66,6 @@ const setupPreload = () =>
             // We adapt the functions which contain a callback
             if ( fn.startsWith( WITH_CALLBACK_TYPE_PREFIX ) )
             {
-                console.log('and here:::::', fn );
-
                 // We use a readable type to receive the data from the RPC channel
                 const manifest = { [fn]: 'readable' };
                 const rpcAPI = rpc.importAPI( WITH_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false } );
