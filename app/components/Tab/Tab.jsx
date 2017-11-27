@@ -135,6 +135,7 @@ export default class Tab extends Component
             wv.addEventListener( 'did-stop-loading', ::this.didStopLoading );
             wv.addEventListener( 'will-navigate', ::this.willNavigate );
             wv.addEventListener( 'did-navigate', ::this.didNavigate );
+            wv.addEventListener( 'did-navigate-in-page', ::this.didNavigateInPage );
             wv.addEventListener( 'did-get-redirect-request', ::this.didGetRedirectRequest );
             wv.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
             wv.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
@@ -290,13 +291,24 @@ export default class Tab extends Component
         }
     }
 
+    didNavigateInPage( e )
+    {
+        const { updateTab, index, updateAddress } = this.props;
+        const { url } = e;
+        const noTrailingSlashUrl = removeTrailingSlash( url );
+
+        // TODO: Actually overwrite history for redirect
+        if ( !this.state.browserState.redirects.includes( url ) )
+        {
+            this.updateBrowserState( { url } );
+            updateTab( { index, url } );
+            updateAddress( noTrailingSlashUrl );
+        }
+    }
+
     didGetRedirectRequest( e )
     {
         const { oldURL, newURL } = e;
-
-        // TODO: cleanup
-        // let prev = removeTrailingSlash(oldURL);
-        // let next  = removeTrailingSlash(newURL);
 
         const prev = oldURL;
         const next = newURL;
@@ -309,6 +321,7 @@ export default class Tab extends Component
 
     willNavigate( e )
     {
+
         if ( !this.isFrozen() )
         {
             return;
@@ -357,9 +370,6 @@ export default class Tab extends Component
         // addTab( { url, isActiveTab: true } );
 
         this.goForward();
-
-        // TODO: Negate bug
-        console.log( 'webcontents historyyyy', this.webview.getWebContents().history );
     }
 
     isFrozen( e )

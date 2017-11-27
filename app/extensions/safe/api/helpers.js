@@ -1,3 +1,5 @@
+import { CONFIG } from 'constants';
+
 const crypto = require('crypto'); // electron deps will be available inside browser
 const { Readable } = require('stream');
 
@@ -146,7 +148,7 @@ export const netStateCallbackHelper = (safeApp, appInfo, enableLog, groupId) => 
     setImmediate(() => {
       readable.push([state]);
     });
-  }, { log: enableLog, registerScheme: false })
+    }, { log: enableLog, registerScheme: false, libPath: CONFIG.LIB_PATH })
     .then((app) => {
       // We assign null to 'netObj' to signal this is a SAFEApp instance
       const handle = genHandle(app, null, groupId);
