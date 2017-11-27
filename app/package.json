@@ -5,7 +5,7 @@
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "main": "./main.js",
   "scripts": {
-    "rebuild": "npm rebuild --runtime=electron --disturl=https://atom.io/download/atom-shell --build-from-source",
+    "rebuild": "npm rebuild --runtime=electron --disturl=https://atom.io/download/atom-shell --build-from-source --target=1.7.8",
     "postinstall": "download_deps --package package.json"
   },
   "author": {
@@ -16,7 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "@maidsafe/safe-node-app": "https://github.com/bochaco/safe_app_nodejs#app-id-unreg-auth-reqs",
-    "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz",
     "enum": "2.5.0",
     "ffi": "2.2.0",
     "react-icons": "2.2.7",
@@ -69,5 +68,7 @@
       }
     }
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
+  }
 }

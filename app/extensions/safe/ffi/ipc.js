@@ -102,7 +102,8 @@ class ReqQueue
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
-            logger.info('this.req.uri', this.req.uri, res)
+            logger.info( 'this.req.uri', this.req.uri, res );
+
             if ( this.req.uri === global.browserReqUri )
             {
                 handleAnonConnResponse( parseResUrl( res ) );
@@ -111,6 +112,7 @@ class ReqQueue
             {
                 openExternal( res );
             }
+
             self.next();
         } ).catch( ( err ) =>
         {
@@ -118,7 +120,7 @@ class ReqQueue
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
 
-            if( ipcEvent )
+            if ( ipcEvent )
             {
                 ipcEvent.sender.send( self.errChannelName, self.req );
             }
