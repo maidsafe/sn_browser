@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { remote, ipcRenderer } from 'electron';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import path from 'path';
+import { parse as parseURL } from 'url';
 import styles from './tab.css';
 
 const log = require( 'electron-log' );
@@ -22,7 +23,6 @@ export default class Tab extends Component
         url         : PropTypes.string.isRequired,
         index       : PropTypes.number.isRequired,
         // className   : PropTypes.string,
-        // navigate    : PropTypes.any,
         updateTab   : PropTypes.func.isRequired,
         addTab      : PropTypes.func.isRequired
     }
@@ -300,10 +300,7 @@ export default class Tab extends Component
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
-
-            //using redirect to notreload whole page as its inpage
             this.updateBrowserState( { url, redirects: [url] } );
-            // this.updateBrowserState( { url } );
             updateTab( { index, url } );
             updateAddress( noTrailingSlashUrl );
         }
@@ -330,10 +327,8 @@ export default class Tab extends Component
             return;
         }
 
-        const { navigate } = this.props;
         const { url } = e;
 
-        // sometimes we get double will-navigate events because life is fun?!
         if ( this.lastNavigationUrl === url && e.timeStamp - this.lastNavigationTimeStamp < WILL_NAVIGATE_GRACE_PERIOD )
         {
             this.with( ( wv ) =>
@@ -367,8 +362,8 @@ export default class Tab extends Component
 
     newWindow( e )
     {
-        const { navigate, addTab } = this.props;
-        const { url } = e;
+        // const { navigate, addTab } = this.props;
+        // const { url } = e;
         // navigate('url/' + url)
         // addTab( { url, isActiveTab: true } );
 
@@ -428,16 +423,23 @@ export default class Tab extends Component
         this.with( ( wv ) => wv.goForward() );
     }
 
-    async loadURL( input )
+    loadURL = async ( input ) =>
     {
-        const { navigate } = this.props;
-        // const url = await transformUrl(input)
-
         const url = input;
+        let parsedURL = parseURL( url );
 
-        // if (navigation.isAppSupported(url) && this.isFrozen()) {
-        //     navigate(`url/${url}`)
-        // } else {
+        let currentParsedURL  = parseURL( this.state.browserState.url );
+
+
+        // TODO: Move to should loadURL func?
+        if( parsedURL.protocol === currentParsedURL.protocol &&
+            parsedURL.host === currentParsedURL.host &&
+            parsedURL.path === currentParsedURL.path )
+        {
+            // dont load cos it's the saaaaame
+            return;
+        }
+
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
 
