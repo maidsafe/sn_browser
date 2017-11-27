@@ -300,7 +300,10 @@ export default class Tab extends Component
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
-            this.updateBrowserState( { url } );
+
+            //using redirect to notreload whole page as its inpage
+            this.updateBrowserState( { url, redirects: [url] } );
+            // this.updateBrowserState( { url } );
             updateTab( { index, url } );
             updateAddress( noTrailingSlashUrl );
         }
