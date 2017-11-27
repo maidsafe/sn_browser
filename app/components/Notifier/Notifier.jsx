@@ -29,7 +29,7 @@ export default class Notifier extends Component
         }
 
         return (
-            <Row hasMinHeight>
+            <Row hasMinHeight className={ styles.container }>
                 <MessageBox messageType="alert">
                     <Row verticalAlign="middle" align="center">
                         <Text>{ notification.text }</Text>
