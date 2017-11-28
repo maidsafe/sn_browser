@@ -46,9 +46,11 @@ before_deploy:
 - ls release
 - export RELEASE="$(ls release)";
 - echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
-- zip -r -q release/$(ls release).zip release/$(ls release);
-- if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release);
-  fi
+- cd release
+- zip -r -q ${RELEASE}.zip ${RELEASE};
+# - if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release);
+#   fi
+- cd ..
 - ls release
 - export RELEASE_ZIP="$(ls release/*.zip)";
 - echo "deploying ${RELEASE_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
