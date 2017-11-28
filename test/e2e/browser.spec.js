@@ -11,7 +11,7 @@ import {
 
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
@@ -32,6 +32,7 @@ describe( 'main window', () =>
 {
     beforeAll( async () =>
     {
+        await delay( 10000 )
         await app.start();
         await app.client.waitUntilWindowLoaded();
     } );
@@ -75,7 +76,7 @@ describe( 'main window', () =>
         const parsedUrl = urlParse( clientUrl );
         // const clientUrl = removeTrailingSlash ( await client.getUrl() );
 
-        expect( parsedUrl.protocol ).toBe( 'safe:' );
+        expect( parsedUrl.protocol ).toBe( 'about:' );
 
     } );
 
@@ -115,7 +116,7 @@ describe( 'main window', () =>
 
     } );
 
-    xit( 'loads safe-auth:// home', async () =>
+    it( 'loads safe-auth:// home', async () =>
     {
         const { client } = app;
         const tabIndex = await newTab( app );

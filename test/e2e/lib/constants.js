@@ -20,7 +20,8 @@ export const AUTH_UI =
     START_CREATE_BUTTON          : '.js-spectron__auth__create-account',
     BROWSER_PLUGIN_TEST_FAILURES : '.failures',
     // authenticator plugin
-    AUTH_FORM                    : '.js-spectron__auth__form',
+    AUTH_FORM                    : '.card-main', //temp till rebuilt auth with selectors
+    // AUTH_FORM                    : '.js-spectron__auth__form',
     AUTH_SECRET_INPUT            : '.js-spectron__account-secret',
     AUTH_CONFIRM_SECRET_INPUT    : '.js-spectron__confirm-account-secret',
     AUTH_INVITE_CODE_INPUT       : '.js-spectron__invitation-code',

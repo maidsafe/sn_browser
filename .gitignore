@@ -48,6 +48,7 @@ dll
 main.js
 main.js.map
 node_modules/locales
+locales
 
 .idea
 npm-debug.log.*

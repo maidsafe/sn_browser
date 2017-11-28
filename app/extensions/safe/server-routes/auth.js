@@ -1,5 +1,5 @@
 import logger from 'logger';
-import { isRunningPackaged } from 'constants';
+import { isRunningPackaged, isRunningSpectronTest } from 'constants';
 import url from 'url';
 import path from 'path';
 
@@ -13,7 +13,9 @@ const authRoute = {
             const link = request.params.link;
             const linkUrl = url.parse( link );
 
-            const authDistLocale = isRunningPackaged ? `../extensions/safe/` : `../`;
+            let authDistLocale = isRunningPackaged ? `../extensions/safe/` : `../`;
+            authDistLocale = isRunningSpectronTest ? `extensions/safe/` : authDistLocale;
+
             const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/temp_dist/' );
 
             switch ( linkUrl.path )

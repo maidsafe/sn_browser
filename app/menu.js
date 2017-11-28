@@ -21,10 +21,10 @@ export default class MenuBuilder
 
     buildMenu()
     {
-        if ( isHot  )
-        {
-            this.setupDevelopmentEnvironment();
-        }
+            if ( isHot  )
+            {
+                this.setupDevelopmentEnvironment();
+            }
 
         let template;
 

@@ -4,7 +4,7 @@ os:
 - osx
 - linux
 env:
-# - NODE_ENV=dev
+- NODE_ENV=dev
 - NODE_ENV=prod
 language: node_js
 node_js:
@@ -29,17 +29,31 @@ addons:
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
-- sleep 3
+- sleep 5
 script:
 - yarn run build
 - yarn run test
-# - yarn run test e2e
+- export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
+- sleep 15
+# - yarn run test e2e;
+- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
+  fi
+- if [[ "$NODE_ENV" == "prod" ]]; then export NODE_ENV=production;
+  fi
 - yarn run package
 - yarn run post-pack
 before_deploy:
 - ls release
+- export RELEASE="$(ls release)";
+- echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
+- zip -r -q release/$(ls release).zip release/$(ls release);
+- if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release);
+  fi
+- ls release
 - export RELEASE_ZIP="$(ls release/*.zip)";
 - echo "deploying ${RELEASE_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
+
+
 deploy:
   provider: releases
   skip_cleanup: true
