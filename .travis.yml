@@ -35,21 +35,17 @@ script:
 - yarn run test
 # - yarn run test e2e
 - yarn run package
+- yarn run post-pack
 before_deploy:
 - ls release
-- export DIST_FOLDER="$(ls release)";
-- zip -r -q release/$(ls release).zip release/$(ls release);
-- rm -rf release/$DIST_FOLDER
-- if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release); fi
-- ls release
-- export RELEASE_DIR="$(ls release/*.zip)";
-- echo "deploying ${RELEASE_DIR} to GitHub releases as tagged with ${TRAVIS_TAG}"
+- export RELEASE_ZIP="$(ls release/*.zip)";
+- echo "deploying ${RELEASE_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: i7J0VE/UAxfpei1AjMNrCP440wQNh2iLGFMip8FPotFIPBqHxxJlxmz9FCkVim/3XgtdgdQbT5M29IqkIt1pwtLn4xwx5LXgVNGy5/yW7uvqR2pnowhu2/G9YdOEZti+ZPLFnWCjqgMjdvbg8CE4K6is/Qa613EeDP1PBvCf2e0lvathNX9LOKDZk0G8DpTgFKp7ndCYBH4JmPLVbyWn2D9w4nmzpaYI2sk4ma+O7yrkDaE9u+AKrLn/RtshjgBovBSfMFqlaYUipIhkukAPYynArOUOCEoGNsOxthMbyPYOlH0PqY4OWEt2pSqQOYDOq14zemeskmcoGJeKmpw2WWHdz5ZKGBex6HSq6RbxOaPot0PSfnZxis2q/P9CwlPoTBjtk16UI+Y/ZPreL2dC+PRz2+NCTqVcl2yUKs6Z8HeuCG6ntnUlcWxqURzW5kdfD/lWxJMEtyqi1MAfieLyNpZiBsF08uOJeHfjW/QwB9zL6nSzkUznUWpvKQmS19yEb2bmUyFogyQj8KRnBhJTq74HMgRAbCT/fPnvIGvq63bwjKekqF1fAViTe/z8WL5l2B5D1cFJWy+l6VUlW6O8DpFe04jmzWo3vFYWmqNok2MzesMXQHLe6yE/Mo5+wfbUr5BS87sjCAw4GXF9ThcbYk0MjLKzfOBFafTFQoiM/Rs=
-  file: "${RELEASE_DIR}"
+  file: "${RELEASE_ZIP}"
   draft: true
   tag_name: $TRAVIS_TAG
   on:

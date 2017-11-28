@@ -68,25 +68,17 @@ build_script:
   - set NODE_ENV=production
   - yarn --version
   - yarn run package
-
+  - yarn run post-pack
 
 after_build:
-  - ps: Get-ChildItem release
-  - ps: Get-ChildItem release | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - dir release
-  - cd release
-  - 7z a peruse-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
+  - ps: Get-ChildItem -filter 'release\*.zip'
+  - ps: Get-ChildItem -filter 'release\*.zip' | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - dir
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
 
-
 artifacts:
   - path: release/*
-
-
-before_deploy:
-    # - dir dist
 
 deploy:
   release: $(appveyor_repo_tag_name)
@@ -102,4 +94,3 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag:  true        # deploy on tag push only
-    # appveyor_repo_tag:  true        # deploy on tag push only
