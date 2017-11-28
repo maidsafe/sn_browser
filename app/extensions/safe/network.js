@@ -22,8 +22,6 @@ export const authFromQueue = async () =>
 
 const authFromRes = async ( res ) =>
 {
-    logger.info('ressssss', res)
-
     try{
         appObj = await appObj.auth.loginFromURI( res );
     }

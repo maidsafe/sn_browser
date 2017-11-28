@@ -121,7 +121,7 @@ export default class Browser extends Component
             activeTabBackwards,
             activeTabForwards,
             notifications,
-            // addNotification
+            clearNotification
         } = this.props;
 
         // only show the first notification
@@ -153,7 +153,8 @@ export default class Browser extends Component
                     } }
                 />
                 <Notifier
-                    notification={ notification }
+                    { ...notification }
+                    clearNotification={ clearNotification }
                 />
                 <TabContents
                     updateActiveTab={ updateActiveTab }

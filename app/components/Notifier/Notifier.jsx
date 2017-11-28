@@ -11,19 +11,44 @@ const log = require( 'electron-log' );
 
 export default class Notifier extends Component
 {
+    static propTypes =
+   {
+       isVisible   : PropTypes.bool,
+       text        : PropTypes.string,
+       acceptText  : PropTypes.string,
+       denyText    : PropTypes.string,
+       dismissText : PropTypes.string,
+       onDismiss   : PropTypes.func,
+       onAccept    : PropTypes.func,
+       onDeny      : PropTypes.func
+   }
     static defaultProps =
     {
         isVisible   : false,
         acceptText  : 'Accept',
         denyText    : 'Deny',
         dismissText : ''
+
+    }
+
+    handleDismiss = () =>
+    {
+        const { clearNotification } = this.props;
+        clearNotification();
     }
 
     render()
     {
-        const { notification, acceptText, denyText, dismissText } = this.props;
+        const { acceptText,
+            denyText,
+            dismissText,
+            onDismiss,
+            onAccept,
+            onDeny,
+            text
+        } = this.props;
 
-        if ( !notification )
+        if ( !text )
         {
             return ( <div /> );
         }
@@ -32,20 +57,20 @@ export default class Notifier extends Component
             <Row hasMinHeight className={ styles.container }>
                 <MessageBox messageType="alert">
                     <Row verticalAlign="middle" align="center">
-                        <Text>{ notification.text }</Text>
+                        <Text>{ text }</Text>
                         <Column align="left">
-                            <Button role="promoted" onClick={ notification.onAccept }>{notification.acceptText || acceptText }</Button>
+                            <Button role="promoted" onClick={ onAccept }>{ acceptText }</Button>
                         </Column>
                         <Column align="left">
-                            <Button onClick={ notification.onDeny }>{notification.denyText || denyText }</Button>
+                            <Button onClick={ onDeny }>{ denyText }</Button>
                         </Column>
                         <Column align="left">
                             <IconButton
                                 role="subtle"
                                 iconType="close"
-                                onClick={ notification.onDismiss }
+                                onClick={ onDismiss || this.handleDismiss }
                             >
-                                {notification.dismissText || dismissText }
+                                { dismissText }
                             </IconButton>
                         </Column>
                     </Row>
