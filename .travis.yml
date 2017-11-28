@@ -36,8 +36,8 @@ script:
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
 # - yarn run test e2e;
-- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
-  fi
+# - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
+#   fi
 - if [[ "$NODE_ENV" == "prod" ]]; then export NODE_ENV=production;
   fi
 - yarn run package
