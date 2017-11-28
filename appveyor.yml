@@ -71,8 +71,10 @@ build_script:
   - yarn run post-pack
 
 after_build:
-  - ps: Get-ChildItem -filter 'release\*.zip'
-  - ps: Get-ChildItem -filter 'release\*.zip' | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - dir release
+  - cd release
+  - 7z a peruse-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
   - dir
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
