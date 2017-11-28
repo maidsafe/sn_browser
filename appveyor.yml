@@ -1,21 +1,22 @@
 platform:
   - x64
 
-image: Visual Studio 2017
-os: unstable
+image: Visual Studio 2015
+
 environment:
-  nodejs_version: "Stable"
+  nodejs_version: "7"
   matrix:
     - NODE_ENV: "dev"
-    - NODE_ENV: "production"
-cache:
-  - "%LOCALAPPDATA%\\Yarn"
-  - node_modules
-  - app\node_modules
-  - '%USERPROFILE%\.electron'
+      win_runtime: win-x64
+      arch: x64
+      plat: win32
+    - NODE_ENV: "prod"
+      win_runtime: win-x64
+      arch: x64
+      plat: win32
 
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   - node --version
   - npm --version
   - yarn --version
@@ -25,41 +26,44 @@ install:
 
 build_script:
   - node --version
-  - set NODE_ENV=production
   - yarn --version
   - yarn run build
   - yarn run package
 
 
-
-
 after_build:
-  - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - dir dist
+  - FOR /F %%i IN ('dir dist /b') DO SET APP_PKG_DIR=%%i
+  - if [%NODE_ENV%]==[dev] (
+      ren .\dist\%APP_PKG_DIR% mock-%APP_PKG_DIR%
+    )
+  - FOR /F %%G IN ('dir dist /b') DO SET APP_PKG_DIR=%%G
+  - echo %APP_PKG_DIR%
+  - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
+  - if [%NODE_ENV%]==[prod] (
+      copy .\build\"SAFE Browser.crust.config" .\dist\%APP_PKG_DIR%\safe-browser.crust.config)
+  - copy .\build\log.toml .\dist\%APP_PKG_DIR%\
+  - ren .\dist\%APP_PKG_DIR%\"SAFE Browser.exe" safe-browser.exe
+  - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
   - cd dist
-  - 7z a safe-browser-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
-  - dir
+  - 7z a %APP_PKG_DIR%.zip
+  - cd ..
+  - for /f %%P in ('dir dist /b') do echo %%P
+  - for /f %%P in ('dir .\dist\%APP_PKG_DIR%  /b') do echo %%P
+  - certutil -hashfile .\dist\%APP_PKG_DIR%.zip SHA256 >> .\dist\%APP_PKG_DIR%.txt
   - echo %APPVEYOR_REPO_TAG%
   - echo %APPVEYOR_REPO_TAG_NAME%
+  - ps: Get-ChildItem .\dist\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\dist\*.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
-artifacts:
-  - path: dist/*
 
-before_deploy:
-    # - dir dist
 
 deploy:
   release: $(appveyor_repo_tag_name)
   tag: $(appveyor_repo_tag_name)
   description: 'SAFE Browser'
   provider: GitHub
-  auth_token:
-    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
- # your encrypted token from GitHub
-  # artifact: /.*\.zip/
+  auth_token: $(github_auth_token)
   draft: true
   prerelease: true
   on:
-    branch: AddMockTravisBuild
     appveyor_repo_tag:  true        # deploy on tag push only
-    # appveyor_repo_tag:  true        # deploy on tag push only
