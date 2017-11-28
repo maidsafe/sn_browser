@@ -38,8 +38,7 @@
       "plugins": [
           "transform-es2015-modules-commonjs",
           "transform-class-properties",
-          "transform-es2015-classes",
-           [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ]
+          "transform-es2015-classes"
         ]
     }
   }
