@@ -68,15 +68,16 @@ describe( 'main window', () =>
         const tabIndex = await newTab( app );
         await navigateTo( app, 'http://example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        await client.pause( 1500 );
+
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
         await client.windowByIndex( tabIndex );
 
         const clientUrl = await client.getUrl();
         const parsedUrl = urlParse( clientUrl );
-        // const clientUrl = removeTrailingSlash ( await client.getUrl() );
 
-        expect( parsedUrl.protocol ).toBe( 'about:' );
+        expect( parsedUrl.protocol ).toBe( 'safe:' );
 
     } );
 
@@ -86,6 +87,8 @@ describe( 'main window', () =>
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        await client.pause( 1500 );
+
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
         await client.windowByIndex( tabIndex );
