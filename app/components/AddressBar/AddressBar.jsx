@@ -75,7 +75,6 @@ export default class AddressBar extends Component
         super( props );
         this.handleChange = ::this.handleChange;
         this.handleKeyPress = ::this.handleKeyPress;
-        this.handleRefresh = ::this.handleRefresh;
 
         this.state = {
             address : props.address
@@ -103,7 +102,7 @@ export default class AddressBar extends Component
         activeTabForwards();
     }
 
-    handleRefresh( tabData, event )
+    handleRefresh = ( event ) =>
     {
         // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
