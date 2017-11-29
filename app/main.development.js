@@ -168,8 +168,8 @@ app.on( 'window-all-closed', () =>
     // HACK: Fix this so we can have OSX convention for closing windows.
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
-    // if ( process.platform !== 'darwin' )
-    // {
+    if ( process.platform !== 'darwin' )
+    {
         app.quit();
-    // }
+    }
 } );

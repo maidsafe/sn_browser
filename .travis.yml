@@ -38,8 +38,6 @@ script:
 # - yarn run test e2e;
 # - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
 #   fi
-- if [[ "$NODE_ENV" == "prod" ]]; then export NODE_ENV=production;
-  fi
 - yarn run package
 - yarn run post-pack
 before_deploy:
@@ -47,9 +45,10 @@ before_deploy:
 - export RELEASE="$(ls release)";
 - echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - cd release
-- zip -r -q ${RELEASE}.zip ${RELEASE};
-# - if [[ "$NODE_ENV" == "dev" ]]; then mv release/{,mock-}$(ls release);
-#   fi
+- if [[ "$OS" == "osx" ]]; then ditto -c -k --sequesterRsrc --keepParent ${RELEASE} ${RELEASE}.zip;
+  fi
+- if [[ "$OS" == "linux" ]]; then - zip -r -q ${RELEASE}.zip ${RELEASE};;
+  fi
 - cd ..
 - ls release
 - export RELEASE_ZIP="$(ls release/*.zip)";
