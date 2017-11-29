@@ -1,5 +1,10 @@
 # SAFE Browser Changelog
 
+# 0.8.1
+
+- Upgrade autheticator plugin to v0.4.1
+- Upgrade safe-app plugin to v0.4.1
+
 # 0.8.0
 
 - Upgrade authenticator plugin to v0.4.1.
