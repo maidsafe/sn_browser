@@ -71,12 +71,14 @@ build_script:
   - yarn run post-pack
 
 after_build:
+  # - ps:
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: $env:PACKAGE_VERSION = node -p -e "require('./app/package.json').version"
   - dir release
   - cd release
-  - 7z a peruse-%APPVEYOR_REPO_TAG_NAME%-win-x64.zip
+  - 7z a peruse-v%PACKAGE_VERSION%-win-x64.zip
   - dir
-  - echo %APPVEYOR_REPO_TAG%
+  - echo %PACKAGE_VERSION%
   - echo %APPVEYOR_REPO_TAG_NAME%
 
 artifacts:
