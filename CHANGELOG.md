@@ -2,9 +2,9 @@
 
 # 0.8.0
 
-- Upgrade authenticator plugin to v0.4.0.
-- Upgrade safe-app plugin to v0.4.0 with change in DOM API as per safe_client_libs API changes.
-- Support for providing crust config path with SAFE_CONFIG_PATH env var. 
+- Upgrade authenticator plugin to v0.4.1.
+- Upgrade safe-app plugin to v0.4.1 with change in DOM API as per safe_client_libs API changes.
+- Support for providing crust config path with SAFE_CONFIG_PATH env var.
 - Issue related to revocation of apps fixed thanks to safe_authenticator upgrade.
 - Some additional automated tests created.
 
