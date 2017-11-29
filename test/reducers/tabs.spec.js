@@ -142,7 +142,7 @@ describe( 'tabs reducer', () =>
             );
         } );
 
-        test.only( 'should not set a previously closed tab to active when closed', () =>
+        test( 'should not set a previously closed tab to active when closed', () =>
         {
             let closedTab = { ...basicTab, isClosed: true }
 
