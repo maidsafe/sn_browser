@@ -16,7 +16,7 @@ const safeRoute = {
             const link = `safe://${request.params.link}`;
             const app = getAppObj();
 
-            logger.silly( `Handling SAFE req: ${link}` );
+            logger.verbose( `Handling SAFE req: ${link}` );
 
             if ( !app )
             {
@@ -32,8 +32,11 @@ const safeRoute = {
             if( pathname && pathname.length > 1 )
             {
                 const fileExt =  path.extname(path.basename(pathname));
-                mimeType = mime.getType(fileExt);
+                mimeType = mime.getType(fileExt) || 'text/html';
             }
+
+            logger.verbose( `MIME Type: ${mimeType}` );
+
 
             const data = await app.webFetch( link );
 
