@@ -7,6 +7,9 @@ environment:
     # - NODE_ENV: "dev"
     - NODE_ENV: "prod"
 
+platform:
+  - x86
+
 cache:
   - node_modules -> package.json
   - app/node_modules -> app/package.json
@@ -67,7 +70,7 @@ build_script:
   - node --version
   - set NODE_ENV=production
   - yarn --version
-  - yarn run package
+  - yarn run package-win
   - yarn run post-pack
 
 after_build:

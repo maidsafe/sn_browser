@@ -45,9 +45,9 @@ before_deploy:
 - export RELEASE="$(ls release)";
 - echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - cd release
-- if [[ "$OS" == "osx" ]]; then ditto -c -k --sequesterRsrc --keepParent ${RELEASE} ${RELEASE}.zip;
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ditto -c -k --sequesterRsrc --keepParent ${RELEASE} ${RELEASE}.zip;
   fi
-- if [[ "$OS" == "linux" ]]; then - zip -r -q ${RELEASE}.zip ${RELEASE};;
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
   fi
 - cd ..
 - ls release
