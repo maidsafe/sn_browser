@@ -109,7 +109,16 @@ export default class MenuBuilder
                     accelerator : 'Command+W',
                     click       : ( item, win ) =>
                     {
-                        if ( win ) win.webContents.send( 'command', 'file:close-active-tab' );
+                        const tabs = store.getState().tabs;
+                        const openTabs = tabs.filter( tab => !tab.isClosed )
+                        if( openTabs.length == 1 )
+                        {
+                            if ( win ) win.close();
+                        }
+                        else
+                        {
+                            if ( win ) win.webContents.send( 'command', 'file:close-active-tab' );
+                        }
                     }
                 },
                 {

@@ -26,9 +26,6 @@ export default class Browser extends Component
         address : initialAppState.address
     }
 
-
-    //
-
     componentDidMount( )
     {
         const { addTab, closeTab, closeActiveTab, reopenTab, addNotification, clearNotification } = this.props;
@@ -54,22 +51,17 @@ export default class Browser extends Component
                 case 'file:new-tab':
                 {
                     addTab( { url: 'about:blank', isActiveTab: true } );
-                    console.log( 'ADDING TABBB, addressbar in focus? ', addressBar );
                     addressBar.focus();
                     return;
                 }
                 case 'file:close-tab':
                 {
-                    console.log( 'closing tabbb' );
                     closeTab( { index: extraArgs[0] } );
-                    // addressBar.focus();
                     return;
                 }
                 case 'file:close-active-tab':
                 {
-                    console.log( 'closing active tabbb' );
                     closeActiveTab( );
-                    // addressBar.focus();
                     return;
                 }
                 // case 'file:reopen-tab':
@@ -107,6 +99,28 @@ export default class Browser extends Component
         } );
     }
 
+    shouldComponentUpdate = ( nextProps ) =>
+    {
+        const { tabs } = nextProps;
+        const activeTab = tabs.find( tab => tab.isActiveTab );
+
+        return !!activeTab;
+    }
+
+    handleCloseBrowserTab = ( tab ) =>
+    {
+        const { closeTab, tabs } = this.props;
+        const openTabs = tabs.filter( tab => !tab.isClosed );
+
+        if( openTabs.length == 1 )
+        {
+            ipcRenderer.send( 'command:close-window')
+        }
+        else {
+            closeTab( tab );
+        }
+    }
+
     render()
     {
         const {
@@ -128,7 +142,9 @@ export default class Browser extends Component
         const notification = notifications[0];
 
         //TODO: Remove Address reducer and just go off of active tab
-        const activeTabAddress = tabs.find( tab => tab.isActiveTab ).url;
+        const activeTab = tabs.find( tab => tab.isActiveTab );
+
+        const activeTabAddress = activeTab.url;
 
         return (
             <div className={ styles.container }>
@@ -138,7 +154,7 @@ export default class Browser extends Component
                     updateAddress={ updateAddress }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
-                    closeTab={ closeTab }
+                    closeTab={ this.handleCloseBrowserTab }
                     tabs={ tabs }
                 />
                 <AddressBar

@@ -22,7 +22,7 @@ import handleCommands from './commandHandling';
 import { setupWebAPIs } from './webAPIs';
 // TODO: This should be handled in an extensible fashion
 import { handleOpenUrl } from './extensions/safe/network';
-import { addTab } from 'actions/tabs_actions';
+import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
 
 
@@ -85,22 +85,6 @@ const installExtensions = async () =>
         .catch( console.log );
 };
 
-
-/**
- * Add event listeners...
- */
-
-app.on( 'window-all-closed', () =>
-{
-    logger.info( 'All windows closed' );
-
-    // Respect the OSX convention of having the application in memory even
-    // after all windows have been closed
-    if ( process.platform !== 'darwin' )
-    {
-        app.exit();
-    }
-} );
 
 
 const parseSafeUri = function ( uri )
@@ -172,12 +156,20 @@ app.on( 'open-url', ( e, url ) =>
 } );
 
 
+
+/**
+ * Add event listeners...
+ */
+
 app.on( 'window-all-closed', () =>
 {
-    if ( process.platform !== 'darwin' )
-    {
-        app.quit();
-    }
-
     global.macAllWindowsClosed = true;
+
+    // HACK: Fix this so we can have OSX convention for closing windows.
+    // Respect the OSX convention of having the application in memory even
+    // after all windows have been closed
+    // if ( process.platform !== 'darwin' )
+    // {
+        app.quit();
+    // }
 } );

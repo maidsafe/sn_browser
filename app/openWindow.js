@@ -1,7 +1,8 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, ipcMain } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
+import logger from 'logger';
 
 //TODO: Move this // abstract
 import {authFromQueue} from './extensions/safe/network';
@@ -85,3 +86,14 @@ const openWindow = ( store ) =>
 
 
 export default openWindow;
+
+
+ipcMain.on( 'command:close-window', ( ) =>
+{
+    let win = BrowserWindow.getFocusedWindow();
+
+    if( win )
+    {
+        win.close();
+    }
+})
