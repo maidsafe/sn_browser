@@ -179,24 +179,31 @@ const closeTab = ( state, payload ) =>
     const index = payload.index;
 
     const tabToMerge = state[index];
+    const openTabs = state.filter( tab => !tab.isClosed );
+
     const updatedTab = {
-        ...tabToMerge, isActiveTab : false, index, isClosed    : true, closedTime  : new Date()
+        ...tabToMerge, isActiveTab : false, index, isClosed : true, closedTime  : new Date()
     };
     let updatedState = [...state];
     updatedState[index] = updatedTab;
 
     if ( tabToMerge.isActiveTab )
     {
-        // TODO: Filter tabs for isClosed and get nearest index that is not closed
-        let newActiveTabIndex = index - 1;
-        const newActiveTab = state[newActiveTabIndex];
+        let ourTabIndex = openTabs.findIndex( tab => tab === tabToMerge );
 
-        if ( !newActiveTab )
+        const nextTab = ourTabIndex + 1;
+        const prevTab = ourTabIndex - 1;
+        let targetOpenTabsIndex = openTabs.length > nextTab ? nextTab : prevTab;
+        let targetIndex;
+
+        if( targetOpenTabsIndex >= 0 )
         {
-            newActiveTabIndex = index + 1;
+            let newOpenTab = openTabs[targetOpenTabsIndex];
+
+            targetIndex = updatedState.findIndex( tab => tab === newOpenTab );
         }
 
-        updatedState = setActiveTab( updatedState, { index: newActiveTabIndex } );
+        updatedState = setActiveTab( updatedState, { index: targetIndex } );
     }
 
     return updatedState;

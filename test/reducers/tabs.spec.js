@@ -141,6 +141,40 @@ describe( 'tabs reducer', () =>
                 }
             );
         } );
+
+        test.only( 'should not set a previously closed tab to active when closed', () =>
+        {
+            let closedTab = { ...basicTab, isClosed: true }
+
+            const newState = tabs( [basicTab, closedTab, activeTab ], {
+                type    : TYPES.CLOSE_TAB,
+                payload : { index: 2 }
+            } );
+
+            expect( newState[0] ).toMatchObject(
+                {
+                    ...basicTab,
+                    isActiveTab : true,
+                    isClosed    : false
+                }
+            );
+
+            // expect( newState[1] ).toMatchObject(
+            //     {
+            //         ...closedTab,
+            //         isActiveTab : false,
+            //         isClosed    : true
+            //     }
+            // );
+            //
+            // expect( newState[2] ).toMatchObject(
+            //     {
+            //         ...activeTab,
+            //         isActiveTab : false,
+            //         isClosed    : true
+            //     }
+            // );
+        } );
     } );
 
 
