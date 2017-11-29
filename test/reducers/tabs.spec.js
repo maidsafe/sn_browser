@@ -159,21 +159,20 @@ describe( 'tabs reducer', () =>
                 }
             );
 
-            // expect( newState[1] ).toMatchObject(
-            //     {
-            //         ...closedTab,
-            //         isActiveTab : false,
-            //         isClosed    : true
-            //     }
-            // );
-            //
-            // expect( newState[2] ).toMatchObject(
-            //     {
-            //         ...activeTab,
-            //         isActiveTab : false,
-            //         isClosed    : true
-            //     }
-            // );
+            expect( newState[1] ).toMatchObject(
+                {
+                    ...closedTab,
+                    isClosed    : true
+                }
+            );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    isActiveTab : false,
+                    isClosed    : true
+                }
+            );
         } );
     } );
 
