@@ -3,7 +3,7 @@
   "productName": "SAFE Browser",
   "description": "A browser for the SAFE Network, powered by Beaker.",
   "homepage": "https://github.com/maidsafe/safe_browser#safe_browser",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "identifier": "net.maidsafe.safebrowser",
   "author": {
     "name": "MaidSafe.net Ltd",
@@ -12,7 +12,7 @@
   },
   "main": "background-process.build.js",
   "dependencies": {
-    "beaker-plugin-safe-app": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.1.tgz",
+    "beaker-plugin-safe-app": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.2.tgz",
     "beaker-plugin-safe-authenticator": "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.1.tgz",
     "browser-es-module-loader": "^0.4.1",
     "co": "^4.6.0",
