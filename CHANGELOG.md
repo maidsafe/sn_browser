@@ -1,5 +1,9 @@
 # SAFE Browser Changelog
 
+# 0.8.1
+
+- Upgrade safe-app plugin to v0.4.2 with change in DOM API as per safe_client_libs API changes.
+
 # 0.8.0
 
 - Upgrade authenticator plugin to v0.4.1.

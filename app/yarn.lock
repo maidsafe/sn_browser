@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.1.tgz#79438d74a353408e3bf5e89ced5a462f0f384aa2"
+"@maidsafe/safe-node-app@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.2.tgz#9f88116d248e08df6ffb0ccd200b2849168587b5"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
@@ -430,11 +430,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.1.tgz":
-  version "0.4.1"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.1.tgz#492d928d66b4dc119433b3f52ef17cdbbea036a4"
+"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.2.tgz":
+  version "0.4.2"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.2.tgz#27e08f011200cbdf19be71df24a1df7860d6f872"
   dependencies:
-    "@maidsafe/safe-node-app" "0.5.1"
+    "@maidsafe/safe-node-app" "0.5.2"
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
     mime "^1.3.4"
