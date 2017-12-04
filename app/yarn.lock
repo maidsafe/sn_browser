@@ -2,13 +2,14 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.2.tgz#9f88116d248e08df6ffb0ccd200b2849168587b5"
+"@maidsafe/safe-node-app@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.3.tgz#6ea032170db450af39b545e15c5fb83176ba48f4"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
     ffi "^2.2.0"
+    mime "^2.0.3"
     ref "^1.3.3"
     ref-array "^1.2.0"
     ref-struct "^1.1.0"
@@ -430,14 +431,13 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.2.tgz":
-  version "0.4.2"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.2.tgz#27e08f011200cbdf19be71df24a1df7860d6f872"
+"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.3.tgz":
+  version "0.4.3"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.3.tgz#8ef1fc99f72c7dbfb6cb8790c71603e6981ba9c7"
   dependencies:
-    "@maidsafe/safe-node-app" "0.5.2"
+    "@maidsafe/safe-node-app" "0.5.3"
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
-    mime "^1.3.4"
     url "^0.11.0"
 
 "beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.1.tgz":
@@ -3437,9 +3437,13 @@ mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.15, mime-types@~2.1.16, 
   dependencies:
     mime-db "~1.30.0"
 
-mime@1.4.1, mime@^1.3.4:
+mime@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
+
+mime@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.0.3.tgz#4353337854747c48ea498330dc034f9f4bbbcc0b"
 
 min-document@^2.19.0:
   version "2.19.0"
