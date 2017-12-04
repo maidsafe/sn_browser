@@ -1,4 +1,5 @@
 import { remote, ipcRenderer } from 'electron'
+import path from 'path'
 import * as pages from '../pages'
 import * as zoom from '../pages/zoom'
 import * as yo from 'yo-yo'
@@ -952,8 +953,10 @@ function onKeydownLocation (e) {
       }
 
       var selectionUrl = selection.url
-      selectionUrl = selectionUrl.replace(/\/?(\?|#|$)/, '/$1');
-      
+      if ((selectionUrl.subStr(-1) !== '/') && !path.extname(selectionUrl)) {
+        selectionUrl = selectionUrl.replace(/\/?(\?|#|$)/, '/$1');
+      }
+
       page.loadURL(selectionUrl, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }
