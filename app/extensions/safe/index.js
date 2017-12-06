@@ -1,19 +1,17 @@
-import { session } from 'electron';
+import { session, shell } from 'electron';
 import url from 'url';
 import logger from 'logger';
 import { CONFIG, isRunningProduction } from 'constants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
-import ipc  from './ffi/ipc';
+import ipc from './ffi/ipc';
 import { initAnon, initMock } from './network';
 
 import * as authAPI from './auth-api';
 
 const isForSafeServer = ( parsedUrlObject ) =>
-{
-    return parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
-}
+    parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
 const blockNonSAFERequests = () =>
 {
@@ -29,11 +27,23 @@ const blockNonSAFERequests = () =>
 
         if ( target.protocol === 'safe:' || target.protocol === 'safe-auth:' ||
             target.protocol === 'chrome-devtools:' || target.protocol === 'file:' ||
-            isForSafeServer(target) )
+            isForSafeServer( target ) )
         {
             logger.debug( `Allowing url ${details.url}` );
             callback( {} );
             return;
+        }
+
+        if ( details.url.indexOf( 'http' ) > -1 )
+        {
+            try
+            {
+                shell.openExternal( details.url );
+            }
+            catch ( e )
+            {
+                logger.error( e );
+            }
         }
 
         logger.debug( 'Blocked req:', details.url );
@@ -41,17 +51,18 @@ const blockNonSAFERequests = () =>
     } );
 };
 
-const init = async( store ) =>
+const init = async ( store ) =>
 {
     logger.info( 'Registering SAFE Network Protocols' );
     registerSafeProtocol();
     registerSafeAuthProtocol();
 
-    try{
+    try
+    {
         // setup auth
         authAPI.ffi.ffiLoader.loadLibrary();
 
-        //dont do this inside if auth ffi as circular dep
+        // dont do this inside if auth ffi as circular dep
         ipc();
 
         if ( isRunningProduction )
@@ -63,10 +74,11 @@ const init = async( store ) =>
             await initMock( store );
         }
     }
-    catch(e){
-        logger.info('Problems initing SAFE extension')
-        logger.info(e.message)
-        logger.info(e)
+    catch ( e )
+    {
+        logger.info( 'Problems initing SAFE extension' );
+        logger.info( e.message );
+        logger.info( e );
     }
     // authAPI.client();
     blockNonSAFERequests();
