@@ -29,7 +29,7 @@ if ( isRunningPackaged )
 export const PROTOCOLS = {
     SAFE       : 'safe',
     SAFE_AUTH  : 'safe-auth',
-    SAFE_LOCAL : 'localhost',
+    SAFE_LOCAL : 'local',
     SAFE_LOGS  : 'safe-logs'
 };
 

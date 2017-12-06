@@ -90,12 +90,8 @@ export const initAnon = async ( passedStore ) =>
             configPath: CONFIG.CONFIG_PATH
         } );
 
-        logger.info( 'CONFIGGG???????????', CONFIG.CONFIG_PATH)
         // TODO, do we even need to generate this?
         const authReq = await appObj.auth.genConnUri( {} );
-
-
-        logger.info( 'authreqq???????????', authReq );
 
         const authType = parseSafeAuthUrl( authReq.uri );
 
@@ -127,7 +123,6 @@ export const handleOpenUrl = async ( res ) =>
 
     if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` )
     {
-        logger.info('Thatisan auth reqqqqqqqq')
         authUrl = parseSafeAuthUrl( res );
 
         // Q: Do we need this check?

@@ -1,6 +1,7 @@
 // @flow
 import { remote, shell } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
+import { makeValidUrl } from 'utils/urlHelpers';
 
 import initialAppState from './initialAppState.json';
 
@@ -12,7 +13,9 @@ const getActiveTabIndex = ( state ) => state.findIndex( tab => tab.isActiveTab )
 const addTab = ( state, tab ) =>
 {
     const currentWindowId = remote ? remote.getCurrentWindow().id : 1;
-    const newTab = { ...tab, windowId: currentWindowId, historyIndex: 0, history: [ tab.url ] };
+
+    const tabUrl = makeValidUrl( tab.url );
+    const newTab = { ...tab, windowId: currentWindowId, historyIndex: 0, history: [ tabUrl ] };
 
     let newState = [...state];
 
@@ -246,7 +249,7 @@ const updateActiveTab = ( state, payload ) =>
 
     let updatedTab = { ...tabToMerge };
 
-    const url = payload.url;
+    const url = makeValidUrl( payload.url );
 
     updatedTab = updateTabHistory( updatedTab, url );
     updatedTab = { ...updatedTab, ...payload };
@@ -271,7 +274,7 @@ const updateTab = ( state, payload ) =>
 
     let updatedTab = { ...tabToMerge };
 
-    const url = payload.url;
+    const url = makeValidUrl( payload.url );
 
     updatedTab = updateTabHistory( updatedTab, url );
     updatedTab = { ...updatedTab, ...payload };

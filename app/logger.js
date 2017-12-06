@@ -46,6 +46,16 @@ log.verbose( '' );
 log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
 log.verbose( '' );
 
+process.on( 'uncaughtTypeError', ( err ) =>
+{
+    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    log.error( 'whoops! there was an uncaught type error:' );
+    log.error( err );
+    log.error( err.file );
+    log.error( err.line );
+    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+} );
+
 process.on( 'uncaughtException', ( err ) =>
 {
     log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

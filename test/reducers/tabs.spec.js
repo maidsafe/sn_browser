@@ -6,10 +6,10 @@ import initialState from 'reducers/initialAppState.json';
 describe( 'tabs reducer', () =>
 {
     const basicTab = {
-        url      : 'hello',
+        url      : 'safe://hello',
         windowId : 1,
         historyIndex : 0,
-        history: ['hello']
+        history: ['safe://hello']
     };
 
     it( 'should return the initial state', () =>
@@ -24,7 +24,7 @@ describe( 'tabs reducer', () =>
             expect(
                 tabs( [], {
                     type    : TYPES.ADD_TAB,
-                    payload : { url: 'hello' }
+                    payload : { url: 'safe://hello' }
                 } )
             ).toEqual( [
                 basicTab
@@ -39,17 +39,17 @@ describe( 'tabs reducer', () =>
                     {
                         type    : TYPES.ADD_TAB,
                         payload : {
-                            url : 'another-url'
+                            url : 'safe://another-url'
                         }
                     }
                 )
             ).toEqual( [
                 basicTab,
                 {
-                    url      : 'another-url',
+                    url      : 'safe://another-url',
                     windowId : 1,
                     historyIndex : 0,
-                    history : [ 'another-url'],
+                    history : [ 'safe://another-url'],
                 }
             ] );
         } );

@@ -14,6 +14,7 @@ import { app, BrowserWindow, protocol } from 'electron';
 import logger from 'logger';
 import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'constants';
 import { parse as parseURL } from 'url';
+import pkg from 'appPackage';
 
 import openWindow from './openWindow';
 import loadExtensions from './extensions';
@@ -54,9 +55,8 @@ const handleSafeUrls = ( url ) =>
     }
 };
 
-
-// TODO: Register schemes from extension
-protocol.registerStandardSchemes( ['safe', 'safe-auth'], { secure: true } );
+// Register all schemes from package.json
+protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
 if ( isRunningPackaged )
 {

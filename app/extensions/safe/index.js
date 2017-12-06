@@ -1,10 +1,11 @@
 import { session, shell } from 'electron';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, isRunningProduction } from 'constants';
+import { CONFIG, isRunningProduction, PROTOCOLS } from 'constants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
+import registerSafeLocalhostProtocol from './protocols/localhost';
 import ipc from './ffi/ipc';
 import { initAnon, initMock } from './network';
 import * as tabsActions from 'actions/tabs_actions';
@@ -13,6 +14,11 @@ import * as authAPI from './auth-api';
 
 const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
+
+const isForLocalServer = ( parsedUrlObject ) =>
+{
+    return parsedUrlObject.protocol === `${PROTOCOLS.SAFE_LOCAL}:` || parsedUrlObject.hostname === '127.0.0.1';
+}
 
 const blockNonSAFERequests = () =>
 {
@@ -28,9 +34,10 @@ const blockNonSAFERequests = () =>
 
         if ( target.protocol === 'safe:' || target.protocol === 'safe-auth:' ||
             target.protocol === 'chrome-devtools:' || target.protocol === 'file:' ||
-            isForSafeServer( target ) )
+            isForSafeServer(target) || isForLocalServer(target) )
         {
             logger.debug( `Allowing url ${details.url}` );
+
             callback( {} );
             return;
         }
@@ -57,6 +64,7 @@ const init = async ( store ) =>
     logger.info( 'Registering SAFE Network Protocols' );
     registerSafeProtocol();
     registerSafeAuthProtocol();
+    registerSafeLocalhostProtocol();
 
     try
     {
@@ -90,23 +98,21 @@ const init = async ( store ) =>
     // } );
 };
 
-const middleware = store => next => action =>
-{
-    logger.info( 'ACTION:paylos', action.payload.url );
-
-    if ( action.type === tabsActions.TYPES.ADD_TAB && action.payload.url && action.payload.url.startsWith( 'http' ) )
-    {
-        logger.info('TRYING TO DO THISSSSSSSS', action.payload.url);
-
-        let newAction = { ...action, type: 'cancelled' }
-        return 'boop';
-    }
-
-    // return next( action );
-};
+// const middleware = store => next => action =>
+// {
+//     logger.info( 'ACTION:paylos', action.payload.url );
+//
+//     if ( action.type === tabsActions.TYPES.ADD_TAB && action.payload.url && action.payload.url.startsWith( 'http' ) )
+//     {
+//         let newAction = { ...action, type: 'cancelled' }
+//         return 'boop';
+//     }
+//
+//     // return next( action );
+// };
 
 export default {
     init,
     setupRoutes,
-    middleware
+    // middleware
 };

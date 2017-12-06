@@ -5,6 +5,7 @@ module.exports = {
     testPathIgnorePatterns : ['node_modules', '<rootDir>/app/extensions'],
     moduleDirectories    : ['app', 'test', 'node_modules', 'app/node_modules'],
     moduleNameMapper     : {
+        '^appPackage$'    : '<rootDir>/package.json',
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
         '^@containers(.*)$' : '<rootDir>/app/containers',
