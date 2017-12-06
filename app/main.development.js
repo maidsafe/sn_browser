@@ -20,22 +20,24 @@ import loadExtensions from './extensions';
 import configureStore from './store/configureStore';
 import handleCommands from './commandHandling';
 import { setupWebAPIs } from './webAPIs';
+
 // TODO: This should be handled in an extensible fashion
 import { handleOpenUrl } from './extensions/safe/network';
 import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
+import { mainSync } from './store/electronStoreSyncer';
 
 
 const initialState = {};
 
-// add middleware; perhaps from a plugin?
+// Add middleware from extensions here.
 const loadMiddlewarePackages = [];
-const store = configureStore( initialState, loadMiddlewarePackages );
 
-import { mainSync } from './store/electronStoreSyncer';
+const store = configureStore( initialState, loadMiddlewarePackages );
+mainSync( store );
+
 
 const mainWindow = null;
-mainSync( store );
 
 const handleSafeUrls = ( url ) =>
 {
@@ -43,15 +45,14 @@ const handleSafeUrls = ( url ) =>
     // Also parse out and deal with safe:// urls and auth response etc.
     handleOpenUrl( url );
 
-    let parsedUrl = parseURL( url );
+    const parsedUrl = parseURL( url );
 
     // TODO: Use constants // 'shouldOpenUrl...'
-    if( parsedUrl.protocol === 'safe:')
+    if ( parsedUrl.protocol === 'safe:' )
     {
-        store.dispatch( addTab({url, isActiveTab: true }) );
+        store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
-
-}
+};
 
 
 // TODO: Register schemes from extension
@@ -86,7 +87,6 @@ const installExtensions = async () =>
 };
 
 
-
 const parseSafeUri = function ( uri )
 {
     return uri.replace( '//', '' ).replace( '==/', '==' );
@@ -96,7 +96,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     if ( commandLine.length >= 2 && commandLine[1] )
     {
-        handleSafeUrls( parseSafeUri( commandLine[1] ) )
+        handleSafeUrls( parseSafeUri( commandLine[1] ) );
     }
 
     // Someone tried to run a second instance, we should focus our window
@@ -154,7 +154,6 @@ app.on( 'open-url', ( e, url ) =>
         }
     }
 } );
-
 
 
 /**

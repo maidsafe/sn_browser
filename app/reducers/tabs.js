@@ -1,5 +1,5 @@
 // @flow
-import { remote } from 'electron';
+import { remote, shell } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
 
 import initialAppState from './initialAppState.json';
@@ -15,6 +15,14 @@ const addTab = ( state, tab ) =>
     const newTab = { ...tab, windowId: currentWindowId, historyIndex: 0, history: [ tab.url ] };
 
     let newState = [...state];
+
+    // Prevent http tabs at all
+    // TODO. This via middleware
+    if( tab.url.startsWith('http') )
+    {
+        shell.openExternal( tab.url );
+        return state;
+    }
 
     if ( newTab.isActiveTab )
     {

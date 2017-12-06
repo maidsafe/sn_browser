@@ -2,19 +2,15 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
-// import { createLogger } from 'redux-logger';
-// import createCLILogger from 'redux-cli-logger';
+import logger from 'logger';
 import rootReducer from '../reducers';
-// import { toJS } from 'immutable';
 import electronSyncerMiddleware from './electronStoreSyncer';
 
 const inRendererProcess = typeof window !== 'undefined';
 
-
 export default ( initialState = {}, middleware = [] ) =>
 {
     // Redux Configuration
-    // middleware ? middleware = [];
     const enhancers = [];
 
     // Thunk Middleware
@@ -23,64 +19,12 @@ export default ( initialState = {}, middleware = [] ) =>
     // electron Syncer
     middleware.push( electronSyncerMiddleware );
 
-
-    // lets sort logging
-    let logger;
-
-    // const stateTransformer = ( state ) =>
-    // {
-    //     let logState = {};
-    //
-    //     Object.keys(state).forEach(function(key,index) {
-    //
-    //         if( state[ key ] )
-    //         {
-    //             logState[key] = state[ key ].toJS();
-    //         }
-    //         else
-    //         {
-    //             logState[key] = state[ key ];
-    //
-    //         }
-    //
-    //         // key: the name of the object key
-    //     });
-    //
-    //     return logState;
-    // };
-
-
-    if ( inRendererProcess )
-    {
-        // Logging Middleware
-        // logger = createLogger( {
-        //     level     : 'info',
-        //     collapsed : true,
-        //     stateTransformer: stateTransformer
-        //     // actionTransformer: ( action ) => action.toJS()
-        // } );
-
-    }
-    else
-    {
-        // const loggerOptions =
-        // {
-        //     stateTransformer: stateTransformer
-        // };
-
-        // logger = createCLILogger(loggerOptions)
-
-        // middleware.push( logger );
-    }
-
-
     // Router Middleware
     const router = routerMiddleware( hashHistory );
     middleware.push( router );
 
     // Redux DevTools Configuration
     const actionCreators = {
-
         push,
     };
 

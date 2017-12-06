@@ -360,10 +360,12 @@ export default class Tab extends Component
 
     newWindow( e )
     {
-        // const { navigate, addTab } = this.props;
-        // const { url } = e;
+        const { addTab } = this.props;
+        const { url } = e;
         // navigate('url/' + url)
-        // addTab( { url, isActiveTab: true } );
+        const activateTab = e.disposition == 'foreground-tab';
+
+        addTab( { url, isActiveTab: activateTab } );
 
         this.goForward();
     }

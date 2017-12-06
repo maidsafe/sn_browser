@@ -7,6 +7,7 @@ import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import ipc from './ffi/ipc';
 import { initAnon, initMock } from './network';
+import * as tabsActions from 'actions/tabs_actions';
 
 import * as authAPI from './auth-api';
 
@@ -80,7 +81,7 @@ const init = async ( store ) =>
         logger.info( e.message );
         logger.info( e );
     }
-    // authAPI.client();
+
     blockNonSAFERequests();
 
     // if we want to do something with the store, we would do it here.
@@ -89,7 +90,23 @@ const init = async ( store ) =>
     // } );
 };
 
+const middleware = store => next => action =>
+{
+    logger.info( 'ACTION:paylos', action.payload.url );
+
+    if ( action.type === tabsActions.TYPES.ADD_TAB && action.payload.url && action.payload.url.startsWith( 'http' ) )
+    {
+        logger.info('TRYING TO DO THISSSSSSSS', action.payload.url);
+
+        let newAction = { ...action, type: 'cancelled' }
+        return 'boop';
+    }
+
+    // return next( action );
+};
+
 export default {
     init,
-    setupRoutes
+    setupRoutes,
+    middleware
 };

@@ -9,9 +9,15 @@ import electronSyncerMiddleware from './electronStoreSyncer';
 
 const router = routerMiddleware( hashHistory );
 
-const enhancer = applyMiddleware( thunk, router, electronSyncerMiddleware );
 
-export default function configureStore( initialState )
+const configureStore = ( initialState, middleware = [] ) =>
 {
-  return createStore(rootReducer, initialState, enhancer); // eslint-disable-line
+    middleware.push( thunk );
+    middleware.push( electronSyncerMiddleware );
+    middleware.push( router );
+
+    const enhancer = applyMiddleware( ...middleware );
+    return createStore(rootReducer, initialState, enhancer); // eslint-disable-line
 }
+
+export default configureStore;
