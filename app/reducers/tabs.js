@@ -274,7 +274,6 @@ const updateTab = ( state, payload ) =>
 
     let updatedTab = { ...tabToMerge };
 
-
     updatedTab = { ...updatedTab, ...payload };
 
     if( payload.url )

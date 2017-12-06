@@ -4,12 +4,18 @@ import { CONFIG, isRunningProduction } from 'appConstants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
+import registerSafeLocalhostProtocol from './protocols/localhost';
 import ipc from './ffi/ipc';
 import { initAnon, initMock } from './network';
 import * as tabsActions from 'actions/tabs_actions';
 import { urlIsAllowed } from './utils/safeHelpers';
 import * as authAPI from './auth-api';
 
+
+const isForLocalServer = ( parsedUrlObject ) =>
+{
+    return parsedUrlObject.protocol === `localhost:` || parsedUrlObject.hostname === '127.0.0.1';
+}
 
 const blockNonSAFERequests = () =>
 {
@@ -52,6 +58,7 @@ const init = async ( store ) =>
     logger.info( 'Registering SAFE Network Protocols' );
     registerSafeProtocol();
     registerSafeAuthProtocol();
+    registerSafeLocalhostProtocol();
 
     try
     {
