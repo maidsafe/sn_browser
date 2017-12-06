@@ -12,7 +12,7 @@ export const setAddress = async( app, url ) =>
 {
     const { client } = app;
 
-    await client.pause( 500 ); // need to wait a sec for the UI to catch up
+    await client.pause( 800 ); // need to wait a sec for the UI to catch up
     await client.windowByIndex( 0 );
     await client.waitUntilWindowLoaded()
     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );

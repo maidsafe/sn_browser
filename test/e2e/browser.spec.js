@@ -81,7 +81,7 @@ describe( 'main window', () =>
     //
     // } );
 
-    it( 'has safe:// protocol', async () =>
+    test( 'has safe:// protocol', async () =>
     {
         const { client } = app;
         const tabIndex = await newTab( app );
@@ -95,8 +95,9 @@ describe( 'main window', () =>
 
         const clientUrl = await client.getUrl();
         const parsedUrl = urlParse( clientUrl );
-        // const clientUrl = removeTrailingSlash ( await client.getUrl() );
 
+        // TODO fix slash setup after removing address reducer
+        expect( address ).toBe( 'safe://example.com/' );
         expect( parsedUrl.protocol ).toBe( 'safe:' );
 
     } );
@@ -113,7 +114,6 @@ describe( 'main window', () =>
 
         const clientUrl = await client.getUrl();
         const parsedUrl = urlParse( clientUrl );
-        // const clientUrl = removeTrailingSlash ( await client.getUrl() );
 
         expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
 
