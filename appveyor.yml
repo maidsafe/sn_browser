@@ -18,18 +18,6 @@ cache:
   - app\node_modules
   - '%USERPROFILE%\.electron'
 
-# Enable when https://github.com/yarnpkg/yarn/issues/1233 and
-# https://github.com/yarnpkg/yarn/issues/1059 are resolved and disable npm cache
-#
-# cache:
-#   - "%LOCALAPPDATA%/Yarn"
-
-# matrix:
-#   fast_finish: true
-
-# build: off
-
-# version: '{build}'
 
 shallow_clone: true
 
@@ -46,16 +34,6 @@ install:
   - yarn add windows-build-tools --global
   - yarn --ignore-optional
   - yarn
-
-# Enable when https://github.com/yarnpkg/yarn/issues/1233 and
-# https://github.com/yarnpkg/yarn/issues/1059 are resolved and disable npm cache
-#
-# install:
-#   - ps: Install-Product node $env:nodejs_version
-#   - set CI=true
-#   - choco install yarn
-#   - refreshenv
-#   - yarn
 
 test_script:
   - node --version
@@ -75,17 +53,20 @@ build_script:
 
 after_build:
   # - ps:
-  - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - FOR /F %%i IN ('dir release /b') DO SET APP_PKG_DIR=%%i
   - ps: $env:PACKAGE_VERSION = node -p -e "require('./app/package.json').version"
   - dir release
   - cd release
   - 7z a peruse-v%PACKAGE_VERSION%-win-x64.zip
   - dir
+  - certutil -hashfile peruse-v%PACKAGE_VERSION%-win-x64.zip SHA256 >> %APP_PKG_DIR%.txt
   - echo %PACKAGE_VERSION%
   - echo %APPVEYOR_REPO_TAG_NAME%
+  - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\*.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
-artifacts:
-  - path: release/*
+# artifacts:
+#   - path: release/*
 
 deploy:
   release: $(appveyor_repo_tag_name)
