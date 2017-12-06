@@ -8,7 +8,7 @@ environment:
     - NODE_ENV: "prod"
 
 platform:
-  - x86
+  - x64
 
 cache:
   - node_modules -> package.json
@@ -24,7 +24,7 @@ shallow_clone: true
 clone_depth: 1
 
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
   # - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
