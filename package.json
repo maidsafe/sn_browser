@@ -208,7 +208,6 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "21.2.1",
     "jsdom": "^11.1.0",
-    "mime": "^2.0.3",
     "minimist": "^1.2.0",
     "node-sass": "^4.5.2",
     "postcss": "^6.0.8",

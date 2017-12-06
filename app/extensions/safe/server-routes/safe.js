@@ -1,9 +1,5 @@
 import logger from 'logger';
 
-import url from 'url';
-import mime from 'mime';
-import path from 'path';
-
 import { getAppObj } from '../network';
 
 const safeRoute = {
@@ -23,24 +19,9 @@ const safeRoute = {
                 return reply( 'SAFE not connected yet' );
             }
 
-            const parsedUrl = url.parse(link);
-            let mimeType = 'text/html';
-
-            let pathname = parsedUrl.pathname;
-
-            // ie not just '/'
-            if( pathname && pathname.length > 1 )
-            {
-                const fileExt =  path.extname(path.basename(pathname));
-                mimeType = mime.getType(fileExt) || 'text/html';
-            }
-
-            logger.verbose( `MIME Type: ${mimeType}` );
-
-
             const data = await app.webFetch( link );
 
-            return reply( data ).type( mimeType );
+            return reply( data.body ).type( data.headers['Content-Type'] );
         }
         catch ( e )
         {

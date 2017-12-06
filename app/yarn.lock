@@ -2,13 +2,14 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.1.tgz#79438d74a353408e3bf5e89ced5a462f0f384aa2"
+"@maidsafe/safe-node-app@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.3.tgz#6ea032170db450af39b545e15c5fb83176ba48f4"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
     ffi "^2.2.0"
+    mime "^2.0.3"
     ref "^1.3.3"
     ref-array "^1.2.0"
     ref-struct "^1.1.0"
@@ -551,6 +552,10 @@ mime-types@^2.1.12, mime-types@~2.1.17:
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.17.tgz#09d7a393f03e995a79f8af857b70a9e0ab16557a"
   dependencies:
     mime-db "~1.30.0"
+
+mime@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.0.3.tgz#4353337854747c48ea498330dc034f9f4bbbcc0b"
 
 minimalist@^1.0.0:
   version "1.0.0"
