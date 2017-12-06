@@ -278,7 +278,7 @@ export default class Tab extends Component
 
     didNavigate( e )
     {
-        const { updateTab, index, updateAddress } = this.props;
+        const { updateTab, index } = this.props;
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
@@ -287,13 +287,12 @@ export default class Tab extends Component
         {
             this.updateBrowserState( { url } );
             updateTab( { index, url } );
-            updateAddress( noTrailingSlashUrl );
         }
     }
 
     didNavigateInPage( e )
     {
-        const { updateTab, index, updateAddress } = this.props;
+        const { updateTab, index } = this.props;
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
@@ -302,7 +301,6 @@ export default class Tab extends Component
         {
             this.updateBrowserState( { url, redirects: [url] } );
             updateTab( { index, url } );
-            updateAddress( noTrailingSlashUrl );
         }
     }
 
@@ -348,7 +346,7 @@ export default class Tab extends Component
         if ( this.props.isActiveTab )
         {
             // TODO ensure url structure in reducer, as opposed to here/everywhere
-            this.props.updateAddress( removeTrailingSlash( url ) );
+            this.props.updateActiveTab( { url: removeTrailingSlash( url ) } );
         }
 
         // our own little preventDefault

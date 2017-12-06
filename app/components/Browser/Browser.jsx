@@ -7,7 +7,6 @@ import AddressBar from 'components/AddressBar';
 import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
-import initialAppState from 'reducers/initialAppState.json';
 import styles from './browser.css';
 import setupAuthHandling from 'extensions/safe/authIPCHandling';
 
@@ -23,7 +22,6 @@ export default class Browser extends Component
 
     static defaultProps =
     {
-        address : initialAppState.address
     }
 
     componentDidMount( )
@@ -125,13 +123,11 @@ export default class Browser extends Component
     {
         const {
             addTab,
-            address,
             closeTab,
             tabs,
             setActiveTab,
             updateActiveTab,
             updateTab,
-            updateAddress,
             activeTabBackwards,
             activeTabForwards,
             notifications,
@@ -141,7 +137,6 @@ export default class Browser extends Component
         // only show the first notification
         const notification = notifications[0];
 
-        //TODO: Remove Address reducer and just go off of active tab
         const activeTab = tabs.find( tab => tab.isActiveTab );
 
         const activeTabAddress = activeTab.url;
@@ -151,7 +146,6 @@ export default class Browser extends Component
                 <TabBar
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
-                    updateAddress={ updateAddress }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
                     closeTab={ this.handleCloseBrowserTab }
@@ -159,7 +153,6 @@ export default class Browser extends Component
                 />
                 <AddressBar
                     address={ activeTabAddress }
-                    updateAddress={ updateAddress }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={activeTabBackwards }
                     activeTabForwards={activeTabForwards }
@@ -175,7 +168,6 @@ export default class Browser extends Component
                 <TabContents
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
-                    updateAddress={ updateAddress }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
                     tabs={ tabs }

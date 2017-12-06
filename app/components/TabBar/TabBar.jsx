@@ -31,8 +31,7 @@ export default class TabBar extends Component
     {
         event.stopPropagation();
 
-        this.props.setActiveTab( { index: tabData.key } );
-        this.props.updateAddress( event.target.value );
+        this.props.setActiveTab( { index: tabData.key, url: event.target.value } );
     }
 
     handleTabClose( tabData, event )
@@ -48,12 +47,11 @@ export default class TabBar extends Component
     {
         event.stopPropagation();
 
-        const { addTab, updateAddress } = this.props;
+        const { addTab } = this.props;
         const newTabUrl = 'about:blank';
 
         event.preventDefault();
         addTab( { url: newTabUrl, isActiveTab: true } );
-        updateAddress( event.target.value );
     }
 
     render()

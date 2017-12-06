@@ -130,7 +130,6 @@ export default class AddressBar extends Component
 
         const url = makeValidUrl( input );
 
-        this.props.updateAddress( url );
         this.props.updateActiveTab( { url } );
     }
 
