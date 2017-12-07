@@ -5,30 +5,35 @@ import { env,
     isRunningPackaged,
     isRunningProduction,
     isRunningDevelopment,
-    isRunningSpectronTest
+    isRunningSpectronTest,
+    inRendererProcess
 } from 'appConstants';
 
 const log = require( 'electron-log' );
-// Log level
-// error, warn, info, verbose, debug, silly
-log.transports.console.level = 'verbose';
 
-/**
- * Set output format template. Available variables:
- * Main: {level}, {text}
- * Date: {y},{m},{d},{h},{i},{s},{ms}
- */
-log.transports.console.format = '{h}:{i}:{s}:{ms} {text}';
+if( log.transports )
+{
+    // Log level
+    // error, warn, info, verbose, debug, silly
+    log.transports.console.level = 'verbose';
 
-// Set a function which formats output
-log.transports.console.format = ( msg ) => util.format( ...msg.data );
+    /**
+    * Set output format template. Available variables:
+    * Main: {level}, {text}
+    * Date: {y},{m},{d},{h},{i},{s},{ms}
+    */
+    log.transports.console.format = '{h}:{i}:{s}:{ms} {text}';
 
-log.transports.file.level = 'verbose';
-log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
+    // Set a function which formats output
+    log.transports.console.format = ( msg ) => util.format( ...msg.data );
 
-// Set approximate maximum log size in bytes. When it exceeds,
-// the archived log will be saved as the log.old.log file
-log.transports.file.maxSize = 5 * 1024 * 1024;
+    log.transports.file.level = 'verbose';
+    log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
+
+    // Set approximate maximum log size in bytes. When it exceeds,
+    // the archived log will be saved as the log.old.log file
+    log.transports.file.maxSize = 5 * 1024 * 1024;
+}
 
 // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
 log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

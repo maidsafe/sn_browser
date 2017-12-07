@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow, protocol } from 'electron';
+import { app, BrowserWindow, protocol, ipcMain } from 'electron';
 import logger from 'logger';
 import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
@@ -26,7 +26,6 @@ import { setupWebAPIs } from './webAPIs';
 import { handleOpenUrl } from './extensions/safe/network';
 import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
-import { mainSync } from './store/electronStoreSyncer';
 
 
 const initialState = {};
@@ -35,8 +34,11 @@ const initialState = {};
 const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
-mainSync( store );
 
+// renderer error notifications
+ipcMain.on('errorInWindow', function(event, data){
+    logger.error(data)
+});
 
 const mainWindow = null;
 

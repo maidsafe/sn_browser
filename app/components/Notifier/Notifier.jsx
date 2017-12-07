@@ -48,6 +48,10 @@ export default class Notifier extends Component
             text
         } = this.props;
 
+        // TODO: Enable IPC comms for functionality with some string/phrasing
+        // to catch and implement the cb.
+        // OR: Use electron-redux aliasing.
+
         if ( !text )
         {
             return ( <div /> );

@@ -1,14 +1,16 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import {
-    reopenTab,
+    addTab,
     activeTabForwards,
-    activeTabBackwards
+    activeTabBackwards,
+    closeActiveTab,
+    reopenTab
 } from './actions/tabs_actions';
-import { isRunningDevelopment, isHot, isRunningSpectronTest } from 'appConstants';
+import { isHot } from 'constants';
 import { getLastClosedTab } from './reducers/tabs';
 import logger from 'logger';
-import appPackage from 'appPackage';
+import pkg from 'appPackage';
 
 export default class MenuBuilder
 {
@@ -21,10 +23,10 @@ export default class MenuBuilder
 
     buildMenu()
     {
-            if ( isHot  )
-            {
-                this.setupDevelopmentEnvironment();
-            }
+        if ( isHot )
+        {
+            this.setupDevelopmentEnvironment();
+        }
 
         let template;
 
@@ -73,7 +75,7 @@ export default class MenuBuilder
                 { type: 'separator' },
                 { label: 'Services', submenu: [] },
                 { type: 'separator' },
-                { label: `Hide ${appPackage.productName}`, accelerator: 'Command+H', selector: 'hide:' },
+                { label: `Hide ${pkg.productName}`, accelerator: 'Command+H', selector: 'hide:' },
                 { label: 'Hide Others', accelerator: 'Command+Shift+H', selector: 'hideOtherApplications:' },
                 { label: 'Show All', selector: 'unhideAllApplications:' },
                 { type: 'separator' },
@@ -93,7 +95,11 @@ export default class MenuBuilder
                     accelerator : 'Command+N',
                     click       : ( item, win ) =>
                     {
-                        if ( this.openWindow ) this.openWindow();
+                        if ( this.openWindow && win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.openWindow( this.store, windowId );
+                        }
                     }
                 },
                 {
@@ -101,7 +107,11 @@ export default class MenuBuilder
                     accelerator : 'Command+T',
                     click       : ( item, win ) =>
                     {
-                        if ( win ) win.webContents.send( 'command', 'file:new-tab', );
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
+                        }
                     }
                 },
                 {
@@ -109,15 +119,20 @@ export default class MenuBuilder
                     accelerator : 'Command+W',
                     click       : ( item, win ) =>
                     {
-                        const tabs = store.getState().tabs;
-                        const openTabs = tabs.filter( tab => !tab.isClosed )
-                        if( openTabs.length == 1 )
+                        if ( win )
                         {
-                            if ( win ) win.close();
-                        }
-                        else
-                        {
-                            if ( win ) win.webContents.send( 'command', 'file:close-active-tab' );
+                            const tabs = store.getState().tabs;
+                            const windowId = win.webContents.id;
+
+                            const openTabs = tabs.filter( tab => !tab.isClosed && tab.windowId === windowId );
+                            if ( openTabs.length === 1 )
+                            {
+                                win.close();
+                            }
+                            else
+                            {
+                                this.store.dispatch( closeActiveTab( windowId ) );
+                            }
                         }
                     }
                 },
@@ -144,13 +159,7 @@ export default class MenuBuilder
                             windowToFocus.focus();
                         }
 
-                        // here. we find last tab && update store to be open.
                         store.dispatch( reopenTab() );
-                        // store.dispatch( setActiveTab( {index:  lastTab } ) );
-                        // need window ID to focus it
-
-                        // if ( win ) win.webContents.send( 'command', 'file:reopen-tab' );
-                        console.log( 'TODO: Add history to all tabs... go back in time. Redux goodness??' );
                     }
                 }, { type: 'separator' },
                 {
@@ -158,7 +167,7 @@ export default class MenuBuilder
                     accelerator : 'CommandOrControl+L',
                     click( item, win )
                     {
-                        if ( win ) win.webContents.send( 'command', 'file:focus-location' );
+                        // if ( win ) win.webContents.send( 'command', 'file:focus-location' );
                         console.log( 'TODO: Focus Nav bar' );
                     }
                 }
@@ -237,7 +246,7 @@ export default class MenuBuilder
                 { type: 'separator' },
                 { label: 'Bring All to Front', selector: 'arrangeInFront:' },
                 { type: 'separator' },
-                { label: 'Toggle Peruse-shell Devtools (not for web dev debug)',
+                { label : 'Toggle Peruse-shell Devtools (not for web dev debug)',
                     click : ( item, win ) =>
                     {
                         if ( win )

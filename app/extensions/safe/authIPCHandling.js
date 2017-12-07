@@ -87,7 +87,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onNetworkStatus', ( event, status ) =>
     {
-        // addNotification( { name: 'Hello', reqType: 'ONE OF THOSE'} );
+        // addNotification( { text: status } );
         log.info( 'on.....onNetworkStatus' );
         safeAuthNetworkState = status;
         log.info( 'Network state changed to: ', safeAuthNetworkState );

@@ -231,14 +231,6 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
 
-        const webContentsId = webview.getWebContents().id;
-        // lets add the webContents id for easy manipulation
-        updateTab( { index, webContentsId } );
-
-        // if (currentSession !== webContents.session) {
-        //     this.setupItchInternal(webContents.session)
-        // }
-
         if ( url && url !== 'about:blank' )
         {
             this.loadURL( url )

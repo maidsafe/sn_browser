@@ -1,6 +1,6 @@
 // @flow
 //
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AddressBar from 'components/AddressBar';
@@ -9,8 +9,7 @@ import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 import styles from './browser.css';
 import setupAuthHandling from 'extensions/safe/authIPCHandling';
-
-const log = require( 'electron-log' );
+import logger from 'logger';
 
 export default class Browser extends Component
 {
@@ -24,57 +23,41 @@ export default class Browser extends Component
     {
     }
 
+    constructor( props )
+    {
+        super( props );
+        this.state = {};
+    }
+
     componentDidMount( )
     {
         const { addTab, closeTab, closeActiveTab, reopenTab, addNotification, clearNotification } = this.props;
-        const addressBar = this.address.refs.addressBar;
+        const addressBar = this.address;
 
+        const theBrowser = this;
         setupAuthHandling( addNotification, clearNotification );
+
+        // this is mounted but its not show?
+        this.setState( { windowId: remote.getCurrentWebContents().id } );
+
 
         ipcRenderer.on( 'command', ( ...args ) =>
         {
             const event = args[0];
             const type = args[1];
             const { tabContents } = this;
+
             const activeTab = tabContents.getActiveTab();
 
             const extraArgs = args.slice( 2 );
 
-
             switch ( type )
             {
-                // TODO: Should this actually be passed as an array of browser actions to be dealt with>?
-                // TODO: to the store?
-                // TODO: And then parsed/removed?
-                case 'file:new-tab':
-                {
-                    addTab( { url: 'about:blank', isActiveTab: true } );
-                    addressBar.focus();
-                    return;
-                }
-                case 'file:close-tab':
-                {
-                    closeTab( { index: extraArgs[0] } );
-                    return;
-                }
                 case 'file:close-active-tab':
                 {
                     closeActiveTab( );
                     return;
                 }
-                // case 'file:reopen-tab':
-                //     {
-                //         // console.log( 'closing tabbb' )
-                //         reopenTab();
-                //         // addressBar.focus();
-                //         return;
-                //     }
-                case 'file:focus-location':
-                {
-                    addressBar.focus();
-                    return;
-                }
-                // case 'file:close-tab':         return pages.remove(page)
                 // case 'file:reopen-closed-tab': return pages.reopenLastRemoved()
                 // case 'edit:find':              return navbar.showInpageFind(page)
                 case 'view:reload': return activeTab.reload();
@@ -100,9 +83,12 @@ export default class Browser extends Component
     shouldComponentUpdate = ( nextProps ) =>
     {
         const { tabs } = nextProps;
-        const activeTab = tabs.find( tab => tab.isActiveTab );
+        const currentTabs = this.props.tabs;
 
-        return !!activeTab;
+        const newWindowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
+        const currentWindowTabs = currentTabs.filter( tab => tab.windowId === this.state.windowId );
+
+        return newWindowTabs !== currentWindowTabs;
     }
 
     handleCloseBrowserTab = ( tab ) =>
@@ -110,11 +96,12 @@ export default class Browser extends Component
         const { closeTab, tabs } = this.props;
         const openTabs = tabs.filter( tab => !tab.isClosed );
 
-        if( openTabs.length == 1 )
+        if ( openTabs.length === 1 )
         {
-            ipcRenderer.send( 'command:close-window')
+            ipcRenderer.send( 'command:close-window' );
         }
-        else {
+        else
+        {
             closeTab( tab );
         }
     }
@@ -136,8 +123,14 @@ export default class Browser extends Component
 
         // only show the first notification
         const notification = notifications[0];
+        const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
+        const activeTab = windowTabs.find( tab => tab.isActiveTab );
 
-        const activeTab = tabs.find( tab => tab.isActiveTab );
+        // TODO: if not, lets trigger close?
+        if ( !activeTab )
+        {
+            return <div />;
+        }
 
         const activeTabAddress = activeTab.url;
 
@@ -149,13 +142,13 @@ export default class Browser extends Component
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
                     closeTab={ this.handleCloseBrowserTab }
-                    tabs={ tabs }
+                    tabs={ windowTabs }
                 />
                 <AddressBar
                     address={ activeTabAddress }
                     updateActiveTab={ updateActiveTab }
-                    activeTabBackwards={activeTabBackwards }
-                    activeTabForwards={activeTabForwards }
+                    activeTabBackwards={ activeTabBackwards }
+                    activeTabForwards={ activeTabForwards }
                     ref={ ( c ) =>
                     {
                         this.address = c;
@@ -170,7 +163,7 @@ export default class Browser extends Component
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
-                    tabs={ tabs }
+                    tabs={ windowTabs }
                     ref={ ( c ) =>
                     {
                         this.tabContents = c;

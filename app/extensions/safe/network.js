@@ -232,9 +232,12 @@ export const reconnect = ( app ) =>
  * Authorise application for dev environment
  * This creates a test login for development purpose
  */
-export const initMock = async () =>
+export const initMock = async ( passedStore ) =>
 {
-    logger.info( 'Init mock app' );
+    const store = passedStore;
+
+    logger.info( 'Initialising mock app' );
+
     try
     {
         appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );

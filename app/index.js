@@ -7,7 +7,6 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import Root from './containers/Root';
 import configureStore from './store/configureStore';
 import './app.global.css';
-import { rendererSync } from './store/electronStoreSyncer';
 
 var log = require( 'electron-log' );
 
@@ -21,8 +20,6 @@ window.onerror = function(error, url, line) {
 
 const store = configureStore();
 const history = syncHistoryWithStore( hashHistory, store );
-
-rendererSync( store );
 
 
 render(

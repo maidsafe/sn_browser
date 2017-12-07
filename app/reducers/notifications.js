@@ -1,6 +1,6 @@
 // @flow
 import { createActions }from 'redux-actions';
-import initialAppState from './initialAppState.json';
+import initialAppState from './initialAppState';
 
 import { TYPES } from 'actions/notification_actions';
 

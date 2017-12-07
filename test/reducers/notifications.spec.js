@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import notifications from 'reducers/notifications';
 import { TYPES } from 'actions/notification_actions';
-import initialState from 'reducers/initialAppState.json';
+import initialState from 'reducers/initialAppState';
 
 describe( 'notification reducer', () =>
 {

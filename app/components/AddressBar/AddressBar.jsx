@@ -121,7 +121,7 @@ export default class AddressBar extends Component
                             type="text"
                             ref={ ( c ) =>
                             {
-                                this.addressBar = c;
+                                this.addressInput = c;
                             } }
                             onFocus={ this.handleFocus }
                             onChange={ this.handleChange }

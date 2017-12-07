@@ -3,11 +3,18 @@ import { BrowserWindow, ipcMain } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
 import logger from 'logger';
+import {
+    addTab,
+    updateTab,
+    // activeTabForwards,
+    // activeTabBackwards,
+    // reopenTab
+} from './actions/tabs_actions';
 
 //TODO: Move this // abstract
 import {authFromQueue} from './extensions/safe/network';
 
-let mainWindow = null;
+let windowArray = [];
 
 function getNewWindowPosition( mainWindowState )
 {
@@ -43,7 +50,7 @@ const openWindow = ( store ) =>
 
     const newWindowPosition = getNewWindowPosition( mainWindowState );
 
-    mainWindow = new BrowserWindow( {
+    let mainWindow = new BrowserWindow( {
         show              : false,
         x                 : newWindowPosition.x,
         y                 : newWindowPosition.y,
@@ -73,12 +80,34 @@ const openWindow = ( store ) =>
         mainWindow.focus();
 
         authFromQueue();
+
+        const webContentsId = mainWindow.webContents.id;
+
+        // TODO: This assumes no BG windows!
+        if( BrowserWindow.getAllWindows().length === 1 )
+        {
+            //first tab needs this webContentsId.
+            store.dispatch( updateTab({ index: 0, windowId: webContentsId }))
+        }
+        else
+        {
+            logger.info( 'shou;d be addinga tabbbbb for', webContentsId)
+            store.dispatch( addTab({ url: 'about:blank', windowId: webContentsId, isActiveTab : true }) );
+        }
+
     } );
 
     mainWindow.on( 'closed', () =>
     {
+        const index = windowArray.indexOf( mainWindow );
         mainWindow = null;
+        if ( index > -1 )
+        {
+            windowArray.splice( index, 1 )
+        }
     } );
+
+    windowArray.push( mainWindow );
 
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();

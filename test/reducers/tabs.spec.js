@@ -1,15 +1,15 @@
 /* eslint-disable func-names */
 import tabs from 'reducers/tabs';
 import { TYPES } from 'actions/tabs_actions';
-import initialState from 'reducers/initialAppState.json';
+import initialState from 'reducers/initialAppState';
 
 describe( 'tabs reducer', () =>
 {
     const basicTab = {
-        url      : 'safe://hello',
-        windowId : 1,
+        url          : 'safe://hello',
+        windowId     : 1,
         historyIndex : 0,
-        history: ['safe://hello']
+        history      : ['safe://hello']
     };
 
     it( 'should return the initial state', () =>
@@ -46,10 +46,42 @@ describe( 'tabs reducer', () =>
             ).toEqual( [
                 basicTab,
                 {
-                    url      : 'safe://another-url',
-                    windowId : 1,
+                    url          : 'safe://another-url',
+                    windowId     : 1,
                     historyIndex : 0,
-                    history : [ 'safe://another-url'],
+                    history      : ['safe://another-url'],
+                }
+            ] );
+        } );
+
+        it( 'should deactivate prev active tab if isActive is set to true and ignore other windows\' tabs', () =>
+        {
+            const activeTab = { ...basicTab, isActiveTab: true };
+            const activeTabAnotherWindow = { ...basicTab, isActiveTab: true, windowId: 2 };
+
+            expect(
+                tabs(
+                    [activeTab, activeTabAnotherWindow ],
+                    {
+                        type    : TYPES.ADD_TAB,
+                        payload : {
+                            url : 'safe://another-url',
+                            isActiveTab: true
+                        }
+                    }
+                )
+            ).toEqual( [
+                {
+                    ...activeTab,
+                    isActiveTab : false
+                },
+                activeTabAnotherWindow,
+                {
+                    url          : 'safe://another-url',
+                    windowId     : 1,
+                    historyIndex : 0,
+                    history      : ['safe://another-url'],
+                    isActiveTab : true
                 }
             ] );
         } );
@@ -92,6 +124,31 @@ describe( 'tabs reducer', () =>
                 }
             ] );
         } );
+
+        it( 'deactivate the previous active tab ONLY in this window', () =>
+        {
+            // TODO. This test needs to account for many windows.
+            const anotherWindowTab = { ...basicTab, windowId: 2 };
+            const anotherWindowActiveTab = { ...basicTab, windowId: 2, isActiveTab: true };
+            const newState = tabs( [activeTab, anotherWindowTab, anotherWindowActiveTab, basicTab], {
+                type    : TYPES.SET_ACTIVE_TAB,
+                payload : { index: 3 }
+            } );
+            expect( newState ).toEqual( [
+                { ...activeTab, isActiveTab: false },
+                {
+                    ...anotherWindowTab
+                },
+                {
+                    ...anotherWindowActiveTab
+                },
+                {
+                    ...basicTab,
+                    isActiveTab : true,
+                    isClosed    : false
+                }
+            ] );
+        } );
     } );
 
 
@@ -119,7 +176,7 @@ describe( 'tabs reducer', () =>
 
         it( 'should set another tab as active if was active and trigger address update', () =>
         {
-            //TODO Mock address update action?
+            // TODO Mock address update action?
             const newState = tabs( [activeTab, basicTab], {
                 type    : TYPES.CLOSE_TAB,
                 payload : { index: 0 }
@@ -142,11 +199,37 @@ describe( 'tabs reducer', () =>
             );
         } );
 
+        it( 'should not affect a tab in another window', () =>
+        {
+            // TODO. This test needs to account for many windows.
+            const anotherWindowTab = { ...basicTab, windowId: 2 };
+            const anotherWindowActiveTab = { ...basicTab, windowId: 2, isActiveTab: true };
+
+            const newState = tabs( [activeTab, anotherWindowTab, anotherWindowActiveTab, basicTab], {
+                type    : TYPES.CLOSE_TAB,
+                payload : { index: 2 }
+            } );
+
+
+            expect( newState[0] ).toMatchObject( { ...activeTab } );
+            expect( newState[1] ).toMatchObject( {
+                ...anotherWindowTab,
+                isActiveTab : true,
+                isClosed    : false
+            } );
+            expect( newState[2] ).toMatchObject( {
+                ...anotherWindowActiveTab,
+                isClosed    : true,
+                isActiveTab : false
+            } );
+            expect( newState[3] ).toMatchObject( { ...basicTab } );
+        } );
+
         test( 'should not set a previously closed tab to active when closed', () =>
         {
-            let closedTab = { ...basicTab, isClosed: true }
+            const closedTab = { ...basicTab, isClosed: true };
 
-            const newState = tabs( [basicTab, closedTab, activeTab ], {
+            const newState = tabs( [basicTab, closedTab, activeTab], {
                 type    : TYPES.CLOSE_TAB,
                 payload : { index: 2 }
             } );
@@ -162,7 +245,7 @@ describe( 'tabs reducer', () =>
             expect( newState[1] ).toMatchObject(
                 {
                     ...closedTab,
-                    isClosed    : true
+                    isClosed : true
                 }
             );
 
@@ -224,7 +307,7 @@ describe( 'tabs reducer', () =>
     describe( 'UPDATE_ACTIVE_TAB', () =>
     {
         const activeTab = { ...basicTab, isActiveTab: true };
-
+        const anotherWindowActiveTab = { ...activeTab, windowId: 2 };
         it( 'should update the active tab\'s properties', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
@@ -235,9 +318,34 @@ describe( 'tabs reducer', () =>
             expect( newState[2] ).toMatchObject(
                 {
                     ...activeTab,
-                    url   : 'safe://changed!',
-                    title : 'hi',
-                    historyIndex: 1
+                    url          : 'safe://changed!',
+                    title        : 'hi',
+                    historyIndex : 1
+                }
+            );
+
+            expect( newState[2] ).toHaveProperty( 'history' );
+        } );
+
+        it( 'should only update the active tab in the same window properties', () =>
+        {
+            const newState = tabs( [basicTab, basicTab, anotherWindowActiveTab, activeTab], {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed!', title: 'hi' }
+            } );
+
+            expect( newState[3] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'changed!',
+                    title        : 'hi',
+                    historyIndex : 1
+                }
+            );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...anotherWindowActiveTab
                 }
             );
 
@@ -279,9 +387,9 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url   : 'safe://changedagain!',
-                    title : 'hi',
-                    historyIndex: 1
+                    url          : 'safe://changedagain!',
+                    title        : 'hi',
+                    historyIndex : 1
                 }
             );
 

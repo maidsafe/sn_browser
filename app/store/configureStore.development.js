@@ -1,13 +1,21 @@
-import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { hashHistory } from 'react-router';
+import { inRendererProcess } from 'constants';
 import { routerMiddleware, push } from 'react-router-redux';
 import rootReducer from '../reducers';
-import electronSyncerMiddleware from './electronStoreSyncer';
+import {
+    forwardToRenderer,
+    forwardToMain,
+    // triggerAlias,
+    getInitialStateRenderer,
+    replayActionMain,
+    replayActionRenderer,
+} from 'electron-redux';
 
-const inRendererProcess = typeof window !== 'undefined';
+const initialStateFromMain = inRendererProcess ? getInitialStateRenderer() : {};
 
-export default ( initialState = {}, middleware = [] ) =>
+export default ( initialState = initialStateFromMain, middleware = [] ) =>
 {
     // Redux Configuration
     const enhancers = [];
@@ -15,12 +23,21 @@ export default ( initialState = {}, middleware = [] ) =>
     // Thunk Middleware
     middleware.push( thunk );
 
-    // electron Syncer
-    middleware.push( electronSyncerMiddleware );
-
     // Router Middleware
     const router = routerMiddleware( hashHistory );
     middleware.push( router );
+
+    if ( inRendererProcess )
+    {
+        // must be first
+        middleware.unshift( forwardToMain );
+    }
+
+    if ( !inRendererProcess )
+    {
+        // must be last
+        middleware.push( forwardToRenderer );
+    }
 
     // Redux DevTools Configuration
     const actionCreators = {
@@ -57,6 +74,15 @@ export default ( initialState = {}, middleware = [] ) =>
         module.hot.accept( '../reducers', () =>
             store.replaceReducer( require( '../reducers' ) ) // eslint-disable-line global-require
         );
+    }
+
+    if ( inRendererProcess )
+    {
+        replayActionRenderer( store );
+    }
+    else
+    {
+        replayActionMain( store );
     }
 
     return store;

@@ -1,26 +1,74 @@
+
 // @flow
-import { remote, shell } from 'electron';
+import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
 import { makeValidUrl } from 'utils/urlHelpers';
-import initialAppState from './initialAppState.json';
+import initialAppState from './initialAppState';
 
 const initialState = initialAppState.tabs;
 
-const getActiveTab = ( state ) => state.find( tab => tab.isActiveTab );
-const getActiveTabIndex = ( state ) => state.findIndex( tab => tab.isActiveTab );
+/**
+ * Retrieve the active tab object for a given windowId.
+ * @param  { Array } state    State array
+ * @param  { Integer } windowId  BrowserWindow webContents Id of target window.
+ */
+const getActiveTab = ( state, windowId ) => state.find( tab =>
+{
+    const currentWindowId = windowId || getCurrentWindowId( );
+    return tab.isActiveTab && tab.windowId === currentWindowId;
+} );
+
+/**
+ * Retrieve the active tab index for a given windowId.
+ * @param  { Array } state    State array
+ * @param  { Integer } windowId  BrowserWindow webContents Id of target window.
+ */
+const getActiveTabIndex = ( state, windowId ) =>
+{
+    const currentWindowId = windowId || getCurrentWindowId( );
+
+    return state.findIndex( tab =>
+        tab.isActiveTab && tab.windowId === currentWindowId );
+};
+
+/**
+ * Get the current window's webcontents Id. Defaults to `1` if none found.
+ * @return { Integer } WebContents Id of the curremt BrowserWindow webcontents.
+ */
+const getCurrentWindowId = ( ) =>
+{
+    let currentWindowId;
+
+    if ( typeof currentWindowId === 'undefined' && remote )
+    {
+        currentWindowId = remote.getCurrentWindow().webContents.id;
+    }
+    else if ( typeof currentWindowId === 'undefined' )
+    {
+        currentWindowId = 1;
+    }
+
+    return currentWindowId;
+};
 
 const addTab = ( state, tab ) =>
 {
-    const currentWindowId = remote ? remote.getCurrentWindow().id : 1;
+    if ( !tab )
+    {
+        throw new Error( 'You must pass a tab object with url' );
+    }
 
-    const tabUrl = makeValidUrl( tab.url );
-    const newTab = { ...tab, windowId: currentWindowId, historyIndex: 0, history: [ tabUrl ] };
+    const currentWindowId = getCurrentWindowId( );
+
+    const targetWindowId = tab.windowId || currentWindowId;
+    const tabUrl = makeValidUrl( tab.url || '' );
+    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl] };
 
     let newState = [...state];
 
     // Prevent http tabs at all
     // TODO. This via middleware
-    if( tab.url.startsWith('http') )
+    if ( tab.url.startsWith( 'http' ) )
     {
         shell.openExternal( tab.url );
         return state;
@@ -28,33 +76,75 @@ const addTab = ( state, tab ) =>
 
     if ( newTab.isActiveTab )
     {
-        newState = deactivateOldActiveTab( newState );
+        newState = deactivateOldActiveTab( newState, targetWindowId );
     }
 
     newState.push( newTab );
-
 
     return newState;
 };
 
 
-const closeActiveTab = ( state ) =>
+/**
+ * Set a tab as closed. If it is active, deactivate and and set a new active tab
+ * @param { array } state
+ * @param { object } payload
+ */
+const closeTab = ( state, payload ) =>
 {
-    const activeTabIndex = getActiveTabIndex( state );
+    const index = payload.index;
+    const currentWindowId = getCurrentWindowId();
+    const tabToMerge = state[index];
+    const targetWindowId = tabToMerge ? tabToMerge.windowId || currentWindowId : currentWindowId;
+    const openTabs = state.filter( tab => !tab.isClosed && tab.windowId === targetWindowId );
+
+    const updatedTab = {
+        ...tabToMerge, isActiveTab : false, index, isClosed    : true, closedTime  : new Date()
+    };
+    let updatedState = [...state];
+    updatedState[index] = updatedTab;
+
+    if ( tabToMerge.isActiveTab )
+    {
+        const ourTabIndex = openTabs.findIndex( tab => tab === tabToMerge );
+
+        const nextTab = ourTabIndex + 1;
+        const prevTab = ourTabIndex - 1;
+        const targetOpenTabsIndex = openTabs.length > nextTab ? nextTab : prevTab;
+        let targetIndex;
+
+
+        if ( targetOpenTabsIndex >= 0 )
+        {
+            const newOpenTab = openTabs[targetOpenTabsIndex];
+
+            targetIndex = updatedState.findIndex( tab => tab === newOpenTab );
+        }
+
+        updatedState = setActiveTab( updatedState, { index: targetIndex } );
+    }
+
+    return updatedState;
+};
+
+
+const closeActiveTab = ( state, windowId ) =>
+{
+    const activeTabIndex = getActiveTabIndex( state, windowId );
 
     return closeTab( state, { index: activeTabIndex } );
 };
 
 
-const deactivateOldActiveTab = ( state ) =>
+const deactivateOldActiveTab = ( state, windowId ) =>
 {
-    const activeTabIndex = getActiveTabIndex( state );
+    const currentWindowId = windowId || getCurrentWindowId();
+    const activeTabIndex = getActiveTabIndex( state, currentWindowId );
 
     if ( activeTabIndex > -1 )
     {
-        const oldActiveTab = getActiveTab( state );
+        const oldActiveTab = getActiveTab( state, currentWindowId );
         const updatedOldTab = { ...oldActiveTab, isActiveTab: false };
-
         const updatedState = [...state];
         updatedState[activeTabIndex] = updatedOldTab;
         return updatedState;
@@ -172,48 +262,12 @@ const setActiveTab = ( state, payload ) =>
     const newActiveTab = state[index];
     let updatedState = [...state];
 
-    updatedState = deactivateOldActiveTab( state );
-
-    updatedState[index] = { ...newActiveTab, isActiveTab: true, isClosed: false };
-
-    return updatedState;
-};
-
-/**
- * Set a tab as closed. If it is active, deactivate and and set a new active tab
- * @param { array } state
- * @param { object } payload
- */
-const closeTab = ( state, payload ) =>
-{
-    const index = payload.index;
-
-    const tabToMerge = state[index];
-    const openTabs = state.filter( tab => !tab.isClosed );
-
-    const updatedTab = {
-        ...tabToMerge, isActiveTab : false, index, isClosed : true, closedTime  : new Date()
-    };
-    let updatedState = [...state];
-    updatedState[index] = updatedTab;
-
-    if ( tabToMerge.isActiveTab )
+    if ( newActiveTab )
     {
-        let ourTabIndex = openTabs.findIndex( tab => tab === tabToMerge );
+        const targetWindowId = newActiveTab.windowId;
 
-        const nextTab = ourTabIndex + 1;
-        const prevTab = ourTabIndex - 1;
-        let targetOpenTabsIndex = openTabs.length > nextTab ? nextTab : prevTab;
-        let targetIndex;
-
-        if( targetOpenTabsIndex >= 0 )
-        {
-            let newOpenTab = openTabs[targetOpenTabsIndex];
-
-            targetIndex = updatedState.findIndex( tab => tab === newOpenTab );
-        }
-
-        updatedState = setActiveTab( updatedState, { index: targetIndex } );
+        updatedState = deactivateOldActiveTab( updatedState, targetWindowId );
+        updatedState[index] = { ...newActiveTab, isActiveTab: true, isClosed: false };
     }
 
     return updatedState;
@@ -227,7 +281,7 @@ const updateTabHistory = ( tabToMerge, url ) =>
     {
         if ( updatedTab.history )
         {
-            updatedTab.historyIndex = updatedTab.historyIndex + 1;
+            updatedTab.historyIndex += 1;
             updatedTab.history.push( url );
         }
     }
@@ -245,6 +299,8 @@ const updateActiveTab = ( state, payload ) =>
     }
 
     const tabToMerge = state[index];
+
+    const targetWindowId = tabToMerge.windowId || getCurrentWindowId();
 
     let updatedTab = { ...tabToMerge };
 
@@ -323,7 +379,7 @@ export default function tabs( state: array = initialState, action )
         }
         case TYPES.CLOSE_ACTIVE_TAB :
         {
-            return closeActiveTab( state );
+            return closeActiveTab( state, payload );
         }
         case TYPES.REOPEN_TAB :
         {

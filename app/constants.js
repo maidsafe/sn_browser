@@ -14,6 +14,8 @@ export const isRunningDevelopment = /^dev/.test( env );
 
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
 
+export const inRendererProcess = typeof window !== 'undefined';
+
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
 const preloadLocation = isRunningUnpacked ? '' : `../`;
@@ -57,6 +59,15 @@ export const LIB_PATH = {
 const execPath = ( ) =>
 {
     if( env === 'test' )
+        return '';
+
+    return  isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' );
+}
+
+//HACK: Prevent jest dying due to no electron globals
+const execPath = ( ) =>
+{
+    if( env === 'test' || inRendererProcess )
         return '';
 
     return  isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' );

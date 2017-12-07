@@ -96,3 +96,7 @@ const setupPreload = () =>
 
 
 setupPreload();
+
+window.onerror = function(error, url, line) {
+    ipcRenderer.send('errorInWindow', error);
+};

@@ -1,11 +1,12 @@
 
 // @flow
+import { remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './tabBar.css';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
-
+import logger from 'logger';
 export default class TabBar extends Component
 {
     static defaultProps =
@@ -49,9 +50,8 @@ export default class TabBar extends Component
 
         const { addTab } = this.props;
         const newTabUrl = 'about:blank';
-
         event.preventDefault();
-        addTab( { url: newTabUrl, isActiveTab: true } );
+        addTab( { url: newTabUrl, isActiveTab: true, windowId: remote.getCurrentWindow().webContents.id } );
     }
 
     render()
