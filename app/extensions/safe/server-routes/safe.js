@@ -21,7 +21,9 @@ const safeRoute = {
 
             const data = await app.webFetch( link );
 
-            return reply( data.body ).type( data.headers['Content-Type'] );
+            return reply( data.body )
+                .type( data.headers['Content-Type'] )
+                .header( 'Content-Encoding', 'chunked');
         }
         catch ( e )
         {
