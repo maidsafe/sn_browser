@@ -15,7 +15,7 @@ export default merge.smart( baseConfig, {
 
     target : 'electron-renderer',
 
-    entry : ['babel-polyfill', './app/webPreload.development'],
+    entry : ['./app/webPreload.development'],
 
     output : {
         path       : __dirname,
