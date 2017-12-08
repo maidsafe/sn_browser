@@ -1,5 +1,4 @@
 import { session, shell } from 'electron';
-import url from 'url';
 import logger from 'logger';
 import { CONFIG, isRunningProduction } from 'appConstants';
 import setupRoutes from './server-routes';
@@ -22,9 +21,8 @@ const blockNonSAFERequests = () =>
 
     safeSession.webRequest.onBeforeRequest( filter, ( details, callback ) =>
     {
-        const target = url.parse( details.url );
 
-        if ( urlIsAllowed( target ) )
+        if ( urlIsAllowed( details.url ) )
         {
             logger.debug( `Allowing url ${details.url}` );
 

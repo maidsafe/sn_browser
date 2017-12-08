@@ -53,6 +53,14 @@ export const LIB_PATH = {
     }
 };
 
+//HACK: Prevent jest dying due to no electron globals
+const execPath = ( ) =>
+{
+    if( env === 'test' )
+        return '';
+
+    return  isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' );
+}
 
 const appInfo = {
     info : {
@@ -61,7 +69,7 @@ const appInfo = {
         name   : pkg.productName,
         vendor : pkg.author.name,
         // customSearchPath : isRunningUnpacked ? process.execPath : app.getPath( 'exe' )
-        customExecPath : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' )
+        customExecPath : execPath()
     },
     opt : {
         own_container : false,

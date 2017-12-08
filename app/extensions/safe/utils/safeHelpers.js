@@ -1,13 +1,15 @@
 import pkg from 'appPackage';
 import { CONFIG } from 'appConstants';
+import url from 'url';
 
-console.log( 'asdadiasjdaiojjjojojojioji',CONFIG )
 export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
 
-export const urlIsAllowed = ( urlObj ) =>
+export const urlIsAllowed = ( testUrl ) =>
 {
+    const urlObj = url.parse( testUrl );
+
     const validProtocols = pkg.build.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
 

@@ -1,4 +1,4 @@
-import * as CONSTANTS from 'constants';
+import * as CONSTANTS from 'appConstants';
 
 describe( 'CONSTANTS', async () =>
 {
@@ -7,7 +7,7 @@ describe( 'CONSTANTS', async () =>
         expect( CONSTANTS ).not.toBeNull();
     } );
 
-    x.it( 'should contain PROTOCOLS', async () =>
+    it( 'should contain PROTOCOLS', async () =>
     {
         expect( CONSTANTS.PROTOCOLS ).not.toBeNull();
     } );
