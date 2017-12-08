@@ -6,7 +6,7 @@ import { env,
     isRunningProduction,
     isRunningDevelopment,
     isRunningSpectronTest
-} from 'constants';
+} from 'appConstants';
 
 const log = require( 'electron-log' );
 // Log level

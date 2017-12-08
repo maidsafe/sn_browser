@@ -1,7 +1,7 @@
 import { session, app } from 'electron';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, PROTOCOLS,APP_INFO, isRunningPackaged } from 'constants';
+import { CONFIG, PROTOCOLS,APP_INFO, isRunningPackaged } from 'appConstants';
 
 const registerSafeProtocol = () =>
 {

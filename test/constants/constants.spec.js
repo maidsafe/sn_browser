@@ -7,7 +7,7 @@ describe( 'CONSTANTS', async () =>
         expect( CONSTANTS ).not.toBeNull();
     } );
 
-    it( 'should contain PROTOCOLS', async () =>
+    x.it( 'should contain PROTOCOLS', async () =>
     {
         expect( CONSTANTS.PROTOCOLS ).not.toBeNull();
     } );

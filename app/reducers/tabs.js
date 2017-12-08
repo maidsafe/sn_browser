@@ -2,7 +2,6 @@
 import { remote, shell } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
 import { makeValidUrl } from 'utils/urlHelpers';
-
 import initialAppState from './initialAppState.json';
 
 const initialState = initialAppState.tabs;

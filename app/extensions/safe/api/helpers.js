@@ -1,4 +1,4 @@
-import { CONFIG } from 'constants';
+import { CONFIG } from 'appConstants';
 
 const crypto = require('crypto'); // electron deps will be available inside browser
 const { Readable } = require('stream');

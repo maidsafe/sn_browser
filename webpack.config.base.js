@@ -18,16 +18,16 @@ export default {
         extensions : ['.js', '.jsx', '.json'],
         alias      :
         {
-            actions    : path.join( __dirname, 'app/actions' ),
-            appPackage : path.join( __dirname, 'package.json' ),
-            components : path.join( __dirname, 'app/components' ),
-            containers : path.join( __dirname, 'app/containers' ),
-            constants  : path.join( __dirname, 'app/constants' ),
-            extensions : path.join( __dirname, 'app/extensions' ),
-            logger     : path.join( __dirname, 'app/logger' ),
-            store      : path.join( __dirname, 'app/store' ),
-            utils      : path.join( __dirname, 'app/utils' ),
-            reducers   : path.join( __dirname, 'app/reducers' )
+            actions      : path.join( __dirname, 'app/actions' ),
+            appPackage   : path.join( __dirname, 'package.json' ),
+            components   : path.join( __dirname, 'app/components' ),
+            containers   : path.join( __dirname, 'app/containers' ),
+            appConstants : path.join( __dirname, 'app/constants' ),
+            extensions   : path.join( __dirname, 'app/extensions' ),
+            logger       : path.join( __dirname, 'app/logger' ),
+            store        : path.join( __dirname, 'app/store' ),
+            utils        : path.join( __dirname, 'app/utils' ),
+            reducers     : path.join( __dirname, 'app/reducers' )
         },
         modules : [
             path.join( __dirname, 'app' ),
@@ -78,7 +78,7 @@ export default {
                             modules        : true,
                             sourceMap      : true,
                             importLoaders  : 1,
-                            localIdentName : '[name]__[local]', //remove for now for nessie styles
+                            localIdentName : '[name]__[local]', // remove for now for nessie styles
                             // localIdentName : '[name]__[local]__[hash:base64:5]',
                         }
                     },

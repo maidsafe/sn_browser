@@ -1,6 +1,6 @@
 import Enum from 'enum';
 import path from 'path';
-import { isHot, isRunningPackaged, isRunningSpectronTest } from 'constants';
+import { isHot, isRunningPackaged, isRunningSpectronTest } from 'appConstants';
 
 
 let libLocaleModifier = '';

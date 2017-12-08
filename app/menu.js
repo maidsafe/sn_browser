@@ -5,7 +5,7 @@ import {
     activeTabForwards,
     activeTabBackwards
 } from './actions/tabs_actions';
-import { isRunningDevelopment, isHot, isRunningSpectronTest } from 'constants';
+import { isRunningDevelopment, isHot, isRunningSpectronTest } from 'appConstants';
 import { getLastClosedTab } from './reducers/tabs';
 import logger from 'logger';
 import appPackage from 'appPackage';

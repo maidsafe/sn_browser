@@ -7,7 +7,6 @@
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
   "scripts": {
-    "test2": "cross-env NODE_ENV=test jest --notify",
     "test": "cross-env NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
     "test-e2e": "yarn build && yarn test e2e",
     "test-auth": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 electron-mocha --require babel-register ./app/extensions/safe/test/setup.js  ./app/extensions/safe/test/**/*.spec.js",
@@ -104,8 +103,7 @@
       "name": "SAFE Network URL",
       "schemes": [
         "safe",
-        "safe-auth",
-        "local"
+        "safe-auth"
       ]
     },
     "win": {

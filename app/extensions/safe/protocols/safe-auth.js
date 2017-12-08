@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, PROTOCOLS, isRunningUnpacked } from 'constants';
+import { CONFIG, PROTOCOLS, isRunningUnpacked } from 'appConstants';
 
 import { session, app } from 'electron';
 /* eslint-enable import/extensions */

@@ -1,24 +1,16 @@
 import { session, shell } from 'electron';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, isRunningProduction, PROTOCOLS } from 'constants';
+import { CONFIG, isRunningProduction } from 'appConstants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
-import registerSafeLocalhostProtocol from './protocols/localhost';
 import ipc from './ffi/ipc';
 import { initAnon, initMock } from './network';
 import * as tabsActions from 'actions/tabs_actions';
-
+import { urlIsAllowed } from './utils/safeHelpers';
 import * as authAPI from './auth-api';
 
-const isForSafeServer = ( parsedUrlObject ) =>
-    parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
-
-const isForLocalServer = ( parsedUrlObject ) =>
-{
-    return parsedUrlObject.protocol === `${PROTOCOLS.SAFE_LOCAL}:` || parsedUrlObject.hostname === '127.0.0.1';
-}
 
 const blockNonSAFERequests = () =>
 {
@@ -32,9 +24,7 @@ const blockNonSAFERequests = () =>
     {
         const target = url.parse( details.url );
 
-        if ( target.protocol === 'safe:' || target.protocol === 'safe-auth:' ||
-            target.protocol === 'chrome-devtools:' || target.protocol === 'file:' ||
-            isForSafeServer(target) || isForLocalServer(target) )
+        if ( urlIsAllowed( target ) )
         {
             logger.debug( `Allowing url ${details.url}` );
 
@@ -54,7 +44,7 @@ const blockNonSAFERequests = () =>
             }
         }
 
-        logger.debug( 'Blocked req:', details.url );
+        logger.info( 'Blocked req:', details.url );
         callback( { cancel: true } );
     } );
 };
@@ -64,7 +54,6 @@ const init = async ( store ) =>
     logger.info( 'Registering SAFE Network Protocols' );
     registerSafeProtocol();
     registerSafeAuthProtocol();
-    registerSafeLocalhostProtocol();
 
     try
     {

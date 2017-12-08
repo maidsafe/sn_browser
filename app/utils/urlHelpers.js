@@ -1,5 +1,5 @@
 import { parse } from 'url';
-import appPackage from 'appPackage';
+import pkg from 'appPackage';
 
 export const removeTrailingSlash = ( url ) =>
 {
@@ -19,7 +19,7 @@ export const makeValidUrl = ( input ) =>
         return new Error( 'url must be a string');
     }
 
-    const validProtocols = appPackage.build.protocols.schemes || ['http'];
+    const validProtocols = pkg.build.protocols.schemes || ['http'];
     const parsedURL = parse( input );
 
     const inputProtocol = parsedURL.protocol ? parsedURL.protocol.replace( ':', '' ) : '';

@@ -1,5 +1,5 @@
 import Hapi from 'hapi';
-import { CONFIG, isRunningProduction } from 'constants';
+import { CONFIG, isRunningProduction } from 'appConstants';
 import inert from 'inert';
 import logger from 'logger';
 
