@@ -9,7 +9,7 @@ module.exports = {
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
         '^@containers(.*)$' : '<rootDir>/app/containers$1',
-        'appConstants'  : '<rootDir>/app/constants.js',
+        '^appConstants$'  : '<rootDir>/app/constants.js',
         '^@extensions(.*)$' : '<rootDir>/app/extensions$1',
         '^@logger(.*)$'     : '<rootDir>/app/logger$1',
         '^@reducers(.*)$'   : '<rootDir>/app/reducers$1',

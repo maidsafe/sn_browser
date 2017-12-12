@@ -252,6 +252,7 @@ const updateActiveTab = ( state, payload ) =>
 
     updatedTab = updateTabHistory( updatedTab, url );
     updatedTab = { ...updatedTab, ...payload };
+    updatedTab = { ...updatedTab, url };
 
     const updatedState = [...state];
 
@@ -273,10 +274,15 @@ const updateTab = ( state, payload ) =>
 
     let updatedTab = { ...tabToMerge };
 
-    const url = makeValidUrl( payload.url );
 
-    updatedTab = updateTabHistory( updatedTab, url );
     updatedTab = { ...updatedTab, ...payload };
+
+    if( payload.url )
+    {
+        const url = makeValidUrl( payload.url );
+        updatedTab = updateTabHistory( updatedTab, url );
+        updatedTab =  { ...updatedTab, url } ;
+    }
 
     const updatedState = [...state];
 

@@ -235,13 +235,32 @@ describe( 'tabs reducer', () =>
             expect( newState[2] ).toMatchObject(
                 {
                     ...activeTab,
-                    url   : 'changed!',
+                    url   : 'safe://changed!',
                     title : 'hi',
                     historyIndex: 1
                 }
             );
 
             expect( newState[2] ).toHaveProperty( 'history' );
+        } );
+
+        it( 'should update the active tab\'s with a safe:// url when no protocol is given', () =>
+        {
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed!', title: 'hi' }
+            } );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url   : 'safe://changed!',
+                    title : 'hi',
+                    historyIndex: 1
+                }
+            );
+
+            // expect( newState[2] ).toHaveProperty( 'history' );
         } );
     } );
 
@@ -254,13 +273,13 @@ describe( 'tabs reducer', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_TAB,
-                payload : { url: 'changed again!', title: 'hi', index: 2 }
+                payload : { url: 'changedagain!', title: 'hi', index: 2 }
             } );
             const updatedTab = newState[2];
             expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url   : 'changed again!',
+                    url   : 'safe://changedagain!',
                     title : 'hi',
                     historyIndex: 1
                 }

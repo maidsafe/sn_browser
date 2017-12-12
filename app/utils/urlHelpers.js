@@ -6,6 +6,31 @@ export const removeTrailingSlash = ( url ) =>
     return url.replace(/\/$/, "");
 }
 
+export const removeTrailingRedundancies = ( url ) =>
+{
+    let newUrl = url.replace( /\.html$/, '');
+    newUrl = newUrl.replace( /index$/, '');
+    return removeTrailingSlash( newUrl );
+}
+
+const getProtocolPosition = ( url, inputProtocol  ) =>
+{
+    const fullProto = '://';
+    const shortProto = ':';
+
+    let protocolPos;
+
+    if ( url.indexOf( fullProto ) > -1 )
+    {
+        protocolPos = url.indexOf( fullProto ) + 3;
+    }
+    else
+    {
+        protocolPos = url.indexOf( shortProto );
+    }
+
+    return protocolPos;
+}
 /**
  * Takes input and adds requisite url portions as needed, comparing to package.json defined
  * protocols, or defaulting to http
@@ -16,45 +41,38 @@ export const makeValidUrl = ( input ) =>
 {
     if( !input )
     {
-        return new Error( 'url must be a string');
+        throw new Error( 'url must be a string');
+        return '';
     }
 
     const validProtocols = pkg.build.protocols.schemes || ['http'];
     const parsedURL = parse( input );
-
     const inputProtocol = parsedURL.protocol ? parsedURL.protocol.replace( ':', '' ) : '';
+
     let finalProtocol;
     let everythingAfterProtocol = '';
+    let protocolPos = getProtocolPosition( input, inputProtocol );
 
     if ( validProtocols.includes( inputProtocol ) )
     {
-        const fullProto = '://';
-        const shortProto = ':';
-
         finalProtocol = inputProtocol;
-
-        let protocolPos;
-
-        if ( input.indexOf( fullProto ) > -1 )
-        {
-            protocolPos = input.indexOf( fullProto ) + 3;
-        }
-        else
-        {
-            protocolPos = input.indexOf( shortProto );
-        }
 
         everythingAfterProtocol = input.substring(
             protocolPos,
             input.length );
     }
-    else
+    else if ( !inputProtocol )
     {
         finalProtocol = validProtocols[0];
         everythingAfterProtocol = input;
     }
+    else if ( inputProtocol)
+    {
+        // TODO: Show error page for bad urls.
+        return removeTrailingRedundancies( input );
+    }
 
     const endUrl = `${finalProtocol}://${everythingAfterProtocol}`;
 
-    return removeTrailingSlash( endUrl );
+    return removeTrailingRedundancies( endUrl );
 };
