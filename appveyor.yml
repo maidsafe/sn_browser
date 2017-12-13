@@ -4,7 +4,7 @@ platform:
 image: Visual Studio 2015
 
 environment:
-  nodejs_version: "7"
+  nodejs_version: "8"
   matrix:
     - NODE_ENV: "dev"
       win_runtime: win-x64
