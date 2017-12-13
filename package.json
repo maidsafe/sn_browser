@@ -70,7 +70,8 @@
       "target": "dir"
     }
   },
-  "scripts": {
+  "scripts": { 
+    "mock": "cross-env NODE_ENV=dev yarn",
     "postinstall": "cd app && yarn install && cd .. && yarn rebuild",
     "build": "node ./scripts/main.js --build",
     "copy-bin:unix": "cp -f ./authenticator/src/ffi/*system_uri* ./app/node_modules/beaker-plugin-safe-authenticator/dist && cp -f ./authenticator/src/ffi/*safe_authenticator* ./app/node_modules/beaker-plugin-safe-authenticator/dist",

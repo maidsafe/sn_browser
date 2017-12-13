@@ -50,15 +50,19 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const postPackage = () => {
+  console.log('===================================================================');
+  console.log('arch: ', os.arch());
   const releaseFolderName = `${pkg.name}-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
 
-  const removeLicenseFiles = () => {
+  const removeLicenseAndLogFiles = () => {
     try {
-      const files = ['LICENSE', 'LICENSES.chromium.html'];
       const releaseFolder = path.resolve(packageDistDir, releaseFolderName);
+      const files = fs.readdirSync(path.resolve(releaseFolder));
       for (let i = 0; i < files.length; i++) {
-        const filePath = path.resolve(releaseFolder, files[i]);
-        fs.removeSync(filePath);
+        if(/LICENSE/.test(files[i]) || /.log/.test(files[i])) {
+          const filePath = path.resolve(releaseFolder, files[i]);
+          fs.removeSync(filePath);
+	}
       }
     } catch (err) {
       console.error('Remove License files error ::', err);
@@ -87,7 +91,7 @@ const postPackage = () => {
   return new Promise((resolve) => {
     renameReleaseFolder();
     addVersionFile();
-    removeLicenseFiles();
+    removeLicenseAndLogFiles();
     resolve();
   });
 };

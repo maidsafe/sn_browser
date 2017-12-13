@@ -12,7 +12,7 @@ env:
 
 
 node_js:
-- node
+- '8'
 cache:
   yarn: true
   directories:
@@ -32,22 +32,33 @@ script:
 - yarn package
 before_deploy:
 - ls dist
-- export DIST_FOLDER="$(ls dist)";
-- zip -r -q dist/$(ls dist).zip dist/$(ls dist);
-- rm -rf dist/$DIST_FOLDER
-- if [[ "$NODE_ENV" == "dev" ]]; then mv dist/{,mock-}$(ls dist);
-  fi
+- if [[ "$NODE_ENV" == "dev" ]]; then mv dist/$(ls dist) dist/mock-$(ls dist); fi
+- export APP_PKG_DIR="$(ls dist)";
+- if [[ "$NODE_ENV" == "prod" ]] && [[ "$TRAVIS_OS_NAME" == "linux"  ]]; then cp build/'SAFE Browser.crust.config' dist/$APP_PKG_DIR/safe-browser.crust.config; fi
+- if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/; fi
+- ls dist/$APP_PKG_DIR
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip $APP_PKG_DIR && cd ..; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd dist && ditto -c -k --sequesterRsrc --keepParent $APP_PKG_DIR $APP_PKG_DIR.zip  && cd ..;  fi
+- ls dist
+- rm -rf dist/$APP_PKG_DIR
 - ls dist
 - export RELEASE_DIR="$(ls dist/*.zip)";
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum dist/*.zip >> dist/$APP_PKG_DIR.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 dist/*.zip >> dist/$APP_PKG_DIR.txt; fi
+- ls dist
+- export SHA_256_SUM="$(ls dist/*.txt)";
 - echo "deploying ${RELEASE_DIR} to GitHub releases as tagged with ${TRAVIS_TAG}"
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: dNUJgCh8UYnwLH09f7W3Wu/ZhO2wPBHkFlN8Z9n5uIXm1CH/FkZl6uqBZ1LTUov6K1kqhlDTpJvKd2lbQkYkbMcLqa5LN3vrXiJX0jmTmoIz4ujSpYcKeSfMSc8S7NBI4/w+hD6Z8d+3fUwNlQgZjrSQbkabpm/zmE7ShGGu9VjmrCXXGDWOxRBLWVP6ujzLTuLns2kC1gdtz7p7ceeZ5flXe24iSc4O8TZhUJkuC3vLvUuLiTfSoWAbtwNXZ1mjIj45M7cixTpsAyBmduEH6X/o2fCy8AuFuRTNHo24u0t1jie0OyVXqyDOVVQ+cIvzvgQCiyCljbx7ZxnOKum/PJ0QchkWSX6b9R14+EIPDiNDpshBrul+SKQDWlfKYkCpcQVsEIJrENuUpynrNZx8rQ41EF1d/uqpWAgBNG78MprqZ+9jZR+XSrz7zPn4/iBH3GZjtkwlRCm81exyF6jJypVyPkUFHh0npPRzoFdk6CR3ywk0EsSa6vWR04E2HzZBvBs5MOk2UHM5G7NUAsXLo3JGp1aLsBgU0+C2SIjmyvfielEKzUgmhLZFCItAada92QcEJU/6ekjGwL1uxVO7mqVth3iRatHS7Dk6x9t92rXNPihW7h0qGpA+Skg7PXTBP6QiIPOA4fAFzpG6GcDu4RWZnUPxBQluIvcnJdPwemw=
-  file: "${RELEASE_DIR}"
+  file: 
+    - "${RELEASE_DIR}"
+    - "${SHA_256_SUM}"
   draft: true
+  prerelease: true
   tag_name: $TRAVIS_TAG
   on:
-    all_branches: true
-    tag: true
+    tags: true

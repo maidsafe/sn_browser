@@ -25,11 +25,10 @@ A browser designed to open `safe://` websites on the SAFE Network.
     yarn
     ```
 
-    If you're actively developing, you can run `NODE_ENV=dev yarn` instead in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
+    If you're actively developing, you can run `yarn mock` instead of `yarn` in order to get the `safe_client` libraries which use the `MockVault` file rather than connecting to the SAFE Network.
 
     ###### Windows-specific notes:
-    - `yarn` will attempt to use multiple processes to speed up installation, which will cause errors on Windows. So, before running `yarn`, run `yarn config set child-concurrency 1`.  
-    - You'll notice that you can't run `NODE_ENV=dev yarn` in command prompt or PowerShell. Instead, before running `yarn`, run `$env:NODE_ENV = "dev"` in PowerShell or `set NODE_ENV=dev` in command prompt. Both of which will only last as variables for the duration of that shell session.
+    - `yarn` will attempt to use multiple processes to speed up installation, which will cause errors on Windows. So, before running `yarn` or `yarn mock`, run `yarn config set child-concurrency 1`.  
 
 
 4. Build the SAFE Browser and open it:
