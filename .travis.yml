@@ -1,16 +1,12 @@
 sudo: required
 dist: trusty
-
 os:
 - osx
 - linux
-
-
 env:
-- NODE_ENV=dev
-- NODE_ENV=prod
-
-
+  matrix:
+  - NODE_ENV=dev
+  - NODE_ENV=prod
 node_js:
 - '8'
 cache:
@@ -18,8 +14,8 @@ cache:
   directories:
   - node_modules
   - app/node_modules
-  - $HOME/.electron
-  - $HOME/.cache
+  - "$HOME/.electron"
+  - "$HOME/.cache"
 language: node_js
 addons:
   apt:
@@ -34,30 +30,38 @@ before_deploy:
 - ls dist
 - if [[ "$NODE_ENV" == "dev" ]]; then mv dist/$(ls dist) dist/mock-$(ls dist); fi
 - export APP_PKG_DIR="$(ls dist)";
-- if [[ "$NODE_ENV" == "prod" ]] && [[ "$TRAVIS_OS_NAME" == "linux"  ]]; then cp build/'SAFE Browser.crust.config' dist/$APP_PKG_DIR/safe-browser.crust.config; fi
-- if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/; fi
+- if [[ "$NODE_ENV" == "prod" ]] && [[ "$TRAVIS_OS_NAME" == "linux"  ]]; then cp build/'SAFE
+  Browser.crust.config' dist/$APP_PKG_DIR/safe-browser.crust.config; fi
+- if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
+  Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
+  fi
 - ls dist/$APP_PKG_DIR
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip $APP_PKG_DIR && cd ..; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd dist && ditto -c -k --sequesterRsrc --keepParent $APP_PKG_DIR $APP_PKG_DIR.zip  && cd ..;  fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip
+  $APP_PKG_DIR && cd ..; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd dist && ditto -c -k --sequesterRsrc
+  --keepParent $APP_PKG_DIR $APP_PKG_DIR.zip  && cd ..;  fi
 - ls dist
 - rm -rf dist/$APP_PKG_DIR
 - ls dist
 - export RELEASE_DIR="$(ls dist/*.zip)";
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum dist/*.zip >> dist/$APP_PKG_DIR.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 dist/*.zip >> dist/$APP_PKG_DIR.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum dist/*.zip >> dist/$APP_PKG_DIR.txt;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 dist/*.zip >> dist/$APP_PKG_DIR.txt;
+  fi
 - ls dist
 - export SHA_256_SUM="$(ls dist/*.txt)";
 - echo "deploying ${RELEASE_DIR} to GitHub releases as tagged with ${TRAVIS_TAG}"
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key: $GITHUB_AUTH_TOKEN
-  file: 
-    - "${RELEASE_DIR}"
-    - "${SHA_256_SUM}"
+  api_key:
+    secure: E7PzJv0w5NwpZ7WCxHuhPzqty1QVzR+kZ6PoZ2OODgPfyiAE+z/hIiN77GtaKFH1q1+jOLuVJwwGnTlcKuLVaxcmN0YGocWu+07opV7srfR7U/4G6PeBHke6wTwGRvdDgNZ6G/xoTNcYoJDTfeYRRyaf1lACoenGQEqHKCA3a7oL0oI1UOGUAvDbtiqNPwbDm2gqwT/TGXzIc1LIZrFm+DGfjq1Ngelz5+RgknatXDMLH3JZOkLdB3QCVmU/03ouHjcHgQuApsUk9Dkh+bbXvmdUyVnoEmV7DKcc0CrcSiDygIhcdEMD6C2eXoHBpfoGzXmLecOeUm0se2a35CdhJeUSbMOVh2kfq+0uexCqMq3K4xWH2TD7p2cshjf/nrk2YVkeYTmiTP0HfzEuWurZh+310M1MITjlfBmgzPvzTqPMDZKPqpKIYcTiJbyt2olFnL3Yhgo5Thayhb+DTumVsuJQZpOufRD0R/shNzojw9OSOZSzeRnS6fh5UL+P4kNNOXxm6lp7NQzJXyHLifErfA+DkJb/QtCLoAdSzf5iDifBZu9vPX2Sgl+Q5aGoywtulVk1HfckGgwcDtQLM4zoHuVg1TT2a/dfoFW1FSFQrd2AEEa8B9uQSOSyXjdJoTBUN+6TF3Zc0xhd2NOBc20EWUEXSgMgLtUwvc0dtFn0OXE=
+  file:
+  - "${RELEASE_DIR}"
+  - "${SHA_256_SUM}"
   draft: true
   prerelease: true
-  tag_name: $TRAVIS_TAG
+  tag_name: "$TRAVIS_TAG"
   on:
     tags: true
