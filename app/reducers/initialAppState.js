@@ -1,4 +1,7 @@
 const initialState = {
+    ui : {
+        addressBarIsFocussed : false
+    },
     notifications : [
     ],
     tabs : [{

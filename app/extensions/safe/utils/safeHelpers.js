@@ -1,7 +1,7 @@
 import pkg from 'appPackage';
 import { CONFIG } from 'appConstants';
 import url from 'url';
-
+import logger from 'logger';
 export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 

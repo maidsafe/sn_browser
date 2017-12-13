@@ -6,9 +6,10 @@ import {
     activeTabBackwards,
     closeActiveTab,
     reopenTab
-} from './actions/tabs_actions';
+} from 'actions/tabs_actions';
+import { focusAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';
-import { getLastClosedTab } from './reducers/tabs';
+import { getLastClosedTab } from 'reducers/tabs';
 import logger from 'logger';
 import pkg from 'appPackage';
 
@@ -111,6 +112,8 @@ export default class MenuBuilder
                         {
                             const windowId = win.webContents.id;
                             this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( focusAddressBar() )
+
                         }
                     }
                 },
@@ -148,7 +151,7 @@ export default class MenuBuilder
                 {
                     label       : 'Reopen Last Tab',
                     accelerator : 'Command+Shift+T',
-                    click( item, win )
+                    click       : ( item, win ) =>
                     {
                         const lastTab = getLastClosedTab( store.getState().tabs );
                         let windowToFocus = lastTab.windowId;
@@ -165,10 +168,9 @@ export default class MenuBuilder
                 {
                     label       : 'Open Location',
                     accelerator : 'CommandOrControl+L',
-                    click( item, win )
+                    click       : ( item, win ) =>
                     {
-                        // if ( win ) win.webContents.send( 'command', 'file:focus-location' );
-                        console.log( 'TODO: Focus Nav bar' );
+                        this.store.dispatch( focusAddressBar() )
                     }
                 }
             ]

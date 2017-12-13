@@ -15,12 +15,18 @@ export default class Browser extends Component
 {
     static propTypes =
     {
-        addTab : PropTypes.func.isRequired
+        addTab            : PropTypes.func.isRequired,
+        closeTab          : PropTypes.func.isRequired,
+        closeActiveTab    : PropTypes.func.isRequired,
+        reopenTab         : PropTypes.func.isRequired,
+        addNotification   : PropTypes.func,
+        clearNotification : PropTypes.func,
+        ui                : PropTypes.object.isRequired
     }
-
 
     static defaultProps =
     {
+        addressBarIsFocussed : false
     }
 
     constructor( props )
@@ -31,7 +37,14 @@ export default class Browser extends Component
 
     componentDidMount( )
     {
-        const { addTab, closeTab, closeActiveTab, reopenTab, addNotification, clearNotification } = this.props;
+        const {
+            addTab,
+            closeTab,
+            closeActiveTab,
+            reopenTab,
+            addNotification,
+            clearNotification
+        } = this.props;
         const addressBar = this.address;
 
         const theBrowser = this;
@@ -110,6 +123,8 @@ export default class Browser extends Component
     {
         const {
             addTab,
+            focusAddressBar,
+            blurAddressBar,
             closeTab,
             tabs,
             setActiveTab,
@@ -118,8 +133,12 @@ export default class Browser extends Component
             activeTabBackwards,
             activeTabForwards,
             notifications,
-            clearNotification
+            clearNotification,
+            ui
         } = this.props;
+
+        // TODO: Set focus only for this window if current
+        // const thisAddressBarIsFocussed =
 
         // only show the first notification
         const notification = notifications[0];
@@ -146,6 +165,9 @@ export default class Browser extends Component
                 />
                 <AddressBar
                     address={ activeTabAddress }
+                    onFocus={ focusAddressBar }
+                    onBlur={ blurAddressBar }
+                    isFocussed={ ui.addressBarIsFocussed }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }

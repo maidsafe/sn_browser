@@ -44,9 +44,7 @@ export default class TabContents extends Component
 
         return (
             <div className={ styles.container }>
-                <div className={ styles.tabWindow }>
-                    { tabComponents }
-                </div>
+                { tabComponents }
             </div>
         );
     }

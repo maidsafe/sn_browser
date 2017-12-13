@@ -1,8 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-// import { Link } from 'react-router';
 
 import { Column, IconButton, Row, InputField } from 'nessie-ui';
 
@@ -13,9 +12,16 @@ const log = require( 'electron-log' );
 
 export default class AddressBar extends Component
 {
+    static propTypes =
+    {
+        onBlur  : PropTypes.func.isRequired,
+        onFocus : PropTypes.func.isRequired
+    }
+
     static defaultProps =
     {
-        address : ''
+        address    : '',
+        isFocussed : false
     }
 
     constructor( props )
@@ -30,12 +36,22 @@ export default class AddressBar extends Component
     }
 
 
-    componentWillReceiveProps( props )
+    componentWillReceiveProps( nextProps )
     {
-        if ( props.address !== this.state.address )
+        if ( nextProps.address !== this.state.address )
         {
-            this.setState( { address: props.address } );
+            this.setState( { address: nextProps.address } );
         }
+
+    }
+
+    isInFocussedWindow = ( ) =>
+    {
+        const BrowserWindow = remote.BrowserWindow;
+        const focussedWindowId = BrowserWindow.getFocusedWindow().id;
+        const currentWindowId = remote.getCurrentWindow().id;
+
+        return focussedWindowId === currentWindowId;
     }
 
     handleBack = ( tabData, event ) =>
@@ -64,7 +80,16 @@ export default class AddressBar extends Component
 
     handleFocus = ( event ) =>
     {
+        const { onFocus } = this.props;
+
+        onFocus();
         event.target.select();
+    }
+
+    handleBlur = ( ) =>
+    {
+        const { onBlur } = this.props;
+        onBlur();
     }
 
     handleKeyPress( event )
@@ -82,6 +107,7 @@ export default class AddressBar extends Component
     render()
     {
         const { address } = this.state;
+        const { isFocussed } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
@@ -119,11 +145,18 @@ export default class AddressBar extends Component
                             className={ 'js-address__input' }
                             value={ this.state.address }
                             type="text"
-                            ref={ ( c ) =>
+                            inputRef={ ( input ) =>
                             {
-                                this.addressInput = c;
+                                this.addressInput = input;
+
+                                if ( this.props.isFocussed &&
+                                    this.isInFocussedWindow() && input )
+                                {
+                                    input.focus();
+                                }
                             } }
                             onFocus={ this.handleFocus }
+                            onBlur={ this.handleBlur }
                             onChange={ this.handleChange }
                             onKeyPress={ this.handleKeyPress }
                         />

@@ -1,6 +1,7 @@
-.container,
-.tabWindow
+.container
  {
-    flex: 1 0 0%;
-    height: 100%;
+    flex: auto;
+    position: relative;
+    overflow: hidden;
+
 }
