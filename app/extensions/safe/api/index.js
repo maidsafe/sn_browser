@@ -15,13 +15,14 @@ const mdataPermissions = require( './mutable_data_permissions' );
 const nfs = require( './emulations/nfs' );
 const nfsFile = require( './emulations/nfs_file' );
 
+// NOTE: We add http here, but note that all http reqs are blocked outside of the whitelisted `localhost/127.0.0.1`;
 module.exports = [
     {
         name       : 'safeApp',
         isInternal : true,
         manifest   : app.manifest,
         methods    : app,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -29,7 +30,7 @@ module.exports = [
         isInternal : true,
         manifest   : cipherOpt.manifest,
         methods    : cipherOpt,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -37,7 +38,7 @@ module.exports = [
         isInternal : true,
         manifest   : imdata.manifest,
         methods    : imdata,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -45,7 +46,7 @@ module.exports = [
         isInternal : true,
         manifest   : crypto.manifest,
         methods    : crypto,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -53,7 +54,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoSignKeyPair.manifest,
         methods    : cryptoSignKeyPair,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -61,7 +62,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoPubSignKey.manifest,
         methods    : cryptoPubSignKey,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -69,7 +70,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoSecSignKey.manifest,
         methods    : cryptoSecSignKey,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -77,7 +78,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoEncKeyPair.manifest,
         methods    : cryptoEncKeyPair,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -85,7 +86,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoSecEncKey.manifest,
         methods    : cryptoSecEncKey,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -93,7 +94,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoPubEncKey.manifest,
         methods    : cryptoPubEncKey,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -101,7 +102,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdata.manifest,
         methods    : mdata,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -109,7 +110,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdataEntries.manifest,
         methods    : mdataEntries,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -117,7 +118,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdataMutation.manifest,
         methods    : mdataMutation,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -125,7 +126,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdataPermissions.manifest,
         methods    : mdataPermissions,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -133,7 +134,7 @@ module.exports = [
         isInternal : true,
         manifest   : nfs.manifest,
         methods    : nfs,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     },
     {
@@ -141,7 +142,7 @@ module.exports = [
         isInternal : true,
         manifest   : nfsFile.manifest,
         methods    : nfsFile,
-        protocols  : ['safe', 'localhost']
+        protocols  : ['safe', 'http']
 
     }
 ];
