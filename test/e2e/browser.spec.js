@@ -15,6 +15,10 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
+// TODO:
+// - Check for protocols/APIs? Via js injection?
+// - Check for inspect element availability
+
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
 const app = new Application( {

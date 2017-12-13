@@ -13,7 +13,8 @@ export const urlIsAllowed = ( testUrl ) =>
     const validProtocols = pkg.build.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
 
-    if ( adaptedProtocols.includes( urlObj.protocol ) || isForSafeServer( urlObj ) )
+    if ( adaptedProtocols.includes( urlObj.protocol ) || isForSafeServer( urlObj ) ||
+        urlObj.protocol === 'chrome-devtools:')
     {
         return true;
     }

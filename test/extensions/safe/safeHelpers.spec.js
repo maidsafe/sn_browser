@@ -18,6 +18,8 @@ describe( 'Safe Extension', () =>
             const ws = 'ws://google.com';
             const wsLegal = 'ws://127.0.0.1';
 
+            //actul devctools url
+            const devtools = 'chrome-devtools://devtools/bundled/inspector.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@691bdb490962d4e6ae7f25c6ab1fdd0faaf19cd0/&can_dock=&toolbarColor=rgba(223,223,223,1)&textColor=rgba(0,0,0,1)&experiments=true';
             const localhost = 'http://localhost/';
             const home = 'http://127.0.0.1/';
             const homeBad = 'http://127.0.0.1.com/';
@@ -29,6 +31,7 @@ describe( 'Safe Extension', () =>
             expect( urlIsAllowed( homeBad ) ).toBeFalsy();
 
             expect( urlIsAllowed( wsLegal ) ).toBeTruthy();
+            expect( urlIsAllowed( devtools ) ).toBeTruthy();
             expect( urlIsAllowed( localhost ) ).toBeTruthy();
             expect( urlIsAllowed( home ) ).toBeTruthy();
         } );
