@@ -58,15 +58,6 @@ export const LIB_PATH = {
 //HACK: Prevent jest dying due to no electron globals
 const execPath = ( ) =>
 {
-    if( env === 'test' )
-        return '';
-
-    return  isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' );
-}
-
-//HACK: Prevent jest dying due to no electron globals
-const execPath = ( ) =>
-{
     if( env === 'test' || inRendererProcess )
         return '';
 

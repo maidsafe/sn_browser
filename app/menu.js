@@ -7,7 +7,7 @@ import {
     closeActiveTab,
     reopenTab
 } from './actions/tabs_actions';
-import { isHot } from 'constants';
+import { isHot } from 'appConstants';
 import { getLastClosedTab } from './reducers/tabs';
 import logger from 'logger';
 import pkg from 'appPackage';

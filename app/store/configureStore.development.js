@@ -1,7 +1,7 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { hashHistory } from 'react-router';
-import { inRendererProcess } from 'constants';
+import { inRendererProcess } from 'appConstants';
 import { routerMiddleware, push } from 'react-router-redux';
 import rootReducer from '../reducers';
 import {

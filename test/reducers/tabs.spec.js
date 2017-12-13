@@ -337,7 +337,7 @@ describe( 'tabs reducer', () =>
             expect( newState[3] ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'changed!',
+                    url          : 'safe://changed!',
                     title        : 'hi',
                     historyIndex : 1
                 }

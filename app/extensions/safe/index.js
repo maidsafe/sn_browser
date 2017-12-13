@@ -4,7 +4,6 @@ import { CONFIG, isRunningProduction } from 'appConstants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
-import registerSafeLocalhostProtocol from './protocols/localhost';
 import ipc from './ffi/ipc';
 import { initAnon, initMock } from './network';
 import * as tabsActions from 'actions/tabs_actions';
@@ -58,7 +57,6 @@ const init = async ( store ) =>
     logger.info( 'Registering SAFE Network Protocols' );
     registerSafeProtocol();
     registerSafeAuthProtocol();
-    registerSafeLocalhostProtocol();
 
     try
     {

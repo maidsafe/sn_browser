@@ -103,8 +103,7 @@
       "name": "SAFE Network URL",
       "schemes": [
         "safe",
-        "safe-auth",
-        "localhost"
+        "safe-auth"
       ]
     },
     "win": {

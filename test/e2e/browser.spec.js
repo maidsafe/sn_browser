@@ -101,7 +101,7 @@ describe( 'main window', () =>
         const parsedUrl = urlParse( clientUrl );
 
         // TODO fix slash setup after removing address reducer
-        expect( address ).toBe( 'safe://example.com/' );
+        expect( address ).toBe( 'safe://example.com' );
         expect( parsedUrl.protocol ).toBe( 'safe:' );
 
     } );
@@ -179,7 +179,7 @@ describe( 'main window', () =>
         expect( clientUrl ).toBe( 'safe://example.com/' );
 
 
-        expect( address ).toBe( 'safe://example.com/' );
+        expect( address ).toBe( 'safe://example.com' );
     } );
 
 
