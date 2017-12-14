@@ -18,7 +18,7 @@ export const inRendererProcess = typeof window !== 'undefined';
 
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
-const preloadLocation = isRunningUnpacked ? '' : `../`;
+const preloadLocation = isRunningUnpacked ? '' : '../';
 global.preloadFile = path.resolve( __dirname, preloadLocation, 'webPreload.js' );
 
 let safeNodeAppPathModifier = '';
@@ -29,9 +29,15 @@ if ( isRunningPackaged )
 }
 
 export const PROTOCOLS = {
-    SAFE       : 'safe',
-    SAFE_AUTH  : 'safe-auth',
-    SAFE_LOGS  : 'safe-logs'
+    SAFE           : 'safe',
+    SAFE_AUTH      : 'safe-auth',
+    SAFE_LOGS      : 'safe-logs',
+    INTERNAL_PAGES : 'peruse'
+};
+
+export const INTERNAL_PAGES = {
+    HISTORY : 'history',
+    BOOKMARKS : 'bookmarks'
 };
 
 export const CONFIG = {
@@ -55,21 +61,23 @@ export const LIB_PATH = {
     }
 };
 
-//HACK: Prevent jest dying due to no electron globals
+// HACK: Prevent jest dying due to no electron globals
 const execPath = ( ) =>
 {
-    if( env === 'test' || inRendererProcess )
+    if ( env === 'test' || inRendererProcess )
+    {
         return '';
+    }
 
-    return  isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' );
-}
+    return isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` : app.getPath( 'exe' );
+};
 
 const appInfo = {
     info : {
-        id     : pkg.identifier,
-        scope  : null,
-        name   : pkg.productName,
-        vendor : pkg.author.name,
+        id             : pkg.identifier,
+        scope          : null,
+        name           : pkg.productName,
+        vendor         : pkg.author.name,
         // customSearchPath : isRunningUnpacked ? process.execPath : app.getPath( 'exe' )
         customExecPath : execPath()
     },
@@ -97,7 +105,7 @@ if ( isRunningUnpacked && process.platform === 'darwin' )
 {
     appInfo.info.bundle = 'com.github.electron';
 }
-else if( process.platform === 'darwin' )
+else if ( process.platform === 'darwin' )
 {
     appInfo.info.bundle = 'com.electron.peruse';
 }

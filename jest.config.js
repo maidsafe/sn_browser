@@ -2,10 +2,17 @@ module.exports = {
     verbose                : true,
     testMatch              : ['**/test/**/*'],
     moduleFileExtensions   : ['js', 'jsx'],
+    setupFiles   : ['<rootDir>/test/setup.js'],
+    // unmockedModulePathPatterns: ["node_modules/babel-core"],
     testPathIgnorePatterns : ['node_modules', '<rootDir>/app/extensions'],
     moduleDirectories      : ['app', 'test', 'node_modules', 'app/node_modules'],
     moduleNameMapper       : {
+        "electron": "<rootDir>/mocks/electron.js",
+        "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
+        "<rootDir>/mocks/fileMock.js",
+        "\\.(css|scss)$": "<rootDir>/mocks/fileMock.js",
         '^appPackage$'      : '<rootDir>/package.json',
+        // "\\.(css)$": "<rootDir>/node_modules/jest-css-modules",
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
         '^@containers(.*)$' : '<rootDir>/app/containers$1',

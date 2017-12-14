@@ -18,6 +18,8 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 // TODO:
 // - Check for protocols/APIs? Via js injection?
 // - Check for inspect element availability
+// - Check history
+// - Check bookmarks
 
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.

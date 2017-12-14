@@ -14,8 +14,11 @@ export default class AddressBar extends Component
 {
     static propTypes =
     {
-        onBlur  : PropTypes.func.isRequired,
-        onFocus : PropTypes.func.isRequired
+        isBookmarked   : PropTypes.bool.isRequired,
+        addBookmark    : PropTypes.func.isRequired,
+        removeBookmark : PropTypes.func.isRequired,
+        onBlur         : PropTypes.func.isRequired,
+        onFocus        : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -42,7 +45,6 @@ export default class AddressBar extends Component
         {
             this.setState( { address: nextProps.address } );
         }
-
     }
 
     isInFocussedWindow = ( ) =>
@@ -52,6 +54,20 @@ export default class AddressBar extends Component
         const currentWindowId = remote.getCurrentWindow().id;
 
         return focussedWindowId === currentWindowId;
+    }
+
+    handleBookmarking = ( tabData, event ) =>
+    {
+        const { address, addBookmark, removeBookmark, isBookmarked } = this.props;
+
+        if ( isBookmarked )
+        {
+            removeBookmark( { url: address } );
+        }
+        else
+        {
+            addBookmark( { url: address } );
+        }
     }
 
     handleBack = ( tabData, event ) =>
@@ -107,7 +123,7 @@ export default class AddressBar extends Component
     render()
     {
         const { address } = this.state;
-        const { isFocussed } = this.props;
+        const { isFocussed, isBookmarked } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
@@ -160,6 +176,18 @@ export default class AddressBar extends Component
                             onChange={ this.handleChange }
                             onKeyPress={ this.handleKeyPress }
                         />
+                    </Column>
+                    <Column size="content">
+                        <Row gutters="S">
+                            <Column>
+                                <IconButton
+                                    iconTheme={ isBookmarked ? 'control' : 'navigation' }
+                                    iconType="preview"
+                                    iconSize="L"
+                                    onClick={ this.handleBookmarking }
+                                />
+                            </Column>
+                        </Row>
                     </Column>
                 </Row>
             </div>

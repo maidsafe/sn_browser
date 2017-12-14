@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import * as TabActions from 'actions/tabs_actions';
 import * as NotificationActions from 'actions/notification_actions';
 import * as UiActions from 'actions/ui_actions';
+import * as BookmarksActions from 'actions/bookmarks_actions';
 import Browser from 'components/Browser';
 
 class BrowserWindow extends Component
@@ -22,6 +23,7 @@ class BrowserWindow extends Component
 function mapStateToProps( state )
 {
     return {
+        bookmarks : state.bookmarks,
         notifications : state.notifications,
         tabs          : state.tabs,
         ui            : state.ui
@@ -32,6 +34,7 @@ function mapDispatchToProps( dispatch )
 {
     const actions =
         {
+            ...BookmarksActions,
             ...NotificationActions,
             ...TabActions,
             ...UiActions

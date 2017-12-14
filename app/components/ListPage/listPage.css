@@ -1,0 +1,37 @@
+.container
+{
+    width: 100%;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: rgba( 246, 246, 246, 1);
+    /* border:             1px solid rgba( 127, 127, 127, 1); */
+    display:            flex;
+    flex:  none;
+    align-content: center;
+    /* justify-content: space-around; */
+    box-sizing: border-box;
+    border-right: 0;
+
+}
+
+
+/* // TODO: Use compesition here */
+.tab
+{
+    z-index:           0;
+    display:           flex;
+    position:          absolute;
+    background-color:  white;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+
+
+.activeTab
+{
+    composes: tab;
+    z-index: 1;
+}

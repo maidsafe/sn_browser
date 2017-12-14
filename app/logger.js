@@ -35,48 +35,52 @@ if( log.transports )
     log.transports.file.maxSize = 5 * 1024 * 1024;
 }
 
-// TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
-log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-log.info( `      Started with node env: ${env}` );
-log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-
-log.verbose( 'Running with derived constants:' );
-log.verbose( '' );
-log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
-log.verbose( 'isRunningPackaged?', isRunningPackaged );
-log.verbose( 'isRunningProduction?', isRunningProduction );
-log.verbose( 'isRunningDevelopment?', isRunningDevelopment );
-log.verbose( 'isRunningSpectronTest?', isRunningSpectronTest );
-log.verbose( '' );
-log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-log.verbose( '' );
-
-process.on( 'uncaughtTypeError', ( err ) =>
+// HACK: for jest
+if( log.info && log.verbose )
 {
-    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    log.error( 'whoops! there was an uncaught type error:' );
-    log.error( err );
-    log.error( err.file );
-    log.error( err.line );
-    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-} );
+    // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
+    log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    log.info( `      Started with node env: ${env}` );
+    log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
 
-process.on( 'uncaughtException', ( err ) =>
-{
-    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    log.error( 'whoops! there was an uncaught error:' );
-    log.error( err );
-    log.error( err.file );
-    log.error( err.line );
-    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-} );
+    log.verbose( 'Running with derived constants:' );
+    log.verbose( '' );
+    log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
+    log.verbose( 'isRunningPackaged?', isRunningPackaged );
+    log.verbose( 'isRunningProduction?', isRunningProduction );
+    log.verbose( 'isRunningDevelopment?', isRunningDevelopment );
+    log.verbose( 'isRunningSpectronTest?', isRunningSpectronTest );
+    log.verbose( '' );
+    log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    log.verbose( '' );
 
-process.on( 'unhandledRejection', ( reason, p ) =>
-{
-    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    log.error( 'Unhandled Rejection. Reason:', reason.message || reason );
-    log.error( 'At:', p );
-    log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-} );
+    process.on( 'uncaughtTypeError', ( err ) =>
+    {
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+        log.error( 'whoops! there was an uncaught type error:' );
+        log.error( err );
+        log.error( err.file );
+        log.error( err.line );
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    } );
+
+    process.on( 'uncaughtException', ( err ) =>
+    {
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+        log.error( 'whoops! there was an uncaught error:' );
+        log.error( err );
+        log.error( err.file );
+        log.error( err.line );
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    } );
+
+    process.on( 'unhandledRejection', ( reason, p ) =>
+    {
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+        log.error( 'Unhandled Rejection. Reason:', reason.message || reason );
+        log.error( 'At:', p );
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    } );
+}
 
 export default log;

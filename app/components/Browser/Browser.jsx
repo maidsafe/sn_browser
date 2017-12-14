@@ -15,6 +15,11 @@ export default class Browser extends Component
 {
     static propTypes =
     {
+        bookmarks         : PropTypes.array,
+        addBookmark       : PropTypes.func.isRequired,
+        removeBookmark    : PropTypes.func.isRequired,
+        focusAddressBar   : PropTypes.func.isRequired,
+        blurAddressBar    : PropTypes.func.isRequired,
         addTab            : PropTypes.func.isRequired,
         closeTab          : PropTypes.func.isRequired,
         closeActiveTab    : PropTypes.func.isRequired,
@@ -26,7 +31,8 @@ export default class Browser extends Component
 
     static defaultProps =
     {
-        addressBarIsFocussed : false
+        addressBarIsFocussed : false,
+        bookmarks : []
     }
 
     constructor( props )
@@ -123,6 +129,9 @@ export default class Browser extends Component
     {
         const {
             addTab,
+            bookmarks,
+            addBookmark,
+            removeBookmark,
             focusAddressBar,
             blurAddressBar,
             closeTab,
@@ -153,6 +162,8 @@ export default class Browser extends Component
 
         const activeTabAddress = activeTab.url;
 
+        const isBookmarked = !!bookmarks.find( bookmark => bookmark.url === activeTabAddress );
+
         return (
             <div className={ styles.container }>
                 <TabBar
@@ -167,6 +178,9 @@ export default class Browser extends Component
                     address={ activeTabAddress }
                     onFocus={ focusAddressBar }
                     onBlur={ blurAddressBar }
+                    addBookmark={ addBookmark }
+                    isBookmarked={ isBookmarked }
+                    removeBookmark={ removeBookmark }
                     isFocussed={ ui.addressBarIsFocussed }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
@@ -186,6 +200,7 @@ export default class Browser extends Component
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
                     tabs={ windowTabs }
+                    bookmarks={ bookmarks }
                     ref={ ( c ) =>
                     {
                         this.tabContents = c;

@@ -1,7 +1,7 @@
 // @flow
+import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { remote, ipcRenderer } from 'electron';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';

@@ -1,17 +1,20 @@
 const initialState = {
-    ui : {
-        addressBarIsFocussed : false
-    },
+    bookmarks : [ ],
     notifications : [
     ],
     tabs : [{
-        url          : 'safe-auth://home/',
-        history      : ['safe-auth://home/'],
+        url          : 'peruse:bookmarks',
+        // url          : 'safe-auth://home/',
+        history      : ['peruse:bookmarks'],
+        // history      : ['safe-auth://home/'],
         historyIndex : 0,
         isActiveTab  : true,
         isClosed     : false,
         windowId     : 1
-    }]
+    }],
+    ui : {
+        addressBarIsFocussed : false
+    }
 };
 
 export default initialState;
