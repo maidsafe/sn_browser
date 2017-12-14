@@ -6,11 +6,11 @@ image: Visual Studio 2015
 environment:
   nodejs_version: "8"
   matrix:
-    - NODE_ENV: "dev"
+    - NODE_ENV: "prod"
       win_runtime: win-x64
       arch: x64
       plat: win32
-    - NODE_ENV: "prod"
+    - NODE_ENV: "dev"
       win_runtime: win-x64
       arch: x64
       plat: win32
@@ -20,18 +20,19 @@ install:
   - node --version
   - npm --version
   - yarn --version
+  - yarn config set child-concurrency 1
+  - yarn
   - yarn add windows-build-tools --global
-  - yarn --ignore-optional
 
 
 build_script:
   - node --version
   - yarn --version
+
+
+before_deploy:
   - yarn run build
   - yarn run package
-
-
-after_build:
   - FOR /F %%i IN ('dir dist /b') DO SET APP_PKG_DIR=%%i
   - if [%NODE_ENV%]==[dev] (
       ren .\dist\%APP_PKG_DIR% mock-%APP_PKG_DIR%
@@ -39,8 +40,19 @@ after_build:
   - FOR /F %%G IN ('dir dist /b') DO SET APP_PKG_DIR=%%G
   - echo %APP_PKG_DIR%
   - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
-  - if [%NODE_ENV%]==[prod] (
-      copy .\build\"SAFE Browser.crust.config" .\dist\%APP_PKG_DIR%\safe-browser.crust.config)
+  - ps: >-
+      If ($env:NODE_ENV -Match "prod") {
+        $TOKEN="$env:GITHUB_ACCESS_TOKEN"
+        $OWNER="MaidSafe"
+        $REPO="release_config"
+        $REPO_PATH="safe_authenticator/safe_browser.crust.config"
+        $FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+        $APP_DIR="$env:APP_PKG_DIR"
+        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        $headers.Add("Authorization", "token $TOKEN")
+        $headers.Add("Accept", 'application/vnd.github.v3.raw')
+        Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\dist\$APP_DIR\safe-browser.crust.config"
+      }
   - copy .\build\log.toml .\dist\%APP_PKG_DIR%\
   - ren .\dist\%APP_PKG_DIR%\"SAFE Browser.exe" safe-browser.exe
   - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
@@ -62,8 +74,7 @@ deploy:
   tag: $(appveyor_repo_tag_name)
   description: 'SAFE Browser'
   provider: GitHub
-  auth_token:
-    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+  auth_token: $(GITHUB_ACCESS_TOKEN)
   draft: true
   prerelease: true
   on:

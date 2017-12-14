@@ -23,15 +23,23 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-script:
+before_deploy:
 - yarn build
 - yarn package
-before_deploy:
 - ls dist
 - if [[ "$NODE_ENV" == "dev" ]]; then mv dist/$(ls dist) dist/mock-$(ls dist); fi
 - export APP_PKG_DIR="$(ls dist)";
-- if [[ "$NODE_ENV" == "prod" ]] && [[ "$TRAVIS_OS_NAME" == "linux"  ]]; then cp build/'SAFE
-  Browser.crust.config' dist/$APP_PKG_DIR/safe-browser.crust.config; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export OUTPUT_PATH=dist/$APP_PKG_DIR/safe-browser.crust.config;
+  else export OUTPUT_PATH=dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/'SAFE
+  Browser.crust.config'; fi
+- echo $OUTPUT_PATH
+- export TOKEN="$GITHUB_ACCESS_TOKEN"
+- export OWNER="MaidSafe" REPO="release_config"
+- export REPO_PATH="safe_authenticator/safe_browser.crust.config"
+- export FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+- if [[ "$NODE_ENV" == "prod" ]]; then 
+  curl "$FILE" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
+  --output "$OUTPUT_PATH"; fi
 - if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
   Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
@@ -55,8 +63,7 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: E7PzJv0w5NwpZ7WCxHuhPzqty1QVzR+kZ6PoZ2OODgPfyiAE+z/hIiN77GtaKFH1q1+jOLuVJwwGnTlcKuLVaxcmN0YGocWu+07opV7srfR7U/4G6PeBHke6wTwGRvdDgNZ6G/xoTNcYoJDTfeYRRyaf1lACoenGQEqHKCA3a7oL0oI1UOGUAvDbtiqNPwbDm2gqwT/TGXzIc1LIZrFm+DGfjq1Ngelz5+RgknatXDMLH3JZOkLdB3QCVmU/03ouHjcHgQuApsUk9Dkh+bbXvmdUyVnoEmV7DKcc0CrcSiDygIhcdEMD6C2eXoHBpfoGzXmLecOeUm0se2a35CdhJeUSbMOVh2kfq+0uexCqMq3K4xWH2TD7p2cshjf/nrk2YVkeYTmiTP0HfzEuWurZh+310M1MITjlfBmgzPvzTqPMDZKPqpKIYcTiJbyt2olFnL3Yhgo5Thayhb+DTumVsuJQZpOufRD0R/shNzojw9OSOZSzeRnS6fh5UL+P4kNNOXxm6lp7NQzJXyHLifErfA+DkJb/QtCLoAdSzf5iDifBZu9vPX2Sgl+Q5aGoywtulVk1HfckGgwcDtQLM4zoHuVg1TT2a/dfoFW1FSFQrd2AEEa8B9uQSOSyXjdJoTBUN+6TF3Zc0xhd2NOBc20EWUEXSgMgLtUwvc0dtFn0OXE=
+  api_key: $GITHUB_ACCESS_TOKEN
   file:
   - "${RELEASE_DIR}"
   - "${SHA_256_SUM}"
