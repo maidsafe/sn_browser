@@ -16,14 +16,16 @@ export default class Browser extends Component
     static propTypes =
     {
         bookmarks         : PropTypes.array,
+        notifications     : PropTypes.array,
+        tabs              : PropTypes.array,
         addBookmark       : PropTypes.func.isRequired,
         removeBookmark    : PropTypes.func.isRequired,
         focusAddressBar   : PropTypes.func.isRequired,
         blurAddressBar    : PropTypes.func.isRequired,
-        addTab            : PropTypes.func.isRequired,
-        closeTab          : PropTypes.func.isRequired,
-        closeActiveTab    : PropTypes.func.isRequired,
-        reopenTab         : PropTypes.func.isRequired,
+        addTab            : PropTypes.func,
+        closeTab          : PropTypes.func,
+        closeActiveTab    : PropTypes.func,
+        reopenTab         : PropTypes.func,
         addNotification   : PropTypes.func,
         clearNotification : PropTypes.func,
         ui                : PropTypes.object.isRequired
@@ -32,7 +34,9 @@ export default class Browser extends Component
     static defaultProps =
     {
         addressBarIsFocussed : false,
-        bookmarks : []
+        tabs                 : [],
+        bookmarks            : [],
+        notifications        : []
     }
 
     constructor( props )

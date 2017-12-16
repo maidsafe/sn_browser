@@ -4,6 +4,7 @@
       "targets": { "node": 8 },
       "useBuiltIns": true
     }],
+    "stage-0",
     "react"
   ],
   "plugins": ["add-module-exports" ],
@@ -30,6 +31,7 @@
               "targets": { "node": 8 },
               "useBuiltIns": true
             }],
+          "stage-0",
           "es2015",
           "react"
       ],

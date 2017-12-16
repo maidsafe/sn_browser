@@ -7,11 +7,23 @@ import styles from './tabBar.css';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
 import logger from 'logger';
+import { CLASSES } from 'appConstants';
+
 export default class TabBar extends Component
 {
+    static propTypes =
+    {
+        tabInFocus   : PropTypes.number.isRequired,
+        tabs         : PropTypes.array.isRequired,
+        setActiveTab : PropTypes.func.isRequired,
+        addTab       : PropTypes.func.isRequired,
+        closeTab     : PropTypes.func.isRequired
+    }
+
     static defaultProps =
     {
-        tabInFocus : 0
+        tabInFocus : 0,
+        tabs       : []
     }
 
 
@@ -24,7 +36,6 @@ export default class TabBar extends Component
         };
 
         this.handleAddTabClick = ::this.handleAddTabClick;
-
     }
 
 
@@ -54,6 +65,41 @@ export default class TabBar extends Component
         addTab( { url: newTabUrl, isActiveTab: true, windowId: remote.getCurrentWindow().webContents.id } );
     }
 
+    getTabs = ( ) =>
+    {
+        const { tabs } = this.props;
+
+        return tabs.map( ( tab, i ) =>
+        {
+            if ( tab.isClosed )
+            {
+                return;
+            }
+
+            const isActiveTab = tab.isActiveTab;
+            let tabStyleClass = styles.tab;
+            const tabData = { key: i, url: tab.url };
+
+            if ( isActiveTab )
+            {
+                tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
+            }
+
+            return ( <div
+                key={ i }
+                className={ `${tabStyleClass} ${CLASSES.TAB}` }
+                onClick={ this.handleTabClick.bind( this, tabData ) }
+            >
+                <span className={ styles.tabText }>{ tab.title || 'New Tab' }</span>
+                <MdClose
+                    className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
+                    onClick={ this.handleTabClose.bind( this, tabData ) }
+                    title="Close"
+                />
+            </div> );
+        } );
+    }
+
     render()
     {
         const { tabs } = this.props;
@@ -62,38 +108,13 @@ export default class TabBar extends Component
             <div className={ styles.container }>
                 <div className={ styles.tabBar }>
                     {
-                        tabs.map( ( tab, i ) =>
-                        {
-                            if ( tab.isClosed )
-                            {
-                                return;
-                            }
-
-                            const isActiveTab = tab.isActiveTab;
-                            let tabStyleClass = styles.tab;
-                            const tabData = { key: i, url: tab.url };
-                            if ( isActiveTab )
-                            {
-                                tabStyleClass = `${styles.activeTab} js-tabBar__active-tab`;
-                            }
-                            return ( <div
-                                key={ i }
-                                className={ `${tabStyleClass} js-tab` }
-                                onClick={ this.handleTabClick.bind( this, tabData ) }
-                            >
-                                <span className={ styles.tabText }>{ tab.title || 'New Tab' }</span>
-                                <MdClose
-                                    className={ `${styles.tabCloseButton} js-tabBar__close-tab` }
-                                    onClick={ this.handleTabClose.bind( this, tabData ) }
-                                    title="Close"
-                                />
-                            </div> );
-                        } )
+                        this.getTabs()
                     }
-                    <div className={ `${styles.addTab} js-tabBar__add-tab` } onClick={ this.handleAddTabClick.bind( this ) }>
-                            <MdAdd  className={ styles.tabAddButton }
-                                    title="New Tab"
-                            />
+                    <div className={ `${styles.addTab} ${CLASSES.ADD_TAB}` } onClick={ this.handleAddTabClick.bind( this ) }>
+                        <MdAdd
+                            className={ styles.tabAddButton }
+                            title="New Tab"
+                        />
                     </div>
                 </div>
             </div>

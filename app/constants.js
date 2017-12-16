@@ -36,7 +36,7 @@ export const PROTOCOLS = {
 };
 
 export const INTERNAL_PAGES = {
-    HISTORY : 'history',
+    HISTORY   : 'history',
     BOOKMARKS : 'bookmarks'
 };
 
@@ -132,4 +132,12 @@ export const SAFE = {
     SAFE_APP_ERROR_CODES : {
         ERR_AUTH_DENIED : -200,
     }
+};
+
+
+export const CLASSES = {
+    ACTIVE_TAB : 'js-tabBar__active-tab',
+    TAB        : 'js-tab',
+    ADD_TAB    : 'js-tabBar__add-tab',
+    CLOSE_TAB  : 'js-tabBar__close-tab'
 };
