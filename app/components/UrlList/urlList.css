@@ -1,0 +1,11 @@
+.table
+{
+    max-width: 800px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    align-content: center;
+    box-sizing: border-box;
+    border-right: 0;
+    margin: 0 auto;
+
+}

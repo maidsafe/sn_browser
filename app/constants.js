@@ -139,5 +139,6 @@ export const CLASSES = {
     ACTIVE_TAB : 'js-tabBar__active-tab',
     TAB        : 'js-tab',
     ADD_TAB    : 'js-tabBar__add-tab',
-    CLOSE_TAB  : 'js-tabBar__close-tab'
+    CLOSE_TAB  : 'js-tabBar__close-tab',
+    PERUSE_PAGE : 'js-peruse__page'
 };

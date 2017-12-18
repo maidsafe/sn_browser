@@ -6,8 +6,9 @@ import { Link } from 'react-router';
 import styles from './tabContents.css';
 import Tab from 'components/Tab';
 import { PROTOCOLS, INTERNAL_PAGES } from 'appConstants';
-import History from 'components/History';
-import ListPage from 'components/ListPage';
+import History from 'components/PerusePages/History';
+import Bookmarks from 'components/PerusePages/Bookmarks';
+import UrlList from 'components/UrlList';
 
 export default class TabContents extends Component
 {
@@ -54,10 +55,9 @@ export default class TabContents extends Component
                         }
                         case INTERNAL_PAGES.BOOKMARKS :
                         {
-                            return ( <ListPage
-                                list={ bookmarks }
+                            return ( <Bookmarks
+                                bookmarks={ bookmarks }
                                 key={ i }
-                                title="Bookmarks"
                                 isActiveTab={ isActiveTab }
                                 ref={ ( c ) => {
                                     if ( isActiveTab )
@@ -70,7 +70,7 @@ export default class TabContents extends Component
 
                         default :
                         {
-                            return <div>Sorry what?</div>;
+                            return <div key="sorry">Sorry what?</div>;
                         }
                     }
                 }

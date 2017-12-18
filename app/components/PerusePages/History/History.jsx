@@ -4,9 +4,10 @@ import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
 
-import { Column, Page, H1, Row, Text } from 'nessie-ui';
-
+import { Column, Page, PageHeader, H1, Row, Text } from 'nessie-ui';
+import UrlList from 'components/UrlList';
 import styles from './history.css';
+import { CLASSES } from 'appConstants';
 
 const log = require( 'electron-log' );
 
@@ -39,33 +40,19 @@ export default class History extends Component
     {
         const { tabs, isActiveTab } = this.props;
 
-        const tabsHistory = [];
+        const historyList = [];
 
         tabs.forEach( ( tab, i ) =>
         {
             tab.history.forEach( ( history, ii ) =>
             {
-                const historyItem = (
-                    <Row
-                        align="left"
-                        verticalAlign="middle"
-                        gutters="S"
-                        key={ i + ii }
-                    >
-                        <Column>
-                            <Text>
-                                <a href={ history } >
-                                    { history }
-                                </a>
-                            </Text>
-                        </Column>
-                    </Row>
-                );
+                const historyItem = history;
 
-                tabsHistory.push( historyItem );
+                historyList.push( historyItem );
             } );
         } );
 
+        const urlList = ( <UrlList list={ historyList } /> );
 
         let moddedClass = styles.tab;
         if ( isActiveTab )
@@ -77,9 +64,13 @@ export default class History extends Component
         return (
             <div className={ moddedClass } >
                 <div className={ `${styles.container} js-history` } >
-                    <Page>
-                        <H1>History</H1>
-                        { tabsHistory }
+                    <Page
+                        className={ `${CLASSES.PERUSE_PAGE} ${styles.page}` }
+                    >
+                        <PageHeader>
+                            <H1 title="History" />
+                        </PageHeader>
+                        { urlList }
                     </Page>
 
                 </div>

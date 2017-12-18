@@ -3,10 +3,10 @@ const initialState = {
     notifications : [
     ],
     tabs : [{
-        // url          : 'peruse:bookmarks',
-        url          : 'safe-auth://home/',
-        // history      : ['peruse:bookmarks'],
-        history      : ['safe-auth://home/'],
+        url          : 'peruse:history',
+        // url          : 'safe-auth://home/',
+        history      : ['peruse:history'],
+        // history      : ['safe-auth://home/'],
         historyIndex : 0,
         isActiveTab  : true,
         isClosed     : false,
