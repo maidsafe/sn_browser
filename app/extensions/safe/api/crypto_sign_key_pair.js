@@ -30,10 +30,10 @@ module.exports.getPubSignKey = (signKeyPairHandle) => getObj(signKeyPairHandle)
  *
  * @returns {Promise<SecSignKeyHandle>}
  *
- * @example // Getting the public key from a signing key pair:
+ * @example // Getting the secret key from a signing key pair:
  * window.safeCrypto.generateSignKeyPair(appHandle)
  *    .then((signKeyPairHandle) => window.safeCryptoSignKeyPair.getSecSignKey(signKeyPairHandle))
- *    .then((secSignKeyHandle) => window.safeCryptoPubSignKey.getRaw(secSignKeyHandle))
+ *    .then((secSignKeyHandle) => window.safeCryptoSecSignKey.getRaw(secSignKeyHandle))
  *    .then((rawSk) => console.log('Secret signing key: ', rawSk.buffer.toString('hex')));
  */
 module.exports.getSecSignKey = (signKeyPairHandle) => getObj(signKeyPairHandle)
