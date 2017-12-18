@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
 
-import { Page, H1 } from 'nessie-ui';
+import { Page, H1, PageHeader } from 'nessie-ui';
 import UrlList from 'components/UrlList';
 import styles from './bookmarks.css';
 import { CLASSES } from 'appConstants';

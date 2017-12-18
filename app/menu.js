@@ -190,6 +190,28 @@ export default class MenuBuilder
         const subMenuView = {
             label   : 'View',
             submenu : [
+                { label       : 'Bookmarks',
+                    accelerator : 'CommandOrControl+Shift+B',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
+                        }
+                    } },
+                { label       : 'History',
+                    accelerator : 'CommandOrControl+Y',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
+                        }
+                    } },
+
+                { type: 'separator' },
                 { label       : 'Reload',
                     accelerator : 'Command+R',
                     click       : ( item, win ) =>

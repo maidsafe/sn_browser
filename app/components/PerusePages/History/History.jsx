@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // import { Link } from 'react-router';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-
+import _ from 'lodash';
 import { Column, Page, PageHeader, H1, Row, Text } from 'nessie-ui';
 import UrlList from 'components/UrlList';
 import styles from './history.css';
@@ -33,14 +33,11 @@ export default class History extends Component
         return focussedWindowId === currentWindowId;
     }
 
-    // TODO: uniq. the array. Then, we need sort. for sort, we need time for each url....
-
-
     render()
     {
         const { tabs, isActiveTab } = this.props;
 
-        const historyList = [];
+        let historyList = [];
 
         tabs.forEach( ( tab, i ) =>
         {
@@ -52,9 +49,17 @@ export default class History extends Component
             } );
         } );
 
+        const ignoreList = ['about:blank', 'peruse://history', 'peruse://bookmarks']
+
+        // TODO: uniq by object props, so will be less harsh once we have title etc.
+        historyList = _.uniq( historyList );
+
+        historyList = historyList.filter( url => ! ignoreList.includes( url ) )
+
         const urlList = ( <UrlList list={ historyList } /> );
 
         let moddedClass = styles.tab;
+
         if ( isActiveTab )
         {
             moddedClass = styles.activeTab;

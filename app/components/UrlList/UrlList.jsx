@@ -51,15 +51,17 @@ export default class UrlList extends Component
                 className={ styles.table }
                 isZebra
             >
-                <TableRow>
-                    <TableCell isHeader align="left">
-                        Url
-                    </TableCell>
-                    {/* <TableCell isHeader={ true } align="left">
-                        Date
-                    </TableCell> */}
-                </TableRow>
-                {parsedList}
+                { parsedList.length &&
+                    <TableRow>
+                        <TableCell isHeader align="left">
+                            Url
+                        </TableCell>
+                    </TableRow>
+                }
+                { parsedList }
+                { ! parsedList.length &&
+                    <TableCell>{'Nothing to see here yet'}</TableCell>
+                }
             </Table>
         );
     }
