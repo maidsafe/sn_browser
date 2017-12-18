@@ -17,6 +17,11 @@ export default function notifications( state: array = initialState, action )
             const notification = payload;
             return [ ...state, notification ];
         }
+        case TYPES.ADD_LOCAL_NOTIFICATION :
+        {
+            const notification = payload;
+            return [ ...state, notification ];
+        }
         case TYPES.CLEAR_NOTIFICATION :
         {
             let updatedState = [ ...state ];

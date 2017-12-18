@@ -16,11 +16,13 @@ describe( 'Browser', () =>
     beforeEach( () =>
     {
         props = {
-            ui              : {},
-            addBookmark     : jest.fn(),
-            removeBookmark  : jest.fn(),
-            focusAddressBar : jest.fn(),
-            blurAddressBar  : jest.fn()
+            ui                   : {},
+            addBookmark          : jest.fn(),
+            removeBookmark       : jest.fn(),
+            focusAddressBar      : jest.fn(),
+            blurAddressBar       : jest.fn(),
+            addNotification      : jest.fn(),
+            addLocalNotification : jest.fn()
         };
         wrapper = shallow( <Browser { ...props } /> );
         instance = wrapper.instance();

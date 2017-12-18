@@ -26,7 +26,8 @@ export default class Browser extends Component
         closeTab          : PropTypes.func,
         closeActiveTab    : PropTypes.func,
         reopenTab         : PropTypes.func,
-        addNotification   : PropTypes.func,
+        // addNotification   : PropTypes.func.isRequired,
+        addLocalNotification   : PropTypes.func.isRequired,
         clearNotification : PropTypes.func,
         ui                : PropTypes.object.isRequired
     }
@@ -52,13 +53,14 @@ export default class Browser extends Component
             closeTab,
             closeActiveTab,
             reopenTab,
-            addNotification,
+            // use local notifications, keeps auth in one relevant window
+            addLocalNotification,
             clearNotification
         } = this.props;
         const addressBar = this.address;
 
         const theBrowser = this;
-        setupAuthHandling( addNotification, clearNotification );
+        setupAuthHandling( addLocalNotification, clearNotification );
 
         // this is mounted but its not show?
         this.setState( { windowId: remote.getCurrentWebContents().id } );

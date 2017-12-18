@@ -1,7 +1,5 @@
 import { ipcRenderer } from 'electron';
-
-const log = require( 'electron-log' );
-
+import logger from 'logger';
 let isSafeAppAuthenticating = false;
 let safeAuthNetworkState = -1;
 let safeAuthData = null;
@@ -43,19 +41,22 @@ function authDecision( isAllowed, data, reqType )
 const addAuthNotification = ( data, addNotification, clearNotification, ignoreRequest  ) =>
 {
     const text = `${data.authReq.app.name} Requests Auth`;
-
+    // const success = 'bloop';
     const success = () =>
     {
+        logger.info('success of notification! youaccepteddd');
         authDecision( true, data, REQ_TYPES.AUTH );
         clearNotification();
     };
+
     const denial = () =>
     {
         authDecision( false, data, REQ_TYPES.AUTH );
         clearNotification();
     };
 
-    addNotification( { text, onAccept: success, onDeny: denial, onDimiss: ignoreRequest } );
+    console.log( 'adding auth notification::::', success );
+    addNotification( { text, onAccept: success, onDeny: denial, onDimiss: ignoreRequest  });
 }
 
 
@@ -73,7 +74,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
     // setupSafeReconnectionHandlers( update );
     ipcRenderer.on( 'webClientAuthReq', ( event, req ) =>
     {
-        log.info( 'on.....webClientAuthReq' );
+        logger.info( 'on.....webClientAuthReq' );
         handleSafeAuthAuthentication( req, CLIENT_TYPES.WEB );
     } );
 
@@ -88,9 +89,9 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
     ipcRenderer.on( 'onNetworkStatus', ( event, status ) =>
     {
         // addNotification( { text: status } );
-        log.info( 'on.....onNetworkStatus' );
+        logger.info( 'on.....onNetworkStatus' );
         safeAuthNetworkState = status;
-        log.info( 'Network state changed to: ', safeAuthNetworkState );
+        logger.info( 'Network state changed to: ', safeAuthNetworkState );
 
         if ( status === -1 )
         {
@@ -108,14 +109,14 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onAuthReq', ( event, data ) =>
     {
-        log.info( 'on....onAuthReq.', data );
+        logger.info( 'on....onAuthReq.', data );
 
         addAuthNotification( data, addNotification, clearNotification, ignoreRequest );
     } );
 
     ipcRenderer.on( 'onContainerReq', ( event, data ) =>
     {
-        log.info( 'on.....onContainerReq' );
+        logger.info( 'on.....onContainerReq' );
         if ( data )
         {
             // safeAuthData = data;
@@ -125,7 +126,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onSharedMDataReq', ( event, data ) =>
     {
-        log.info( 'on.....onSharedMDataReq' );
+        logger.info( 'on.....onSharedMDataReq', data );
         if ( data )
         {
             // safeAuthData = data;
@@ -135,7 +136,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onAuthDecisionRes', ( event, res ) =>
     {
-        log.info( 'on.....onAuthDecisionRes' );
+        logger.info( 'on.....onAuthDecisionRes', res );
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {
@@ -145,7 +146,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onContDecisionRes', ( event, res ) =>
     {
-        log.info( 'on.....onContDecisionRes' );
+        logger.info( 'on.....onContDecisionRes', res );
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {
@@ -155,7 +156,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onUnAuthDecisionRes', ( event, res ) =>
     {
-        log.info( 'on.....onUnAuthDecisionRes' );
+        logger.info( 'on.....onUnAuthDecisionRes', res );
         if ( res.type === CLIENT_TYPES.WEB )
         {
             ipcRenderer.send( 'webClientAuthRes', res );
@@ -164,7 +165,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onSharedMDataRes', ( event, res ) =>
     {
-        log.info( 'on.....onSharedMDataRes' );
+        logger.info( 'on.....onSharedMDataRes',res );
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {
@@ -174,7 +175,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onAuthResError', ( event, res ) =>
     {
-        log.info( 'on.....onAuthResError' );
+        logger.info( 'on.....onAuthResError', res );
         isSafeAppAuthenticating = false;
         if ( res && res.error && ( res.error.toLowerCase() === 'unauthorised' ) )
         {
@@ -188,7 +189,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onUnAuthResError', ( event, res ) =>
     {
-        log.info( 'on.....onUnAuthResError' );
+        logger.info( 'on.....onUnAuthResError' );
         if ( res.type === CLIENT_TYPES.WEB )
         {
             ipcRenderer.send( 'webClientErrorRes', res );

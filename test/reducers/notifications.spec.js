@@ -23,6 +23,20 @@ describe( 'notification reducer', () =>
         } );
     })
 
+
+    describe( 'ADD_LOCAL_NOTIFICATION', () =>
+    {
+        it( 'should handle updating the notification array with a locally scoped action', () =>
+        {
+            expect(
+                notifications( [], {
+                    type    : TYPES.ADD_LOCAL_NOTIFICATION,
+                    payload : { text: 'hiwhat' }
+                } )
+            ).toEqual( [{ text: 'hiwhat' }] );
+        } );
+    })
+
     describe( 'CLEAR_NOTIFICATION', () =>
     {
         it( 'should handle clearing the first notification', () =>
