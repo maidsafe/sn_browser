@@ -38,13 +38,12 @@ function authDecision( isAllowed, data, reqType )
     ipcRenderer.send( 'registerSharedMDataDecision', data, isAllowed );
 }
 
-const addAuthNotification = ( data, addNotification, clearNotification, ignoreRequest  ) =>
+const addAuthNotification = ( data, app, addNotification, clearNotification, ignoreRequest  ) =>
 {
-    const text = `${data.authReq.app.name} Requests Auth`;
+    const text = `${app.name} Requests Auth`;
     // const success = 'bloop';
     const success = () =>
     {
-        logger.info('success of notification! youaccepteddd');
         authDecision( true, data, REQ_TYPES.AUTH );
         clearNotification();
     };
@@ -55,7 +54,6 @@ const addAuthNotification = ( data, addNotification, clearNotification, ignoreRe
         clearNotification();
     };
 
-    console.log( 'adding auth notification::::', success );
     addNotification( { text, onAccept: success, onDeny: denial, onDimiss: ignoreRequest  });
 }
 
@@ -110,8 +108,9 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
     ipcRenderer.on( 'onAuthReq', ( event, data ) =>
     {
         logger.info( 'on....onAuthReq.', data );
+        const app = data.authReq.app;
 
-        addAuthNotification( data, addNotification, clearNotification, ignoreRequest );
+        addAuthNotification( data, app, addNotification, clearNotification, ignoreRequest );
     } );
 
     ipcRenderer.on( 'onContainerReq', ( event, data ) =>
@@ -119,7 +118,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         logger.info( 'on.....onContainerReq' );
         if ( data )
         {
-            // safeAuthData = data;
+            const app = data.contReq.app;
             addAuthNotification( data, addNotification, clearNotification, ignoreRequest );
         }
     } );
@@ -127,10 +126,13 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
     ipcRenderer.on( 'onSharedMDataReq', ( event, data ) =>
     {
         logger.info( 'on.....onSharedMDataReq', data );
+
         if ( data )
         {
+            const app = data.mDataReq.app;
+
             // safeAuthData = data;
-            addAuthNotification( data, addNotification, clearNotification, ignoreRequest );
+            addAuthNotification( data, app, addNotification, clearNotification, ignoreRequest );
         }
     } );
 
