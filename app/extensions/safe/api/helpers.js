@@ -112,7 +112,7 @@ export const forEachHelper = (containerHandle, sendHandles) => {
   getObj(containerHandle)
     .then((obj) => obj.netObj.forEach((arg1, arg2) => {
       setImmediate(() => {
-        let argOneCopy = Object.assign({}, arg1);
+        let argOneCopy = Buffer.from(arg1);
         if (sendHandles) {
           argOneCopy = genHandle(obj.app, argOneCopy);
         }
