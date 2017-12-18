@@ -14,6 +14,12 @@ describe.only( 'makeValidUrl', () =>
         expect( makeValidUrl('hello.world/lalalala') ).toBe( 'safe://hello.world/lalalala');
     } );
 
+    test.only( 'should convert localhost http://localhost:port', () =>
+    {
+        expect( makeValidUrl('localhost:3003') ).toBe( 'http://localhost:3003');
+
+    } );
+
     it( 'should NOT convert a url with a valid protocol to safe://', () =>
     {
         expect( makeValidUrl('safe-auth://hello') ).toBe( 'safe-auth://hello');

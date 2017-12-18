@@ -67,6 +67,19 @@ export const makeValidUrl = ( input ) =>
         finalProtocol = validProtocols[0];
         everythingAfterProtocol = input;
     }
+    else if ( inputProtocol === 'localhost' && parsedURL.hostname )
+    {
+        const port = parsedURL.hostname;
+        const lengthOfSemiColon = 1;
+
+        finalProtocol = 'http';
+
+        everythingAfterProtocol = input.substring(
+            protocolPos + port.length + lengthOfSemiColon,
+            input.length );
+
+        everythingAfterProtocol = `localhost:${parsedURL.hostname}/${everythingAfterProtocol}`;
+    }
     else if ( inputProtocol)
     {
         // TODO: Show error page for bad urls.
