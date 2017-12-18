@@ -1,4 +1,4 @@
-const { genHandle, getObj } = require('./helpers');
+const { genHandle, getObj, freeObj } = require('./helpers');
 
 module.exports.manifest = {
   newRandomPrivate: 'promise',
@@ -27,7 +27,8 @@ module.exports.manifest = {
   applyEntriesMutation: 'promise',
   serialise: 'promise',
   fromSerial: 'promise',
-  emulateAs: 'promise'
+  emulateAs: 'promise',
+  free: 'sync'
 };
 
 /**
@@ -592,6 +593,18 @@ module.exports.fromSerial = (appHandle, data) => getObj(appHandle)
 */
 module.exports.emulateAs = (mdHandle, eml) => getObj(mdHandle)
     .then((obj) => genHandle(obj.app, obj.netObj.emulateAs(eml)));
+
+/**
+  * Removes MutableData handle from Map
+  * @name window.safeMutableData.free
+  *
+  * @param {String} mdHandle the MutableData handle
+  *
+  * @example // Removing MutableData handle from Map
+  * window.safeApp.newRandomPublic(mdHandle)
+  *    .then((mdHandle) => window.safeMutableData.free(mdHandle))
+ */
+ module.exports.free = (mdHandle) => freeObj(mdHandle);
 
 /**
  * @name MutableDataHandle
