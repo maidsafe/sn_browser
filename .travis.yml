@@ -1,16 +1,12 @@
 sudo: required
 dist: trusty
-
 os:
 - osx
 - linux
-
-
 env:
-- NODE_ENV=dev
-- NODE_ENV=prod
-
-
+  matrix:
+  - NODE_ENV=dev
+  - NODE_ENV=prod
 node_js:
 - '8'
 cache:
@@ -18,8 +14,8 @@ cache:
   directories:
   - node_modules
   - app/node_modules
-  - $HOME/.electron
-  - $HOME/.cache
+  - "$HOME/.electron"
+  - "$HOME/.cache"
 language: node_js
 addons:
   apt:
@@ -27,38 +23,52 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-script:
+before_deploy:
 - yarn build
 - yarn package
-before_deploy:
 - ls dist
 - if [[ "$NODE_ENV" == "dev" ]]; then mv dist/$(ls dist) dist/mock-$(ls dist); fi
 - export APP_PKG_DIR="$(ls dist)";
-- if [[ "$NODE_ENV" == "prod" ]] && [[ "$TRAVIS_OS_NAME" == "linux"  ]]; then cp build/'SAFE Browser.crust.config' dist/$APP_PKG_DIR/safe-browser.crust.config; fi
-- if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export OUTPUT_PATH=dist/$APP_PKG_DIR/safe-browser.crust.config;
+  else export OUTPUT_PATH=dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/'SAFE
+  Browser.crust.config'; fi
+- echo $OUTPUT_PATH
+- export TOKEN="$GITHUB_ACCESS_TOKEN"
+- export OWNER="MaidSafe" REPO="release_config"
+- export REPO_PATH="safe_authenticator/safe_browser.crust.config"
+- export FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+- if [[ "$NODE_ENV" == "prod" ]]; then 
+  curl "$FILE" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
+  --output "$OUTPUT_PATH"; fi
+- if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
+  Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
+  fi
 - ls dist/$APP_PKG_DIR
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip $APP_PKG_DIR && cd ..; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd dist && ditto -c -k --sequesterRsrc --keepParent $APP_PKG_DIR $APP_PKG_DIR.zip  && cd ..;  fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip
+  $APP_PKG_DIR && cd ..; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd dist && ditto -c -k --sequesterRsrc
+  --keepParent $APP_PKG_DIR $APP_PKG_DIR.zip  && cd ..;  fi
 - ls dist
 - rm -rf dist/$APP_PKG_DIR
 - ls dist
 - export RELEASE_DIR="$(ls dist/*.zip)";
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum dist/*.zip >> dist/$APP_PKG_DIR.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 dist/*.zip >> dist/$APP_PKG_DIR.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum dist/*.zip >> dist/$APP_PKG_DIR.txt;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 dist/*.zip >> dist/$APP_PKG_DIR.txt;
+  fi
 - ls dist
 - export SHA_256_SUM="$(ls dist/*.txt)";
 - echo "deploying ${RELEASE_DIR} to GitHub releases as tagged with ${TRAVIS_TAG}"
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: dNUJgCh8UYnwLH09f7W3Wu/ZhO2wPBHkFlN8Z9n5uIXm1CH/FkZl6uqBZ1LTUov6K1kqhlDTpJvKd2lbQkYkbMcLqa5LN3vrXiJX0jmTmoIz4ujSpYcKeSfMSc8S7NBI4/w+hD6Z8d+3fUwNlQgZjrSQbkabpm/zmE7ShGGu9VjmrCXXGDWOxRBLWVP6ujzLTuLns2kC1gdtz7p7ceeZ5flXe24iSc4O8TZhUJkuC3vLvUuLiTfSoWAbtwNXZ1mjIj45M7cixTpsAyBmduEH6X/o2fCy8AuFuRTNHo24u0t1jie0OyVXqyDOVVQ+cIvzvgQCiyCljbx7ZxnOKum/PJ0QchkWSX6b9R14+EIPDiNDpshBrul+SKQDWlfKYkCpcQVsEIJrENuUpynrNZx8rQ41EF1d/uqpWAgBNG78MprqZ+9jZR+XSrz7zPn4/iBH3GZjtkwlRCm81exyF6jJypVyPkUFHh0npPRzoFdk6CR3ywk0EsSa6vWR04E2HzZBvBs5MOk2UHM5G7NUAsXLo3JGp1aLsBgU0+C2SIjmyvfielEKzUgmhLZFCItAada92QcEJU/6ekjGwL1uxVO7mqVth3iRatHS7Dk6x9t92rXNPihW7h0qGpA+Skg7PXTBP6QiIPOA4fAFzpG6GcDu4RWZnUPxBQluIvcnJdPwemw=
-  file: 
-    - "${RELEASE_DIR}"
-    - "${SHA_256_SUM}"
+  api_key: $GITHUB_ACCESS_TOKEN
+  file:
+  - "${RELEASE_DIR}"
+  - "${SHA_256_SUM}"
   draft: true
   prerelease: true
-  tag_name: $TRAVIS_TAG
+  tag_name: "$TRAVIS_TAG"
   on:
     tags: true

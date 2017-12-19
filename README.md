@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/maidsafe/safe_browser.svg)](https://travis-ci.org/maidsafe/safe_browser)
+[![Build status](https://ci.appveyor.com/api/projects/status/9w7b9mvqm3gdig3o/branch/master?svg=true)](https://ci.appveyor.com/project/MaidSafe-QA/safe-browser/branch/master)
+
 # safe_browser
 
 A browser designed to open `safe://` websites on the SAFE Network.
