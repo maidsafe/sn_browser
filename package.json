@@ -42,7 +42,8 @@
     "cleanup": "mop -v",
     "put-live-net-files-for-dev": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/MacOS/Electron.crust.config && cp resources/log.toml node_modules/electron/dist/Electron.app/Contents/Resources/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
-    "rebuild": "npm rebuild --runtime=electron --target=1.7.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
+    "rebuild": "npm rebuild --runtime=electron --target=1.7.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "browserslist": "electron 1.4",
   "build": {
@@ -229,6 +230,7 @@
   },
   "dependencies": {
     "archiver": "2.1.0",
+    "auto-changelog": "1.2.2",
     "crypto": "^1.0.1",
     "electron-log": "2.2.11",
     "electron-mocha": "5.0.0",
