@@ -41,12 +41,15 @@ export default class History extends Component
 
         tabs.forEach( ( tab, i ) =>
         {
-            tab.history.forEach( ( history, ii ) =>
+            if( tab.history )
             {
-                const historyItem = history;
+                tab.history.forEach( ( history, ii ) =>
+                {
+                    const historyItem = history;
 
-                historyList.push( historyItem );
-            } );
+                    historyList.push( historyItem );
+                } );
+            }
         } );
 
         const ignoreList = ['about:blank', 'peruse://history', 'peruse://bookmarks']
