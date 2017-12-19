@@ -56,8 +56,6 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const postPackage = () => {
-  console.log('===================================================================');
-  console.log('arch: ', os.arch());
   const releaseFolderName = `${pkg.name}-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
 
   const removeLicenseAndLogFiles = () => {
@@ -110,10 +108,10 @@ const package = () => {
       cmd = 'build -m -p never';
       break;
     case 'linux':
-      cmd = `build -l -p never --${osArch}`;
+      cmd = `build -l -p never`;
       break;
     case 'win32':
-      cmd = `build -w -p never --${osArch}`;
+      cmd = `build -w -p never`;
       break;
     default:
       throw new Error('Safe Browser is not supported to this platform.');
