@@ -2,18 +2,17 @@
 import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-
+import MdStar from 'react-icons/lib/md/star';
+import MdStarOutline from 'react-icons/lib/md/star-outline';
 import { Column, IconButton, Row, InputField } from 'nessie-ui';
 
 import styles from './addressBar.css';
-
-const log = require( 'electron-log' );
-
 
 export default class AddressBar extends Component
 {
     static propTypes =
     {
+        isFocussed     : PropTypes.bool,
         isBookmarked   : PropTypes.bool.isRequired,
         addBookmark    : PropTypes.func.isRequired,
         removeBookmark : PropTypes.func.isRequired,
@@ -159,13 +158,13 @@ export default class AddressBar extends Component
                     <Column className={ styles.addressBarColumn }>
                         <InputField
                             className={ 'js-address__input' }
-                            value={ this.state.address }
+                            value={ address }
                             type="text"
                             inputRef={ ( input ) =>
                             {
                                 this.addressInput = input;
 
-                                if ( this.props.isFocussed &&
+                                if ( isFocussed &&
                                     this.isInFocussedWindow() && input )
                                 {
                                     input.focus();
@@ -179,13 +178,15 @@ export default class AddressBar extends Component
                     </Column>
                     <Column size="content">
                         <Row gutters="S">
-                            <Column>
-                                <IconButton
-                                    iconTheme={ isBookmarked ? 'control' : 'navigation' }
-                                    iconType="preview"
-                                    iconSize="L"
-                                    onClick={ this.handleBookmarking }
-                                />
+                            <Column align="left">
+                                {
+                                    isBookmarked &&
+                                        <MdStar className={styles.buttonIcon} onClick={this.handleBookmarking}/>
+                                }
+                                {
+                                    ! isBookmarked &&
+                                        <MdStarOutline className={styles.buttonIcon} onClick={this.handleBookmarking}/>
+                                }
                             </Column>
                         </Row>
                     </Column>

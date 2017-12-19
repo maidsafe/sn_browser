@@ -58,14 +58,16 @@
 .addressBarColumn
 {
     flex-grow: 1;
-    padding-right: 1rem;
 }
 .buttonIcon
 {
     display: block;
-    width: 100%;
+    width: 25px;
     height: 100%;
+    padding-left: 0;
     fill:  rgba( 127, 127, 127, 1);
+    padding-right: 1rem;
+
 
 }
 

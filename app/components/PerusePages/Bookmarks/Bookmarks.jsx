@@ -29,7 +29,7 @@ export default class Bookmarks extends Component
         const { bookmarks, isActiveTab } = this.props;
 
         const bookmarkList = bookmarks.map( bookmark => bookmark.url );
-        const urlList = (<UrlList list={ bookmarkList } />);
+        const urlList = <UrlList list={ bookmarkList } />;
 
         let moddedClass = styles.tab;
         if ( isActiveTab )

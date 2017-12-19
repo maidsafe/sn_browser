@@ -3,10 +3,8 @@ const initialState = {
     notifications : [
     ],
     tabs : [{
-        url          : 'peruse://history',
-        // url          : 'safe-auth://home/',
-        history      : ['peruse://history'],
-        // history      : ['safe-auth://home/'],
+        url          : 'safe-auth://home/',
+        history      : ['safe-auth://home/'],
         historyIndex : 0,
         isActiveTab  : true,
         isClosed     : false,
