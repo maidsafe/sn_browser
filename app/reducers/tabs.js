@@ -2,6 +2,7 @@
 // @flow
 import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
+import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
 import { makeValidUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 
@@ -332,11 +333,11 @@ const updateTab = ( state, payload ) =>
 
     updatedTab = { ...updatedTab, ...payload };
 
-    if( payload.url )
+    if ( payload.url )
     {
         const url = makeValidUrl( payload.url );
         updatedTab = updateTabHistory( updatedTab, url );
-        updatedTab =  { ...updatedTab, url } ;
+        updatedTab = { ...updatedTab, url };
     }
 
     const updatedState = [...state];
@@ -400,6 +401,21 @@ export default function tabs( state: array = initialState, action )
         case TYPES.ACTIVE_TAB_BACKWARDS :
         {
             return moveActiveTabBackwards( state );
+        }
+        case SAFE_TYPES.RECEIVED_CONFIG :
+        {
+            const payloadTabs = payload.tabs;
+
+            payloadTabs.forEach( tab =>
+            {
+                tab.isClosed = true;
+                tab.isActiveTab = false;
+                return tab;
+            });
+
+            const newTabs = [...state, ...payloadTabs];
+
+            return newTabs;
         }
         default:
             return state;

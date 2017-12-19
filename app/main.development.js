@@ -45,7 +45,6 @@ const mainWindow = null;
 const handleSafeUrls = ( url ) =>
 {
     // TODO. Queue incase of not started.
-    // Also parse out and deal with safe:// urls and auth response etc.
     handleOpenUrl( url );
 
     const parsedUrl = parseURL( url );

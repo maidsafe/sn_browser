@@ -7,6 +7,11 @@ import {
     closeActiveTab,
     reopenTab
 } from 'actions/tabs_actions';
+import {
+    setSaveConfigStatus,
+    setReadConfigStatus
+} from 'actions/safe_actions';
+import { SAFE } from 'appConstants';
 import { selectAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';
 import { getLastClosedTab } from 'reducers/tabs';
@@ -88,6 +93,7 @@ export default class MenuBuilder
                     } }
             ]
         };
+
         const subMenuFile = {
             label   : 'File',
             submenu : [
@@ -105,7 +111,7 @@ export default class MenuBuilder
                 },
                 {
                     label       : 'New Tab',
-                    accelerator : 'Command+T',
+                    accelerator : 'CommandOrControl+T',
                     click       : ( item, win ) =>
                     {
                         if ( win )
@@ -113,6 +119,30 @@ export default class MenuBuilder
                             const windowId = win.webContents.id;
                             this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
                             this.store.dispatch( selectAddressBar() );
+                        }
+                    }
+                },
+                {
+                    label       : 'Save Browser State to SAFE',
+                    accelerator : 'CommandOrControl+Shift+E',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            this.store.dispatch( setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE ) )
+
+                        }
+                    }
+                },
+                {
+                    label       : 'Read Browser State from SAFE',
+                    accelerator : 'CommandOrControl+Shift+F',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            this.store.dispatch( setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) )
+
                         }
                     }
                 },

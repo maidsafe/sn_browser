@@ -1,7 +1,9 @@
 
 // @flow
 import { remote, shell, webContents } from 'electron';
+import _ from 'lodash';
 import { TYPES } from 'actions/bookmarks_actions';
+import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
 import { makeValidUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 
@@ -39,7 +41,7 @@ const addBookmark = ( state, bookmark ) =>
     const bookmarkUrl = makeValidUrl( bookmark.url || '' );
     const newBookmark = { ...bookmark };
 
-    let newState = [...state];
+    const newState = [...state];
 
 
     newState.push( newBookmark );
@@ -58,14 +60,12 @@ const removeBookmark = ( state, payload ) =>
     const removalIndex = state.findIndex( bookmark => bookmark === payload );
 
 
-    let updatedState = [...state];
+    const updatedState = [...state];
 
     updatedState.pop( removalIndex );
 
     return updatedState;
 };
-
-
 
 
 const updateBookmark = ( state, payload ) =>
@@ -87,7 +87,7 @@ const updateBookmark = ( state, payload ) =>
     if ( payload.url )
     {
         const url = makeValidUrl( payload.url );
-        updatedBookmark =  { ...updatedBookmark, url } ;
+        updatedBookmark = { ...updatedBookmark, url };
     }
 
     const updatedState = [...state];
@@ -127,6 +127,13 @@ export default function bookmarks( state: array = initialState, action )
         case TYPES.UPDATE_BOOKMARK :
         {
             return updateBookmark( state, payload );
+        }
+        case SAFE_TYPES.RECEIVED_CONFIG :
+        {
+            const payloadBookmarks = payload.bookmarks;
+            const newBookmarks = [...state, ...payloadBookmarks];
+
+            return _.uniqBy( newBookmarks, 'url' );
         }
         default:
             return state;

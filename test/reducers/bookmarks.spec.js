@@ -1,6 +1,8 @@
 /* eslint-disable func-names */
 import bookmarks from 'reducers/bookmarks';
 import { TYPES } from 'actions/bookmarks_actions';
+import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
+
 import initialState from 'reducers/initialAppState';
 
 describe( 'notification reducer', () =>
@@ -46,6 +48,30 @@ describe( 'notification reducer', () =>
                     payload : { url: 'changed', index: 0 }
                 } )[0]
             ).toMatchObject( { url: 'safe://changed' } );
+        } );
+    } );
+
+    describe( 'RECEIVED_CONFIG', () =>
+    {
+        it( 'should handle receiving the new config', () =>
+        {
+            expect(
+                bookmarks( [{ url: 'i should not exist' } ], {
+                    type    : SAFE_TYPES.RECEIVED_CONFIG,
+                    payload : { bookmarks: [{ url: 'updated', index: 0 }] }
+                } )[1]
+            ).toMatchObject( { url: 'updated', index: 0 } );
+        } );
+
+        it( 'should merge the new bookmarks with any current, w/o duplicates', () =>
+        {
+            const newBookmarks = bookmarks( [{ url: 'i should exist' }, { url: 'updated', index: 0 } ], {
+                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                payload : { bookmarks: [{ url: 'updated', index: 0 }] }
+            } );
+            expect( newBookmarks[0] ).toMatchObject( { url: 'i should exist' } );
+            expect( newBookmarks[1] ).toMatchObject( { url: 'updated', index: 0 } );
+            expect( newBookmarks[2] ).toBeUndefined();
         } );
     } );
 } );

@@ -5,13 +5,15 @@ import logger from 'logger';
 import { parse as parseURL } from 'url';
 // import { executeScriptInBackground } from 'utils/background-process';
 import { addNotification, clearNotification } from 'actions/notification_actions';
-import { callIPC } from './ffi/ipc';
-import AUTH_CONSTANTS from './auth-constants';
+import * as safeActions from 'actions/safe_actions';
+import { callIPC } from '../ffi/ipc';
+import AUTH_CONSTANTS from '../auth-constants';
 
 const queue = [];
 let appObj;
 let store;
-
+let browserReqUri;
+let browserAuthReqUri;
 
 export const authFromQueue = async () =>
 {
@@ -21,10 +23,19 @@ export const authFromQueue = async () =>
     }
 };
 
-const authFromRes = async ( res ) =>
+const authFromRes = async ( res, isAuthenticated ) =>
 {
-    try{
+    try {
         appObj = await appObj.auth.loginFromURI( res );
+
+        if( isAuthenticated && store )
+        {
+            // TODO: AuthorisedApp should be localscope?
+            // this appObj cant be used, so maybe there's no need to bother here?
+            store.dispatch( safeActions.authorisedApp( appObj ) );
+            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ))
+        }
+
     }
     catch( err )
     {
@@ -33,17 +44,10 @@ const authFromRes = async ( res ) =>
             store.dispatch( addNotification({ text: err.message, onDismiss: clearNotification }) )
         }
 
-        // logger.error( store.getState().notifications )
         logger.error( err.message || err )
         logger.error( `>>>>>>>>>>>>>`)
     }
 };
-
-// ipcRenderer.on( 'simulate-mock-res', () =>
-// {
-//     logger.verbose('hi')
-//     // store.dispatch( simulateMockRes() );
-// } );
 
 
 const getMDataValueForKey = async ( md, key ) =>
@@ -83,6 +87,7 @@ export const initAnon = async ( passedStore ) =>
 
     try
     {
+        // does it matter if we override?
         appObj = await initializeApp( APP_INFO.info, null, {
             libPath: CONFIG.LIB_PATH,
             registerScheme: false,
@@ -111,15 +116,18 @@ export const initAnon = async ( passedStore ) =>
     }
 };
 
-
-export const handleAnonConnResponse = ( url ) => authFromRes( url );
+export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
 
 
 
 export const handleOpenUrl = async ( res ) =>
 {
+    if( typeof res !== 'string' )
+    {
+        throw new Error( 'Response url should be a string')
+    }
     let authUrl = null;
-    logger.info( 'Received URL response: ', res, parseURL( res ).protocol );
+    logger.info( 'Received URL response' );
 
     if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` )
     {
@@ -132,7 +140,6 @@ export const handleOpenUrl = async ( res ) =>
         }
     }
 };
-
 
 
 export function parseSafeAuthUrl( url, isClient )
@@ -168,49 +175,22 @@ export function parseSafeAuthUrl( url, isClient )
     return safeAuthUrl;
 }
 
-//
-// export const requestAuth = async () =>
-// {
-//     try
-//     {
-//         const app = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
-//         const resp = await app.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
-//         // commented out until system_uri open issue is solved for osx
-//         // await app.auth.openUri(resp.uri);
-//         // openExternal( resp.uri );
-//         return;
-//     }
-//     catch ( err )
-//     {
-//         console.error( err );
-//         throw err;
-//     }
-// };
 
-
-export const connectAuthed = async ( uri, netStatusCallback ) =>
+export const requestAuth = async () =>
 {
-    if ( !netStatusCallback )
-    {
-        return Promise.reject( new Error( 'netStatusCallback ' ) );
-    }
-
-    if ( !uri )
-    {
-        return Promise.reject( new Error( 'Invalid Auth response' ) );
-    }
-
     try
     {
-        const app = await fromAuthURI( APP_INFO.info, uri, netStatusCallback, { libPath: CONFIG.LIB_PATH } );
-        await app.auth.refreshContainersPermissions();
-        netStatusCallback( SAFE.NETWORK_STATE.CONNECTED );
+        const app = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        const authReq = await app.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
+
+        global.browserAuthReqUri = authReq.uri;
+
+        handleOpenUrl( authReq.uri );
         return app;
     }
     catch ( err )
     {
-        logger.error( `Error connecting to safe... ${err}` );
-
+        logger.error( err );
         throw err;
     }
 };
@@ -234,7 +214,7 @@ export const reconnect = ( app ) =>
  */
 export const initMock = async ( passedStore ) =>
 {
-    const store = passedStore;
+    store = passedStore;
 
     logger.info( 'Initialising mock app' );
 
@@ -249,3 +229,11 @@ export const initMock = async ( passedStore ) =>
         throw err;
     }
 };
+
+
+
+
+ipcMain.on( 'browserAuthenticated', ( e, uri, isAuthenticated ) =>
+{
+    authFromRes( uri, isAuthenticated )
+} );
