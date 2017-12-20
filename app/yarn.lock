@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.5.3.tgz#6ea032170db450af39b545e15c5fb83176ba48f4"
+"@maidsafe/safe-node-app@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.6.0.tgz#a5c25e54484777f2a1e12f9c050c2a820874347c"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
@@ -431,18 +431,18 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.3.tgz":
-  version "0.4.3"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.3.tgz#8ef1fc99f72c7dbfb6cb8790c71603e6981ba9c7"
+"beaker-plugin-safe-app@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.4.tgz":
+  version "0.4.4"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-app/beaker-plugin-safe-app-0.4.4.tgz#7ea6af1f1e19b81495b6a9c253003780cdf5ab1c"
   dependencies:
-    "@maidsafe/safe-node-app" "0.5.3"
+    "@maidsafe/safe-node-app" "0.6.0"
     css-loader "^0.28.4"
     ejs-loader "^0.3.0"
     url "^0.11.0"
 
-"beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.1.tgz":
-  version "0.4.1"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.1.tgz#b56dc8bbfd01321522450f6fe3dc970257bd9a44"
+"beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.2.tgz":
+  version "0.4.2"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.2.tgz#c08c03c5d15b0d3a5fc4fd82dd89fae6d5dd26d2"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
