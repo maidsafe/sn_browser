@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@maidsafe/safe-node-app": "0.5.3",
+    "@maidsafe/safe-node-app": "0.6.0",
     "enum": "2.5.0",
     "ffi": "2.2.0",
     "react-icons": "2.2.7",
