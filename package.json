@@ -2,7 +2,7 @@
   "name": "peruse",
   "identifier": "net.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "vendor": "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
