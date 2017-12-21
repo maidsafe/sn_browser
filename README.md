@@ -10,12 +10,12 @@ An electron web browser. Built to be a basis. Extendable by design.
 - `yarn`
 - `yarn rebuild`
 
-And to run dev mode:
+And to run dev mode, ensure you run `yarn` with `NODE_ENV=dev` set:
 - `yarn dev`
 
-Want to run 'production' variables, but with hot reloading?:
-- `yarn live-dev` Will work _soon_. Right now it's hinging upon registering the 
-url scheme for opening the app, which won't work until we've gotten all schemes going.
+Want to run 'production' variables, but with hot reloading? Ensure you run the initial `yarn` with `NODE_ENV=` set, then:
+- `yarn live-dev` 
+Note, you'll need a crust.config set for the application. [Helper commands are available on osx/linux](https://github.com/joshuef/peruse/blob/master/package.json#L43-L44) (not windows yet, sorry! this is only temporary.)
 
 And to package:
 - `yarn package`
@@ -46,14 +46,12 @@ There are 'live-dev' configs for running against NODE_ENV=production but without
 ### Testing
 
 - `yarn test` runs jest (you have the optional `yarn test-watch`, too).
-- `yarn test e2e` runs spectron integration tests.
+- `yarn test e2e` runs spectron integration tests (not yet stable). 
 - `yarn lint` ...lints...
 
 ### Logging
 
-Via electron-log, in main process: `import logger from 'logger'`, and you can `logger.info('things')`.
-
-In render process `const log = require('electron-log')`, and you can `log.info('things')`.
+Via electron-log: `import logger from 'logger'`, and you can `logger.info('things')`.
 
 Logs are printed to both render console and stdout. Logs are also written to a log file per system.
 
@@ -66,3 +64,10 @@ The `safe` code is contained within the `app/extensions` folder. This includes
 a simple http server with is used to provide the http like functionalities of the safe network.
 
 Currently you need to authenticate against the SAFE Browser to get network access.
+
+### Authenticator
+
+Currently, we're using a `temp_dist` versino of the authenticator webapp, prebuilt from the 'beaker-plugin-safe-authenticator'.
+
+- APIs are located in `app/extensions/safe/api`;
+- APIs are located in `app/extensions/safe/auth-api`;
