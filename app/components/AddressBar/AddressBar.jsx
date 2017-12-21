@@ -174,6 +174,7 @@ export default class AddressBar extends Component
                                     this.isInFocussedWindow() && input )
                                 {
                                     input.focus();
+                                    input.select();
                                 }
                             } }
                             onFocus={ this.handleFocus }
