@@ -27,23 +27,19 @@ before_deploy:
 - yarn build
 - yarn package
 - ls dist
-- if [[ "$NODE_ENV" == "dev" ]]; then mv dist/$(ls dist) dist/mock-$(ls dist); fi
 - export APP_PKG_DIR="$(ls dist)";
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export OUTPUT_PATH=dist/$APP_PKG_DIR/safe-browser.crust.config;
-  else export OUTPUT_PATH=dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/'SAFE
-  Browser.crust.config'; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export OUTPUT_PATH=dist/$APP_PKG_DIR/;
+  else export OUTPUT_PATH=dist/$APP_PKG_DIR/'SAFE Browser.app'/Contents/Resources/; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CRUST_CONFIG_NAME=safe-browser.crust.config;
+  else export CRUST_CONFIG_NAME='SAFE Browser.crust.config'; fi
 - echo $OUTPUT_PATH
-- export TOKEN="$GITHUB_ACCESS_TOKEN"
-- export OWNER="MaidSafe" REPO="release_config"
-- export REPO_PATH="safe_authenticator/safe_browser.crust.config"
+- export TOKEN="$GITHUB_ACCESS_TOKEN" OWNER="MaidSafe" REPO="release_config"
+- export CRUST_CONFIG="safe_browser.crust.config" LOG_TOML="log.toml" REPO_PATH="safe_authenticator/"
 - export FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+- curl "$FILE$LOG_TOML" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw" --output "$OUTPUT_PATH$LOG_TOML"
 - if [[ "$NODE_ENV" == "prod" ]]; then 
-  curl "$FILE" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
-  --output "$OUTPUT_PATH"; fi
-- if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
-  Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
-  fi
+  curl "$FILE$CRUST_CONFIG" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
+  --output "$OUTPUT_PATH$CRUST_CONFIG_NAME"; fi
 - ls dist/$APP_PKG_DIR
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip
   $APP_PKG_DIR && cd ..; fi

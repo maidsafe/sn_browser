@@ -50,9 +50,10 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const postPackage = () => {
-  console.log('===================================================================');
-  console.log('arch: ', os.arch());
-  const releaseFolderName = `${pkg.name}-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
+  let releaseFolderName = `${pkg.name}-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
+  if (process.env.NODE_ENV === 'dev') {
+    releaseFolderName = `${pkg.name}-mock-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
+  }
 
   const removeLicenseAndLogFiles = () => {
     try {

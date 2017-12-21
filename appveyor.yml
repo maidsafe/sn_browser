@@ -34,12 +34,19 @@ before_deploy:
   - yarn run build
   - yarn run package
   - FOR /F %%i IN ('dir dist /b') DO SET APP_PKG_DIR=%%i
-  - if [%NODE_ENV%]==[dev] (
-      ren .\dist\%APP_PKG_DIR% mock-%APP_PKG_DIR%
-    )
-  - FOR /F %%G IN ('dir dist /b') DO SET APP_PKG_DIR=%%G
   - echo %APP_PKG_DIR%
   - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
+  - ps: >-
+        $TOKEN="$env:GITHUB_ACCESS_TOKEN"
+        $OWNER="MaidSafe"
+        $REPO="release_config"
+        $REPO_PATH="safe_authenticator/log.toml"
+        $FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+        $APP_DIR="$env:APP_PKG_DIR"
+        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        $headers.Add("Authorization", "token $TOKEN")
+        $headers.Add("Accept", 'application/vnd.github.v3.raw')
+        Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\dist\$APP_DIR\log.toml"
   - ps: >-
       If ($env:NODE_ENV -Match "prod") {
         $TOKEN="$env:GITHUB_ACCESS_TOKEN"
@@ -53,7 +60,6 @@ before_deploy:
         $headers.Add("Accept", 'application/vnd.github.v3.raw')
         Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\dist\$APP_DIR\safe-browser.crust.config"
       }
-  - copy .\build\log.toml .\dist\%APP_PKG_DIR%\
   - ren .\dist\%APP_PKG_DIR%\"SAFE Browser.exe" safe-browser.exe
   - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
   - cd dist
