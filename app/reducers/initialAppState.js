@@ -11,7 +11,7 @@ const initialState = {
         windowId     : 1
     }],
     ui : {
-        addressBarIsFocussed : false
+        addressBarIsSelected : false
     }
 };
 

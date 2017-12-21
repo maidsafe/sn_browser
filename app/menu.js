@@ -7,7 +7,7 @@ import {
     closeActiveTab,
     reopenTab
 } from 'actions/tabs_actions';
-import { focusAddressBar } from 'actions/ui_actions';
+import { selectAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';
 import { getLastClosedTab } from 'reducers/tabs';
 import logger from 'logger';
@@ -112,7 +112,7 @@ export default class MenuBuilder
                         {
                             const windowId = win.webContents.id;
                             this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
-                            this.store.dispatch( focusAddressBar() );
+                            this.store.dispatch( selectAddressBar() );
                         }
                     }
                 },
@@ -171,7 +171,7 @@ export default class MenuBuilder
                     accelerator : 'CommandOrControl+L',
                     click       : ( item, win ) =>
                     {
-                        this.store.dispatch( focusAddressBar() );
+                        this.store.dispatch( selectAddressBar() );
                     }
                 }
             ]
@@ -341,7 +341,7 @@ export default class MenuBuilder
                 accelerator : 'CommandOrControl+L',
                 click       : ( item, win ) =>
                 {
-                    this.store.dispatch( focusAddressBar() );
+                    this.store.dispatch( selectAddressBar() );
                 }
             }
         ]

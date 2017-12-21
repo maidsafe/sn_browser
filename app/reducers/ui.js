@@ -12,13 +12,17 @@ export default function ui( state: array = initialState, action )
 
     switch ( action.type )
     {
-        case TYPES.FOCUS_ADDRESS_BAR :
+        case TYPES.SELECT_ADDRESS_BAR :
         {
-            return { ...state, addressBarIsFocussed : true };
+            return { ...state, addressBarIsSelected : true };
+        }
+        case TYPES.DESELECT_ADDRESS_BAR :
+        {
+            return { ...state, addressBarIsSelected : false };
         }
         case TYPES.BLUR_ADDRESS_BAR :
         {
-            return { ...state, addressBarIsFocussed : false };
+            return { ...state, addressBarIsSelected : false };
         }
 
         default:

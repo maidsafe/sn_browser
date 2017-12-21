@@ -10,7 +10,7 @@ import {
     // activeTabBackwards,
     // reopenTab
 } from './actions/tabs_actions';
-import { focusAddressBar } from './actions/ui_actions';
+import { selectAddressBar } from './actions/ui_actions';
 
 //TODO: Move this // abstract
 import {authFromQueue} from './extensions/safe/network';
@@ -93,7 +93,7 @@ const openWindow = ( store ) =>
         else
         {
             store.dispatch( addTab({ url: 'about:blank', windowId: webContentsId, isActiveTab : true }) );
-            store.dispatch( focusAddressBar() )
+            store.dispatch( selectAddressBar() )
         }
 
     } );

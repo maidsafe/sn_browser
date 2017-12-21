@@ -7,13 +7,20 @@ describe( 'notification actions', () =>
         expect( ui.TYPES ).toBeDefined();
     } );
 
-    it( 'should set addressbar focus', () =>
+    it( 'should set addressbar selected', () =>
     {
-        const payload = { text: 'hi' };
         const expectedAction = {
-            type : ui.TYPES.FOCUS_ADDRESS_BAR
+            type : ui.TYPES.SELECT_ADDRESS_BAR
         };
-        expect( ui.focusAddressBar( ) ).toEqual( expectedAction );
+        expect( ui.selectAddressBar( ) ).toEqual( expectedAction );
+    } );
+
+    it( 'should set addressbar deselected', () =>
+    {
+        const expectedAction = {
+            type : ui.TYPES.DESELECT_ADDRESS_BAR
+        };
+        expect( ui.deselectAddressBar( ) ).toEqual( expectedAction );
     } );
 
     it( 'should clear a notification', () =>

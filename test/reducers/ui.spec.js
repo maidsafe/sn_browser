@@ -10,15 +10,15 @@ describe( 'notification reducer', () =>
         expect( ui( undefined, {} ) ).toEqual( initialState.ui );
     } );
 
-    describe( 'FOCUS_ADDRESS_BAR', () =>
+    describe( 'SELECT_ADDRESS_BAR', () =>
     {
         it( 'should handle setting address bar focus', () =>
         {
             expect(
                 ui( {}, {
-                    type    : TYPES.FOCUS_ADDRESS_BAR
+                    type    : TYPES.SELECT_ADDRESS_BAR
                 } )
-            ).toEqual( { addressBarIsFocussed: true } );
+            ).toEqual( { addressBarIsSelected: true } );
         } );
     })
 
@@ -30,7 +30,7 @@ describe( 'notification reducer', () =>
                 ui( {}, {
                     type    : TYPES.BLUR_ADDRESS_BAR
                 } )
-            ).toEqual( { addressBarIsFocussed: false } );
+            ).toEqual( { addressBarIsSelected: false } );
         } );
     })
 

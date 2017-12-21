@@ -20,7 +20,8 @@ export default class Browser extends Component
         tabs              : PropTypes.array,
         addBookmark       : PropTypes.func.isRequired,
         removeBookmark    : PropTypes.func.isRequired,
-        focusAddressBar   : PropTypes.func.isRequired,
+        selectAddressBar   : PropTypes.func.isRequired,
+        deselectAddressBar   : PropTypes.func.isRequired,
         blurAddressBar    : PropTypes.func.isRequired,
         addTab            : PropTypes.func,
         closeTab          : PropTypes.func,
@@ -34,7 +35,7 @@ export default class Browser extends Component
 
     static defaultProps =
     {
-        addressBarIsFocussed : false,
+        addressBarIsSelected : false,
         tabs                 : [],
         bookmarks            : [],
         notifications        : []
@@ -138,7 +139,8 @@ export default class Browser extends Component
             bookmarks,
             addBookmark,
             removeBookmark,
-            focusAddressBar,
+            selectAddressBar,
+            deselectAddressBar,
             blurAddressBar,
             closeTab,
             tabs,
@@ -182,12 +184,13 @@ export default class Browser extends Component
                 />
                 <AddressBar
                     address={ activeTabAddress }
-                    onFocus={ focusAddressBar }
+                    onSelect={ deselectAddressBar }
+                    onFocus={ selectAddressBar }
                     onBlur={ blurAddressBar }
                     addBookmark={ addBookmark }
                     isBookmarked={ isBookmarked }
                     removeBookmark={ removeBookmark }
-                    isFocussed={ ui.addressBarIsFocussed }
+                    isSelected={ ui.addressBarIsSelected }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }

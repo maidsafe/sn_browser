@@ -12,18 +12,21 @@ export default class AddressBar extends Component
 {
     static propTypes =
     {
-        isFocussed     : PropTypes.bool,
+        address        : PropTypes.string,
+        isSelected     : PropTypes.bool,
         isBookmarked   : PropTypes.bool.isRequired,
         addBookmark    : PropTypes.func.isRequired,
         removeBookmark : PropTypes.func.isRequired,
         onBlur         : PropTypes.func.isRequired,
+        onSelect       : PropTypes.func.isRequired,
         onFocus        : PropTypes.func.isRequired
     }
 
     static defaultProps =
     {
         address    : '',
-        isFocussed : false
+        isSelected : false,
+        editingUrl : false
     }
 
     constructor( props )
@@ -40,9 +43,14 @@ export default class AddressBar extends Component
 
     componentWillReceiveProps( nextProps )
     {
-        if ( nextProps.address !== this.state.address )
+        if ( nextProps.address !== this.props.address && nextProps.address !== this.state.address )
         {
-            this.setState( { address: nextProps.address } );
+            this.setState( { address: nextProps.address, editingUrl: false } );
+        }
+
+        if ( nextProps.isSelected  && !this.props.isSelected && !this.state.editingUrl && this.addressInput )
+        {
+            this.addressInput.select();
         }
     }
 
@@ -94,9 +102,28 @@ export default class AddressBar extends Component
         ipcRenderer.send( 'command', 'view:reload' );
     }
 
+    handleClick = ( event ) =>
+    {
+        const { onSelect, isSelected } = this.props;
+
+        if( isSelected )
+        {
+            this.setState( { editingUrl: true } );
+            onSelect();
+        }
+
+    }
+
     handleChange( event )
     {
-        this.setState( { address: event.target.value } );
+        const { onSelect } = this.props;
+
+        this.setState( { editingUrl: true, address: event.target.value } );
+
+        if ( onSelect )
+        {
+            onSelect();
+        }
     }
 
     handleFocus = ( event ) =>
@@ -128,7 +155,7 @@ export default class AddressBar extends Component
     render()
     {
         const { address } = this.state;
-        const { isFocussed, isBookmarked } = this.props;
+        const { isSelected, isBookmarked } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
@@ -170,10 +197,10 @@ export default class AddressBar extends Component
                             {
                                 this.addressInput = input;
 
-                                if ( isFocussed &&
+                                if ( isSelected && ! this.state.editingUrl &&
                                     this.isInFocussedWindow() && input )
                                 {
-                                    input.focus();
+                                    console.log('this bit is firiiriinrirninnnggg', this.state )
                                     input.select();
                                 }
                             } }

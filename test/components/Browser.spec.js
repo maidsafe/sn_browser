@@ -19,7 +19,7 @@ describe( 'Browser', () =>
             ui                   : {},
             addBookmark          : jest.fn(),
             removeBookmark       : jest.fn(),
-            focusAddressBar      : jest.fn(),
+            selectAddressBar      : jest.fn(),
             blurAddressBar       : jest.fn(),
             addNotification      : jest.fn(),
             addLocalNotification : jest.fn()
@@ -68,11 +68,11 @@ describe( 'Browser', () =>
 
     describe( 'props', () =>
     {
-        describe( 'addressBarIsFocussed', () =>
+        describe( 'addressBarIsSelected', () =>
         {
-            it( 'addressBarIsFocussed should be "false" by default', () =>
+            it( 'addressBarIsSelected should be "false" by default', () =>
             {
-                expect( instance.props.addressBarIsFocussed ).toBeFalsy();
+                expect( instance.props.addressBarIsSelected ).toBeFalsy();
             } );
         } );
 
