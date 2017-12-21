@@ -51,7 +51,7 @@ export default class UrlList extends Component
                 className={ styles.table }
             >
                 { parsedList }
-                { ! parsedList.length &&
+                { !parsedList.length &&
                     <TableCell>{'Nothing to see here yet'}</TableCell>
                 }
             </Table>

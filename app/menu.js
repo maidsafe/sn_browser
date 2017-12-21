@@ -112,8 +112,7 @@ export default class MenuBuilder
                         {
                             const windowId = win.webContents.id;
                             this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
-                            this.store.dispatch( focusAddressBar() )
-
+                            this.store.dispatch( focusAddressBar() );
                         }
                     }
                 },
@@ -127,7 +126,9 @@ export default class MenuBuilder
                             const tabs = store.getState().tabs;
                             const windowId = win.webContents.id;
 
-                            const openTabs = tabs.filter( tab => !tab.isClosed && tab.windowId === windowId );
+                            const openTabs =
+                                tabs.filter( tab => !tab.isClosed && tab.windowId === windowId );
+
                             if ( openTabs.length === 1 )
                             {
                                 win.close();
@@ -170,7 +171,7 @@ export default class MenuBuilder
                     accelerator : 'CommandOrControl+L',
                     click       : ( item, win ) =>
                     {
-                        this.store.dispatch( focusAddressBar() )
+                        this.store.dispatch( focusAddressBar() );
                     }
                 }
             ]
@@ -191,7 +192,7 @@ export default class MenuBuilder
             label   : 'View',
             submenu : [
                 { label       : 'Bookmarks',
-                    accelerator : 'CommandOrControl+Shift+B',
+                    accelerator : 'Option+Shift+B',
                     click       : ( item, win ) =>
                     {
                         if ( win )
@@ -200,17 +201,6 @@ export default class MenuBuilder
                             this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
                         }
                     } },
-                { label       : 'History',
-                    accelerator : 'CommandOrControl+Y',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
-                            const windowId = win.webContents.id;
-                            this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
-                        }
-                    } },
-
                 { type: 'separator' },
                 { label       : 'Reload',
                     accelerator : 'Command+R',
@@ -235,6 +225,17 @@ export default class MenuBuilder
         const subMenuHistory = {
             label   : 'History',
             submenu : [
+                { label       : 'View All History',
+                    accelerator : 'CommandOrControl+Y',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
+                        }
+                    } },
+                { type: 'separator' },
                 {
                     label       : 'Forward',
                     accelerator : 'CommandOrControl + ]',
@@ -325,14 +326,25 @@ export default class MenuBuilder
             submenu : [{
                 label       : '&Open',
                 accelerator : 'Ctrl+O'
-            }, {
+            },
+            {
                 label       : '&Close',
                 accelerator : 'Ctrl+W',
                 click       : () =>
                 {
                     this.mainWindow.close();
+                },
+            },
+            { type: 'separator' },
+            {
+                label       : 'Open Location',
+                accelerator : 'CommandOrControl+L',
+                click       : ( item, win ) =>
+                {
+                    this.store.dispatch( focusAddressBar() );
                 }
-            }]
+            }
+        ]
         }, {
             label   : '&View',
             submenu : ( process.env.NODE_ENV === 'development' ) ? [{
@@ -349,7 +361,31 @@ export default class MenuBuilder
                 {
                     this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
                 }
-            }, {
+            },
+            { type: 'separator' },
+            { label       : 'Bookmarks',
+                accelerator : 'Control+Shift+O',
+                click       : ( item, win ) =>
+                {
+                    if ( win )
+                    {
+                        const windowId = win.webContents.id;
+                        this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
+                    }
+                } },
+            { label       : 'View All History',
+                accelerator : 'Control+H',
+                click       : ( item, win ) =>
+                {
+                    if ( win )
+                    {
+                        const windowId = win.webContents.id;
+                        this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
+                    }
+                }
+            },
+            { type: 'separator' },
+            {
                 label       : 'Toggle &Developer Tools',
                 accelerator : 'Alt+Ctrl+I',
                 click       : () =>

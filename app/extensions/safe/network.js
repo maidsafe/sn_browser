@@ -31,8 +31,6 @@ const authFromRes = async ( res ) =>
         if( store )
         {
             store.dispatch( addNotification({ text: err.message, onDismiss: clearNotification }) )
-
-            logger.info( store.getState() )
         }
 
         // logger.error( store.getState().notifications )
