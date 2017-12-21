@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 const pkg = require('../app/package.json');
 
 const osPlatform = os.platform();
+const osArch = os.arch();
 const OSName = {
   darwin: 'osx',
   linux: 'linux',
@@ -16,6 +17,11 @@ const releaseFolderNameForPlatforms = {
   linux: 'linux-unpacked',
   win32: 'win-unpacked'
 };
+
+if (osArch !== 'x64') {
+  releaseFolderNameForPlatforms.linux = `linux-${osArch}-unpacked`;
+  releaseFolderNameForPlatforms.win32 = `win-${osArch}-unpacked`;
+}
 
 const packageDistDir = path.resolve(__dirname, '..', 'dist');
 
@@ -50,8 +56,6 @@ const runSpawn = (title, cmdStr) => {
 const targetScript = process.argv[2];
 
 const postPackage = () => {
-  console.log('===================================================================');
-  console.log('arch: ', os.arch());
   const releaseFolderName = `${pkg.name}-v${pkg.version}-${OSName[osPlatform]}-${os.arch()}`;
 
   const removeLicenseAndLogFiles = () => {
@@ -104,10 +108,10 @@ const package = () => {
       cmd = 'build -m -p never';
       break;
     case 'linux':
-      cmd = 'build -l -p never --x64';
+      cmd = `build -l -p never`;
       break;
     case 'win32':
-      cmd = 'build -w -p never --x64';
+      cmd = `build -w -p never`;
       break;
     default:
       throw new Error('Safe Browser is not supported to this platform.');
