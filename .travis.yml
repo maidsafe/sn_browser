@@ -4,7 +4,7 @@ os:
 - osx
 - linux
 env:
-- NODE_ENV=dev
+# - NODE_ENV=dev
 - NODE_ENV=prod
 language: node_js
 node_js:
