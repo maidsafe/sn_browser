@@ -1,8 +1,8 @@
 // @flow
 import React, { Component } from 'react';
-// import { Link } from 'react-router';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
+import { parse } from 'url';
 import _ from 'lodash';
 import { Column, Page, PageHeader, H1, Row, Text } from 'nessie-ui';
 import UrlList from 'components/UrlList';
@@ -52,12 +52,27 @@ export default class History extends Component
             }
         } );
 
-        const ignoreList = ['about:blank', 'peruse://history', 'peruse://bookmarks']
+        const ignoreProtocolList = [ 'safe-auth:'];
+        const ignoreList = [
+            'about:blank',
+            'peruse://history',
+            'peruse://bookmarks'
+        ]
 
         // TODO: uniq by object props, so will be less harsh once we have title etc.
         historyList = _.uniq( historyList );
 
-        historyList = historyList.filter( url => ! ignoreList.includes( url ) )
+        historyList = historyList.filter( url =>
+        {
+            const urlObj = parse( url );
+
+            if ( ignoreList.includes( url ) || ignoreProtocolList.includes( urlObj.protocol ) )
+            {
+                return false;
+            }
+
+            return true;
+        });
 
         const urlList = ( <UrlList list={ historyList } /> );
 

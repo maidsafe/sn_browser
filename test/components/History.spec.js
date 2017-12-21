@@ -33,7 +33,7 @@ describe( 'History', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, history: [ 'hello' ] }] };
+            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, history: ['hello'] }] };
             wrapper = shallow( <History { ...props } /> );
         } );
 
@@ -52,7 +52,46 @@ describe( 'History', () =>
             wrapper = mount( <History { ...props } /> );
             expect( wrapper.find( 'a' ).length ).toBe( 1 );
         } );
+    } );
 
+
+    describe( 'History should filter excluded protocols', () =>
+    {
+        beforeEach( () =>
+        {
+            props = { ...props,
+                tabs :
+                [
+                    { url         : 'safe-auth://lalala',
+                        isActiveTab : true,
+                        windowId    : 1,
+                        history     : [
+                            'safe-auth://lalala',
+                            'somethingreal',
+                            'about:blank',
+                            'peruse://history',
+                            'peruse://bookmarks'
+                        ] }
+                ] };
+            wrapper = shallow( <History { ...props } /> );
+        } );
+
+        it( 'should have one url list', () =>
+        {
+            expect( wrapper.find( UrlList ).length ).toBe( 1 );
+        } );
+
+        it( 'should have one link', () =>
+        {
+            wrapper = mount( <History { ...props } /> );
+            expect( wrapper.find( 'a' ).length ).toBe( 1 );
+        } );
+
+        it( 'should have one link with text', () =>
+        {
+            wrapper = mount( <History { ...props } /> );
+            expect( wrapper.find( 'a' ).text() ).toBe( 'somethingreal' );
+        } );
     } );
 
 
