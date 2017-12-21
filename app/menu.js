@@ -335,16 +335,53 @@ export default class MenuBuilder
                     this.mainWindow.close();
                 },
             },
+            {
+                label       : 'New Tab',
+                accelerator : 'Ctrl+T',
+                click       : ( item, win ) =>
+                {
+                    if ( win )
+                    {
+                        const windowId = win.webContents.id;
+                        this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
+                        this.store.dispatch( selectAddressBar() );
+                    }
+                }
+            },
+            {
+                label       : 'Close Tab',
+                accelerator : 'Ctrl+W',
+                click       : ( item, win ) =>
+                {
+                    if ( win )
+                    {
+                        const tabs = store.getState().tabs;
+                        const windowId = win.webContents.id;
+
+                        const openTabs =
+                            tabs.filter( tab => !tab.isClosed && tab.windowId === windowId );
+
+                        if ( openTabs.length === 1 )
+                        {
+                            win.close();
+                        }
+                        else
+                        {
+                            this.store.dispatch( closeActiveTab( windowId ) );
+                        }
+                    }
+                }
+            },
             { type: 'separator' },
             {
                 label       : 'Open Location',
-                accelerator : 'CommandOrControl+L',
+                accelerator : 'Control+L',
                 click       : ( item, win ) =>
                 {
                     this.store.dispatch( selectAddressBar() );
                 }
             }
-        ]
+            ]
         }, {
             label   : '&View',
             submenu : ( process.env.NODE_ENV === 'development' ) ? [{
@@ -362,29 +399,6 @@ export default class MenuBuilder
                     this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
                 }
             },
-            { type: 'separator' },
-            { label       : 'Bookmarks',
-                accelerator : 'Control+Shift+O',
-                click       : ( item, win ) =>
-                {
-                    if ( win )
-                    {
-                        const windowId = win.webContents.id;
-                        this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
-                    }
-                } },
-            { label       : 'View All History',
-                accelerator : 'Control+H',
-                click       : ( item, win ) =>
-                {
-                    if ( win )
-                    {
-                        const windowId = win.webContents.id;
-                        this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
-                    }
-                }
-            },
-            { type: 'separator' },
             {
                 label       : 'Toggle &Developer Tools',
                 accelerator : 'Alt+Ctrl+I',
@@ -392,14 +406,39 @@ export default class MenuBuilder
                 {
                     this.mainWindow.toggleDevTools();
                 }
-            }] : [{
-                label       : 'Toggle &Full Screen',
-                accelerator : 'F11',
-                click       : () =>
+            }] : [
                 {
-                    this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
-                }
-            }]
+                    label       : 'Toggle &Full Screen',
+                    accelerator : 'F11',
+                    click       : () =>
+                    {
+                        this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
+                    }
+                },
+                { type: 'separator' },
+                { label       : 'Bookmarks',
+                    accelerator : 'Control+Shift+O',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
+                        }
+                    } },
+                { label       : 'View All History',
+                    accelerator : 'Control+H',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
+                        }
+                    }
+                },
+                { type: 'separator' },
+            ]
         }, {
             label   : 'Help',
             submenu : [{

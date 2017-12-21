@@ -17,7 +17,8 @@ export default class TabBar extends Component
         tabs         : PropTypes.array.isRequired,
         setActiveTab : PropTypes.func.isRequired,
         addTab       : PropTypes.func.isRequired,
-        closeTab     : PropTypes.func.isRequired
+        closeTab     : PropTypes.func.isRequired,
+        selectAddressBar  : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -59,10 +60,11 @@ export default class TabBar extends Component
     {
         event.stopPropagation();
 
-        const { addTab } = this.props;
+        const { addTab, selectAddressBar } = this.props;
         const newTabUrl = 'about:blank';
         event.preventDefault();
         addTab( { url: newTabUrl, isActiveTab: true, windowId: remote.getCurrentWindow().webContents.id } );
+        selectAddressBar();
     }
 
     getTabs = ( ) =>

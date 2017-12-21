@@ -178,6 +178,7 @@ export default class Browser extends Component
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
+                    selectAddressBar= { selectAddressBar }
                     addTab={ addTab }
                     closeTab={ this.handleCloseBrowserTab }
                     tabs={ windowTabs }
