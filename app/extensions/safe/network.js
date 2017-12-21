@@ -1,8 +1,8 @@
+import { app, ipcMain } from 'electron';
 import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';
 import { parse as parseURL } from 'url';
-import { app } from 'electron';
 // import { executeScriptInBackground } from 'utils/background-process';
 import { addNotification, clearNotification } from 'actions/notification_actions';
 import { callIPC } from './ffi/ipc';
@@ -11,6 +11,7 @@ import AUTH_CONSTANTS from './auth-constants';
 const queue = [];
 let appObj;
 let store;
+
 
 export const authFromQueue = async () =>
 {
@@ -29,8 +30,9 @@ const authFromRes = async ( res ) =>
     {
         if( store )
         {
-            //TODO: Store not syncing.
             store.dispatch( addNotification({ text: err.message, onDismiss: clearNotification }) )
+
+            logger.info( store.getState() )
         }
 
         // logger.error( store.getState().notifications )
