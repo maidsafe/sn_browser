@@ -49,6 +49,12 @@ export default class AddressBar extends Component
     isInFocussedWindow = ( ) =>
     {
         const BrowserWindow = remote.BrowserWindow;
+        const focusedWindow = BrowserWindow.getFocusedWindow();
+        if( !focusedWindow )
+        {
+            return false;
+        }
+
         const focussedWindowId = BrowserWindow.getFocusedWindow().id;
         const currentWindowId = remote.getCurrentWindow().id;
 

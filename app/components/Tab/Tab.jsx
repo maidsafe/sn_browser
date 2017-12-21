@@ -7,7 +7,7 @@ import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
 
-const log = require( 'electron-log' );
+import logger from 'logger';
 
 const { Menu, MenuItem } = remote;
 
@@ -183,10 +183,12 @@ export default class Tab extends Component
                 return;
             }
 
+            // we need to strip trailing slash of webview for comparison.
+            const strippedWebviewUrl = removeTrailingSlash( webview.src );
+
             if ( webview.src === '' || webview.src === 'about:blank' ||
-            webview.src !== nextProps.url )
+                strippedWebviewUrl !== nextProps.url )
             {
-                // we didn't have a proper url but now do
                 this.loadURL( nextProps.url );
             }
         }
@@ -241,6 +243,7 @@ export default class Tab extends Component
     didStartLoading( )
     {
         const { updateTab, index } = this.props;
+        logger.silly('webview started loading');
 
         this.updateBrowserState( { loading: true } );
     }
@@ -311,7 +314,7 @@ export default class Tab extends Component
 
     willNavigate( e )
     {
-
+        logger.silly('webview will navigate');
         if ( !this.isFrozen() )
         {
             return;
@@ -398,6 +401,8 @@ export default class Tab extends Component
 
     reload()
     {
+        logger.silly('webview reloading');
+
         this.with( ( wv ) =>
         {
             wv.reload();
@@ -417,6 +422,7 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
+        logger.info('webview loadURL being triggered');
         const url = input;
         let parsedURL = parseURL( url );
 
