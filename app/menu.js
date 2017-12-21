@@ -436,8 +436,7 @@ export default class MenuBuilder
                             this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
                         }
                     }
-                },
-                { type: 'separator' },
+                }
             ]
         }, {
             label   : 'Help',
