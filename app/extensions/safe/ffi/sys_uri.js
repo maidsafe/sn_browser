@@ -86,8 +86,9 @@ class SystemUriLoader {
   }
 
   _handleError(resolve, reject) {
-    return ffi.Callback(type.Void, [type.voidPointer, type.FfiResult],
-      (userData, result) => {
+    return ffi.Callback(type.Void, [type.voidPointer, type.FfiResultPointer],
+      (userData, resultPtr) => {
+        const result = resultPtr.deref();
         if (result.error_code !== 0) {
           return reject(new Error(result.description));
         }
