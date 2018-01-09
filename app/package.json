@@ -50,21 +50,6 @@
           "filename": "safe_authenticator-mock",
           "targetDir": "extensions/safe/dist"
         }
-      },
-      "win32": {
-        "libwinpthread-1": {
-          "mirror": "https://s3.eu-west-2.amazonaws.com/libwinpthread",
-          "version": "v0.1.0",
-          "targetDir": "extensions/safe/dist",
-          "filePattern": "^libwinpthread-1.dll$"
-        },
-        "ENV": {
-          "test": {
-            "libwinpthread-1": {
-              "targetDir": "extensions/safe/dist"
-            }
-          }
-        }
       }
     }
   },
