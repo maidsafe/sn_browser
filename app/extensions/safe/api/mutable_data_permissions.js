@@ -84,9 +84,14 @@ module.exports.insertPermissionsSet = (permissionsHandle,
  * @example // Iterating over the permissions of a MutableData:
  * window.safeMutableData.getPermissions(mdHandle)
  *    .then((permsHandle) => window.safeMutableDataPermissions.listPermissionSets(permsHandle))
- *    .then((permsArray) => {
- *      console.log("Permission sets retrieved: ", permsArray);
- *    });
+ *    .then((permsArray) => permsArray.forEach((perm) => {
+ *        window.safeCryptoPubSignKey.getRaw(perm.signKeyHandle)
+ *          .then((rawSignKey) => {
+ *            console.log("Sign key: ", rawSignKey.buffer.toString('hex'));
+ *            console.log("Permissions set: ", perm.permSet);
+ *          });
+ *      })
+ *    );
  */
 module.exports.listPermissionSets = (permissionsHandle) => getObj(permissionsHandle)
    .then((permsObj) => permsObj.netObj.listPermissionSets()
