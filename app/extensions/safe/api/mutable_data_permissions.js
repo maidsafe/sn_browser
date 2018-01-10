@@ -1,4 +1,4 @@
-const { getObj, freeObj } = require('./helpers');
+const { genHandle, getObj, freeObj } = require('./helpers');
 
 /* eslint no-underscore-dangle: ["error", { "allow": ["_with_cb_forEach"] }] */
 
@@ -89,7 +89,13 @@ module.exports.insertPermissionsSet = (permissionsHandle,
  *    });
  */
 module.exports.listPermissionSets = (permissionsHandle) => getObj(permissionsHandle)
-  .then((permsObj) => permsObj.netObj.listPermissionSets());
+   .then((permsObj) => permsObj.netObj.listPermissionSets()
+     .then((permSets) => permSets.map((perm) => ({
+           permSet: perm.permSet,
+           signKeyHandle: genHandle(permsObj.app, perm.signKey),
+         }))
+     )
+   );
 
 /**
  * Free the Permissions instance from memory
