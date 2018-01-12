@@ -22,7 +22,7 @@ module.exports = [
         isInternal : true,
         manifest   : app.manifest,
         methods    : app,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -30,7 +30,7 @@ module.exports = [
         isInternal : true,
         manifest   : cipherOpt.manifest,
         methods    : cipherOpt,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -38,7 +38,7 @@ module.exports = [
         isInternal : true,
         manifest   : imdata.manifest,
         methods    : imdata,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -46,7 +46,7 @@ module.exports = [
         isInternal : true,
         manifest   : crypto.manifest,
         methods    : crypto,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -54,7 +54,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoSignKeyPair.manifest,
         methods    : cryptoSignKeyPair,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -62,7 +62,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoPubSignKey.manifest,
         methods    : cryptoPubSignKey,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -70,7 +70,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoSecSignKey.manifest,
         methods    : cryptoSecSignKey,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -78,7 +78,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoEncKeyPair.manifest,
         methods    : cryptoEncKeyPair,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -86,7 +86,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoSecEncKey.manifest,
         methods    : cryptoSecEncKey,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -94,7 +94,7 @@ module.exports = [
         isInternal : true,
         manifest   : cryptoPubEncKey.manifest,
         methods    : cryptoPubEncKey,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -102,7 +102,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdata.manifest,
         methods    : mdata,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -110,7 +110,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdataEntries.manifest,
         methods    : mdataEntries,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -118,7 +118,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdataMutation.manifest,
         methods    : mdataMutation,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -126,7 +126,7 @@ module.exports = [
         isInternal : true,
         manifest   : mdataPermissions.manifest,
         methods    : mdataPermissions,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -134,7 +134,7 @@ module.exports = [
         isInternal : true,
         manifest   : nfs.manifest,
         methods    : nfs,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     },
     {
@@ -142,7 +142,7 @@ module.exports = [
         isInternal : true,
         manifest   : nfsFile.manifest,
         methods    : nfsFile,
-        protocols  : ['safe', 'http']
+        protocols  : ['safe', 'http', 'https']
 
     }
 ];
