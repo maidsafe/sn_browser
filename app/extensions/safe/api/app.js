@@ -44,7 +44,7 @@ module.exports.manifest = {
  * window.safeApp.initialise({
  *       id: 'net.maidsafe.test.webapp.id',
  *       name: 'WebApp Test',
- *       vendor: 'MaidSafe Ltd.'
+ *       vendor: 'MaidSafe.net Ltd'
  *    }, (newState) => {
  *       console.log("Network state changed to: ", newState);
  *    })
@@ -76,7 +76,7 @@ module.exports._with_async_cb_initialise = (appInfo, enableLog, safeAppGroupId) 
  * window.safeApp.initialise({
  *    id: 'net.maidsafe.test.webapp.id',
  *    name: 'WebApp Test',
- *    vendor: 'MaidSafe Ltd.'
+ *    vendor: 'MaidSafe.net Ltd'
  * })
  * .then((appHandle) => window.safeApp.connect(appHandle))
  * .then(_ => {
@@ -404,9 +404,9 @@ module.exports.canAccessContainer = (appHandle, name, permissions) => getObj(app
  * }
  *
  * const appInfo = {
- *   id: `random net.maidsafe.beaker_plugin_safe_app.test${Math.round(Math.random() * 100000)}`,
- *   name: `random beaker_plugin_safe_app_test${Math.round(Math.random() * 100000)}`,
- *   vendor: 'MaidSafe Ltd.'
+ *   id: `random net.maidsafe.web_safe_app.test${Math.round(Math.random() * 100000)}`,
+ *   name: `random web_safe_app_test${Math.round(Math.random() * 100000)}`,
+ *   vendor: 'MaidSafe.net Ltd'
  * };
  * const appHandle = await window.safeApp.initialise(appInfo);
  * const authUri = await window.safeApp.authorise(appHandle, permissions, {});
@@ -548,7 +548,7 @@ module.exports.free = (appHandle) => freeObj(appHandle);
  * @param {String} id - unique identifier for the app
  *        (e.g. 'net.maidsafe.examples.mail-app')
  * @param {String} name - human readable name of the app (e.g. "Mail App")
- * @param {String} vendor - human readable name of the vendor (e.g. "MaidSafe Ltd.")
+ * @param {String} vendor - human readable name of the vendor (e.g. "MaidSafe.net Ltd")
  */
 
 /**

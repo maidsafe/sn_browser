@@ -15,7 +15,7 @@ import sysUri from '../ffi/sys_uri';
 
 const appInfo = {
     id     : 'net.maidsafe.app.browser.authenticator',
-    exec   : isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` :  app.getPath( 'exe' ),
+    exec   : isRunningUnpacked ? [ process.execPath, app.getAppPath() ] : [ app.getPath( 'exe' ) ],
     vendor : 'MaidSafe.net Ltd',
     name   : 'SAFE Browser Authenticator plugin',
     icon   : 'iconPath'

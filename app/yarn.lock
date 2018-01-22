@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.6.0.tgz#a5c25e54484777f2a1e12f9c050c2a820874347c"
+"@maidsafe/safe-node-app@0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.6.1.tgz#f40c924db21a3a018bb16aa4c7c3efb413d48bd3"
   dependencies:
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
     enum "^2.3.0"
