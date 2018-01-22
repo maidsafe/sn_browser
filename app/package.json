@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@maidsafe/safe-node-app": "0.6.0",
+    "@maidsafe/safe-node-app": "0.6.1",
     "enum": "2.5.0",
     "ffi": "2.2.0",
     "react-icons": "2.2.7",
@@ -24,7 +24,7 @@
   "download_deps": {
     "system_uri": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/system-uri",
-      "version": "v0.3.0",
+      "version": "v0.4.0",
       "targetDir": "extensions/safe/dist",
       "filePattern": "^.*\\.(dll|so|dylib)$"
     },
@@ -49,21 +49,6 @@
         "safe_authenticator": {
           "filename": "safe_authenticator-mock",
           "targetDir": "extensions/safe/dist"
-        }
-      },
-      "win32": {
-        "libwinpthread-1": {
-          "mirror": "https://s3.eu-west-2.amazonaws.com/libwinpthread",
-          "version": "v0.1.0",
-          "targetDir": "extensions/safe/dist",
-          "filePattern": "^libwinpthread-1.dll$"
-        },
-        "ENV": {
-          "test": {
-            "libwinpthread-1": {
-              "targetDir": "extensions/safe/dist"
-            }
-          }
         }
       }
     }

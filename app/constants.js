@@ -48,7 +48,6 @@ export const CONFIG = {
 };
 
 export const LIB_PATH = {
-    PTHREAD   : './libwinpthread-1.dll',
     SAFE_AUTH : {
         win32  : './safe_authenticator.dll',
         darwin : './libsafe_authenticator.dylib',
@@ -69,7 +68,7 @@ const execPath = ( ) =>
         return '';
     }
 
-    return isRunningUnpacked ? `${process.execPath} ${app.getAppPath()}` : app.getPath( 'exe' );
+    return isRunningUnpacked ? [ process.execPath, app.getAppPath() ] : [ app.getPath( 'exe' ) ];
 };
 
 const appInfo = {
@@ -78,7 +77,6 @@ const appInfo = {
         scope          : null,
         name           : pkg.productName,
         vendor         : pkg.author.name,
-        // customSearchPath : isRunningUnpacked ? process.execPath : app.getPath( 'exe' )
         customExecPath : execPath()
     },
     opt : {

@@ -1,6 +1,6 @@
 # Peruse
 
-## About 
+## About
 An electron web browser. Built to be a basis. Extendable by design.
 
 ## Development
@@ -14,7 +14,7 @@ And to run dev mode, ensure you run `yarn` with `NODE_ENV=dev` set:
 - `yarn dev`
 
 Want to run 'production' variables, but with hot reloading? Ensure you run the initial `yarn` with `NODE_ENV=` set, then:
-- `yarn live-dev` 
+- `yarn live-dev`
 Note, you'll need a crust.config set for the application. [Helper commands are available on osx/linux](https://github.com/joshuef/peruse/blob/master/package.json#L43-L44) (not windows yet, sorry! this is only temporary.)
 
 And to package:
@@ -32,11 +32,11 @@ extensibility.
 The interface is built in react for simple data flow and clear componentisation.
 
 
-### Webpack 
+### Webpack
 
 `webpack.config.base` contains loaders and alias' used across all webpack configs.
 
-There is a prod, config. Alongside renderer configs. 
+There is a prod, config. Alongside renderer configs.
 
 When developing against hot reloading, the `vendor` setup is used to speed up build times etc.
 
@@ -46,7 +46,7 @@ There are 'live-dev' configs for running against NODE_ENV=production but without
 ### Testing
 
 - `yarn test` runs jest (you have the optional `yarn test-watch`, too).
-- `yarn test e2e` runs spectron integration tests (not yet stable). 
+- `yarn test e2e` runs spectron integration tests (not yet stable).
 - `yarn lint` ...lints...
 
 ### Logging
@@ -67,7 +67,7 @@ Currently you need to authenticate against the SAFE Browser to get network acces
 
 ### Authenticator
 
-Currently, we're using a `temp_dist` versino of the authenticator webapp, prebuilt from the 'beaker-plugin-safe-authenticator'.
+Currently, we're using a `temp_dist` version of the authenticator webapp, prebuilt from the 'beaker-plugin-safe-authenticator'.
 
 - APIs are located in `app/extensions/safe/api`;
 - APIs are located in `app/extensions/safe/auth-api`;
