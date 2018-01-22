@@ -29,11 +29,11 @@ module.exports.len = (permissionsHandle) => getObj(permissionsHandle)
 /**
  * Lookup the permissions of a specifc key
  * If the SignKeyHandle provided is `null` it will be then
- * assumed as for `USER_ANYONE`.
+ * assumed as `window.safeApp.CONSTANTS.USER_ANYONE`.
  * @name window.safeMutableDataPermissions.getPermissionsSet
  *
  * @param {PermissionsHandle} permissionsHandle the Permissions handle
- * @param {SignKeyHandle|null} signKeyHandle the sign key to lookup for
+ * @param {SignKeyHandle|window.safeApp.CONSTANTS.USER_ANYONE} signKeyHandle the sign key to lookup for
  *
  * @returns {Promise<PermissionsSetHandle>} the permissions set for that sign key
 */
@@ -46,11 +46,11 @@ module.exports.getPermissionsSet = (permissionsHandle, signKeyHandle) => getObj(
  * Insert a new permissions to a specifc sign key. Directly commits to the network.
  * Requires 'ManagePermissions'-permission for the app.
  * If the SignKeyHandle provided is `null` the permission set will be then
- * set for `USER_ANYONE`.
+ * set for `window.safeApp.CONSTANTS.USER_ANYONE`.
  * @name window.safeMutableDataPermissions.insertPermissionsSet
  *
  * @param {PermissionsHandle} permissionsHandle the Permissions handle
- * @param {SignKeyHandle|null} signKeyHandle the sign key to map to
+ * @param {SignKeyHandle|window.safeApp.CONSTANTS.USER_ANYONE} signKeyHandle the sign key to map to
  * @param {Array} permSetArray - array of permissions
  *
  * @returns {Promise} resolves once finished
