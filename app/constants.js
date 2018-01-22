@@ -48,7 +48,6 @@ export const CONFIG = {
 };
 
 export const LIB_PATH = {
-    PTHREAD   : './libwinpthread-1.dll',
     SAFE_AUTH : {
         win32  : './safe_authenticator.dll',
         darwin : './libsafe_authenticator.dylib',

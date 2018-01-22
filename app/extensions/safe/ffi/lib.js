@@ -44,10 +44,6 @@ class LibLoader {
 
     return new Promise((resolve, reject) => {
       try {
-        if (os.platform() === 'win32') {
-          ffi.DynamicLibrary(path.resolve(__dirname, CONSTANTS.LIB_PATH.PTHREAD), mode);
-        }
-
         const lib = ffi.DynamicLibrary(path.resolve(__dirname, this[_libPath]), mode);
         Object.keys(ffiFunctions).forEach((fnName) => {
           fnDefinition = ffiFunctions[fnName];
