@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { parseAppName, getAppIconClassName } from '../utils';
 import CardLoaderFull from './card_loader_full';
 

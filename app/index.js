@@ -1,14 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { ipcRenderer } from 'electron';
-import { hashHistory } from 'react-router';
+// import { ipcRenderer } from 'electron';
 import { AppContainer } from 'react-hot-loader';
-import { syncHistoryWithStore } from 'react-router-redux';
+// import { syncHistoryWithStore } from 'react-router-redux';
 import Root from './containers/Root';
-import configureStore from './store/configureStore';
+import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 
 var log = require( 'electron-log' );
+
 
 log.info('Starting render process');
 window.onerror = function(error, url, line) {
@@ -19,12 +19,12 @@ window.onerror = function(error, url, line) {
 };
 
 const store = configureStore();
-const history = syncHistoryWithStore( hashHistory, store );
+// const history = syncHistoryWithStore( hashHistory, store );
 
 
 render(
     <AppContainer>
-        <Root store={ store } history={ history } />
+        <Root store={ store } history={history} />
     </AppContainer>,
     document.getElementById( 'root' )
 );

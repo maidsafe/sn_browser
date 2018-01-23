@@ -18,7 +18,7 @@ import pkg from 'appPackage';
 
 import openWindow from './openWindow';
 import loadExtensions from './extensions';
-import configureStore from './store/configureStore';
+import {configureStore} from './store/configureStore';
 import handleCommands from './commandHandling';
 import { setupWebAPIs } from './webAPIs';
 

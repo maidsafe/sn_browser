@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Router, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { I18n } from 'react-redux-i18n';
-import configureStore from './store';
+import {configureStore} from './store';
 import routes from './router';
 import CONSTANTS from '../constants';
 import { fetchReAuthoriseState } from './utils';
