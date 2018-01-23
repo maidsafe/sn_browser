@@ -6,6 +6,9 @@ import os from 'os';
 import path from 'path';
 import CONSTANTS from '../auth-constants';
 import * as type from './refs/types';
+import ArrayType from 'ref-array';
+
+const StringArray = ArrayType(type.CString);
 
 const _ffiFunctions = Symbol('ffiFunctions');
 const _libPath = Symbol('libPath');
@@ -19,7 +22,8 @@ class SystemUriLoader {
       install: [type.Void, ['string',
         'string',
         'string',
-        'string',
+        StringArray,
+        type.usize,
         'string',
         'string',
         'pointer',
@@ -44,21 +48,23 @@ class SystemUriLoader {
   }
 
   registerUriScheme(appInfo, schemes) {
+    if (!this.lib) {
+      return;
+    }
+    if (appInfo.exec && !Array.isArray(appInfo.exec)) {
+      throw new Error("Exec command must be an array of string arguments");
+    }
     const bundle = appInfo.bundle || appInfo.id;
-    const exec = appInfo.exec ? appInfo.exec : process.execPath;
+    const exec = appInfo.exec ? new StringArray(appInfo.exec) : new StringArray([process.execPath]);
     const vendor = appInfo.vendor.replace(/\s/g, '-');
     const name = appInfo.name.replace(/\s/g, '-');
     const icon = appInfo.icon;
     const joinedSchemes = schemes.join ? schemes.join(',') : schemes;
 
-    if (!this.lib) {
-      return;
-    }
-
     return new Promise((resolve, reject) => {
       try {
         const cb = this._handleError(resolve, reject);
-        this.lib.install(bundle, vendor, name, exec, icon, joinedSchemes, type.Null, cb);
+        this.lib.install(bundle, vendor, name, exec, exec.length, icon, joinedSchemes, type.Null, cb);
       } catch (err) {
         return reject(err);
       }
@@ -80,8 +86,9 @@ class SystemUriLoader {
   }
 
   _handleError(resolve, reject) {
-    return ffi.Callback(type.Void, [type.voidPointer, type.FfiResult],
-      (userData, result) => {
+    return ffi.Callback(type.Void, [type.voidPointer, type.FfiResultPointer],
+      (userData, resultPtr) => {
+        const result = resultPtr.deref();
         if (result.error_code !== 0) {
           return reject(new Error(result.description));
         }

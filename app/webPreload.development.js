@@ -44,7 +44,7 @@ const readableToAsyncCallback = ( rpcAPI, safeAppGroupId ) =>
         } );
 
 
-// method which will populate window.beaker with the APIs deemed appropriate for the protocol
+// method which will populate window with the APIs deemed appropriate for the protocol
 const setupPreload = () =>
 {
     // mark the safe protocol as 'secure' to enable all DOM APIs
