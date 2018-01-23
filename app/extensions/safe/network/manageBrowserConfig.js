@@ -37,6 +37,7 @@ export const saveConfigToSafe = ( store, quit ) =>
 
         try
         {
+            logger.info( 'Attempting to save data to safe.' );
             const container = await appObj.auth.getOwnContainer();
             const mut = await appObj.mutableData.newMutation();
             const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
@@ -53,6 +54,8 @@ export const saveConfigToSafe = ( store, quit ) =>
             }
             catch ( e )
             {
+                logger.verbose( 'Saved Data not found. Creating.' );
+
                 if ( e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND )
                 {
                     mut.insert( encryptedKey, encryptedData );
@@ -61,32 +64,41 @@ export const saveConfigToSafe = ( store, quit ) =>
                 }
                 else
                 {
-                    throw new Error( e );
+                    reject( e );
                 }
             }
 
             try
             {
+                logger.verbose( 'checking prev entry.' );
                 previousEntry = await container.get( encryptedKey );
             }
             catch ( e )
             {
-                if ( e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND )
+                if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY )
                 {
+                    logger.verbose( 'Previous didnt exist, creating...' );
                     mut.insert( encryptedKey, encryptedData );
                     createdNewEntry = true;
                     container.applyEntriesMutation( mut );
+                }
+                else
+                {
+                    reject( e );
                 }
             }
 
             if ( !createdNewEntry && previousEntry &&
                 typeof previousEntry.version !== 'undefined' )
             {
+                logger.verbose( 'Previous entry exists, updating...' );
+
                 version = previousEntry.version + 1;
                 await mut.update( encryptedKey, encryptedData, version );
                 container.applyEntriesMutation( mut );
             }
 
+            logger.info( 'Data saved successfully' );
             resolve();
         }
         catch ( e )
@@ -95,7 +107,7 @@ export const saveConfigToSafe = ( store, quit ) =>
             logger.error( e.message || e );
             logger.error( e.code );
             logger.error( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' );
-            reject( e )
+            reject( e );
         }
     } );
 };
@@ -128,6 +140,7 @@ export const readConfigFromSafe = ( app ) =>
 
         try
         {
+            logger.info( 'Attempting to read browser state from network' );
             const container = await appObj.auth.getOwnContainer();
             const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
             const encryptedValue = await container.get( encryptedKey );

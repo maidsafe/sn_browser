@@ -151,7 +151,7 @@ export default class MenuBuilder
                 },
                 {
                     label       : 'Read Browser State from SAFE',
-                    accelerator : 'CommandOrControl+Shift+F',
+                    accelerator : 'CommandOrControl+Alt+F',
                     click       : ( item, win ) =>
                     {
                         if ( win )

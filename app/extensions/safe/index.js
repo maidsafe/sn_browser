@@ -74,7 +74,6 @@ const init = async ( store ) =>
         }
         else
         {
-            logger.info( 'store being passed to initmockkkk', store );
             await initMock( store );
         }
     }
@@ -181,8 +180,8 @@ const manageAuthorisationActions = async ( store ) =>
 
     if ( state.safeNetwork.appStatus === SAFE.APP_STATUS.TO_AUTH )
     {
-        const app = await requestAuth();
         store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
+        const app = await requestAuth();
     }
 };
 
