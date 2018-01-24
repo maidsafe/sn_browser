@@ -1,3 +1,4 @@
+// import 'raf/polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 // import { ipcRenderer } from 'electron';
