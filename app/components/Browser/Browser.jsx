@@ -205,6 +205,7 @@ export default class Browser extends Component
                     clearNotification={ clearNotification }
                 />
                 <TabContents
+                    addTab={ addTab }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }

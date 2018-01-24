@@ -12,7 +12,7 @@
  */
 import { app, BrowserWindow, protocol, ipcMain } from 'electron';
 import logger from 'logger';
-import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'appConstants';
+import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
 

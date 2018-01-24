@@ -108,10 +108,9 @@ export default class Tab extends Component
         const partition = 'persist:safe-tab';
 
         wv.partition = partition;
-        // wv.useragent = useragent
+
         wv.plugins = true;
         wv.preload = injectPath
-        //
 
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
