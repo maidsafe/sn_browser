@@ -127,38 +127,41 @@ const manageReadStateActions = async ( store ) =>
     const state = store.getState();
     const safeNetwork = state.safeNetwork;
 
-    if ( safeNetwork.readStatus === SAFE.READ_STATUS.TO_READ )
+    if ( safeNetwork.readStatus !== SAFE.READ_STATUS.TO_READ )
     {
-        if ( safeNetwork.appStatus === SAFE.APP_STATUS.AUTHORISED &&
-            safeNetwork.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
-        {
-            store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
-            readConfigFromSafe( store )
-                .then( savedState =>
-                {
-                    store.dispatch(
-                        safeActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
-                    );
-
-                    store.dispatch( safeActions.receivedConfig( savedState ) );
-                    return null;
-                } )
-                .catch( e =>
-                {
-                    logger.error( e );
-                    store.dispatch(
-                        safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_READ )
-                    );
-                    throw new Error( e );
-                });
-        }
-
-        // TODO: Refactor and DRY this out between save/read?
-        else if ( !authingStates.includes( safeNetwork.appStatus ) )
-        {
-            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
-        }
+        // do nothing
+        return;
     }
+
+    if ( safeNetwork.appStatus === SAFE.APP_STATUS.AUTHORISED &&
+        safeNetwork.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
+    {
+        store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
+        readConfigFromSafe( store )
+            .then( savedState =>
+            {
+                store.dispatch( safeActions.receivedConfig( savedState ) );
+                store.dispatch(
+                    safeActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
+                );
+                return null;
+            } )
+            .catch( e =>
+            {
+                logger.error( e );
+                store.dispatch(
+                    safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_READ )
+                );
+                throw new Error( e );
+            } );
+    }
+
+    // TODO: Refactor and DRY this out between save/read?
+    else if ( !authingStates.includes( safeNetwork.appStatus ) )
+    {
+        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+    }
+
 
     // TODO: Refactor this: Is it needed?
     if ( safeNetwork.readStatus === SAFE.READ_STATUS.FAILED_TO_READ &&
@@ -195,38 +198,55 @@ const manageSaveStateActions = async ( store ) =>
     const state = store.getState();
     const safeNetwork = state.safeNetwork;
 
-    if ( safeNetwork.saveStatus === SAFE.SAVE_STATUS.TO_SAVE )
+    if ( safeNetwork.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE )
     {
-        if ( safeNetwork.appStatus === SAFE.APP_STATUS.AUTHORISED &&
-            safeNetwork.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
-        {
-            store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
-            saveConfigToSafe( store )
-                .then( () =>
-                {
-                    store.dispatch(
-                        safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY )
-                    );
-
-                    return null;
-
-                })
-                .catch( e =>
-                {
-                    logger.error( e );
-
-                    // TODO: Handle errors across the store in a separate error watcher?
-                    store.dispatch(
-                        safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE )
-                    );
-                    throw new Error( e );
-                })
-        }
-        else if ( !authingStates.includes( state.safeNetwork.appStatus ) )
-        {
-            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
-        }
+        // do nothing
+        return;
     }
+
+    if ( safeNetwork.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY )
+    {
+        logger.verbose( 'read stat', safeNetwork.readStatus, SAFE.READ_STATUS.TO_READ );
+
+        if ( safeNetwork.readStatus !== SAFE.READ_STATUS.TO_READ &&
+            safeNetwork.readStatus !== SAFE.READ_STATUS.READING )
+        {
+            logger.verbose( 'Can\'t save, not read yet. Triggering a read.' );
+            store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
+        }
+
+        return;
+    }
+
+    if ( safeNetwork.appStatus === SAFE.APP_STATUS.AUTHORISED &&
+        safeNetwork.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
+    {
+        store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
+        saveConfigToSafe( store )
+            .then( () =>
+            {
+                store.dispatch(
+                    safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY )
+                );
+
+                return null;
+            } )
+            .catch( e =>
+            {
+                logger.error( e );
+
+                // TODO: Handle errors across the store in a separate error watcher?
+                store.dispatch(
+                    safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE )
+                );
+                throw new Error( e );
+            } );
+    }
+    else if ( !authingStates.includes( state.safeNetwork.appStatus ) )
+    {
+        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+    }
+
 
     if ( safeNetwork.saveStatus === SAFE.SAVE_STATUS.FAILED_TO_SAVE &&
         safeNetwork.appStatus === SAFE.APP_STATUS.AUTHORISED )
