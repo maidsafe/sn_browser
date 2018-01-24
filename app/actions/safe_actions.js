@@ -12,7 +12,9 @@ export const TYPES = {
     SET_INITIALIZER_TASK        : 'SET_INITIALIZER_TASK',
     STORE_NEW_ACCOUNT           : 'STORE_NEW_ACCOUNT',
     RECONNECT_SAFE_APP          : 'RECONNECT_SAFE_APP',
-    SAFE_NETWORK_STATUS_CHANGED : 'SAFE_NETWORK_STATUS_CHANGED'
+    SAFE_NETWORK_STATUS_CHANGED : 'SAFE_NETWORK_STATUS_CHANGED',
+
+    LOGOUT                      : 'LOGOUT'
 };
 
 export const {
@@ -26,7 +28,9 @@ export const {
     setInitializerTask,
     storeNewAccount,
     safeNetworkStatusChanged,
-    reconnectSafeApp
+    reconnectSafeApp,
+
+    logout
 } = createActions(
     TYPES.SET_AUTH_APP_STATUS,
     TYPES.SET_READ_CONFIG_STATUS,
@@ -38,5 +42,7 @@ export const {
     TYPES.SET_INITIALIZER_TASK,
     TYPES.STORE_NEW_ACCOUNT,
     TYPES.SAFE_NETWORK_STATUS_CHANGED,
-    TYPES.RECONNECT_SAFE_APP
+    TYPES.RECONNECT_SAFE_APP,
+
+    TYPES.LOGOUT
 );

@@ -135,6 +135,11 @@ export default function bookmarks( state: array = initialState, action )
 
             return _.uniqBy( newBookmarks, 'url' );
         }
+        case SAFE_TYPES.LOGOUT :
+        {
+            const initial = initialState;
+            return [...initial];
+        }
         default:
             return state;
     }

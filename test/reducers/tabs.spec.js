@@ -578,4 +578,19 @@ describe( 'tabs reducer', () =>
         } );
 
     } );
+
+
+    describe( 'SAFE_LOGOUT', () =>
+    {
+        it( 'should reset tabs to the inital state', () =>
+        {
+            const tabsPostLogout = tabs( [ basicTab, basicTab, basicTab ], {
+                type    : SAFE_TYPES.LOGOUT,
+            } );
+            expect( tabsPostLogout ).toHaveLength( 1 );
+            expect( tabsPostLogout ).toMatchObject( initialState.tabs );
+        })
+
+
+    })
 } );

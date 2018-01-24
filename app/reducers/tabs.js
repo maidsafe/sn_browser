@@ -5,6 +5,7 @@ import { TYPES } from 'actions/tabs_actions';
 import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
 import { makeValidUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
+import { CONFIG } from 'appConstants';
 
 const initialState = initialAppState.tabs;
 
@@ -38,15 +39,21 @@ const getActiveTabIndex = ( state, windowId ) =>
  */
 const getCurrentWindowId = ( ) =>
 {
-    let currentWindowId;
+    let currentWindowId = 1; //for testing
 
-    if ( typeof currentWindowId === 'undefined' && remote )
+    if ( remote )
     {
         currentWindowId = remote.getCurrentWindow().webContents.id;
     }
-    else if ( typeof currentWindowId === 'undefined' )
+    else if ( webContents )
     {
-        currentWindowId = 1;
+        let allWindows = webContents.getAllWebContents();
+
+        let currentWindow = allWindows.filter( win => {
+            return win.history[0] === CONFIG.APP_HTML_PATH;
+        });
+
+        currentWindowId = currentWindow.id;
     }
 
     return currentWindowId;
@@ -416,6 +423,16 @@ export default function tabs( state: array = initialState, action )
             const newTabs = [...state, ...payloadTabs];
 
             return newTabs;
+        }
+        case SAFE_TYPES.LOGOUT :
+        {
+            const initial = initialState;
+            const firstTab = { ...initial[0] };
+            const currentWindowId = getCurrentWindowId();
+
+            firstTab.windowId = currentWindowId;
+
+            return [firstTab];
         }
         default:
             return state;

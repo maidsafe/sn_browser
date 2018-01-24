@@ -45,6 +45,7 @@ export const CONFIG = {
     SAFE_PARTITION       : 'persist:safe-tab',
     LIB_PATH             : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' ),
     CONFIG_PATH          : path.resolve( __dirname, '../resources' ),
+    APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
     DATE_FORMAT          : 'h:MM-mmm dd',
     NET_STATUS_CONNECTED : 'Connected',
     STATE_KEY            : 'peruseState',

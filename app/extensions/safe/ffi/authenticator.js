@@ -9,7 +9,6 @@ import ref from 'ref';
 import crypto from 'crypto';
 import lodash from 'lodash';
 import i18n from 'i18n';
-import logger from 'logger';
 
 import SafeLib from './safe_lib';
 import Listener from './listeners';
@@ -18,7 +17,7 @@ import * as types from './refs/types';
 import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
-
+import { logout as safeLogout } from 'actions/safe_actions';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -335,6 +334,9 @@ class Authenticator extends SafeLib
         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
         this.safeLib.auth_free( this.registeredClientHandle );
         this.registeredClientHandle = null;
+
+        let store = global.mainProcessStore;
+        store.dispatch( safeLogout() );
     }
 
     decodeRequest( uri )
@@ -870,7 +872,6 @@ class Authenticator extends SafeLib
         const decodeReqErrorCb = this._pushCb( ffi.Callback( types.Void,
             [types.voidPointer, types.FfiResultPointer, types.CString], () =>
             {
-                logger.info( 'line 871: dinnnggggggggg, ', parsedUri );
                 reject( new Error( 'Unauthorised' ) );
             } ) );
 

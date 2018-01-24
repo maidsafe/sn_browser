@@ -35,6 +35,7 @@ const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
+global.mainProcessStore = store;
 // renderer error notifications
 ipcMain.on('errorInWindow', function(event, data){
     logger.error(data)

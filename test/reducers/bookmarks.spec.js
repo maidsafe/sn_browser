@@ -74,4 +74,17 @@ describe( 'notification reducer', () =>
             expect( newBookmarks[2] ).toBeUndefined();
         } );
     } );
+
+    describe( 'SAFE_LOGOUT', () =>
+    {
+        const bookmarksPostLogout =     bookmarks( [{ url: 'i should not exist' } ], {
+                type    : SAFE_TYPES.LOGOUT,
+            } );
+
+        it( 'should reset bookmarks to inital state', () =>
+        {
+            expect( bookmarksPostLogout ).toHaveLength( 0 );
+            expect( bookmarksPostLogout ).toMatchObject( initialState.bookmarks );
+        })
+    })
 } );

@@ -88,4 +88,12 @@ describe( 'notification actions', () =>
         };
         expect( safe.reconnectSafeApp( ) ).toEqual( expectedAction );
     } );
+
+    it( 'should logout', () =>
+    {
+        const expectedAction = {
+            type : safe.TYPES.LOGOUT
+        };
+        expect( safe.logout( ) ).toEqual( expectedAction );
+    } );
 } );
