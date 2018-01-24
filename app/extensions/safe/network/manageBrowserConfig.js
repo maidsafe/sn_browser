@@ -5,6 +5,7 @@ import {
     setAuthAppStatus,
     setSaveConfigStatus
 } from 'actions/safe_actions';
+import { addNotification } from 'actions/notification_actions';
 import { CONFIG, SAFE, SAFE_APP_ERROR_CODES } from 'appConstants';
 
 /**
@@ -124,7 +125,7 @@ function delay( t )
  * Read the configuration from the netowrk
  * @param  {[type]} app SafeApp reference, with handle and authUri
  */
-export const readConfigFromSafe = ( app ) =>
+export const readConfigFromSafe = ( store ) =>
     new Promise( async ( resolve, reject ) =>
     {
         const appObj = getAppObj();
@@ -152,6 +153,18 @@ export const readConfigFromSafe = ( app ) =>
         }
         catch ( e )
         {
-            reject( e );
+            if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY ||
+                e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND )
+            {
+                store.dispatch( addNotification( {
+                    text: 'No browser data found on the network.',
+                    type: 'error'
+                } ) );
+            }
+            else
+            {
+                logger.error( e );
+                reject( e );
+            }
         }
     } );
