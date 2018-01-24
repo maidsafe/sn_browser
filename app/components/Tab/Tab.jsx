@@ -96,8 +96,6 @@ export default class Tab extends Component
 
         const partition = 'persist:safe-tab';
 
-        console.log('mountedddddd and so webview:', this);
-
         webview.partition = partition;
         webview.src = 'about:blank';
 
@@ -473,7 +471,6 @@ export default class Tab extends Component
                     // src="about:blank"
                     ref={ ( c ) =>
                     {
-                        console.log('setting reffff', this, c)
                         this.webview = c;
                     } }/>
             </div>

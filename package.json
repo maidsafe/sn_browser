@@ -176,7 +176,7 @@
     "css-loader": "^0.28.0",
     "devtron": "^1.4.0",
     "ejs-loader": "^0.3.0",
-    "electron": "1.7.8",
+    "electron": "1.7.11",
     "electron-builder": "^19.19.1",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
