@@ -3,8 +3,7 @@ import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { getAppObj } from './index.js';
 import {
     setAuthAppStatus,
-    setSaveConfigStatus,
-    logout
+    setSaveConfigStatus
 } from 'actions/safe_actions';
 import { addNotification } from 'actions/notification_actions';
 import { CONFIG, SAFE, SAFE_APP_ERROR_CODES } from 'appConstants';

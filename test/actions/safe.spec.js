@@ -89,11 +89,11 @@ describe( 'notification actions', () =>
         expect( safe.reconnectSafeApp( ) ).toEqual( expectedAction );
     } );
 
-    it( 'should logout', () =>
+    it( 'should resetStore', () =>
     {
         const expectedAction = {
-            type : safe.TYPES.LOGOUT
+            type : safe.TYPES.RESET_STORE
         };
-        expect( safe.logout( ) ).toEqual( expectedAction );
+        expect( safe.resetStore( ) ).toEqual( expectedAction );
     } );
 } );

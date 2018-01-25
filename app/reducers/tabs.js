@@ -424,7 +424,7 @@ export default function tabs( state: array = initialState, action )
 
             return newTabs;
         }
-        case SAFE_TYPES.LOGOUT :
+        case SAFE_TYPES.RESET_STORE :
         {
             const initial = initialState;
             const firstTab = { ...initial[0] };

@@ -75,10 +75,10 @@ describe( 'notification reducer', () =>
         } );
     } );
 
-    describe( 'SAFE_LOGOUT', () =>
+    describe( 'SAFE_RESET_STORE', () =>
     {
         const bookmarksPostLogout =     bookmarks( [{ url: 'i should not exist' } ], {
-                type    : SAFE_TYPES.LOGOUT,
+                type    : SAFE_TYPES.RESET_STORE,
             } );
 
         it( 'should reset bookmarks to inital state', () =>

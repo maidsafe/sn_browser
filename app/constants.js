@@ -73,7 +73,7 @@ const execPath = ( ) =>
         return '';
     }
 
-    return isRunningUnpacked ? [ process.execPath, app.getAppPath() ] : [ app.getPath( 'exe' ) ];
+    return isRunningUnpacked ? [process.execPath, app.getAppPath()] : [app.getPath( 'exe' )];
 };
 
 const appInfo = {
@@ -120,7 +120,12 @@ export const SAFE = {
         AUTHORISING          : 'AUTHORISING',
         AUTHORISATION_FAILED : 'AUTHORISATION_FAILED',
         AUTHORISATION_DENIED : 'AUTHORISATION_DENIED',
-        READY                : 'READY'
+
+        TO_LOGOUT   : 'TO_LOGOUT',
+        LOGGING_OUT : 'LOGGING_OUT',
+        LOGGED_OUT  : 'LOGGED_OUT',
+
+        READY : 'READY'
     },
     ACCESS_CONTAINERS : {
         PUBLIC       : '_public',

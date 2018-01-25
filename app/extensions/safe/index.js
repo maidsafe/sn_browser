@@ -10,7 +10,7 @@ import {
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import ipc from './ffi/ipc';
 
-import { initAnon, initMock, requestAuth } from './network';
+import { initAnon, initMock, requestAuth, clearAppObj } from './network';
 import * as tabsActions from 'actions/tabs_actions';
 import * as safeActions from 'actions/safe_actions';
 import { urlIsAllowed } from './utils/safeHelpers';
@@ -91,6 +91,7 @@ const init = async ( store ) =>
         manageSaveStateActions( store );
         manageReadStateActions( store );
         manageAuthorisationActions( store );
+        manageLogout( store );
     } );
 };
 
@@ -185,6 +186,24 @@ const manageAuthorisationActions = async ( store ) =>
     {
         store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
         const app = await requestAuth();
+    }
+};
+
+/**
+ * Handle triggering actions and related functionality for Authorising on the SAFE netowrk
+ * based upon the application auth state
+ * @param  {Object} state Application state (from redux)
+ */
+const manageLogout = async ( store ) =>
+{
+    const state = store.getState();
+
+    if ( state.safeNetwork.appStatus === SAFE.APP_STATUS.TO_LOGOUT )
+    {
+        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
+        store.dispatch( safeActions.resetStore() );
+        clearAppObj();
+        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
     }
 };
 

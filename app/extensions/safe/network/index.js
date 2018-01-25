@@ -25,58 +25,48 @@ export const authFromQueue = async () =>
 
 const authFromRes = async ( res, isAuthenticated ) =>
 {
-    try {
+    try
+    {
         appObj = await appObj.auth.loginFromURI( res );
 
-        if( isAuthenticated && store )
+        if ( isAuthenticated && store )
         {
             // TODO: AuthorisedApp should be localscope?
             // this appObj cant be used, so maybe there's no need to bother here?
             store.dispatch( safeActions.authorisedApp( appObj ) );
-            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ))
+            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
         }
-
-    }
-    catch( err )
-    {
-        if( store )
-        {
-            store.dispatch( addNotification({ text: err.message, onDismiss: clearNotification }) )
-        }
-
-        logger.error( err.message || err )
-        logger.error( `>>>>>>>>>>>>>`)
-    }
-};
-
-
-const getMDataValueForKey = async ( md, key ) =>
-{
-    try
-    {
-        const encKey = await md.encryptKey( key );
-        const value = await md.get( encKey );
-        const result = await md.decrypt( value.buf );
-        return result;
     }
     catch ( err )
     {
-        throw err;
+        if ( store )
+        {
+            store.dispatch( addNotification( { text: err.message, onDismiss: clearNotification } ) );
+        }
+
+        logger.error( err.message || err );
+        logger.error( '>>>>>>>>>>>>>' );
     }
 };
+
+
 
 export const getAppObj = () =>
     appObj;
 
+export const clearAppObj = () =>
+{
+    appObj.clearObjectCache()
+};
 
 export const handleSafeAuthAuthentication = ( uri, type ) =>
 {
-    if( typeof uri !== 'string' )
+    if ( typeof uri !== 'string' )
     {
-        throw new Error('Auth URI should be a string');
+        throw new Error( 'Auth URI should be a string' );
     }
 
-    callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP )
+    callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP );
 };
 
 export const initAnon = async ( passedStore ) =>
@@ -89,10 +79,10 @@ export const initAnon = async ( passedStore ) =>
     {
         // does it matter if we override?
         appObj = await initializeApp( APP_INFO.info, null, {
-            libPath: CONFIG.LIB_PATH,
-            registerScheme: false,
-            joinSchemes: [ PROTOCOLS.SAFE ],
-            configPath: CONFIG.CONFIG_PATH
+            libPath        : CONFIG.LIB_PATH,
+            registerScheme : false,
+            joinSchemes    : [PROTOCOLS.SAFE],
+            configPath     : CONFIG.CONFIG_PATH
         } );
 
         // TODO, do we even need to generate this?
@@ -119,12 +109,11 @@ export const initAnon = async ( passedStore ) =>
 export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
 
 
-
 export const handleOpenUrl = async ( res ) =>
 {
-    if( typeof res !== 'string' )
+    if ( typeof res !== 'string' )
     {
-        throw new Error( 'Response url should be a string')
+        throw new Error( 'Response url should be a string' );
     }
     let authUrl = null;
     logger.info( 'Received URL response' );
@@ -144,9 +133,9 @@ export const handleOpenUrl = async ( res ) =>
 
 export function parseSafeAuthUrl( url, isClient )
 {
-    if( typeof url !== 'string' )
+    if ( typeof url !== 'string' )
     {
-        throw new Error('URl should be a string to parse')
+        throw new Error( 'URl should be a string to parse' );
     }
 
     const safeAuthUrl = {};
@@ -180,13 +169,14 @@ export const requestAuth = async () =>
 {
     try
     {
-        const app = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
-        const authReq = await app.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
+        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+
+        const authReq = await appObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         global.browserAuthReqUri = authReq.uri;
 
         handleOpenUrl( authReq.uri );
-        return app;
+        return appObj;
     }
     catch ( err )
     {
@@ -231,9 +221,7 @@ export const initMock = async ( passedStore ) =>
 };
 
 
-
-
 ipcMain.on( 'browserAuthenticated', ( e, uri, isAuthenticated ) =>
 {
-    authFromRes( uri, isAuthenticated )
+    authFromRes( uri, isAuthenticated );
 } );

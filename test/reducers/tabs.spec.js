@@ -580,12 +580,12 @@ describe( 'tabs reducer', () =>
     } );
 
 
-    describe( 'SAFE_LOGOUT', () =>
+    describe( 'SAFE_RESET_STORE', () =>
     {
         it( 'should reset tabs to the inital state', () =>
         {
             const tabsPostLogout = tabs( [ basicTab, basicTab, basicTab ], {
-                type    : SAFE_TYPES.LOGOUT,
+                type    : SAFE_TYPES.RESET_STORE,
             } );
             expect( tabsPostLogout ).toHaveLength( 1 );
             expect( tabsPostLogout ).toMatchObject( initialState.tabs );

@@ -14,7 +14,7 @@ export const TYPES = {
     RECONNECT_SAFE_APP          : 'RECONNECT_SAFE_APP',
     SAFE_NETWORK_STATUS_CHANGED : 'SAFE_NETWORK_STATUS_CHANGED',
 
-    LOGOUT                      : 'LOGOUT'
+    RESET_STORE : 'RESET_STORE'
 };
 
 export const {
@@ -30,7 +30,7 @@ export const {
     safeNetworkStatusChanged,
     reconnectSafeApp,
 
-    logout
+    resetStore
 } = createActions(
     TYPES.SET_AUTH_APP_STATUS,
     TYPES.SET_READ_CONFIG_STATUS,
@@ -44,5 +44,5 @@ export const {
     TYPES.SAFE_NETWORK_STATUS_CHANGED,
     TYPES.RECONNECT_SAFE_APP,
 
-    TYPES.LOGOUT
+    TYPES.RESET_STORE
 );

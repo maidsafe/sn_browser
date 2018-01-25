@@ -17,7 +17,8 @@ import * as types from './refs/types';
 import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
-import { logout as safeLogout } from 'actions/safe_actions';
+import { setAuthAppStatus } from 'actions/safe_actions';
+import { SAFE } from 'appConstants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -335,8 +336,8 @@ class Authenticator extends SafeLib
         this.safeLib.auth_free( this.registeredClientHandle );
         this.registeredClientHandle = null;
 
-        let store = global.mainProcessStore;
-        store.dispatch( safeLogout() );
+        const store = global.mainProcessStore;
+        store.dispatch( setAuthAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
     }
 
     decodeRequest( uri )
@@ -933,8 +934,8 @@ class Authenticator extends SafeLib
                     return reject( new Error( 'Invalid Response while decoding Unregisterd client request' ) );
                 }
 
-                const appId = ref.reinterpret(appIdPtr, appIdLen);
-                return this._encodeUnRegisteredResp(reqId, appId)
+                const appId = ref.reinterpret( appIdPtr, appIdLen );
+                return this._encodeUnRegisteredResp( reqId, appId )
                     .then( ( res ) => resolve( res ) );
             } ) );
     }
