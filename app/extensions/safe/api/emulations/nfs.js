@@ -19,7 +19,7 @@ module.exports.manifest = {
  * @param {(String|Buffer)} content
  *
  * @returns {Promise<FileHandle>} the File handle of a newly created file
- * */
+ */
 module.exports.create = (nfsHandle, content) => getObj(nfsHandle)
     .then((obj) => obj.netObj.create(content)
       .then((file) => genHandle(obj.app, file)));
@@ -32,7 +32,7 @@ module.exports.create = (nfsHandle, content) => getObj(nfsHandle)
  * @param {String} fileName - the path/file name
  *
  * @returns {Promise<FileHandle>} the handle of the File found for that path
- * */
+ */
 module.exports.fetch = (nfsHandle, fileName) => getObj(nfsHandle)
     .then((obj) => obj.netObj.fetch(fileName)
       .then((file) => genHandle(obj.app, file)));
@@ -47,7 +47,7 @@ module.exports.fetch = (nfsHandle, fileName) => getObj(nfsHandle)
  * @param {(String|Buffer)} fileName the path to store the file under
  *
  * @returns {Promise<FileHandle>} the same File handle
- * */
+ */
 module.exports.insert = (nfsHandle, fileHandle, fileName) => getObj(nfsHandle)
     .then((nfsObj) => getObj(fileHandle)
       .then((fileObj) => nfsObj.netObj.insert(fileName, fileObj.netObj))
@@ -64,7 +64,7 @@ module.exports.insert = (nfsHandle, fileHandle, fileName) => getObj(nfsHandle)
  * @param {Number} version the version successor, to ensure you
  *         are overwriting the right one
  * @returns {Promise<FileHandle>} the same File handle
- * */
+ */
 module.exports.update = (nfsHandle, fileHandle, fileName, version) => getObj(nfsHandle)
     .then((nfsObj) => getObj(fileHandle)
       .then((fileObj) => nfsObj.netObj.update(fileName, fileObj.netObj, version))
@@ -72,15 +72,15 @@ module.exports.update = (nfsHandle, fileHandle, fileName, version) => getObj(nfs
     .then(() => fileHandle);
 
 /**
-* Delete a file from path. Directly commit to the network.
-* @name window.safeNfs.delete
-*
-* @param {NFSHandle} nfsHandle the NFS emulation handle
-* @param {(String|Buffer)} fileName - the path to store the file under
-* @param {Number} version the version successor, to ensure you
-*        are overwriting the right one
-* @returns {Promise}
-* */
+ * Delete a file from path. Directly commit to the network.
+ * @name window.safeNfs.delete
+ *
+ * @param {NFSHandle} nfsHandle the NFS emulation handle
+ * @param {(String|Buffer)} fileName - the path to store the file under
+ * @param {Number} version the version successor, to ensure you
+ *        are overwriting the right one
+ * @returns {Promise}
+ */
 module.exports.delete = (nfsHandle, fileName, version) => getObj(nfsHandle)
     .then((nfsObj) => nfsObj.netObj.delete(fileName, version));
 
@@ -89,24 +89,27 @@ module.exports.delete = (nfsHandle, fileName, version) => getObj(nfsHandle)
  * A new File handle is returned if the handle passed in is null, otherwise
  * the File handle provided is returned.
  *
- * Open Modes:
+ * Open Modes (these constants are exported in window.safeApp.CONSTANTS):
  *
- *  1 = Replaces the entire content of the file when writing data.
+ * CONSTANTS.NFS_FILE_MODE_OVERWRITE: Replaces the entire content of the file when writing data.
  *
- *  2 = Appends to existing data in the file.
+ * CONSTANTS.NFS_FILE_MODE_APPEND: Appends to existing data in the file.
  *
- *  4 = Open file to read.
+ * CONSTANTS.NFS_FILE_MODE_READ: Open file to read.
  *
  * @name window.safeNfs.open
  *
  * @param {NFSHandle} nfsHandle the NFS emulation handle
  * @param {FileHandle|null} fileHandle the handle of the File to open, if null
  * a new file is created
- * @param {Number} openMode the mode for opening the file
+ * @param {Number|CONSTANTS.NFS_FILE_MODE_OVERWRITE|
+ *         CONSTANTS.NFS_FILE_MODE_APPEND|
+ *         CONSTANTS.NFS_FILE_MODE_READ} [openMode=CONSTANTS.NFS_FILE_MODE_OVERWRITE]
+ * the mode for opening the file
  *
  * @returns {Promise<FileHandle>} a File handle. A new handle is returned if the
  * handle passed in is null, otherwise the File handle provided is returned
- * */
+ */
 module.exports.open = (nfsHandle, fileHandle, openMode) => getObj(nfsHandle)
     .then((nfsObj) => getObj(fileHandle, true)
       .then((fileObj) => nfsObj.netObj.open(fileObj.netObj, openMode))
@@ -123,7 +126,7 @@ module.exports.open = (nfsHandle, fileHandle, openMode) => getObj(nfsHandle)
  * @name window.safeNfs.free
  *
  * @param {NFSHandle} nfsHandle the NFS emulation handle
-*/
+ */
 module.exports.free = (nfsHandle) => freeObj(nfsHandle);
 
 /**
