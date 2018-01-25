@@ -1,8 +1,9 @@
 import { ipcRenderer } from 'electron';
 import logger from 'logger';
+
 let isSafeAppAuthenticating = false;
 let safeAuthNetworkState = -1;
-let safeAuthData = null;
+const safeAuthData = null;
 
 
 export const CLIENT_TYPES = {
@@ -38,34 +39,51 @@ function authDecision( isAllowed, data, reqType )
     ipcRenderer.send( 'registerSharedMDataDecision', data, isAllowed );
 }
 
-const addAuthNotification = ( data, app, addNotification, clearNotification, ignoreRequest  ) =>
+const addAuthNotification = ( data, app, addNotification, clearNotification, ignoreRequest ) =>
 {
-    const text = `${app.name} Requests Auth`;
-    // const success = 'bloop';
+    let text = `${app.name} Requests Auth Permission`;
+    let reqType = REQ_TYPES.AUTH;
+
+    if ( data.contReq )
+    {
+        text = `${app.name} Requests Container Access`;
+        reqType = REQ_TYPES.CONTAINER;
+    }
+
+    if ( data.mDataReq )
+    {
+        text = `${app.name} Requests mData Access`;
+        reqType = REQ_TYPES.MDATA;
+    }
+
     const success = () =>
     {
-        authDecision( true, data, REQ_TYPES.AUTH );
+        authDecision( true, data, reqType );
         clearNotification();
     };
 
     const denial = () =>
     {
-        authDecision( false, data, REQ_TYPES.AUTH );
+        authDecision( false, data, reqType );
         clearNotification();
     };
 
-    addNotification( { text, onAccept: success, onDeny: denial, onDimiss: ignoreRequest  });
-}
+    addNotification( { text, onAccept: success, onDeny: denial, onDimiss: ignoreRequest } );
+};
 
-
+/**
+ * binds listeners for authenticsator handling and triggers addition of Notifications for each
+ * @param  {[type]} addNotification   [description]
+ * @param  {[type]} clearNotification [description]
+ * @return {[type]}                   [description]
+ */
 const setupAuthHandling = ( addNotification, clearNotification ) =>
 {
-
     const ignoreRequest = ( data ) =>
     {
         ipcRenderer.send( 'skipAuthRequest', true );
         clearNotification();
-    }
+    };
 
     // safe app plugin
     ipcRenderer.send( 'registerSafeApp' );
@@ -86,7 +104,6 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onNetworkStatus', ( event, status ) =>
     {
-        // addNotification( { text: status } );
         logger.info( 'on.....onNetworkStatus' );
         safeAuthNetworkState = status;
         logger.info( 'Network state changed to: ', safeAuthNetworkState );
@@ -101,13 +118,11 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         //     const safeConnectionIntervalId = getSafeConnectionIntervalId();
         //     clearInterval( safeConnectionIntervalId );
         // }
-
-        // update();
     } );
 
     ipcRenderer.on( 'onAuthReq', ( event, data ) =>
     {
-        logger.info( 'on....onAuthReq.', data );
+        logger.verbose( 'onAuthReq triggered' );
         const app = data.authReq.app;
 
         addAuthNotification( data, app, addNotification, clearNotification, ignoreRequest );
@@ -115,23 +130,22 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onContainerReq', ( event, data ) =>
     {
-        logger.info( 'on.....onContainerReq' );
+        logger.verbose( 'onContainerReq triggered' );
         if ( data )
         {
             const app = data.contReq.app;
-            addAuthNotification( data, addNotification, clearNotification, ignoreRequest );
+            addAuthNotification( data, app, addNotification, clearNotification, ignoreRequest );
         }
     } );
 
     ipcRenderer.on( 'onSharedMDataReq', ( event, data ) =>
     {
-        logger.info( 'on.....onSharedMDataReq', data );
+        logger.verbose( 'onSharedMDataReq triggered' );
 
         if ( data )
         {
             const app = data.mDataReq.app;
 
-            // safeAuthData = data;
             addAuthNotification( data, app, addNotification, clearNotification, ignoreRequest );
         }
     } );
@@ -167,7 +181,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     ipcRenderer.on( 'onSharedMDataRes', ( event, res ) =>
     {
-        logger.info( 'on.....onSharedMDataRes',res );
+        logger.info( 'on.....onSharedMDataRes', res );
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {

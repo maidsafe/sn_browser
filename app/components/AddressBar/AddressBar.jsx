@@ -200,7 +200,6 @@ export default class AddressBar extends Component
                                 if ( isSelected && ! this.state.editingUrl &&
                                     this.isInFocussedWindow() && input )
                                 {
-                                    console.log('this bit is firiiriinrirninnnggg', this.state )
                                     input.select();
                                 }
                             } }
