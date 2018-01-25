@@ -89,7 +89,7 @@ const setupPreload = () =>
             else if ( fn.startsWith( EXPORT_AS_STATIC_OBJ_PREFIX ) )
             {
                 const manifest = { [fn]: 'sync' };
-                const rpcAPI = rpc.importAPI( k, manifest, { timeout: false } );
+                const rpcAPI = rpc.importAPI( EXPORT_AS_STATIC_OBJ_PREFIX + k, manifest, { timeout: false } );
                 // We expose the object name removing the EXPORT_AS_STATIC_OBJ_PREFIX prefix
                 const objName = fn.replace( EXPORT_AS_STATIC_OBJ_PREFIX, '' );
                 // Call the function to expose just the returned value
