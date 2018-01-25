@@ -21,12 +21,14 @@ module.exports.size = (fileHandle) => getObj(fileHandle)
     .then((obj) => obj.netObj.size());
 
 /**
- * Read content from the file
+ * Read content from the file.
+ * window.safeApp.CONSTANTS.NFS_FILE_START and window.safeApp.CONSTANTS.NFS_FILE_END
+ * may be used to read the entire content of the file.
  * @name window.safeNfsFile.read
  *
  * @param {FileHandle} fileHandle the File handle
- * @param {Number} position
- * @param {Number} len
+ * @param {Number|window.safeApp.CONSTANTS.NFS_FILE_START} position
+ * @param {Number|window.safeApp.CONSTANTS.NFS_FILE_END} len
  *
  * @returns {Promise<[Data, Size]>}
  * */

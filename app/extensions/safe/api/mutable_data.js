@@ -344,8 +344,8 @@ module.exports.get = (mdHandle, key) => getObj(mdHandle)
  * @name window.safeMutableData.put
  *
  * @param {MutableDataHandle} mdHandle the MutableData handle
- * @param {PermissionsHandle|null} permissionsHandle the permissions to create the MutableData with
- * @param {EntriesHandle|null} entriesHandle data payload to create the MutableData with
+ * @param {PermissionsHandle|window.safeApp.CONSTANTS.MD_PERMISSION_EMPTY} permissionsHandle the permissions to create the MutableData with
+ * @param {EntriesHandle|window.safeApp.CONSTANTS.MD_ENTRIES_EMPTY} entriesHandle data payload to create the MutableData with
  *
  * @returns {Promise} it resolves when finished creating it
  *
@@ -442,16 +442,16 @@ module.exports.getPermissions = (mdHandle) => getObj(mdHandle)
  * Get a handle to the permissions associated with this MutbleData for
  * a specifc key.
  * If the SignKeyHandle provided is `null` it will be then
- * assummed as `USER_ANYONE`.
+ * assummed as `window.safeApp.CONSTANTS.USER_ANYONE`.
  * @name window.safeMutableData.getUserPermissions
  *
  * @param {MutableDataHandle} mdHandle the MutableData handle
- * @param {SignKeyHandle|null} signKeyHandle the sign key to look up
+ * @param {SignKeyHandle|window.safeApp.CONSTANTS.USER_ANYONE} signKeyHandle the sign key to look up
  *
  * @returns {Promise<PermissionsSetHandle>} the PermissionsSet handle
  *
  * @example // Retrieving the permissions set associated to a sign key:
- * window.safeMutableData.getUserPermissions(mdHandle, signKey)
+ * window.safeMutableData.getUserPermissions(mdHandle, window.safeApp.CONSTANTS.USER_ANYONE)
  *    .then((permSetHandle) => console.log('PermissionsSet retrieved'));
 */
 module.exports.getUserPermissions = (mdHandle, signKeyHandle) => getObj(signKeyHandle, true)
@@ -464,11 +464,11 @@ module.exports.getUserPermissions = (mdHandle, signKeyHandle) => getObj(signKeyH
  * Delete the permissions of a specifc key. Directly commits to the network.
  * Requires `'ManagePermissions'` permission for the app.
  * If the SignKeyHandle provided is `null` it will be then
- * assummed as `USER_ANYONE`.
+ * assummed as `window.safeApp.CONSTANTS.USER_ANYONE`.
  * @name window.safeMutableData.delUserPermissions
  *
  * @param {MutableDataHandle} mdHandle the MutableData handle
- * @param {SignKeyHandle|null} signKeyHandle the sign key to lookup for
+ * @param {SignKeyHandle|window.safeApp.CONSTANTS.USER_ANYONE} signKeyHandle the sign key to lookup for
  * @param {Number} version the version successor, to confirm you are
  *        actually asking for the right state
  *
@@ -490,11 +490,11 @@ module.exports.delUserPermissions = (mdHandle,
  * Set the permissions of a specifc key. Directly commits to the network.
  * Requires `'ManagePermissions'` permission for the app.
  * If the SignKeyHandle provided is `null` the permission set will be then
- * set for `USER_ANYONE`.
+ * set for `window.safeApp.CONSTANTS.USER_ANYONE`.
  * @name window.safeMutableData.setUserPermissions
  *
  * @param {MutableDataHandle} mdHandle the MutableData handle
- * @param {SignKeyHandle|null} signKeyHandle the sign key to lookup for
+ * @param {SignKeyHandle|window.safeApp.CONSTANTS.USER_ANYONE} signKeyHandle the sign key to lookup for
  * @param {Array} pmSet array of permissions
  * @param {Number} version the version successor, to confirm you are
  *        actually asking for the right state
