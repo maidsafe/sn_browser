@@ -1,6 +1,6 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { hashHistory } from 'react-router';
+import { createHashHistory } from 'history';
 import { inRendererProcess } from 'appConstants';
 import { routerMiddleware, push } from 'react-router-redux';
 import rootReducer from '../reducers';
@@ -13,9 +13,17 @@ import {
     replayActionRenderer,
 } from 'electron-redux';
 
+let history;
+
+if( inRendererProcess )
+{
+    history = createHashHistory();
+}
+
+
 const initialStateFromMain = inRendererProcess ? getInitialStateRenderer() : {};
 
-export default ( initialState = initialStateFromMain, middleware = [] ) =>
+const configureStore = ( initialState = initialStateFromMain, middleware = [] ) =>
 {
     // Redux Configuration
     const enhancers = [];
@@ -24,8 +32,11 @@ export default ( initialState = initialStateFromMain, middleware = [] ) =>
     middleware.push( thunk );
 
     // Router Middleware
-    const router = routerMiddleware( hashHistory );
-    middleware.push( router );
+    if( history )
+    {
+        const router = routerMiddleware( history );
+        middleware.push( router );
+    }
 
     if ( inRendererProcess )
     {
@@ -87,3 +98,5 @@ export default ( initialState = initialStateFromMain, middleware = [] ) =>
 
     return store;
 };
+
+export default { configureStore, history };

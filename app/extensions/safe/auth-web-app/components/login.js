@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { I18n } from 'react-redux-i18n';
 import classNames from 'classnames';

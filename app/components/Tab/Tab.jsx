@@ -9,6 +9,8 @@ import styles from './tab.css';
 
 import logger from 'logger';
 
+// OKAY. those refs here are problematic. hmmmm
+
 const { Menu, MenuItem } = remote;
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
@@ -89,29 +91,13 @@ export default class Tab extends Component
 
     componentDidMount()
     {
-        const { webviewShell } = this.refs;
-        const { index } = this.props;
-        const preloadFile = remote.getGlobal( 'preloadFile' );
-
-        const injectPath = `file://${preloadFile}` ; // js we'll be chucking in
-
+        const { webview } = this;
         let rightClickPosition;
 
-        // cf. https://github.com/electron/electron/issues/6046
-        webviewShell.innerHTML = '<webview style="height: 100%; display: flex; flex: 1 1;"/>';
-        const wv = webviewShell.querySelector( 'webview' );
-        this.webview = wv;
-
-        const { meId } = this.props;
-
-        // TODO: Setup up render constants
         const partition = 'persist:safe-tab';
 
-        wv.partition = partition;
-        // wv.useragent = useragent
-        wv.plugins = true;
-        wv.preload = injectPath
-        //
+        webview.partition = partition;
+        webview.src = 'about:blank';
 
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
@@ -123,7 +109,7 @@ export default class Tab extends Component
                 label : 'Inspect element',
                 click : ( e ) =>
                 {
-                    wv.inspectElement( rightClickPosition.x, rightClickPosition.y );
+                    webview.inspectElement( rightClickPosition.x, rightClickPosition.y );
                 }
             }
         ] );
@@ -131,17 +117,17 @@ export default class Tab extends Component
 
         const callbackSetup = () =>
         {
-            wv.addEventListener( 'did-start-loading', ::this.didStartLoading );
-            wv.addEventListener( 'did-stop-loading', ::this.didStopLoading );
-            wv.addEventListener( 'will-navigate', ::this.willNavigate );
-            wv.addEventListener( 'did-navigate', ::this.didNavigate );
-            wv.addEventListener( 'did-navigate-in-page', ::this.didNavigateInPage );
-            wv.addEventListener( 'did-get-redirect-request', ::this.didGetRedirectRequest );
-            wv.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
-            wv.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
-            wv.addEventListener( 'new-window', ::this.newWindow );
+            webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
+            webview.addEventListener( 'did-stop-loading', ::this.didStopLoading );
+            webview.addEventListener( 'will-navigate', ::this.willNavigate );
+            webview.addEventListener( 'did-navigate', ::this.didNavigate );
+            webview.addEventListener( 'did-navigate-in-page', ::this.didNavigateInPage );
+            webview.addEventListener( 'did-get-redirect-request', ::this.didGetRedirectRequest );
+            webview.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
+            webview.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
+            webview.addEventListener( 'new-window', ::this.newWindow );
 
-            wv.addEventListener( 'contextmenu', ( e ) =>
+            webview.addEventListener( 'contextmenu', ( e ) =>
             {
                 e.preventDefault();
                 rightClickPosition = { x: e.x, y: e.y };
@@ -150,17 +136,15 @@ export default class Tab extends Component
 
             this.domReady();
 
-            wv.removeEventListener( 'dom-ready', callbackSetup );
+            webview.removeEventListener( 'dom-ready', callbackSetup );
         };
-        wv.addEventListener( 'dom-ready', callbackSetup );
+        webview.addEventListener( 'dom-ready', callbackSetup );
 
-        wv.addEventListener( 'dom-ready', () =>
+        webview.addEventListener( 'dom-ready', () =>
         {
-            // wv.executeJavaScript(`window.__itchInit && window.__itchInit(${JSON.stringify(index)})`)
             this.didStopLoading();
         } );
 
-        wv.src = 'about:blank';
     }
 
     componentWillReceiveProps( nextProps )
@@ -195,7 +179,6 @@ export default class Tab extends Component
     }
 
 
-    //
     updateBrowserState( props = {} )
     {
         const { webview } = this;
@@ -220,7 +203,7 @@ export default class Tab extends Component
 
     domReady()
     {
-        const { url, updateTab, index } = this.props;
+        const { url } = this.props;
         const { webview } = this;
 
         const webContents = webview.getWebContents();
@@ -466,8 +449,11 @@ export default class Tab extends Component
 
     render()
     {
-        const { isActiveTab, tabData, tabPath, controls } = this.props;
+        const { index, isActiveTab, tabData, tabPath, controls } = this.props;
         const { browserState } = this.state;
+
+        const preloadFile = remote.getGlobal( 'preloadFile' );
+        const injectPath = `file://${preloadFile}` ; // js we'll be chucking in
 
         let moddedClass = styles.tab;
         if ( isActiveTab )
@@ -475,8 +461,20 @@ export default class Tab extends Component
             moddedClass = styles.activeTab;
         }
 
-        const context = '';
-
-        return <div className={ moddedClass } ref="webviewShell" />;
+        return (
+            <div className={ moddedClass } >
+                <webview
+                    style={{ height: '100%', display: 'flex', flex: '1 1' }}
+                    // partition={partition}
+                    // plugins={true}
+                    preload={injectPath}
+                    // src="about:blank"
+                    ref={ ( c ) =>
+                    {
+                        this.webview = c;
+                    } }/>
+            </div>
+        );
     }
+
 }

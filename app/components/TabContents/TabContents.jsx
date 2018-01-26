@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import url from 'url';
-import { Link } from 'react-router';
 import styles from './tabContents.css';
 import Tab from 'components/Tab';
 import { PROTOCOLS, INTERNAL_PAGES } from 'appConstants';
@@ -45,7 +44,8 @@ export default class TabContents extends Component
                                 tabs={ tabs }
                                 key={ i }
                                 isActiveTab={ isActiveTab }
-                                ref={ ( c ) => {
+                                ref={ ( c ) =>
+                                {
                                     if ( isActiveTab )
                                     {
                                         this.activeTab = c;
@@ -59,7 +59,8 @@ export default class TabContents extends Component
                                 bookmarks={ bookmarks }
                                 key={ i }
                                 isActiveTab={ isActiveTab }
-                                ref={ ( c ) => {
+                                ref={ ( c ) =>
+                                {
                                     if ( isActiveTab )
                                     {
                                         this.activeTab = c;

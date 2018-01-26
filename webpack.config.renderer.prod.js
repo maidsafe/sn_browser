@@ -7,7 +7,8 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import BabiliPlugin from 'babili-webpack-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+
 import baseConfig from './webpack.config.base';
 
 export default merge.smart( baseConfig, {
@@ -41,7 +42,7 @@ export default merge.smart( baseConfig, {
         /**
      * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
      */
-        new BabiliPlugin(),
+        new UglifyJsPlugin(),
 
         new ExtractTextPlugin( 'style.css' ),
 

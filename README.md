@@ -22,6 +22,15 @@ And to package:
 
 The resulting packages are contained within the `releases` folder.
 
+#### Build commands
+
+There are a few build commands for various situations:
+
+- `yarn dev` will run a peruse developer version of the application using `MockVault`
+- `yarn live-dev` will run a peruse developer version of the application using the live network.
+- `yarn build` compiles all code, but you shouldn't need to use this
+- `yarn build-preload` will need to be run whenever you change the `preload.js` file for changes to show up in the browser.
+
 ### Redux
 
 The core is built around redux for simple state management allowing for easy
