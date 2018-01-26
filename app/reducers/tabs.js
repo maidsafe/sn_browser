@@ -422,7 +422,13 @@ export default function tabs( state: array = initialState, action )
 
             const newTabs = [...state, ...payloadTabs];
 
-            return newTabs;
+            // update tab indexes after receiving tabs from store
+            const reindexedTabs = newTabs.map( ( tab, index ) =>
+            {
+                return { ...tab, index };
+            });
+
+            return reindexedTabs;
         }
         case SAFE_TYPES.RESET_STORE :
         {
