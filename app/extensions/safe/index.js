@@ -223,10 +223,9 @@ const manageSaveStateActions = async ( store ) =>
         return;
     }
 
-    if ( safeNetwork.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY )
+    if ( safeNetwork.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
+        safeNetwork.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT )
     {
-        logger.verbose( 'read stat', safeNetwork.readStatus, SAFE.READ_STATUS.TO_READ );
-
         if ( safeNetwork.readStatus !== SAFE.READ_STATUS.TO_READ &&
             safeNetwork.readStatus !== SAFE.READ_STATUS.READING )
         {

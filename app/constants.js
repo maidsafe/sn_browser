@@ -139,10 +139,11 @@ export const SAFE = {
     },
     READ_STATUS :
     {
-        READING           : 'READING',
-        READ_SUCCESSFULLY : 'READ_SUCCESSFULLY',
-        FAILED_TO_READ    : 'FAILED_TO_READ',
-        TO_READ           : 'TO_READ'
+        READING              : 'READING',
+        READ_SUCCESSFULLY    : 'READ_SUCCESSFULLY',
+        READ_BUT_NONEXISTANT : 'READ_BUT_NONEXISTANT',
+        FAILED_TO_READ       : 'FAILED_TO_READ',
+        TO_READ              : 'TO_READ'
     },
     SAVE_STATUS :
     {

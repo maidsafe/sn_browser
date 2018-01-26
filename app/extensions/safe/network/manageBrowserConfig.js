@@ -3,7 +3,8 @@ import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { getAppObj } from './index.js';
 import {
     setAuthAppStatus,
-    setSaveConfigStatus
+    setSaveConfigStatus,
+    setReadConfigStatus
 } from 'actions/safe_actions';
 import { addNotification } from 'actions/notification_actions';
 import { CONFIG, SAFE, SAFE_APP_ERROR_CODES } from 'appConstants';
@@ -156,10 +157,18 @@ export const readConfigFromSafe = ( store ) =>
             if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY ||
                 e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND )
             {
-                store.dispatch( addNotification( {
-                    text: 'No browser data found on the network.',
-                    type: 'error'
-                } ) );
+                const state = store.getState();
+
+                //only error if we're only reading
+                if( state.safeNetwork.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE )
+                {
+                    store.dispatch( addNotification( {
+                        text: 'No browser data found on the network.',
+                        type: 'error'
+                    } ) );
+                }
+
+                store.dispatch( setReadConfigStatus( SAFE.READ_STATUS.READ_BUT_NONEXISTANT ))
             }
             else
             {
