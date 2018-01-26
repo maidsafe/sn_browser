@@ -70,7 +70,7 @@ const safeRoute = {
 
             return reply( data.body )
                 .type( data.headers['Content-Type'] )
-                .header( 'Content-Encoding', 'chunked' );
+                .header( 'Transfer-Encoding', 'chunked' );
         }
         catch ( e )
         {
