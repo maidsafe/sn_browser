@@ -96,9 +96,11 @@ const parseSafeUri = function ( uri )
 
 const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
-    if ( commandLine.length >= 2 && commandLine[1] )
+    // We expect the URI to be the last argument
+    const uri = commandLine[commandLine.length - 1];
+    if ( commandLine.length >= 2 && uri )
     {
-        handleSafeUrls( parseSafeUri( commandLine[1] ) );
+        handleSafeUrls( parseSafeUri( uri ) );
     }
 
     // Someone tried to run a second instance, we should focus our window
