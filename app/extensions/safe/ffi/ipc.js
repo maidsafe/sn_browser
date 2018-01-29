@@ -103,7 +103,14 @@ class ReqQueue
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
-            openExternal( res );
+            if ( this.req.uri === global.browserReqUri )
+            {
+                handleConnResponse( parseResUrl( res ) );
+            }
+            else
+            {
+                openExternal( res );
+            }
 
             self.next();
             return;
