@@ -9,7 +9,7 @@ export const removeTrailingSlash = ( url ) =>
 
 export const removeTrailingRedundancies = ( url ) =>
 {
-    let newUrl = url.replace( /\.html$/, '');
+    let newUrl = url.replace( /index\.html$/, '');
     newUrl = newUrl.replace( /index$/, '');
     return removeTrailingSlash( newUrl );
 }
