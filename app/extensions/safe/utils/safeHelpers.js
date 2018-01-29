@@ -14,7 +14,8 @@ export const urlIsAllowed = ( testUrl ) =>
     const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
 
     if ( adaptedProtocols.includes( urlObj.protocol ) || isForSafeServer( urlObj ) ||
-        urlObj.protocol === 'chrome-devtools:' || urlObj.protocol === 'file:' )
+        urlObj.protocol === 'chrome-devtools:' || urlObj.protocol === 'file:' ||
+        urlObj.protocol === 'blob:' )
     {
         return true;
     }
