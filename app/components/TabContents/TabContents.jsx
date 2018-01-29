@@ -41,6 +41,7 @@ export default class TabContents extends Component
                         case INTERNAL_PAGES.HISTORY :
                         {
                             return ( <History
+                                addTab={ addTab }
                                 tabs={ tabs }
                                 key={ i }
                                 isActiveTab={ isActiveTab }
@@ -56,6 +57,7 @@ export default class TabContents extends Component
                         case INTERNAL_PAGES.BOOKMARKS :
                         {
                             return ( <Bookmarks
+                                addTab={ addTab }
                                 bookmarks={ bookmarks }
                                 key={ i }
                                 isActiveTab={ isActiveTab }

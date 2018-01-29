@@ -96,8 +96,11 @@ export default class Tab extends Component
 
         const partition = 'persist:safe-tab';
 
-        webview.partition = partition;
         webview.src = 'about:blank';
+        webview.partition = partition;
+
+        webview.plugins = true;
+        // webview.preload = injectPath;
 
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
@@ -465,10 +468,7 @@ export default class Tab extends Component
             <div className={ moddedClass } >
                 <webview
                     style={{ height: '100%', display: 'flex', flex: '1 1' }}
-                    // partition={partition}
-                    // plugins={true}
                     preload={injectPath}
-                    // src="about:blank"
                     ref={ ( c ) =>
                     {
                         this.webview = c;

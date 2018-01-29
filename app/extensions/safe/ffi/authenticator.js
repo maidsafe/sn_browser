@@ -9,7 +9,6 @@ import ref from 'ref';
 import crypto from 'crypto';
 import lodash from 'lodash';
 import i18n from 'i18n';
-import logger from 'logger';
 
 import SafeLib from './safe_lib';
 import Listener from './listeners';
@@ -18,7 +17,8 @@ import * as types from './refs/types';
 import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
-
+import { setAuthAppStatus } from 'actions/safe_actions';
+import { SAFE } from 'appConstants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -335,6 +335,9 @@ class Authenticator extends SafeLib
         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
         this.safeLib.auth_free( this.registeredClientHandle );
         this.registeredClientHandle = null;
+
+        const store = global.mainProcessStore;
+        store.dispatch( setAuthAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
     }
 
     decodeRequest( uri )
@@ -870,7 +873,6 @@ class Authenticator extends SafeLib
         const decodeReqErrorCb = this._pushCb( ffi.Callback( types.Void,
             [types.voidPointer, types.FfiResultPointer, types.CString], () =>
             {
-                logger.info( 'line 871: dinnnggggggggg, ', parsedUri );
                 reject( new Error( 'Unauthorised' ) );
             } ) );
 
@@ -932,8 +934,8 @@ class Authenticator extends SafeLib
                     return reject( new Error( 'Invalid Response while decoding Unregisterd client request' ) );
                 }
 
-                const appId = ref.reinterpret(appIdPtr, appIdLen);
-                return this._encodeUnRegisteredResp(reqId, appId)
+                const appId = ref.reinterpret( appIdPtr, appIdLen );
+                return this._encodeUnRegisteredResp( reqId, appId )
                     .then( ( res ) => resolve( res ) );
             } ) );
     }

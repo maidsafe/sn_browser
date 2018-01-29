@@ -9,6 +9,10 @@ import UrlList from 'components/UrlList';
 import styles from './history.css';
 import { CLASSES } from 'appConstants';
 
+// TODO: Ideally this should be pulled in in a more generic fashion if we need filtering for these pages
+// (as opposed to hardcoded imports from extensions.)
+import { urlIsAllowed } from 'extensions/safe/utils/safeHelpers';
+
 const log = require( 'electron-log' );
 
 
@@ -16,7 +20,8 @@ export default class History extends Component
 {
     static propTypes =
     {
-        tabs : PropTypes.array.isRequired
+        tabs : PropTypes.array.isRequired,
+        addTab : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -35,7 +40,7 @@ export default class History extends Component
 
     render()
     {
-        const { tabs, isActiveTab } = this.props;
+        const { addTab, tabs, isActiveTab } = this.props;
 
         let historyList = [];
 
@@ -71,10 +76,8 @@ export default class History extends Component
                 return false;
             }
 
-            return true;
+            return urlIsAllowed( url );
         });
-
-        const urlList = ( <UrlList list={ historyList } /> );
 
         let moddedClass = styles.tab;
 
@@ -93,7 +96,7 @@ export default class History extends Component
                         <PageHeader>
                             <H1 title="History" />
                         </PageHeader>
-                        { urlList }
+                        <UrlList list={ historyList } addTab={ addTab } />
                     </Page>
 
                 </div>

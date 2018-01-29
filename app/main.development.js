@@ -12,7 +12,7 @@
  */
 import { app, BrowserWindow, protocol, ipcMain } from 'electron';
 import logger from 'logger';
-import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'appConstants';
+import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
 
@@ -35,6 +35,7 @@ const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
+global.mainProcessStore = store;
 // renderer error notifications
 ipcMain.on('errorInWindow', function(event, data){
     logger.error(data)
@@ -45,7 +46,6 @@ const mainWindow = null;
 const handleSafeUrls = ( url ) =>
 {
     // TODO. Queue incase of not started.
-    // Also parse out and deal with safe:// urls and auth response etc.
     handleOpenUrl( url );
 
     const parsedUrl = parseURL( url );

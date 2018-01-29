@@ -1,6 +1,7 @@
 /* eslint-disable func-names */
 import tabs from 'reducers/tabs';
 import { TYPES } from 'actions/tabs_actions';
+import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
 import initialState from 'reducers/initialAppState';
 
 describe( 'tabs reducer', () =>
@@ -507,4 +508,106 @@ describe( 'tabs reducer', () =>
             );
         } );
     } );
+
+    describe( 'RECEIVED_CONFIG', () =>
+    {
+        const activeTab = {
+            ...basicTab,
+            isActiveTab  : true,
+            history      : ['hello', 'forward', 'forward again'],
+            historyIndex : 2,
+            url          : 'forward again'
+        };
+
+
+        const receivedTab = {
+            ...basicTab,
+            url          : 'safe://received',
+            historyIndex : 0,
+            index : 2
+        }
+
+        it( 'should not override the current active tab', () =>
+        {
+            const openReceived = { ...receivedTab, isClosed: false };
+            // TODO: Add option for this?
+            const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
+                type : SAFE_TYPES.RECEIVED_CONFIG,
+                payload: { tabs: [openReceived] }
+            } );
+
+            expect( updatedTabs[3] ).toMatchObject( {
+                ...receivedTab,
+                isActiveTab: false,
+                index: 3
+            } );
+        } );
+        it( 'should not open the received tabs', () =>
+        {
+            const openReceived = { ...receivedTab, isClosed: false };
+            // TODO: Add option for this?
+            const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
+                type : SAFE_TYPES.RECEIVED_CONFIG,
+                payload: { tabs: [openReceived] }
+            } );
+
+            expect( updatedTabs[3] ).toMatchObject( {
+                ...receivedTab,
+                isClosed: true,
+                index: 3
+            } );
+        } );
+
+        it( 'should handle receiving the new config', () =>
+        {
+            const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
+                type : SAFE_TYPES.RECEIVED_CONFIG,
+                payload: { tabs: [receivedTab] }
+            } );
+
+            expect( updatedTabs[3] ).toMatchObject( { ...receivedTab, index: 3 } );
+
+        } );
+
+        it( 'should merge the new array with current array', () =>
+        {
+            const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
+                type : SAFE_TYPES.RECEIVED_CONFIG,
+                payload: { tabs: [receivedTab] }
+            } );
+
+            expect( updatedTabs[0] ).toMatchObject( { ...basicTab, index: 0 } );
+            expect( updatedTabs[2] ).toMatchObject( { ...activeTab, index: 2 } );
+            expect( updatedTabs[3] ).toMatchObject( { ...receivedTab, index: 3 } );
+        } );
+
+        it( 'should update the index of received tabs', () =>
+        {
+            const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
+                type : SAFE_TYPES.RECEIVED_CONFIG,
+                payload: { tabs: [receivedTab] }
+            } );
+
+            expect( updatedTabs[0].index ).toBe( 0 );
+            expect( updatedTabs[1].index ).toBe( 1 );
+            expect( updatedTabs[2].index ).toBe( 2 );
+            expect( updatedTabs[3].index ).toBe( 3 );
+        } );
+
+    } );
+
+
+    describe( 'SAFE_RESET_STORE', () =>
+    {
+        it( 'should reset tabs to the inital state', () =>
+        {
+            const tabsPostLogout = tabs( [ basicTab, basicTab, basicTab ], {
+                type    : SAFE_TYPES.RESET_STORE,
+            } );
+            expect( tabsPostLogout ).toHaveLength( 1 );
+            expect( tabsPostLogout ).toMatchObject( initialState.tabs );
+        })
+
+
+    })
 } );
