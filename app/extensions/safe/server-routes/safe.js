@@ -36,14 +36,14 @@ const safeRoute = {
                 start = rangeArray[0] ? parseInt( rangeArray[0], 10 ) : null;
                 end = rangeArray[1] ? parseInt( rangeArray[1], 10 ) : null;
 
-                //we need to separate out 0- length requests which are not partial content
-                if( start && start !== 0 )
+                // we need to separate out 0- length requests which are not partial content
+                if ( start && start !== 0 )
                 {
-                    //should have a start !== 0
+                    // should have a start !== 0
                     isRangeReq = true;
                 }
 
-                if( start === 0 && end )
+                if ( start === 0 && end )
                 {
                     isRangeReq = true;
                 }
@@ -59,7 +59,7 @@ const safeRoute = {
 
             const data = await app.webFetch( link, options );
 
-            if ( headers.range )
+            if ( isRangeReq )
             {
                 return reply( data.body )
                     .code( 206 )
@@ -70,12 +70,22 @@ const safeRoute = {
 
             return reply( data.body )
                 .type( data.headers['Content-Type'] )
-                .header( 'Transfer-Encoding', 'chunked' );
+                .header( 'Transfer-Encoding', 'chunked' )
+                .header( 'Accept-Ranges', 'bytes' )
         }
         catch ( e )
         {
             logger.error( e );
-            return reply( e.message || e );
+
+            if( e.code && e.code === -302 )
+            {
+                return reply( 'Requested Range Not Satisfiable' )
+                    .code( 416 );
+            }
+            else
+            {
+                return reply( e.message || e );
+            }
         }
     }
 };
