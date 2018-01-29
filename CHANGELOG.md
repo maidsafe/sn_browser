@@ -3,11 +3,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Fixed
-- 
+- Menu.js simplified
+- CLI Arg order fixed, enabling dev mode URI handling
 
 ### Added
 - Save/Retrieve Peruse Browser state from the network.
 - Tests for save/retrieve redux flow.
+- Notifications now have error type
+- Logout clears browser stateToSave
+- Partial Content can now be handled in a limited fashion (no multipart reqs)
+- React 16, Electron, Webpack and React-ecosystem deps updated
+- API Constants added to the DOM.
 
 ### SAFE libraries Dependencies
 - safe_app: v0.6.1 [TO UPDATE WITH PARTIAL CONTENT]
