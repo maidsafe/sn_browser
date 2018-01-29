@@ -44,7 +44,7 @@ export default class TabBar extends Component
     {
         event.stopPropagation();
 
-        this.props.setActiveTab( { index: tabData.key, url: event.target.value } );
+        this.props.setActiveTab( { index: tabData.tabIndex, url: event.target.value } );
     }
 
     handleTabClose( tabData, event )
@@ -53,7 +53,7 @@ export default class TabBar extends Component
 
         const { closeTab } = this.props;
 
-        closeTab( { index: tabData.key } );
+        closeTab( { index: tabData.tabIndex } );
     }
 
     handleAddTabClick( event )
@@ -80,7 +80,7 @@ export default class TabBar extends Component
 
             const isActiveTab = tab.isActiveTab;
             let tabStyleClass = styles.tab;
-            const tabData = { key: i, url: tab.url };
+            const tabData = { key: i, tabIndex: tab.index, url: tab.url };
 
             if ( isActiveTab )
             {

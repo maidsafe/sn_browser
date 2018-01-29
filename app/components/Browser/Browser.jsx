@@ -183,7 +183,7 @@ export default class Browser extends Component
                     selectAddressBar={ selectAddressBar }
                     addTab={ addTab }
                     closeTab={ this.handleCloseBrowserTab }
-                    tabs={ windowTabs }
+                    tabs={ openTabs }
                 />
                 <AddressBar
                     key={ 2 }
@@ -216,7 +216,7 @@ export default class Browser extends Component
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
-                    tabs={ windowTabs }
+                    tabs={ openTabs }
                     bookmarks={ bookmarks }
                     ref={ ( c ) =>
                     {

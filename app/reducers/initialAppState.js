@@ -15,6 +15,7 @@ const initialState = {
         url          : 'safe-auth://home/',
         history      : ['safe-auth://home/'],
         historyIndex : 0,
+        index        : 0,
         isActiveTab  : true,
         isClosed     : false
     }],

@@ -70,7 +70,7 @@ const addTab = ( state, tab ) =>
 
     const targetWindowId = tab.windowId || currentWindowId;
     const tabUrl = makeValidUrl( tab.url || '' );
-    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl] };
+    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length };
 
     let newState = [...state];
 
@@ -107,8 +107,9 @@ const closeTab = ( state, payload ) =>
     const openTabs = state.filter( tab => !tab.isClosed && tab.windowId === targetWindowId );
 
     const updatedTab = {
-        ...tabToMerge, isActiveTab : false, index, isClosed    : true, closedTime  : new Date()
+        ...tabToMerge, isActiveTab : false, index, isClosed : true, closedTime  : new Date()
     };
+
     let updatedState = [...state];
     updatedState[index] = updatedTab;
 
@@ -355,6 +356,11 @@ const updateTab = ( state, payload ) =>
 };
 
 
+const reindexTabs = ( tabs ) => tabs.map( ( tab, index ) =>
+{
+    return { ...tab, index };
+});
+
 /**
  * Tabs reducer. Should handle all tab states, including window/tab id and the individual tab history
  * @param  { array } state  array of tabs
@@ -422,13 +428,7 @@ export default function tabs( state: array = initialState, action )
 
             const newTabs = [...state, ...payloadTabs];
 
-            // update tab indexes after receiving tabs from store
-            const reindexedTabs = newTabs.map( ( tab, index ) =>
-            {
-                return { ...tab, index };
-            });
-
-            return reindexedTabs;
+            return reindexTabs( newTabs );
         }
         case SAFE_TYPES.RESET_STORE :
         {
