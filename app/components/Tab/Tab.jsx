@@ -6,10 +6,7 @@ import { removeTrailingSlash } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
-
 import logger from 'logger';
-
-// OKAY. those refs here are problematic. hmmmm
 
 const { Menu, MenuItem } = remote;
 
@@ -95,8 +92,6 @@ export default class Tab extends Component
         let rightClickPosition;
 
         const partition = 'persist:safe-tab';
-
-        webview.src = 'about:blank';
         webview.partition = partition;
 
         webview.plugins = true;
@@ -141,6 +136,9 @@ export default class Tab extends Component
 
             webview.removeEventListener( 'dom-ready', callbackSetup );
         };
+
+        webview.src = 'about:blank';
+
         webview.addEventListener( 'dom-ready', callbackSetup );
 
         webview.addEventListener( 'dom-ready', () =>

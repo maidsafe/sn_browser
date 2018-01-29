@@ -15,22 +15,22 @@ export default class Browser extends Component
 {
     static propTypes =
     {
-        bookmarks         : PropTypes.array,
-        notifications     : PropTypes.array,
-        tabs              : PropTypes.array,
-        addBookmark       : PropTypes.func.isRequired,
-        removeBookmark    : PropTypes.func.isRequired,
-        selectAddressBar   : PropTypes.func.isRequired,
+        bookmarks            : PropTypes.array,
+        notifications        : PropTypes.array,
+        tabs                 : PropTypes.array,
+        addBookmark          : PropTypes.func.isRequired,
+        removeBookmark       : PropTypes.func.isRequired,
+        selectAddressBar     : PropTypes.func.isRequired,
         deselectAddressBar   : PropTypes.func.isRequired,
-        blurAddressBar    : PropTypes.func.isRequired,
-        addTab            : PropTypes.func,
-        closeTab          : PropTypes.func,
-        closeActiveTab    : PropTypes.func,
-        reopenTab         : PropTypes.func,
+        blurAddressBar       : PropTypes.func.isRequired,
+        addTab               : PropTypes.func,
+        closeTab             : PropTypes.func,
+        closeActiveTab       : PropTypes.func,
+        reopenTab            : PropTypes.func,
         // addNotification   : PropTypes.func.isRequired,
-        addLocalNotification   : PropTypes.func.isRequired,
-        clearNotification : PropTypes.func,
-        ui                : PropTypes.object.isRequired
+        addLocalNotification : PropTypes.func.isRequired,
+        clearNotification    : PropTypes.func,
+        ui                   : PropTypes.object.isRequired
     }
 
     static defaultProps =
@@ -175,15 +175,17 @@ export default class Browser extends Component
         return (
             <div className={ styles.container }>
                 <TabBar
+                    key={ 1 }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
-                    selectAddressBar= { selectAddressBar }
+                    selectAddressBar={ selectAddressBar }
                     addTab={ addTab }
                     closeTab={ this.handleCloseBrowserTab }
                     tabs={ windowTabs }
                 />
                 <AddressBar
+                    key={ 2 }
                     address={ activeTabAddress }
                     onSelect={ deselectAddressBar }
                     onFocus={ selectAddressBar }
@@ -201,10 +203,13 @@ export default class Browser extends Component
                     } }
                 />
                 <Notifier
+                    key={ 3 }
+
                     { ...notification }
                     clearNotification={ clearNotification }
                 />
                 <TabContents
+                    key={ 4 }
                     addTab={ addTab }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
