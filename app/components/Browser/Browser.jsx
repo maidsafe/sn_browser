@@ -160,7 +160,8 @@ export default class Browser extends Component
         // only show the first notification
         const notification = notifications[0];
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
-        const activeTab = windowTabs.find( tab => tab.isActiveTab );
+        const openTabs = windowTabs.filter( tab => !tab.isClosed );
+        const activeTab = openTabs.find( tab => tab.isActiveTab );
 
         // TODO: if not, lets trigger close?
         if ( !activeTab )
