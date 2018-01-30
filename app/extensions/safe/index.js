@@ -13,6 +13,7 @@ import ipc from './ffi/ipc';
 import { initAnon, initMock, requestAuth, clearAppObj } from './network';
 import * as tabsActions from 'actions/tabs_actions';
 import * as safeActions from 'actions/safe_actions';
+import * as notificationActions from 'actions/notification_actions';
 import { urlIsAllowed } from './utils/safeHelpers';
 import * as authAPI from './auth-api';
 
@@ -118,6 +119,21 @@ const authingStates = [
 ];
 
 
+const networkIsConnected = ( state ) =>
+{
+    const safeNetwork = state.safeNetwork;
+
+    if ( safeNetwork.appStatus === null || safeNetwork.networkStatus === SAFE.NETWORK_STATE.UNKNOWN ||
+        safeNetwork.networkStatus === SAFE.NETWORK_STATE.DISCONNECTED )
+    {
+        return false
+    }
+    else
+    {
+        return true;
+    }
+}
+
 /**
  * Handle triggering actions and related functionality for saving to SAFE netowrk
  * based upon the application stateToSave
@@ -156,7 +172,16 @@ const manageReadStateActions = async ( store ) =>
                 throw new Error( e );
             } );
     }
+    else if ( !networkIsConnected( state ) )
+    {
+        store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.FAILED_TO_READ ) );
+        store.dispatch( notificationActions.addNotification(
+            {
+                text: 'Cannot read. Network not yet connected.',
+                type: 'error'
+            } ) );
 
+    }
     // TODO: Refactor and DRY this out between save/read?
     else if ( !authingStates.includes( safeNetwork.appStatus ) )
     {
@@ -207,6 +232,7 @@ const manageLogout = async ( store ) =>
     }
 };
 
+
 /**
  * Handle triggering actions and related functionality for saving to SAFE netowrk
  * based upon the application stateToSave
@@ -223,7 +249,7 @@ const manageSaveStateActions = async ( store ) =>
         return;
     }
 
-    if ( safeNetwork.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
+    if ( networkIsConnected( state ) && safeNetwork.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
         safeNetwork.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT )
     {
         if ( safeNetwork.readStatus !== SAFE.READ_STATUS.TO_READ &&
@@ -259,6 +285,16 @@ const manageSaveStateActions = async ( store ) =>
                 );
                 throw new Error( e );
             } );
+    }
+    else if ( !networkIsConnected( state ) )
+    {
+        store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
+        store.dispatch( notificationActions.addNotification(
+            {
+                text: 'Cannot save. Network not yet connected.',
+                type: 'error'
+            } ) );
+
     }
     else if ( !authingStates.includes( state.safeNetwork.appStatus ) )
     {
