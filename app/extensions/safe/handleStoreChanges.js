@@ -31,7 +31,7 @@ const handleStoreChanges = ( store ) =>
 const networkIsConnected = ( state ) =>
 {
     const safeNetwork = state.safeNetwork;
-    logger.info('TESTING CONNENCNENCTEDD', safeNetwork);
+
     if ( safeNetwork.appStatus === SAFE.NETWORK_STATE.LOGGED_IN ||
         authingStates.includes( safeNetwork.appStatus ) )
     {
@@ -86,7 +86,7 @@ const manageReadStateActions = async ( store ) =>
         store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.FAILED_TO_READ ) );
         store.dispatch( notificationActions.addNotification(
             {
-                text: 'Cannot read. Network not yet connected.',
+                text: 'Unable to read the browser state. The network is not yet connected.',
                 type: 'error'
             } ) );
 
@@ -218,7 +218,7 @@ const manageSaveStateActions = async ( store ) =>
         store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
         store.dispatch( notificationActions.addNotification(
             {
-                text: 'Cannot save. Network not yet connected.',
+                text: 'Unable to save the browser state. The network is not yet connected.',
                 type: 'error'
             } ) );
 
