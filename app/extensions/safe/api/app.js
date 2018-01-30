@@ -302,20 +302,23 @@ module.exports.authoriseShareMd = (appHandle, permissions) => new Promise((resol
  *
  * @param {SAFEAppHandle} appHandle the app handle
  * @param {String} url url to fetch
+ * @param {WebFetchOptions} [options=null] additional options
  *
- * @returns {Promise<File>} the file object found for that URL
+ * @returns {Promise<Object>} the object with body of content and headers
  *
  * @example // Retrieving a web page:
  * window.safeApp.webFetch(
  *   appHandle, // the app handle obtained when invoking `initialise`
- *   'safe://servicename.publicid' // the SAFE Network URL
+ *   'safe://servicename.publicid', // the SAFE Network URL
+ *   { range: { start: 0, end: 9 } } // the range of bytes to retrieve
  * )
  * .then((data) => {
- *    console.log('Web page content retrieved: ', data.toString());
+ *    console.log('Web page headers retrieved: ', data.headers.toString());
+ *    console.log('Web page content (first 10 bytes) retrieved: ', data.body.toString());
  * });
  */
-module.exports.webFetch = (appHandle, url) => getObj(appHandle)
-    .then((obj) => obj.app.webFetch(url));
+module.exports.webFetch = (appHandle, url, options) => getObj(appHandle)
+    .then((obj) => obj.app.webFetch(url, options));
 
 /**
  * Whether or not this is a registered/authenticated session.
@@ -620,4 +623,19 @@ module.exports.free = (appHandle) => freeObj(appHandle);
  * application to connect to the network wihout the need to get authorisation
  * from the Authenticator again. Although if the user decided to revoke the application
  * the auth URI shall be obtained again from the Authenticator.
+ */
+
+ /**
+ * @name WebFetchOptions
+ * @typedef {Object} WebFetchOptions
+ * holds additional options for the `webFetch` function.
+ * @param {Object} range range of bytes to be retrieved.
+ * The `start` attribute is expected to be the start offset, while the
+ * `end` attribute of the `range` object the end position (both inclusive)
+ * to be retrieved, e.g. with `range: { start: 2, end: 3 }` the 3rd
+ * and 4th bytes of data will be retrieved.
+ * If `end` is not specified, the bytes retrived will be from the `start` offset
+ * untill the end of the file.
+ * The ranges values are also used to populate the `Content-Range` and
+ * `Content-Length` headers in the response.
  */
