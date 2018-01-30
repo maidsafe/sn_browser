@@ -512,7 +512,7 @@ class Authenticator extends SafeLib
                     ( userData, resultPtr, res ) =>
                     {
                         const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && !res )
+                        if ( result.error_code !== 0 )
                         {
                             return reject( JSON.stringify( result ) );
                         }
