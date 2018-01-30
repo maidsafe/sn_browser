@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Menu.js simplified
 - CLI Arg order fixed, enabling dev mode URI handling
+- Handling of blob Urls
+- Crashes from partial content requests.
 
 ### Added
 - Save/Retrieve Peruse Browser state from the network.
@@ -16,7 +18,7 @@ All notable changes to this project will be documented in this file.
 - API Constants added to the DOM.
 
 ### SAFE libraries Dependencies
-- safe_app: v0.6.1 [TO UPDATE WITH PARTIAL CONTENT]
+- safe_app: v0.7.0
 - system_uri: v0.4.0
 
 
