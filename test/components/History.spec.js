@@ -33,7 +33,7 @@ describe( 'History Component', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [{ url: 'safe://hello', isActiveTab: true, windowId: 1, history: ['safe://hello'] }] };
+            props = { ...props, history: [{ url: 'safe://hello', isActiveTab: true, windowId: 1, history: ['safe://hello'] }] };
             wrapper = shallow( <History { ...props } /> );
         } );
 
@@ -60,7 +60,7 @@ describe( 'History Component', () =>
         beforeEach( () =>
         {
             props = { ...props,
-                tabs :
+                history :
                 [
                     { url         : 'safe-auth://lalala',
                         isActiveTab : true,

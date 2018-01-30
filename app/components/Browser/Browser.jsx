@@ -217,6 +217,7 @@ export default class Browser extends Component
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
                     tabs={ openTabs }
+                    allTabs={ tabs }
                     bookmarks={ bookmarks }
                     ref={ ( c ) =>
                     {

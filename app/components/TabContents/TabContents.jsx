@@ -18,7 +18,7 @@ export default class TabContents extends Component
 
     render()
     {
-        const { addTab, bookmarks, tabs, updateActiveTab, updateTab } = this.props;
+        const { addTab, bookmarks, allTabs, tabs, updateActiveTab, updateTab } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
         {
@@ -35,7 +35,7 @@ export default class TabContents extends Component
                         {
                             return ( <History
                                 addTab={ addTab }
-                                tabs={ tabs }
+                                history={ allTabs }
                                 key={ i }
                                 isActiveTab={ isActiveTab }
                                 ref={ ( c ) =>

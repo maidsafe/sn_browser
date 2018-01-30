@@ -20,13 +20,13 @@ export default class History extends Component
 {
     static propTypes =
     {
-        tabs : PropTypes.array.isRequired,
-        addTab : PropTypes.func.isRequired
+        history : PropTypes.array.isRequired,
+        addTab  : PropTypes.func.isRequired
     }
 
     static defaultProps =
     {
-        tabs : []
+        history : []
     }
 
     isInFocussedWindow = ( ) =>
@@ -40,13 +40,13 @@ export default class History extends Component
 
     render()
     {
-        const { addTab, tabs, isActiveTab } = this.props;
+        const { addTab, history, isActiveTab } = this.props;
 
         let historyList = [];
 
-        tabs.forEach( ( tab, i ) =>
+        history.forEach( ( tab, i ) =>
         {
-            if( tab.history )
+            if ( tab.history )
             {
                 tab.history.forEach( ( history, ii ) =>
                 {
@@ -57,12 +57,12 @@ export default class History extends Component
             }
         } );
 
-        const ignoreProtocolList = [ 'safe-auth:'];
+        const ignoreProtocolList = ['safe-auth:'];
         const ignoreList = [
             'about:blank',
             'peruse://history',
             'peruse://bookmarks'
-        ]
+        ];
 
         // TODO: uniq by object props, so will be less harsh once we have title etc.
         historyList = _.uniq( historyList );
@@ -77,7 +77,7 @@ export default class History extends Component
             }
 
             return urlIsAllowed( url );
-        });
+        } );
 
         let moddedClass = styles.tab;
 
