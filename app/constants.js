@@ -136,6 +136,7 @@ export const SAFE = {
         CONNECTED    : 'Connected',
         UNKNOWN      : 'Unknown',
         DISCONNECTED : 'Disconnected',
+        LOGGED_IN  : 'LOGGED_IN',
     },
     READ_STATUS :
     {

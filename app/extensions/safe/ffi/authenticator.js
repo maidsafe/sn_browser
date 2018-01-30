@@ -304,6 +304,9 @@ class Authenticator extends SafeLib
                         }
                         this.registeredClientHandle = clientHandle;
                         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
+
+                        const store = global.mainProcessStore;
+                        store.dispatch( setAuthAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
                         resolve();
                     } ) );
 
