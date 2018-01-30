@@ -286,9 +286,12 @@ const setActiveTab = ( state, payload ) =>
 const updateTabHistory = ( tabToMerge, url ) =>
 {
     const updatedTab = { ...tabToMerge };
+    const history = updatedTab.history;
+    const currentIndex = updatedTab.historyIndex;
+
     if ( url && url !== tabToMerge.url )
     {
-        if ( updatedTab.history )
+        if ( history && history[currentIndex] !== url  )
         {
             updatedTab.historyIndex += 1;
             updatedTab.history.push( url );

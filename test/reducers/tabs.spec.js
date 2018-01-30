@@ -6,6 +6,7 @@ import initialState from 'reducers/initialAppState';
 
 describe( 'tabs reducer', () =>
 {
+
     const basicTab = {
         url          : 'safe://hello',
         windowId     : 1,
@@ -13,6 +14,12 @@ describe( 'tabs reducer', () =>
         historyIndex : 0,
         history      : ['safe://hello']
     };
+
+    beforeEach( () =>
+    {
+        basicTab.url = 'safe://hello';
+        basicTab.history = ['safe://hello'];
+    });
 
     it( 'should return the initial state', () =>
     {
@@ -120,7 +127,7 @@ describe( 'tabs reducer', () =>
                     payload : { index: 1 }
                 } )
             ).toEqual( [
-                { ...basicTab, isActiveTab: false },
+                { ...activeTab, isActiveTab: false },
                 {
                     ...basicTab,
                     isActiveTab : true,
@@ -311,8 +318,15 @@ describe( 'tabs reducer', () =>
 
     describe( 'UPDATE_ACTIVE_TAB', () =>
     {
-        const activeTab = { ...basicTab, isActiveTab: true };
-        const anotherWindowActiveTab = { ...activeTab, windowId: 2 };
+        let activeTab;
+        let anotherWindowActiveTab;
+
+        beforeEach( () =>
+        {
+            activeTab = { ...basicTab, isActiveTab: true };
+            anotherWindowActiveTab = { ...activeTab, windowId: 2 };
+        });
+
         it( 'should update the active tab\'s properties', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
@@ -372,8 +386,48 @@ describe( 'tabs reducer', () =>
                     historyIndex: 1
                 }
             );
+        } );
 
-            // expect( newState[2] ).toHaveProperty( 'history' );
+        it( 'should not add to history index when same url is given', () =>
+        {
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed!', title: 'hi' }
+            } );
+
+            const secondState = tabs( newState, {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed!', title: 'hi' }
+            } );
+            const thirdState = tabs( secondState, {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed#woooo', title: 'hi' }
+            } );
+
+            const fourthState = tabs( thirdState, {
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'changed#woooo', title: 'hi' }
+            } );
+
+            expect( secondState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url   : 'safe://changed!',
+                    title : 'hi',
+                    historyIndex: 1
+                }
+            );
+
+            expect( fourthState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url   : 'safe://changed#woooo',
+                    title : 'hi',
+                    historyIndex: 2
+                }
+            );
+
+            expect( fourthState[2].history.length ).toBe( 3 );
         } );
     } );
 
@@ -401,6 +455,7 @@ describe( 'tabs reducer', () =>
 
             expect( updatedTab ).toHaveProperty( 'history' );
         } );
+
     } );
 
 
