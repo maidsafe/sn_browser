@@ -4,23 +4,16 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import styles from './tabContents.css';
 import Tab from 'components/Tab';
-import { PROTOCOLS, INTERNAL_PAGES } from 'appConstants';
+import { INTERNAL_PAGES } from 'appConstants';
+import { isInternalPage } from 'utils/urlHelpers';
 import History from 'components/PerusePages/History';
 import Bookmarks from 'components/PerusePages/Bookmarks';
-import UrlList from 'components/UrlList';
 
 export default class TabContents extends Component
 {
     getActiveTab()
     {
         return this.activeTab;
-    }
-
-    isInternalPage = ( tab ) =>
-    {
-        const urlObj = url.parse( tab.url );
-
-        return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
     }
 
     render()
@@ -31,7 +24,7 @@ export default class TabContents extends Component
         {
             if ( !tab.isClosed )
             {
-                if ( this.isInternalPage( tab ) )
+                if ( isInternalPage( tab ) )
                 {
                     const urlObj = url.parse( tab.url );
                     const isActiveTab = tab.isActiveTab;

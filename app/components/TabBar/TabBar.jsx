@@ -1,24 +1,26 @@
 
 // @flow
 import { remote } from 'electron';
+import url from 'url';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './tabBar.css';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
 import logger from 'logger';
-import { CLASSES } from 'appConstants';
+import { isInternalPage } from 'utils/urlHelpers';
+import { CLASSES, INTERNAL_PAGES } from 'appConstants';
 
 export default class TabBar extends Component
 {
     static propTypes =
     {
-        tabInFocus   : PropTypes.number.isRequired,
-        tabs         : PropTypes.array.isRequired,
-        setActiveTab : PropTypes.func.isRequired,
-        addTab       : PropTypes.func.isRequired,
-        closeTab     : PropTypes.func.isRequired,
-        selectAddressBar  : PropTypes.func.isRequired
+        tabInFocus       : PropTypes.number.isRequired,
+        tabs             : PropTypes.array.isRequired,
+        setActiveTab     : PropTypes.func.isRequired,
+        addTab           : PropTypes.func.isRequired,
+        closeTab         : PropTypes.func.isRequired,
+        selectAddressBar : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -73,6 +75,32 @@ export default class TabBar extends Component
 
         return tabs.map( ( tab, i ) =>
         {
+            let title = tab.title;
+
+            if ( isInternalPage( tab ) )
+            {
+                // TODO: DRY this out with TabContents.jsx
+                const urlObj = url.parse( tab.url );
+                switch ( urlObj.host )
+                {
+                    case INTERNAL_PAGES.HISTORY :
+                    {
+                        title = 'History';
+                        break;
+                    }
+                    case INTERNAL_PAGES.BOOKMARKS :
+                    {
+                        title = 'Bookmarks';
+                        break;
+                    }
+                    default :
+                    {
+                        title = null;
+                        break;
+                    }
+                }
+            }
+
             if ( tab.isClosed )
             {
                 return;
@@ -87,12 +115,13 @@ export default class TabBar extends Component
                 tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
             }
 
+
             return ( <div
                 key={ i }
                 className={ `${tabStyleClass} ${CLASSES.TAB}` }
                 onClick={ this.handleTabClick.bind( this, tabData ) }
             >
-                <span className={ styles.tabText }>{ tab.title || 'New Tab' }</span>
+                <span className={ styles.tabText }>{ title || 'New Tab' }</span>
                 <MdClose
                     className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
                     onClick={ this.handleTabClose.bind( this, tabData ) }

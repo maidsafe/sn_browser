@@ -1,6 +1,15 @@
 import { parse } from 'url';
 import pkg from 'appPackage';
 import logger from 'logger';
+import { PROTOCOLS } from 'appConstants';
+
+
+export const isInternalPage = ( tab ) =>
+{
+    const urlObj = parse( tab.url );
+
+    return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
+}
 
 export const removeTrailingSlash = ( url ) =>
 {
