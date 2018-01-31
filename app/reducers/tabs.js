@@ -2,8 +2,10 @@
 // @flow
 import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
+import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
 import { makeValidUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
+import { CONFIG } from 'appConstants';
 
 const initialState = initialAppState.tabs;
 
@@ -37,15 +39,20 @@ const getActiveTabIndex = ( state, windowId ) =>
  */
 const getCurrentWindowId = ( ) =>
 {
-    let currentWindowId;
+    let currentWindowId = 1; // for testing
 
-    if ( typeof currentWindowId === 'undefined' && remote )
+    if ( remote )
     {
         currentWindowId = remote.getCurrentWindow().webContents.id;
     }
-    else if ( typeof currentWindowId === 'undefined' )
+    else if ( webContents )
     {
-        currentWindowId = 1;
+        const allWindows = webContents.getAllWebContents();
+
+        const currentWindow = allWindows.filter( win =>
+            win.history[0] === CONFIG.APP_HTML_PATH );
+
+        currentWindowId = currentWindow.id;
     }
 
     return currentWindowId;
@@ -62,7 +69,7 @@ const addTab = ( state, tab ) =>
 
     const targetWindowId = tab.windowId || currentWindowId;
     const tabUrl = makeValidUrl( tab.url || '' );
-    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl] };
+    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length };
 
     let newState = [...state];
 
@@ -101,6 +108,7 @@ const closeTab = ( state, payload ) =>
     const updatedTab = {
         ...tabToMerge, isActiveTab : false, index, isClosed    : true, closedTime  : new Date()
     };
+
     let updatedState = [...state];
     updatedState[index] = updatedTab;
 
@@ -274,17 +282,36 @@ const setActiveTab = ( state, payload ) =>
 };
 
 
-const updateTabHistory = ( tabToMerge, url ) =>
+const updateTabHistory = ( tabToMerge, payload ) =>
 {
-    const updatedTab = { ...tabToMerge };
+    const url = makeValidUrl( payload.url );
+    let updatedTab = { ...tabToMerge, ...payload };
+    const ancientHistory = tabToMerge.history;
+    let newHistory = [...ancientHistory];
+    const currentIndex = tabToMerge.historyIndex;
+
     if ( url && url !== tabToMerge.url )
     {
-        if ( updatedTab.history )
+        if ( ancientHistory && ancientHistory[currentIndex] !== url )
         {
             updatedTab.historyIndex += 1;
+
+            // if we're not at last index split array there.
+            if( ( ancientHistory.length - 1 ) !== currentIndex )
+            {
+                newHistory = newHistory.slice( 0, currentIndex + 1 );
+            }
+
+            // else, a simple addition to array
+            updatedTab.history = newHistory;
             updatedTab.history.push( url );
         }
     }
+
+    updatedTab = {
+        ...updatedTab,
+        url };
+
     return updatedTab;
 };
 
@@ -299,16 +326,14 @@ const updateActiveTab = ( state, payload ) =>
     }
 
     const tabToMerge = state[index];
-
-    const targetWindowId = tabToMerge.windowId || getCurrentWindowId();
-
     let updatedTab = { ...tabToMerge };
 
-    const url = makeValidUrl( payload.url );
-
-    updatedTab = updateTabHistory( updatedTab, url );
     updatedTab = { ...updatedTab, ...payload };
-    updatedTab = { ...updatedTab, url };
+
+    if ( payload.url )
+    {
+        updatedTab = updateTabHistory( tabToMerge, payload );
+    }
 
     const updatedState = [...state];
 
@@ -329,15 +354,14 @@ const updateTab = ( state, payload ) =>
     const tabToMerge = state[index];
 
     let updatedTab = { ...tabToMerge };
-
     updatedTab = { ...updatedTab, ...payload };
 
-    if( payload.url )
+    if ( payload.url )
     {
         const url = makeValidUrl( payload.url );
-        updatedTab = updateTabHistory( updatedTab, url );
-        updatedTab =  { ...updatedTab, url } ;
+        updatedTab = updateTabHistory( tabToMerge, payload );
     }
+
 
     const updatedState = [...state];
 
@@ -346,6 +370,9 @@ const updateTab = ( state, payload ) =>
     return updatedState;
 };
 
+
+const reindexTabs = ( tabs ) => tabs.map( ( tab, index ) =>
+    ( { ...tab, index } ) );
 
 /**
  * Tabs reducer. Should handle all tab states, including window/tab id and the individual tab history
@@ -400,6 +427,31 @@ export default function tabs( state: array = initialState, action )
         case TYPES.ACTIVE_TAB_BACKWARDS :
         {
             return moveActiveTabBackwards( state );
+        }
+        case SAFE_TYPES.RECEIVED_CONFIG :
+        {
+            const payloadTabs = payload.tabs;
+
+            payloadTabs.forEach( tab =>
+            {
+                tab.isClosed = true;
+                tab.isActiveTab = false;
+                return tab;
+            } );
+
+            const newTabs = [...state, ...payloadTabs];
+
+            return reindexTabs( newTabs );
+        }
+        case SAFE_TYPES.RESET_STORE :
+        {
+            const initial = initialState;
+            const firstTab = { ...initial[0] };
+            const currentWindowId = getCurrentWindowId();
+
+            firstTab.windowId = currentWindowId;
+
+            return [firstTab];
         }
         default:
             return state;

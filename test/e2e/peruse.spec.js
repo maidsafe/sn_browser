@@ -20,7 +20,7 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 // - Check for inspect element availability
 // - Check history
 // - Check bookmarks
-
+// - Check clicking a link in a page, updates title and webview etc.
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
 const app = new Application( {

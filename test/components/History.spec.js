@@ -5,7 +5,7 @@ import History from 'components/PerusePages/History';
 import UrlList from 'components/UrlList';
 import { CLASSES } from 'appConstants';
 
-describe( 'History', () =>
+describe( 'History Component', () =>
 {
     let wrapper;
     let instance;
@@ -33,7 +33,7 @@ describe( 'History', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, history: ['hello'] }] };
+            props = { ...props, history: [{ url: 'safe://hello', isActiveTab: true, windowId: 1, history: ['safe://hello'] }] };
             wrapper = shallow( <History { ...props } /> );
         } );
 
@@ -60,14 +60,14 @@ describe( 'History', () =>
         beforeEach( () =>
         {
             props = { ...props,
-                tabs :
+                history :
                 [
                     { url         : 'safe-auth://lalala',
                         isActiveTab : true,
                         windowId    : 1,
                         history     : [
                             'safe-auth://lalala',
-                            'somethingreal',
+                            'safe://somethingreal',
                             'about:blank',
                             'peruse://history',
                             'peruse://bookmarks'
@@ -90,7 +90,7 @@ describe( 'History', () =>
         it( 'should have one link with text', () =>
         {
             wrapper = mount( <History { ...props } /> );
-            expect( wrapper.find( 'a' ).text() ).toBe( 'somethingreal' );
+            expect( wrapper.find( 'a' ).text() ).toBe( 'safe://somethingreal' );
         } );
     } );
 

@@ -16,11 +16,12 @@ export default class Notifier extends Component
    {
        isVisible   : PropTypes.bool,
        text        : PropTypes.string,
+       type        : PropTypes.string,
        acceptText  : PropTypes.string,
        denyText    : PropTypes.string,
        dismissText : PropTypes.string,
        onDismiss   : PropTypes.func,
-       onAccept    : PropTypes.func, //
+       onAccept    : PropTypes.func,
        onDeny      : PropTypes.func
    }
     static defaultProps =
@@ -28,8 +29,8 @@ export default class Notifier extends Component
         isVisible   : false,
         acceptText  : 'Accept',
         denyText    : 'Deny',
-        dismissText : ''
-
+        dismissText : '',
+        type        : 'alert'
     }
 
     handleDismiss = () =>
@@ -51,7 +52,8 @@ export default class Notifier extends Component
             onDismiss,
             onAccept,
             onDeny,
-            text
+            text,
+            type
         } = this.props;
 
         // TODO: Enable IPC comms for functionality with some string/phrasing
@@ -79,7 +81,6 @@ export default class Notifier extends Component
             handleOnAccept = () => this.handleIPCProxy( onAccept );
         }
 
-        // handle proxy back to main process
         if( typeof onDeny === 'string' )
         {
             this.proxyDeny = onDeny;
@@ -88,7 +89,7 @@ export default class Notifier extends Component
 
         return (
             <Row hasMinHeight className={ styles.container }>
-                <MessageBox messageType="alert">
+                <MessageBox messageType={type}>
                     <Row verticalAlign="middle" align="center">
                         <Text>{ text }</Text>
                         {

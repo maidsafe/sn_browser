@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import logger from 'logger';
 
 let isSafeAppAuthenticating = false;
@@ -87,7 +87,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
     // safe app plugin
     ipcRenderer.send( 'registerSafeApp' );
-    // setupSafeReconnectionHandlers( update );
+
     ipcRenderer.on( 'webClientAuthReq', ( event, req ) =>
     {
         logger.info( 'on.....webClientAuthReq' );
@@ -153,6 +153,15 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
     ipcRenderer.on( 'onAuthDecisionRes', ( event, res ) =>
     {
         logger.info( 'on.....onAuthDecisionRes', res );
+
+        const browserAuthReqUri = remote.getGlobal( 'browserAuthReqUri' );
+        const browserReqUri = remote.getGlobal( 'browserReqUri' );
+
+        if( res.uri === browserAuthReqUri || res.uri === browserReqUri )
+        {
+            ipcRenderer.send('browserAuthenticated', res.res, res.uri === browserAuthReqUri )
+        }
+
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {

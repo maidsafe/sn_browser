@@ -5,7 +5,7 @@ import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import config from '../config';
-import { handleAnonConnResponse } from '../network';
+import { handleConnResponse } from '../network';
 import logger from 'logger';
 
 config.i18n();
@@ -53,7 +53,7 @@ class ReqQueue
     constructor( resChannelName, errChannelName )
     {
         this.q = [];
-        this.preocessing = false;
+        this.processing = false;
         this.req = null;
         this.resChannelName = resChannelName;
         this.errChannelName = errChannelName;
@@ -72,7 +72,7 @@ class ReqQueue
 
     next()
     {
-        this.preocessing = false;
+        this.processing = false;
         if ( this.q.length === 0 )
         {
             return;
@@ -84,11 +84,11 @@ class ReqQueue
     process()
     {
         const self = this;
-        if ( this.preocessing || this.q.length === 0 )
+        if ( this.processing || this.q.length === 0 )
         {
             return;
         }
-        this.preocessing = true;
+        this.processing = true;
         this.req = this.q[0];
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
@@ -97,16 +97,15 @@ class ReqQueue
                 return;
             }
             this.req.res = res;
+
             if ( ipcEvent )
             {
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
-            logger.info( 'this.req.uri', this.req.uri, res );
-
             if ( this.req.uri === global.browserReqUri )
             {
-                handleAnonConnResponse( parseResUrl( res ) );
+                handleConnResponse( parseResUrl( res ) );
             }
             else
             {
@@ -114,6 +113,7 @@ class ReqQueue
             }
 
             self.next();
+            return;
         } ).catch( ( err ) =>
         {
             logger.error( err.message || err );
@@ -137,7 +137,7 @@ const registerNetworkListener = ( e ) =>
     {
         if ( state === CONSTANTS.NETWORK_STATUS.CONNECTED )
         {
-            reqQ.preocessing = false;
+            reqQ.processing = false;
             reqQ.process();
         }
         e.sender.send( 'onNetworkStatus', state );
@@ -156,6 +156,7 @@ const decodeRequest = ( e, req, type ) =>
     } );
 
     ipcEvent = e;
+
     if ( isUnRegistered )
     {
         unregisteredReqQ.add( request );

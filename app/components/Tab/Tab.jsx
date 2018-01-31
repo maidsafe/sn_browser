@@ -6,10 +6,7 @@ import { removeTrailingSlash } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
-
 import logger from 'logger';
-
-// OKAY. those refs here are problematic. hmmmm
 
 const { Menu, MenuItem } = remote;
 
@@ -95,9 +92,10 @@ export default class Tab extends Component
         let rightClickPosition;
 
         const partition = 'persist:safe-tab';
-
         webview.partition = partition;
-        webview.src = 'about:blank';
+
+        webview.plugins = true;
+        // webview.preload = injectPath;
 
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
@@ -138,6 +136,9 @@ export default class Tab extends Component
 
             webview.removeEventListener( 'dom-ready', callbackSetup );
         };
+
+        webview.src = 'about:blank';
+
         webview.addEventListener( 'dom-ready', callbackSetup );
 
         webview.addEventListener( 'dom-ready', () =>
@@ -171,7 +172,7 @@ export default class Tab extends Component
             const strippedWebviewUrl = removeTrailingSlash( webview.src );
 
             if ( webview.src === '' || webview.src === 'about:blank' ||
-                strippedWebviewUrl !== nextProps.url )
+                strippedWebviewUrl !== removeTrailingSlash ( nextProps.url ) )
             {
                 this.loadURL( nextProps.url );
             }
@@ -323,8 +324,7 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            // TODO ensure url structure in reducer, as opposed to here/everywhere
-            this.props.updateActiveTab( { url: removeTrailingSlash( url ) } );
+            this.props.updateActiveTab( { url: url } );
         }
 
         // our own little preventDefault
@@ -465,10 +465,7 @@ export default class Tab extends Component
             <div className={ moddedClass } >
                 <webview
                     style={{ height: '100%', display: 'flex', flex: '1 1' }}
-                    // partition={partition}
-                    // plugins={true}
                     preload={injectPath}
-                    // src="about:blank"
                     ref={ ( c ) =>
                     {
                         this.webview = c;

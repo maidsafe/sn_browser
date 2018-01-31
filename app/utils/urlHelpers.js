@@ -1,17 +1,42 @@
 import { parse } from 'url';
 import pkg from 'appPackage';
 import logger from 'logger';
+import { PROTOCOLS } from 'appConstants';
+
+
+export const isInternalPage = ( tab ) =>
+{
+    const urlObj = parse( tab.url );
+
+    return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
+}
 
 export const removeTrailingSlash = ( url ) =>
 {
     return url.replace(/\/$/, "");
 }
 
+export const removeTrailingHash = ( url ) =>
+{
+    return url.replace(/\#$/, "");
+}
+
 export const removeTrailingRedundancies = ( url ) =>
 {
-    let newUrl = url.replace( /\.html$/, '');
+    let newUrl = url.replace( /index\.html$/, '');
     newUrl = newUrl.replace( /index$/, '');
-    return removeTrailingSlash( newUrl );
+    // newUrl = removeTrailingSlash( newUrl );
+    newUrl = removeTrailingHash( newUrl );
+
+    // loop until clean
+    if( newUrl === url )
+    {
+        return newUrl
+    }
+    else
+    {
+        return removeTrailingRedundancies( newUrl );
+    }
 }
 
 const getProtocolPosition = ( url, inputProtocol  ) =>

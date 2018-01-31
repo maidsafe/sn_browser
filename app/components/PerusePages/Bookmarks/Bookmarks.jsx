@@ -16,7 +16,8 @@ export default class Bookmarks extends Component
 {
     static propTypes =
     {
-        bookmarks : PropTypes.array.isRequired
+        bookmarks : PropTypes.array.isRequired,
+        addTab : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -26,10 +27,8 @@ export default class Bookmarks extends Component
 
     render()
     {
-        const { bookmarks, isActiveTab } = this.props;
-
+        const { bookmarks, isActiveTab, addTab } = this.props;
         const bookmarkList = bookmarks.map( bookmark => bookmark.url );
-        const urlList = <UrlList list={ bookmarkList } />;
 
         let moddedClass = styles.tab;
         if ( isActiveTab )
@@ -46,7 +45,7 @@ export default class Bookmarks extends Component
                         <PageHeader>
                             <H1 title="Bookmarks" />
                         </PageHeader>
-                        { urlList }
+                        <UrlList list={ bookmarkList } addTab={ addTab } />
                     </Page>
 
 

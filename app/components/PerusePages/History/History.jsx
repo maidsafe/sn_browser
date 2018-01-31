@@ -9,6 +9,10 @@ import UrlList from 'components/UrlList';
 import styles from './history.css';
 import { CLASSES } from 'appConstants';
 
+// TODO: Ideally this should be pulled in in a more generic fashion if we need filtering for these pages
+// (as opposed to hardcoded imports from extensions.)
+import { urlIsAllowed } from 'extensions/safe/utils/safeHelpers';
+
 const log = require( 'electron-log' );
 
 
@@ -16,12 +20,13 @@ export default class History extends Component
 {
     static propTypes =
     {
-        tabs : PropTypes.array.isRequired
+        history : PropTypes.array.isRequired,
+        addTab  : PropTypes.func.isRequired
     }
 
     static defaultProps =
     {
-        tabs : []
+        history : []
     }
 
     isInFocussedWindow = ( ) =>
@@ -35,13 +40,13 @@ export default class History extends Component
 
     render()
     {
-        const { tabs, isActiveTab } = this.props;
+        const { addTab, history, isActiveTab } = this.props;
 
         let historyList = [];
 
-        tabs.forEach( ( tab, i ) =>
+        history.forEach( ( tab, i ) =>
         {
-            if( tab.history )
+            if ( tab.history )
             {
                 tab.history.forEach( ( history, ii ) =>
                 {
@@ -52,12 +57,12 @@ export default class History extends Component
             }
         } );
 
-        const ignoreProtocolList = [ 'safe-auth:'];
+        const ignoreProtocolList = ['safe-auth:'];
         const ignoreList = [
             'about:blank',
             'peruse://history',
             'peruse://bookmarks'
-        ]
+        ];
 
         // TODO: uniq by object props, so will be less harsh once we have title etc.
         historyList = _.uniq( historyList );
@@ -71,10 +76,8 @@ export default class History extends Component
                 return false;
             }
 
-            return true;
-        });
-
-        const urlList = ( <UrlList list={ historyList } /> );
+            return urlIsAllowed( url );
+        } );
 
         let moddedClass = styles.tab;
 
@@ -93,7 +96,7 @@ export default class History extends Component
                         <PageHeader>
                             <H1 title="History" />
                         </PageHeader>
-                        { urlList }
+                        <UrlList list={ historyList } addTab={ addTab } />
                     </Page>
 
                 </div>
