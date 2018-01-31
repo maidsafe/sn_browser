@@ -83,7 +83,7 @@ describe( 'notification reducer', () =>
 
         it( 'should reset bookmarks to inital state', () =>
         {
-            expect( bookmarksPostLogout ).toHaveLength( 0 );
+            expect( bookmarksPostLogout ).toHaveLength( 1 );
             expect( bookmarksPostLogout ).toMatchObject( initialState.bookmarks );
         })
     })
