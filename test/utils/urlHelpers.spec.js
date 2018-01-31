@@ -16,7 +16,7 @@ describe.only( 'makeValidUrl', () =>
 
     test.only( 'should convert localhost http://localhost:port', () =>
     {
-        expect( makeValidUrl('localhost:3003') ).toBe( 'http://localhost:3003');
+        expect( makeValidUrl('localhost:3003') ).toBe( 'http://localhost:3003/');
 
     } );
 

@@ -25,7 +25,7 @@ export const removeTrailingRedundancies = ( url ) =>
 {
     let newUrl = url.replace( /index\.html$/, '');
     newUrl = newUrl.replace( /index$/, '');
-    newUrl = removeTrailingSlash( newUrl );
+    // newUrl = removeTrailingSlash( newUrl );
     newUrl = removeTrailingHash( newUrl );
 
     // loop until clean

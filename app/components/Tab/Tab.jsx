@@ -325,7 +325,7 @@ export default class Tab extends Component
         if ( this.props.isActiveTab )
         {
             // TODO ensure url structure in reducer, as opposed to here/everywhere
-            this.props.updateActiveTab( { url: removeTrailingSlash( url ) } );
+            this.props.updateActiveTab( { url: url } );
         }
 
         // our own little preventDefault
