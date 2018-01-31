@@ -172,7 +172,7 @@ export default class Tab extends Component
             const strippedWebviewUrl = removeTrailingSlash( webview.src );
 
             if ( webview.src === '' || webview.src === 'about:blank' ||
-                strippedWebviewUrl !== nextProps.url )
+                strippedWebviewUrl !== removeTrailingSlash ( nextProps.url ) )
             {
                 this.loadURL( nextProps.url );
             }
@@ -324,7 +324,6 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            // TODO ensure url structure in reducer, as opposed to here/everywhere
             this.props.updateActiveTab( { url: url } );
         }
 

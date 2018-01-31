@@ -79,7 +79,7 @@ export default class TabContents extends Component
                     updateTab={ updateTab }
                     updateActiveTab={ updateActiveTab }
                     key={ i }
-                    index={ i }
+                    index={ tab.index }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )
