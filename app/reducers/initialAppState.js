@@ -12,8 +12,8 @@ const initialState = {
         saveStatus      : ''
     },
     tabs : [{
-        url          : 'safe-auth://home/',
-        history      : ['safe-auth://home/'],
+        url          : 'safe-auth://home',
+        history      : ['safe-auth://home'],
         historyIndex : 0,
         index        : 0,
         isActiveTab  : true,
