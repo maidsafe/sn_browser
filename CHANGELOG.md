@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - React 16, Electron, Webpack and React-ecosystem deps updated
 - API Constants added to the DOM.
 - Support for `options` in `webFetch` to enable fetching specific byte ranges.
+- Logout clears tab history / bookmark data etc (including open tabs).
 
 ### SAFE libraries Dependencies
 - safe_app: v0.7.0
