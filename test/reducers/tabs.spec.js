@@ -680,6 +680,71 @@ describe( 'tabs reducer', () =>
         } );
     } );
 
+
+
+    describe( 'More complex navigation', () =>
+    {
+        const activeTab = {
+            ...basicTab,
+            isActiveTab  : true,
+            history      : ['safe://hello', 'safe://forward', 'safe://forward again', 'safe://another', 'safe://anotheranother'],
+            historyIndex : 0
+        };
+
+        it( 'should remove history on forward/backwards/newURL navigations', () =>
+        {
+            const firstUpdate = tabs( [basicTab, basicTab, activeTab], {
+                type : TYPES.ACTIVE_TAB_FORWARDS
+            } );
+
+            const updatedTab = firstUpdate[2];
+            expect( updatedTab ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'safe://forward',
+                    historyIndex : 1
+                }
+            );
+
+            expect( updatedTab ).toHaveProperty( 'history' );
+            expect( updatedTab.history ).toHaveLength( 5 );
+
+            const secondUpdate = tabs( firstUpdate, {
+                type : TYPES.ACTIVE_TAB_BACKWARDS
+            } );
+
+            const updatedTabAgain = secondUpdate[2];
+            expect( updatedTabAgain ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'safe://hello',
+                    historyIndex : 0
+                }
+            );
+
+            expect( updatedTabAgain ).toHaveProperty( 'history' );
+            expect( updatedTabAgain.history ).toHaveLength( 5 );
+
+            const thirdUpdate = tabs( secondUpdate, {
+                type : TYPES.UPDATE_ACTIVE_TAB,
+                payload: { url: 'safe://new url overwriting previous history array'}
+            } );
+
+            const updatedTabThree = thirdUpdate[2];
+            expect( updatedTabThree ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'safe://new url overwriting previous history array',
+                    historyIndex : 1,
+                    history: [ 'safe://hello', 'safe://new url overwriting previous history array']
+                }
+            );
+
+            expect( updatedTabThree ).toHaveProperty( 'history' );
+            expect( updatedTabThree.history ).toHaveLength( 2 );
+        } );
+    } );
+
     describe( 'RECEIVED_CONFIG', () =>
     {
         const activeTab = {

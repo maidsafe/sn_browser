@@ -287,7 +287,7 @@ const updateTabHistory = ( tabToMerge, payload ) =>
     const url = makeValidUrl( payload.url );
     let updatedTab = { ...tabToMerge, ...payload };
     const ancientHistory = tabToMerge.history;
-    const newHistory = [...ancientHistory];
+    let newHistory = [...ancientHistory];
     const currentIndex = tabToMerge.historyIndex;
 
     if ( url && url !== tabToMerge.url )
@@ -295,6 +295,14 @@ const updateTabHistory = ( tabToMerge, payload ) =>
         if ( ancientHistory && ancientHistory[currentIndex] !== url )
         {
             updatedTab.historyIndex += 1;
+
+            // if we're not at last index split array there.
+            if( ( ancientHistory.length - 1 ) !== currentIndex )
+            {
+                newHistory = newHistory.slice( 0, currentIndex + 1 );
+            }
+
+            // else, a simple addition to array
             updatedTab.history = newHistory;
             updatedTab.history.push( url );
         }
@@ -318,9 +326,6 @@ const updateActiveTab = ( state, payload ) =>
     }
 
     const tabToMerge = state[index];
-
-    const targetWindowId = tabToMerge.windowId || getCurrentWindowId();
-
     let updatedTab = { ...tabToMerge };
 
     updatedTab = { ...updatedTab, ...payload };
