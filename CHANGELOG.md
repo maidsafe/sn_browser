@@ -1,6 +1,12 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Fixed
+- Removing bookmarks removes correct index.
+
+### Added
+
 ## [0.4.0]
 ### Fixed
 - Menu.js simplified

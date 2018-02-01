@@ -57,12 +57,10 @@ const addBookmark = ( state, bookmark ) =>
  */
 const removeBookmark = ( state, payload ) =>
 {
-    const removalIndex = state.findIndex( bookmark => bookmark === payload );
+    const removalIndex = state.findIndex( bookmark => bookmark.url === payload.url );
+    let updatedState = [...state];
 
-
-    const updatedState = [...state];
-
-    updatedState.pop( removalIndex );
+    updatedState.splice( removalIndex, 1 );
 
     return updatedState;
 };
