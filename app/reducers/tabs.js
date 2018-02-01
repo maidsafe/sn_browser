@@ -3,7 +3,7 @@
 import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
 import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
-import { makeValidUrl } from 'utils/urlHelpers';
+import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 import { CONFIG } from 'appConstants';
 
@@ -68,7 +68,7 @@ const addTab = ( state, tab ) =>
     const currentWindowId = getCurrentWindowId( );
 
     const targetWindowId = tab.windowId || currentWindowId;
-    const tabUrl = makeValidUrl( tab.url || '' );
+    const tabUrl = makeValidAddressBarUrl( tab.url || '' );
     const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length };
 
     let newState = [...state];
@@ -284,7 +284,7 @@ const setActiveTab = ( state, payload ) =>
 
 const updateTabHistory = ( tabToMerge, payload ) =>
 {
-    const url = makeValidUrl( payload.url );
+    const url = makeValidAddressBarUrl( payload.url );
     let updatedTab = { ...tabToMerge, ...payload };
     const ancientHistory = tabToMerge.history;
     let newHistory = [...ancientHistory];
@@ -358,7 +358,7 @@ const updateTab = ( state, payload ) =>
 
     if ( payload.url )
     {
-        const url = makeValidUrl( payload.url );
+        const url = makeValidAddressBarUrl( payload.url );
         updatedTab = updateTabHistory( tabToMerge, payload );
     }
 

@@ -41,6 +41,7 @@ export default class Bookmarks extends Component
                 <div className={ `${styles.container}` } >
                     <Page
                         className={ `${CLASSES.PERUSE_PAGE} ${styles.page}` }
+                        overflow='auto'
                     >
                         <PageHeader>
                             <H1 title="Bookmarks" />

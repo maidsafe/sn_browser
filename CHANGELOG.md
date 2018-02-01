@@ -1,6 +1,18 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.4.1]
+### Fixed
+- Removing bookmarks removes correct index.
+- Remove trailing slash for history. Add trailing slash for webview loads.
+- Improve 'Unexpected logic error' message with a note to point to invite.maidsafe.net
+- Scrollable history/bookmarks pages.
+- URL change check improved
+
+### Added
+- Tests for url change abstraction. Improved Tab.jsx tests;
+- Tests for adding/removing slashes
+
 ## [0.4.0]
 ### Fixed
 - Menu.js simplified

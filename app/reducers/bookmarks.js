@@ -4,7 +4,7 @@ import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
 import { TYPES } from 'actions/bookmarks_actions';
 import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
-import { makeValidUrl } from 'utils/urlHelpers';
+import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
@@ -38,7 +38,7 @@ const addBookmark = ( state, bookmark ) =>
 
     // TODO, check if url existssss
 
-    const bookmarkUrl = makeValidUrl( bookmark.url || '' );
+    const bookmarkUrl = makeValidAddressBarUrl( bookmark.url || '' );
     const newBookmark = { ...bookmark };
 
     const newState = [...state];
@@ -57,12 +57,10 @@ const addBookmark = ( state, bookmark ) =>
  */
 const removeBookmark = ( state, payload ) =>
 {
-    const removalIndex = state.findIndex( bookmark => bookmark === payload );
+    const removalIndex = state.findIndex( bookmark => bookmark.url === payload.url );
+    let updatedState = [...state];
 
-
-    const updatedState = [...state];
-
-    updatedState.pop( removalIndex );
+    updatedState.splice( removalIndex, 1 );
 
     return updatedState;
 };
@@ -86,7 +84,7 @@ const updateBookmark = ( state, payload ) =>
 
     if ( payload.url )
     {
-        const url = makeValidUrl( payload.url );
+        const url = makeValidAddressBarUrl( payload.url );
         updatedBookmark = { ...updatedBookmark, url };
     }
 

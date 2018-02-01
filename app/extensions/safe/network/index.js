@@ -41,7 +41,13 @@ const authFromRes = async ( res, isAuthenticated ) =>
     {
         if ( store )
         {
-            store.dispatch( addNotification( { text: err.message, onDismiss: clearNotification } ) );
+            let message = err.message;
+
+            if( err.message.startsWith( 'Unexpected (probably a logic') )
+            {
+                message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
+            }
+            store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
         }
 
         logger.error( err.message || err );

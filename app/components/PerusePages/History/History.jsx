@@ -92,6 +92,7 @@ export default class History extends Component
                 <div className={ `${styles.container} js-history` } >
                     <Page
                         className={ `${CLASSES.PERUSE_PAGE} ${styles.page}` }
+                        overflow='auto'
                     >
                         <PageHeader>
                             <H1 title="History" />

@@ -30,11 +30,12 @@ describe( 'notification reducer', () =>
         it( 'should handle removing a bookmark', () =>
         {
             expect(
-                bookmarks( [{ url: 'i should exist' }, { url: 'i should not  exist' }], {
-                    type    : TYPES.REMOVE_BOOKMARK,
-                    payload : { url: 'i should not  exist' }
-                } )
-            ).toEqual( [{ url: 'i should exist' }] );
+                bookmarks( [{ url: 'i also should exist' }, { url: 'i should not exist' }, { url: 'i should exist' }],
+                    {
+                        type    : TYPES.REMOVE_BOOKMARK,
+                        payload : { url: 'i should not exist' }
+                    } )
+            ).toEqual( [{ url: 'i also should exist' }, { url: 'i should exist' }] );
         } );
     } );
 
@@ -43,7 +44,7 @@ describe( 'notification reducer', () =>
         it( 'should handle updating a bookmark', () =>
         {
             expect(
-                bookmarks( [{ url: 'i should not exist' } ], {
+                bookmarks( [{ url: 'i should not exist' }], {
                     type    : TYPES.UPDATE_BOOKMARK,
                     payload : { url: 'changed', index: 0 }
                 } )[0]
@@ -56,7 +57,7 @@ describe( 'notification reducer', () =>
         it( 'should handle receiving the new config', () =>
         {
             expect(
-                bookmarks( [{ url: 'i should not exist' } ], {
+                bookmarks( [{ url: 'i should not exist' }], {
                     type    : SAFE_TYPES.RECEIVED_CONFIG,
                     payload : { bookmarks: [{ url: 'updated', index: 0 }] }
                 } )[1]
@@ -65,7 +66,7 @@ describe( 'notification reducer', () =>
 
         it( 'should merge the new bookmarks with any current, w/o duplicates', () =>
         {
-            const newBookmarks = bookmarks( [{ url: 'i should exist' }, { url: 'updated', index: 0 } ], {
+            const newBookmarks = bookmarks( [{ url: 'i should exist' }, { url: 'updated', index: 0 }], {
                 type    : SAFE_TYPES.RECEIVED_CONFIG,
                 payload : { bookmarks: [{ url: 'updated', index: 0 }] }
             } );
@@ -77,14 +78,14 @@ describe( 'notification reducer', () =>
 
     describe( 'SAFE_RESET_STORE', () =>
     {
-        const bookmarksPostLogout =     bookmarks( [{ url: 'i should not exist' } ], {
-                type    : SAFE_TYPES.RESET_STORE,
-            } );
+        const bookmarksPostLogout = bookmarks( [{ url: 'i should not exist' }], {
+            type : SAFE_TYPES.RESET_STORE,
+        } );
 
         it( 'should reset bookmarks to inital state', () =>
         {
             expect( bookmarksPostLogout ).toHaveLength( 1 );
             expect( bookmarksPostLogout ).toMatchObject( initialState.bookmarks );
-        })
-    })
+        } );
+    } );
 } );
