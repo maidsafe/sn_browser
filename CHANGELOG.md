@@ -1,7 +1,7 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.4.1]
 ### Fixed
 - Removing bookmarks removes correct index.
 - Remove trailing slash for history. Add trailing slash for webview loads.
