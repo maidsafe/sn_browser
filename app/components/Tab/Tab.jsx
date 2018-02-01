@@ -2,7 +2,7 @@
 import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { removeTrailingSlash } from 'utils/urlHelpers';
+import { addTrailingSlashIfNeeded, removeTrailingSlash } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
@@ -406,7 +406,7 @@ export default class Tab extends Component
     loadURL = async ( input ) =>
     {
         logger.info('webview loadURL being triggered');
-        const url = input;
+        const url = addTrailingSlashIfNeeded( input );
         let parsedURL = parseURL( url );
 
         let currentParsedURL  = parseURL( this.state.browserState.url );

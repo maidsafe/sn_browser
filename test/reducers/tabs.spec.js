@@ -495,7 +495,7 @@ describe( 'tabs reducer', () =>
 
         it( 'should not update the history/index with minor a slash removal', () =>
         {
-            const newState = tabs( [ { ...basicTab, url: 'safe://hello/' }, secondTab, activeTab], {
+            const newState = tabs( [{ ...basicTab, url: 'safe://hello/' }, secondTab, activeTab], {
                 type    : TYPES.UPDATE_TAB,
                 payload : { url: 'safe://hello', title: 'hi', index: 2 }
             } );
@@ -514,7 +514,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab.history ).toHaveLength( 1 );
         } );
 
-        xit( 'should not update the history/index with minor a hash addition', () =>
+        it( 'should not update the history/index with minor a hash addition', () =>
         {
             const newState = tabs( [basicTab, secondTab, activeTab], {
                 type    : TYPES.UPDATE_TAB,
@@ -558,10 +558,10 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://hello/#/boom/',
+                    url          : 'safe://hello/#/boom',
                     title        : 'hi',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://hello/#/boom/']
+                    history      : ['safe://hello', 'safe://hello/#/boom']
                 }
             );
 
@@ -682,7 +682,6 @@ describe( 'tabs reducer', () =>
     } );
 
 
-
     describe( 'More complex navigation', () =>
     {
         const activeTab = {
@@ -727,8 +726,8 @@ describe( 'tabs reducer', () =>
             expect( updatedTabAgain.history ).toHaveLength( 5 );
 
             const thirdUpdate = tabs( secondUpdate, {
-                type : TYPES.UPDATE_ACTIVE_TAB,
-                payload: { url: 'safe://new url overwriting previous history array'}
+                type    : TYPES.UPDATE_ACTIVE_TAB,
+                payload : { url: 'safe://new url overwriting previous history array' }
             } );
 
             const updatedTabThree = thirdUpdate[2];
@@ -737,7 +736,7 @@ describe( 'tabs reducer', () =>
                     ...activeTab,
                     url          : 'safe://new url overwriting previous history array',
                     historyIndex : 1,
-                    history: [ 'safe://hello', 'safe://new url overwriting previous history array']
+                    history      : ['safe://hello', 'safe://new url overwriting previous history array']
                 }
             );
 
