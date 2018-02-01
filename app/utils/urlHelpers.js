@@ -13,7 +13,14 @@ export const isInternalPage = ( tab ) =>
 };
 
 export const removeTrailingSlash = ( url ) =>
-    url.replace( /\/$/, '' );
+{
+    if ( url )
+    {
+        return url.replace( /\/$/, '' );
+    }
+
+    return url;
+};
 
 
 export const addTrailingSlashIfNeeded = ( url ) =>
@@ -54,6 +61,34 @@ export const removeTrailingRedundancies = ( url ) =>
     }
 
     return removeTrailingRedundancies( newUrl );
+};
+
+export const urlHasChanged = ( src, newUrl ) =>
+{
+    const strippedWebviewUrl = removeTrailingRedundancies( src );
+    const strippedNewUrl = removeTrailingRedundancies( newUrl );
+
+    const parsedSrc = parse( src );
+    const parsedNew = parse( newUrl );
+
+    if ( strippedNewUrl === strippedWebviewUrl )
+    {
+        return false;
+    }
+
+    if ( parsedSrc.protocol !== parsedNew.protocol ||
+        parsedSrc.host !== parsedNew.host ||
+        removeTrailingSlash( parsedSrc.path ) !== removeTrailingSlash( parsedNew.path ) )
+    {
+        return true;
+    }
+
+    if ( strippedNewUrl.hash !== parsedNew.hash )
+    {
+        return true;
+    }
+
+    return false;
 };
 
 const getProtocolPosition = ( url, inputProtocol ) =>

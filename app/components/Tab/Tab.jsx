@@ -2,7 +2,7 @@
 import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { addTrailingSlashIfNeeded, removeTrailingSlash } from 'utils/urlHelpers';
+import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
@@ -21,7 +21,6 @@ export default class Tab extends Component
         isActiveTab : PropTypes.bool.isRequired,
         url         : PropTypes.string.isRequired,
         index       : PropTypes.number.isRequired,
-        // className   : PropTypes.string,
         updateTab   : PropTypes.func.isRequired,
         addTab      : PropTypes.func.isRequired
     }
@@ -91,11 +90,6 @@ export default class Tab extends Component
         const { webview } = this;
         let rightClickPosition;
 
-        const partition = 'persist:safe-tab';
-        webview.partition = partition;
-
-        webview.plugins = true;
-        // webview.preload = injectPath;
 
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
@@ -145,7 +139,6 @@ export default class Tab extends Component
         {
             this.didStopLoading();
         } );
-
     }
 
     componentWillReceiveProps( nextProps )
@@ -168,17 +161,13 @@ export default class Tab extends Component
                 return;
             }
 
-            // we need to strip trailing slash of webview for comparison.
-            const strippedWebviewUrl = removeTrailingSlash( webview.src );
-
             if ( webview.src === '' || webview.src === 'about:blank' ||
-                strippedWebviewUrl !== removeTrailingSlash ( nextProps.url ) )
+                urlHasChanged( webview.src, nextProps.url ) )
             {
                 this.loadURL( nextProps.url );
             }
         }
     }
-
 
     updateBrowserState( props = {} )
     {
@@ -227,7 +216,7 @@ export default class Tab extends Component
     didStartLoading( )
     {
         const { updateTab, index } = this.props;
-        logger.silly('webview started loading');
+        logger.silly( 'webview started loading' );
 
         this.updateBrowserState( { loading: true } );
     }
@@ -298,7 +287,7 @@ export default class Tab extends Component
 
     willNavigate( e )
     {
-        logger.silly('webview will navigate');
+        logger.silly( 'webview will navigate' );
         if ( !this.isFrozen() )
         {
             return;
@@ -324,7 +313,7 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            this.props.updateActiveTab( { url: url } );
+            this.props.updateActiveTab( { url } );
         }
 
         // our own little preventDefault
@@ -384,7 +373,7 @@ export default class Tab extends Component
 
     reload()
     {
-        logger.silly('webview reloading');
+        logger.silly( 'webview reloading' );
 
         this.with( ( wv ) =>
         {
@@ -405,25 +394,17 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
-        logger.info('webview loadURL being triggered');
+        logger.info( 'webview loadURL being triggered' );
         const url = addTrailingSlashIfNeeded( input );
-        let parsedURL = parseURL( url );
 
-        let currentParsedURL  = parseURL( this.state.browserState.url );
-
-
-        // TODO: Move to should loadURL func?
-        if( parsedURL.protocol === currentParsedURL.protocol &&
-            parsedURL.host === currentParsedURL.host &&
-            parsedURL.path === currentParsedURL.path )
+        if ( !urlHasChanged( this.state.browserState.url, url) )
         {
-            // dont load cos it's the saaaaame
+            logger.verbose( 'not loading URL as it has not changed');
             return;
         }
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
-
 
         const { webview } = this;
 
@@ -453,7 +434,7 @@ export default class Tab extends Component
         const { browserState } = this.state;
 
         const preloadFile = remote.getGlobal( 'preloadFile' );
-        const injectPath = `file://${preloadFile}` ; // js we'll be chucking in
+        const injectPath = `file://${preloadFile}`; // js we'll be chucking in
 
         let moddedClass = styles.tab;
         if ( isActiveTab )
@@ -464,14 +445,16 @@ export default class Tab extends Component
         return (
             <div className={ moddedClass } >
                 <webview
-                    style={{ height: '100%', display: 'flex', flex: '1 1' }}
-                    preload={injectPath}
+                    style={ { height: '100%', display: 'flex', flex: '1 1' } }
+                    preload={ injectPath }
+                    partition='persist:safe-tab'
+                    src={ this.props.url }
                     ref={ ( c ) =>
                     {
                         this.webview = c;
-                    } }/>
+                    } }
+                />
             </div>
         );
     }
-
 }

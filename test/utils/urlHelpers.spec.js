@@ -1,6 +1,7 @@
 import {
     addTrailingSlashIfNeeded,
-    makeValidAddressBarUrl
+    makeValidAddressBarUrl,
+    urlHasChanged
 } from 'utils/urlHelpers';
 
 describe( 'makeValidAddressBarUrl', () =>
@@ -76,4 +77,61 @@ describe( 'addTrailingSlashIfNeeded', () =>
         expect( addTrailingSlashIfNeeded( 'safe://hello.world/boom#yes' ) ).toBe( 'safe://hello.world/boom#yes' );
         expect( addTrailingSlashIfNeeded( 'safe://hello.world/boom/#/yes' ) ).toBe( 'safe://hello.world/boom/#/yes' );
     } );
+} );
+
+describe( 'urlHasChanged', () =>
+{
+    it( 'should return true for new protocol', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom', 'safe-auth://hello.world/boom' ) ).toBeTruthy( );
+    } );
+    it( 'should return true for new host', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom', 'safe://helloyou.world/boom' ) ).toBeTruthy( );
+    } );
+    it( 'should return true for new path', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom', 'safe://helloyou.world/boom/new' ) ).toBeTruthy( );
+    } );
+
+    it( 'should return false for the same url', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom', 'safe://hello.world/boom' ) ).toBeFalsy( );
+    } );
+
+    it( 'should return false for the same url with a slash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom', 'safe://hello.world/boom/' ) ).toBeFalsy( );
+    } );
+
+    it( 'should return false for the same url without a slash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://hello.world/boom' ) ).toBeFalsy( );
+    } );
+
+    it( 'should return false for the same url with trailing hash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://hello.world/boom#' ) ).toBeFalsy( );
+    } );
+
+    it( 'should return false for the same url with a trailing hash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://hello.world/boom/#' ) ).toBeFalsy( );
+    } );
+
+    it( 'should return true for the same url with a complex hash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://hello.world/boom/#/hereyouare' ) ).toBeTruthy( );
+    } );
+
+    it( 'should return true for the same url with a hash change', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom/#/somewhereElse', 'safe://hello.world/boom/#/hereyouare' ) ).toBeTruthy( );
+    } );
+
+    it( 'should return true for a different url with a complex hash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://ciao.world/boom/#/hereyouare' ) ).toBeTruthy( );
+    } );
+
 } );
