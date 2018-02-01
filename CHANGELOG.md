@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Removing bookmarks removes correct index.
 - Remove trailing slash for history. Add trailing slash for webview loads.
+- Improve 'Unexpected logic error' message with a note to point to invite.maidsafe.net
 
 ### Added
 
