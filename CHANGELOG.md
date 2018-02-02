@@ -1,5 +1,20 @@
 # SAFE Browser Changelog
 
+## [Unreleased]
+### Changed
+- Upgrade beaker-plugin-safe-authenticator to v0.4.3
+
+### SAFE libraries Dependencies
+#### Direct Dependencies
+- beaker-plugin-safe-app: v0.4.4
+- beaker-plugin-safe-authenticator: v0.4.3
+
+#### Indirect Dependencies
+- @maidsafe/safe-node-app: v0.6.0
+- safe_app: v0.5.0
+- safe_authenticator: v0.5.0
+- system_uri: v0.4.0
+
 ## [0.8.1] - 20-12-2017
 ### Changed
 - Upgrade beaker-plugin-safe-app to v0.4.4
