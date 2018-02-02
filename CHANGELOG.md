@@ -4,6 +4,9 @@
 ### Changed
 - Upgrade beaker-plugin-safe-authenticator to v0.4.3
 
+### Added
+- Support for exposing objects declared in plugins as constants in the DOM API
+
 ### SAFE libraries Dependencies
 #### Direct Dependencies
 - beaker-plugin-safe-app: v0.4.4

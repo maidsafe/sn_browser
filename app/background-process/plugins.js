@@ -9,6 +9,7 @@ import {sendToShellWindow} from './logInRenderer'
 // =
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
+const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
 
 const PLUGIN_NODE_MODULES = path.join(__dirname, 'node_modules')
 log.debug('[PLUGINS] Loading from', PLUGIN_NODE_MODULES)
@@ -113,22 +114,34 @@ export function setupWebAPIs () {
 
     // We export functions with callbacks in a separate channel
     // since they will be adapted to invoke the callbacks
-    let fnsToExport = [];
-  let fnsWithCallbacks = [];
-  let fnsWithAsyncCallbacks = [];
-  for (var fn in api.manifest) {
-    if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
-      fnsWithCallbacks[fn] = api.manifest[fn];
-    } else if (fn.startsWith(WITH_ASYNC_CALLBACK_TYPE_PREFIX)) {
-      fnsWithAsyncCallbacks[fn] = api.manifest[fn];
-    } else {
-      fnsToExport[fn] = api.manifest[fn];
+    const fnsToExport = [];
+    const fnsWithCallbacks = [];
+    const fnsWithAsyncCallbacks = [];
+    const fnsToExportStatically = [];
+
+    for (var fn in api.manifest)
+    {
+      if (fn.startsWith(WITH_CALLBACK_TYPE_PREFIX)) {
+        fnsWithCallbacks[fn] = api.manifest[fn];
+      }
+      else if (fn.startsWith(WITH_ASYNC_CALLBACK_TYPE_PREFIX))
+      {
+        fnsWithAsyncCallbacks[fn] = api.manifest[fn];
+      }
+      else if ( fn.startsWith( EXPORT_AS_STATIC_OBJ_PREFIX ) )
+      {
+        fnsToExportStatically[fn] = api.manifest[fn];
+      }
+      else
+      {
+        fnsToExport[fn] = api.manifest[fn];
+      }
     }
-  }
-  rpc.exportAPI(api.name, fnsToExport, api.methods)
-  rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
-  rpc.exportAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + api.name, fnsWithAsyncCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
-})
+    rpc.exportAPI(api.name, fnsToExport, api.methods)
+    rpc.exportAPI(WITH_CALLBACK_TYPE_PREFIX + api.name, fnsWithCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+    rpc.exportAPI(WITH_ASYNC_CALLBACK_TYPE_PREFIX + api.name, fnsWithAsyncCallbacks, api.methods) // FIXME: api.methods shall be probably chopped too
+    rpc.exportAPI( EXPORT_AS_STATIC_OBJ_PREFIX + api.name, fnsToExportStatically, api.methods ); // FIXME: api.methods shall be probably chopped too
+  })
 }
 
 // get web API manifests for the given protocol
