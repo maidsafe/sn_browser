@@ -2,18 +2,24 @@
 
 ## [Unreleased]
 ### Changed
+- Upgrade beaker-plugin-safe-app to v0.4.5
 - Upgrade beaker-plugin-safe-authenticator to v0.4.3
 
 ### Added
 - Support for exposing objects declared in plugins as constants in the DOM API
+- Expose `safe-node-app` helper constants in DOM API at `window.safeApp.CONSTANTS`
+- Support providing additional options to `webFetch` function, e.g. range of bytes
+
+### Fixed
+- Generate a handle for each sign key returned by the `listPermissionSets` DOM API function
 
 ### SAFE libraries Dependencies
 #### Direct Dependencies
-- beaker-plugin-safe-app: v0.4.4
+- beaker-plugin-safe-app: v0.4.5
 - beaker-plugin-safe-authenticator: v0.4.3
 
 #### Indirect Dependencies
-- @maidsafe/safe-node-app: v0.6.0
+- @maidsafe/safe-node-app: v0.7.0
 - safe_app: v0.5.0
 - safe_authenticator: v0.5.0
 - system_uri: v0.4.0
