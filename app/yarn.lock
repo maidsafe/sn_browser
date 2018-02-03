@@ -440,9 +440,9 @@ bcrypt-pbkdf@^1.0.0:
     ejs-loader "^0.3.0"
     url "^0.11.0"
 
-"beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.2.tgz":
-  version "0.4.2"
-  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.2.tgz#c08c03c5d15b0d3a5fc4fd82dd89fae6d5dd26d2"
+"beaker-plugin-safe-authenticator@https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.3.tgz":
+  version "0.4.3"
+  resolved "https://s3.eu-west-2.amazonaws.com/beaker-plugin-safe-authenticator/beaker-plugin-safe-authenticator-0.4.3.tgz#8c65ee36f1d8a14d4c1b25776a413525c51355b3"
   dependencies:
     classnames "^2.2.5"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
@@ -3947,9 +3947,9 @@ path-type@^1.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#1.0.1":
+"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#1.1.0":
   version "4.0.1"
-  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#0853f148ab97d2a1bd65734da817186402935052"
+  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#e896cdd7c2decb82a178764664fdbf2e049238b2"
 
 pause-stream@0.0.11:
   version "0.0.11"
