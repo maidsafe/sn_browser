@@ -41,8 +41,7 @@ before_deploy:
 - if [[ "$NODE_ENV" == "prod" ]]; then 
   curl "$FILE_PATH$CRUST_FILE_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
   --output "$OUTPUT_PATH$CRUST_CONFIG"; fi
-- curl "$FILE_PATH$LOG_TOML_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
-  --output "$OUTPUT_PATH$LOG_TOML_NAME"; fi
+- curl "$FILE_PATH$LOG_TOML_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw" --output "$OUTPUT_PATH$LOG_TOML_NAME"
 - ls dist/$APP_PKG_DIR
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then  cd dist && zip -r -q -y $APP_PKG_DIR.zip
   $APP_PKG_DIR && cd ..; fi
