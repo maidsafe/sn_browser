@@ -113,16 +113,37 @@ export default merge.smart( baseConfig, {
         },
         before()
         {
-            if ( process.env.START_HOT )
-            {
-                spawn(
-                    'npm',
-                    ['run', 'start-hot-renderer-live'],
-                    { shell: true, env: process.env, stdio: 'inherit' }
-                )
-                    .on( 'close', code => process.exit( code ) )
-                    .on( 'error', spawnError => console.error( spawnError ) );
-            }
+            spawn(
+                'npm',
+                ['run', 'build-preload'],
+                { shell: true, env: process.env, stdio: 'inherit' }
+            ).on( 'error', spawnError => console.error( spawnError ) );
+
+            spawn(
+                'npm',
+                ['run', 'build-browserPreload'],
+                { shell: true, env: process.env, stdio: 'inherit' }
+            ).on( 'error', spawnError => console.error( spawnError ) );
+
+            spawn(
+                'npm',
+                ['run', 'build-bg'],
+                { shell: true, env: process.env, stdio: 'inherit' }
+            )
+                .on( 'close', code =>
+                {
+                    if ( process.env.START_HOT )
+                    {
+                        spawn(
+                            'npm',
+                            ['run', 'start-hot-renderer-live'],
+                            { shell: true, env: process.env, stdio: 'inherit' }
+                        )
+                            .on( 'close', code => process.exit( code ) )
+                            .on( 'error', spawnError => console.error( spawnError ) );
+                    }
+                } )
+                .on( 'error', spawnError => console.error( spawnError ) );
         }
     },
 } );

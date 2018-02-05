@@ -1,13 +1,13 @@
 // @flow
-import { TYPES } from 'actions/safe_actions';
+import { TYPES } from 'actions/peruse_actions';
 import initialAppState from './initialAppState';
 import logger from 'logger';
 
 import { SAFE, CONFIG } from 'appConstants';
 
-const initialState = initialAppState.safeNetwork;
+const initialState = initialAppState.peruseApp;
 
-export default function safeNetwork( state = initialState, action )
+export default function peruseApp( state = initialState, action )
 {
     if ( action.error )
     {
@@ -19,29 +19,14 @@ export default function safeNetwork( state = initialState, action )
 
     switch ( action.type )
     {
-        case TYPES.SET_INITIALIZER_TASK:
-        {
-            const oldTasks = state.tasks;
-            const tasks = [ ...oldTasks ];
-            tasks.push( payload );
-            return { ...state, tasks };
-        }
-        case TYPES.SET_AUTH_APP_STATUS:
+        case TYPES.SET_APP_STATUS:
         {
             return {
                 ...state,
                 appStatus     : payload,
             };
         }
-        case TYPES.AUTHORISED_APP:
-        {
-            return { ...state,
-                app           : { ...state.app, ...payload },
-                appStatus     : SAFE.APP_STATUS.AUTHORISED,
-                networkStatus : CONFIG.NET_STATUS_CONNECTED
-            };
-        }
-        case TYPES.SAFE_NETWORK_STATUS_CHANGED:
+        case TYPES.SET_NETWORK_STATUS:
         {
             return { ...state, networkStatus: payload };
         }
@@ -49,6 +34,12 @@ export default function safeNetwork( state = initialState, action )
         {
             return { ...state,
                 readStatus : payload,
+            };
+        }
+        case TYPES.RECEIVED_AUTH_RESPONSE:
+        {
+            return { ...state,
+                authResponseUri : payload,
             };
         }
         case TYPES.SET_SAVE_CONFIG_STATUS:

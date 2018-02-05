@@ -10,52 +10,78 @@
  *
  * @flow
  */
-import { app, BrowserWindow, protocol, ipcMain } from 'electron';
+import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
 import logger from 'logger';
 import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
+import * as peruseAppActions from 'actions/peruse_actions';
+
+import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
 import loadExtensions from './extensions';
-import {configureStore} from './store/configureStore';
+import { configureStore } from './store/configureStore';
+
+// TODO: Deprecate this in favour of redux actions
 import handleCommands from './commandHandling';
+
 import { setupWebAPIs } from './webAPIs';
 
 // TODO: This should be handled in an extensible fashion
-import { handleOpenUrl } from './extensions/safe/network';
+import { handleSafeAuthUrlReception } from './extensions/safe/network';
 import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
 
+import { createSafeInfoWindow, createTray } from './setupTray';
 
 const initialState = {};
+let bgProcessWindow = null;
 
 // Add middleware from extensions here.
 const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
+
 global.mainProcessStore = store;
 // renderer error notifications
-ipcMain.on('errorInWindow', function(event, data){
-    logger.error(data)
-});
+ipcMain.on( 'errorInWindow', ( event, data ) =>
+{
+    logger.error( data );
+} );
 
 const mainWindow = null;
 
+
 const handleSafeUrls = ( url ) =>
 {
-    // TODO. Queue incase of not started.
-    handleOpenUrl( url );
-
+    // added as from renderer it's receiving as a lowercase string. WHY?
     const parsedUrl = parseURL( url );
 
-    // TODO: Use constants // 'shouldOpenUrl...'
+    // TODO. Queue incase of not started.
+    logger.verbose( 'Receiving Open Window Param (a url)', url );
+
+    // TODO:
+    // If the received URL protocol is looong and starts with 'safe' it's fair to assume it's the
+    // auth response
+    // Currently _ONLY_ peruse is going to be making a req.fe
+    // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
+    if ( parsedUrl.protocol === 'safe-auth:' )
+    {
+        handleSafeAuthUrlReception( url );
+    }
     if ( parsedUrl.protocol === 'safe:' )
     {
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
+    // 20 is arbitrarily looong right now...
+    else if ( parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
+    {
+        store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
+    }
 };
+
 
 // Register all schemes from package.json
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
@@ -137,13 +163,22 @@ app.on( 'ready', async () =>
 
     const server = await setupServerVars();
 
-    openWindow( store );
     loadExtensions( server, store );
     startServer( server );
+
 
     setupWebAPIs();
 
     handleCommands( store );
+
+    // TODO: Reenable for adding Safe Network popup
+    // createTray();
+    // createSafeInfoWindow();
+
+    // TODO: This order is important, reversing breaks tests. Why!?
+    bgProcessWindow = setupBackground();
+    openWindow( store );
+
 } );
 
 app.on( 'open-url', ( e, url ) =>
@@ -166,6 +201,9 @@ app.on( 'open-url', ( e, url ) =>
 
 app.on( 'window-all-closed', () =>
 {
+    logger.verbose( 'All Windows Closed!' );
+    app.dock.hide() //hide the icon
+
     global.macAllWindowsClosed = true;
 
     // HACK: Fix this so we can have OSX convention for closing windows.

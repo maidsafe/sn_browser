@@ -6,7 +6,7 @@ import * as TabActions from 'actions/tabs_actions';
 import * as NotificationActions from 'actions/notification_actions';
 import * as UiActions from 'actions/ui_actions';
 import * as BookmarksActions from 'actions/bookmarks_actions';
-import * as SafeActions from 'actions/safe_actions';
+import * as PeruseActions from 'actions/peruse_actions';
 import Browser from 'components/Browser';
 
 class BrowserWindow extends Component
@@ -37,7 +37,7 @@ function mapDispatchToProps( dispatch )
             ...NotificationActions,
             ...TabActions,
             ...UiActions,
-            ...SafeActions
+            ...PeruseActions
         };
     return bindActionCreators( actions, dispatch );
 }

@@ -42,7 +42,7 @@ export const registerSafeAuthProtocol = () =>
 
     ses.protocol.registerHttpProtocol( PROTOCOLS.SAFE_AUTH, ( req, cb ) =>
     {
-        logger.verbose( `safe-auth:// url being parsed: ${req.url}` );
+        logger.verbose( `Procotol:: safe-auth:// url being parsed: ${req.url}` );
 
         // TODO. Sort out when/where with slash
         const newUrl = `http://localhost:${CONFIG.PORT}/auth/${req.url}`;

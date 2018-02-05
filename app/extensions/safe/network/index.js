@@ -1,41 +1,35 @@
-import { app, ipcMain } from 'electron';
 import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';
 import { parse as parseURL } from 'url';
-// import { executeScriptInBackground } from 'utils/background-process';
 import { addNotification, clearNotification } from 'actions/notification_actions';
-import * as safeActions from 'actions/safe_actions';
-import { callIPC } from '../ffi/ipc';
+import { callIPC, setIPCStore } from '../ffi/ipc';
+import ipc from '../ffi/ipc';
 import AUTH_CONSTANTS from '../auth-constants';
 
 const queue = [];
 let appObj;
 let store;
-let browserReqUri;
 let browserAuthReqUri;
+
+ipc();
 
 export const authFromQueue = async () =>
 {
     if ( queue.length )
     {
-        authFromRes( queue[0] ); // hack for testing
+        authFromInteralResponse( queue[0] ); // hack for testing
     }
 };
 
-const authFromRes = async ( res, isAuthenticated ) =>
+
+export const authFromInteralResponse = async ( res, isAuthenticated ) =>
 {
+    //TODO: This logic shuld be in BG process for peruse.
     try
     {
+        // for webFetch app only
         appObj = await appObj.auth.loginFromURI( res );
-
-        if ( isAuthenticated && store )
-        {
-            // TODO: AuthorisedApp should be localscope?
-            // this appObj cant be used, so maybe there's no need to bother here?
-            store.dispatch( safeActions.authorisedApp( appObj ) );
-            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
-        }
     }
     catch ( err )
     {
@@ -73,11 +67,14 @@ export const handleSafeAuthAuthentication = ( uri, type ) =>
     }
 
     callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP );
+
 };
 
+export const getBrowserAuthReqUri = () => browserAuthReqUri;
 export const initAnon = async ( passedStore ) =>
 {
     store = passedStore;
+    setIPCStore( store );
 
     logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
 
@@ -96,10 +93,11 @@ export const initAnon = async ( passedStore ) =>
 
         const authType = parseSafeAuthUrl( authReq.uri );
 
-        global.browserReqUri = authReq.uri;
+        browserAuthReqUri = authReq.uri;
 
         if ( authType.action === 'auth' )
         {
+            // await appObj.auth.openUri( authReq.uri );
             handleSafeAuthAuthentication( authReq.uri );
         }
 
@@ -112,30 +110,26 @@ export const initAnon = async ( passedStore ) =>
     }
 };
 
-export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
-
-
-export const handleOpenUrl = async ( res ) =>
+export const handleSafeAuthUrlReception = async ( res ) =>
 {
     if ( typeof res !== 'string' )
     {
         throw new Error( 'Response url should be a string' );
     }
+
     let authUrl = null;
-    logger.info( 'Received URL response' );
+    logger.info( 'Received URL response', res);
 
     if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` )
     {
         authUrl = parseSafeAuthUrl( res );
 
-        // Q: Do we need this check?
         if ( authUrl.action === 'auth' )
         {
             return handleSafeAuthAuthentication( res );
         }
     }
 };
-
 
 export function parseSafeAuthUrl( url, isClient )
 {
@@ -181,7 +175,7 @@ export const requestAuth = async () =>
 
         global.browserAuthReqUri = authReq.uri;
 
-        handleOpenUrl( authReq.uri );
+        handleSafeAuthUrlReception( authReq.uri );
         return appObj;
     }
     catch ( err )
@@ -211,7 +205,7 @@ export const reconnect = ( app ) =>
 export const initMock = async ( passedStore ) =>
 {
     store = passedStore;
-
+    setIPCStore( store );
     logger.info( 'Initialising mock app' );
 
     try
@@ -225,9 +219,3 @@ export const initMock = async ( passedStore ) =>
         throw err;
     }
 };
-
-
-ipcMain.on( 'browserAuthenticated', ( e, uri, isAuthenticated ) =>
-{
-    authFromRes( uri, isAuthenticated );
-} );

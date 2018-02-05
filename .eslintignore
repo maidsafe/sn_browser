@@ -1,6 +1,8 @@
 flow-typed/
 app/dist/
 app/main.js
+app/webPreload.js
+app/browserPreload.js
 app/node_modules/
 node_modules
 dll

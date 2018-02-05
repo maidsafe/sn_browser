@@ -1,17 +1,21 @@
+// TODO: Pull these from app constants, and add '.' programmatically.
 export const BROWSER_UI =
 {
-    ADDRESS_BAR   : '.js-address',
-    FORWARDS      : '.js-address__forwards',
-    BACKWARDS     : '.js-address__backwards',
-    REFRESH       : '.js-address__refresh',
-    ADDRESS_INPUT : '.js-address__input',
-    FAVOURITE     : '.js-address__favourite',
-    MENU          : '.js-address__menu',
-    ADD_TAB       : '.js-tabBar__add-tab',
-    CLOSE_TAB     : '.js-tabBar__close-tab',
-    TAB           : '.js-tab',
-    ACTIVE_TAB    : '.js-tabBar__active-tab'
-
+    ADDRESS_BAR               : '.js-address',
+    FORWARDS                  : '.js-address__forwards',
+    BACKWARDS                 : '.js-address__backwards',
+    REFRESH                   : '.js-address__refresh',
+    ADDRESS_INPUT             : '.js-address__input',
+    FAVOURITE                 : '.js-address__favourite',
+    MENU                      : '.js-address__menu',
+    ADD_TAB                   : '.js-tabBar__add-tab',
+    CLOSE_TAB                 : '.js-tabBar__close-tab',
+    TAB                       : '.js-tab',
+    ACTIVE_TAB                : '.js-tabBar__active-tab',
+    SPECTRON_AREA             : '.js-spectron-area',
+    SPECTRON_AREA__SPOOF_SAVE : '.js-spectron-area__spoof-save',
+    SPECTRON_AREA__SPOOF_READ : '.js-spectron-area__spoof-read',
+    NOTIFIER_TEXT : '.js-notifier__text',
 };
 
 export const AUTH_UI =
@@ -20,7 +24,7 @@ export const AUTH_UI =
     START_CREATE_BUTTON          : '.js-spectron__auth__create-account',
     BROWSER_PLUGIN_TEST_FAILURES : '.failures',
     // authenticator plugin
-    AUTH_FORM                    : '.card-main', //temp till rebuilt auth with selectors
+    AUTH_FORM                    : '.card-main', // temp till rebuilt auth with selectors
     // AUTH_FORM                    : '.js-spectron__auth__form',
     AUTH_SECRET_INPUT            : '.js-spectron__account-secret',
     AUTH_CONFIRM_SECRET_INPUT    : '.js-spectron__confirm-account-secret',

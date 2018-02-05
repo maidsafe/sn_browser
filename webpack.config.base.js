@@ -27,7 +27,8 @@ export default {
             logger       : path.join( __dirname, 'app/logger' ),
             store        : path.join( __dirname, 'app/store' ),
             utils        : path.join( __dirname, 'app/utils' ),
-            reducers     : path.join( __dirname, 'app/reducers' )
+            reducers     : path.join( __dirname, 'app/reducers' ),
+            resources    : path.join( __dirname, '../resources' )
         },
         modules : [
             path.join( __dirname, 'app' ),

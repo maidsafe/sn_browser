@@ -3,6 +3,7 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { SAFE, CLASSES, isRunningSpectronTest } from 'appConstants';
 import AddressBar from 'components/AddressBar';
 import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
@@ -132,6 +133,20 @@ export default class Browser extends Component
         }
     }
 
+    handleSpectronTestSaveState = ( ) =>
+    {
+        const { setSaveConfigStatus } = this.props;
+
+        setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE );
+    }
+
+    handleSpectronTestReadState = ( ) =>
+    {
+        const { setReadConfigStatus } = this.props;
+
+        setSaveConfigStatus( SAFE.SAVE_STATUS.TO_READ );
+    }
+
     render()
     {
         const {
@@ -166,7 +181,7 @@ export default class Browser extends Component
         // TODO: if not, lets trigger close?
         if ( !activeTab )
         {
-            return <div />;
+            return <div className="noTabsToShow" />;
         }
 
         const activeTabAddress = activeTab.url;
@@ -175,6 +190,22 @@ export default class Browser extends Component
 
         return (
             <div className={ styles.container }>
+                {
+                    // TODO: Create spectron Menu spoofer component.
+                    isRunningSpectronTest &&
+                    <div
+                        className={ `${CLASSES.SPECTRON_AREA} ${styles.spectronArea}` }
+                    >
+                        <button
+                            className={ `${CLASSES.SPECTRON_AREA__SPOOF_SAVE}` }
+                            onClick={ this.handleSpectronTestSaveState }
+                        />
+                        <button
+                            className={ `${CLASSES.SPECTRON_AREA__SPOOF_READ}` }
+                            onClick={ this.handleSpectronTestReadState }
+                        />
+                    </div>
+                }
                 <TabBar
                     key={ 1 }
                     updateActiveTab={ updateActiveTab }

@@ -10,7 +10,7 @@ import {
 import {
     setSaveConfigStatus,
     setReadConfigStatus
-} from 'actions/safe_actions';
+} from 'actions/peruse_actions';
 import { SAFE } from 'appConstants';
 import { selectAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';

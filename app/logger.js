@@ -6,6 +6,7 @@ import { env,
     isRunningProduction,
     isRunningDevelopment,
     isRunningSpectronTest,
+    inMainProcess,
     inRendererProcess
 } from 'appConstants';
 
@@ -16,6 +17,13 @@ if( log.transports )
     // Log level
     // error, warn, info, verbose, debug, silly
     log.transports.console.level = 'verbose';
+    log.transports.file.level = 'verbose';
+
+    if( isRunningPackaged || isRunningSpectronTest )
+    {
+        log.transports.console.level = 'warn';
+        log.transports.file.level = 'warn';
+    }
 
     /**
     * Set output format template. Available variables:
@@ -27,7 +35,6 @@ if( log.transports )
     // Set a function which formats output
     log.transports.console.format = ( msg ) => util.format( ...msg.data );
 
-    log.transports.file.level = 'verbose';
     log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 
     // Set approximate maximum log size in bytes. When it exceeds,
@@ -36,7 +43,7 @@ if( log.transports )
 }
 
 // HACK: for jest
-if( log.info && log.verbose )
+if( log.info && log.verbose && inMainProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

@@ -2,15 +2,22 @@
 import { ipcMain, shell } from 'electron';
 import i18n from 'i18n';
 
+import { authFromInteralResponse, getBrowserAuthReqUri } from '../network';
+import * as peruseAppActions from 'actions/peruse_actions';
+
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import config from '../config';
-import { handleConnResponse } from '../network';
 import logger from 'logger';
 
 config.i18n();
-
+let store;
 let ipcEvent = null;
+
+export const setIPCStore = ( passedStore ) =>
+{
+    store = passedStore;
+};
 
 const parseResUrl = ( url ) =>
 {
@@ -103,9 +110,11 @@ class ReqQueue
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
-            if ( this.req.uri === global.browserReqUri )
+            // TODO. Use openUri and parse received url once decoded to decide app
+            // OR: upgrade connection
+            if ( this.req.uri === getBrowserAuthReqUri() )
             {
-                handleConnResponse( parseResUrl( res ) );
+                authFromInteralResponse( parseResUrl( res ) );
             }
             else
             {
@@ -116,13 +125,27 @@ class ReqQueue
             return;
         } ).catch( ( err ) =>
         {
-            logger.error( err.message || err );
+
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
+            logger.error( 'Error at req processing for:', this.req );
+
+            // TODO: Setup proper rejection from when unauthed.
+            if( store )
+            {
+                store.dispatch( peruseAppActions.receivedAuthResponse( err.message ) )
+            }
 
             if ( ipcEvent )
             {
                 ipcEvent.sender.send( self.errChannelName, self.req );
+            }
+
+            else
+            {
+                // TODO: Currently there is no message sent when unauthorised.
+                // We need to send one for the app to know...
+                // authenticator.encodeAuthResp( this.req, false )
             }
         } );
     }
@@ -202,6 +225,7 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
     {
         return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
     }
+
     authenticator.encodeAuthResp( authData, isAllowed )
         .then( ( res ) =>
         {

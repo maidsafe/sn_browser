@@ -155,12 +155,12 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         logger.info( 'on.....onAuthDecisionRes', res );
 
         const browserAuthReqUri = remote.getGlobal( 'browserAuthReqUri' );
-        const browserReqUri = remote.getGlobal( 'browserReqUri' );
+        const peruseRequestUri = remote.getGlobal( 'peruseRequestUri' );
 
-        if( res.uri === browserAuthReqUri || res.uri === browserReqUri )
-        {
-            ipcRenderer.send('browserAuthenticated', res.res, res.uri === browserAuthReqUri )
-        }
+        // if( res.uri === browserAuthReqUri || res.uri === peruseRequestUri )
+        // {
+        //     // ipcRenderer.send('browserAuthenticated', res.res, res.uri === browserAuthReqUri )
+        // }
 
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )

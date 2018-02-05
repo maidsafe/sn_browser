@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './notifier.css';
 import logger from 'logger';
+import { CLASSES } from 'appConstants';
 
 import { Button, Column, IconButton, MessageBox, Row, Text } from 'nessie-ui';
 
@@ -91,7 +92,7 @@ export default class Notifier extends Component
             <Row hasMinHeight className={ styles.container }>
                 <MessageBox messageType={type}>
                     <Row verticalAlign="middle" align="center">
-                        <Text>{ text }</Text>
+                        <Text className={CLASSES.NOTIFIER_TEXT}>{ text }</Text>
                         {
                             handleOnAccept &&
                             <Column align="left">

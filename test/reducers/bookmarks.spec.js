@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import bookmarks from 'reducers/bookmarks';
 import { TYPES } from 'actions/bookmarks_actions';
-import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
+import { TYPES as SAFE_TYPES } from 'actions/peruse_actions';
 
 import initialState from 'reducers/initialAppState';
 

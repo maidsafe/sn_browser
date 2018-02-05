@@ -1,31 +1,33 @@
-// import 'raf/polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-// import { ipcRenderer } from 'electron';
 import { AppContainer } from 'react-hot-loader';
-// import { syncHistoryWithStore } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 
-var log = require( 'electron-log' );
+const log = require( 'electron-log' );
 
 
-log.info('Starting render process');
-window.onerror = function(error, url, line) {
-    log.error(error);
-    log.error(url);
-    log.error(line);
-
+log.info( 'Starting render process' );
+window.onerror = function ( error, url, line )
+{
+    log.error( error );
+    log.error( url );
+    log.error( line );
 };
 
 const store = configureStore();
-// const history = syncHistoryWithStore( hashHistory, store );
+window.peruseStore = store;
 
+if ( window.perusePendingNavigation && window.perusePendingNavigation.length )
+{
+    store.dispatch( push( window.perusePendingNavigation ) );
+}
 
 render(
     <AppContainer>
-        <Root store={ store } history={history} />
+        <Root store={ store } history={ history } />
     </AppContainer>,
     document.getElementById( 'root' )
 );

@@ -1,5 +1,6 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 import { BrowserWindow, ipcMain } from 'electron';
+import path from 'path';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
 import logger from 'logger';
@@ -12,10 +13,10 @@ import {
 } from './actions/tabs_actions';
 import { selectAddressBar } from './actions/ui_actions';
 
-//TODO: Move this // abstract
-import {authFromQueue} from './extensions/safe/network';
+// TODO: Move this // abstract
+import { authFromQueue } from './extensions/safe/network';
 
-let windowArray = [];
+const browserWindowArray = [];
 
 function getNewWindowPosition( mainWindowState )
 {
@@ -59,6 +60,10 @@ const openWindow = ( store ) =>
         height            : mainWindowState.height,
         titleBarStyle     : 'hidden-inset',
         'standard-window' : false,
+        webPreferences    :
+        {
+            preload : path.join( __dirname, 'browserPreload.js' )
+        }
 
     } );
 
@@ -83,36 +88,36 @@ const openWindow = ( store ) =>
         authFromQueue();
 
         const webContentsId = mainWindow.webContents.id;
-
-        // TODO: This assumes no BG windows!
-        if( BrowserWindow.getAllWindows().length === 1 )
+        // global.browserWindowId = webContentsId;
+        // set first browserWindow id upon initial opening.
+        // otherwise, addTab with about:blank
+        if ( browserWindowArray.length === 1 )
         {
-            //first tab needs this webContentsId.
-            store.dispatch( updateTab({ index: 0, windowId: webContentsId }))
+            // first tab needs this webContentsId.
+            store.dispatch( updateTab( { index: 0, windowId: webContentsId } ) );
         }
         else
         {
-            store.dispatch( addTab({ url: 'about:blank', windowId: webContentsId, isActiveTab : true }) );
-            store.dispatch( selectAddressBar() )
+            store.dispatch( addTab( { url: 'about:blank', windowId: webContentsId, isActiveTab: true } ) );
+            store.dispatch( selectAddressBar() );
         }
-
     } );
 
     mainWindow.on( 'closed', () =>
     {
-        const index = windowArray.indexOf( mainWindow );
+        const index = browserWindowArray.indexOf( mainWindow );
         mainWindow = null;
         if ( index > -1 )
         {
-            windowArray.splice( index, 1 )
+            browserWindowArray.splice( index, 1 );
         }
     } );
 
-    windowArray.push( mainWindow );
+    browserWindowArray.push( mainWindow );
 
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();
-}
+};
 
 
 export default openWindow;
@@ -120,10 +125,10 @@ export default openWindow;
 
 ipcMain.on( 'command:close-window', ( ) =>
 {
-    let win = BrowserWindow.getFocusedWindow();
+    const win = BrowserWindow.getFocusedWindow();
 
-    if( win )
+    if ( win )
     {
         win.close();
     }
-})
+} );

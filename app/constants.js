@@ -15,6 +15,7 @@ export const isRunningDevelopment = /^dev/.test( env );
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
 
 export const inRendererProcess = typeof window !== 'undefined';
+export const inMainProcess = !inRendererProcess;
 
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
@@ -103,13 +104,18 @@ else if ( process.platform === 'darwin' )
 
 export const APP_INFO = appInfo;
 
-
+// TODO. Unify with test lib/constants browser UI?
 export const CLASSES = {
-    ACTIVE_TAB  : 'js-tabBar__active-tab',
-    TAB         : 'js-tab',
-    ADD_TAB     : 'js-tabBar__add-tab',
-    CLOSE_TAB   : 'js-tabBar__close-tab',
-    PERUSE_PAGE : 'js-peruse__page'
+    ACTIVE_TAB                : 'js-tabBar__active-tab',
+    TAB                       : 'js-tab',
+    ADD_TAB                   : 'js-tabBar__add-tab',
+    CLOSE_TAB                 : 'js-tabBar__close-tab',
+    PERUSE_PAGE               : 'js-peruse__page',
+    SPECTRON_AREA             : 'js-spectron-area',
+    SPECTRON_AREA__SPOOF_SAVE : 'js-spectron-area__spoof-save',
+    SPECTRON_AREA__SPOOF_READ : 'js-spectron-area__spoof-read',
+    NOTIFIER_TEXT             : 'js-notifier__text',
+
 };
 
 
@@ -136,7 +142,7 @@ export const SAFE = {
         CONNECTED    : 'Connected',
         UNKNOWN      : 'Unknown',
         DISCONNECTED : 'Disconnected',
-        LOGGED_IN  : 'LOGGED_IN',
+        LOGGED_IN    : 'LOGGED_IN',
     },
     READ_STATUS :
     {

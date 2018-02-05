@@ -6,9 +6,9 @@ import {removeTrailingSlash} from 'utils/urlHelpers';
 import {
     navigateTo,
     newTab,
-    setToShellWindow
+    setClientToMainBrowserWindow,
+    setClientToBackgroundProcessWindow
 } from './lib/browser-driver';
-
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
 jest.unmock('electron')
@@ -25,8 +25,6 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 // - Check clicking a link in a page, updates title and webview etc.
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
-
-
 // TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
 // Check that http images are _not_ loaded.
 
@@ -44,6 +42,7 @@ describe( 'main window', () =>
     {
         await delay( 10000 )
         await app.start();
+        await setClientToMainBrowserWindow( app );
         await app.client.waitUntilWindowLoaded();
     } );
 
@@ -55,21 +54,22 @@ describe( 'main window', () =>
         }
     } );
 
-    test( 'window loaded', async () => await app.browserWindow.isVisible() );
-
-    it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
-    {
-        const { client } = app;
-        const logs = await client.getRenderProcessLogs();
-        // Print renderer process logs
-        logs.forEach( log =>
-        {
-            console.log( log.message );
-            console.log( log.source );
-            console.log( log.level );
-        } );
-        // expect( logs ).toHaveLength( 0 );
-    } );
+    test( 'window loaded', async () => {
+        return await app.browserWindow.isVisible();;
+    });
+    // it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
+    // {
+    //     const { client } = app;
+    //     const logs = await client.getRenderProcessLogs();
+    //     // Print renderer process logs
+    //     logs.forEach( log =>
+    //     {
+    //         console.log( log.message );
+    //         console.log( log.source );
+    //         console.log( log.level );
+    //     } );
+    //     // expect( logs ).toHaveLength( 0 );
+    // } );
 
     //
     // it( 'cannot open http:// protocol links', async () =>
@@ -97,7 +97,7 @@ describe( 'main window', () =>
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-        await client.pause( 1500 );
+        await client.pause( 2500 );
 
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
@@ -192,7 +192,7 @@ describe( 'main window', () =>
     xit( 'can go backwards', async () =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'google.com' );
@@ -211,7 +211,7 @@ describe( 'main window', () =>
     xit( 'can go forwards', async () =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'example.org' );
@@ -225,7 +225,7 @@ describe( 'main window', () =>
         //TODO: URL from webview always has trailing slash
         expect( clientUrl ).toBe( 'http://example.com' );
 
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.waitForExist( BROWSER_UI.FORWARDS );
 
@@ -243,7 +243,7 @@ describe( 'main window', () =>
     it( 'can close a tab', async() =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         const tabIndex = await newTab( app );
 
         await navigateTo( app, 'bbc.com' );
@@ -258,11 +258,11 @@ describe( 'main window', () =>
 
     });
 
-
+    // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async() =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.click( BROWSER_UI.ADDRESS_INPUT );
@@ -271,6 +271,23 @@ describe( 'main window', () =>
         await client.keys( ['\ue03d', '\ue008', 'w'] ); // shift + cmd + w
         //rest - to test on ci...
         await client.keys( ['\ue008','\ue009', 'w'] ); // shift + ctrl + w
+
+    } )
+
+    test( 'triggers a save for the window state', async() =>
+    {
+        const { client } = app;
+        await setClientToMainBrowserWindow(app);
+        await client.pause( 500 );
+
+        await client.waitForExist( BROWSER_UI.SPECTRON_AREA );
+        await client.pause( 500 );
+        await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+        await client.pause( 2500 );
+        await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT );
+        const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+        expect( note.endsWith( 'Unauthorised' ) ).toBeTruthy();
 
     } )
 } );

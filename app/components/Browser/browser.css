@@ -19,3 +19,20 @@
 {
     flex-grow: 1;
 }
+
+
+
+.spectronArea
+{
+    background-color: blue;
+    display: block;
+    width: 100%;
+    height: 1px;
+}
+
+.spectronArea button
+{
+    width: 1px;
+    height:1px;
+    display: inline-block;
+}

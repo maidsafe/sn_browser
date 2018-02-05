@@ -8,6 +8,7 @@ import rootReducer from '../reducers';
 import {
     forwardToRenderer,
     forwardToMain,
+    triggerAlias,
     getInitialStateRenderer,
     replayActionMain,
     replayActionRenderer,
@@ -22,7 +23,7 @@ if( inRendererProcess )
 const router = routerMiddleware( history );
 const initialStateFromMain = inRendererProcess ? getInitialStateRenderer() : {};
 
-const configureStore = ( initialState = initialStateFromMain, middleware = [] ) =>
+const configureStore = ( initialState = initialStateFromMain, middleware = [], isBackgroundProcess ) =>
 {
     middleware.push( thunk );
     middleware.push( router );
@@ -31,6 +32,11 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [] ) 
     {
         // must be first
         middleware.unshift( forwardToMain );
+    }
+
+    if ( isBackgroundProcess )
+    {
+        middleware.push( triggerAlias );
     }
 
     if ( !inRendererProcess )
