@@ -1,6 +1,7 @@
 import { createActions } from 'redux-actions';
 
 export const TYPES = {
+    SET_IS_MOCK    : 'SET_IS_MOCK',
     SET_AUTH_APP_STATUS    : 'SET_AUTH_APP_STATUS',
     SET_READ_CONFIG_STATUS     : 'SET_READ_CONFIG_STATUS',
     SET_SAVE_CONFIG_STATUS : 'SET_SAVE_CONFIG_STATUS',
@@ -18,6 +19,7 @@ export const TYPES = {
 };
 
 export const {
+    setIsMock,
     setAuthAppStatus,
     setReadConfigStatus,
     setSaveConfigStatus,
@@ -32,6 +34,7 @@ export const {
 
     resetStore
 } = createActions(
+    TYPES.SET_IS_MOCK,
     TYPES.SET_AUTH_APP_STATUS,
     TYPES.SET_READ_CONFIG_STATUS,
     TYPES.SET_SAVE_CONFIG_STATUS,

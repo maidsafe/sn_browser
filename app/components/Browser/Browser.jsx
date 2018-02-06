@@ -149,9 +149,12 @@ export default class Browser extends Component
             updateTab,
             activeTabBackwards,
             activeTabForwards,
+
             notifications,
             clearNotification,
-            ui
+            ui,
+
+            safeNetwork
         } = this.props;
 
         // TODO: Set focus only for this window if current
@@ -162,6 +165,7 @@ export default class Browser extends Component
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
+        const isMock = safeNetwork ? safeNetwork.isMock : false;
 
         // TODO: if not, lets trigger close?
         if ( !activeTab )
@@ -175,6 +179,10 @@ export default class Browser extends Component
 
         return (
             <div className={ styles.container }>
+                {
+                    isMock &&
+                    <span>Running on a mock network</span>
+                }
                 <TabBar
                     key={ 1 }
                     updateActiveTab={ updateActiveTab }

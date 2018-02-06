@@ -85,7 +85,7 @@ export const initAnon = async ( passedStore ) =>
     {
         // does it matter if we override?
         appObj = await initializeApp( APP_INFO.info, null, {
-            libPath        : CONFIG.LIB_PATH,
+            libPath        : CONFIG.SAFE_NODE_LIB_PATH,
             registerScheme : false,
             joinSchemes    : [PROTOCOLS.SAFE],
             configPath     : CONFIG.CONFIG_PATH
@@ -175,7 +175,7 @@ export const requestAuth = async () =>
 {
     try
     {
-        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
 
         const authReq = await appObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
@@ -216,8 +216,10 @@ export const initMock = async ( passedStore ) =>
 
     try
     {
-        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
         appObj = await appObj.auth.loginForTest( APP_INFO.permissions );
+
+        passedStore.dispatch( safeActions.setIsMock( true ) );
         return appObj;
     }
     catch ( err )

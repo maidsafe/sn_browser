@@ -9,7 +9,8 @@ const initialState = {
         tasks           : [],
         readStatus      : '',
         savedBeforeQuit : false,
-        saveStatus      : ''
+        saveStatus      : '',
+        isMock          : false
     },
     tabs : [{
         url          : 'safe-auth://home/',
