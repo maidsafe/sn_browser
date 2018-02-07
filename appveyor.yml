@@ -4,7 +4,7 @@ image: Visual Studio 2017
 environment:
   nodejs_version: "Stable"
   matrix:
-    # - NODE_ENV: "dev"
+    - NODE_ENV: "dev"
     - NODE_ENV: "prod"
 
 platform:
@@ -26,6 +26,8 @@ clone_depth: 1
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
+  - if [%NODE_ENV%]==[dev] ( set RUN_E2E=true )
+
   # - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
   - node --version
@@ -40,7 +42,8 @@ test_script:
   # - yarn run lint
   - yarn run build
   - yarn run test
-  # - yarn run test e2e
+  - IF DEFINED RUN_E2E ( yarn run test e2e ) ELSE (echo "is not defined")
+
 
 
 
