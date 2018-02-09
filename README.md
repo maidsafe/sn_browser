@@ -5,7 +5,9 @@ An electron web browser. Built to be a basis. Extendable by design.
 
 ## Development
 
-- `git clone git@github.com:joshuef/peruse.git`
+Make sure you have both git and [yarn](https://yarnpkg.com/en/docs/install) installed.
+
+- `git clone https://github.com/joshuef/peruse.git`
 - `cd peruse`
 - `yarn`
 - `yarn rebuild`
