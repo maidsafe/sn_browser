@@ -190,7 +190,7 @@ module.exports.authorise = (appHandle, permissions, options) => new Promise((res
       .then((obj) => obj.app.auth.genAuthUri(permissions, options)
         .then((authReq) => ipc.sendAuthReq(authReq, false, (err, res) => {
           if (err) {
-            return reject(new Error('Unable to authorise the application: ', err));
+            return reject(new Error(`Unable to authorise the application: ${err}`));
           }
           return resolve(res);
         })))

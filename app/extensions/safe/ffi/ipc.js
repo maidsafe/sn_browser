@@ -213,7 +213,7 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
         {
             reqQ.req.error = err;
             e.sender.send( 'onAuthDecisionRes', reqQ.req );
-            logger.error( 'Auth decision error :: ', err.message );
+            logger.error( 'Auth decision error :: ', err );
             reqQ.next();
         } );
 };

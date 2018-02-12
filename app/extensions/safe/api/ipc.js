@@ -56,7 +56,11 @@ const authRes = (event, response) => {
   }
   remove(reqId);
   if (typeof task.cb === 'function') {
-    task.cb(null, response.res);
+    if (response.error) {
+      task.cb(response.error, null);     
+    } else {
+      task.cb(null, response.res);
+    }
   }
 };
 
