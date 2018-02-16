@@ -1,20 +1,97 @@
 import { parse } from 'url';
+import path from 'path';
 import pkg from 'appPackage';
 import logger from 'logger';
+import { PROTOCOLS } from 'appConstants';
+
+
+export const isInternalPage = ( tab ) =>
+{
+    const urlObj = parse( tab.url );
+
+    return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
+};
 
 export const removeTrailingSlash = ( url ) =>
 {
-    return url.replace(/\/$/, "");
-}
+    if ( url )
+    {
+        return url.replace( /\/$/, '' );
+    }
+
+    return url;
+};
+
+
+export const addTrailingSlashIfNeeded = ( url ) =>
+{
+    const urlObj = parse( url );
+    const urlPath = urlObj.path;
+    let extName;
+
+    if ( urlPath )
+    {
+        extName = path.extname( urlPath );
+    }
+
+    let slashedUrl = url;
+
+    if ( urlPath && !urlObj.hash && !extName && !urlPath.endsWith( '/' ) )
+    {
+        slashedUrl += '/';
+    }
+
+    return slashedUrl;
+};
+
+export const removeTrailingHash = ( url ) =>
+    url.replace( /\#$/, '' );
 
 export const removeTrailingRedundancies = ( url ) =>
 {
-    let newUrl = url.replace( /\.html$/, '');
-    newUrl = newUrl.replace( /index$/, '');
-    return removeTrailingSlash( newUrl );
-}
+    let newUrl = url.replace( /index\.html$/, '' );
+    newUrl = newUrl.replace( /index$/, '' );
+    newUrl = removeTrailingSlash( newUrl );
+    newUrl = removeTrailingHash( newUrl );
 
-const getProtocolPosition = ( url, inputProtocol  ) =>
+    // loop until clean
+    if ( newUrl === url )
+    {
+        return newUrl;
+    }
+
+    return removeTrailingRedundancies( newUrl );
+};
+
+export const urlHasChanged = ( src, newUrl ) =>
+{
+    const strippedWebviewUrl = removeTrailingRedundancies( src );
+    const strippedNewUrl = removeTrailingRedundancies( newUrl );
+
+    const parsedSrc = parse( src );
+    const parsedNew = parse( newUrl );
+
+    if ( strippedNewUrl === strippedWebviewUrl )
+    {
+        return false;
+    }
+
+    if ( parsedSrc.protocol !== parsedNew.protocol ||
+        parsedSrc.host !== parsedNew.host ||
+        removeTrailingSlash( parsedSrc.path ) !== removeTrailingSlash( parsedNew.path ) )
+    {
+        return true;
+    }
+
+    if ( strippedNewUrl.hash !== parsedNew.hash )
+    {
+        return true;
+    }
+
+    return false;
+};
+
+const getProtocolPosition = ( url, inputProtocol ) =>
 {
     const fullProto = '://';
     const shortProto = ':';
@@ -31,16 +108,18 @@ const getProtocolPosition = ( url, inputProtocol  ) =>
     }
 
     return protocolPos;
-}
+};
 /**
  * Takes input and adds requisite url portions as needed, comparing to package.json defined
- * protocols, or defaulting to http
+ * protocols, or defaulting to http.
+ *
+ * Strips trailling slashes/hashses for clarity in the address bar
  * @param  {String} input address bar input
  * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
  */
-export const makeValidUrl = ( input ) =>
+export const makeValidAddressBarUrl = ( input ) =>
 {
-    if( !input )
+    if ( !input )
     {
         return 'about:blank';
         logger.warn( 'url must be a string' );
@@ -52,7 +131,7 @@ export const makeValidUrl = ( input ) =>
 
     let finalProtocol;
     let everythingAfterProtocol = '';
-    let protocolPos = getProtocolPosition( input, inputProtocol );
+    const protocolPos = getProtocolPosition( input, inputProtocol );
 
     if ( validProtocols.includes( inputProtocol ) )
     {
@@ -80,7 +159,7 @@ export const makeValidUrl = ( input ) =>
 
         everythingAfterProtocol = `localhost:${parsedURL.hostname}/${everythingAfterProtocol}`;
     }
-    else if ( inputProtocol)
+    else if ( inputProtocol )
     {
         // TODO: Show error page for bad urls.
         return removeTrailingRedundancies( input );

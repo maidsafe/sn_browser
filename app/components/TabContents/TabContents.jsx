@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import styles from './tabContents.css';
 import Tab from 'components/Tab';
-import { PROTOCOLS, INTERNAL_PAGES } from 'appConstants';
+import { INTERNAL_PAGES } from 'appConstants';
+import { isInternalPage } from 'utils/urlHelpers';
 import History from 'components/PerusePages/History';
 import Bookmarks from 'components/PerusePages/Bookmarks';
-import UrlList from 'components/UrlList';
 
 export default class TabContents extends Component
 {
@@ -16,22 +16,15 @@ export default class TabContents extends Component
         return this.activeTab;
     }
 
-    isInternalPage = ( tab ) =>
-    {
-        const urlObj = url.parse( tab.url );
-
-        return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
-    }
-
     render()
     {
-        const { addTab, bookmarks, tabs, updateActiveTab, updateTab } = this.props;
+        const { addTab, bookmarks, allTabs, tabs, updateActiveTab, updateTab } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
         {
             if ( !tab.isClosed )
             {
-                if ( this.isInternalPage( tab ) )
+                if ( isInternalPage( tab ) )
                 {
                     const urlObj = url.parse( tab.url );
                     const isActiveTab = tab.isActiveTab;
@@ -41,7 +34,8 @@ export default class TabContents extends Component
                         case INTERNAL_PAGES.HISTORY :
                         {
                             return ( <History
-                                tabs={ tabs }
+                                addTab={ addTab }
+                                history={ allTabs }
                                 key={ i }
                                 isActiveTab={ isActiveTab }
                                 ref={ ( c ) =>
@@ -56,6 +50,7 @@ export default class TabContents extends Component
                         case INTERNAL_PAGES.BOOKMARKS :
                         {
                             return ( <Bookmarks
+                                addTab={ addTab }
                                 bookmarks={ bookmarks }
                                 key={ i }
                                 isActiveTab={ isActiveTab }
@@ -84,7 +79,7 @@ export default class TabContents extends Component
                     updateTab={ updateTab }
                     updateActiveTab={ updateActiveTab }
                     key={ i }
-                    index={ i }
+                    index={ tab.index }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )

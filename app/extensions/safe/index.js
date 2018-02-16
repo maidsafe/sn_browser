@@ -1,56 +1,19 @@
-import { session, shell } from 'electron';
 import logger from 'logger';
-import { CONFIG, isRunningProduction } from 'appConstants';
+import { isRunningProduction, SAFE } from 'appConstants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
+
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import ipc from './ffi/ipc';
+
 import { initAnon, initMock } from './network';
-import * as tabsActions from 'actions/tabs_actions';
-import { urlIsAllowed } from './utils/safeHelpers';
+// import * as tabsActions from 'actions/tabs_actions';
+
 import * as authAPI from './auth-api';
 
+import blockNonSAFERequests from './blockNonSafeReqs';
+import handleStoreChanges from './handleStoreChanges';
 
-const isForLocalServer = ( parsedUrlObject ) =>
-{
-    return parsedUrlObject.protocol === `localhost:` || parsedUrlObject.hostname === '127.0.0.1';
-}
-
-const blockNonSAFERequests = () =>
-{
-    const filter = {
-        urls : ['*://*']
-    };
-
-    const safeSession = session.fromPartition( CONFIG.SAFE_PARTITION );
-
-    safeSession.webRequest.onBeforeRequest( filter, ( details, callback ) =>
-    {
-
-        if ( urlIsAllowed( details.url ) )
-        {
-            logger.debug( `Allowing url ${details.url}` );
-
-            callback( {} );
-            return;
-        }
-
-        if ( details.url.indexOf( 'http' ) > -1 )
-        {
-            try
-            {
-                shell.openExternal( details.url );
-            }
-            catch ( e )
-            {
-                logger.error( e );
-            }
-        }
-
-        logger.info( 'Blocked req:', details.url );
-        callback( { cancel: true } );
-    } );
-};
 
 const init = async ( store ) =>
 {
@@ -84,10 +47,10 @@ const init = async ( store ) =>
 
     blockNonSAFERequests();
 
-    // if we want to do something with the store, we would do it here.
-    // store.subscribe( () =>
-    // {
-    // } );
+    store.subscribe( async () =>
+    {
+        handleStoreChanges( store );
+    } );
 };
 
 // const middleware = store => next => action =>
@@ -102,6 +65,8 @@ const init = async ( store ) =>
 //
 //     // return next( action );
 // };
+//
+
 
 export default {
     init,

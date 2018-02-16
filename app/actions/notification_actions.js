@@ -6,7 +6,11 @@ export const TYPES = {
     CLEAR_NOTIFICATION     : 'CLEAR_NOTIFICATION'
 };
 
-export const { addNotification, addLocalNotification, clearNotification } = createActions( {
+export const {
+    addNotification,
+    addLocalNotification,
+    clearNotification
+} = createActions( {
     [TYPES.ADD_NOTIFICATION]       : payload => ( { ...payload } ),
     [TYPES.ADD_LOCAL_NOTIFICATION] : [
         payload => ( { ...payload } ),

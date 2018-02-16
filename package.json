@@ -2,7 +2,7 @@
   "name": "peruse",
   "identifier": "net.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
-  "version": "0.3.4",
+  "version": "0.4.1",
   "vendor": "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
@@ -43,7 +43,7 @@
     "prepush": "yarn test",
     "put-live-net-files-for-dev": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/MacOS/Electron.crust.config && cp resources/log.toml node_modules/electron/dist/Electron.app/Contents/Resources/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
-    "rebuild": "npm rebuild --runtime=electron --target=1.7.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
+    "rebuild": "npm rebuild --runtime=electron --target=1.7.11 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
   },
   "browserslist": "electron 1.4",
   "build": {

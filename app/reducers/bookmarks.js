@@ -1,8 +1,10 @@
 
 // @flow
 import { remote, shell, webContents } from 'electron';
+import _ from 'lodash';
 import { TYPES } from 'actions/bookmarks_actions';
-import { makeValidUrl } from 'utils/urlHelpers';
+import { TYPES as SAFE_TYPES } from 'actions/safe_actions';
+import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
@@ -36,10 +38,10 @@ const addBookmark = ( state, bookmark ) =>
 
     // TODO, check if url existssss
 
-    const bookmarkUrl = makeValidUrl( bookmark.url || '' );
+    const bookmarkUrl = makeValidAddressBarUrl( bookmark.url || '' );
     const newBookmark = { ...bookmark };
 
-    let newState = [...state];
+    const newState = [...state];
 
 
     newState.push( newBookmark );
@@ -55,17 +57,13 @@ const addBookmark = ( state, bookmark ) =>
  */
 const removeBookmark = ( state, payload ) =>
 {
-    const removalIndex = state.findIndex( bookmark => bookmark === payload );
-
-
+    const removalIndex = state.findIndex( bookmark => bookmark.url === payload.url );
     let updatedState = [...state];
 
-    updatedState.pop( removalIndex );
+    updatedState.splice( removalIndex, 1 );
 
     return updatedState;
 };
-
-
 
 
 const updateBookmark = ( state, payload ) =>
@@ -86,8 +84,8 @@ const updateBookmark = ( state, payload ) =>
 
     if ( payload.url )
     {
-        const url = makeValidUrl( payload.url );
-        updatedBookmark =  { ...updatedBookmark, url } ;
+        const url = makeValidAddressBarUrl( payload.url );
+        updatedBookmark = { ...updatedBookmark, url };
     }
 
     const updatedState = [...state];
@@ -127,6 +125,18 @@ export default function bookmarks( state: array = initialState, action )
         case TYPES.UPDATE_BOOKMARK :
         {
             return updateBookmark( state, payload );
+        }
+        case SAFE_TYPES.RECEIVED_CONFIG :
+        {
+            const payloadBookmarks = payload.bookmarks;
+            const newBookmarks = [...state, ...payloadBookmarks];
+
+            return _.uniqBy( newBookmarks, 'url' );
+        }
+        case SAFE_TYPES.RESET_STORE :
+        {
+            const initial = initialState;
+            return [...initial];
         }
         default:
             return state;

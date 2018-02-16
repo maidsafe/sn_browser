@@ -9,7 +9,6 @@ import ref from 'ref';
 import crypto from 'crypto';
 import lodash from 'lodash';
 import i18n from 'i18n';
-import logger from 'logger';
 
 import SafeLib from './safe_lib';
 import Listener from './listeners';
@@ -19,7 +18,8 @@ import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
-
+import { setAuthAppStatus } from 'actions/safe_actions';
+import { SAFE } from 'appConstants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -305,6 +305,9 @@ class Authenticator extends SafeLib
                         }
                         this.registeredClientHandle = clientHandle;
                         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
+
+                        const store = global.mainProcessStore;
+                        store.dispatch( setAuthAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
                         resolve();
                     } ) );
 
@@ -336,6 +339,9 @@ class Authenticator extends SafeLib
         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
         this.safeLib.auth_free( this.registeredClientHandle );
         this.registeredClientHandle = null;
+
+        const store = global.mainProcessStore;
+        store.dispatch( setAuthAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
     }
 
     decodeRequest( uri )
@@ -932,8 +938,8 @@ class Authenticator extends SafeLib
                     return reject( new Error( errConst,INVALID_RESPONSE.msg ) );
                 }
 
-                const appId = ref.reinterpret(appIdPtr, appIdLen);
-                return this._encodeUnRegisteredResp(reqId, appId)
+                const appId = ref.reinterpret( appIdPtr, appIdLen );
+                return this._encodeUnRegisteredResp( reqId, appId )
                     .then( ( res ) => resolve( res ) );
             } ) );
     }

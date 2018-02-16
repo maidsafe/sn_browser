@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-
+import logger from 'logger';
 import { PageContent, Text, TableRow, TableCell, Table } from 'nessie-ui';
 
 import styles from './urlList.css';
@@ -12,7 +12,8 @@ export default class UrlList extends Component
     static propTypes =
     {
         list     : PropTypes.array.isRequired,
-        onRemove : PropTypes.func
+        onRemove : PropTypes.func,
+        addTab   : PropTypes.func
     }
 
     static defaultProps =
@@ -20,15 +21,23 @@ export default class UrlList extends Component
         list : []
     }
 
-
-    render()
+    render = () =>
     {
-        const { list } = this.props;
-
+        const { addTab, list } = this.props;
         const parsedList = [];
 
         list.forEach( ( item, i ) =>
         {
+            const handleClick = ( e ) =>
+            {
+                // required to prevent the app navigating by default.
+                e.preventDefault();
+                addTab( {
+                    url         : item,
+                    isActiveTab : true
+                } );
+            };
+
             const listItem = (
                 <TableRow
                     align="left"
@@ -36,7 +45,10 @@ export default class UrlList extends Component
                     gutters="S"
                     key={ i }
                 >
-                    <a href={ item } >
+                    <a
+                        onClick={ handleClick }
+                        href={ item }
+                    >
                         { item }
                     </a>
                 </TableRow>

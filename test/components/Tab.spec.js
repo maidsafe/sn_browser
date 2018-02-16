@@ -13,13 +13,13 @@ describe( 'Tab', () =>
     beforeEach( () =>
     {
         props = {
-            url: '',
-            index: 1,
+            url       : '',
+            index     : 1,
             updateTab : jest.fn(),
-            addTab : jest.fn()
+            addTab    : jest.fn()
         };
 
-        wrapper = mount( <Tab { ...props } setActiveTab={ jest.fn()} /> );
+        wrapper = mount( <Tab { ...props } setActiveTab={ jest.fn() } /> );
         instance = wrapper.instance();
     } );
 
@@ -35,30 +35,52 @@ describe( 'Tab', () =>
     {
         it( 'should not call loadUrl with the same url without a slash', () =>
         {
-            instance.webview = { src: 'hello/'};
+            instance.webview = { src: 'hello/' };
             instance.loadURL = jest.fn();
             instance.state = {
                 browserState : { mountedAndReady: true }
-            }
+            };
 
-            instance.componentWillReceiveProps( { url: 'hello' } )
-            expect( instance.loadURL.mock.calls.length ).toBe( 0 )
+            instance.componentWillReceiveProps( { url: 'hello' } );
+            expect( instance.loadURL.mock.calls.length ).toBe( 0 );
+        } );
 
+        it( 'should call loadUrl with the same url with a hash addition', () =>
+        {
+            instance.webview = { src: 'hello/' };
+            instance.loadURL = jest.fn();
+            instance.state = {
+                browserState : { mountedAndReady: true }
+            };
+
+            instance.componentWillReceiveProps( { url: 'hello/#something' } );
+            expect( instance.loadURL.mock.calls.length ).toBe( 1 );
+        } );
+
+        it( 'should not call loadUrl with the same url', () =>
+        {
+            instance.webview = { src: 'hello/' };
+            instance.loadURL = jest.fn();
+            instance.state = {
+                browserState : { mountedAndReady: true }
+            };
+
+            instance.componentWillReceiveProps( { url: 'hello/' } );
+            expect( instance.loadURL.mock.calls.length ).toBe( 0 );
         } );
 
         it( 'should call loadUrl with a different url ', () =>
         {
-            instance.webview = { src: 'hello/'};
+            instance.webview = { src: 'hello/' };
             instance.loadURL = jest.fn();
             instance.state = {
                 browserState : { mountedAndReady: true }
-            }
+            };
 
             instance.componentWillReceiveProps( { url: 'hello' } );
-            expect( instance.loadURL.mock.calls.length ).toBe( 0 )
+            expect( instance.loadURL.mock.calls.length ).toBe( 0 );
             instance.componentWillReceiveProps( { url: 'helllllllo' } );
-            expect( instance.loadURL.mock.calls.length ).toBe( 1 )
+            expect( instance.loadURL.mock.calls.length ).toBe( 1 );
         } );
     } );
-
 } );
