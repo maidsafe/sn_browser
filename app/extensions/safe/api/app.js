@@ -1,7 +1,7 @@
 const safeApp = require('@maidsafe/safe-node-app');
 const ipc = require('./ipc');
 const { genHandle, getObj, freeObj, freeAllNetObj, netStateCallbackHelper } = require('./helpers');
-const errConst = require('../error-constants');
+const errConst = require('../err-constants');
 
 /* eslint no-underscore-dangle: ["error", { "allow": ["_with_async_cb_initialise"] }] */
 
