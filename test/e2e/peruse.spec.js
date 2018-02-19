@@ -11,6 +11,8 @@ import {
 
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
+jest.unmock('electron')
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
@@ -23,19 +25,21 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 // - Check clicking a link in a page, updates title and webview etc.
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
-const app = new Application( {
-    path : electron,
-    args : [path.join( __dirname, '..', '..', 'app' )],
-    env : {
-        IS_SPECTRON: true
-    }
-} );
+
 
 // TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
 // Check that http images are _not_ loaded.
 
 describe( 'main window', () =>
 {
+    const app = new Application( {
+        path : electron,
+        args : [path.join( __dirname, '..', '..', 'app' )],
+        env  : {
+            IS_SPECTRON: true
+        }
+    } );
+
     beforeAll( async () =>
     {
         await delay( 10000 )

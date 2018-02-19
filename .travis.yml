@@ -4,7 +4,7 @@ os:
 - osx
 - linux
 env:
-# - NODE_ENV=dev
+- NODE_ENV=dev
 - NODE_ENV=prod
 language: node_js
 node_js:
@@ -17,6 +17,7 @@ cache:
   - "$HOME/.electron"
   - "$HOME/.cache"
 addons:
+  chrome: stable
   apt:
     sources:
     - ubuntu-toolchain-r-test
@@ -37,7 +38,7 @@ script:
 - sleep 15
 # - yarn run test e2e;
 # - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
-#   fi
+  # fi
 - yarn run package
 - yarn run post-pack
 
