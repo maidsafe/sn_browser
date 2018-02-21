@@ -14,23 +14,6 @@ All notable changes to this project will be documented in this file.
 - Scrollable history/bookmarks pages.
 - URL change check improved
 
-#### [v0.2.0](https://github.com/joshuef/peruse/compare/v0.10.0-1...v0.2.0)
-> 19 December 2017
-- hmmm something borked [`c686b0c`](https://github.com/joshuef/peruse/commit/c686b0ca3942d400d843aff2682f5d7026e441ac)
-- feat/ui: Add UI reducer and setup actions for focussing addressbar [`6269df7`](https://github.com/joshuef/peruse/commit/6269df7c0d54a1eab22d22b934ffa981c41ba1fb)
-- add bookmarks reducer and actions [`bc334b8`](https://github.com/joshuef/peruse/commit/bc334b88c1e0b4b6e9c65f921b37489a26c91b3d)
-- init of TabSpec [`603bad9`](https://github.com/joshuef/peruse/commit/603bad97299377f88b0cdecf798e8e8629a6a470)
-- init of history [`4d0f95c`](https://github.com/joshuef/peruse/commit/4d0f95c29a8348ebdd92e5e03ceb9d6467f66ebf)
-- add bookmark list page [`1441166`](https://github.com/joshuef/peruse/commit/1441166ccc316f4f4242655f260e61a81466f42b)
-- browser tests [`e87a9f0`](https://github.com/joshuef/peruse/commit/e87a9f06a9838523eaa2a7ee19d5c54758b9aa4a)
-- fix/dom-auth: Fix domAuth after window/redux state refactor. [`49fb642`](https://github.com/joshuef/peruse/commit/49fb64219da53854eb36e87dff8c81a08ff560c0)
-- add bookmarks to address bar [`953568f`](https://github.com/joshuef/peruse/commit/953568fe716db2e8d764ea85e62e961aca2d551b)
-- basic history [`c26b18f`](https://github.com/joshuef/peruse/commit/c26b18fde18993d94c969623c7a4fe94f9d37972)
-- mo brows [`e0df9ba`](https://github.com/joshuef/peruse/commit/e0df9bac4b70d985d933cbdeb6df374d701822d3)
-- feat/locahost: Add localhost to http:localhost urlhelper [`0ebe723`](https://github.com/joshuef/peruse/commit/0ebe7235271a9171b25c280d4be6a8e0cc45e5a5)
-- fix/auth-req: Fix auth request response handling. [`652e208`](https://github.com/joshuef/peruse/commit/652e208e99928d5a9de7fdde84c815c33a7ed34d)
-- mo brows [`b16cb05`](https://github.com/joshuef/peruse/commit/b16cb050cf0dc6c4a59c2166efe908307663a901)
-- fix/dev: Manually install app deps to get any applied NODE_ENV [`3c6bf8b`](https://github.com/joshuef/peruse/commit/3c6bf8bb2bc60b5fbc20ea38798b9d1d71afe3c7)
 ### Added
 - Tests for url change abstraction. Improved Tab.jsx tests;
 - Tests for adding/removing slashes
