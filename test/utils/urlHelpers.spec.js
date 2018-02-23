@@ -77,6 +77,7 @@ describe( 'addTrailingSlashIfNeeded', () =>
         expect( addTrailingSlashIfNeeded( 'safe://hello.world/boom#yes' ) ).toBe( 'safe://hello.world/boom#yes' );
         expect( addTrailingSlashIfNeeded( 'safe://hello.world/boom/#/yes' ) ).toBe( 'safe://hello.world/boom/#/yes' );
     } );
+
 } );
 
 describe( 'urlHasChanged', () =>
@@ -117,6 +118,11 @@ describe( 'urlHasChanged', () =>
     it( 'should return false for the same url with a trailing hash', () =>
     {
         expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://hello.world/boom/#' ) ).toBeFalsy( );
+    } );
+
+    it( 'should return false for the same url with a trailing slash', () =>
+    {
+        expect( urlHasChanged( 'safe-auth://home', 'safe-auth://home/' ) ).toBeFalsy( );
     } );
 
     it( 'should return true for the same url with a complex hash', () =>

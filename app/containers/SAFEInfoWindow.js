@@ -4,7 +4,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as NotificationActions from 'actions/notification_actions';
 import * as UiActions from 'actions/ui_actions';
-import * as AuthenticatorActions from 'actions/authenticator_actions';
+
+// TODO: Enable creation of windows via an api...? Or mvoe this into safe extension. Is that the way?
+import * as AuthenticatorActions from 'extensions/safe/actions/authenticator_actions';
 import { SAFE } from 'appConstants';
 import { TextInput } from 'nessie-ui';
 import Notifier from 'components/Notifier';

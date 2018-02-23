@@ -1,6 +1,6 @@
 import logger from 'logger';
 
-import { getAppObj } from '../network';
+// import { getPeruseAppObj } from '../network';
 
 const safeRoute = {
     method  : 'GET',
@@ -10,7 +10,10 @@ const safeRoute = {
         try
         {
             const link = `safe://${request.params.link}`;
-            const app = getAppObj();
+
+            // TODO: Move to bg process. OR: How do we get app?
+            // const app = getPeruseAppObj() || {};
+            const app =  {};
             const headers = request.headers;
             let isRangeReq = false;
             const BYTES = 'bytes=';
@@ -57,21 +60,21 @@ const safeRoute = {
                 options.range = { start, end };
             }
 
-            const data = await app.webFetch( link, options );
+            // const data = await app.webFetch( link, options );
 
-            if ( isRangeReq )
-            {
-                return reply( data.body )
-                    .code( 206 )
-                    .type( data.headers['Content-Type'] )
-                    .header( 'Content-Range', data.headers['Content-Range'] )
-                    .header( 'Content-Length', data.headers['Content-Length'] );
-            }
-
-            return reply( data.body )
-                .type( data.headers['Content-Type'] )
-                .header( 'Transfer-Encoding', 'chunked' )
-                .header( 'Accept-Ranges', 'bytes' )
+            // if ( isRangeReq )
+            // {
+            //     return reply( data.body )
+            //         .code( 206 )
+            //         .type( data.headers['Content-Type'] )
+            //         .header( 'Content-Range', data.headers['Content-Range'] )
+            //         .header( 'Content-Length', data.headers['Content-Length'] );
+            // }
+            //
+            // return reply( data.body )
+            //     .type( data.headers['Content-Type'] )
+            //     .header( 'Transfer-Encoding', 'chunked' )
+            //     .header( 'Accept-Ranges', 'bytes' )
         }
         catch ( e )
         {

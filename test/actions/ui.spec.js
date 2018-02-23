@@ -1,6 +1,6 @@
 import * as ui from 'actions/ui_actions';
 
-describe( 'notification actions', () =>
+describe( 'ui actions', () =>
 {
     it( 'should have types', () =>
     {

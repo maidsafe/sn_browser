@@ -7,38 +7,12 @@ import { CONFIG, APP_INFO, PROTOCOLS, isRunningUnpacked } from 'appConstants';
 import { session, app } from 'electron';
 /* eslint-enable import/extensions */
 
-// TODO: Is sysuri loaded + happening? (why the protocols not working?)
-// If it is, is it not happening early enough?
-import sysUri from '../ffi/sys_uri';
-
-// const isDevMode = process.execPath.match( /[\\/]electron/ );
-
-const appInfo = {
-    id     : 'net.maidsafe.app.browser.authenticator',
-    exec   : APP_INFO.info.customExecPath,
-    vendor : 'MaidSafe.net Ltd',
-    name   : 'SAFE Browser Authenticator plugin',
-    icon   : 'iconPath'
-};
-
-// OSX: Add bundle for electron in dev mode
-if ( isRunningUnpacked && process.platform === 'darwin' )
-{
-    appInfo.bundle = 'com.github.electron';
-}
-else if( process.platform === 'darwin' )
-{
-    appInfo.bundle = 'com.electron.peruse';
-
-}
 
 export const registerSafeAuthProtocol = () =>
 {
     logger.verbose( 'Registering safe-auth scheme');
     const partition = CONFIG.SAFE_PARTITION;
     const ses = session.fromPartition( partition );
-
-    sysUri.registerUriScheme( appInfo, PROTOCOLS.SAFE_AUTH );
 
     ses.protocol.registerHttpProtocol( PROTOCOLS.SAFE_AUTH, ( req, cb ) =>
     {

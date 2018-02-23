@@ -6,10 +6,7 @@ import MenuBuilder from './menu';
 import logger from 'logger';
 import {
     addTab,
-    updateTab,
-    // activeTabForwards,
-    // activeTabBackwards,
-    // reopenTab
+    updateTab
 } from './actions/tabs_actions';
 import { selectAddressBar } from './actions/ui_actions';
 
@@ -73,9 +70,10 @@ const openWindow = ( store ) =>
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-
+    logger.info('loadurl passssed')
     mainWindow.webContents.on( 'did-finish-load', () =>
     {
+        logger.info('finished load window>>>>>>>>>>>>>>>>')
         if ( !mainWindow )
         {
             throw new Error( '"mainWindow" is not defined' );
@@ -85,12 +83,10 @@ const openWindow = ( store ) =>
         mainWindow.show();
         mainWindow.focus();
 
-        authFromQueue();
+        // TODO: Make this queue authenticastor action.
+        // authFromQueue();
 
         const webContentsId = mainWindow.webContents.id;
-        // global.browserWindowId = webContentsId;
-        // set first browserWindow id upon initial opening.
-        // otherwise, addTab with about:blank
         if ( browserWindowArray.length === 1 )
         {
             // first tab needs this webContentsId.

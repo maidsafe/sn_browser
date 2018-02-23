@@ -16,8 +16,8 @@ if( log.transports )
 {
     // Log level
     // error, warn, info, verbose, debug, silly
-    log.transports.console.level = 'verbose';
-    log.transports.file.level = 'verbose';
+    log.transports.console.level = 'silly';
+    log.transports.file.level = 'silly';
 
     if( isRunningPackaged || isRunningSpectronTest )
     {

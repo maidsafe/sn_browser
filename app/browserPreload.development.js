@@ -1,7 +1,6 @@
 import { push } from 'react-router-redux';
-import rpc from 'pauls-electron-rpc';
 import { PROTOCOLS } from 'appConstants';
-import setupPreloadAPIs from './setupPreloadAPIs';;
+// import setupPreloadAPIs from './setupPreloadAPIs';;
 
 //no logger to avoid duplicate msgs.
 console.log( 'Peruse Browser window preloaded.' );
@@ -19,4 +18,4 @@ window.peruseNav = ( location ) =>
 };
 
 
-setupPreloadAPIs( `${PROTOCOLS.SAFE_AUTH}:` );
+// setupPreloadAPIs( `${PROTOCOLS.SAFE_AUTH}:` );

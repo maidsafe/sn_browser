@@ -394,7 +394,6 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
-        logger.info( 'webview loadURL being triggered' );
         const url = addTrailingSlashIfNeeded( input );
 
         if ( !urlHasChanged( this.state.browserState.url, url) )
@@ -448,6 +447,7 @@ export default class Tab extends Component
                     style={ { height: '100%', display: 'flex', flex: '1 1' } }
                     preload={ injectPath }
                     partition='persist:safe-tab'
+                    // nodeIntegration={ false }
                     src={ this.props.url }
                     ref={ ( c ) =>
                     {

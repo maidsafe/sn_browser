@@ -6,6 +6,7 @@ import { initializeApp } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import * as peruseAppActions from 'actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
+// import * as remoteCallActions from 'actions/remoteCall_actions';
 import logger from 'logger';
 
 const authingStates = [
@@ -15,8 +16,13 @@ const authingStates = [
     SAFE.APP_STATUS.AUTHORISATION_DENIED
 ];
 
-let appObj;
+let peruseAppObj;
 
+// TODO: Refactor away this and use aliased actions for less... sloppy
+// flow and make this more reasonable.
+let isAuthing = false;
+let isReading = false;
+let isSaving = false;
 
 /**
  * Setup actions to be triggered in response to store state changes.
@@ -29,18 +35,26 @@ const handlePeruseStoreChanges = ( store ) =>
     manageAuthorisationActions( store );
 }
 
+
+
+let cachedRemoteCallArray = [];
+// things underway
+let callingArray = [];
+
+
+
 const requestPeruseAppAuthentication = async () =>
 {
     try
     {
-        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
 
-        const authReq = await appObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
+        const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         global.browserAuthReqUri = authReq.uri;
-        await appObj.auth.openUri( authReq.uri );
+        await peruseAppObj.auth.openUri( authReq.uri );
 
-        return appObj;
+        return peruseAppObj;
     }
     catch ( err )
     {
@@ -50,9 +64,10 @@ const requestPeruseAppAuthentication = async () =>
 };
 
 // TODO: Watch out, this is duped in network.js for funcs over there.
-export const getAppObj = () =>
-    appObj;
+export const getPeruseAppObj = () =>
+    peruseAppObj;
 
+const urisUnderAuth = [];
 const authFromStoreResponse = async ( res, store ) =>
 {
     if( !res.startsWith('safe') )
@@ -70,10 +85,16 @@ const authFromStoreResponse = async ( res, store ) =>
         return;
     }
 
+    if( urisUnderAuth.includes( res ) )
+    {
+        return;
+    }
+
     //TODO: This logic shuld be in BG process for peruse.
     try
     {
-        appObj = await appObj.auth.loginFromURI( res );
+        urisUnderAuth.push(res);
+        peruseAppObj = await peruseAppObj.auth.loginFromURI( res );
 
         if ( store )
         {
@@ -108,10 +129,15 @@ const manageAuthorisationActions = async ( store ) =>
 {
     const peruse = store.getState().peruseApp;
 
-    if ( peruse.appStatus === SAFE.APP_STATUS.TO_AUTH )
+    if ( peruse.appStatus === SAFE.APP_STATUS.TO_AUTH && !isAuthing )
     {
+        // cannot rely solely on store as can change in other ways
+        // before this is updated properly. This prevents that.
+        isAuthing = true;
+
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
         await requestPeruseAppAuthentication();
+        isAuthing = false;
     }
 
     if( peruse.authResponseUri && peruse.authResponseUri.length )
@@ -148,7 +174,7 @@ const peruseIsAuthing = ( state ) =>
 
     const peruseApp = state.peruseApp;
 
-    return pendingAuthStates.includes( peruseApp.appStatus )
+    return isAuthing || pendingAuthStates.includes( peruseApp.appStatus )
 }
 
 const peruseIsAuthed = ( state ) =>
@@ -175,6 +201,11 @@ const peruseAuthFailed = ( state ) =>
  */
 const manageReadStateActions = async ( store ) =>
 {
+    //Hack as store is actually unreliable.
+    //TODO: Rework this to use aliased funcs.
+    if( isReading )
+        return;
+
     const state = store.getState();
     const peruseApp = state.peruseApp;
 
@@ -198,6 +229,8 @@ const manageReadStateActions = async ( store ) =>
         return;
     }
 
+    isReading = true;
+
     logger.verbose('Attempting to READ PeruseApp state from network')
     store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
 
@@ -208,10 +241,13 @@ const manageReadStateActions = async ( store ) =>
             store.dispatch(
                 peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
             );
+
+            isReading = false;
             return null;
         } )
         .catch( e =>
         {
+            isReading = false;
             logger.error( e );
             store.dispatch(
                 peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_READ )
@@ -230,6 +266,11 @@ const manageReadStateActions = async ( store ) =>
  */
 const manageSaveStateActions = async ( store ) =>
 {
+    //Hack as store is actually unreliable.
+    //TODO: Rework this to use aliased funcs.
+    if( isSaving )
+        return;
+
     const state = store.getState();
     const peruseApp = state.peruseApp;
 
@@ -267,12 +308,14 @@ const manageSaveStateActions = async ( store ) =>
         return;
     }
 
+    isSaving = true;
 
     logger.verbose('Attempting to SAVE PeruseApp state to network')
     store.dispatch( peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
     saveConfigToSafe( store )
         .then( () =>
         {
+            isSaving = false;
             store.dispatch(
                 peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY )
             );
@@ -281,6 +324,7 @@ const manageSaveStateActions = async ( store ) =>
         } )
         .catch( e =>
         {
+            isSaving = false;
             logger.error( e );
 
             // TODO: Handle errors across the store in a separate error watcher?

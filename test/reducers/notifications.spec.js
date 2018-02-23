@@ -24,16 +24,17 @@ describe( 'notification reducer', () =>
     })
 
 
-    describe( 'ADD_LOCAL_NOTIFICATION', () =>
+    describe( 'UPDATE_NOTIFICATION', () =>
     {
-        it( 'should handle updating the notification array with a locally scoped action', () =>
+        it( 'should handle updating the notification', () =>
         {
+            const note = { id: '1', text: 'hiwhat' };
             expect(
-                notifications( [], {
-                    type    : TYPES.ADD_LOCAL_NOTIFICATION,
-                    payload : { text: 'hiwhat' }
-                } )
-            ).toEqual( [{ text: 'hiwhat' }] );
+                notifications( [ note ], {
+                    type    : TYPES.UPDATE_NOTIFICATION,
+                    payload : { ...note, text:'new!' }
+                } )[0]
+            ).toMatchObject( { text: 'new!' } );
         } );
     })
 

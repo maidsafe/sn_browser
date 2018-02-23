@@ -1,5 +1,7 @@
 /**
  * Authenticator
+ *
+ * Running in the background process
  */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-unresolved, import/extensions */
@@ -8,18 +10,16 @@ import ref from 'ref';
 /* eslint-enable import/no-unresolved, import/extensions */
 import crypto from 'crypto';
 import lodash from 'lodash';
+import logger from 'logger';
 import i18n from 'i18n';
-// import logger from 'logger';
-
 import SafeLib from './safe_lib';
 import Listener from './listeners';
-import config from '../config';
 import * as types from './refs/types';
 import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
-import { setAppStatus } from 'actions/peruse_actions';
 import errConst from '../err-constants';
+
 
 import { SAFE } from 'appConstants';
 // private variables
@@ -58,8 +58,6 @@ class Authenticator extends SafeLib
     constructor()
     {
         super();
-
-        config.i18n();
         this[_registeredClientHandle] = null;
         this[_nwState] = CONSTANTS.NETWORK_STATUS.DISCONNECTED;
         this[_reAuthoriseState] = null;
@@ -76,6 +74,8 @@ class Authenticator extends SafeLib
             {
                 this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
             } );
+
+        logger.info('authhhhhhh', this[_nwState] )
     }
 
     get registeredClientHandle()
@@ -87,6 +87,7 @@ class Authenticator extends SafeLib
     {
         this[_registeredClientHandle] = handle;
     }
+
 
     get networkState()
     {
@@ -111,6 +112,7 @@ class Authenticator extends SafeLib
     {
         return this.isLibLoaded;
     }
+
 
     fnsToRegister()
     {
@@ -308,8 +310,9 @@ class Authenticator extends SafeLib
                         this.registeredClientHandle = clientHandle;
                         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
 
-                        const store = global.mainProcessStore;
-                        store.dispatch( setAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
+                        // const store = global.mainProcessStore;
+                        // TODO: sort thissssss
+                        // store.dispatch( setAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
                         resolve();
                     } ) );
 
@@ -341,13 +344,14 @@ class Authenticator extends SafeLib
         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
         this.safeLib.auth_free( this.registeredClientHandle );
         this.registeredClientHandle = null;
-
-        const store = global.mainProcessStore;
-        store.dispatch( setAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
+        // TODO sort thisss
+        // const store = global.mainProcessStore;
+        // store.dispatch( setAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
     }
 
     decodeRequest( uri )
     {
+        logger.verbose( 'Authenticator.js decoding request' );
         return new Promise( ( resolve, reject ) =>
         {
             if ( !uri )
@@ -360,6 +364,7 @@ class Authenticator extends SafeLib
             {
                 return this._decodeUnRegisteredRequest( parsedURI, resolve, reject );
             }
+
             const decodeReqAuthCb = this._pushCb( ffi.Callback( types.Void,
                 [types.voidPointer, types.u32, types.AuthReqPointer], ( userData, reqId, req ) =>
                 {
@@ -373,23 +378,30 @@ class Authenticator extends SafeLib
                         reqId,
                         authReq
                     };
+                    logger.verbose( 'Authenticator.js decoded authReq result: ', result );
                     return this._isAlreadyAuthorised( authReq )
                         .then( ( isAuthorised ) =>
                         {
                             if ( isAuthorised )
                             {
+                                logger.verbose( 'Authenticator.js showing isAuthorised already' );
                                 // re authorise the app
                                 if ( this[_reAuthoriseState] !== CONSTANTS.RE_AUTHORISE.STATE.UNLOCK )
                                 {
                                     result.isAuthorized = true;
-                                    this[_authReqListener].broadcast( null, result );
-                                    return resolve();
+
+                                    logger.verbose( 'Authenticator.js showing locked, so retriggering auth' );
+                                    // this[_authReqListener].broadcast( null, result );
+                                    return resolve( result );
                                 }
                                 return this.encodeAuthResp( result, true )
                                     .then( resolve );
                             }
-                            this[_authReqListener].broadcast( null, result );
-                            resolve();
+
+                            logger.verbose( 'Authenticator.js not authed before, so broadcasting result' );
+
+                            // this[_authReqListener].broadcast( null, result );
+                            resolve( result );
                         } );
                 } ) );
 
@@ -406,6 +418,9 @@ class Authenticator extends SafeLib
                         reqId,
                         contReq
                     };
+
+                    logger.verbose( 'Authenticator.js decoded contReq result: ', result );
+
                     if ( this[_reAuthoriseState] !== CONSTANTS.RE_AUTHORISE.STATE.UNLOCK )
                     {
                         this[_containerReqListener].broadcast( null, result );
@@ -416,11 +431,13 @@ class Authenticator extends SafeLib
                         {
                             if ( isAuthorised )
                             {
+
                                 return this.encodeContainersResp( result, true )
                                     .then( resolve );
                             }
-                            this[_containerReqListener].broadcast( null, result );
-                            resolve();
+                            logger.verbose( 'Authenticator.js container not authed before, so triggering auth' );
+                            // this[_containerReqListener].broadcast( null, result );
+                            resolve( result );
                         } );
                 } ) );
 
@@ -436,6 +453,9 @@ class Authenticator extends SafeLib
                         mDataReq,
                         metaData
                     };
+
+                    logger.verbose( 'Authenticator.js decoded MDataReq result: ', result );
+
                     const appAccess = [];
                     const tempArr = [];
                     for ( let i = 0; i < mDataReq.mdata_len; i++ )
@@ -455,7 +475,9 @@ class Authenticator extends SafeLib
                         .then( () =>
                         {
                             result.appAccess = appAccess;
-                            this[_mDataReqListener].broadcast( null, result );
+                            logger.verbose( 'Authenticator.js decoded mDataListener would be broadcast: ', result );
+                            logger.verbose('HSOULD WE RESOLVE HERE?')
+                            // this[_mDataReqListener].broadcast( null, result );
                         } );
                 } ) );
 
@@ -469,7 +491,10 @@ class Authenticator extends SafeLib
                     {
                         return;
                     }
+
+                    logger.verbose('Error in auth callback.', result)
                     this[_reqErrListener].broadcast( JSON.stringify( result ) );
+                    reject( result )
                 } ) );
             try
             {
@@ -494,6 +519,8 @@ class Authenticator extends SafeLib
     {
         return new Promise( ( resolve, reject ) =>
         {
+            logger.verbose( 'authenticator.js: encoding auth response', req, isAllowed );
+
             if ( !this.registeredClientHandle )
             {
                 return reject( new Error( i18n.__( 'messages.unauthorised' ) ) );
@@ -520,11 +547,15 @@ class Authenticator extends SafeLib
                     [types.voidPointer, types.FfiResultPointer, types.CString],
                     ( userData, resultPtr, res ) =>
                     {
+
                         const result = resultPtr.deref();
                         if ( result.error_code !== 0 )
                         {
                             return reject( JSON.stringify( result ) );
                         }
+
+                        logger.verbose( 'authenticator.js: auth decision CB', result, isAllowed );
+
                         if ( isAllowed )
                         {
                             this._updateAppList();

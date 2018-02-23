@@ -1,8 +1,6 @@
 import logger from 'logger';
-import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
-import { getAppObj } from './index.js';
+import { getPeruseAppObj } from './index.js';
 import {
-    setAppStatus,
     setSaveConfigStatus,
     setReadConfigStatus
 } from 'actions/peruse_actions';
@@ -20,17 +18,23 @@ export const saveConfigToSafe = ( store, quit ) =>
 {
     const state = store.getState();
 
-    const stateToSave = { ...state, peruseApp: {} };
+    // TODO: Better to opt in?
+    const stateToSave = {
+        ...state,
+        peruseApp: {},
+        authenticator: {},
+        remoteCalls : []
+    };
     const JSONToSave = JSON.stringify( stateToSave );
 
     return new Promise( async ( resolve, reject ) =>
     {
-        const appObj = getAppObj();
+        const peruseAppObj = getPeruseAppObj();
 
         let mData;
         let mdEntries;
 
-        if ( !appObj )
+        if ( !peruseAppObj )
         {
             store.dispatch( setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
             logger.error( 'Not authorised to save to the network.' );
@@ -39,8 +43,8 @@ export const saveConfigToSafe = ( store, quit ) =>
 
         try
         {
-            const container = await appObj.auth.getOwnContainer();
-            const mut = await appObj.mutableData.newMutation();
+            const container = await peruseAppObj.auth.getOwnContainer();
+            const mut = await peruseAppObj.mutableData.newMutation();
             const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
             const encryptedData = await container.encryptValue( JSONToSave );
 
@@ -128,8 +132,8 @@ function delay( t )
 export const readConfigFromSafe = ( store ) =>
     new Promise( async ( resolve, reject ) =>
     {
-        const appObj = getAppObj();
-        if ( !appObj )
+        const peruseAppObj = getPeruseAppObj();
+        if ( !peruseAppObj )
         {
             reject( 'Not authorised to read from the network.' );
         }
@@ -141,7 +145,7 @@ export const readConfigFromSafe = ( store ) =>
 
         try
         {
-            const container = await appObj.auth.getOwnContainer();
+            const container = await peruseAppObj.auth.getOwnContainer();
             const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
             const encryptedValue = await container.get( encryptedKey );
             const decryptedValue = await container.decrypt( encryptedValue.buf );

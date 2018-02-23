@@ -4,6 +4,7 @@ import { createHashHistory } from 'history';
 import { inRendererProcess } from 'appConstants';
 import { routerMiddleware, push } from 'react-router-redux';
 import rootReducer from '../reducers';
+import logger from 'logger';
 import {
     forwardToRenderer,
     forwardToMain,
@@ -23,7 +24,7 @@ if( inRendererProcess )
 
 const initialStateFromMain = inRendererProcess ? getInitialStateRenderer() : {};
 
-const configureStore = ( initialState = initialStateFromMain, middleware = [], isBackgroundProcess = false ) =>
+const configureStore = ( initialState = initialStateFromMain, middleware = [], isBackgroundProcess ) =>
 {
     // Redux Configuration
     const enhancers = [];

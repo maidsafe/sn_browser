@@ -5,7 +5,15 @@ import logger from 'logger';
 import { TYPES } from 'actions/notification_actions';
 
 const initialState = initialAppState.notifications;
+const findNotificationIndexById = ( theState, theCall ) =>
+{
+    if( !theCall.id )
+    {
+        logger.error( 'Remote calls cannot be removed without an ID property')
+    }
 
+    return theState.findIndex( c =>  c.id === theCall.id )
+};
 export default function notifications( state: array = initialState, action )
 {
     const notification = action.payload;
@@ -16,9 +24,14 @@ export default function notifications( state: array = initialState, action )
         {
             return [ ...state, notification ];
         }
-        case TYPES.ADD_LOCAL_NOTIFICATION :
+        case TYPES.UPDATE_NOTIFICATION :
         {
-            return [ ...state, notification ];
+            const notificationId = findNotificationIndexById( state, notification)
+            const updatedState = [ ...state ];
+            const oldNotification = updatedState[notificationId];
+
+            updatedState[notificationId] = { ...oldNotification, ...notification }
+            return updatedState;
         }
         case TYPES.CLEAR_NOTIFICATION :
         {

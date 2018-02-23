@@ -18,6 +18,8 @@ window.onerror = function ( error, url, line )
 };
 
 const store = configureStore();
+
+// for execution via BrowserWindow later
 window.peruseStore = store;
 
 if ( window.perusePendingNavigation && window.perusePendingNavigation.length )

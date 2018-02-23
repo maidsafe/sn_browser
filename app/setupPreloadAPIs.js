@@ -1,110 +1,174 @@
-// following @pfrazee's beaker pattern again here.
-import { ipcRenderer } from 'electron';
-import rpc from 'pauls-electron-rpc';
 import pkg from 'appPackage';
+import logger from 'logger';
+import * as remoteCallActions from 'actions/remoteCall_actions';
+import safe from '@maidsafe/safe-node-app';
+import { PROTOCOLS } from 'appConstants';
+
+import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
+
 const VERSION = pkg.version;
-const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
-const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
-const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
 
-// Use a readable RPC stream to invoke a provided callback function,
-// resolving the promise upon the closure of the stream the sender.
-const readableToCallback = ( rpcAPI ) =>
-    ( arg1, cb ) =>
-        new Promise( ( resolve, reject ) =>
-        {
-            const r = rpcAPI( arg1 );
-            r.on( 'data', data => cb.apply( cb, data ) );
-            r.on( 'error', err => reject( err ) );
-            r.on( 'end', () => resolve() );
-        } );
+const pendingCalls = {};
 
-// Use a readable RPC stream to invoke a provided callback function even after
-// resolving the promise.
-const readableToAsyncCallback = ( rpcAPI, safeAppGroupId ) =>
-    ( arg1, cb, arg2 ) =>
-        new Promise( ( resolve, reject ) =>
-        {
-            let firstValueReceived = false;
-            const r = rpcAPI( arg1, arg2, safeAppGroupId );
-            r.on( 'data', data =>
-            {
-                if ( !firstValueReceived )
-                {
-                    firstValueReceived = true;
-                    resolve( data[0] );
-                }
-                else
-                {
-                    cb.apply( cb, data );
-                }
-            } );
-            r.on( 'error', err => reject( err ) );
-        } );
-
-
-// method which will populate window with the APIs deemed appropriate for the protocol
-const setupPreloadAPIs = ( asProtocol ) =>
+window.eval = global.eval = () =>
 {
-    // mark the safe protocol as 'secure' to enable all DOM APIs
-    // webFrame.registerURLSchemeAsSecure('safe');
-    window[ pkg.name ] = { version: VERSION };
-    const webAPIs = asProtocol ?
-        ipcRenderer.sendSync( 'get-web-api-manifests', asProtocol ) :
-        ipcRenderer.sendSync( 'get-web-api-manifests', window.location.protocol ) ;
+    throw new Error( 'Sorry, peruse does not support window.eval().' );
+};
 
-    // create an id to group all safeApp objects
+const setupPreloadedSafeAuthAPIs = ( store ) =>
+{
+    window.safe = { ...safe, fromAuthURI: null };
+    window[pkg.name] = { version: VERSION };
+
+    if ( !window.location.protocol === PROTOCOLS.SAFE_AUTH )
+    {
+        return;
+    }
+
+    window.safeAuthenticator = {};
     const safeAppGroupId = ( Math.random() * 1000 | 0 ) + Date.now();
     window.safeAppGroupId = safeAppGroupId;
 
-    Object.keys( webAPIs ).forEach( k =>
+    authManifest.forEach( ( func ) =>
     {
-        const fnsToImport = [];
-        const fnsWithCallback = [];
-        const fnsWithAsyncCallback = [];
-        const staticObjs = [];
-
-        Object.keys( webAPIs[k] ).forEach( fn =>
-        {
-            // We adapt the functions which contain a callback
-            if ( fn.startsWith( WITH_CALLBACK_TYPE_PREFIX ) )
-            {
-                // We use a readable type to receive the data from the RPC channel
-                const manifest = { [fn]: 'readable' };
-                const rpcAPI = rpc.importAPI( WITH_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false } );
-                // We expose the function removing the WITH_CALLBACK_TYPE_PREFIX prefix
-                const newFnName = fn.replace( WITH_CALLBACK_TYPE_PREFIX, '' );
-                fnsWithCallback[newFnName] = readableToCallback( rpcAPI[fn] );
-            }
-            else if ( fn.startsWith( WITH_ASYNC_CALLBACK_TYPE_PREFIX ) )
-            {
-                // We use a readable type to receive the data from the RPC channel
-                const manifest = { [fn]: 'readable' };
-                const rpcAPI = rpc.importAPI( WITH_ASYNC_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false } );
-                // We expose the function removing the WITH_ASYNC_CALLBACK_TYPE_PREFIX prefix
-                const newFnName = fn.replace( WITH_ASYNC_CALLBACK_TYPE_PREFIX, '' );
-                // Provide the safeAppGroupId to map it to all safeApp instances created,
-                // so they can be automatically freed when the page is closed or refreshed
-                fnsWithAsyncCallback[newFnName] = readableToAsyncCallback( rpcAPI[fn], safeAppGroupId );
-            }
-            else if ( fn.startsWith( EXPORT_AS_STATIC_OBJ_PREFIX ) )
-            {
-                const manifest = { [fn]: 'sync' };
-                const rpcAPI = rpc.importAPI( EXPORT_AS_STATIC_OBJ_PREFIX + k, manifest, { timeout: false } );
-                // We expose the object name removing the EXPORT_AS_STATIC_OBJ_PREFIX prefix
-                const objName = fn.replace( EXPORT_AS_STATIC_OBJ_PREFIX, '' );
-                // Call the function to expose just the returned value
-                staticObjs[objName] = rpcAPI[fn].call();
-            }
-            else
-            {
-                fnsToImport[fn] = webAPIs[k][fn];
-            }
-        });
-
-        window[k] = Object.assign( rpc.importAPI( k, fnsToImport, { timeout: false } ), staticObjs, fnsWithCallback, fnsWithAsyncCallback );
+        window.safeAuthenticator[func] = createRemoteCall( func, store );
     } );
-}
+
+    window.safeAuthenticator.getNetworkState = ( ) =>
+    {
+        const state = store.getState();
+        logger.info( 'getting the network state!', state.authenticator.networkState );
+        return { state: state.authenticator.networkState };
+    };
+
+    window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
+    {
+        logger.info( 'window method for get auth handle being called' );
+        const state = store.getState();
+        return state.authenticator.authenticatorHandle;
+    };
+
+    window.safeAuthenticator.getLibStatus = ( ) =>
+    {
+        const state = store.getState();
+        return state.authenticator.libStatus;
+    };
+
+    window.safeAuthenticator.setReAuthoriseState = ( ) =>
+    {
+        // TODO: Reauth action
+        // const state = store.getState();
+        // return state.authenticator.authenticatorHandle;
+
+    };
 
 
-export default setupPreloadAPIs;
+    // Add custom and continual listeners.
+    window.safeAuthenticator.setNetworkListener = ( cb ) =>
+    {
+        const callId = Math.random().toString( 36 );
+
+        store.dispatch( remoteCallActions.addRemoteCall(
+            {
+                id         : callId,
+                name       : 'setNetworkListener',
+                isListener : true
+            }
+        ) );
+
+        pendingCalls[callId] = {
+            resolve : cb
+        };
+    };
+
+    window.safeAuthenticator.setAppListUpdateListener = ( cb ) =>
+    {
+        const callId = Math.random().toString( 36 );
+
+        store.dispatch( remoteCallActions.addRemoteCall(
+            {
+                id         : callId,
+                name       : 'setAppListUpdateListener',
+                isListener : true
+            }
+        ) );
+
+        pendingCalls[callId] = {
+            resolve : cb
+        };
+    };
+
+
+    const stopListening = store.subscribe( async () =>
+    {
+        const state = store.getState();
+        const calls = state.remoteCalls;
+
+        calls.forEach( theCall =>
+        {
+            if ( theCall === pendingCalls[theCall.id] )
+            {
+                return;
+            }
+
+            const callPromises = pendingCalls[theCall.id];
+
+            if ( theCall.done && callPromises.resolve )
+            {
+                pendingCalls[theCall.id] = theCall;
+
+                let callbackArgs = theCall.response;
+
+                callbackArgs = [theCall.response];
+
+                store.dispatch( remoteCallActions.removeRemoteCall(
+                    theCall
+                ) );
+
+                if ( theCall.isListener )
+                {
+                    // error first
+                    return callPromises.resolve( null, ...callbackArgs );
+                }
+                return callPromises.resolve( ...callbackArgs );
+            }
+            else if ( theCall.error && callPromises.reject )
+            {
+                logger.error( ':remoteCall', theCall.name, 'was rejected with: ', theCall.response );
+                return callPromises.reject( new Error( theCall.error.message || theCall.error ) );
+            }
+        } );
+    } );
+};
+
+
+const createRemoteCall = ( functionName, store ) =>
+{
+    if ( !functionName )
+    {
+        throw new Error( 'Remote calls must have a functionName to call.' );
+    }
+
+    const remoteCall = ( ...args ) => new Promise( ( resolve, reject ) =>
+    {
+        console.log( 'doing remote calllll', functionName );
+        const callId = Math.random().toString( 36 );
+
+        logger.info( 'about to add ', functionName );
+        const theCall = {
+            id   : callId,
+            name : functionName,
+            args
+        };
+
+        // but we need store.
+        store.dispatch( remoteCallActions.addRemoteCall( theCall ) );
+
+        pendingCalls[theCall.id] = {
+            resolve, reject
+        };
+    } );
+
+    return remoteCall;
+};
+export default setupPreloadedSafeAuthAPIs;

@@ -98,7 +98,7 @@
 	  }
 	};
 
-	var networkStateListenerCb = function networkStateListenerCb(err, state) {
+	var networkStateListenerCb = function networkStateListenerCb (err, state) {
 	  registerNetworkStateListener(networkStateListenerCb);
 	  switch (state) {
 	    case _constants2.default.NETWORK_STATUS.CONNECTING:
@@ -115,6 +115,7 @@
 	      }
 	    default:
 	      {
+              console.log('the state received:::', state)
 	        throw new Error(_reactReduxI18n.I18n.t('invalid_network_state'));
 	      }
 	  }
@@ -127,11 +128,12 @@
 	};
 
 	var appListUpdateListenerCb = function appListUpdateListenerCb(err, apps) {
+        console.log('appupdatelistennnerrr', err, apps)
 	  registerAppListUpdateListener(appListUpdateListenerCb);
 	  return store.dispatch((0, _app.setAppList)(apps));
 	};
 
-	networkStateListenerCb(null, window.safeAuthenticator.getNetworkState().state);
+    networkStateListenerCb(null, window.safeAuthenticator.getNetworkState().state);
 	appListUpdateListenerCb(null, []);
 
 	// check Reauthorise state
@@ -736,7 +738,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 	'use strict';
 
@@ -945,7 +947,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	function makeEmptyFunction(arg) {
@@ -984,7 +986,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -1356,7 +1358,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -1815,7 +1817,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -1846,7 +1848,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -2047,7 +2049,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -2090,7 +2092,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -2581,7 +2583,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -3053,7 +3055,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -3081,7 +3083,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -5059,7 +5061,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 	'use strict';
 
@@ -6296,7 +6298,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -6781,7 +6783,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -6862,7 +6864,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -6923,7 +6925,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -7091,7 +7093,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8160,7 +8162,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8282,7 +8284,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8475,7 +8477,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8566,7 +8568,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8662,7 +8664,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8689,7 +8691,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9053,7 +9055,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9093,7 +9095,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9190,7 +9192,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9645,7 +9647,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -13064,7 +13066,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 * @typechecks static-only
 	 */
 
@@ -14256,7 +14258,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -15215,7 +15217,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16501,7 +16503,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16634,7 +16636,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16663,7 +16665,7 @@
 	 * LICENSE file in the root directory of this source tree.
 	 *
 	 * @typechecks
-	 * 
+	 *
 	 */
 
 	/*eslint-disable no-self-compare */
@@ -16879,7 +16881,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16902,7 +16904,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17142,7 +17144,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17164,7 +17166,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17207,7 +17209,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17379,7 +17381,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -19480,7 +19482,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	var isTextNode = __webpack_require__(156);
@@ -20109,7 +20111,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -21538,7 +21540,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -59316,6 +59318,7 @@
 	         */
 	        var handleReject = function handleReject(reason) {
 	          var rejectedAction = getAction(reason, true);
+              console.log('rejection received', reason, rejectedAction)
 	          dispatch(rejectedAction);
 
 	          throw reason;
@@ -59331,7 +59334,7 @@
 	         */
 	        var handleFulfill = function handleFulfill() {
 	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
+              console.log('handling fulfullllllll', arguments, value)
 	          var resolvedAction = getAction(value, false);
 	          dispatch(resolvedAction);
 
@@ -60391,6 +60394,7 @@
 	      }
 	    case _app.GET_AUTHORISED_APPS + '_FULFILLED':
 	      {
+              console.log('GET APPSssss', action)
 	        return _extends({}, state, {
 	          fetchingApps: false,
 	          authorisedApps: action.payload
@@ -61066,8 +61070,8 @@
 	  };
 
 	  /**
-	   * Return true whether the enumItem parameter passed in is an EnumItem object and 
-	   * has been included as constant of this Enum   
+	   * Return true whether the enumItem parameter passed in is an EnumItem object and
+	   * has been included as constant of this Enum
 	   * @param  {EnumItem} enumItem
 	   */
 
@@ -66159,7 +66163,19 @@
 	          popupDesc = _state.popupDesc,
 	          popupTitle = _state.popupTitle;
 
+              console.log('AUTHHED APPPSSS????', authorisedApps);
 
+          if( ! authorisedApps )
+          {
+              return _react2.default.createElement(
+    	        'div',
+    	        { className: 'card-main-b' },
+    	        _react2.default.createElement(
+    	          'div',
+    	          { className: 'card-main-h' },
+    	          this.title
+              ) );
+          }
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'card-main-b' },

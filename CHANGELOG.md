@@ -1,6 +1,24 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Changed
+- safeNetwork reducer becomes peruseSafeApp
+- specific domAPI implementations removed
+
+### Fixed
+- `eval` has been disabled.
+- domAPI handles removed
+
+### Added
+- background process
+- remoteCalls actions/reducers for passing around remote calls (in place of pauls-RPC)
+- peruseSafeApp moved to background process
+- authenticator redux store and actions.
+- authenticator moved to background process
+- uses safe-node-app directly for DOM APIs
+
+
 #### [0.5.1]
 ### Fixed 
 - Reopen closed tab works.

@@ -1,18 +1,29 @@
 /* eslint-disable no-underscore-dangle */
 import { ipcMain, shell } from 'electron';
-import i18n from 'i18n';
-
-import { authFromInteralResponse, getBrowserAuthReqUri } from '../network';
+import { authFromInteralResponse, getPeruseAuthReqUri } from '../network/authenticator-comms';
 import * as peruseAppActions from 'actions/peruse_actions';
-
+import * as notificationActions from 'actions/notification_actions';
+import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
-import config from '../config';
 import logger from 'logger';
+import { addAuthNotification } from '../manageAuthNotifications';
 
-config.i18n();
 let store;
 let ipcEvent = null;
+
+
+export const CLIENT_TYPES = {
+    DESKTOP : 'DESKTOP',
+    WEB     : 'WEB'
+};
+
+export const REQ_TYPES = {
+    AUTH      : 'AUTH',
+    CONTAINER : 'CONTAINER',
+    MDATA     : 'MDATA'
+};
+
 
 export const setIPCStore = ( passedStore ) =>
 {
@@ -41,6 +52,21 @@ const openExternal = ( uri ) =>
         logger.error( err.message );
     }
 };
+
+async function sendAuthDecision( isAllowed, authReqData, reqType )
+{
+    logger.verbose( 'IPC.js: Sending auth response', isAllowed, authReqData );
+    if ( reqType === REQ_TYPES.AUTH )
+    {
+        onAuthDecision( authReqData, isAllowed );
+    }
+    else if ( reqType === REQ_TYPES.CONTAINER )
+    {
+        onContainerDecision( authReqData, isAllowed );
+    }
+    onSharedMDataDecision( authReqData, isAllowed );
+}
+
 
 class Request
 {
@@ -97,6 +123,8 @@ class ReqQueue
         }
         this.processing = true;
         this.req = this.q[0];
+        // authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
+
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
             if ( !res )
@@ -105,14 +133,26 @@ class ReqQueue
             }
             this.req.res = res;
 
-            if ( ipcEvent )
+            logger.info( 'IPC.js: another response being parsed.:', res );
+            if ( res.authReq || res.contReq || res.mDataReq )
             {
-                ipcEvent.sender.send( self.resChannelName, self.req );
+                logger.info( 'Its an auth request!' );
+
+                const app = res.authReq.app;
+                addAuthNotification( res, app, sendAuthDecision, store );
+                return;
             }
+
+            logger.info( 'not an auth request.... what is it?', res );
+
+            // if ( ipcEvent )
+            // {
+            //     ipcEvent.sender.send( self.resChannelName, self.req );
+            // }
 
             // TODO. Use openUri and parse received url once decoded to decide app
             // OR: upgrade connection
-            if ( this.req.uri === getBrowserAuthReqUri() )
+            if ( this.req.uri === getPeruseAuthReqUri() )
             {
                 authFromInteralResponse( parseResUrl( res ) );
             }
@@ -122,18 +162,16 @@ class ReqQueue
             }
 
             self.next();
-            return;
         } ).catch( ( err ) =>
         {
-
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
             logger.error( 'Error at req processing for:', this.req );
 
             // TODO: Setup proper rejection from when unauthed.
-            if( store )
+            if ( store )
             {
-                store.dispatch( peruseAppActions.receivedAuthResponse( err.message ) )
+                store.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
             }
 
             if ( ipcEvent )
@@ -214,8 +252,9 @@ const onSharedMDataReq = ( e ) =>
     } );
 };
 
-const onAuthDecision = ( e, authData, isAllowed ) =>
+const onAuthDecision = ( authData, isAllowed ) =>
 {
+    logger.verbose( 'IPC.js: onAuthDecision running...', authData, isAllowed );
     if ( !authData )
     {
         return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) ) );
@@ -226,20 +265,21 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
         return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
     }
 
+    logger.info( 'inside on auth decision' );
     authenticator.encodeAuthResp( authData, isAllowed )
         .then( ( res ) =>
         {
+            logger.info( 'IPC.js: Successfully encoded auth response. Sending.', authData );
             reqQ.req.res = res;
-            e.sender.send( 'onAuthDecisionRes', reqQ.req );
-            logger.info( errConst.AUTH_DECISION_RESP.msg(err) );
+
             openExternal( res );
             reqQ.next();
         } )
         .catch( ( err ) =>
         {
             reqQ.req.error = err;
-            e.sender.send( 'onAuthDecisionRes', reqQ.req );
-            logger.error( errConst.AUTH_DECISION_RESP.msg(err) );
+            logger.error( 'Auth decision error :: ', err.message );
+
             reqQ.next();
         } );
 };
@@ -319,25 +359,6 @@ const skipAuthReq = () =>
     reqQ.next();
 };
 
-const init = () =>
-{
-    if ( !ipcMain )
-    {
-        return;
-    }
-    ipcMain.on( 'registerSafeNetworkListener', registerNetworkListener );
-    ipcMain.on( 'decryptRequest', decodeRequest );
-    ipcMain.on( 'registerOnAuthReq', onAuthReq );
-    ipcMain.on( 'registerOnContainerReq', onContainerReq );
-    ipcMain.on( 'registerOnSharedMDataReq', onSharedMDataReq );
-    ipcMain.on( 'registerAuthDecision', onAuthDecision );
-    ipcMain.on( 'registerContainerDecision', onContainerDecision );
-    ipcMain.on( 'registerSharedMDataDecision', onSharedMDataDecision );
-    ipcMain.on( 'registerOnReqError', onReqError );
-    ipcMain.on( 'skipAuthRequest', skipAuthReq );
-};
-
-export default init;
 
 export const callIPC = {
     registerSafeNetworkListener : registerNetworkListener,

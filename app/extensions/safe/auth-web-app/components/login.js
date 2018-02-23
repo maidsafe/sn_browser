@@ -49,6 +49,7 @@ export default class Login extends Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.isAuthorised) {
+
       return this.context.router.push('/');
     }
   }

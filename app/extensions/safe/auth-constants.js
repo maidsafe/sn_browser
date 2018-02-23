@@ -9,7 +9,8 @@ import { isHot,
 } from 'appConstants';
 
 
-let libLocaleModifier = '';
+// let libLocaleModifier = '';
+let libLocaleModifier = 'extensions/safe/';
 
 let libEnvModifier = 'prod';
 
@@ -29,10 +30,9 @@ if ( isHot )
     // libLocaleModifier = 'extensions/safe/';
     // TODO. Questions about mock. Hmm
 }
-else if ( isRunningSpectronTest || inRendererProcess )
-{
-    libLocaleModifier = `extensions/safe`;
-}
+// else if ( isRunningSpectronTest || inRendererProcess )
+// {
+// }
 else if ( isRunningPackaged )
 {
     libLocaleModifier = `../extensions/safe`;

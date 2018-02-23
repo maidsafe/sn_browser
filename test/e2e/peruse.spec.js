@@ -38,6 +38,9 @@ describe( 'main window', () =>
         }
     } );
 
+
+    console.log('appppp',app)
+
     beforeAll( async () =>
     {
         await delay( 10000 )
@@ -96,15 +99,20 @@ describe( 'main window', () =>
         const { client } = app;
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
+
+        console.log('THIS ONNENNEEE')
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         await client.pause( 2500 );
 
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
+        console.log('THaaatS ONNENNEEE')
         await client.windowByIndex( tabIndex );
 
         const clientUrl = await client.getUrl();
+        console.log('expecttttttS ONNENNEEE', clientUrl )
         const parsedUrl = urlParse( clientUrl );
+        console.log('expecttttttS twoooo', parsedUrl )
 
         // TODO fix slash setup after removing address reducer
         expect( address ).toBe( 'safe://example.com' );

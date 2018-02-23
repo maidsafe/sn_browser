@@ -1,5 +1,4 @@
 import path from 'path';
-
 import { app } from 'electron';
 import pkg from 'appPackage';
 
@@ -35,6 +34,14 @@ if ( isRunningPackaged )
 {
     safeNodeAppPathModifier = '../app.asar.unpacked/';
 }
+
+
+
+export const I18N_CONFIG = {
+    locales        : ['en'],
+    directory      : path.resolve( __dirname, 'locales' ),
+    objectNotation : true
+} ;
 
 export const PROTOCOLS = {
     SAFE           : 'safe',

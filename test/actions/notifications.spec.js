@@ -17,22 +17,20 @@ describe( 'notification actions', () =>
         expect( notifications.addNotification( payload ) ).toEqual( expectedAction );
     } );
 
-    it( 'should add a local notification', () =>
+    it( 'should update a notification', () =>
     {
-        const payload = { text: 'hi' };
+        const payload = { text: 'hi', id: 'A' };
         const expectedAction = {
-            type : notifications.TYPES.ADD_LOCAL_NOTIFICATION,
-            payload,
-            meta: { scope: 'local'}
+            type : notifications.TYPES.UPDATE_NOTIFICATION,
+            payload
         };
-        expect( notifications.addLocalNotification( payload ) ).toEqual( expectedAction );
+        expect( notifications.updateNotification( payload ) ).toEqual( expectedAction );
     } );
 
     it( 'should clear a notification', () =>
     {
         const expectedAction = {
-            type : notifications.TYPES.CLEAR_NOTIFICATION,
-            payload: {}
+            type : notifications.TYPES.CLEAR_NOTIFICATION
         };
         expect( notifications.clearNotification( ) ).toEqual( expectedAction );
     } );
