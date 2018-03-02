@@ -1,6 +1,7 @@
 const safeApp = require('@maidsafe/safe-node-app');
 const ipc = require('./ipc');
 const { genHandle, getObj, freeObj, freeAllNetObj, netStateCallbackHelper } = require('./helpers');
+const errConst = require('../err-constants');
 
 /* eslint no-underscore-dangle: ["error", { "allow": ["_with_async_cb_initialise"] }] */
 
@@ -149,7 +150,7 @@ module.exports.connect = (appHandle) => new Promise((resolve, reject) => {
       .then((obj) => obj.app.auth.genConnUri()
         .then((connReq) => ipc.sendAuthReq(connReq, true, (err, res) => {
           if (err) {
-            return reject(new Error('Unable to get connection information: ', err));
+            return reject(new Error(errConst.ERR_CONNECT_INFO.msg(err)));
           }
           return obj.app.auth.loginFromURI(res)
             .then(() => resolve(appHandle))
@@ -190,7 +191,7 @@ module.exports.authorise = (appHandle, permissions, options) => new Promise((res
       .then((obj) => obj.app.auth.genAuthUri(permissions, options)
         .then((authReq) => ipc.sendAuthReq(authReq, false, (err, res) => {
           if (err) {
-            return reject(new Error('Unable to authorise the application: ', err));
+            return reject(new Error(errConst.ERR_AUTH_APP.msg(err)));
           }
           return resolve(res);
         })))
@@ -251,7 +252,7 @@ module.exports.authoriseContainer = (appHandle, permissions) => new Promise((res
       .then((obj) => obj.app.auth.genContainerAuthUri(permissions)
         .then((authReq) => ipc.sendAuthReq(authReq, false, (err, res) => {
           if (err) {
-            return reject(new Error('Unable to authorise the application: ', err)); // TODO send Error in specific
+            return reject(new Error(errConst.ERR_AUTH_APP.msg(err)));
           }
           return resolve(res);
         })))
@@ -288,7 +289,7 @@ module.exports.authoriseShareMd = (appHandle, permissions) => new Promise((resol
       .then((obj) => obj.app.auth.genShareMDataUri(permissions)
         .then((authReq) => ipc.sendAuthReq(authReq, false, (err, res) => {
           if (err) {
-            return reject(new Error('Unable to authorise the application: ', err)); // TODO send Error in specific
+            return reject(new Error(errConst.ERR_AUTH_APP.msg(err)));
           }
           return resolve(res);
         })))

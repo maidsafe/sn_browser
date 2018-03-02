@@ -17,6 +17,7 @@ import * as types from './refs/types';
 import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
+import errConst from '../err-constants';
 import { setAuthAppStatus } from 'actions/safe_actions';
 import { SAFE } from 'appConstants';
 // private variables
@@ -155,7 +156,7 @@ class Authenticator extends SafeLib
                 return this[_reqErrListener].add( cb );
             }
             default: {
-                throw new Error( 'Invalid listener type' );
+                throw new Error( errConst.INVALID_LISTENER.msg );
             }
         }
     }
@@ -180,7 +181,7 @@ class Authenticator extends SafeLib
                 return this[_reqErrListener].remove( id );
             }
             default: {
-                throw new Error( 'Invalid listener type' );
+                throw new Error( errConst.INVALID_LISTENER.msg );
             }
         }
     }
@@ -349,7 +350,7 @@ class Authenticator extends SafeLib
         {
             if ( !uri )
             {
-                return reject( new Error( 'Invalid URI' ) );
+                return reject( new Error( errConst.INVALID_URI.msg ) );
             }
             const parsedURI = uri.replace( 'safe-auth://', '' ).replace( 'safe-auth:', '' ).replace( '/', '' );
 
@@ -518,7 +519,7 @@ class Authenticator extends SafeLib
                     ( userData, resultPtr, res ) =>
                     {
                         const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && !res )
+                        if ( result.error_code !== 0 )
                         {
                             return reject( JSON.stringify( result ) );
                         }
@@ -575,7 +576,7 @@ class Authenticator extends SafeLib
                     ( userData, resultPtr, res ) =>
                     {
                         const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && !res )
+                        if ( result.error_code !== 0 )
                         {
                             return reject( JSON.stringify( result ) );
                         }
@@ -634,7 +635,7 @@ class Authenticator extends SafeLib
                     ( userData, resultPtr, res ) =>
                     {
                         const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && !res )
+                        if ( result.error_code !== 0 )
                         {
                             return reject( JSON.stringify( result ) );
                         }
@@ -868,7 +869,7 @@ class Authenticator extends SafeLib
     {
         if ( !parsedUri )
         {
-            return reject( new Error( 'Invalid URI' ) );
+            return reject( new Error( errConst.INVALID_URI.msg ) );
         }
 
         const unregisteredCb = this._getUnregisteredClientCb( resolve, reject );
@@ -876,7 +877,7 @@ class Authenticator extends SafeLib
         const decodeReqErrorCb = this._pushCb( ffi.Callback( types.Void,
             [types.voidPointer, types.FfiResultPointer, types.CString], () =>
             {
-                reject( new Error( 'Unauthorised' ) );
+                reject( new Error( errConst.UNAUTHORISED.msg ) );
             } ) );
 
         try
@@ -934,7 +935,7 @@ class Authenticator extends SafeLib
             {
                 if ( !reqId || appIdLen <= 0 )
                 {
-                    return reject( new Error( 'Invalid Response while decoding Unregisterd client request' ) );
+                    return reject( new Error( errConst,INVALID_RESPONSE.msg ) );
                 }
 
                 const appId = ref.reinterpret( appIdPtr, appIdLen );

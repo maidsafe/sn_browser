@@ -52,7 +52,7 @@ class SystemUriLoader {
       return;
     }
     if (appInfo.exec && !Array.isArray(appInfo.exec)) {
-      throw new Error("Exec command must be an array of string arguments");
+      throw new Error(errConst.ERR_SYSTEM_URI.msg);
     }
     const bundle = appInfo.bundle || appInfo.id;
     const exec = appInfo.exec ? new StringArray(appInfo.exec) : new StringArray([process.execPath]);

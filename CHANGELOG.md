@@ -1,6 +1,11 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [Unreleased]
+##### Added
+- Allows client to receive error if non-standard container is requested during authorisation
+- Creates central constants for SAFE API 
+
 ## [0.4.1]
 ### Fixed
 - Removing bookmarks removes correct index.
