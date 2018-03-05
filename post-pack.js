@@ -5,6 +5,8 @@ const fs = require( 'fs-extra' );
 const archiver = require( 'archiver' );
 
 const pkg = require( './package.json' );
+const env = process.env.NODE_ENV || 'production';
+const isBuildingDev = /^dev/.test( env );
 
 const targetDir = path.resolve( __dirname, 'release' );
 
@@ -38,7 +40,13 @@ if ( platform === WINDOWS )
     PLATFORM_NAME = 'win';
 }
 
-const RELEASE_FOLDER_NAME = `${pkgName}-v${pkg.version}-${PLATFORM_NAME}-x64`;
+let devModifier = '';
+if( isBuildingDev )
+{
+    devModifier = 'dev-'
+}
+
+const RELEASE_FOLDER_NAME = `${devModifier}${pkgName}-v${pkg.version}-${PLATFORM_NAME}-x64`;
 
 
 // add version file
