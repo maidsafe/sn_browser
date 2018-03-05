@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Allows client to receive error if non-standard container is requested during authorisation
 - Creates central constants for SAFE API 
+- Uses latest safe-node-app to enable either prod or dev use from a `NODE_ENV=DEV` install. (Can build a package and enable `mock` use via a flag.)
 
 ## [0.4.1]
 ### Fixed

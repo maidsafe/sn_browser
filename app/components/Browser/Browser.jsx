@@ -135,25 +135,33 @@ export default class Browser extends Component
     render()
     {
         const {
-            addTab,
+
+            //bookmarks
             bookmarks,
             addBookmark,
             removeBookmark,
+
+            //ui / addressbar
+            ui,
             selectAddressBar,
             deselectAddressBar,
             blurAddressBar,
-            closeTab,
+
+            //tabs
             tabs,
+            addTab,
+            closeTab,
             setActiveTab,
             updateActiveTab,
             updateTab,
             activeTabBackwards,
             activeTabForwards,
 
+            //notifications
             notifications,
             clearNotification,
-            ui,
 
+            //safe network
             safeNetwork
         } = this.props;
 
