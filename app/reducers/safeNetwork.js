@@ -57,6 +57,12 @@ export default function safeNetwork( state = initialState, action )
                 saveStatus : payload,
             };
         }
+        case TYPES.SET_IS_MOCK:
+        {
+            return { ...state,
+                isMock : payload,
+            };
+        }
 
         default:
             return state;

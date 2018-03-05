@@ -4,7 +4,7 @@ import { env,
     isRunningUnpacked,
     isRunningPackaged,
     isRunningProduction,
-    isRunningDevelopment,
+    isRunningMock,
     isRunningSpectronTest,
     inRendererProcess
 } from 'appConstants';
@@ -48,7 +48,7 @@ if( log.info && log.verbose )
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );
     log.verbose( 'isRunningProduction?', isRunningProduction );
-    log.verbose( 'isRunningDevelopment?', isRunningDevelopment );
+    log.verbose( 'isRunningMock?', isRunningMock );
     log.verbose( 'isRunningSpectronTest?', isRunningSpectronTest );
     log.verbose( '' );
     log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

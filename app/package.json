@@ -6,7 +6,9 @@
   "main": "./main.js",
   "scripts": {
     "rebuild": "npm rebuild --runtime=electron --disturl=https://atom.io/download/atom-shell --build-from-source --target=1.7.11",
-    "postinstall": "download_deps --package package.json"
+    "postinstall": "yarn run install-prod && yarn run install-mock",
+    "install-prod": "cross-env NODE_ENV=prod download_deps --package package.json",
+    "install-mock": "cross-env NODE_ENV=dev download_deps --package package.json"
   },
   "author": {
     "name": "Josh Wilson",
@@ -15,7 +17,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@maidsafe/safe-node-app": "0.7.0",
+    "@maidsafe/safe-node-app": "0.8.0",
+    "cross-env": "5.1.3",
     "enum": "2.5.0",
     "ffi": "2.2.0",
     "react-icons": "2.2.7",
@@ -25,13 +28,13 @@
     "system_uri": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/system-uri",
       "version": "v0.4.0",
-      "targetDir": "extensions/safe/dist",
+      "targetDir": "extensions/safe/dist/prod",
       "filePattern": "^.*\\.(dll|so|dylib)$"
     },
     "safe_authenticator": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/safe-client-libs",
       "version": "v0.5.0",
-      "targetDir": "extensions/safe/dist",
+      "targetDir": "extensions/safe/dist/prod",
       "filename": "safe_authenticator",
       "filePattern": "^.*\\.(dll|so|dylib)$",
       "force": true
@@ -39,17 +42,12 @@
     "ENV": {
       "dev": {
         "safe_authenticator": {
+          "targetDir": "extensions/safe/dist/mock",
           "filename": "safe_authenticator-mock"
-        }
-      },
-      "test": {
-        "system_uri": {
-          "targetDir": "extensions/safe/dist"
-        },
-        "safe_authenticator": {
-          "filename": "safe_authenticator-mock",
-          "targetDir": "extensions/safe/dist"
-        }
+          },
+          "system_uri": {
+            "targetDir": "extensions/safe/dist/mock"
+          }
       }
     }
   },

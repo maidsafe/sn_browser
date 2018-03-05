@@ -3,17 +3,24 @@ import path from 'path';
 import { app } from 'electron';
 import pkg from 'appPackage';
 
+const allPassedArgs = process.argv;
+
+let hasMockFlag = false;
+
+if( allPassedArgs.includes('--mock') )
+{
+    hasMockFlag = true;
+}
+
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
-export const env = process.env.NODE_ENV || 'production';
+export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
 export const isHot = process.env.HOT || 0;
 
 // TODO: For live-prod we need to setup menu/devtools etc, while ensuring it doesnt affect e2e tests
 export const isRunningProduction = /^prod/.test( env );
-export const isRunningDevelopment = /^dev/.test( env );
-
+export const isRunningMock = /^dev/.test( env );
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
-
 export const inRendererProcess = typeof window !== 'undefined';
 
 // Set global for tab preload.
@@ -43,8 +50,7 @@ export const INTERNAL_PAGES = {
 export const CONFIG = {
     PORT                 : 3984,
     SAFE_PARTITION       : 'persist:safe-tab',
-    LIB_PATH             : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' ),
-    CONFIG_PATH          : path.resolve( __dirname, '../resources' ),
+    SAFE_NODE_LIB_PATH   : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' ),
     APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
     DATE_FORMAT          : 'h:MM-mmm dd',
     NET_STATUS_CONNECTED : 'Connected',
@@ -52,18 +58,11 @@ export const CONFIG = {
     BROWSER_TYPE_TAG     : 8467
 };
 
-export const LIB_PATH = {
-    SAFE_AUTH : {
-        win32  : './safe_authenticator.dll',
-        darwin : './libsafe_authenticator.dylib',
-        linux  : './libsafe_authenticator.so'
-    },
-    SYSTEM_URI : {
-        win32  : './system_uri.dll',
-        darwin : './libsystem_uri.dylib',
-        linux  : './libsystem_uri.so'
-    }
-};
+
+if( isRunningUnpacked )
+{
+    CONFIG.CONFIG_PATH = path.resolve( __dirname, '../resources' );
+}
 
 // HACK: Prevent jest dying due to no electron globals
 const execPath = ( ) =>
@@ -136,7 +135,7 @@ export const SAFE = {
         CONNECTED    : 'Connected',
         UNKNOWN      : 'Unknown',
         DISCONNECTED : 'Disconnected',
-        LOGGED_IN  : 'LOGGED_IN',
+        LOGGED_IN    : 'LOGGED_IN',
     },
     READ_STATUS :
     {
