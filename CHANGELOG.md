@@ -2,10 +2,21 @@
 All notable changes to this project will be documented in this file.
 
 #### [Unreleased]
-##### Added
+### Changed
+- Upgrade @maidsafe/safe-node-app package to v0.8.0
+- Upgrade safe_authenticator library to v0.6.0
+
+### Added
 - Allows client to receive error if non-standard container is requested during authorisation
-- Creates central constants for SAFE API 
+- Creates central constants for SAFE API
 - Uses latest safe-node-app to enable either prod or dev use from a `NODE_ENV=DEV` install. (Can build a package and enable `mock` use via a flag.)
+- Expose `window.safeApp.readGrantedPermissions` function in DOM API to read granted containers permissions from an auth URI without the need to connect
+- Expose `window.safeApp.getOwnContainerName` function in DOM API to get the app's own container name
+
+### SAFE libraries Dependencies
+- @maidsafe/safe-node-app: v0.8.0
+- system_uri: v0.4.0
+- safe_authenticator: v0.6.0
 
 ## [0.4.1]
 ### Fixed
@@ -18,6 +29,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Tests for url change abstraction. Improved Tab.jsx tests;
 - Tests for adding/removing slashes
+
+### SAFE libraries Dependencies
+- @maidsafe/safe-node-app: v0.7.0
+- system_uri: v0.4.0
+- safe_authenticator: v0.5.0
 
 ## [0.4.0]
 ### Fixed
