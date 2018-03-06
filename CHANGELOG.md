@@ -1,5 +1,28 @@
 # SAFE Browser Changelog
 
+## [Unreleased]
+### Changed
+- Upgrade beaker-plugin-safe-app to v0.5.1
+- Upgrade beaker-plugin-safe-authenticator to v0.5.0
+
+### Added
+- Expose `window.safeApp.readGrantedPermissions` function in DOM API to read granted containers permissions from an auth URI without the need to connect
+- Expose `window.safeApp.getOwnContainerName` function in DOM API to get the app's own container name
+
+### Fixed
+- Fix `isNetStateInit()`, `isNetStateConnected()` and `isNetStateDisconnected()` functions which were returning empty objects rather than a boolean value
+
+### SAFE libraries Dependencies
+#### Direct Dependencies
+- beaker-plugin-safe-app: v0.5.1
+- beaker-plugin-safe-authenticator: v0.5.0
+
+#### Indirect Dependencies
+- @maidsafe/safe-node-app: v0.8.0
+- safe_app: v0.6.0
+- safe_authenticator: v0.6.0
+- system_uri: v0.4.0
+
 ## [0.9.0] - 5-2-2018
 ### Changed
 - Upgrade beaker-plugin-safe-app to v0.4.5
