@@ -149,7 +149,7 @@ export const netStateCallbackHelper = (safeApp, appInfo, enableLog, groupId) => 
     setImmediate(() => {
       readable.push([state]);
     });
-    }, { log: enableLog, registerScheme: false, libPath: CONFIG.LIB_PATH })
+    }, { log: enableLog, registerScheme: false, libPath: CONFIG.SAFE_NODE_LIB_PATH })
     .then((app) => {
       // We assign null to 'netObj' to signal this is a SAFEApp instance
       const handle = genHandle(app, null, groupId);
