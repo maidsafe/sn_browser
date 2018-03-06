@@ -34,7 +34,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.13.0",
     "multicb": "^1.2.1",
-    "pauls-electron-rpc": "git+https://github.com/joshuef/pauls-electron-rpc.git#1.1.0",
+    "pauls-electron-rpc": "git+https://github.com/joshuef/pauls-electron-rpc.git#1.2.0",
     "pretty-bytes": "^3.0.1",
     "redux": "^3.6.0",
     "redux-actions": "^2.2.1",

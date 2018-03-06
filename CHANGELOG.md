@@ -4,6 +4,7 @@
 ### Changed
 - Upgrade beaker-plugin-safe-app to v0.5.1
 - Upgrade beaker-plugin-safe-authenticator to v0.5.0
+- Upgrade pauls-electron-rpc to to v1.2.0
 
 ### Added
 - Expose `window.safeApp.readGrantedPermissions` function in DOM API to read granted containers permissions from an auth URI without the need to connect
@@ -11,6 +12,7 @@
 
 ### Fixed
 - Fix `isNetStateInit()`, `isNetStateConnected()` and `isNetStateDisconnected()` functions which were returning empty objects rather than a boolean value
+- Issue with error codes not being returned from DOM API fixed
 
 ### SAFE libraries Dependencies
 #### Direct Dependencies
