@@ -57,19 +57,18 @@ build_script:
 after_build:
   # - ps:
   - FOR /F %%i IN ('dir release /b') DO SET APP_PKG_DIR=%%i
+  - echo %APP_PKG_DIR%
   - ps: $env:PACKAGE_VERSION = node -p -e "require('./app/package.json').version"
   - dir release
   - cd release
-  - 7z a peruse-v%PACKAGE_VERSION%-win-x64.zip
+  - 7z a %APP_PKG_DIR%.zip
   - dir
-  - certutil -hashfile peruse-v%PACKAGE_VERSION%-win-x64.zip SHA256 >> %APP_PKG_DIR%.txt
+  - certutil -hashfile %APP_PKG_DIR%.zip SHA256 >> %APP_PKG_DIR%.txt
   - echo %PACKAGE_VERSION%
   - echo %APPVEYOR_REPO_TAG_NAME%
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - ps: Get-ChildItem .\*.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
-# artifacts:
-#   - path: release/*
 
 deploy:
   release: $(appveyor_repo_tag_name)
