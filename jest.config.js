@@ -1,9 +1,8 @@
 module.exports = {
     verbose                : true,
-    testMatch              : ['**/test/**/*'],
     moduleFileExtensions   : ['js', 'jsx'],
     setupFiles   : ['raf/polyfill','<rootDir>/test/setup.js'],
-    testPathIgnorePatterns : ['node_modules', '<rootDir>/app/extensions'],
+    testPathIgnorePatterns : ['node_modules'],
     moduleDirectories      : ['app', 'test', 'node_modules', 'app/node_modules'],
     moduleNameMapper       : {
         "electron": "<rootDir>/mocks/electron.js",
@@ -16,7 +15,7 @@ module.exports = {
         '^@containers(.*)$' : '<rootDir>/app/containers$1',
         '^appConstants$'  : '<rootDir>/app/constants.js',
         '^@extensions(.*)$' : '<rootDir>/app/extensions$1',
-        '^@logger(.*)$'     : '<rootDir>/app/logger$1',
+        '^@logger$'     : '<rootDir>/app/logger.js',
         '^@reducers(.*)$'   : '<rootDir>/app/reducers$1',
         '^@store(.*)$'      : '<rootDir>/app/store',
         '^@utils(.*)$'      : '<rootDir>/app/utils$1'

@@ -30,9 +30,10 @@ if ( isHot )
     // libLocaleModifier = 'extensions/safe/';
     // TODO. Questions about mock. Hmm
 }
-// else if ( isRunningSpectronTest || inRendererProcess )
-// {
-// }
+else if ( isRunningSpectronTest || inRendererProcess )
+{
+    libLocaleModifier = '';
+}
 else if ( isRunningPackaged )
 {
     libLocaleModifier = `../extensions/safe`;

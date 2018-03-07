@@ -1,4 +1,8 @@
-export const callIPC =
-{
-    decryptRequest: jest.fn()
+const ipc = {
+    callIPC :
+    {
+        decryptRequest: jest.fn(),
+    }
 }
+
+export default ipc;

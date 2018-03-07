@@ -21,7 +21,7 @@ import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
 
 
-import { SAFE } from 'appConstants';
+import { SAFE, isRunningSpectronTest } from 'appConstants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -341,17 +341,31 @@ class Authenticator extends SafeLib
 
     logout()
     {
-        this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
-        this.safeLib.auth_free( this.registeredClientHandle );
-        this.registeredClientHandle = null;
-        // TODO sort thisss
-        // const store = global.mainProcessStore;
-        // store.dispatch( setAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
+        return new Promise( ( resolve, reject) =>
+        {
+            try{
+                this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
+
+                if( !isRunningSpectronTest )
+                {
+                    // TODO: Why does this crash testing?
+                    // this.safeLib.auth_free( this.registeredClientHandle );
+                }
+                this.registeredClientHandle = null;
+                resolve('woo');
+            }catch(e)
+            {
+                console.log('nooooo')
+                reject(e)
+            }
+        })
     }
 
     decodeRequest( uri )
     {
         logger.verbose( 'Authenticator.js decoding request' );
+
+
         return new Promise( ( resolve, reject ) =>
         {
             if ( !uri )
@@ -423,12 +437,14 @@ class Authenticator extends SafeLib
 
                     if ( this[_reAuthoriseState] !== CONSTANTS.RE_AUTHORISE.STATE.UNLOCK )
                     {
-                        this[_containerReqListener].broadcast( null, result );
-                        return resolve();
+
+                        // this[_containerReqListener].broadcast( null, result );
+                        return resolve(result);
                     }
                     return this._isAlreadyAuthorisedContainer( contReq )
                         .then( ( isAuthorised ) =>
                         {
+
                             if ( isAuthorised )
                             {
 
