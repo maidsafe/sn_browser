@@ -1,6 +1,6 @@
 # SAFE Browser Changelog
 
-## [Unreleased]
+## [0.10.0] - 7-3-2018
 ### Changed
 - Upgrade beaker-plugin-safe-app to v0.5.1
 - Upgrade beaker-plugin-safe-authenticator to v0.5.0
