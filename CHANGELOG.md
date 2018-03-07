@@ -1,10 +1,11 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased]
+#### [0.5.0]
 ### Changed
 - Upgrade @maidsafe/safe-node-app package to v0.8.0
 - Upgrade safe_authenticator library to v0.6.0
+- Upgrade pauls-electron-rpc fork to 1.2.0
 
 ### Added
 - Allows client to receive error if non-standard container is requested during authorisation

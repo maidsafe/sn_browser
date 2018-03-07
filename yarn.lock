@@ -7463,9 +7463,9 @@ pathval@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
 
-"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#1.1.0":
+"pauls-electron-rpc@git+https://github.com/joshuef/pauls-electron-rpc.git#1.2.0":
   version "4.0.1"
-  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#e896cdd7c2decb82a178764664fdbf2e049238b2"
+  resolved "git+https://github.com/joshuef/pauls-electron-rpc.git#7238aaf6f3563a14e6d22fd0313e221b3e52e617"
 
 pbkdf2@^3.0.3:
   version "3.0.14"
