@@ -73,7 +73,8 @@
     "burnthemall": "rm -Rf ./node_modules ./app/node_modules ./dist && yarn install --force &&  yarn run rebuild && yarn run build && yarn run package",
     "package": "node ./scripts/main.js --package --harmony",
     "start": "cross-env NODE_ENV=dev gulp start",
-    "watch": "cross-env NODE_ENV=dev gulp start-watch"
+    "watch": "cross-env NODE_ENV=dev gulp start-watch",
+    "test": "echo \"Project doesn't contain tests\" && exit 0"
   },
   "dependencies": {
     "fs-extra": "^4.0.1"
