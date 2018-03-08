@@ -6,7 +6,7 @@
   "main": "./main.js",
   "scripts": {
     "rebuild": "npm rebuild --runtime=electron --disturl=https://atom.io/download/atom-shell --build-from-source --target=1.7.11",
-    "postinstall": "yarn run install-prod && yarn run install-mock",
+    "postinstall": "yarn run install-prod && node install-dev-libs.js",
     "install-prod": "cross-env NODE_ENV=prod download_deps --package package.json",
     "install-mock": "cross-env NODE_ENV=dev download_deps --package package.json"
   },
