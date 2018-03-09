@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.8.0.tgz#3ad468204559f56f792af1bd45a68803a61f5234"
+"@maidsafe/safe-node-app@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.8.1.tgz#9920849263978bb55452e69cead9c3b98694c08d"
   dependencies:
     cross-env "5.1.3"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
