@@ -217,6 +217,9 @@ export default class Browser extends Component
                             onClick={ this.handleSpectronTestReadState }
                         />
                     </div>
+
+                }
+                {
                     isMock &&
                     <span>Running on a mock network</span>
                 }
