@@ -231,6 +231,7 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onAuthDecisionRes', reqQ.req );
+            logger.info( errConst.AUTH_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
@@ -238,7 +239,7 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
         {
             reqQ.req.error = err;
             e.sender.send( 'onAuthDecisionRes', reqQ.req );
-            logger.error( 'Auth decision error :: ', err.message );
+            logger.error( errConst.AUTH_DECISION_RESP.msg(err) );
             reqQ.next();
         } );
 };
@@ -260,6 +261,7 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onContDecisionRes', reqQ.req );
+            logger.info( errConst.CONTAINER_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
@@ -267,7 +269,7 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         {
             reqQ.req.error = err;
             e.sender.send( 'onContDecisionRes', reqQ.req );
-            logger.error( 'Container decision error :: ', err.message );
+            logger.error( errConst.CONTAINER_DECISION_RESP.msg(err) );
             reqQ.next();
         } );
 };
@@ -289,13 +291,14 @@ const onSharedMDataDecision = ( e, data, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onSharedMDataRes', reqQ.req );
+            logger.info( errConst.SHAREMD_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
         .catch( ( err ) =>
         {
             reqQ.req.error = err;
-            logger.error( err );
+            logger.error( errConst.SHAREMD_DECISION_RESP.msg(err) );
             e.sender.send( 'onSharedMDataRes', reqQ.req );
             reqQ.next();
         } );

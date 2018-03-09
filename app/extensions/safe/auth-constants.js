@@ -1,10 +1,28 @@
 import Enum from 'enum';
 import path from 'path';
 import logger from 'logger';
-import { isHot, isRunningPackaged,inRendererProcess, isRunningSpectronTest } from 'appConstants';
+import { isHot,
+    isRunningPackaged,
+    isRunningProduction,
+    isRunningMock,
+    isRunningSpectronTest
+} from 'appConstants';
 
 
 let libLocaleModifier = '';
+
+let libEnvModifier = 'prod';
+
+if ( isRunningMock )
+{
+    libEnvModifier = 'mock';
+}
+
+if ( isRunningProduction )
+{
+    libEnvModifier = 'prod';
+}
+
 
 if ( isHot )
 {
@@ -13,12 +31,13 @@ if ( isHot )
 }
 else if ( isRunningSpectronTest || inRendererProcess )
 {
-    libLocaleModifier = 'extensions/safe/';
+    libLocaleModifier = `extensions/safe`;
 }
 else if ( isRunningPackaged )
 {
-    libLocaleModifier = '../extensions/safe/';
+    libLocaleModifier = `../extensions/safe`;
 }
+
 
 export default {
     NETWORK_STATUS : {
@@ -27,16 +46,16 @@ export default {
         DISCONNECTED : -1
     },
     LIB_PATH : {
-        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist/libwinpthread-1.dll' ),
+        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier,  'libwinpthread-1.dll' ),
         SAFE_AUTH : {
-            win32  : path.resolve( __dirname, libLocaleModifier, 'dist/safe_authenticator.dll' ),
-            darwin : path.resolve( __dirname, libLocaleModifier, 'dist/libsafe_authenticator.dylib' ),
-            linux  : path.resolve( __dirname, libLocaleModifier, 'dist/libsafe_authenticator.so' )
+            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'safe_authenticator.dll' ),
+            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsafe_authenticator.dylib' ),
+            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsafe_authenticator.so' )
         },
         SYSTEM_URI : {
-            win32  : path.resolve( __dirname, libLocaleModifier, 'dist/system_uri.dll' ),
-            darwin : path.resolve( __dirname, libLocaleModifier, 'dist/libsystem_uri.dylib' ),
-            linux  : path.resolve( __dirname, libLocaleModifier, 'dist/libsystem_uri.so' )
+            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'system_uri.dll' ),
+            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsystem_uri.dylib' ),
+            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsystem_uri.so' )
         }
     },
     LISTENER_TYPES : new Enum( [

@@ -7,16 +7,18 @@ An electron web browser. Built to be a basis. Extendable by design.
 
 Make sure you have both git and [yarn](https://yarnpkg.com/en/docs/install) installed.
 
+
 - `git clone https://github.com/joshuef/peruse.git`
 - `cd peruse`
-- `yarn`
+- `NODE_ENV=dev yarn` (`NODE_ENV` is needed to install mock libs and to tun `yarn mock-dev`).
 - `yarn rebuild`
 
-And to run dev mode, ensure you run `yarn` with `NODE_ENV=dev` set:
-- `yarn dev`
+And to run dev mode:
+- `yarn mock-dev`
 
-Want to run 'production' variables, but with hot reloading? Ensure you run the initial `yarn` with `NODE_ENV=` set, then:
-- `yarn live-dev`
+Want to run 'production' variables, but with hot reloading?
+- `yarn prod-dev`
+
 Note, you'll need a crust.config set for the application. [Helper commands are available on osx/linux](https://github.com/joshuef/peruse/blob/master/package.json#L43-L44) (not windows yet, sorry! this is only temporary.)
 
 And to package:
@@ -24,12 +26,14 @@ And to package:
 
 The resulting packages are contained within the `releases` folder.
 
+A packaged application, built in a `NODE_ENV=dev`, can access either `prod` or `dev` networks. `prod` is the default, or alternatively you can open the application and pass a `--mock` flag to open and use a mock network.
+
 #### Build commands
 
 There are a few build commands for various situations:
 
-- `yarn dev` will run a peruse developer version of the application using `MockVault`
-- `yarn live-dev` will run a peruse developer version of the application using the live network.
+- `yarn mock-dev` will run a peruse developer version of the application using `MockVault`
+- `yarn prod-dev` will run a peruse developer version of the application using the live network.
 - `yarn build` compiles all code, but you shouldn't need to use this
 - `yarn build-preload` will need to be run whenever you change the `preload.js` file for changes to show up in the browser.
 
@@ -57,7 +61,7 @@ There are 'live-dev' configs for running against NODE_ENV=production but without
 ### Testing
 
 - `yarn test` runs jest (you have the optional `yarn test-watch`, too).
-- `yarn test e2e` runs spectron integration tests (not yet stable).
+- `yarn test-e2e` runs spectron integration tests (not yet stable).
 - `yarn lint` ...lints...
 
 ### Logging

@@ -2,6 +2,7 @@ import { CONFIG } from 'appConstants';
 
 const crypto = require('crypto'); // electron deps will be available inside browser
 const { Readable } = require('stream');
+const errConst = require('../err-constants');
 
 const handles = new Map();
 
@@ -41,7 +42,7 @@ export const getObj = (handle, supportNull) => new Promise((resolve, reject) => 
   if (obj) {
     return resolve(obj);
   }
-  return reject(new Error(`Invalid handle: ${handle}`));
+  return reject(new Error(errConst.INVALID_HANDLE.msg(handle)));
 });
 
 // this helper functions will free all object associated with app\
@@ -148,7 +149,7 @@ export const netStateCallbackHelper = (safeApp, appInfo, enableLog, groupId) => 
     setImmediate(() => {
       readable.push([state]);
     });
-    }, { log: enableLog, registerScheme: false, libPath: CONFIG.LIB_PATH })
+    }, { log: enableLog, registerScheme: false, libPath: CONFIG.SAFE_NODE_LIB_PATH })
     .then((app) => {
       // We assign null to 'netObj' to signal this is a SAFEApp instance
       const handle = genHandle(app, null, groupId);
