@@ -177,10 +177,10 @@ export default class MenuBuilder
                     {
                         const lastTab = getLastClosedTab( store.getState().tabs );
                         let windowToFocus = lastTab.windowId;
-                        windowToFocus = BrowserWindow.fromId( windowToFocus );
 
                         if ( windowToFocus )
                         {
+                            windowToFocus = BrowserWindow.fromId( windowToFocus );
                             windowToFocus.focus();
                         }
 

@@ -18,8 +18,8 @@ export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'produc
 export const isHot = process.env.HOT || 0;
 
 // TODO: For live-prod we need to setup menu/devtools etc, while ensuring it doesnt affect e2e tests
-export const isRunningProduction = /^prod/.test( env );
 export const isRunningMock = /^dev/.test( env );
+export const isRunningProduction = !isRunningMock;
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = !inRendererProcess;

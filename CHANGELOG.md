@@ -1,6 +1,15 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [0.5.1]
+### Fixed 
+- Reopen closed tab works.
+- `mock` store update initing before loginForTest to ensure UI is up to date even when not in a `NODE_ENV=dev` env.
+- Appveyor build process names `dev-` files correctly.
+
+### Added 
+- Safe extension only installs dev libs in a dev env.
+
 #### [0.5.0]
 ### Changed
 - Upgrade @maidsafe/safe-node-app package to v0.8.0

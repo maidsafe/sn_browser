@@ -49,7 +49,6 @@ test_script:
 
 build_script:
   - node --version
-  - set NODE_ENV=production
   - yarn --version
   - yarn run package-win
   - yarn run post-pack
