@@ -26,7 +26,7 @@ function mapStateToProps( state )
         notifications : state.notifications,
         tabs          : state.tabs,
         ui            : state.ui,
-        safeNetwork   : state.safeNetwork,
+        peruseApp     : state.peruseApp
     };
 }
 

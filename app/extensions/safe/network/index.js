@@ -6,7 +6,7 @@ import { addNotification, clearNotification } from 'actions/notification_actions
 import { callIPC, setIPCStore } from '../ffi/ipc';
 import ipc from '../ffi/ipc';
 import AUTH_CONSTANTS from '../auth-constants';
-
+import * as peruseAppActions from '../../../actions/peruse_actions';
 const queue = [];
 let appObj;
 let store;
@@ -207,7 +207,7 @@ export const initMock = async ( passedStore ) =>
     store = passedStore;
     setIPCStore( store );
     logger.info( 'Initialising mock app' );
-    passedStore.dispatch( safeActions.setIsMock( true ) );
+    passedStore.dispatch( peruseAppActions.setIsMock( true ) );
 
     try
     {

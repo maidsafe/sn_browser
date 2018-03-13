@@ -26,7 +26,6 @@ const init = async ( store ) =>
         // setup auth
         authAPI.ffi.ffiLoader.loadLibrary();
 
-        // dont do this inside if auth ffi as circular dep
         if ( isRunningProduction )
         {
             await initAnon( store );
