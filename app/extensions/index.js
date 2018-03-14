@@ -6,7 +6,7 @@ import safeBrowsing from './safe/index';
 // here add your packages for extensibility.
 const allPackages = [ safeBrowsing ];
 
-const loadExtensions = ( server, store ) =>
+export const loadExtensions = ( server, store ) =>
 {
     logger.info( 'Loading extensions' );
 
@@ -21,5 +21,14 @@ const loadExtensions = ( server, store ) =>
     } );
 };
 
+export const onOpenLoadExtensions = ( store ) =>
+{
+    allPackages.forEach( loadPackage => {
 
-export default loadExtensions;
+        if( loadPackage.onOpen )
+        {
+            loadPackage.onOpen( store )
+        }
+
+    } );
+}

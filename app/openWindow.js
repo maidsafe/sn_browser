@@ -3,6 +3,8 @@ import { BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
+import { onOpenLoadExtensions }  from './extensions';
+
 import logger from 'logger';
 import {
     addTab,
@@ -70,7 +72,7 @@ const openWindow = ( store ) =>
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-    logger.info('loadurl passssed')
+
     mainWindow.webContents.on( 'did-finish-load', () =>
     {
         logger.info('finished load window>>>>>>>>>>>>>>>>')
@@ -78,6 +80,8 @@ const openWindow = ( store ) =>
         {
             throw new Error( '"mainWindow" is not defined' );
         }
+
+        onOpenLoadExtensions( store );
 
         // before show lets load state
         mainWindow.show();

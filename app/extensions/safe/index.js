@@ -3,6 +3,8 @@ import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
+import { setIsMock } from 'actions/peruse_actions';
+import { isRunningMock } from 'appConstants';
 
 const init = async ( store ) =>
 {
@@ -11,8 +13,12 @@ const init = async ( store ) =>
     registerSafeAuthProtocol();
 
     blockNonSAFERequests();
-
 };
+
+const onOpen = ( store ) =>
+{
+    store.dispatch( setIsMock( isRunningMock ) );
+}
 
 // const middleware = store => next => action =>
 // {
@@ -32,5 +38,6 @@ const init = async ( store ) =>
 export default {
     init,
     setupRoutes,
+    onOpen
     // middleware
 };

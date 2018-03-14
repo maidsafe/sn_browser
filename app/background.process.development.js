@@ -18,9 +18,29 @@ import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import manageRemoteCalls from './background.manageRemoteCalls';
 import sysUri from 'extensions/safe/ffi/sys_uri';
 
-// import * as authAPI from 'extensions/safe/auth-api';
-
 import * as ffiLoader from 'extensions/safe/auth-api/ffiLoader';
+
+let mockStatus = null;
+const manageLibLoading = ( store ) =>
+{
+    const state = store.getState();
+    const isMock = state.peruseApp.isMock;
+
+    const listenerState = store.getState();
+    const islistenerMock = listenerState.peruseApp.isMock;
+
+    if( islistenerMock === mockStatus )
+        return;
+
+    mockStatus = islistenerMock;
+
+    ffiLoader.loadLibrary( islistenerMock );
+
+    // Lets check the auth lib status:
+    const authLibStatus = theAPI.getLibStatus();
+    logger.verbose( 'Authenticator lib status: ', authLibStatus );
+    store.dispatch( authActions.setAuthLibStatus( authLibStatus ) );
+}
 
 const init = async ( ) =>
 {
@@ -47,21 +67,7 @@ const init = async ( ) =>
 
     try
     {
-        // setup auth
-        ffiLoader.loadLibrary();
-
-        //enable use of store for dispatching of actions.
         setIPCStore(store);
-
-        // TODO: Move webfetch here... web fetch...
-        // if ( isRunningProduction )
-        // {
-        //     await initAnon( store );
-        // }
-        // else
-        // {
-        //     await initMock( store );
-        // }
     }
     catch ( e )
     {
@@ -74,12 +80,10 @@ const init = async ( ) =>
     {
         manageRemoteCalls( store );
         handlePeruseStoreChanges( store );
+        manageLibLoading( store );
     } );
 
-    // Lets check the auth lib status:
-    const authLibStatus = theAPI.getLibStatus();
-    logger.verbose( 'Authenticator lib status: ', authLibStatus );
-    store.dispatch( authActions.setAuthLibStatus( authLibStatus ) );
+
 };
 
 init( );

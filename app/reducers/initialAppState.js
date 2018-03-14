@@ -31,7 +31,7 @@ const initialState = {
         authResponseUri : '',
         savedBeforeQuit : false,
         saveStatus      : '',
-        isMock          : false
+        isMock          : null
     },
     tabs : [{
         url          : 'safe-auth://home/',

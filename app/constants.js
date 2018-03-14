@@ -16,9 +16,10 @@ export const isRunningPackaged = !isRunningUnpacked;
 export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
 export const isHot = process.env.HOT || 0;
 
-// TODO: For live-prod we need to setup menu/devtools etc, while ensuring it doesnt affect e2e tests
+// only to be used for inital store setting in main process. Not guaranteed correct for renderers.
 export const isRunningMock = /^dev/.test( env );
 export const isRunningProduction = !isRunningMock;
+export const isRunningTest = /^test/.test( env );
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = !inRendererProcess;

@@ -7,7 +7,6 @@ import { PROTOCOLS } from 'appConstants';
 import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 
 const VERSION = pkg.version;
-
 const pendingCalls = {};
 
 window.eval = global.eval = () =>
@@ -99,7 +98,7 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
     };
 
 
-    const stopListening = store.subscribe( async () =>
+    store.subscribe( async () =>
     {
         const state = store.getState();
         const calls = state.remoteCalls;

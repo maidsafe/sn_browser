@@ -21,7 +21,7 @@ import * as authenticatorActions from 'actions/authenticator_actions';
 import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
-import loadExtensions from './extensions';
+import { loadExtensions }  from './extensions';
 import { configureStore } from './store/configureStore';
 
 // TODO: Deprecate this in favour of redux actions
@@ -170,7 +170,6 @@ app.on( 'ready', async () =>
     // TODO: This order is important, reversing breaks tests. Why!?
     bgProcessWindow = setupBackground();
     openWindow( store );
-
 } );
 
 app.on( 'open-url', ( e, url ) =>

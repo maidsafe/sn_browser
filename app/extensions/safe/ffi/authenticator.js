@@ -20,8 +20,7 @@ import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
 
-
-import { SAFE, isRunningSpectronTest } from 'appConstants';
+import { SAFE, isRunningTest } from 'appConstants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -74,8 +73,6 @@ class Authenticator extends SafeLib
             {
                 this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
             } );
-
-        logger.info('authhhhhhh', this[_nwState] )
     }
 
     get registeredClientHandle()
@@ -302,6 +299,7 @@ class Authenticator extends SafeLib
                     [types.voidPointer, types.FfiResultPointer, types.ClientHandlePointer],
                     ( userData, resultPtr, clientHandle ) =>
                     {
+
                         const result = resultPtr.deref();
                         if ( result.error_code !== 0 && clientHandle.length === 0 )
                         {
@@ -310,9 +308,6 @@ class Authenticator extends SafeLib
                         this.registeredClientHandle = clientHandle;
                         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
 
-                        // const store = global.mainProcessStore;
-                        // TODO: sort thissssss
-                        // store.dispatch( setAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
                         resolve();
                     } ) );
 
@@ -334,6 +329,7 @@ class Authenticator extends SafeLib
             }
             catch ( e )
             {
+                logger.info('Login error', e )
                 reject( e );
             }
         } );
@@ -346,16 +342,15 @@ class Authenticator extends SafeLib
             try{
                 this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
 
-                if( !isRunningSpectronTest )
+                if( !isRunningTest  )
                 {
                     // TODO: Why does this crash testing?
-                    // this.safeLib.auth_free( this.registeredClientHandle );
+                    this.safeLib.auth_free( this.registeredClientHandle );
                 }
                 this.registeredClientHandle = null;
-                resolve('woo');
+
             }catch(e)
             {
-                console.log('nooooo')
                 reject(e)
             }
         })

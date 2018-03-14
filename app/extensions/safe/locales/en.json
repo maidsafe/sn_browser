@@ -6,7 +6,8 @@
 		"shouuuld_not_be_empty": "messages.shouuuld_not_be_empty",
 		"invalid_params": "messages.invalid_params",
 		"invalid_paramss": "messages.invalid_paramss",
-		"invalid_req": "messages.invalid_req"
+		"invalid_req": "messages.invalid_req",
+		"unauthorised": "messages.unauthorised"
 	},
 	"Secret": "Secret",
 	"AppId": "AppId"
