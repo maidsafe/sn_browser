@@ -3,7 +3,7 @@ import logger from 'logger';
 import path from 'path';
 import { isRunningUnpacked, isRunningDevelopment } from 'appConstants';
 
-const BACKGROUND_PROCESS = path.join( __dirname, 'bg.html' );
+const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
 let backgroundProcess = null;
 
 const setupBackground = () =>
@@ -12,7 +12,7 @@ const setupBackground = () =>
 
     if ( backgroundProcess === null )
     {
-        logger.info('loading:', BACKGROUND_PROCESS );
+        logger.info('loading bg:', BACKGROUND_PROCESS );
 
         backgroundProcess = new BrowserWindow( {
             width: 300,
@@ -41,13 +41,13 @@ const setupBackground = () =>
         {
             logger.verbose( 'Background process renderer loaded.');
 
-            if( isRunningUnpacked || isRunningDevelopment )
-            {
+            // if( isRunningUnpacked || isRunningDevelopment )
+            // {
                 backgroundProcess.webContents.openDevTools()
-            }
+            // }
         } );
 
-        backgroundProcess.loadURL( `file://${BACKGROUND_PROCESS}` );
+        backgroundProcess.loadURL( BACKGROUND_PROCESS );
     }
 
     return backgroundProcess;

@@ -112,6 +112,8 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
             const callPromises = pendingCalls[theCall.id];
 
+
+
             if ( theCall.done && callPromises.resolve )
             {
                 pendingCalls[theCall.id] = theCall;
@@ -120,22 +122,29 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
                 callbackArgs = [theCall.response];
 
+                logger.info('acting upon received callllllllll', theCall.name, theCall )
+                if ( theCall.isListener )
+                {
+                    // error first
+                    callPromises.resolve( null, ...callbackArgs );
+                }
+                callPromises.resolve( ...callbackArgs );
                 store.dispatch( remoteCallActions.removeRemoteCall(
                     theCall
                 ) );
 
-                if ( theCall.isListener )
-                {
-                    // error first
-                    return callPromises.resolve( null, ...callbackArgs );
-                }
-                return callPromises.resolve( ...callbackArgs );
+                delete pendingCalls[theCall.id];
             }
             else if ( theCall.error && callPromises.reject )
             {
-                logger.error( ':remoteCall', theCall.name, 'was rejected with: ', theCall.response );
-                return callPromises.reject( new Error( theCall.error.message || theCall.error ) );
+                logger.error( 'remoteCall ', theCall.name, 'was rejected with: ', theCall.error );
+                callPromises.reject( new Error( theCall.error.message || theCall.error ) );
+                store.dispatch( remoteCallActions.removeRemoteCall(
+                    theCall
+                ) );
+                delete pendingCalls[theCall.id];
             }
+
         } );
     } );
 };
@@ -153,12 +162,12 @@ const createRemoteCall = ( functionName, store ) =>
         console.log( 'doing remote calllll', functionName );
         const callId = Math.random().toString( 36 );
 
-        logger.info( 'about to add ', functionName );
         const theCall = {
             id   : callId,
             name : functionName,
             args
         };
+        logger.info( 'about to add ', theCall.name, theCall.id );
 
         // but we need store.
         store.dispatch( remoteCallActions.addRemoteCall( theCall ) );

@@ -1,15 +1,12 @@
 // following @pfrazee's beaker pattern again here.
-import setupPreloadedSafeAuthAPIs from './setupPreloadAPIs';
+// import setModuleImportLocations from 'setModuleImportLocations';
 import { ipcRenderer } from 'electron';
-import { configureStore } from 'store/configureStore';
+
+var setupPreloadedSafeAuthAPIs = require( './setupPreloadAPIs');
+var configureStore = require( './store/configureStore').configureStore;
 
 // TODO This handling needs to be imported via extension apis more seemlessly
-const initialState = {};
-
-// Add middleware from extensions here. TODO: this should be be unified somewhere.
-const loadMiddlewarePackages = [];
-const store = configureStore( initialState, loadMiddlewarePackages );
-
+const store = configureStore( );
 
 setupPreloadedSafeAuthAPIs( store );
 

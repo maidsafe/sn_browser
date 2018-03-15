@@ -27,7 +27,7 @@ export const inMainProcess = !inRendererProcess;
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
 const preloadLocation = isRunningUnpacked ? '' : '../';
-global.preloadFile = path.resolve( __dirname, preloadLocation, 'webPreload.js' );
+global.preloadFile = `file://${ __dirname }/webPreload.js`;
 
 let safeNodeAppPathModifier = '';
 

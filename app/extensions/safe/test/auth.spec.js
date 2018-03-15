@@ -4,8 +4,7 @@ import i18n from 'i18n';
 import ffiLoader from '../ffi/lib';
 import client from '../ffi/authenticator';
 import * as helper from './helper';
-import ipc from '../ffi/ipc';
-// needed?
+
 import crypto from 'crypto';
 
 import CONST from '../auth-constants';
@@ -53,12 +52,6 @@ describe( 'Authenticator functions', () =>
         init();
     } );
 
-    afterEach( async ( ) =>
-    {
-        await client.logout();
-        client.logout();
-    } );
-
     describe( 'Unregistered client', () =>
     {
         xit( 'gets back encoded response', () => (
@@ -84,10 +77,6 @@ describe( 'Authenticator functions', () =>
 
     describe( 'create Account', () =>
     {
-        afterAll( async () =>
-        {
-            await client.logout();
-        } );
 
         it( 'should throw an error when account locator is empty', async () =>
         {
@@ -119,6 +108,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).toBeInstanceOf( Error );
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account locator is not a string', async () =>
@@ -135,6 +127,8 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) ) );
             }
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account secret is not a string', async () =>
@@ -151,6 +145,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account locator is an empty string', async () =>
@@ -167,6 +164,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account secret is an empty string', async () =>
@@ -183,6 +183,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'sets authenticator handle when account creation is successful', async () =>
@@ -200,6 +203,9 @@ describe( 'Authenticator functions', () =>
             expect( client.registeredClientHandle ).not.toBeNull();
             expect( client.registeredClientHandle ).not.toBeUndefined();
             expect( client.registeredClientHandle ).toBeInstanceOf( Buffer );
+
+            await helper.clearAccount();
+
         } );
 
         it( 'emits network state as connected when account creation is successful', () => (
@@ -207,12 +213,15 @@ describe( 'Authenticator functions', () =>
             {
                 expect.assertions( 3 );
                 const nwListener = client.setListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE,
-                    ( err, state ) =>
+                    async ( err, state ) =>
                     {
                         expect( err ).toBeNull();
                         expect( state ).not.toBeUndefined();
                         expect( state ).toEqual( CONST.NETWORK_STATUS.CONNECTED );
                         client.removeListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE, nwListener );
+
+                        await helper.clearAccount();
+
                         return resolve();
                     } );
                 helper.createRandomAccount();
@@ -231,8 +240,6 @@ describe( 'Authenticator functions', () =>
             } )
         );
 
-        afterAll( () => helper.clearAccount() );
-
         it( 'should throw an error when account locator is empty', async () =>
         {
             expect.assertions( 3 );
@@ -247,6 +254,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account secret is empty', async () =>
@@ -263,6 +273,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).toBeInstanceOf( Error );
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account locator is not a string', async () =>
@@ -279,6 +292,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account secret is not a string', async () =>
@@ -295,6 +311,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account locator is an empty string', async () =>
@@ -311,6 +330,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
         it( 'should throw an error when account secret is an empty string', async () =>
@@ -327,6 +349,9 @@ describe( 'Authenticator functions', () =>
                 expect( e ).not.toBeUndefined();
                 expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
             }
+
+            await helper.clearAccount();
+
         } );
 
 
@@ -342,6 +367,9 @@ describe( 'Authenticator functions', () =>
             expect( client.registeredClientHandle ).not.toBeNull();
             expect( client.registeredClientHandle ).not.toBeUndefined();
             expect( client.registeredClientHandle ).toBeInstanceOf( Buffer );
+
+            await helper.clearAccount();
+
         } );
 
 
@@ -350,12 +378,15 @@ describe( 'Authenticator functions', () =>
             {
                 expect.assertions( 3 );
                 const nwListener = client.setListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE,
-                    ( err, state ) =>
+                    async ( err, state ) =>
                     {
                         expect( err ).toBeNull();
                         expect( state ).not.toBeUndefined();
                         expect( state ).toEqual( CONST.NETWORK_STATUS.CONNECTED );
                         client.removeListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE, nwListener );
+
+                        await helper.clearAccount();
+
                         return resolve();
                     } );
                 helper.createRandomAccount();
@@ -404,11 +435,6 @@ describe( 'Authenticator functions', () =>
             catch ( e )
             {
                 expect( e ).not.toBeNull();
-
-                // TODO: This should be 'message', 'code' to be consistent.
-                // TODO: what's this error code!??
-                // expect( e.error_code ).toBe( -1541922031 );
-
                 await helper.clearAccount();
             }
         } );

@@ -24,8 +24,8 @@ switch ( process.argv[2] )
 }
 
 const result = spawn.sync(
-    path.normalize( './node_modules/.bin/jest' ),
-    [`--testPathPattern=${pattern}`, '--bail', ...process.argv.slice( 2 ), '--notify'],
+    path.normalize( './node_modules/.bin/electron' ),
+    [path.normalize( './node_modules/.bin/jest' ), `--testPathPattern=${pattern}`, ...process.argv.slice( 2 ), '--notify'],
     { stdio: 'inherit' }
 );
 

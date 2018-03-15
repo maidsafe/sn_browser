@@ -106,7 +106,6 @@ export default class Tab extends Component
             }
         ] );
 
-
         const callbackSetup = () =>
         {
             webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
@@ -433,7 +432,7 @@ export default class Tab extends Component
         const { browserState } = this.state;
 
         const preloadFile = remote.getGlobal( 'preloadFile' );
-        const injectPath = `file://${preloadFile}`; // js we'll be chucking in
+        const injectPath = preloadFile; // js we'll be chucking in
 
         let moddedClass = styles.tab;
         if ( isActiveTab )
@@ -447,7 +446,6 @@ export default class Tab extends Component
                     style={ { height: '100%', display: 'flex', flex: '1 1' } }
                     preload={ injectPath }
                     partition='persist:safe-tab'
-                    // nodeIntegration={ false }
                     src={ this.props.url }
                     ref={ ( c ) =>
                     {

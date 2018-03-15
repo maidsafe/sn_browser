@@ -120,12 +120,6 @@ export default merge.smart( baseConfig, {
 
             spawn(
                 'npm',
-                ['run', 'build-bg'],
-                { shell: true, env: process.env, stdio: 'inherit' }
-            ).on( 'error', spawnError => console.error( spawnError ) );
-
-            spawn(
-                'npm',
                 ['run', 'build-browserPreload'],
                 { shell: true, env: process.env, stdio: 'inherit' }
             ).on( 'error', spawnError => console.error( spawnError ) );

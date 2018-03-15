@@ -24,10 +24,12 @@ export default function remoteCalls( state: array = initialState, action )
     {
         case TYPES.ADD_REMOTE_CALL :
         {
+            const updatedState = [ ...state ];
+            updatedState.push( theCall );
             // TODO: Do we need to add an ID here?
             // DO we fail if no windowIdProvided?
             // Do we need to remove calls after X time?
-            return [ ...state, theCall ];
+            return updatedState;
         }
         case TYPES.REMOVE_REMOTE_CALL :
         {

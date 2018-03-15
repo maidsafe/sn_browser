@@ -347,7 +347,10 @@ class Authenticator extends SafeLib
                     // TODO: Why does this crash testing?
                     this.safeLib.auth_free( this.registeredClientHandle );
                 }
+
                 this.registeredClientHandle = null;
+
+                resolve();
 
             }catch(e)
             {

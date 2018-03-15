@@ -61,7 +61,7 @@ const openWindow = ( store ) =>
         'standard-window' : false,
         webPreferences    :
         {
-            preload : path.join( __dirname, 'browserPreload.js' )
+            // preload : path.join( __dirname, 'browserPreload.js' )
         }
 
     } );
