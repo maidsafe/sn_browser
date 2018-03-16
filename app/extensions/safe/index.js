@@ -9,10 +9,16 @@ import { isRunningMock } from 'appConstants';
 const init = async ( store ) =>
 {
     logger.info( 'Registering SAFE Network Protocols' );
-    registerSafeProtocol();
-    registerSafeAuthProtocol();
-
-    blockNonSAFERequests();
+    try
+    {
+        registerSafeProtocol( store );
+        registerSafeAuthProtocol( store );
+        blockNonSAFERequests();
+    }
+    catch ( e )
+    {
+        logger.error( 'Load extensions error: ', e );
+    }
 };
 
 const onOpen = ( store ) =>

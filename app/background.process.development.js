@@ -17,6 +17,9 @@ import { initAnon, initMock } from 'extensions/safe/network';
 import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import manageRemoteCalls from './background.manageRemoteCalls';
 import sysUri from 'extensions/safe/ffi/sys_uri';
+import { onInitBgProcess }  from './extensions';
+import { setupServerVars, startServer } from './server';
+import { remote } from 'electron';
 
 import * as ffiLoader from 'extensions/safe/auth-api/ffiLoader';
 
@@ -29,7 +32,7 @@ const manageLibLoading = ( store ) =>
     const listenerState = store.getState();
     const islistenerMock = listenerState.peruseApp.isMock;
 
-    if( islistenerMock === mockStatus )
+    if ( islistenerMock === mockStatus )
         return;
 
     mockStatus = islistenerMock;
@@ -40,17 +43,27 @@ const manageLibLoading = ( store ) =>
     const authLibStatus = theAPI.getLibStatus();
     logger.verbose( 'Authenticator lib status: ', authLibStatus );
     store.dispatch( authActions.setAuthLibStatus( authLibStatus ) );
-}
+    if ( authLibStatus )
+    {
+        initAnon( store );
+    }
+};
+
+const initSafeServer = ( store ) =>
+{
+    const server = setupServerVars();
+    onInitBgProcess( server, store );
+    startServer( server );
+};
 
 const init = async ( ) =>
 {
-    logger.info( 'Init of bg process.' );
     // const initialState = {};
 
     // Add middleware from extensions here. TODO: this should be be unified somewhere.
     // const loadMiddlewarePackages = [];
     const store = configureStore( {}, [], true );
-
+    initSafeServer( store );
 
     i18n.configure( I18N_CONFIG );
     i18n.setLocale( 'en' );
@@ -77,19 +90,15 @@ const init = async ( ) =>
         console.log( e );
     }
 
-    store.subscribe( async () =>
+    store.subscribe( () =>
     {
         manageRemoteCalls( store );
         handlePeruseStoreChanges( store );
         manageLibLoading( store );
     } );
-
-
 };
 
 init( );
-
-
 
 window.onerror = function ( error, url, line )
 {

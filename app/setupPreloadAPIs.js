@@ -178,6 +178,15 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
             if ( theCall.done && callPromises.resolve )
             {
+                if ( theCall.name === 'login' )
+                {
+                    logger.info('store subscribe calls: ', calls);
+                    logger.info('pendingCalls: ', pendingCalls);
+                    logger.info('call Promises: ', callPromises);
+		    // QUESTION: callPromises.resolve logs `null` \
+		    // Why is the condition on line  115 passing?
+                    logger.info('callpromises.resolve: ', callPromises.resolve);
+                }
                 pendingCalls[theCall.id] = theCall;
 
                 let callbackArgs = theCall.response;

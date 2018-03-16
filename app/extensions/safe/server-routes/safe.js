@@ -1,8 +1,8 @@
 import logger from 'logger';
+import { getPeruseAppObj } from '../network';
+import { setWebFetchStatus } from '../../../actions/web_fetch_actions';
 
-// import { getPeruseAppObj } from '../network';
-
-const safeRoute = {
+const safeRoute = ( store ) => ( {
     method  : 'GET',
     path    : '/safe/{link*}',
     handler : async ( request, reply ) =>
@@ -11,9 +11,7 @@ const safeRoute = {
         {
             const link = `safe://${request.params.link}`;
 
-            // TODO: Move to bg process. OR: How do we get app?
-            // const app = getPeruseAppObj() || {};
-            const app =  {};
+            const app = getPeruseAppObj() || {};
             const headers = request.headers;
             let isRangeReq = false;
             const BYTES = 'bytes=';
@@ -59,39 +57,53 @@ const safeRoute = {
             {
                 options.range = { start, end };
             }
+            store.dispatch( setWebFetchStatus( {
+                fetching : true,
+                link,
+                options  : JSON.stringify( options )
+            } ) );
+            let data = null;
+            try
+            {
+	        // TODO: At this point in the code `app` has a null\
+		// connection, causing `1001` error
+                data = await app.webFetch( link, options );
+            }
+            catch ( error )
+            {
+                logger.error( error.code, error.message );
+                store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
+                return reply( error.message || error );
+            }
+            store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
-            // const data = await app.webFetch( link, options );
+            if ( isRangeReq )
+            {
+                return reply( data.body )
+                    .code( 206 )
+                    .type( data.headers['Content-Type'] )
+                    .header( 'Content-Range', data.headers['Content-Range'] )
+                    .header( 'Content-Length', data.headers['Content-Length'] );
+            }
 
-            // if ( isRangeReq )
-            // {
-                return reply( 'nothing yet...waiting for webfetch merge. this is a placeholder to get e2e tests going...' )
-            //         .code( 206 )
-            //         .type( data.headers['Content-Type'] )
-            //         .header( 'Content-Range', data.headers['Content-Range'] )
-            //         .header( 'Content-Length', data.headers['Content-Length'] );
-            // }
-            //
-            // return reply( data.body )
-            //     .type( data.headers['Content-Type'] )
-            //     .header( 'Transfer-Encoding', 'chunked' )
-            //     .header( 'Accept-Ranges', 'bytes' )
+            return reply( data.body )
+                .type( data.headers['Content-Type'] )
+                .header( 'Transfer-Encoding', 'chunked' )
+                .header( 'Accept-Ranges', 'bytes' );
         }
         catch ( e )
         {
             logger.error( e );
 
-            if( e.code && e.code === -302 )
+            if ( e.code && e.code === -302 )
             {
                 return reply( 'Requested Range Not Satisfiable' )
                     .code( 416 );
             }
-            else
-            {
-                return reply( e.message || e );
-            }
+            return reply( e.message || e );
         }
     }
-};
+} );
 
 
 export default safeRoute;

@@ -12,8 +12,7 @@ const authRoute = {
         {
             const link = request.params.link;
             const linkUrl = url.parse( link );
-
-            let authDistLocale = isRunningPackaged ? `../extensions/safe/` : `../`;
+            let authDistLocale = isRunningPackaged ? `../extensions/safe/` : `./extensions/safe/`;
             authDistLocale = isRunningSpectronTest ? `extensions/safe/` : authDistLocale;
 
             const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/temp_dist/' );

@@ -43,6 +43,12 @@ const initialState = {
     }],
     ui : {
         addressBarIsSelected : false
+    },
+    webFetch : {
+        fetching : false,
+        link     : '',
+        error    : null,
+        options  : ''
     }
 };
 

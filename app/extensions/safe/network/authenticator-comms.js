@@ -1,32 +1,26 @@
-// import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
-import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';
+import { handleAuthUrl } from 'actions/authenticator_actions';
+import { initializeApp } from '@maidsafe/safe-node-app';
+import { APP_INFO, CONFIG, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import { addNotification, clearNotification } from 'actions/notification_actions';
-import { callIPC, setIPCStore } from '../ffi/ipc';
-// import ipc from '../ffi/ipc';
-
-//  TODO: Move to constants.
-import AUTH_CONSTANTS from '../auth-constants';
+import { setIPCStore } from '../ffi/ipc';
 
 const queue = [];
 let peruseAppObj;
 let store;
 let browserAuthReqUri;
 
-
 export const authFromQueue = async () =>
 {
     if ( queue.length )
     {
-        authFromInteralResponse( queue[0] ); // hack for testing
+        authFromInternalResponse( queue[0] ); // hack for testing
     }
 };
 
-
-export const authFromInteralResponse = async ( res, isAuthenticated ) =>
+export const authFromInternalResponse = async ( res, isAuthenticated ) =>
 {
-    //TODO: This logic shuld be in BG process for peruse.
     try
     {
         // for webFetch app only
@@ -38,9 +32,9 @@ export const authFromInteralResponse = async ( res, isAuthenticated ) =>
         {
             let message = err.message;
 
-            if( err.message.startsWith( 'Unexpected (probably a logic') )
+            if ( err.message.startsWith( 'Unexpected (probably a logic' ) )
             {
-                message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
+                message = 'Check your current IP address matches your registered address at invite.maidsafe.net';
             }
             store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
         }
@@ -50,14 +44,12 @@ export const authFromInteralResponse = async ( res, isAuthenticated ) =>
     }
 };
 
-
-
 export const getPeruseAppObj = () =>
     peruseAppObj;
 
 export const clearAppObj = () =>
 {
-    peruseAppObj.clearObjectCache()
+    peruseAppObj.clearObjectCache();
 };
 
 export const handleSafeAuthAuthentication = ( uri, type ) =>
@@ -67,8 +59,7 @@ export const handleSafeAuthAuthentication = ( uri, type ) =>
         throw new Error( 'Auth URI should be a string' );
     }
 
-    callIPC.decryptRequest( null, uri, type || AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP );
-
+    store.dispatch( handleAuthUrl( uri ) );
 };
 
 export const getPeruseAuthReqUri = () => browserAuthReqUri;
@@ -76,7 +67,7 @@ export const getPeruseAuthReqUri = () => browserAuthReqUri;
 export const initAnon = async ( passedStore ) =>
 {
     store = passedStore;
-    setIPCStore( store );
+    // setIPCStore( store );
 
     logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
 
@@ -84,7 +75,7 @@ export const initAnon = async ( passedStore ) =>
     {
         // does it matter if we override?
         peruseAppObj = await initializeApp( APP_INFO.info, null, {
-            libPath        : CONFIG.LIB_PATH,
+            libPath        : CONFIG.SAFE_NODE_LIB_PATH,
             registerScheme : false,
             joinSchemes    : [PROTOCOLS.SAFE],
             configPath     : CONFIG.CONFIG_PATH
@@ -100,7 +91,7 @@ export const initAnon = async ( passedStore ) =>
         if ( authType.action === 'auth' )
         {
             // await peruseAppObj.auth.openUri( authReq.uri );
-            handleSafeAuthAuthentication( authReq.uri );
+            handleSafeAuthAuthentication( authReq.uri, null );
         }
 
         return peruseAppObj;
@@ -120,7 +111,7 @@ export const handleSafeAuthUrlReception = async ( res ) =>
     }
 
     let authUrl = null;
-    logger.info( 'Received URL response', res);
+    logger.info( 'Received URL response', res );
 
     if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` )
     {
@@ -166,12 +157,15 @@ export function parseSafeAuthUrl( url, isClient )
     return safeAuthUrl;
 }
 
-
 export const requestAuth = async () =>
 {
     try
     {
-        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        peruseAppObj = await initializeApp(
+            APP_INFO.info,
+            null,
+            { libPath: CONFIG.SAFE_NODE_LIB_PATH }
+        );
 
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 

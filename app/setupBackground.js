@@ -10,9 +10,7 @@ import {
 
 const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
 let backgroundProcess = null;
-
-const setupBackground = () =>
-{
+const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
     logger.info( 'Setting up Background Process', backgroundProcess );
 
     if ( backgroundProcess === null )
@@ -20,16 +18,16 @@ const setupBackground = () =>
         logger.info('loading bg:', BACKGROUND_PROCESS );
 
         backgroundProcess = new BrowserWindow( {
-            width: 300,
-            height: 450,
-            show: false,
-            frame: false,
-            fullscreenable: false,
-            resizable: false,
-            transparent: true,
+            width          : 300,
+            height         : 450,
+            show           : false,
+            frame          : false,
+            fullscreenable : false,
+            resizable      : false,
+            transparent    : true,
             webPreferences : {
                 // partition               : 'persist:safe-tab', // TODO make safe?
-                nodeIntegration         : true,
+                nodeIntegration     : true,
                 // Prevents renderer process code from not running when window is hidden
                 backgroundThrottling: false
             }
@@ -50,14 +48,18 @@ const setupBackground = () =>
 
             if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {
-                backgroundProcess.webContents.openDevTools()
+                backgroundProcess.webContents.openDevTools();
             }
+            resolve( backgroundProcess );
+        } );
+
+        backgroundProcess.webContents.on( 'did-fail-load', ( event, code, message ) =>
+        {
+            reject( message );
         } );
 
         backgroundProcess.loadURL( BACKGROUND_PROCESS );
     }
-
-    return backgroundProcess;
-};
+} );
 
 export default setupBackground;

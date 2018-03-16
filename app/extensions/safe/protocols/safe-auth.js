@@ -1,18 +1,14 @@
-import path from 'path';
-import fs from 'fs';
-import url from 'url';
 import logger from 'logger';
-import { CONFIG, APP_INFO, PROTOCOLS, isRunningUnpacked } from 'appConstants';
+import { CONFIG, PROTOCOLS } from 'appConstants';
 
-import { session, app } from 'electron';
+import { remote } from 'electron';
 /* eslint-enable import/extensions */
-
 
 export const registerSafeAuthProtocol = () =>
 {
     logger.verbose( 'Registering safe-auth scheme');
     const partition = CONFIG.SAFE_PARTITION;
-    const ses = session.fromPartition( partition );
+    const ses = remote.session.fromPartition( partition );
 
     ses.protocol.registerHttpProtocol( PROTOCOLS.SAFE_AUTH, ( req, cb ) =>
     {

@@ -8,6 +8,7 @@ import tabs from './tabs';
 import peruseApp from './peruseApp';
 import remoteCalls from './remoteCalls';
 import ui from './ui';
+import webFetch from './webFetch';
 
 const rootReducer = combineReducers( {
     authenticator,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers( {
     routing,
     remoteCalls,
     tabs,
-    ui
+    ui,
+    webFetch
 } );
 
 export default rootReducer;
