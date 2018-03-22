@@ -41,7 +41,6 @@ script:
 # - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
   # fi
 - yarn run package
-- yarn run post-pack
 
 after_success:
 - ls release

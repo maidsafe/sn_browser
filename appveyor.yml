@@ -52,7 +52,6 @@ build_script:
   - node --version
   - yarn --version
   - yarn run package-win
-  - yarn run post-pack
 
 after_build:
   # - ps:

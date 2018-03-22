@@ -1,5 +1,5 @@
 {
-  "name": "peruse",
+  "name": "Peruse",
   "identifier": "net.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
   "version": "0.5.1",
@@ -37,9 +37,9 @@
     "dev": "cross-env START_HOT=1 yarn run hot-updates-server",
     "mock-dev": "yarn run dev",
     "prod-dev": "cross-env START_HOT=1 yarn run hot-updates-server-live",
-    "package": "yarn run build && build --publish never",
+    "package": "yarn run build && build --publish never && yarn post-pack",
     "package-only": "build --publish never",
-    "package-win": "yarn run build && build --win --x64",
+    "package-win": "yarn run build && build --win --x64 &&  yarn post-pack",
     "package-linux": "yarn run build && build --linux",
     "package-all": "yarn run build && build -mwl",
     "post-pack": "node ./post-pack.js",
