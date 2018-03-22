@@ -16,7 +16,7 @@ import { spawn, execSync } from 'child_process';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import baseConfig from './webpack.config.base';
 
-const port = process.env.PORT || 1212;
+const port = process.env.PORT || 1214;
 const publicPath = `http://localhost:${port}/dist`;
 const dll = path.resolve( process.cwd(), 'dll' );
 const manifest = path.resolve( dll, 'vendor.json' );
