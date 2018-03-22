@@ -61,8 +61,9 @@ const init = async ( ) =>
         id     : 'net.maidsafe.app.browser.authenticator',
         name   : 'SAFE Browser Authenticator plugin',
         icon   : 'iconPath'
-     }
+    }
 
+    logger.verbose( 'Auth application info', authAppInfo );
     sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
 
     try

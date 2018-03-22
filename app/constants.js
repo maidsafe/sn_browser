@@ -5,15 +5,24 @@ import pkg from 'appPackage';
 const allPassedArgs = process.argv;
 
 let hasMockFlag = false;
+let hasDebugFlag = false;
 
 if( allPassedArgs.includes('--mock') )
 {
     hasMockFlag = true;
 }
 
+if( allPassedArgs.includes('--debug') )
+{
+    hasDebugFlag = true;
+}
+
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
 export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
+
+//other considerations?
+export const isRunningDebug = hasDebugFlag;
 export const isHot = process.env.HOT || 0;
 
 // only to be used for inital store setting in main process. Not guaranteed correct for renderers.

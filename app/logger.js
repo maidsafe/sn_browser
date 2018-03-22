@@ -3,6 +3,7 @@ import util from 'util';
 import { env,
     isRunningUnpacked,
     isRunningPackaged,
+    isRunningDebug,
     isRunningProduction,
     isRunningMock,
     isRunningSpectronTest,
@@ -19,7 +20,7 @@ if( log.transports )
     log.transports.console.level = 'silly';
     log.transports.file.level = 'silly';
 
-    if( isRunningPackaged || isRunningSpectronTest )
+    if( !isRunningDebug && ( isRunningPackaged || isRunningSpectronTest ) )
     {
         log.transports.console.level = 'warn';
         log.transports.file.level = 'warn';
@@ -52,6 +53,7 @@ if( log.info && log.verbose && inMainProcess )
 
     log.verbose( 'Running with derived constants:' );
     log.verbose( '' );
+    log.verbose( 'isRunningDebug?', isRunningDebug );
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );
     log.verbose( 'isRunningProduction?', isRunningProduction );

@@ -10,6 +10,7 @@ import SafeLib from './safe_lib';
 import authenticator from './authenticator';
 import * as types from './refs/types';
 import CONSTANTS from '../auth-constants';
+import logger from 'logger';
 
 const _mods = Symbol('_mods');
 const _libPath = Symbol('_libPath');
@@ -22,10 +23,12 @@ class LibLoader {
 
   load( isMock = false ) {
 
-      if( isMock )
-      {
-          this[_libPath] = CONSTANTS.LIB_PATH_MOCK.SAFE_AUTH[os.platform()];
-      }
+    if( isMock )
+    {
+       this[_libPath] = CONSTANTS.LIB_PATH_MOCK.SAFE_AUTH[os.platform()];
+    }
+
+    logger.verbose('Auth lib location loading: ', this[_libPath] )
 
     const safeLib = {};
     const RTLD_NOW = ffi.DynamicLibrary.FLAGS.RTLD_NOW;

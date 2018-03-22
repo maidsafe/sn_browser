@@ -1,7 +1,11 @@
 import { BrowserWindow } from 'electron';
 import logger from 'logger';
 import path from 'path';
-import { isRunningUnpacked, isRunningDevelopment } from 'appConstants';
+import {
+    isRunningUnpacked,
+    isRunningDebug,
+    isRunningDevelopment
+} from 'appConstants';
 
 const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
 let backgroundProcess = null;
@@ -41,10 +45,10 @@ const setupBackground = () =>
         {
             logger.verbose( 'Background process renderer loaded.');
 
-            // if( isRunningUnpacked || isRunningDevelopment )
-            // {
+            if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
+            {
                 backgroundProcess.webContents.openDevTools()
-            // }
+            }
         } );
 
         backgroundProcess.loadURL( BACKGROUND_PROCESS );

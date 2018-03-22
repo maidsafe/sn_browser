@@ -15,6 +15,10 @@ eg, on OSX:
 
 `NODE_ENV=dev open Peruse.app --args --mock`
 
+### Debugging
+
+A `--debug` flag is also available to get extra logs and devtool windows when working with a packaged application.
+
 ### Compiling
 
 Make sure you have both git and [yarn](https://yarnpkg.com/en/docs/install) installed.
