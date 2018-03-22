@@ -34,6 +34,7 @@ before_script:
 script:
 - yarn run build
 - yarn run test
+- yarn run test exts
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
 # - yarn run test e2e;
