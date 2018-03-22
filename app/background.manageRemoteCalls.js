@@ -32,7 +32,6 @@ const manageRemoteCalls = async ( store ) =>
         {
             if ( !theCall.inProgress && !pendingCallIds[theCall.id] )
             {
-                logger.info('working on the callll', theCall)
                 // hack to prevent multi store triggering.
                 // not needed for auth via redux.
                 pendingCallIds[theCall.id] = 'pending';

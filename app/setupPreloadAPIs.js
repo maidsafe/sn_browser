@@ -112,8 +112,6 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
             const callPromises = pendingCalls[theCall.id];
 
-
-
             if ( theCall.done && callPromises.resolve )
             {
                 pendingCalls[theCall.id] = theCall;
@@ -122,7 +120,6 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
                 callbackArgs = [theCall.response];
 
-                logger.info('acting upon received callllllllll', theCall.name, theCall )
                 if ( theCall.isListener )
                 {
                     // error first
@@ -144,7 +141,6 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
                 ) );
                 delete pendingCalls[theCall.id];
             }
-
         } );
     } );
 };
@@ -159,7 +155,6 @@ const createRemoteCall = ( functionName, store ) =>
 
     const remoteCall = ( ...args ) => new Promise( ( resolve, reject ) =>
     {
-        console.log( 'doing remote calllll', functionName );
         const callId = Math.random().toString( 36 );
 
         const theCall = {
@@ -167,7 +162,6 @@ const createRemoteCall = ( functionName, store ) =>
             name : functionName,
             args
         };
-        logger.info( 'about to add ', theCall.name, theCall.id );
 
         // but we need store.
         store.dispatch( remoteCallActions.addRemoteCall( theCall ) );

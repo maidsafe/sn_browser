@@ -75,7 +75,6 @@ const openWindow = ( store ) =>
 
     mainWindow.webContents.on( 'did-finish-load', () =>
     {
-        logger.info('finished load window>>>>>>>>>>>>>>>>')
         if ( !mainWindow )
         {
             throw new Error( '"mainWindow" is not defined' );
