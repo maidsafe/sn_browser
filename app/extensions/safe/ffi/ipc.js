@@ -7,6 +7,7 @@ import CONSTANTS from '../auth-constants';
 import config from '../config';
 import { handleConnResponse } from '../network';
 import logger from 'logger';
+import errConst from '../err-constants';
 
 config.i18n();
 
@@ -202,12 +203,12 @@ const onAuthDecision = ( e, authData, isAllowed ) =>
     {
         return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
     }
+
     authenticator.encodeAuthResp( authData, isAllowed )
         .then( ( res ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onAuthDecisionRes', reqQ.req );
-            logger.info( errConst.AUTH_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
