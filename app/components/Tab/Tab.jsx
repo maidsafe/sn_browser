@@ -152,6 +152,8 @@ export default class Tab extends Component
             return;
         }
 
+        logger.silly( 'Webview: did receive updated props' );
+
         if ( nextProps.url )
         {
             const { webview } = this;
@@ -214,7 +216,6 @@ export default class Tab extends Component
 
     didStartLoading( )
     {
-        const { updateTab, index } = this.props;
         logger.silly( 'webview started loading' );
 
         this.updateBrowserState( { loading: true } );
@@ -227,6 +228,8 @@ export default class Tab extends Component
 
     pageTitleUpdated( e )
     {
+        logger.silly( 'Webview: page title updated' );
+
         const title = e.title;
         const { updateTab, index, isActiveTab } = this.props;
 
@@ -239,6 +242,7 @@ export default class Tab extends Component
 
     pageFaviconUpdated( e )
     {
+        logger.silly( 'Webview: page favicon updated' );
         // const {index, tabDataFetched} = this.props
         // tabDataFetched(index, {webFavicon: e.favicons[0]})
     }
@@ -248,6 +252,8 @@ export default class Tab extends Component
         const { updateTab, index } = this.props;
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
+
+        logger.silly( 'webview did navigate' );
 
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
@@ -263,6 +269,8 @@ export default class Tab extends Component
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
+        logger.silly( 'Webview: did navigate in page' );
+
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
@@ -277,6 +285,9 @@ export default class Tab extends Component
 
         const prev = oldURL;
         const next = newURL;
+
+        logger.silly( 'Webview: did get redirect request' );
+
 
         if ( prev === this.state.browserState.url )
         {
@@ -393,6 +404,8 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
+        logger.silly( 'Webview: loading url' );
+
         const url = addTrailingSlashIfNeeded( input );
 
         if ( !urlHasChanged( this.state.browserState.url, url) )
@@ -412,24 +425,12 @@ export default class Tab extends Component
             // webview.src = url;
             webview.loadURL( url );
         }
-        // }
-    }
-
-    shouldComponentUpdate( newProps )
-    {
-        if ( newProps.isActiveTab !== this.props.isActiveTab )
-        {
-            return true;
-        }
-
-        return false;
     }
 
 
     render()
     {
-        const { index, isActiveTab, tabData, tabPath, controls } = this.props;
-        const { browserState } = this.state;
+        const { isActiveTab } = this.props;
 
         const preloadFile = remote.getGlobal( 'preloadFile' );
         const injectPath = preloadFile; // js we'll be chucking in

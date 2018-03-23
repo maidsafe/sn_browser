@@ -47,6 +47,9 @@ if( log.transports )
 if( log.info && log.verbose && inMainProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
+    log.verbose( '' );
+    log.verbose( '' );
+    log.verbose( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( `      Started with node env: ${env}` );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

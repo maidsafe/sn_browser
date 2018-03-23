@@ -1,6 +1,5 @@
 .tab
 {
-    z-index:           0;
     display:           flex;
     position:          absolute;
     background-color:  white;
@@ -8,12 +7,13 @@
     right: 0;
     left: 0;
     bottom: 0;
+    visibility: hidden;
 }
 
 
 
 .activeTab
 {
+    visibility: visible;
     composes: tab;
-    z-index: 1;
 }
