@@ -96,11 +96,11 @@ describe( 'main window', () =>
 
     test( 'has safe:// protocol', async () =>
     {
-        const { client } = app;
+        const { client } = await app;
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
 
-        console.log('THIS ONNENNEEE')
+        console.log('THIS ONNENNEEE', client)
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         await client.pause( 2500 );
 

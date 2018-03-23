@@ -59,7 +59,7 @@ const init = async ( ) =>
     const authAppInfo = {
         ...mainAppInfo,
         id     : 'net.maidsafe.app.browser.authenticator',
-        name   : 'SAFE Browser Authenticator plugin',
+        name   : 'SAFE Browser Authenticator',
         icon   : 'iconPath'
     }
 
