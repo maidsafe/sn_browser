@@ -1,6 +1,12 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [0.5.2]
+### Fixed 
+- Add missing `errConst` in ff/ipc.js
+### Changed
+- Change default port for webpack-dev-server
+
 #### [0.5.1]
 ### Fixed 
 - Reopen closed tab works.
