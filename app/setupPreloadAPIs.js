@@ -112,6 +112,11 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
             const callPromises = pendingCalls[theCall.id];
 
+            if( !callPromises )
+            {
+                return;
+            }
+
             if ( theCall.done && callPromises.resolve )
             {
                 pendingCalls[theCall.id] = theCall;
@@ -134,6 +139,8 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
             }
             else if ( theCall.error && callPromises.reject )
             {
+                pendingCalls[theCall.id] = theCall;
+
                 logger.error( 'remoteCall ', theCall.name, 'was rejected with: ', theCall.error );
                 callPromises.reject( new Error( theCall.error.message || theCall.error ) );
                 store.dispatch( remoteCallActions.removeRemoteCall(
