@@ -21,9 +21,6 @@ export default merge.smart( baseConfig, {
     output : {
         path       : __dirname,
         filename : './app/webPreload.js'
-
-        // publicPath : '../dist/'
-        // name: 'hello'
     },
 
     stats : 'errors-only',
@@ -42,20 +39,5 @@ export default merge.smart( baseConfig, {
             'process.env.NODE_ENV' : JSON.stringify( process.env.NODE_ENV || 'production' )
         } ),
 
-        /**
-     * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
-     */
-        new UglifyJsPlugin(),
-
-        // new ExtractTextPlugin( 'style.css' ),
-
-        /**
-     * Dynamically generate index.html page
-     */
-        // new HtmlWebpackPlugin( {
-        //     filename : '../app.html',
-        //     template : 'app/app.html',
-        //     inject   : false
-        // } )
     ],
 } );

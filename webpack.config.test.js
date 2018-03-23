@@ -12,6 +12,8 @@ module.exports = {
     output : {
         libraryTarget : 'commonjs2'
     },
+    mode : 'development',
+
     module : {
         // Use base + development loaders, but exclude 'babel-loader'
         rules : devConfig.module.rules

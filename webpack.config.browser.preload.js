@@ -10,6 +10,7 @@ import baseConfig from './webpack.config.base';
 
 export default merge.smart( baseConfig, {
     devtool : 'source-map',
+    mode : 'production',
 
     target : 'electron-renderer',
 
@@ -34,8 +35,6 @@ export default merge.smart( baseConfig, {
      */
         new webpack.DefinePlugin( {
             'process.env.NODE_ENV' : JSON.stringify( process.env.NODE_ENV || 'production' )
-        } ),
-
-        new UglifyJsPlugin(),
+        } )
     ],
 } );

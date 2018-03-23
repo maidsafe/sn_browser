@@ -11,7 +11,7 @@ export default merge.smart( baseConfig, {
     devtool : 'source-map',
 
     target : 'electron-renderer',
-
+    mode : 'production',
     entry : ['babel-polyfill', './app/background.process.development'],
 
     // 'main.js' in root
@@ -23,10 +23,6 @@ export default merge.smart( baseConfig, {
     stats : 'errors-only',
 
     plugins : [
-    /**
-     * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
-     */
-        new UglifyJsPlugin(),
 
         /**
      * Create global constants which can be configured at compile time.

@@ -14,6 +14,7 @@ export default merge.smart( baseConfig, {
     context : process.cwd(),
 
     devtool : 'eval',
+    mode : 'development',
 
     target : 'electron-renderer',
 
