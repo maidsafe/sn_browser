@@ -238,7 +238,6 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onContDecisionRes', reqQ.req );
-            logger.info( errConst.CONTAINER_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
@@ -268,7 +267,6 @@ const onSharedMDataDecision = ( e, data, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onSharedMDataRes', reqQ.req );
-            logger.info( errConst.SHAREMD_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
