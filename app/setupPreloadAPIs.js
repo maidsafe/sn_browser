@@ -14,10 +14,69 @@ window.eval = global.eval = () =>
     throw new Error( 'Sorry, peruse does not support window.eval().' );
 };
 
+const setupSafeAPIs = ( store ) =>
+{
+    logger.info( 'Setup up SAFE Dom API via @maidsafe/safe-node-app' );
+    window.safe = { ...safe };
+
+    window.safe.initializeApp = async ( appInfo, netStateCallback, options ) =>
+    {
+        // TODO: Throw warnings for these options.
+        const optionsToUse = {
+            ...options,
+            registerScheme : false,
+            joinSchemes    : false,
+            libPath        : null,
+            configPath     : null
+        };
+
+        let app = await safe.initializeApp( appInfo, netStateCallback, optionsToUse );
+
+        app.auth.openUri = () =>
+        {
+            logger.warn('This function is not accessible in the Browser DOM. Please check the docs:')
+        };
+
+        return app;
+    };
+
+    window.safe.fromAuthUri = async ( appInfo, authUri, netStateCallback, options ) =>
+    {
+        // TODO: Throw warnings for these options.
+        const optionsToUse = {
+            ...options,
+            registerScheme : false,
+            joinSchemes    : false,
+            libPath        : null,
+            configPath     : null
+        };
+
+        let app = await window.safe.initializeApp( appInfo, netStateCallback, optionsToUse );
+
+        await app.auth.loginFromURI( authURI );
+        return app;
+    };
+
+    /**
+     * Authorise an app via the browser, returns a promise resolving to a URI string.
+     * @param  {[type]}  authUri [description]
+     * @return {Promise}         resolves to URI string.
+     */
+    window.safe.authorise = async ( authUri ) =>
+    {
+        if( !authUri || typeof authUri !== 'string' ) throw new Error('AuthUri string is required') return;
+
+        return await createRemoteCall( 'authenticateFromURI', store )( authUri );
+    };
+};
+
 const setupPreloadedSafeAuthAPIs = ( store ) =>
 {
-    window.safe = { ...safe, fromAuthURI: null };
+    setupSafeAPIs( store );
     window[pkg.name] = { version: VERSION };
+
+    // TODO: Abstract into extension.
+
 
     if ( !window.location.protocol === PROTOCOLS.SAFE_AUTH )
     {
@@ -112,7 +171,7 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
 
             const callPromises = pendingCalls[theCall.id];
 
-            if( !callPromises )
+            if ( !callPromises )
             {
                 return;
             }
@@ -152,7 +211,6 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
     } );
 };
 
-
 const createRemoteCall = ( functionName, store ) =>
 {
     if ( !functionName )
@@ -170,7 +228,6 @@ const createRemoteCall = ( functionName, store ) =>
             args
         };
 
-        // but we need store.
         store.dispatch( remoteCallActions.addRemoteCall( theCall ) );
 
         pendingCalls[theCall.id] = {
