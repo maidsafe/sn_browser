@@ -73,7 +73,7 @@ const handleSafeUrls = ( url ) =>
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...
-    else if ( parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
+    else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
     {
         store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
     }
