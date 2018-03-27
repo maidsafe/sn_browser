@@ -65,8 +65,6 @@ const safeRoute = ( store ) => ( {
             let data = null;
             try
             {
-	        // TODO: At this point in the code `app` has a null\
-		// connection, causing `1001` error
                 data = await app.webFetch( link, options );
             }
             catch ( error )
