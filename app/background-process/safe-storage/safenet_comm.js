@@ -17,9 +17,6 @@ const appInfo = {
     name: 'SAFE Browser',
     vendor: 'MaidSafe.net Ltd'
   },
-  initOpts: {
-    registerScheme: false
-  },
   authOpts: {
     own_container: true
   },
@@ -69,7 +66,9 @@ export const authoriseApp = ( ) => {
   return new Promise( (resolve, reject ) =>
   {
     appObj = {};
-    let dataStream = safeApp.initialise(appInfo.initInfo, null, appInfo.initOpts);
+    // TODO: support init options from the window.safeApp.initialise plugin function
+    // which cannot be provided at the moment
+    let dataStream = safeApp.initialise(appInfo.initInfo);
 
     dataStream.on('data', ( datum ) =>
     {
