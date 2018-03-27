@@ -1,6 +1,10 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [0.5.3]
+### Changed 
+- Electron to 1.8.4
+
 #### [0.5.2]
 ### Fixed 
 - Add missing `errConst` in ff/ipc.js
