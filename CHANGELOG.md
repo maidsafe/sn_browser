@@ -1,5 +1,23 @@
 # SAFE Browser Changelog
 
+# [0.10.2] - 28-3-2018
+### Changed
+- Upgrade electron to v1.8.4 to fix reported security vulnerabilities
+
+### Fixed
+- Keep track of handles not being freed when refreshing a page on the same publicId so they are effectively freed upon closing the tab or loading a page form a different publicId
+
+### SAFE libraries Dependencies
+#### Direct Dependencies
+- beaker-plugin-safe-app: v0.5.2
+- beaker-plugin-safe-authenticator: v0.5.0
+
+#### Indirect Dependencies
+- @maidsafe/safe-node-app: v0.8.1
+- safe_app: v0.6.0
+- safe_authenticator: v0.6.0
+- system_uri: v0.4.0
+
 # [0.10.1] - 12-3-2018
 ### Changed
 - Upgrade beaker-plugin-safe-app to v0.5.2

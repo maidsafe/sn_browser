@@ -147,7 +147,11 @@ function onAddTab (page) {
 }
 
 function onRemoveTab (page) {
-  ipcRenderer.send('onTabRemove', page.safeAppGroupId);
+  page.safeAppGroupIds.map((groupId) => {
+    ipcRenderer.send('onTabRemove', groupId);
+    delete page.safeAppGroupIds[groupId];
+  });
+
   getTabEl(page, tabEl => tabEl.parentNode.removeChild(tabEl))
   repositionTabs()
 }
@@ -188,7 +192,6 @@ function pageURLChangedForSafe(url, prevUrl)
 }
 
 function onLoadingTab (page) {
-
   let url = page.getIntendedURL();
   let prev = page.prevUrl;
   page.prevUrl = url;
@@ -196,7 +199,10 @@ function onLoadingTab (page) {
   // SAFE: Only pass onTabUpdate when we're changing the site base or main publicID
   if( pageURLChangedForSafe( url, prev ) )
   {
-    ipcRenderer.send('onTabUpdate', page.safeAppGroupId);
+    page.safeAppGroupIds.map((groupId) => {
+      ipcRenderer.send('onTabUpdate', groupId);
+      delete page.safeAppGroupIds[groupId];
+    });
   }
 
   getTabEl(page, tabEl => yo.update(tabEl, drawTab(page)))
