@@ -1,8 +1,11 @@
 # SAFE Browser Changelog
 
-# [Unreleased]
+# [0.10.2] - 28-3-2018
 ### Changed
 - Upgrade electron to v1.8.4 to fix reported security vulnerabilities
+
+### Fixed
+- Keep track of handles not being freed when refreshing a page on the same publicId so they are effectively freed upon closing the tab or loading a page form a different publicId
 
 ### SAFE libraries Dependencies
 #### Direct Dependencies

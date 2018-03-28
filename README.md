@@ -50,6 +50,7 @@ A browser designed to open `safe://` websites on the SAFE Network.
     ```
 
     The packed SAFE Browser will be found inside `dist` folder.
+    In order to be able to connect to the live SAFE Network, a crust.config file shall be placed in the same path of the browser executable. You can find a copy of the crust.config file at `build/SAFE Browser.crust.config` and copy it onto `dist/safe-browser-<version>-<platform>/<safe browser exec name>.crust.config`.
 
 ### Troubleshooting
 
