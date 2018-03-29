@@ -7,7 +7,7 @@
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
   "scripts": {
-    "test": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 electron ./test/runTests.js",
+    "test": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./test/runTests.js",
     "test-e2e": "cross-env NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./test/runTests.js e2e",
     "test-exts": "yarn test exts",
     "test-watch": "yarn test --watch",

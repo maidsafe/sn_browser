@@ -7,32 +7,35 @@ const arg = process.argv[2];
 
 const argsArray = [ ...process.argv.slice( 2 ), '--notify'];
 let testCommand = path.normalize( './node_modules/.bin/electron' );
+let jestBinPath = './node_modules/.bin/jest';
+if (process.platform === 'win32') {
+    jestBinPath = './node_modules/jest/bin/jest.js';
+}
 
 switch ( process.argv[2] )
 {
     case ( 'e2e' ) :
     {
         pattern = `test${s}e2e${s}.+\\.spec\\.js`;
-        testCommand = path.normalize( './node_modules/.bin/jest' );
+        testCommand = path.normalize( jestBinPath );
         break;
     }
     case ( 'exts' ) :
     {
         pattern = `app${s}extensions${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
-        argsArray.unshift(path.normalize( './node_modules/.bin/jest' ))
+        argsArray.unshift( path.normalize( jestBinPath ) );
         break;
     }
     default :
     {
         pattern = `test${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
-        argsArray.unshift(path.normalize( './node_modules/.bin/jest' ))
+        argsArray.unshift( path.normalize( jestBinPath ) );
     }
 }
 
 argsArray.push( `--testPathPattern=${pattern}`);
 
 console.log('test spawinging withh: ', testCommand, argsArray)
-// path.normalize( './node_modules/.bin/jest' )
 
 const result = spawn.sync(
     testCommand,
