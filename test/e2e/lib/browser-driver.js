@@ -15,6 +15,8 @@ export const setClientToMainBrowserWindow = async( app ) =>
         // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
         const theWindow = await client.windowByIndex( i );
         const url = await client.getUrl();
+
+        console.log('this window has url', i, url);
         const urlObj = urlParse( url );
         // get the PeruseBrowserWindow
         // TODO: If more than one...? (checkFocus)
@@ -57,15 +59,15 @@ export const setAddress = async( app, url ) =>
 {
     const { client } = app;
 
-    await client.pause( 800 ); // need to wait a sec for the UI to catch up
+    await client.pause( 800 );
     await setClientToMainBrowserWindow( app );
     await client.waitUntilWindowLoaded()
     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
     await client.click( BROWSER_UI.ADDRESS_INPUT );
     await client.keys( '\uE003' ); // backspace
     await client.setValue( BROWSER_UI.ADDRESS_INPUT, url );
-    await client.pause( 500 ); // need to wait a sec for the UI to catch up
-    await client.keys( '\uE007' ); // enter
+    await client.pause( 500 );
+
 
     return
 
@@ -76,6 +78,8 @@ export const navigateTo = async ( app, url ) =>
 
     // TODO set tab + then...
     await setAddress( app, url);
+    await client.keys( '\uE007' ); // enter
+    await client.pause( 500 );
 
     return;
 
@@ -85,9 +89,13 @@ export const navigateTo = async ( app, url ) =>
 export const newTab = async ( app ) =>
 {
     const { client } = app;
-    const index = await client.getWindowCount();
+
+    let length = await client.getWindowCount();
+
     await setClientToMainBrowserWindow( app );
     await client.click( BROWSER_UI.ADD_TAB);
+    await client.pause( 500 );
 
-    return index;
+
+    return length  ;
 };

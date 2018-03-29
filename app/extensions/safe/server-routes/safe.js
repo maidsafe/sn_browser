@@ -64,7 +64,7 @@ const safeRoute = {
 
             // if ( isRangeReq )
             // {
-            //     return reply( data.body )
+                return reply( 'nothing yet...waiting for webfetch merge. this is a placeholder to get e2e tests going...' )
             //         .code( 206 )
             //         .type( data.headers['Content-Type'] )
             //         .header( 'Content-Range', data.headers['Content-Range'] )

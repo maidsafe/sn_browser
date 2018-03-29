@@ -4,6 +4,7 @@ import path from 'path';
 import {
     isRunningUnpacked,
     isRunningDebug,
+    isRunningSpectronTest,
     isRunningDevelopment
 } from 'appConstants';
 
@@ -35,15 +36,17 @@ const setupBackground = () =>
         } );
 
         // Hide the window when it loses focus
-        backgroundProcess.on('blur', () => {
-          if (!backgroundProcess.webContents.isDevToolsOpened()) {
-            backgroundProcess.hide()
-          }
-      });
+      //   backgroundProcess.on('blur', () => {
+      //     if (!backgroundProcess.webContents.isDevToolsOpened()) {
+      //       backgroundProcess.hide()
+      //     }
+      // });
 
         backgroundProcess.webContents.on( 'did-finish-load', () =>
         {
             logger.verbose( 'Background process renderer loaded.');
+
+            if( isRunningSpectronTest ) return;
 
             if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {

@@ -12,7 +12,12 @@
  */
 import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
 import logger from 'logger';
-import { isRunningUnpacked, isRunningPackaged, I18N_CONFIG, PROTOCOLS } from 'appConstants';
+import {
+    isRunningUnpacked,
+    isRunningSpectronTest,
+    isRunningPackaged,
+    I18N_CONFIG,
+    PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
 
@@ -89,7 +94,7 @@ if ( isRunningPackaged )
     sourceMapSupport.install();
 }
 
-if ( isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+if ( !isRunningSpectronTest && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -138,7 +143,7 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+    if ( !isRunningSpectronTest && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
     {
         await installExtensions();
     }

@@ -2,7 +2,7 @@ import { Application } from 'spectron';
 import electron from 'electron';
 import path from 'path';
 import { parse as urlParse } from 'url';
-import {removeTrailingSlash} from 'utils/urlHelpers';
+import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
     navigateTo,
     newTab,
@@ -11,11 +11,9 @@ import {
 } from './lib/browser-driver';
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
-jest.unmock('electron')
+jest.unmock( 'electron' );
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
-
-const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
 // TODO:
 // - Check for protocols/APIs? Via js injection?
@@ -34,18 +32,13 @@ describe( 'main window', () =>
         path : electron,
         args : [path.join( __dirname, '..', '..', 'app' )],
         env  : {
-            IS_SPECTRON: true
+            IS_SPECTRON : true
         }
     } );
 
-
-    console.log('appppp',app)
-
     beforeAll( async () =>
     {
-        await delay( 10000 )
         await app.start();
-        await setClientToMainBrowserWindow( app );
         await app.client.waitUntilWindowLoaded();
     } );
 
@@ -57,9 +50,8 @@ describe( 'main window', () =>
         }
     } );
 
-    test( 'window loaded', async () => {
-        return await app.browserWindow.isVisible();;
-    });
+    test( 'window loaded', async () =>
+        await app.browserWindow.isVisible() );
     // it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     // {
     //     const { client } = app;
@@ -96,28 +88,22 @@ describe( 'main window', () =>
 
     test( 'has safe:// protocol', async () =>
     {
+        expect.assertions( 2 );
+
+        await setClientToMainBrowserWindow( app );
         const { client } = await app;
         const tabIndex = await newTab( app );
+        await client.pause(500);
         await navigateTo( app, 'example.com' );
 
-        console.log('THIS ONNENNEEE', client)
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-        await client.pause( 2500 );
-
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-
-        console.log('THaaatS ONNENNEEE')
         await client.windowByIndex( tabIndex );
-
+        await client.pause(500);
         const clientUrl = await client.getUrl();
-        console.log('expecttttttS ONNENNEEE', clientUrl )
         const parsedUrl = urlParse( clientUrl );
-        console.log('expecttttttS twoooo', parsedUrl )
 
-        // TODO fix slash setup after removing address reducer
         expect( address ).toBe( 'safe://example.com' );
         expect( parsedUrl.protocol ).toBe( 'safe:' );
-
     } );
 
     it( 'has safe-auth:// protocol', async () =>
@@ -134,7 +120,6 @@ describe( 'main window', () =>
         const parsedUrl = urlParse( clientUrl );
 
         expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
-
     } );
 
     it( 'loads safe-auth:// home', async () =>
@@ -153,7 +138,6 @@ describe( 'main window', () =>
         // const clientUrl = removeTrailingSlash ( await client.getUrl() );
 
         expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
-
     } );
 
     // prod only, and only valid on alpha-2 for now (or wherever this is uploaded).
@@ -176,22 +160,23 @@ describe( 'main window', () =>
 
     it( 'can open a new tab + set address', async () =>
     {
+        expect.assertions(3);
         const { client } = app;
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
 
-
-        await client.pause( 1500 ); // need to wait a sec for the UI to catch up
+        await client.pause( 500 );
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
         await client.windowByIndex( tabIndex );
 
-
+        await client.pause( 500 );
         const clientUrl = await client.getUrl();
+        const parsedUrl = urlParse( clientUrl );
 
-        expect( clientUrl ).toBe( 'safe://example.com/' );
-
+        expect( parsedUrl.protocol ).toBe( 'safe:' );
+        expect( parsedUrl.host ).toBe( 'example.com' );
 
         expect( address ).toBe( 'safe://example.com' );
     } );
@@ -200,7 +185,7 @@ describe( 'main window', () =>
     xit( 'can go backwards', async () =>
     {
         const { client } = app;
-        await setClientToMainBrowserWindow(app);
+        await setClientToMainBrowserWindow( app );
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'google.com' );
@@ -208,18 +193,17 @@ describe( 'main window', () =>
         await client.waitForExist( BROWSER_UI.BACKWARDS );
         await client.click( BROWSER_UI.BACKWARDS );
         await client.windowByIndex( tabIndex );
-        let clientUrl = removeTrailingSlash ( await client.getUrl() );
+        const clientUrl = removeTrailingSlash( await client.getUrl() );
 
-        //TODO: trailing slash
+        // TODO: trailing slash
         expect( clientUrl ).toBe( 'http://example.com' );
-
     } );
 
 
     xit( 'can go forwards', async () =>
     {
         const { client } = app;
-        await setClientToMainBrowserWindow(app);
+        await setClientToMainBrowserWindow( app );
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'example.org' );
@@ -228,13 +212,13 @@ describe( 'main window', () =>
         await client.click( BROWSER_UI.BACKWARDS );
         await client.windowByIndex( tabIndex );
 
-        let clientUrl = removeTrailingSlash ( await client.getUrl() );
+        const clientUrl = removeTrailingSlash( await client.getUrl() );
 
-        //TODO: URL from webview always has trailing slash
+        // TODO: URL from webview always has trailing slash
         expect( clientUrl ).toBe( 'http://example.com' );
 
-        await setClientToMainBrowserWindow(app);
-        await client.pause( 500 ); // need to wait a sec for the UI to catch up
+        await setClientToMainBrowserWindow( app );
+        await client.pause( 500 );
         await client.waitForExist( BROWSER_UI.FORWARDS );
 
         // TODO: why is iting needing two clicks?
@@ -242,50 +226,50 @@ describe( 'main window', () =>
         await client.click( BROWSER_UI.FORWARDS );
 
         await client.windowByIndex( tabIndex );
-        let clientUrl2 = removeTrailingSlash( await client.getUrl() );
+        const clientUrl2 = removeTrailingSlash( await client.getUrl() );
 
         expect( clientUrl2 ).toBe( 'http://example.org' );
     } );
 
 
-    it( 'can close a tab', async() =>
+    it( 'can close a tab', async () =>
     {
         const { client } = app;
-        await setClientToMainBrowserWindow(app);
+        await setClientToMainBrowserWindow( app );
         const tabIndex = await newTab( app );
 
         await navigateTo( app, 'bbc.com' );
         await client.waitForExist( BROWSER_UI.CLOSE_TAB );
 
         await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
-        await client.pause( 500 ); // need to wait a sec for the UI to catch up
-        // await client.pause( 500 ); // need to wait a sec for the UI to catch up
+        await client.pause( 500 );
+        // await client.pause( 500 );
 
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-        expect( address ).not.toBe( 'safe://bbc.com' )
-
-    });
+        expect( address ).not.toBe( 'safe://bbc.com' );
+    } );
 
     // TODO: Setup spectron spoofer for these menu interactions.
-    xtest( 'closes the window', async() =>
+    xtest( 'closes the window', async () =>
     {
         const { client } = app;
-        await setClientToMainBrowserWindow(app);
+        await setClientToMainBrowserWindow( app );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-        await client.pause( 500 ); // need to wait a sec for the UI to catch up
+        await client.pause( 500 );
         await client.click( BROWSER_UI.ADDRESS_INPUT );
 
-        //mac - cmd doesnt work...
+        // mac - cmd doesnt work...
         await client.keys( ['\ue03d', '\ue008', 'w'] ); // shift + cmd + w
-        //rest - to test on ci...
-        await client.keys( ['\ue008','\ue009', 'w'] ); // shift + ctrl + w
+        // rest - to test on ci...
+        await client.keys( ['\ue008', '\ue009', 'w'] ); // shift + ctrl + w
+    } );
 
-    } )
-
-    test( 'triggers a save for the window state', async() =>
+    test( 'triggers a save for the window state', async () =>
     {
+        expect.assertions(1);
+
         const { client } = app;
-        await setClientToMainBrowserWindow(app);
+        await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
 
         await client.waitForExist( BROWSER_UI.SPECTRON_AREA );
@@ -296,6 +280,5 @@ describe( 'main window', () =>
         const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
         expect( note.endsWith( 'Unauthorised' ) ).toBeTruthy();
-
-    } )
+    } );
 } );
