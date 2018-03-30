@@ -18,6 +18,15 @@ All notable changes to this project will be documented in this file.
 - authenticator moved to background process
 - uses safe-node-app directly for DOM APIs
 
+#### [0.5.3]
+### Changed 
+- Electron to 1.8.4
+
+#### [0.5.2]
+### Fixed 
+- Add missing `errConst` in ff/ipc.js
+### Changed
+- Change default port for webpack-dev-server
 
 #### [0.5.1]
 ### Fixed 

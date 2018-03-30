@@ -2,7 +2,7 @@
   "name": "Peruse",
   "identifier": "net.maidsafe.peruse-browser",
   "productName": "Peruse Browser",
-  "version": "0.5.1",
+  "version": "0.5.3",
   "vendor": "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
@@ -47,10 +47,9 @@
     "prepush": "yarn test",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml /Users/josh/Projects/safe/forks/dev/peruse/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
-    "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
-    "rebuild": "npm rebuild --runtime=electron --target=1.7.11 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
+    "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}"
   },
-  "browserslist": "electron 1.4",
+  "browserslist": "electron 1.8.4",
   "build": {
     "asarUnpack": [
       "**/@maidsafe/**/*",
@@ -183,7 +182,7 @@
     "css-loader": "^0.28.0",
     "devtron": "^1.4.0",
     "ejs-loader": "^0.3.0",
-    "electron": "1.7.11",
+    "electron": "1.8.4",
     "electron-builder": "20.5.1",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",

@@ -8,6 +8,7 @@ import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import logger from 'logger';
 import { addAuthNotification } from '../manageAuthNotifications';
+import errConst from '../err-constants';
 
 let store;
 let ipcEvent = null;
@@ -265,7 +266,6 @@ const onAuthDecision = ( authData, isAllowed ) =>
         return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
     }
 
-    logger.info( 'inside on auth decision' );
     authenticator.encodeAuthResp( authData, isAllowed )
         .then( ( res ) =>
         {
@@ -301,7 +301,6 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onContDecisionRes', reqQ.req );
-            logger.info( errConst.CONTAINER_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
@@ -331,7 +330,6 @@ const onSharedMDataDecision = ( e, data, isAllowed ) =>
         {
             reqQ.req.res = res;
             e.sender.send( 'onSharedMDataRes', reqQ.req );
-            logger.info( errConst.SHAREMD_DECISION_RESP.msg(err) );
             openExternal( res );
             reqQ.next();
         } )
