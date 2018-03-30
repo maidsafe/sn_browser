@@ -31,7 +31,8 @@ export const {
 
 const triggerAuthDecoding = ( url ) =>
 {
-    callIPC.decryptRequest( null, url, AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP );
+    logger.verbose('Triggerin auth URL decode', url)
+    callIPC.decryptRequest( url, AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP );
 };
 
 export const handleAuthUrl = createAliasedAction(

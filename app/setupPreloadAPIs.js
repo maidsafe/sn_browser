@@ -64,7 +64,7 @@ const setupSafeAPIs = ( store ) =>
      */
     window.safe.authorise = async ( authUri ) =>
     {
-        if( !authUri || typeof authUri !== 'string' ) throw new Error('AuthUri string is required') return;
+        if( !authUri || typeof authUri !== 'string' ) throw new Error('AuthUri string is required');
 
         return await createRemoteCall( 'authenticateFromURI', store )( authUri );
     };

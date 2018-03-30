@@ -362,7 +362,6 @@ describe( 'Authenticator functions', () =>
             await expect( client.login( randomCredentials.locator,
                 randomCredentials.secret )
             ).resolves.toBeUndefined();
-
             expect( client.registeredClientHandle ).not.toBe( '' );
             expect( client.registeredClientHandle ).not.toBeNull();
             expect( client.registeredClientHandle ).not.toBeUndefined();

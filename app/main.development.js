@@ -160,13 +160,13 @@ app.on( 'ready', async () =>
         app.exit();
     }
 
+    openWindow( store );
+
     // TODO: Reenable for adding Safe Network popup
     // createTray();
     // createSafeInfoWindow();
 
-    // TODO: This order is important, reversing breaks tests. Why!?
     bgProcessWindow = await setupBackground( );
-    openWindow( store );
 } );
 
 app.on( 'open-url', ( e, url ) =>

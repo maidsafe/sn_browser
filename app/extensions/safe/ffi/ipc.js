@@ -225,6 +225,8 @@ const registerNetworkListener = ( e ) =>
 
 const decodeRequest = ( req, type ) =>
 {
+    if( !req ) throw new Error( 'The req object is missing' );
+
     const isWebReq = ( type === CONSTANTS.CLIENT_TYPES.WEB );
     const isUnRegistered = req.isUnRegistered;
     const request = new Request( {

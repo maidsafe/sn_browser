@@ -77,7 +77,7 @@ describe( 'SAFE network webFetch operation', async () =>
         }
     } );
 
-    test( 'fetches content from network', async () => {
+    xtest( 'fetches content from network', async () => {
         const content = `hello world, on ${Math.round(Math.random() * 100000)}`;
 	const domain = await createRandomDomain(content, '', '', safeApp);
 	const data = await safeApp.webFetch(`safe://${domain}`);
