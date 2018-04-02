@@ -44,6 +44,7 @@ const createRandomDomain = async (content, path, service, authedApp) => {
 
 describe( 'SAFE network webFetch operation', async () =>
 {
+    let safeApp;
     const app = new Application( {
         path : electron,
         args : [path.join( __dirname, '..', '..', 'app' )],
@@ -58,12 +59,12 @@ describe( 'SAFE network webFetch operation', async () =>
         vendor: 'Peruse'
     };
 
-    const safeApp = await initializeApp(appInfo);
-    await safeApp.auth.loginForTest();
 
     beforeAll( async () =>
     {
-        await delay( 10000 )
+        safeApp = await initializeApp(appInfo);
+
+        await safeApp.auth.loginForTest();
         await app.start();
         await setClientToMainBrowserWindow( app );
         await app.client.waitUntilWindowLoaded();
@@ -77,10 +78,13 @@ describe( 'SAFE network webFetch operation', async () =>
         }
     } );
 
-    xtest( 'fetches content from network', async () => {
+    it( 'fetches content from network', async () =>
+    {
+        expect.assertions(1);
         const content = `hello world, on ${Math.round(Math.random() * 100000)}`;
-	const domain = await createRandomDomain(content, '', '', safeApp);
-	const data = await safeApp.webFetch(`safe://${domain}`);
-	expect(data.body.toString()).toBe(content);
+    	const domain = await createRandomDomain(content, '', '', safeApp);
+    	const data = await safeApp.webFetch(`safe://${domain}`);
+
+    	expect(data.body.toString()).toBe(content );
     } );
 } );
