@@ -4,7 +4,7 @@ import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'actions/peruse_actions';
-import { isRunningMock } from 'appConstants';
+import { isRunningMock, isRunningSpectronTest } from 'appConstants';
 
 const init = async ( store ) =>
 {
@@ -26,24 +26,21 @@ const onOpen = ( store ) =>
     store.dispatch( setIsMock( isRunningMock ) );
 }
 
-// const middleware = store => next => action =>
-// {
-//     logger.info( 'ACTION:paylos', action.payload.url );
-//
-//     if ( action.type === tabsActions.TYPES.ADD_TAB && action.payload.url && action.payload.url.startsWith( 'http' ) )
-//     {
-//         let newAction = { ...action, type: 'cancelled' }
-//         return 'boop';
-//     }
-//
-//     // return next( action );
-// };
-//
+const middleware = store => next => action =>
+{
+    if( isRunningSpectronTest )
+    {
+        logger.info( 'ACTION:', action );
+    }
+
+    return next( action );
+};
+
 
 
 export default {
     init,
     setupRoutes,
-    onOpen
-    // middleware
+    onOpen,
+    middleware
 };

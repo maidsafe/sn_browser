@@ -70,6 +70,7 @@ export const initAnon = async ( passedStore ) =>
     // setIPCStore( store );
 
     logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
+    logger.verbose( 'Initialising lib path: ', CONFIG.SAFE_NODE_LIB_PATH);
 
     try
     {
@@ -206,7 +207,7 @@ export const initMock = async ( passedStore ) =>
 
     try
     {
-        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
         peruseAppObj = await peruseAppObj.auth.loginForTest( APP_INFO.permissions );
         return peruseAppObj;
     }

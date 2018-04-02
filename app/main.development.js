@@ -16,6 +16,8 @@ import {
     isRunningUnpacked,
     isRunningSpectronTest,
     isRunningPackaged,
+    isCI,
+    travisOS,
     I18N_CONFIG,
     PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
@@ -44,7 +46,7 @@ const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
-
+logger.info('Main process starting.');
 global.mainProcessStore = store;
 // renderer error notifications
 ipcMain.on( 'errorInWindow', ( event, data ) =>
@@ -52,7 +54,13 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
     logger.error( data );
 } );
 
-const mainWindow = null;
+let mainWindow = null;
+
+// if( isCI && travisOS === 'linux' )
+// {
+//
+//     app.disableHardwareAcceleration();
+// }
 
 const handleSafeUrls = ( url ) =>
 {
@@ -124,6 +132,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     // We expect the URI to be the last argument
     const uri = commandLine[commandLine.length - 1];
+    logger.info('Checking if should quit', uri )
     if ( commandLine.length >= 2 && uri )
     {
         handleSafeUrls( parseSafeUri( uri ) );
@@ -160,7 +169,7 @@ app.on( 'ready', async () =>
         app.exit();
     }
 
-    openWindow( store );
+    mainWindow = openWindow( store );
 
     // TODO: Reenable for adding Safe Network popup
     // createTray();

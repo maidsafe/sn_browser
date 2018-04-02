@@ -161,7 +161,7 @@ class ReqQueue
                 return;
             }
 
-            logger.info( 'not an auth request.... what is it?', res );
+            logger.info( 'not an auth request.... what is it?', this.req );
 
             // if ( ipcEvent )
             // {

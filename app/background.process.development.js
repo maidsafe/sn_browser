@@ -17,7 +17,7 @@ import { initAnon, initMock } from 'extensions/safe/network';
 import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import manageRemoteCalls from './background.manageRemoteCalls';
 import sysUri from 'extensions/safe/ffi/sys_uri';
-import { onInitBgProcess }  from './extensions';
+import { onInitBgProcess, getExtensionReduxMiddleware }  from './extensions';
 import { setupServerVars, startServer } from './server';
 import { remote } from 'electron';
 
@@ -43,6 +43,7 @@ const manageLibLoading = ( store ) =>
     const authLibStatus = theAPI.getLibStatus();
     logger.verbose( 'Authenticator lib status: ', authLibStatus );
     store.dispatch( authActions.setAuthLibStatus( authLibStatus ) );
+
     if ( authLibStatus )
     {
         initAnon( store );
@@ -61,8 +62,8 @@ const init = async ( ) =>
     // const initialState = {};
 
     // Add middleware from extensions here. TODO: this should be be unified somewhere.
-    // const loadMiddlewarePackages = [];
-    const store = configureStore( {}, [], true );
+    const loadMiddlewarePackages = getExtensionReduxMiddleware() || [];
+    const store = configureStore( {}, loadMiddlewarePackages, true );
     initSafeServer( store );
 
     i18n.configure( I18N_CONFIG );

@@ -1,4 +1,7 @@
 // TODO: Pull these from app constants, and add '.' programmatically.
+export const WAIT_FOR_EXIST_TIMEOUT = 25000;
+export const SAFE_AUTH_REQ = 'safe-auth:AAAAAIWTDbIAAAAAGwAAAAAAAABuZXQubWFpZHNhZmUucGVydXNlLWJyb3dzZXIADgAAAAAAAABQZXJ1c2UgQnJvd3NlchAAAAAAAAAATWFpZHNhZmUubmV0IEx0ZAEAAAAAAAAAAA';
+
 export const BROWSER_UI =
 {
     ADDRESS_BAR               : '.js-address',
@@ -24,6 +27,7 @@ export const AUTH_UI =
     START_CREATE_BUTTON          : '.js-spectron__auth__create-account',
     BROWSER_PLUGIN_TEST_FAILURES : '.failures',
     // authenticator plugin
+    AUTH_PAGE                    : '#safe-auth-home', // temp till rebuilt auth with selectors
     AUTH_FORM                    : '.card-main', // temp till rebuilt auth with selectors
     // AUTH_FORM                    : '.js-spectron__auth__form',
     AUTH_SECRET_INPUT            : '.js-spectron__account-secret',

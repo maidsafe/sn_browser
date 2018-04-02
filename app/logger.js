@@ -26,6 +26,11 @@ if( log.transports )
         log.transports.file.level = 'warn';
     }
 
+    if( isRunningSpectronTest )
+    {
+        log.transports.file.file =  __dirname + '/log.log';
+    }
+
     /**
     * Set output format template. Available variables:
     * Main: {level}, {text}
@@ -52,8 +57,8 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( `      Started with node env: ${env}` );
+    console.log('       Log location:', log.transports.file.file)
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-
     log.verbose( 'Running with derived constants:' );
     log.verbose( '' );
     log.verbose( 'isRunningDebug?', isRunningDebug );

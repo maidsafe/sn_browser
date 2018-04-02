@@ -28,3 +28,9 @@ export const onOpenLoadExtensions = ( store ) =>
         }
     } );
 };
+
+
+export const getExtensionReduxMiddleware = () =>
+{
+    return allPackages.map( pack => pack.middleware )
+}

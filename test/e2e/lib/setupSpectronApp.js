@@ -3,6 +3,7 @@ import electron from 'electron';
 import path from 'path';
 
 jest.unmock('electron')
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
 
 
 const setupSpectronApp = ( envArgs ) =>

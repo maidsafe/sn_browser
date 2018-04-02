@@ -1,3 +1,4 @@
+import opn from 'opn';
 import {
     saveConfigToSafe,
     readConfigFromSafe
@@ -45,14 +46,17 @@ let callingArray = [];
 
 const requestPeruseAppAuthentication = async () =>
 {
+    logger.info('REQUESTING APP AUATHHHHHHH', CONFIG.SAFE_NODE_LIB_PATH)
     try
     {
-        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
 
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
+        logger.verbose('generated auth uri:', authReq);
         global.browserAuthReqUri = authReq.uri;
-        await peruseAppObj.auth.openUri( authReq.uri );
+        opn( authReq.uri );
+        // await peruseAppObj.auth.openUri( authReq.uri );
 
         return peruseAppObj;
     }

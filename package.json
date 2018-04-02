@@ -44,10 +44,12 @@
     "package-all": "yarn run build && build -mwl",
     "post-pack": "node ./post-pack.js",
     "cleanup": "mop -v",
+    "clean-tests": "pkill -f electron",
     "prepush": "yarn test",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml /Users/josh/Projects/safe/forks/dev/peruse/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
-    "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}"
+    "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
+    "rebuild": "npm rebuild --runtime=electron --target=1.8.4 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
   },
   "browserslist": "electron 1.8.4",
   "build": {
@@ -176,7 +178,7 @@
     "boiler-room-custodian": "^0.6.2",
     "chai": "^4.1.0",
     "chalk": "^2.0.1",
-    "concurrently": "^3.4.0",
+    "concurrently": "3.5.1",
     "cross-env": "^5.0.1",
     "cross-spawn": "^5.1.0",
     "css-loader": "^0.28.0",
@@ -251,6 +253,7 @@
     "jest-tobetype": "git+https://github.com/joshuef/jest-tobetype.git#master",
     "lodash": "4.17.4",
     "nessie-ui": "5.1.2",
+    "opn": "5.3.0",
     "prop-types": "^15.5.8",
     "raf": "3.4.0",
     "react": "^16.2.0",

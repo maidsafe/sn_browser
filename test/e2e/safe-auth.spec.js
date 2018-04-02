@@ -1,6 +1,10 @@
 import { parse as urlParse } from 'url';
+import opn from 'opn';
+
+import { isCI, travisOS } from 'appConstants';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
+    delay,
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
@@ -8,7 +12,7 @@ import {
 } from './lib/browser-driver';
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 import setupSpectronApp from './lib/setupSpectronApp';
-
+import { WAIT_FOR_EXIST_TIMEOUT, SAFE_AUTH_REQ } from './lib/constants';
 jest.unmock( 'electron' );
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
@@ -32,29 +36,53 @@ describe( 'safe authenticator protocol', () =>
     } );
 
     test( 'window loaded', async () =>
-        await app.browserWindow.isVisible() );
-
-
-    it( 'loads safe-auth:// home', async () =>
     {
-        const { client } = app;
-        const tabIndex = await newTab( app );
-        await navigateTo( app, 'safe-auth://home' );
+        let loaded = await app.browserWindow.isVisible() ;
+        await delay(3500)
+        return loaded;
+    })
 
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-        await client.pause(500);
 
-        await client.windowByIndex( tabIndex );
-        await client.pause(500);
+    if( travisOS !== 'linux' )
+    {
+        it( 'is registered to handle safe-auth/home js requests:', async( ) =>
+        {
+            const { client } = app;
+            opn('safe-auth://blabla');
+            expect.assertions(2);
 
-        const clientUrl = await client.getUrl();
 
-        await client.waitForExist( AUTH_UI.AUTH_FORM );
-        const parsedUrl = urlParse( clientUrl );
+            setClientToMainBrowserWindow(app);
+            // await client.pause(1500)
+            let exists = await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+            // console.log('THE NOTE', note)
+            expect( note ).not.toBeNull();
+            expect( note.length ).toBeGreaterThan( 5 );
+        })
+    }
 
-        expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
-    } );
 
+
+    // it( 'loads safe-auth://bundle home page from internal protcol', async () =>
+    // {
+    //     expect.assertions(2);
+    //     const { client } = app;
+    //     const tabIndex = await newTab( app );
+    //     await navigateTo( app, 'safe-auth://home/bundle.js' );
+    //     await delay(3500)
+    //
+    //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+    //     const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
+    //     console.log('newtabbbbb', tabIndex, address )
+    //     await client.windowByIndex( tabIndex );
+    //     await client.pause(1500);
+    //
+    //     // await client.pause(1500);
+    //     let html = await client.source( );
+    //     console.log(html);
+    //     expect( 'html' ).not.toBeNull( );
+    //     // expect( html.length ).toBeGreaterThan( 2000 );
+    // } );
 
 } );

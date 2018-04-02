@@ -5,7 +5,8 @@ import {
     isRunningUnpacked,
     isRunningDebug,
     isRunningSpectronTest,
-    isRunningDevelopment
+    isRunningDevelopment,
+    isCI
 } from 'appConstants';
 
 const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
@@ -44,7 +45,7 @@ const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
         {
             logger.verbose( 'Background process renderer loaded.');
 
-            if( isRunningSpectronTest ) return resolve( backgroundProcess );
+            if( isRunningSpectronTest || isCI ) return resolve( backgroundProcess );
 
             if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {

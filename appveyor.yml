@@ -2,10 +2,16 @@ os: unstable
 image: Visual Studio 2017
 
 environment:
-  nodejs_version: "Stable"
+  nodejs_version: "8"
   matrix:
     - NODE_ENV: "dev"
+      win_runtime: win-x64
+      arch: x64
+      plat: win32
     - NODE_ENV: "prod"
+      win_runtime: win-x64
+      arch: x64
+      plat: win32
 
 platform:
   - x64
@@ -34,14 +40,18 @@ install:
   - node --version
   - npm --version
   - yarn --version
-  - yarn add windows-build-tools --global
+
+  - yarn config set child-concurrency 1
+
+  - yarn global add windows-build-tools --vs2017
   - yarn --ignore-optional
-  - yarn
+  - npm install
+  - yarn run rebuild
+  - yarn run build
 
 test_script:
   - node --version
   # - yarn run lint
-  - yarn run build
   - yarn run test
   - IF DEFINED RUN_EXTS ( yarn run test exts ) ELSE (echo "is not defined")
   - IF DEFINED RUN_E2E ( yarn run test-e2e ) ELSE (echo "is not defined")

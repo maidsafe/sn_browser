@@ -55,7 +55,7 @@ class SystemUriLoader {
       throw new Error(errConst.ERR_SYSTEM_URI.msg);
     }
     const bundle = appInfo.bundle || appInfo.id;
-    const exec = appInfo.exec ? new StringArray(appInfo.exec) : new StringArray([process.execPath]);
+    const customExecPath = appInfo.customExecPath ? new StringArray(appInfo.customExecPath) : new StringArray([process.customExecPathPath]);
     const vendor = appInfo.vendor.replace(/\s/g, '-');
     const name = appInfo.name.replace(/\s/g, '-');
     const icon = appInfo.icon;
@@ -64,7 +64,7 @@ class SystemUriLoader {
     return new Promise((resolve, reject) => {
       try {
         const cb = this._handleError(resolve, reject);
-        this.lib.install(bundle, vendor, name, exec, exec.length, icon, joinedSchemes, type.Null, cb);
+        this.lib.install(bundle, vendor, name, customExecPath, customExecPath.length, icon, joinedSchemes, type.Null, cb);
       } catch (err) {
         return reject(err);
       }

@@ -6,6 +6,8 @@ const addressInput = ( app ) => app.client.element( BROWSER_UI.ADDRESS_INPUT );
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
 
+export const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
+
 export const setClientToMainBrowserWindow = async ( app ) =>
 {
     const { client, browserWindow } = app;

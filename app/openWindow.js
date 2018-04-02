@@ -116,6 +116,8 @@ const openWindow = ( store ) =>
 
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();
+
+    return mainWindow;
 };
 
 
