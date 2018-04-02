@@ -9,6 +9,11 @@
  *
  * @flow
  */
+
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+
 import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
 import logger from 'logger';
 import {
@@ -51,7 +56,16 @@ let mainWindow = null;
 // Do any pre app extension work
 preAppLoad();
 
-// Register all schemes from package.json
+if ( process.argv.includes('--mock') && process.argv.includes('--new') )
+{
+    fs.readFile(path.join(__dirname, '..', 'MockVault'), (err, data) => {
+        if (err) throw err;
+        fs.writeFile(path.join(os.tmpdir(), 'MockVault'), data, (err) => {
+	    if (err) throw err;
+	});
+    });
+}
+
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
 if ( isRunningPackaged )

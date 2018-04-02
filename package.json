@@ -74,6 +74,10 @@
         "to": "log.toml"
       },
       {
+        "from": "resources/MockVault",
+        "to": "MockVault"
+      },
+      {
         "from": "resources/locales",
         "to": "locales"
       },

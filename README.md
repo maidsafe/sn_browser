@@ -15,9 +15,16 @@ eg, on OSX:
 
 `NODE_ENV=dev open Peruse.app --args --mock`
 
+
 ### Debugging
 
 A `--debug` flag is also available to get extra logs and devtool windows when working with a packaged application.
+
+Additionally, the `--new` flag can be passed in order to get the following features preloaded in `mock` network mode:
+- an [interactive tool](https://github.com/maidsafe/safe_examples/tree/master/safe_web_api_playground) to learn about the browser's SAFE network API, located at `safe://api.playground`
+- Account login credentials, both secret and password being `mocksafenetworkdeveloper`
+
+`NODE_ENV=dev open Peruse.app --args --mock --new`
 
 ### Compiling
 
