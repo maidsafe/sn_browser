@@ -76,8 +76,6 @@ const setupPreloadedSafeAuthAPIs = ( store ) =>
     window[pkg.name] = { version: VERSION };
 
     // TODO: Abstract into extension.
-
-
     if ( !window.location.protocol === PROTOCOLS.SAFE_AUTH )
     {
         return;

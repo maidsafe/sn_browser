@@ -264,7 +264,7 @@ describe( 'main window', () =>
         await client.keys( ['\ue008', '\ue009', 'w'] ); // shift + ctrl + w
     } );
 
-    xtest( 'triggers a save for the window state', async () =>
+    test( 'triggers a save for the window state', async () =>
     {
         expect.assertions(1);
 

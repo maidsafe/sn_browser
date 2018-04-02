@@ -128,7 +128,6 @@
 	};
 
 	var appListUpdateListenerCb = function appListUpdateListenerCb(err, apps) {
-        console.log('appupdatelistennnerrr', err, apps)
 	  registerAppListUpdateListener(appListUpdateListenerCb);
 	  return store.dispatch((0, _app.setAppList)(apps));
 	};
@@ -62802,7 +62801,6 @@
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 
-	      console.log('mounted and:', this.props);
 	      if (this.props.isAuthorised) {
 	        return this.context.router.push('/');
 	      }

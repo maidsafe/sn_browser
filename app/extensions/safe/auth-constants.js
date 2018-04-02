@@ -21,7 +21,7 @@ if ( isRunningMock || isRunningTest )
     libEnvModifier = 'mock';
 }
 
-if ( isRunningSpectronTest || isRunningTest )
+if ( isRunningTest )
 {
     libLocaleModifier = '';
 }

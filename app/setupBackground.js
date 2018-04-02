@@ -11,7 +11,7 @@ import {
 const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
 let backgroundProcess = null;
 const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
-    logger.info( 'Setting up Background Process', backgroundProcess );
+    logger.info( 'Setting up Background Process' );
 
     if ( backgroundProcess === null )
     {
@@ -44,7 +44,7 @@ const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
         {
             logger.verbose( 'Background process renderer loaded.');
 
-            if( isRunningSpectronTest ) return;
+            if( isRunningSpectronTest ) return resolve( backgroundProcess );
 
             if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {
@@ -55,6 +55,7 @@ const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
 
         backgroundProcess.webContents.on( 'did-fail-load', ( event, code, message ) =>
         {
+            logger.error('>>>>>>>>>>>>>>>>>>>>>>>> Bg process failed to load <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
             reject( message );
         } );
 

@@ -20,7 +20,7 @@ if( log.transports )
     log.transports.console.level = 'silly';
     log.transports.file.level = 'silly';
 
-    if( !isRunningDebug && ( isRunningPackaged || isRunningSpectronTest ) )
+    if( !isRunningDebug && isRunningPackaged )
     {
         log.transports.console.level = 'warn';
         log.transports.file.level = 'warn';
