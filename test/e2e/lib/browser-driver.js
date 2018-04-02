@@ -71,7 +71,7 @@ export const navigateTo = async ( app, url ) =>
     // TODO set tab + then...
     await setAddress( app, url );
     await client.keys( '\uE007' ); // enter
-    await client.pause( 500 );
+    await client.pause( 1500 );
 };
 
 export const newTab = async ( app ) =>
@@ -82,8 +82,8 @@ export const newTab = async ( app ) =>
 
     await setClientToMainBrowserWindow( app );
     await client.click( BROWSER_UI.ADD_TAB );
-    await client.pause( 500 );
+    await client.pause( 1500 );
 
 
-    return length;
+    return length + 1 ;
 };

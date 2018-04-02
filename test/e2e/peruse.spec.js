@@ -1,6 +1,3 @@
-import { Application } from 'spectron';
-import electron from 'electron';
-import path from 'path';
 import { parse as urlParse } from 'url';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
@@ -10,6 +7,7 @@ import {
     setClientToBackgroundProcessWindow
 } from './lib/browser-driver';
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
+import setupSpectronApp from './lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
 
@@ -28,13 +26,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 describe( 'main window', () =>
 {
-    const app = new Application( {
-        path : electron,
-        args : [path.join( __dirname, '..', '..', 'app' )],
-        env  : {
-            IS_SPECTRON : true
-        }
-    } );
+    const app = setupSpectronApp();
 
     beforeAll( async () =>
     {
@@ -86,78 +78,6 @@ describe( 'main window', () =>
     //
     // } );
 
-    test( 'has safe:// protocol', async () =>
-    {
-        expect.assertions( 2 );
-
-        await setClientToMainBrowserWindow( app );
-        const { client } = await app;
-        const tabIndex = await newTab( app );
-        await client.pause(500);
-        await navigateTo( app, 'example.com' );
-
-        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-        await client.windowByIndex( tabIndex );
-        await client.pause(500);
-        const clientUrl = await client.getUrl();
-        const parsedUrl = urlParse( clientUrl );
-
-        expect( address ).toBe( 'safe://example.com' );
-        expect( parsedUrl.protocol ).toBe( 'safe:' );
-    } );
-
-    it( 'has safe-auth:// protocol', async () =>
-    {
-        const { client } = app;
-        const tabIndex = await newTab( app );
-        await navigateTo( app, 'safe-auth://example.com' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-
-        await client.windowByIndex( tabIndex );
-
-        const clientUrl = await client.getUrl();
-        const parsedUrl = urlParse( clientUrl );
-
-        expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
-    } );
-
-    it( 'loads safe-auth:// home', async () =>
-    {
-        const { client } = app;
-        const tabIndex = await newTab( app );
-        await navigateTo( app, 'safe-auth://home' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-
-        await client.windowByIndex( tabIndex );
-
-        const clientUrl = await client.getUrl();
-        await client.waitForExist( AUTH_UI.AUTH_FORM );
-        const parsedUrl = urlParse( clientUrl );
-        // const clientUrl = removeTrailingSlash ( await client.getUrl() );
-
-        expect( parsedUrl.protocol ).toBe( 'safe-auth:' );
-    } );
-
-    // prod only, and only valid on alpha-2 for now (or wherever this is uploaded).
-    // TODO: We should setup test sites for all network instances to test net config e2e.
-    // it( 'can navigate to a safe:// site', async () =>
-    // {
-    //     const { client } = app;
-    //     const tabIndex = await newTab( app );
-    //     await navigateTo( app, 'aaa.b' );
-    //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-    //     const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-    //
-    //     await client.windowByIndex( tabIndex );
-    //     await client.waitForExist( 'h1' );
-    //     const text = await client.findElement( 'h1' ).getText();
-    //
-    //     expect( text ).toBe( 'safe:' );
-    //
-    // } );
-
     it( 'can open a new tab + set address', async () =>
     {
         expect.assertions(3);
@@ -166,13 +86,14 @@ describe( 'main window', () =>
         await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
 
-        await client.pause( 500 );
+
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
         await client.windowByIndex( tabIndex );
-
         await client.pause( 500 );
+
         const clientUrl = await client.getUrl();
+
         const parsedUrl = urlParse( clientUrl );
 
         expect( parsedUrl.protocol ).toBe( 'safe:' );
@@ -195,7 +116,6 @@ describe( 'main window', () =>
         await client.windowByIndex( tabIndex );
         const clientUrl = removeTrailingSlash( await client.getUrl() );
 
-        // TODO: trailing slash
         expect( clientUrl ).toBe( 'http://example.com' );
     } );
 

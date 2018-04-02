@@ -32,6 +32,8 @@ switch ( arg )
 
 argsArray.push( `--testPathPattern=${pattern}`);
 
+console.log('Running tests via: ', testCommand, argsArray );
+
 const result = spawn.sync(
     testCommand,
     argsArray,
