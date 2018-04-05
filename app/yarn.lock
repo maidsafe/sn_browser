@@ -815,7 +815,7 @@ redent@^1.0.0:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
 
-ref-array@^1.2.0:
+ref-array@1.2.0, ref-array@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ref-array/-/ref-array-1.2.0.tgz#bba870152d4ee0abed1421b062392f0b0184290c"
   dependencies:
@@ -823,7 +823,7 @@ ref-array@^1.2.0:
     debug "2"
     ref "1"
 
-ref-struct@1, ref-struct@^1.1.0:
+ref-struct@1, ref-struct@1.1.0, ref-struct@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ref-struct/-/ref-struct-1.1.0.tgz#5d5ee65ad41cefc3a5c5feb40587261e479edc13"
   dependencies:

@@ -16,8 +16,9 @@ cache:
   - app/node_modules
   - "$HOME/.electron"
   - "$HOME/.cache"
+
 addons:
-  chrome: stable
+  # chrome: stable
   apt:
     sources:
     - ubuntu-toolchain-r-test
@@ -50,7 +51,7 @@ script:
 - sleep 15
 - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test-e2e;
   fi
-- yarn run package
+- yarn run package-only
 
 after_success:
 - ls release

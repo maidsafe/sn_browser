@@ -35,19 +35,27 @@ install:
   - if [%NODE_ENV%]==[dev] ( set RUN_E2E=true )
   - if [%NODE_ENV%]==[dev] ( set RUN_EXTS=true )
 
-  # - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
   - node --version
   - npm --version
   - yarn --version
 
   - yarn config set child-concurrency 1
+  - yarn config set network-timeout 600000
+  - yarn config list
+
+  # - npm cache clean --force
 
   - yarn global add windows-build-tools --vs2017
   - yarn --ignore-optional
-  - npm install
+  - yarn install
   - yarn run rebuild
   - yarn run build
+  # - yarn run build-main
+  # - yarn run build-renderer
+  # - yarn run build-preload
+  # - yarn run build-bg
+
 
 test_script:
   - node --version
