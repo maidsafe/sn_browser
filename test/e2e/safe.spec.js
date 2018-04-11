@@ -47,38 +47,41 @@ describe( 'SAFE network webFetch operation', async () =>
         }
     } );
 
-    it( 'window loaded', async () =>
-        await app.browserWindow.isVisible() );
+    test( 'window loaded', async () =>
+    {
+        let loaded = await app.browserWindow.isVisible() ;
+        await delay(3500)
+        return loaded;
+    })
+
+    it( 'populates the DOM api in the tab window:', async( ) =>
+    {
+        expect.assertions(5);
+        await setClientToMainBrowserWindow( app );
+
+        const { client } = app;
+        const tabIndex = await newTab( app );
+
+        await navigateTo( app, 'safeAPI.com' );
+        await client.pause( 1500 );
+
+        const windows = await client.getWindowCount()
+
+        // TODO: Why -1 here? when others not... ? Something is hanging around...
+        await client.windowByIndex( tabIndex - 1 );
+        await client.pause( 1500 );
+
+        let theSafeClient = await client.execute( function (){ return window.safe } );
+        theSafeClient = theSafeClient.value;
+        await client.pause(1500)
 
 
-    // it( 'populates the DOM api in the tab window:', async( ) =>
-    // {
-    //     await setClientToMainBrowserWindow( app );
-    //
-    //     const { client } = app;
-    //     const tabIndex = await newTab( app );
-    //
-    //     await navigateTo( app, 'safeAPI.com' );
-    //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
-    //
-    //
-    //     await client.pause( 1500 );
-    //     // const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-    //
-    //     await client.windowByIndex( tabIndex );
-    //
-    //     // console.log( '--->>>',tabIndex, address );
-    //     await client.pause(1500)
-    //     // const address2 = await client.getUrl( );
-    //
-    //     // console.log( 'iwndowsaffefeee--->', address2)
-    //     let theSafeClient = client.execute( function () => { return window.location }, '' );
-    //     // await client.pause(1500)
-    //     console.log( 'iwndowsaffefeee', theSafeClient)
-    //
-    //
-    //     expect( 'safe://blabla' ).toBe('safe://blabla');
-    // })
+        expect( theSafeClient ).toHaveProperty('CONSTANTS');
+        expect( theSafeClient ).toHaveProperty('VERSION');
+        expect( theSafeClient ).toHaveProperty('authorise');
+        expect( theSafeClient ).toHaveProperty('initializeApp');
+        expect( theSafeClient ).toHaveProperty('fromAuthURI');
+    })
 
     it( 'has safe:// protocol', async () =>
     {
@@ -114,7 +117,6 @@ describe( 'SAFE network webFetch operation', async () =>
     	expect(data.body.toString()).toBe(content );
     } );
 
-    console.log( 'travisOS',travisOS)
     if( travisOS !== 'linux' )
     {
 

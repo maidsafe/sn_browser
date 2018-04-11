@@ -40,7 +40,7 @@ const setupSafeAPIs = ( store ) =>
         return app;
     };
 
-    window.safe.fromAuthUri = async ( appInfo, authUri, netStateCallback, options ) =>
+    window.safe.fromAuthURI = async ( appInfo, authUri, netStateCallback, options ) =>
     {
         // TODO: Throw warnings for these options.
         const optionsToUse = {
