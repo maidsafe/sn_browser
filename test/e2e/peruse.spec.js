@@ -1,6 +1,7 @@
 import { parse as urlParse } from 'url';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
+    delay,
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
@@ -45,12 +46,10 @@ describe( 'main window', () =>
 
     test( 'window loaded', async () =>
     {
-        console.log('waiting win loaded')
-        let loaded = await app.browserWindow.isVisible()
-        console.log('waiting win loaded DONE')
+        let loaded = await app.browserWindow.isVisible() ;
+        await delay(3500)
         return loaded;
-    }
-     );
+    });
     // it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     // {
     //     const { client } = app;
