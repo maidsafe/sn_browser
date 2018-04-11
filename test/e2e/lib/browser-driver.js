@@ -80,12 +80,26 @@ export const newTab = async ( app ) =>
 {
     const { client } = app;
 
-    const length = await client.getWindowCount();
+    const windows = await client.getWindowCount();
+
+    console.log('number of windows before making a new tab', windows );
+
+    for ( let i = 0; i < windows; i++ )
+    {
+        // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
+        const theWindow = await client.windowByIndex( i );
+        const url = await client.getUrl();
+
+        console.log('the urlllll of these windows', url )
+    }
 
     await setClientToMainBrowserWindow( app );
     await client.click( BROWSER_UI.ADD_TAB );
     await client.pause( 1500 );
 
+    const length2 = await client.getWindowCount();
 
-    return length + 1 ;
+    console.log('widow count after', length2)
+
+    return windows;
 };
