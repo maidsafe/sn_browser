@@ -43,13 +43,19 @@ let cachedRemoteCallArray = [];
 let callingArray = [];
 
 
-
-const requestPeruseAppAuthentication = async () =>
+/**
+ * requests Safe network access for the Peruse application.
+ * @param  {Boolean} isMock is the browser being run on a mock network
+ * @return {Promise}        Peruse SafeApp object
+ */
+const requestPeruseAppAuthentication = async ( ) =>
 {
-    logger.info('REQUESTING APP AUATHHHHHHH', CONFIG.SAFE_NODE_LIB_PATH)
     try
     {
-        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
+        peruseAppObj = await initializeApp( APP_INFO.info, null,
+            {
+                libPath: CONFIG.SAFE_NODE_LIB_PATH
+            } );
 
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
@@ -140,7 +146,8 @@ const manageAuthorisationActions = async ( store ) =>
         isAuthing = true;
 
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
-        await requestPeruseAppAuthentication();
+
+        await requestPeruseAppAuthentication( );
         isAuthing = false;
     }
 

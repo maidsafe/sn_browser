@@ -2,8 +2,7 @@ import pkg from 'appPackage';
 import logger from 'logger';
 import * as remoteCallActions from 'actions/remoteCall_actions';
 import safe from '@maidsafe/safe-node-app';
-import { PROTOCOLS } from 'appConstants';
-
+import { PROTOCOLS, CONFIG } from 'appConstants';
 import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 
 const VERSION = pkg.version;
@@ -26,7 +25,7 @@ const setupSafeAPIs = ( store ) =>
             ...options,
             registerScheme : false,
             joinSchemes    : false,
-            libPath        : null,
+            libPath        : CONFIG.SAFE_NODE_LIB_PATH,
             configPath     : null
         };
 

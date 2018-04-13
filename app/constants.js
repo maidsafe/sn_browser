@@ -38,11 +38,21 @@ export const inMainProcess = !inRendererProcess;
 // Adds app folder for asar packaging (space before app is important).
 const preloadLocation = isRunningUnpacked ? '' : '../';
 
-if( inMainProcess )
+
+/**
+ * retrieve the safe node lib path, either as a relative path in the main process,
+ * or from the main process global
+ * @return {[type]} [description]
+ */
+const safeNodeLibPath = ( ) =>
 {
-    global.preloadFile = `file://${ __dirname }/webPreload.js`;
-    global.appDir = __dirname;
-}
+    if ( env === 'test' || inMainProcess )
+    {
+        return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
+    }
+
+    return remote.getGlobal('SAFE_NODE_LIB_PATH');
+};
 
 let safeNodeAppPathModifier = '';
 
@@ -73,13 +83,22 @@ export const INTERNAL_PAGES = {
 export const CONFIG = {
     PORT                 : 3984,
     SAFE_PARTITION       : 'persist:safe-tab',
-    SAFE_NODE_LIB_PATH   : path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' ),
+    SAFE_NODE_LIB_PATH   : safeNodeLibPath(),
     APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
     DATE_FORMAT          : 'h:MM-mmm dd',
     NET_STATUS_CONNECTED : 'Connected',
     STATE_KEY            : 'peruseState',
     BROWSER_TYPE_TAG     : 8467
 };
+
+if( inMainProcess )
+{
+    global.preloadFile = `file://${ __dirname }/webPreload.js`;
+    global.appDir = __dirname;
+    global.hasMockFlag = hasMockFlag;
+    global.SAFE_NODE_LIB_PATH = CONFIG.SAFE_NODE_LIB_PATH;
+}
+
 
 
 if( isRunningUnpacked )
@@ -97,6 +116,7 @@ const safeNodeAppPath = ( ) =>
 
     return isRunningUnpacked ? [remote.process.execPath, remote.getGlobal('appDir')] : [remote.app.getPath( 'exe' )];
 };
+
 
 const appInfo = {
     info : {

@@ -21,6 +21,8 @@ export const authFromQueue = async () =>
 
 export const authFromInternalResponse = async ( res, isAuthenticated ) =>
 {
+    logger.silly('authFromInternalResponse')
+
     try
     {
         // for webFetch app only
@@ -67,20 +69,18 @@ export const getPeruseAuthReqUri = () => browserAuthReqUri;
 export const initAnon = async ( passedStore ) =>
 {
     store = passedStore;
-    // setIPCStore( store );
 
-    logger.verbose( 'Initialising unauthed app: ', APP_INFO.info );
-    logger.verbose( 'Initialising lib path: ', CONFIG.SAFE_NODE_LIB_PATH);
+    const appOptions = {
+        libPath        : CONFIG.SAFE_NODE_LIB_PATH,
+        registerScheme : false,
+        joinSchemes    : [PROTOCOLS.SAFE],
+        configPath     : CONFIG.CONFIG_PATH
+    }
 
     try
     {
         // does it matter if we override?
-        peruseAppObj = await initializeApp( APP_INFO.info, null, {
-            libPath        : CONFIG.SAFE_NODE_LIB_PATH,
-            registerScheme : false,
-            joinSchemes    : [PROTOCOLS.SAFE],
-            configPath     : CONFIG.CONFIG_PATH
-        } );
+        peruseAppObj = await initializeApp( APP_INFO.info, null, appOptions );
 
         // TODO, do we even need to generate this?
         const authReq = await peruseAppObj.auth.genConnUri( {} );
