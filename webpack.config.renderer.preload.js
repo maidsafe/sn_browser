@@ -15,6 +15,7 @@ export default merge.smart( baseConfig, {
     devtool : 'source-map',
 
     target : 'electron-renderer',
+    mode: 'production',
 
     entry : ['./app/webPreload.development'],
 

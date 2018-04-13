@@ -64,6 +64,7 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( 'isRunningDebug?', isRunningDebug );
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );
+    log.verbose( 'inMainProcess?', inMainProcess );
     log.verbose( 'isRunningProduction?', isRunningProduction );
     log.verbose( 'isRunningMock?', isRunningMock );
     log.verbose( 'isRunningSpectronTest?', isRunningSpectronTest );

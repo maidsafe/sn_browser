@@ -4,7 +4,6 @@
 
 import webpack from 'webpack';
 import merge from 'webpack-merge';
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 
 import baseConfig from './webpack.config.base';
 

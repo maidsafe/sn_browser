@@ -2,7 +2,7 @@
 // import setModuleImportLocations from 'setModuleImportLocations';
 import { ipcRenderer } from 'electron';
 
-var setupPreloadedSafeAuthAPIs = require( './setupPreloadAPIs');
+var { setupPreloadedSafeAuthAPIs } = require( './setupPreloadAPIs');
 var configureStore = require( './store/configureStore').configureStore;
 
 // TODO This handling needs to be imported via extension apis more seemlessly

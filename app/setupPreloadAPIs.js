@@ -13,12 +13,12 @@ window.eval = global.eval = () =>
     throw new Error( 'Sorry, peruse does not support window.eval().' );
 };
 
-const setupSafeAPIs = ( store ) =>
+export const setupSafeAPIs = ( store, win = window ) =>
 {
     logger.info( 'Setup up SAFE Dom API via @maidsafe/safe-node-app' );
-    window.safe = { ...safe };
+    win.safe = { ...safe };
 
-    window.safe.initializeApp = async ( appInfo, netStateCallback, options ) =>
+    win.safe.initializeApp = async ( appInfo, netStateCallback, options ) =>
     {
         // TODO: Throw warnings for these options.
         const optionsToUse = {
@@ -39,7 +39,7 @@ const setupSafeAPIs = ( store ) =>
         return app;
     };
 
-    window.safe.fromAuthURI = async ( appInfo, authUri, netStateCallback, options ) =>
+    win.safe.fromAuthURI = async ( appInfo, authUri, netStateCallback, options ) =>
     {
         // TODO: Throw warnings for these options.
         const optionsToUse = {
@@ -49,8 +49,7 @@ const setupSafeAPIs = ( store ) =>
             libPath        : null,
             configPath     : null
         };
-
-        let app = await window.safe.initializeApp( appInfo, netStateCallback, optionsToUse );
+        let app =  await win.safe.initializeApp( appInfo, netStateCallback, optionsToUse );
 
         await app.auth.loginFromURI( authURI );
         return app;
@@ -61,7 +60,7 @@ const setupSafeAPIs = ( store ) =>
      * @param  {[type]}  authUri [description]
      * @return {Promise}         resolves to URI string.
      */
-    window.safe.authorise = async ( authUri ) =>
+    win.safe.authorise = async ( authUri ) =>
     {
         if( !authUri || typeof authUri !== 'string' ) throw new Error('AuthUri string is required');
 
@@ -69,7 +68,7 @@ const setupSafeAPIs = ( store ) =>
     };
 };
 
-const setupPreloadedSafeAuthAPIs = ( store ) =>
+export const setupPreloadedSafeAuthAPIs = ( store ) =>
 {
     setupSafeAPIs( store );
     window[pkg.name] = { version: VERSION };
@@ -243,4 +242,3 @@ const createRemoteCall = ( functionName, store ) =>
 
     return remoteCall;
 };
-export default setupPreloadedSafeAuthAPIs;

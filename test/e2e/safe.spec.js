@@ -63,7 +63,7 @@ describe( 'SAFE network webFetch operation', async () =>
         const tabIndex = await newTab( app );
 
         await navigateTo( app, 'safeAPI.com' );
-        await client.pause( 1500 );
+        await delay( 1500 );
 
         const windows = await client.getWindowCount()
 
@@ -73,7 +73,8 @@ describe( 'SAFE network webFetch operation', async () =>
 
         let theSafeClient = await client.execute( function (){ return window.safe } );
         theSafeClient = theSafeClient.value;
-        await client.pause(1500)
+        await delay( 2500 );
+        // await client.pause(1500)
 
 
         expect( theSafeClient ).toHaveProperty('CONSTANTS');
@@ -82,6 +83,7 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( theSafeClient ).toHaveProperty('initializeApp');
         expect( theSafeClient ).toHaveProperty('fromAuthURI');
     })
+
 
     it( 'has safe:// protocol', async () =>
     {

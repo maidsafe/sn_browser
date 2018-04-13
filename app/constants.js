@@ -46,7 +46,7 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
  */
 const safeNodeLibPath = ( ) =>
 {
-    if ( env === 'test' || inMainProcess )
+    if ( inMainProcess || env === 'test' )
     {
         return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
     }
@@ -56,7 +56,7 @@ const safeNodeLibPath = ( ) =>
 
 let safeNodeAppPathModifier = '';
 
-if ( isRunningPackaged )
+if ( isRunningPackaged && !isRunningTest )
 {
     safeNodeAppPathModifier = '../app.asar.unpacked/';
 }
@@ -101,10 +101,10 @@ if( inMainProcess )
 
 
 
-if( isRunningUnpacked )
-{
-    CONFIG.CONFIG_PATH = path.resolve( __dirname, '../resources' );
-}
+// if( isRunningUnpacked )
+// {
+//     CONFIG.CONFIG_PATH = path.resolve( __dirname, '../resources' );
+// }
 
 // HACK: Prevent jest dying due to no electron globals
 const safeNodeAppPath = ( ) =>
