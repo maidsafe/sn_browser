@@ -1,5 +1,5 @@
 import * as preloadFuncs from '../../app/setupPreloadAPIs';
-import { APP_INFO } from 'appConstants';
+import { APP_INFO, isRunningProduction } from 'appConstants';
 
 jest.mock('logger');
 
@@ -22,6 +22,23 @@ describe('Setup Preload APIs', () =>
         expect( win.safe ).toHaveProperty('fromAuthURI');
         expect( win.safe ).toHaveProperty('authorise');
     });
+
+
+    test('window.safe.authorise exists', async () =>
+    {
+        expect.assertions(2);
+        expect(win.safe.authorise).not.toBeUndefined()
+
+        try {
+            await win.safe.authorise();
+
+        } catch (e) {
+            expect( e.message ).toBe('AuthUri string is required')
+        }
+    })
+
+    // skip final tests in a production environment as libs dont exist
+    if( isRunningProduction ) return;
 
     test('setupSafeAPIs\s safe.initializeApp', async () =>
     {
@@ -75,16 +92,4 @@ describe('Setup Preload APIs', () =>
 
     });
 
-    test('window.safe.authorise exists', async () =>
-    {
-        expect.assertions(2);
-        expect(win.safe.authorise).not.toBeUndefined()
-
-        try {
-            await win.safe.authorise();
-
-        } catch (e) {
-            expect( e.message ).toBe('AuthUri string is required')
-        }
-    })
 });
