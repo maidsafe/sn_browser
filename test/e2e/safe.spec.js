@@ -111,13 +111,29 @@ describe( 'SAFE network webFetch operation', async () =>
 
     it( 'fetches content from network', async () =>
     {
-        expect.assertions(1);
+        expect.assertions(4);
         const content = `hello world, on ${Math.round(Math.random() * 100000)}`;
     	const domain = await createRandomDomain(content, '', '', safeApp);
     	const data = await safeApp.webFetch(`safe://${domain}`);
 
-    	expect(data.body.toString()).toBe(content );
+    	expect(data.body.toString()).toBe( content );
+
+        const { client } = app;
+        const tabIndex = await newTab( app );
+        await navigateTo( app, `safe://${domain}` );
+        await delay(3500)
+
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+
+        await client.windowByIndex( tabIndex );
+        await client.pause(3500);
+
+        let text = await client.getText( 'body' );
+        expect( text ).not.toBeNull( );
+        expect( text ).toBe( content );
+        expect( text.length ).toBe( content.length );
     } );
+
 
     if( travisOS !== 'linux' )
     {

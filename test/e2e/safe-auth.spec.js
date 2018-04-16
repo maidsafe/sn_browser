@@ -73,16 +73,20 @@ describe( 'safe authenticator protocol', () =>
     //     await delay(3500)
     //
     //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-    //     const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-    //     console.log('newtabbbbb', tabIndex, address )
-    //     await client.windowByIndex( tabIndex );
-    //     await client.pause(1500);
     //
-    //     // await client.pause(1500);
-    //     let html = await client.source( );
-    //     console.log(html);
-    //     expect( 'html' ).not.toBeNull( );
-    //     // expect( html.length ).toBeGreaterThan( 2000 );
+    //     console.log('newtabbbbb', tabIndex )
+    //     await client.windowByIndex( tabIndex );
+    //     // await client.pause(3500);
+    //     //
+    //     let html = await client.getText( 'pre' );
+    //     // let html = await client.source( );
+    //     // console.log(html.value);
+    //     expect( html ).not.toBeNull( );
+    //     // expect( html.value ).toBe( '1');
+    //     expect( html.endsWith('sourceMappingURL=bundle.js.map') ).toBeTruthy;
+    //     expect( html.length ).toBeGreaterThan( 2000 );
+    //
+    //
     // } );
 
 } );
