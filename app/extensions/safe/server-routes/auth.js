@@ -1,5 +1,5 @@
 import logger from 'logger';
-import { isRunningPackaged, isRunningSpectronTest } from 'appConstants';
+import { isRunningPackaged, isRunningSpectronTestProcess,isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
 import url from 'url';
 import path from 'path';
 
@@ -13,7 +13,7 @@ const authRoute = {
             const link = request.params.link;
             const linkUrl = url.parse( link );
             let authDistLocale = isRunningPackaged ? `../extensions/safe/` : `./extensions/safe/`;
-            authDistLocale = isRunningSpectronTest ? `extensions/safe/` : authDistLocale;
+            authDistLocale = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp) ? `extensions/safe/` : authDistLocale;
 
             const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/temp_dist/' );
 

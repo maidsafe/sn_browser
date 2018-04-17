@@ -14,7 +14,7 @@ import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
 import logger from 'logger';
 import {
     isRunningUnpacked,
-    isRunningSpectronTest,
+    isRunningSpectronTestProcess,
     isRunningPackaged,
     isCI,
     travisOS,
@@ -100,7 +100,7 @@ if ( isRunningPackaged )
     sourceMapSupport.install();
 }
 
-if ( !isRunningSpectronTest && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -150,7 +150,7 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( !isRunningSpectronTest && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+    if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
     {
         await installExtensions();
     }

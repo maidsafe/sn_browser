@@ -3,7 +3,7 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { SAFE, CLASSES, isRunningSpectronTest } from 'appConstants';
+import { SAFE, CLASSES, isRunningSpectronTestProcess } from 'appConstants';
 import AddressBar from 'components/AddressBar';
 import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
@@ -198,7 +198,7 @@ export default class Browser extends Component
             <div className={ styles.container }>
                 {
                     // TODO: Create spectron Menu spoofer component.
-                    isRunningSpectronTest &&
+                    isRunningSpectronTestProcess &&
                     <div
                         className={ `${CLASSES.SPECTRON_AREA} ${styles.spectronArea}` }
                     >

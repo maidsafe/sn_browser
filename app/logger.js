@@ -6,7 +6,8 @@ import { env,
     isRunningDebug,
     isRunningProduction,
     isRunningMock,
-    isRunningSpectronTest,
+    isRunningSpectronTestProcess,
+    isRunningSpectronTestProcessingPackagedApp,
     inMainProcess,
     inRendererProcess
 } from 'appConstants';
@@ -26,7 +27,7 @@ if( log.transports )
         log.transports.file.level = 'warn';
     }
 
-    if( isRunningSpectronTest )
+    if( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
     {
         log.transports.file.file =  __dirname + '/log.log';
     }
@@ -67,7 +68,7 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( 'inMainProcess?', inMainProcess );
     log.verbose( 'isRunningProduction?', isRunningProduction );
     log.verbose( 'isRunningMock?', isRunningMock );
-    log.verbose( 'isRunningSpectronTest?', isRunningSpectronTest );
+    log.verbose( 'isRunningSpectronTestProcess?', isRunningSpectronTestProcess );
     log.verbose( '' );
     log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.verbose( '' );

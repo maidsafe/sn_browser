@@ -12,15 +12,15 @@ import {
 import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
 import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
 import setupSpectronApp from './lib/setupSpectronApp';
-import { isCI, travisOS } from 'appConstants';
+import { isCI, travisOS, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 
 describe( 'SAFE network webFetch operation', async () =>
 {
-    let safeApp;
-    const app = setupSpectronApp();
+    const app = setupSpectronApp( isRunningSpectronTestProcessingPackagedApp );
+    console.log('isRunningSpectronTestProcessingPackagedApp', isRunningSpectronTestProcessingPackagedApp);
 
     const appInfo = {
         id: "net.peruse.test",
@@ -31,9 +31,7 @@ describe( 'SAFE network webFetch operation', async () =>
 
     beforeAll( async () =>
     {
-        safeApp = await createSafeApp(appInfo);
 
-        await safeApp.auth.loginForTest();
         await app.start();
         await setClientToMainBrowserWindow( app );
         await app.client.waitUntilWindowLoaded();
@@ -108,32 +106,38 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( parsedUrl.protocol ).toBe( 'safe:' );
     } );
 
-
-    it( 'fetches content from network', async () =>
+    if( ! isRunningSpectronTestProcessingPackagedApp )
     {
-        expect.assertions(4);
-        const content = `hello world, on ${Math.round(Math.random() * 100000)}`;
-    	const domain = await createRandomDomain(content, '', '', safeApp);
-    	const data = await safeApp.webFetch(`safe://${domain}`);
 
-    	expect(data.body.toString()).toBe( content );
+        it( 'fetches content from mock network', async () =>
+        {
+            let safeApp = await createSafeApp(appInfo);
+            await safeApp.auth.loginForTest();
 
-        const { client } = app;
-        const tabIndex = await newTab( app );
-        await navigateTo( app, `safe://${domain}` );
-        await delay(3500)
+            expect.assertions(4);
+            const content = `hello world, on ${Math.round(Math.random() * 100000)}`;
+            const domain = await createRandomDomain(content, '', '', safeApp);
+            const data = await safeApp.webFetch(`safe://${domain}`);
 
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+            expect(data.body.toString()).toBe( content );
 
-        await client.windowByIndex( tabIndex );
-        await client.pause(3500);
+            const { client } = app;
+            const tabIndex = await newTab( app );
+            await navigateTo( app, `safe://${domain}` );
+            await delay(3500)
 
-        let text = await client.getText( 'body' );
-        expect( text ).not.toBeNull( );
-        expect( text ).toBe( content );
-        expect( text.length ).toBe( content.length );
-    } );
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
 
+            await client.windowByIndex( tabIndex );
+            await client.pause(3500);
+
+            let text = await client.getText( 'body' );
+            expect( text ).not.toBeNull( );
+            expect( text ).toBe( content );
+            expect( text.length ).toBe( content.length );
+        } );
+
+    }
 
     if( travisOS !== 'linux' )
     {

@@ -4,7 +4,7 @@ import path from 'path';
 import {
     isRunningUnpacked,
     isRunningDebug,
-    isRunningSpectronTest,
+    isRunningSpectronTestProcess,
     isRunningDevelopment,
     isCI
 } from 'appConstants';
@@ -45,7 +45,7 @@ const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
         {
             logger.verbose( 'Background process renderer loaded.');
 
-            if( isRunningSpectronTest || isCI ) return resolve( backgroundProcess );
+            if( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcess );
 
             if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {

@@ -1,7 +1,7 @@
 import { parse as urlParse } from 'url';
 import opn from 'opn';
 
-import { isCI, travisOS } from 'appConstants';
+import { isCI, travisOS, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
     delay,
@@ -19,7 +19,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 describe( 'safe authenticator protocol', () =>
 {
-    const app = setupSpectronApp();
+    const app = setupSpectronApp(isRunningSpectronTestProcessingPackagedApp);
 
     beforeAll( async () =>
     {

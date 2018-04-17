@@ -9,7 +9,7 @@ import {
 } from './lib/browser-driver';
 import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
 import setupSpectronApp from './lib/setupSpectronApp';
-import { isCI, travisOS } from 'appConstants';
+import { isCI, travisOS, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
 
 jest.unmock( 'electron' );
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 65000;
@@ -27,7 +27,8 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 65000;
 
 describe( 'main window', () =>
 {
-    const app = setupSpectronApp();
+    console.log('isRunningSpectronTestProcessingPackagedApp', isRunningSpectronTestProcessingPackagedApp);
+    const app = setupSpectronApp(isRunningSpectronTestProcessingPackagedApp);
 
     beforeAll( async () =>
     {

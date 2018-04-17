@@ -4,7 +4,13 @@ import {
     readConfigFromSafe
 } from './manageBrowserConfig';
 import { initializeApp } from '@maidsafe/safe-node-app';
-import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
+import {
+    APP_INFO,
+    CONFIG,
+    PROTOCOLS,
+    SAFE,
+    isRunningSpectronTestProcessingPackagedApp
+} from 'appConstants';
 import * as peruseAppActions from 'actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
 // import * as remoteCallActions from 'actions/remoteCall_actions';
@@ -119,6 +125,9 @@ const authFromStoreResponse = async ( res, store ) =>
             {
                 message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
             }
+
+            if ( isRunningSpectronTestProcessingPackagedApp ) return;
+
             store.dispatch( notificationActions.addNotification( { text: message, onDismiss: notificationActions.clearNotification } ) );
         }
 

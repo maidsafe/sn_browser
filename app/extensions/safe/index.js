@@ -4,7 +4,7 @@ import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'actions/peruse_actions';
-import { isRunningMock, isRunningSpectronTest } from 'appConstants';
+import { isRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 
 const init = async ( store ) =>
 {
@@ -28,7 +28,7 @@ const onOpen = ( store ) =>
 
 const middleware = store => next => action =>
 {
-    if( isRunningSpectronTest )
+    if( isRunningSpectronTestProcess )
     {
         logger.info( 'ACTION:', action );
     }

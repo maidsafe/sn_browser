@@ -20,7 +20,7 @@ import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
 
-import { SAFE, isRunningTest } from 'appConstants';
+import { SAFE, isRunningNodeEnvTest } from 'appConstants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
@@ -342,7 +342,7 @@ class Authenticator extends SafeLib
             try{
                 this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
 
-                if( !isRunningTest  )
+                if( !isRunningNodeEnvTest  )
                 {
                     // TODO: Why does this crash testing?
                     this.safeLib.auth_free( this.registeredClientHandle );

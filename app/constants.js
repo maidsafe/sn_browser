@@ -17,6 +17,10 @@ if( allPassedArgs.includes('--debug') )
     hasDebugFlag = true;
 }
 
+// these env vars should only available to the spectron test runner process. [are they?]
+export const isRunningSpectronTestProcess = !!process.env.SPECTRON_TEST;
+export const isRunningSpectronTestProcessingPackagedApp = !!process.env.IS_PACKED;
+
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
 export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
@@ -28,9 +32,9 @@ export const isHot = process.env.HOT || 0;
 // only to be used for inital store setting in main process. Not guaranteed correct for renderers.
 export const isRunningMock = /^dev/.test( env );
 export const isRunningProduction = !isRunningMock;
-export const isRunningTest = /^test/.test( env );
-export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
-export const isRunningDebug = hasDebugFlag || isRunningSpectronTest ;
+export const isRunningNodeEnvTest = /^test/.test( env );
+// export const isRunningSpectronTestProcess = !!process.env.IS_SPECTRON;
+export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess ;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = !inRendererProcess;
 
@@ -46,7 +50,8 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
  */
 const safeNodeLibPath = ( ) =>
 {
-    if ( inMainProcess || env === 'test' )
+    // both spectron or node can negate this. as spectron might not have nodeenv=test set
+    if ( inMainProcess || isRunningSpectronTestProcess || isRunningNodeEnvTest )
     {
         return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
     }
@@ -54,9 +59,20 @@ const safeNodeLibPath = ( ) =>
     return remote.getGlobal('SAFE_NODE_LIB_PATH');
 };
 
+// HACK: Prevent jest dying due to no electron globals
+const safeNodeAppPath = ( ) =>
+{
+    if ( !remote || !remote.app )
+    {
+        return '';
+    }
+
+    return isRunningUnpacked ? [remote.process.execPath, remote.getGlobal('appDir')] : [remote.app.getPath( 'exe' )];
+};
+
 let safeNodeAppPathModifier = '';
 
-if ( isRunningPackaged && !isRunningTest )
+if ( isRunningPackaged && !isRunningNodeEnvTest )
 {
     safeNodeAppPathModifier = '../app.asar.unpacked/';
 }
@@ -106,16 +122,7 @@ if( inMainProcess )
 //     CONFIG.CONFIG_PATH = path.resolve( __dirname, '../resources' );
 // }
 
-// HACK: Prevent jest dying due to no electron globals
-const safeNodeAppPath = ( ) =>
-{
-    if ( env === 'test' || inMainProcess )
-    {
-        return '';
-    }
 
-    return isRunningUnpacked ? [remote.process.execPath, remote.getGlobal('appDir')] : [remote.app.getPath( 'exe' )];
-};
 
 
 const appInfo = {
