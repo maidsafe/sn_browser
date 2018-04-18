@@ -53,7 +53,7 @@ script:
   fi
 - yarn run package-only
 - if [[ "$NODE_ENV" == "prod" ]]; then yarn run test-e2e-prod;
-fi
+  fi
 
 after_success:
 - ls release
