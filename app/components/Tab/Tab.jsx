@@ -157,13 +157,11 @@ export default class Tab extends Component
         if ( nextProps.url )
         {
             const { webview } = this;
-            if ( !webview )
-            {
-                return;
-            }
+
+            if ( !webview ) return;
 
             if ( webview.src === '' || webview.src === 'about:blank' ||
-                urlHasChanged( webview.src, nextProps.url ) )
+                urlHasChanged(webview.src, nextProps.url ) )
             {
                 this.loadURL( nextProps.url );
             }
@@ -258,7 +256,7 @@ export default class Tab extends Component
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
-            this.updateBrowserState( { url } );
+            this.updateBrowserState( { url, redirects: [url] } );
             updateTab( { index, url } );
         }
     }
@@ -297,20 +295,22 @@ export default class Tab extends Component
 
     willNavigate( e )
     {
-        logger.silly( 'webview will navigate' );
+        logger.silly( 'webview will navigate', e );
+
         if ( !this.isFrozen() )
         {
             return;
         }
 
         const { url } = e;
-
+        const { webview } = this;
         if ( this.lastNavigationUrl === url && e.timeStamp - this.lastNavigationTimeStamp < WILL_NAVIGATE_GRACE_PERIOD )
         {
-            this.with( ( wv ) =>
+
+            this.with( ( ) =>
             {
-                wv.stop();
-                wv.loadURL( this.props.url );
+                webview.stop();
+                this.loadURL( url );
             } );
             return;
         }
@@ -326,12 +326,13 @@ export default class Tab extends Component
             this.props.updateActiveTab( { url } );
         }
 
+
         // our own little preventDefault
         // cf. https://github.com/electron/electron/issues/1378
         this.with( ( wv ) =>
         {
-            wv.stop();
-            wv.loadURL( url );
+            webview.stop();
+            this.loadURL( url );
         } );
     }
 
@@ -404,9 +405,10 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
-        logger.silly( 'Webview: loading url' );
 
+        const { webview } = this;
         const url = addTrailingSlashIfNeeded( input );
+        logger.silly( 'Webview: loading url:', url );
 
         if ( !urlHasChanged( this.state.browserState.url, url) )
         {
@@ -417,12 +419,10 @@ export default class Tab extends Component
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
 
-        const { webview } = this;
 
         // prevent looping over attempted url loading
         if ( webview && url !== 'about:blank' )
         {
-            // webview.src = url;
             webview.loadURL( url );
         }
     }
@@ -447,7 +447,6 @@ export default class Tab extends Component
                     style={ { height: '100%', display: 'flex', flex: '1 1' } }
                     preload={ injectPath }
                     partition='persist:safe-tab'
-                    src={ this.props.url }
                     ref={ ( c ) =>
                     {
                         this.webview = c;
