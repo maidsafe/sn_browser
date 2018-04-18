@@ -177,8 +177,10 @@ export default class Browser extends Component
         // TODO: Set focus only for this window if current
         // const thisAddressBarIsFocussed =
 
-        // only show the first notification
-        const notification = notifications[0];
+        // only show the first notification without a response.
+        const notification = notifications.filter( n => !n.response )[0];
+
+
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );

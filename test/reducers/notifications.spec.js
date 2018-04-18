@@ -12,14 +12,34 @@ describe( 'notification reducer', () =>
 
     describe( 'ADD_NOTIFICATION', () =>
     {
-        it( 'should handle updating the notification bar', () =>
+        it( 'should handle adding a notification ', () =>
         {
             expect(
                 notifications( [], {
                     type    : TYPES.ADD_NOTIFICATION,
                     payload : { text: 'hellohello' }
-                } )
-            ).toEqual( [{ text: 'hellohello' }] );
+                } )[0].text
+            ).toEqual( 'hellohello' );
+        } );
+
+        it( 'should add an ID if not set', () =>
+        {
+            expect(
+                notifications( [], {
+                    type    : TYPES.ADD_NOTIFICATION,
+                    payload : { text: 'hihi' }
+                } )[0]
+            ).toHaveProperty( 'id');
+        } );
+
+        it( 'should use passed ID', () =>
+        {
+            expect(
+                notifications( [], {
+                    type    : TYPES.ADD_NOTIFICATION,
+                    payload : { text: 'hellooohello', id:'boom' }
+                } )[0]
+            ).toMatchObject( { text: 'hellooohello', id:'boom' } );
         } );
     })
 
@@ -33,8 +53,19 @@ describe( 'notification reducer', () =>
                 notifications( [ note ], {
                     type    : TYPES.UPDATE_NOTIFICATION,
                     payload : { ...note, text:'new!' }
-                } )[0]
-            ).toMatchObject( { text: 'new!' } );
+                } )[0].text
+            ).toBe( 'new!');
+        } );
+
+        it( 'should throw if no ID passed', () =>
+        {
+            const note = { id: '1', text: 'hiwhat' };
+            expect( () =>
+                notifications( [ note ], {
+                    type    : TYPES.UPDATE_NOTIFICATION,
+                    payload : { text:'new!' }
+                } )
+            ).toThrowError('"id"');
         } );
     })
 
@@ -43,8 +74,9 @@ describe( 'notification reducer', () =>
         it( 'should handle clearing the first notification', () =>
         {
             expect(
-                notifications( [{text:'i should not  exist'}], {
+                notifications( [{text:'i should not  exist', id:'ciao'}], {
                     type    : TYPES.CLEAR_NOTIFICATION,
+                    id: 'ciao'
                 } )
             ).toEqual( [] );
         } );
