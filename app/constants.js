@@ -1,3 +1,4 @@
+
 import path from 'path';
 import { remote } from 'electron';
 import pkg from 'appPackage';
@@ -50,13 +51,13 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
  */
 const safeNodeLibPath = ( ) =>
 {
-    // both spectron or node can negate this. as spectron might not have nodeenv=test set
-    if ( inMainProcess || isRunningSpectronTestProcess || isRunningNodeEnvTest )
+    //only exists in render processes
+    if( remote && remote.getGlobal )
     {
-        return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
+        return remote.getGlobal('SAFE_NODE_LIB_PATH')
     }
 
-    return remote.getGlobal('SAFE_NODE_LIB_PATH');
+    return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
 };
 
 // HACK: Prevent jest dying due to no electron globals
