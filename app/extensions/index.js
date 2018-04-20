@@ -14,7 +14,7 @@ export const onInitBgProcess = ( server, store ) =>
         {
             loadPackage.setupRoutes( server, store );
         }
-        loadPackage.init( store );
+        loadPackage.onInitBgProcess( store );
     } );
 };
 

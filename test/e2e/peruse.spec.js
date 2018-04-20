@@ -203,12 +203,9 @@ describe( 'main window', () =>
             await setClientToMainBrowserWindow( app );
             await client.pause( 500 );
 
-            console.log('trying to trigger save state.')
             await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
-            console.log('spectron area exists.')
             await client.pause( 4500 );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
-            console.log('spectron area was clicked.')
             await client.pause( 4500 );
             await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );

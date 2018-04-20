@@ -6,7 +6,6 @@ import i18n from 'i18n';
 import { I18N_CONFIG, APP_INFO, PROTOCOLS } from 'appConstants';
 
 // TODO This handling needs to be imported via extension apis more seemlessly
-import handlePeruseStoreChanges from './peruseSafeApp';
 import * as authActions from 'actions/authenticator_actions';
 
 // TODO: Dont use client when the same. Offer up original where worded differently
@@ -57,7 +56,7 @@ const initSafeServer = ( store ) =>
     startServer( server );
 };
 
-const init = async ( ) =>
+const initBgProcess = async ( ) =>
 {
     // const initialState = {};
 
@@ -94,12 +93,11 @@ const init = async ( ) =>
     store.subscribe( () =>
     {
         manageRemoteCalls( store );
-        handlePeruseStoreChanges( store );
         manageLibLoading( store );
     } );
 };
 
-init( );
+initBgProcess( );
 
 window.onerror = function ( error, url, line )
 {

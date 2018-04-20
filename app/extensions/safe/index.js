@@ -5,8 +5,9 @@ import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'actions/peruse_actions';
 import { isRunningMock, isRunningSpectronTestProcess } from 'appConstants';
+import handlePeruseStoreChanges from './peruseSafeApp';
 
-const init = async ( store ) =>
+const onInitBgProcess = async ( store ) =>
 {
     logger.info( 'Registering SAFE Network Protocols' );
     try
@@ -19,6 +20,11 @@ const init = async ( store ) =>
     {
         logger.error( 'Load extensions error: ', e );
     }
+
+    store.subscribe( () =>
+    {
+        handlePeruseStoreChanges( store );
+    })
 };
 
 const onOpen = ( store ) =>
@@ -39,7 +45,7 @@ const middleware = store => next => action =>
 
 
 export default {
-    init,
+    onInitBgProcess,
     setupRoutes,
     onOpen,
     middleware
