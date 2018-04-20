@@ -27,7 +27,7 @@ import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
 import { configureStore } from './store/configureStore';
-import { onReceiveUrl } from 'extensions'
+import { onReceiveUrl, preAppLoad } from 'extensions'
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -41,6 +41,7 @@ const store = configureStore( initialState, loadMiddlewarePackages );
 
 logger.info('Main process starting.');
 global.mainProcessStore = store;
+
 // renderer error notifications
 ipcMain.on( 'errorInWindow', ( event, data ) =>
 {
@@ -48,6 +49,9 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 } );
 
 let mainWindow = null;
+
+// Do any pre app extension work
+preAppLoad();
 
 // Register all schemes from package.json
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );

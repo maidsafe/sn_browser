@@ -13,6 +13,12 @@ import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
 import { addTab } from 'actions/tabs_actions';
 
+
+const preAppLoad = () =>
+{
+
+}
+
 const onInitBgProcess = async ( store ) =>
 {
     logger.info( 'Registering SAFE Network Protocols' );
@@ -105,7 +111,8 @@ const onReceiveUrl = ( store, url ) =>
 export default {
     onInitBgProcess,
     onReceiveUrl,
-    setupRoutes,
     onOpen,
+    preAppLoad,
+    setupRoutes,
     middleware
 };

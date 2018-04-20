@@ -6,6 +6,17 @@ import safeBrowsing from './safe/index';
 // here add your packages for extensibility.
 const allPackages = [ safeBrowsing ];
 
+export const preAppLoad = ( store ) =>
+{
+    allPackages.forEach( loadPackage =>
+    {
+        if ( loadPackage.preAppLoad )
+        {
+            loadPackage.preAppLoad( server, store );
+        }
+    } );
+};
+
 export const onInitBgProcess = ( server, store ) =>
 {
     allPackages.forEach( loadPackage =>
@@ -14,7 +25,12 @@ export const onInitBgProcess = ( server, store ) =>
         {
             loadPackage.setupRoutes( server, store );
         }
-        loadPackage.onInitBgProcess( store );
+
+        if ( loadPackage.onInitBgProcess )
+        {
+            loadPackage.onInitBgProcess( store );
+        }
+
     } );
 };
 
