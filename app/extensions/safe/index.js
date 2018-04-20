@@ -6,6 +6,10 @@ import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'actions/peruse_actions';
 import { isRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import handlePeruseStoreChanges from './peruseSafeApp';
+import loadSafeLibs from './loadSafeLibs';
+import { setIPCStore } from 'extensions/safe/ffi/ipc';
+import sysUri from 'extensions/safe/ffi/sys_uri';
+import { APP_INFO, PROTOCOLS } from 'appConstants';
 
 const onInitBgProcess = async ( store ) =>
 {
@@ -15,6 +19,7 @@ const onInitBgProcess = async ( store ) =>
         registerSafeProtocol( store );
         registerSafeAuthProtocol( store );
         blockNonSAFERequests();
+        setIPCStore(store);
     }
     catch ( e )
     {
@@ -24,7 +29,19 @@ const onInitBgProcess = async ( store ) =>
     store.subscribe( () =>
     {
         handlePeruseStoreChanges( store );
-    })
+        loadSafeLibs( store );
+    });
+
+    const mainAppInfo = APP_INFO.info;
+    const authAppInfo = {
+        ...mainAppInfo,
+        id     : 'net.maidsafe.app.browser.authenticator',
+        name   : 'SAFE Browser Authenticator',
+        icon   : 'iconPath'
+    }
+
+    logger.verbose( 'Auth application info', authAppInfo );
+    sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
 };
 
 const onOpen = ( store ) =>

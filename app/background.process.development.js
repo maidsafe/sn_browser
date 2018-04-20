@@ -1,53 +1,15 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-
 import logger from 'logger';
 import { configureStore } from 'store/configureStore';
 import i18n from 'i18n';
-import { I18N_CONFIG, APP_INFO, PROTOCOLS } from 'appConstants';
+import { I18N_CONFIG } from 'appConstants';
 
-// TODO This handling needs to be imported via extension apis more seemlessly
-import * as authActions from 'actions/authenticator_actions';
 
-// TODO: Dont use client when the same. Offer up original where worded differently
-// aim to deprecate client file.
-import * as theAPI from 'extensions/safe/auth-api/authFuncs';
-
-import { initAnon, initMock } from 'extensions/safe/network';
-import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import manageRemoteCalls from './background.manageRemoteCalls';
-import sysUri from 'extensions/safe/ffi/sys_uri';
 import { onInitBgProcess, getExtensionReduxMiddleware }  from './extensions';
 import { setupServerVars, startServer } from './server';
 import { remote } from 'electron';
 
-import * as ffiLoader from 'extensions/safe/auth-api/ffiLoader';
-
-let mockStatus = null;
-const manageLibLoading = ( store ) =>
-{
-    const state = store.getState();
-    const isMock = state.peruseApp.isMock;
-
-    const listenerState = store.getState();
-    const islistenerMock = listenerState.peruseApp.isMock;
-
-    if ( islistenerMock === mockStatus )
-        return;
-
-    mockStatus = islistenerMock;
-
-    ffiLoader.loadLibrary( islistenerMock );
-
-    // Lets check the auth lib status:
-    const authLibStatus = theAPI.getLibStatus();
-    logger.verbose( 'Authenticator lib status: ', authLibStatus );
-    store.dispatch( authActions.setAuthLibStatus( authLibStatus ) );
-
-    if ( authLibStatus )
-    {
-        initAnon( store );
-    }
-};
 
 const initSafeServer = ( store ) =>
 {
@@ -58,8 +20,6 @@ const initSafeServer = ( store ) =>
 
 const initBgProcess = async ( ) =>
 {
-    // const initialState = {};
-
     // Add middleware from extensions here. TODO: this should be be unified somewhere.
     const loadMiddlewarePackages = getExtensionReduxMiddleware() || [];
     const store = configureStore( {}, loadMiddlewarePackages, true );
@@ -68,32 +28,9 @@ const initBgProcess = async ( ) =>
     i18n.configure( I18N_CONFIG );
     i18n.setLocale( 'en' );
 
-    const mainAppInfo = APP_INFO.info;
-    const authAppInfo = {
-        ...mainAppInfo,
-        id     : 'net.maidsafe.app.browser.authenticator',
-        name   : 'SAFE Browser Authenticator',
-        icon   : 'iconPath'
-    }
-
-    logger.verbose( 'Auth application info', authAppInfo );
-    sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
-
-    try
-    {
-        setIPCStore(store);
-    }
-    catch ( e )
-    {
-        console.log( 'Problems initing SAFE extension' );
-        console.log( e.message );
-        console.log( e );
-    }
-
     store.subscribe( () =>
     {
         manageRemoteCalls( store );
-        manageLibLoading( store );
     } );
 };
 
