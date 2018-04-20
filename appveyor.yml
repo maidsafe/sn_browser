@@ -62,7 +62,7 @@ install:
 test_script:
   - node --version
   # - yarn run lint
-  - yarn run test
+  # - yarn run test
   # skip ext tests for now as windows fails inexcplicably
   - if [%NODE_ENV%]==[dev] ( yarn run test )
   # - IF DEFINED RUN_EXTS ( yarn run test exts ) ELSE (echo "is not defined")

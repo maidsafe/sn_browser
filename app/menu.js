@@ -7,6 +7,8 @@ import {
     closeActiveTab,
     reopenTab
 } from 'actions/tabs_actions';
+import { setupExtensionMenus } from 'extensions';
+// TODO: Get these fuckers into the exstension.
 import {
     setSaveConfigStatus,
     setReadConfigStatus
@@ -329,7 +331,8 @@ export default class MenuBuilder
             ]
         };
 
-        return [
+
+        const initialMenusArray = [
             subMenuAbout,
             subMenuFile,
             ...( process.platform === 'darwin' ? [subMenuEdit] : [] ) ,
@@ -338,6 +341,10 @@ export default class MenuBuilder
             subMenuWindow,
             subMenuHelp
         ];
+
+        const extendedMenusArray = setupExtensionMenus(initialMenusArray);
+
+        return extendedMenusArray;
     }
 
 }

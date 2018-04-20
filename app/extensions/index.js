@@ -17,6 +17,27 @@ export const preAppLoad = ( store ) =>
     } );
 };
 
+/**
+ * Setup menus runs per app, and is passed the whole electron menu object, for manipulation/insertion etc.
+ * @param  { Array } menuArray Array of electron menu arrays.
+ * @return  { Array } menuArray Array of electron menu arrays.
+ */
+export const setupExtensionMenus = ( menuArray ) =>
+{
+    let updatedMenuArray = [ ...menuArray ];
+
+    // TODO: This is an accumulator of changes...
+    allPackages.forEach( loadPackage =>
+    {
+        if ( loadPackage.extendMenus )
+        {
+            updatedMenuArray = loadPackage.extendMenus( updatedMenuArray );
+        }
+    } );
+
+    return updatedMenuArray;
+};
+
 export const onInitBgProcess = ( server, store ) =>
 {
     allPackages.forEach( loadPackage =>

@@ -35,7 +35,7 @@ export const isRunningProduction = !isRunningMock;
 export const isRunningNodeEnvTest = /^test/.test( env );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess ;
 export const inRendererProcess = typeof window !== 'undefined';
-export const inMainProcess = !inRendererProcess;
+export const inMainProcess = typeof remote === 'undefined';
 
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).

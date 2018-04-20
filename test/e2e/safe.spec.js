@@ -20,7 +20,6 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 describe( 'SAFE network webFetch operation', async () =>
 {
     const app = setupSpectronApp( isRunningSpectronTestProcessingPackagedApp );
-    console.log('isRunningSpectronTestProcessingPackagedApp', isRunningSpectronTestProcessingPackagedApp);
 
     const appInfo = {
         id: "net.peruse.test",
