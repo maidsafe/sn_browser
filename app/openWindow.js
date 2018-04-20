@@ -12,9 +12,6 @@ import {
 } from './actions/tabs_actions';
 import { selectAddressBar } from './actions/ui_actions';
 
-// TODO: Move this // abstract
-import { authFromQueue } from './extensions/safe/network';
-
 const browserWindowArray = [];
 
 function getNewWindowPosition( mainWindowState )
@@ -85,9 +82,6 @@ const openWindow = ( store ) =>
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
-
-        // TODO: Make this queue authenticastor action.
-        // authFromQueue();
 
         const webContentsId = mainWindow.webContents.id;
         if ( browserWindowArray.length === 1 )
