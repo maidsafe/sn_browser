@@ -19,6 +19,7 @@ const setupSpectronApp = ( testPackagedApp = false ) =>
 
     const packedLocation = path.resolve( './release', RELEASE_NAME, application );
 
+    console.log('Is testing packaged app?', testPackagedApp );
     console.log('Packaged application location:', packedLocation );
     const app = new Application( {
         path : testPackagedApp ? packedLocation : electron,
