@@ -21,8 +21,6 @@ import {
     PROTOCOLS } from 'appConstants';
 import pkg from 'appPackage';
 
-import * as peruseAppActions from 'actions/peruse_actions';
-import * as authenticatorActions from 'actions/authenticator_actions';
 import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';

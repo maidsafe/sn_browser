@@ -18,9 +18,8 @@ if( allPassedArgs.includes('--debug') )
     hasDebugFlag = true;
 }
 
-// these env vars should only available to the spectron test runner process. [are they?]
-export const isRunningSpectronTestProcess = !!process.env.SPECTRON_TEST;
-export const isRunningSpectronTestProcessingPackagedApp = !!process.env.IS_PACKED;
+export const isRunningSpectronTestProcess = ( remote && remote.getGlobal ) ? remote.getGlobal('isRunningSpectronTestProcess') : !!process.env.SPECTRON_TEST;
+export const isRunningSpectronTestProcessingPackagedApp = ( remote && remote.getGlobal ) ? remote.getGlobal('isRunningSpectronTestProcessingPackagedApp') : !!process.env.IS_PACKED;
 
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
@@ -34,7 +33,6 @@ export const isHot = process.env.HOT || 0;
 export const isRunningMock = /^dev/.test( env );
 export const isRunningProduction = !isRunningMock;
 export const isRunningNodeEnvTest = /^test/.test( env );
-// export const isRunningSpectronTestProcess = !!process.env.IS_SPECTRON;
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess ;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = !inRendererProcess;
@@ -115,6 +113,8 @@ if( inMainProcess )
     global.isCI = isCI;
     global.hasMockFlag = hasMockFlag;
     global.SAFE_NODE_LIB_PATH = CONFIG.SAFE_NODE_LIB_PATH;
+    global.isRunningSpectronTestProcessingPackagedApp = isRunningSpectronTestProcessingPackagedApp;
+    global.isRunningSpectronTestProcess = isRunningSpectronTestProcess;
 }
 
 

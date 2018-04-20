@@ -12,7 +12,7 @@ export const preAppLoad = ( store ) =>
     {
         if ( loadPackage.preAppLoad )
         {
-            loadPackage.preAppLoad( server, store );
+            loadPackage.preAppLoad( store );
         }
     } );
 };
