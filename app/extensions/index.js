@@ -29,6 +29,17 @@ export const onOpenLoadExtensions = ( store ) =>
     } );
 };
 
+export const onReceiveUrl = ( store, url ) =>
+{
+    allPackages.forEach( loadPackage =>
+    {
+        if ( loadPackage.onReceiveUrl )
+        {
+            loadPackage.onReceiveUrl( store, url );
+        }
+    } );
+};
+
 
 export const getExtensionReduxMiddleware = () =>
 {

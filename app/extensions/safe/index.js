@@ -1,4 +1,5 @@
 import logger from 'logger';
+import { parse as parseURL } from 'url';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
@@ -10,6 +11,7 @@ import loadSafeLibs from './loadSafeLibs';
 import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
+import { addTab } from 'actions/tabs_actions';
 
 const onInitBgProcess = async ( store ) =>
 {
@@ -61,8 +63,48 @@ const middleware = store => next => action =>
 
 
 
+const parseSafeUri = function ( uri )
+{
+    return uri.replace( '//', '' ).replace( '==/', '==' );
+};
+
+const onReceiveUrl = ( store, url ) =>
+{
+    const preParseUrl = parseSafeUri( url );
+    const parsedUrl = parseURL( preParseUrl );
+
+    // TODO. Queue incase of not started.
+    logger.verbose( 'Receiving Open Window Param (a url)', url );
+
+    // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
+    if ( parsedUrl.protocol === 'safe-auth:' )
+    {
+        store.dispatch( authenticatorActions.handleAuthUrl( url ) );
+    }
+    if ( parsedUrl.protocol === 'safe:' )
+    {
+        store.dispatch( addTab( { url, isActiveTab: true } ) );
+    }
+    // 20 is arbitrarily looong right now...
+    else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
+    {
+        store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
+    }
+
+
+    if ( process.platform === 'darwin' && global.macAllWindowsClosed )
+    {
+        if ( url.startsWith( 'safe-' ) )
+        {
+            openWindow( store );
+        }
+    }
+};
+
+
 export default {
     onInitBgProcess,
+    onReceiveUrl,
     setupRoutes,
     onOpen,
     middleware

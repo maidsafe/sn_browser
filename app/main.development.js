@@ -1,5 +1,4 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -20,7 +19,6 @@ import {
     travisOS,
     I18N_CONFIG,
     PROTOCOLS } from 'appConstants';
-import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
 
 import * as peruseAppActions from 'actions/peruse_actions';
@@ -29,12 +27,7 @@ import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
 import { configureStore } from './store/configureStore';
-
-// TODO: Deprecate this in favour of redux actions
-// import handleCommands from './commandHandling';
-
-// TODO: This should be handled in an extensible fashion
-import { addTab } from 'actions/tabs_actions';
+import { onReceiveUrl } from 'extensions'
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -55,41 +48,6 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 } );
 
 let mainWindow = null;
-
-// if( isCI && travisOS === 'linux' )
-// {
-//
-//     app.disableHardwareAcceleration();
-// }
-
-const handleSafeUrls = ( url ) =>
-{
-    // added as from renderer it's receiving as a lowercase string. WHY?
-    const parsedUrl = parseURL( url );
-
-    // TODO. Queue incase of not started.
-    logger.verbose( 'Receiving Open Window Param (a url)', url );
-
-    // TODO:
-    // If the received URL protocol is looong and starts with 'safe' it's fair to assume it's the
-    // auth response
-    // Currently _ONLY_ peruse is going to be making a req.fe
-    // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
-    if ( parsedUrl.protocol === 'safe-auth:' )
-    {
-        store.dispatch( authenticatorActions.handleAuthUrl( url ) );
-    }
-    if ( parsedUrl.protocol === 'safe:' )
-    {
-        store.dispatch( addTab( { url, isActiveTab: true } ) );
-    }
-    // 20 is arbitrarily looong right now...
-    else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
-    {
-        store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
-    }
-};
-
 
 // Register all schemes from package.json
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
@@ -123,11 +81,6 @@ const installExtensions = async () =>
 };
 
 
-const parseSafeUri = function ( uri )
-{
-    return uri.replace( '//', '' ).replace( '==/', '==' );
-};
-
 const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     // We expect the URI to be the last argument
@@ -135,7 +88,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
     logger.info('Checking if should quit', uri )
     if ( commandLine.length >= 2 && uri )
     {
-        handleSafeUrls( parseSafeUri( uri ) );
+        onReceiveUrl( store, uri );
     }
 
     // Someone tried to run a second instance, we should focus our window
@@ -160,7 +113,7 @@ app.on( 'ready', async () =>
         const uriArg = process.argv[process.argv.length - 1];
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
-            handleSafeUrls( parseSafeUri( uriArg ) );
+            onReceiveUrl( store, uriArg );
         }
     }
 
@@ -180,15 +133,8 @@ app.on( 'ready', async () =>
 
 app.on( 'open-url', ( e, url ) =>
 {
-    handleSafeUrls( url );
-    // osx only for the still open but all windows closed state
-    if ( process.platform === 'darwin' && global.macAllWindowsClosed )
-    {
-        if ( url.startsWith( 'safe-' ) )
-        {
-            openWindow( store );
-        }
-    }
+    onReceiveUrl( store, url );
+
 } );
 
 
