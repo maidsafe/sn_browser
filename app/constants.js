@@ -25,7 +25,7 @@ export const isRunningSpectronTestProcessingPackagedApp = !!process.env.IS_PACKE
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
 export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
-export const isCI = process.env.CI;
+export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal('isCI') :  process.env.CI;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
 //other considerations?
 export const isHot = process.env.HOT || 0;
@@ -112,6 +112,7 @@ if( inMainProcess )
 {
     global.preloadFile = `file://${ __dirname }/webPreload.js`;
     global.appDir = __dirname;
+    global.isCI = isCI;
     global.hasMockFlag = hasMockFlag;
     global.SAFE_NODE_LIB_PATH = CONFIG.SAFE_NODE_LIB_PATH;
 }

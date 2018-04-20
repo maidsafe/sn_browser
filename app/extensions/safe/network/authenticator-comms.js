@@ -5,6 +5,7 @@ import {
     APP_INFO,
     CONFIG,
     PROTOCOLS,
+    isCI,
     isRunningSpectronTestProcessingPackagedApp
 } from 'appConstants';
 import { parse as parseURL } from 'url';
@@ -44,7 +45,8 @@ export const authFromInternalResponse = async ( res, isAuthenticated ) =>
                 message = 'Check your current IP address matches your registered address at invite.maidsafe.net';
             }
 
-            if ( isRunningSpectronTestProcessingPackagedApp ) return;
+            // TODO: Remove check when network is opened up
+            if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
             store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
         }

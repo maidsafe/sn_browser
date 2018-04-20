@@ -9,6 +9,7 @@ import {
     CONFIG,
     PROTOCOLS,
     SAFE,
+    isCI,
     isRunningSpectronTestProcessingPackagedApp
 } from 'appConstants';
 import * as peruseAppActions from 'actions/peruse_actions';
@@ -126,7 +127,7 @@ const authFromStoreResponse = async ( res, store ) =>
                 message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
             }
 
-            if ( isRunningSpectronTestProcessingPackagedApp ) return;
+            if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
             store.dispatch( notificationActions.addNotification( { text: message, onDismiss: notificationActions.clearNotification } ) );
         }

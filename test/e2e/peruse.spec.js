@@ -192,25 +192,24 @@ describe( 'main window', () =>
         await client.keys( ['\ue008', '\ue009', 'w'] ); // shift + ctrl + w
     } );
 
-    // if( travisOS !== 'linux' )
-    // {
-    //
-    //     test( 'triggers a save for the window state', async () =>
-    //     {
-    //         expect.assertions(1);
-    //
-    //         const { client } = app;
-    //         await setClientToMainBrowserWindow( app );
-    //         await client.pause( 500 );
-    //
-    //         await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
-    //         await client.pause( 4500 );
-    //         await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
-    //         await client.pause( 4500 );
-    //         await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
-    //         const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
-    //
-    //         expect( note.endsWith( 'Unauthorised' ) ).toBeTruthy();
-    //     } );
-    // }
+    if( travisOS !== 'linux' )
+    {
+        test( 'triggers a save for the window state', async () =>
+        {
+            expect.assertions(1);
+
+            const { client } = app;
+            await setClientToMainBrowserWindow( app );
+            await client.pause( 500 );
+
+            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
+            await client.pause( 4500 );
+            await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+            await client.pause( 4500 );
+            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+            expect( note.endsWith( 'Unauthorised' ) ).toBeTruthy();
+        } );
+    }
 } );
