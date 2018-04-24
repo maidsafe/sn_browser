@@ -11,15 +11,14 @@ import {
 } from './lib/browser-driver';
 import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
 import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
-import setupSpectronApp from './lib/setupSpectronApp';
-import { isCI, travisOS, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
+import { setupSpectronApp, isCI,isTestingPackagedApp, travisOS } from './lib/setupSpectronApp';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 
 describe( 'SAFE network webFetch operation', async () =>
 {
-    const app = setupSpectronApp( isRunningSpectronTestProcessingPackagedApp );
+    const app = setupSpectronApp( );
 
     const appInfo = {
         id: "net.peruse.test",
@@ -105,7 +104,7 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( parsedUrl.protocol ).toBe( 'safe:' );
     } );
 
-    if( ! isRunningSpectronTestProcessingPackagedApp )
+    if( ! isTestingPackagedApp )
     {
 
         it( 'fetches content from mock network', async () =>

@@ -18,11 +18,12 @@ if( allPassedArgs.includes('--debug') )
     hasDebugFlag = true;
 }
 
-export const isRunningSpectronTestProcess = ( remote && remote.getGlobal ) ? remote.getGlobal('isRunningSpectronTestProcess') : !!process.env.SPECTRON_TEST;
-export const isRunningSpectronTestProcessingPackagedApp = ( remote && remote.getGlobal ) ? remote.getGlobal('isRunningSpectronTestProcessingPackagedApp') : !!process.env.IS_PACKED;
+export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
 
-export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
+export const isRunningUnpacked = process.env.IS_UNPACKED;
 export const isRunningPackaged = !isRunningUnpacked;
+export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
+
 export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
 export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal('isCI') :  process.env.CI;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
@@ -114,7 +115,7 @@ if( inMainProcess )
     global.hasMockFlag = hasMockFlag;
     global.SAFE_NODE_LIB_PATH = CONFIG.SAFE_NODE_LIB_PATH;
     global.isRunningSpectronTestProcessingPackagedApp = isRunningSpectronTestProcessingPackagedApp;
-    global.isRunningSpectronTestProcess = isRunningSpectronTestProcess;
+    global.SPECTRON_TEST = isRunningSpectronTestProcess;
 }
 
 

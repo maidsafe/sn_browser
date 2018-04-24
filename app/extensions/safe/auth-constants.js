@@ -17,7 +17,7 @@ let libLocaleModifier = 'extensions/safe/';
 
 let libEnvModifier = 'prod';
 
-if ( isRunningMock || isRunningNodeEnvTest || isRunningSpectronTestProcess)
+if ( isRunningMock || isRunningNodeEnvTest )
 {
     libEnvModifier = 'mock';
 }

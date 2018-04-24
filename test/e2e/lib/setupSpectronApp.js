@@ -6,7 +6,18 @@ import RELEASE_NAME from '../../../releaseName.js';
 jest.unmock('electron')
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
 
-const setupSpectronApp = ( testPackagedApp = false ) =>
+export const isCI = process.env.CI || false;
+export const travisOS = process.env.TRAVIS_OS_NAME || '';
+export const isUnpacked = process.env.IS_UNPACKED || false;
+export const isTestingPackagedApp = process.env.IS_PACKED || false;
+
+console.log('IS TESTINGINGINIGNGNNNNNN',
+ isCI,
+ travisOS,
+ isUnpacked,
+ isTestingPackagedApp
+)
+export const setupSpectronApp = ( ) =>
 {
     const isMac = process.platform === 'darwin'
     const isWin = process.platform === 'win32'
@@ -19,18 +30,20 @@ const setupSpectronApp = ( testPackagedApp = false ) =>
 
     const packedLocation = path.resolve( './release', RELEASE_NAME, application );
 
-    console.log('Is testing packaged app?', testPackagedApp );
+    console.log('Is testing packaged app?', isTestingPackagedApp );
     console.log('Packaged application location:', packedLocation );
     const app = new Application( {
-        path : testPackagedApp ? packedLocation : electron,
-        args : [ testPackagedApp ? '' : path.join( __dirname, '..' ,'..', '..', 'app' ) ], // lib, e2e, test
+        path : isTestingPackagedApp ? packedLocation : electron,
+        args : [ isTestingPackagedApp ? '' : path.join( __dirname, '..' ,'..', '..', 'app' ) ], // lib, e2e, test
         env  : {
             IS_SPECTRON: true,
-            IS_TESTING_PROD: testPackagedApp
+            // CI: isCI,
+            // TRAVIS_OS_NAME : travisOS,
+            // IS_UNPACKED : isUnpacked,
+            // IS_PACKED : isTestingPackagedApp
         }
     } );
 
     return app;
 
 }
-export default setupSpectronApp;

@@ -69,6 +69,7 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( 'isRunningProduction?', isRunningProduction );
     log.verbose( 'isRunningMock?', isRunningMock );
     log.verbose( 'isRunningSpectronTestProcess?', isRunningSpectronTestProcess );
+    log.verbose( 'isRunningSpectronTestProcessingPackagedApp?', isRunningSpectronTestProcessingPackagedApp );
     log.verbose( '' );
     log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.verbose( '' );
