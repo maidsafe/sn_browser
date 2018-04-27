@@ -71,11 +71,11 @@ after_success:
 
 after_failure:
 - ls /home/travis/peruse/app/node_modules/@maidsafe/safe-node-app/src/native
-- cat ~/.local/share/applications/mimeapps.list
-- cat ~/.local/share/applications/maidsafenet-ltd-safe-browser-authenticator.desktop
+# - cat ~/.local/share/applications/mimeapps.list
+# - cat ~/.local/share/applications/maidsafenet-ltd-safe-browser-authenticator.desktop
 - which xdg-open
 - xdg-open --version
-- bash -x ~/bin/xdg-open safe-auth://whaaaaa
+# - bash -x ~/bin/xdg-open safe-auth://whaaaaa
 - cat app/log.log;
 
 

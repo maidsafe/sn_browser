@@ -49,19 +49,21 @@ describe( 'main window', () =>
         await delay(3500)
         return loaded;
     });
-    it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
-    {
-        const { client } = app;
-        const logs = await client.getRenderProcessLogs();
-        // Print renderer process logs
-        logs.forEach( log =>
-        {
-            console.log( log.message );
-            console.log( log.source );
-            console.log( log.level );
-        } );
-        // expect( logs ).toHaveLength( 0 );
-    } );
+
+    //
+    // it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
+    // {
+    //     const { client } = app;
+    //     const logs = await client.getRenderProcessLogs();
+    //     // Print renderer process logs
+    //     logs.forEach( log =>
+    //     {
+    //         console.log( log.message );
+    //         console.log( log.source );
+    //         console.log( log.level );
+    //     } );
+    //     // expect( logs ).toHaveLength( 0 );
+    // } );
 
     //
     // it( 'cannot open http:// protocol links', async () =>
