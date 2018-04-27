@@ -14,10 +14,12 @@ const safeRoute = ( store ) => ( {
             const app = getPeruseAppObj() || {};
             const headers = request.headers;
             let isRangeReq = false;
+	    let multipartReq = false;
             const BYTES = 'bytes=';
 
             let start;
             let end;
+	    let rangeArray;
 
             logger.verbose( `Handling SAFE req: ${link}` );
 
@@ -28,26 +30,45 @@ const safeRoute = ( store ) => ( {
 
             if ( headers.range )
             {
+	        isRangeReq = true;
                 const range = headers.range;
-                const rangeArray =
+                rangeArray =
                   range.substring( BYTES.length, range.length )
-                      .replace( /['"]+/g, '' )
-                      .split( '-' );
-
-                start = rangeArray[0] ? parseInt( rangeArray[0], 10 ) : null;
-                end = rangeArray[1] ? parseInt( rangeArray[1], 10 ) : null;
-
-                // we need to separate out 0- length requests which are not partial content
-                if ( start && start !== 0 )
-                {
-                    // should have a start !== 0
-                    isRangeReq = true;
-                }
-
-                if ( start === 0 && end )
-                {
-                    isRangeReq = true;
-                }
+                      .split( ',' )
+		      .map(part => 
+		      {
+		          const partObj = {}; 
+	                  part.split('-')
+			      .forEach((int, i) => 
+			      {
+			          if (i === 0) 
+				  {
+				    if ( Number.isInteger(parseInt(int, 10)) )
+				    {
+				      partObj.start = parseInt(int, 10);
+				    }
+				    else
+				    {
+				      partObj.start = null;
+				    }
+				  }
+				  else if (i === 1) 
+				  {
+				    if ( Number.isInteger(parseInt(int, 10)) )
+				    {
+				      partObj.end = parseInt(int, 10);
+				    }
+				    else
+				    {
+				      partObj.end = null;
+				    }
+				  }
+  	                      });
+			  return partObj;
+	              });
+		if (rangeArray.length > 1) {
+	          multipartReq = true;	
+		}
             }
 
             // setup opts object
@@ -55,7 +76,7 @@ const safeRoute = ( store ) => ( {
 
             if ( isRangeReq )
             {
-                options.range = { start, end };
+                options.range = rangeArray;
             }
             store.dispatch( setWebFetchStatus( {
                 fetching : true,
@@ -75,7 +96,14 @@ const safeRoute = ( store ) => ( {
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
-            if ( isRangeReq )
+            if ( isRangeReq && multipartReq )
+            {
+                return reply( data.parts )
+                    .code( 206 )
+                    .type( data.headers['Content-Type'] )
+                    .header( 'Content-Length', data.headers['Content-Length'] );
+            }
+            else if ( isRangeReq )
             {
                 return reply( data.body )
                     .code( 206 )
@@ -83,11 +111,13 @@ const safeRoute = ( store ) => ( {
                     .header( 'Content-Range', data.headers['Content-Range'] )
                     .header( 'Content-Length', data.headers['Content-Length'] );
             }
-
-            return reply( data.body )
-                .type( data.headers['Content-Type'] )
-                .header( 'Transfer-Encoding', 'chunked' )
-                .header( 'Accept-Ranges', 'bytes' );
+	    else
+	    {
+              return reply( data.body )
+                  .type( data.headers['Content-Type'] )
+                  .header( 'Transfer-Encoding', 'chunked' )
+                  .header( 'Accept-Ranges', 'bytes' );
+	    }
         }
         catch ( e )
         {
