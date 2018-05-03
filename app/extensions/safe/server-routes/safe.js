@@ -1,6 +1,7 @@
 import logger from 'logger';
 import { getPeruseAppObj } from '../network';
 import { setWebFetchStatus } from '../../../actions/web_fetch_actions';
+import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 
 const safeRoute = ( store ) => ( {
     method  : 'GET',
@@ -15,7 +16,6 @@ const safeRoute = ( store ) => ( {
             const headers = request.headers;
             let isRangeReq = false;
 	    let multipartReq = false;
-            const BYTES = 'bytes=';
 
             let start;
             let end;
@@ -31,41 +31,7 @@ const safeRoute = ( store ) => ( {
             if ( headers.range )
             {
 	        isRangeReq = true;
-                const range = headers.range;
-                rangeArray =
-                  range.substring( BYTES.length, range.length )
-                      .split( ',' )
-		      .map(part => 
-		      {
-		          const partObj = {}; 
-	                  part.split('-')
-			      .forEach((int, i) => 
-			      {
-			          if (i === 0) 
-				  {
-				    if ( Number.isInteger(parseInt(int, 10)) )
-				    {
-				      partObj.start = parseInt(int, 10);
-				    }
-				    else
-				    {
-				      partObj.start = null;
-				    }
-				  }
-				  else if (i === 1) 
-				  {
-				    if ( Number.isInteger(parseInt(int, 10)) )
-				    {
-				      partObj.end = parseInt(int, 10);
-				    }
-				    else
-				    {
-				      partObj.end = null;
-				    }
-				  }
-  	                      });
-			  return partObj;
-	              });
+                rangeArray = rangeStringToArray(headers.range);
 		if (rangeArray.length > 1) {
 	          multipartReq = true;	
 		}
@@ -98,10 +64,8 @@ const safeRoute = ( store ) => ( {
 
             if ( isRangeReq && multipartReq )
             {
-                return reply( data.parts )
-                    .code( 206 )
-                    .type( data.headers['Content-Type'] )
-                    .header( 'Content-Length', data.headers['Content-Length'] );
+                const responseStr = generateResponseStr(data);
+                return reply( responseStr );
             }
             else if ( isRangeReq )
             {

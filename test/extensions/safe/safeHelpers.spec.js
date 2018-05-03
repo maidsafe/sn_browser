@@ -1,4 +1,4 @@
-import {urlIsAllowed} from 'extensions/safe/utils/safeHelpers';
+import {urlIsAllowed, generateBoundaryStr, generateResponseStr, rangeStringToArray } from 'extensions/safe/utils/safeHelpers';
 
 describe( 'Safe Extension', () =>
 {
@@ -36,4 +36,88 @@ describe( 'Safe Extension', () =>
             expect( urlIsAllowed( home ) ).toBeTruthy();
         } );
     });
+
+    describe( 'Generate boundary string for multirange server response header', () =>
+    {
+        test('it exists', () => 
+        {
+            expect( generateBoundaryStr ).not.toBeNull();
+        } ); 
+
+        test('it generates 13 character string', () => 
+        {
+            const testValue = generateBoundaryStr();
+            expect( testValue.length ).toBe(13);
+            expect( typeof testValue).toBe('string');
+        } ); 
+    } ); 
+
+    describe( 'Generate response string for multirange server response', () =>
+    {
+        test('it exists', () => 
+        {
+            expect( generateResponseStr ).not.toBeNull();
+        } ); 
+
+        test('returns response string', () => 
+        {
+            const fileData = Buffer.from('Lorem ipsum dolor sit amet, consectetur adipiscing elit');
+            const parts =
+            [
+              {
+                body: fileData.slice(3, 9),
+                headers: {
+                  'Content-Type': 'text/plain',
+                  'Content-Range': `bytes 3-8/${fileData.length}`
+                }
+              },
+              {
+                body: fileData.slice(11, 14),
+                headers: {
+                  'Content-Type': 'text/plain',
+                  'Content-Range': `bytes 11-13/${fileData.length}`
+                }
+              },
+              {
+                body: fileData.slice(17, 19),
+                headers: {
+                  'Content-Type': 'text/plain',
+                  'Content-Range': `bytes 17-18/${fileData.length}`
+                }
+              }
+            ];
+            const data = 
+            {
+              headers: 
+              {
+                'Content-Type': 'multipart/byteranges',
+                'Content-Length': JSON.stringify(parts).length
+              },
+              parts
+            };
+            const testValue = generateResponseStr(data);
+            expect( typeof testValue).toBe('string');
+        } ); 
+    } ); 
+
+    describe( 'Parse range request string as array of range objects', () =>
+    {
+        test('it exists', () => 
+        {
+            expect( rangeStringToArray ).not.toBeNull();
+        } ); 
+
+        test('returns array of range objects', () => 
+        {
+            const rangeString = 'bytes=4-6,14-20,40-53';
+            const testValue = rangeStringToArray(rangeString);
+            const expectedValue = 
+            [
+              { start: 4, end: 6 },
+              { start: 14, end: 20 },
+              { start: 40, end: 53 }
+            ];
+            expect( testValue ).toEqual(expectedValue);
+        } ); 
+    } ); 
 } );
