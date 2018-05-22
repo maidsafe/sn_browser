@@ -80,11 +80,15 @@ export const initAnon = async ( passedStore ) =>
 {
     store = passedStore;
 
+    const isMock = passedStore.getState().peruseApp.isMock;
+
     const appOptions = {
         libPath        : CONFIG.SAFE_NODE_LIB_PATH,
         registerScheme : false,
         joinSchemes    : [PROTOCOLS.SAFE],
-        configPath     : CONFIG.CONFIG_PATH
+        configPath     : CONFIG.CONFIG_PATH,
+        forceUseMock   : isMock
+
     }
 
     try
@@ -200,27 +204,4 @@ export const reconnect = ( app ) =>
         return Promise.reject( new Error( 'Application not initialised' ) );
     }
     return app.reconnect();
-};
-
-
-/**
- * Authorise application for dev environment
- * This creates a test login for development purpose
- */
-export const initMock = async ( passedStore ) =>
-{
-    store = passedStore;
-    setIPCStore( store );
-    logger.info( 'Initialising mock app' );
-
-    try
-    {
-        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
-        peruseAppObj = await peruseAppObj.auth.loginForTest( APP_INFO.permissions );
-        return peruseAppObj;
-    }
-    catch ( err )
-    {
-        throw err;
-    }
 };
