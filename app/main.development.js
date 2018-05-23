@@ -16,6 +16,7 @@ import fs from 'fs';
 
 import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
 import logger from 'logger';
+
 import {
     isRunningUnpacked,
     isRunningSpectronTestProcess,
@@ -23,7 +24,10 @@ import {
     isCI,
     travisOS,
     I18N_CONFIG,
-    PROTOCOLS } from 'appConstants';
+    PROTOCOLS,
+    CONFIG
+} from 'appConstants';
+
 import pkg from 'appPackage';
 
 import setupBackground from './setupBackground';
@@ -56,9 +60,9 @@ let mainWindow = null;
 // Do any pre app extension work
 preAppLoad();
 
-if ( process.argv.includes('--mock') && process.argv.includes('--new') )
+if ( process.argv.includes('--mock') && process.argv.includes('--preload') )
 {
-    fs.readFile(path.join(__dirname, '..', 'MockVault'), (err, data) => {
+    fs.readFile(CONFIG.PRELOADED_MOCK_VAULT_PATH, (err, data) => {
         if (err) throw err;
         fs.writeFile(path.join(os.tmpdir(), 'MockVault'), data, (err) => {
 	    if (err) throw err;

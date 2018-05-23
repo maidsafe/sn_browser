@@ -104,7 +104,8 @@ export const CONFIG = {
     DATE_FORMAT          : 'h:MM-mmm dd',
     NET_STATUS_CONNECTED : 'Connected',
     STATE_KEY            : 'peruseState',
-    BROWSER_TYPE_TAG     : 8467
+    BROWSER_TYPE_TAG     : 8467,
+    PRELOADED_MOCK_VAULT_PATH: path.join(__dirname, '..', 'MockVault')
 };
 
 if( inMainProcess )
