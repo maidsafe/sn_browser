@@ -105,7 +105,7 @@ export const CONFIG = {
     NET_STATUS_CONNECTED : 'Connected',
     STATE_KEY            : 'peruseState',
     BROWSER_TYPE_TAG     : 8467,
-    PRELOADED_MOCK_VAULT_PATH: path.join(__dirname, '..', 'MockVault')
+    PRELOADED_MOCK_VAULT_PATH: path.join(__dirname, '..', 'PreloadDevVault')
 };
 
 if( inMainProcess )

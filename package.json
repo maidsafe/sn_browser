@@ -74,8 +74,8 @@
         "to": "log.toml"
       },
       {
-        "from": "resources/MockVault",
-        "to": "MockVault"
+        "from": "resources/PreloadDevVault",
+        "to": "PreloadDevVault"
       },
       {
         "from": "resources/locales",

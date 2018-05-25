@@ -60,15 +60,21 @@ let mainWindow = null;
 // Do any pre app extension work
 preAppLoad();
 
+// Apply MockVault if wanted for prealod
 if ( process.argv.includes('--mock') && process.argv.includes('--preload') )
 {
-    fs.readFile(CONFIG.PRELOADED_MOCK_VAULT_PATH, (err, data) => {
-        if (err) throw err;
-        fs.writeFile(path.join(os.tmpdir(), 'MockVault'), data, (err) => {
-	    if (err) throw err;
-	});
-    });
-}
+    try{
+
+        let data = fs.readFileSync(CONFIG.PRELOADED_MOCK_VAULT_PATH );
+
+        fs.writeFileSync(path.join(os.tmpdir(), 'MockVault'), data)
+    }
+    catch( error )
+    {
+        logger.error('Error preloading MockVault')
+    }
+
+};
 
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
