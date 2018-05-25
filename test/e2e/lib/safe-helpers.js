@@ -1,4 +1,4 @@
-import { initializeApp } from '@maidsafe/safe-node-app';
+import { initialiseApp } from '@maidsafe/safe-node-app';
 const TAG_TYPE_DNS = 15001;
 const TAG_TYPE_WWW = 15002;
 
@@ -6,7 +6,7 @@ const TAG_TYPE_WWW = 15002;
 
 export const createSafeApp = async ( appInfo ) =>
 {
-    const safeApp = await initializeApp(appInfo);
+    const safeApp = await initialiseApp(appInfo);
 
     return safeApp;
 }

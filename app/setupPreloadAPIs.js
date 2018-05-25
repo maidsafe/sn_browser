@@ -18,7 +18,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
     logger.info( 'Setup up SAFE Dom API via @maidsafe/safe-node-app' );
     win.safe = { ...safe };
 
-    win.safe.initializeApp = async ( appInfo, netStateCallback, options ) =>
+    win.safe.initialiseApp = async ( appInfo, netStateCallback, options ) =>
     {
         // TODO: Throw warnings for these options.
         const optionsToUse = {
@@ -29,7 +29,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
             configPath     : null
         };
 
-        let app = await safe.initializeApp( appInfo, netStateCallback, optionsToUse );
+        let app = await safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
 
         app.auth.openUri = () =>
         {
@@ -49,9 +49,9 @@ export const setupSafeAPIs = ( store, win = window ) =>
             libPath        : null,
             configPath     : null
         };
-        let app =  await win.safe.initializeApp( appInfo, netStateCallback, optionsToUse );
+        let app =  await win.safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
 
-        await app.auth.loginFromURI( authURI );
+        await app.auth.loginFromUri( authURI );
         return app;
     };
 

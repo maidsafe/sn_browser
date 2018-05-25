@@ -3,7 +3,7 @@ import {
     saveConfigToSafe,
     readConfigFromSafe
 } from './manageBrowserConfig';
-import { initializeApp } from '@maidsafe/safe-node-app';
+import { initialiseApp } from '@maidsafe/safe-node-app';
 import {
     APP_INFO,
     CONFIG,
@@ -59,7 +59,7 @@ const requestPeruseAppAuthentication = async ( ) =>
 {
     try
     {
-        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
+        peruseAppObj = await initialiseApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
 
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
@@ -108,7 +108,7 @@ const authFromStoreResponse = async ( res, store ) =>
     try
     {
         urisUnderAuth.push(res);
-        peruseAppObj = await peruseAppObj.auth.loginFromURI( res );
+        peruseAppObj = await peruseAppObj.auth.loginFromUri( res );
 
         if ( store )
         {

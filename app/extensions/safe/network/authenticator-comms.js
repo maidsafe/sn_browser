@@ -1,6 +1,6 @@
 import logger from 'logger';
 import { handleAuthUrl } from 'actions/authenticator_actions';
-import { initializeApp } from '@maidsafe/safe-node-app';
+import { initialiseApp } from '@maidsafe/safe-node-app';
 import {
     APP_INFO,
     CONFIG,
@@ -32,7 +32,7 @@ export const authFromInternalResponse = async ( res, isAuthenticated ) =>
     try
     {
         // for webFetch app only
-        peruseAppObj = await peruseAppObj.auth.loginFromURI( res );
+        peruseAppObj = await peruseAppObj.auth.loginFromUri( res );
     }
     catch ( err )
     {
@@ -94,7 +94,7 @@ export const initAnon = async ( passedStore ) =>
     try
     {
         // does it matter if we override?
-        peruseAppObj = await initializeApp( APP_INFO.info, null, appOptions );
+        peruseAppObj = await initialiseApp( APP_INFO.info, null, appOptions );
         const authReq = await peruseAppObj.auth.genConnUri( {} );
 
         const authType = parseSafeAuthUrl( authReq.uri );
@@ -174,7 +174,7 @@ export const requestAuth = async () =>
 {
     try
     {
-        peruseAppObj = await initializeApp(
+        peruseAppObj = await initialiseApp(
             APP_INFO.info,
             null,
             { libPath: CONFIG.SAFE_NODE_LIB_PATH }

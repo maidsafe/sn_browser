@@ -18,7 +18,7 @@ describe('Setup Preload APIs', () =>
 
         expect( win ).toHaveProperty('safe');
         expect( win.safe ).toHaveProperty('CONSTANTS');
-        expect( win.safe ).toHaveProperty('initializeApp');
+        expect( win.safe ).toHaveProperty('initialiseApp');
         expect( win.safe ).toHaveProperty('fromAuthURI');
         expect( win.safe ).toHaveProperty('authorise');
     });
@@ -40,13 +40,13 @@ describe('Setup Preload APIs', () =>
     // skip final tests in a production environment as libs dont exist
     if( startedRunningProduction ) return;
 
-    test('setupSafeAPIs\s safe.initializeApp', async () =>
+    test('setupSafeAPIs\s safe.initialiseApp', async () =>
     {
         expect.assertions(5);
 
         try
         {
-            await win.safe.initializeApp();
+            await win.safe.initialiseApp();
         }
         catch( e )
         {
@@ -54,7 +54,7 @@ describe('Setup Preload APIs', () =>
             expect( e.message ).toBe('Cannot read property \'id\' of undefined');
         }
 
-        let app = await win.safe.initializeApp( APP_INFO.info );
+        let app = await win.safe.initialiseApp( APP_INFO.info );
 
         expect( app ).not.toBeNull()
         expect( app.auth ).not.toBeUndefined()
@@ -63,7 +63,7 @@ describe('Setup Preload APIs', () =>
     });
 
 
-    test('setupSafeAPIs\s safe.fromAuthURI, gets initializeApp errors', async () =>
+    test('setupSafeAPIs\s safe.fromAuthURI, gets initialiseApp errors', async () =>
     {
         expect.assertions(3);
 
@@ -78,7 +78,7 @@ describe('Setup Preload APIs', () =>
             expect( e.message ).toBe('Cannot read property \'id\' of undefined');
         }
 
-        win.safe.initializeApp = jest.fn()
+        win.safe.initialiseApp = jest.fn()
                                     .mockName('mockInitApp');
 
         try
@@ -87,7 +87,7 @@ describe('Setup Preload APIs', () =>
         }
         catch( e )
         {
-            expect( win.safe.initializeApp.mock.calls.length ).toBe(1)
+            expect( win.safe.initialiseApp.mock.calls.length ).toBe(1)
         }
 
     });
