@@ -5,8 +5,8 @@ import logger from 'logger';
 import { isHot,
     isRunningPackaged,
     inRendererProcess,
-    isRunningProduction,
-    isRunningMock,
+    startedRunningProduction,
+    startedRunningMock,
     isRunningNodeEnvTest,
     isRunningSpectronTestProcess
 } from 'appConstants';
@@ -17,7 +17,7 @@ let libLocaleModifier = 'extensions/safe/';
 
 let libEnvModifier = 'prod';
 
-if ( isRunningMock || isRunningNodeEnvTest )
+if ( startedRunningMock || isRunningNodeEnvTest )
 {
     libEnvModifier = 'mock';
 }

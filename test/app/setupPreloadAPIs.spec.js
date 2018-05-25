@@ -1,5 +1,5 @@
 import * as preloadFuncs from '../../app/setupPreloadAPIs';
-import { APP_INFO, isRunningProduction } from 'appConstants';
+import { APP_INFO, startedRunningProduction } from 'appConstants';
 
 jest.mock('logger');
 
@@ -38,7 +38,7 @@ describe('Setup Preload APIs', () =>
     })
 
     // skip final tests in a production environment as libs dont exist
-    if( isRunningProduction ) return;
+    if( startedRunningProduction ) return;
 
     test('setupSafeAPIs\s safe.initializeApp', async () =>
     {

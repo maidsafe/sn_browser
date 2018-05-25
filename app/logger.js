@@ -4,8 +4,8 @@ import { env,
     isRunningUnpacked,
     isRunningPackaged,
     isRunningDebug,
-    isRunningProduction,
-    isRunningMock,
+    startedRunningProduction,
+    startedRunningMock,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp,
     inMainProcess,
@@ -63,11 +63,12 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( 'Running with derived constants:' );
     log.verbose( '' );
     log.verbose( 'isRunningDebug?', isRunningDebug );
+    log.verbose( 'shouldStartAsMockFromFlagsOrPackage?', shouldStartAsMockFromFlagsOrPackage );
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );
     log.verbose( 'inMainProcess?', inMainProcess );
-    log.verbose( 'isRunningProduction?', isRunningProduction );
-    log.verbose( 'isRunningMock?', isRunningMock );
+    log.verbose( 'startedRunningProduction?', startedRunningProduction );
+    log.verbose( 'startedRunningMock?', startedRunningMock );
     log.verbose( 'isRunningSpectronTestProcess?', isRunningSpectronTestProcess );
     log.verbose( 'isRunningSpectronTestProcessingPackagedApp?', isRunningSpectronTestProcessingPackagedApp );
     log.verbose( '' );

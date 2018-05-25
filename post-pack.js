@@ -37,6 +37,12 @@ if ( platform === OSX )
     fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, LOGS ), path.resolve( PERUSE_CONTENTS_FOLDER, LOGS ), { overwrite: true } );
 
     PLATFORM_NAME = 'osx';
+
+    if ( isBuildingDev  )
+    {
+        fs.writeFileSync( path.resolve( PERUSE_RESOURCES_FOLDER, 'startAsMock'), 'unimportantContents' );
+    }
+
 }
 
 if ( platform === LINUX )
@@ -53,6 +59,10 @@ if ( platform === WINDOWS )
     PLATFORM_NAME = 'win';
 }
 
+if ( isBuildingDev && ( platform === WINDOWS || platform === LINUX ) )
+{
+    fs.writeFileSync( path.resolve( CONTAINING_FOLDER, 'startAsMock'), 'unimportantContents' );
+}
 
 
 // add version file

@@ -10,7 +10,7 @@ import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'actions/peruse_actions';
-import { isRunningMock, isRunningSpectronTestProcess } from 'appConstants';
+import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import handlePeruseStoreChanges from './peruseSafeApp';
 import loadSafeLibs from './loadSafeLibs';
 import { setIPCStore } from 'extensions/safe/ffi/ipc';
@@ -59,7 +59,8 @@ const onInitBgProcess = async ( store ) =>
 
 const onOpen = ( store ) =>
 {
-    store.dispatch( setIsMock( isRunningMock ) );
+    logger.info('OnOpen: Setting mock in store. ', startedRunningMock)
+    store.dispatch( setIsMock( startedRunningMock ) );
 }
 
 const middleware = store => next => action =>

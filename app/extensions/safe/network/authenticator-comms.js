@@ -91,8 +91,6 @@ export const initAnon = async ( passedStore ) =>
     {
         // does it matter if we override?
         peruseAppObj = await initializeApp( APP_INFO.info, null, appOptions );
-
-        // TODO, do we even need to generate this?
         const authReq = await peruseAppObj.auth.genConnUri( {} );
 
         const authType = parseSafeAuthUrl( authReq.uri );

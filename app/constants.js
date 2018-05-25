@@ -1,16 +1,23 @@
 
 import path from 'path';
+import fs from 'fs-extra';
 import { remote } from 'electron';
 import pkg from 'appPackage';
 
 const allPassedArgs = process.argv;
 
-let hasMockFlag = false;
+let shouldRunMockNetwork = fs.existsSync( path.resolve( __dirname, '..', 'startAsMock') );
+
 let hasDebugFlag = false;
 
 if( allPassedArgs.includes('--mock') )
 {
-    hasMockFlag = true;
+    shouldRunMockNetwork = true;
+}
+
+if( allPassedArgs.includes('--live') )
+{
+    shouldRunMockNetwork = false;
 }
 
 if( allPassedArgs.includes('--debug') )
@@ -18,21 +25,28 @@ if( allPassedArgs.includes('--debug') )
     hasDebugFlag = true;
 }
 
+export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
+
 export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
 
 export const isRunningUnpacked = process.env.IS_UNPACKED;
 export const isRunningPackaged = !isRunningUnpacked;
 export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
 
-export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
+
+export const env = shouldStartAsMockFromFlagsOrPackage ? 'development' : process.env.NODE_ENV || 'production';
 export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal('isCI') :  process.env.CI;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
 //other considerations?
 export const isHot = process.env.HOT || 0;
 
+
+// const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage;
+const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage ;
+
 // only to be used for inital store setting in main process. Not guaranteed correct for renderers.
-export const isRunningMock = /^dev/.test( env );
-export const isRunningProduction = !isRunningMock;
+export const startedRunningMock = ( remote && remote.getGlobal ) ? remote.getGlobal('startedRunningMock') : startAsMockNetwork || /^dev/.test( env );
+export const startedRunningProduction = !startedRunningMock;
 export const isRunningNodeEnvTest = /^test/.test( env );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess ;
 export const inRendererProcess = typeof window !== 'undefined';
@@ -113,7 +127,8 @@ if( inMainProcess )
     global.preloadFile = `file://${ __dirname }/webPreload.js`;
     global.appDir = __dirname;
     global.isCI = isCI;
-    global.hasMockFlag = hasMockFlag;
+    global.startedRunningMock = startedRunningMock;
+    global.shouldStartAsMockFromFlagsOrPackage = shouldStartAsMockFromFlagsOrPackage;
     global.SAFE_NODE_LIB_PATH = CONFIG.SAFE_NODE_LIB_PATH;
     global.isRunningSpectronTestProcessingPackagedApp = isRunningSpectronTestProcessingPackagedApp;
     global.SPECTRON_TEST = isRunningSpectronTestProcess;
