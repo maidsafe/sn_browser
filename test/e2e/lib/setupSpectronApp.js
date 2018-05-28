@@ -11,12 +11,6 @@ export const travisOS = process.env.TRAVIS_OS_NAME || '';
 export const isUnpacked = process.env.IS_UNPACKED || false;
 export const isTestingPackagedApp = process.env.IS_PACKED || false;
 
-console.log('IS TESTINGINGINIGNGNNNNNN',
- isCI,
- travisOS,
- isUnpacked,
- isTestingPackagedApp
-)
 export const setupSpectronApp = ( ) =>
 {
     const isMac = process.platform === 'darwin'

@@ -6,7 +6,7 @@ const TAG_TYPE_WWW = 15002;
 
 export const createSafeApp = async ( appInfo ) =>
 {
-    const safeApp = await initialiseApp(appInfo);
+    const safeApp = await initialiseApp(appInfo, null, { forceUseMock: true });
 
     return safeApp;
 }
