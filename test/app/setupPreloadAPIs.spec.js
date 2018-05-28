@@ -3,8 +3,16 @@ import { APP_INFO, startedRunningProduction } from 'appConstants';
 
 jest.mock('logger');
 
+// avoid appveyour for its weak.ref issues right now.
+const APPVEYOR = process.env.APPVEYOR;
+
 describe('Setup Preload APIs', () =>
 {
+    if ( APPVEYOR )
+    {
+        return;
+    }
+
     let win = {};
     let store = jest.fn(); //need to mock store. should be called once.
     beforeAll( () =>
