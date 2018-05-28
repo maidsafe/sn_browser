@@ -55,11 +55,15 @@ let callingArray = [];
  * @param  {Boolean} isMock is the browser being run on a mock network
  * @return {Promise}        Peruse SafeApp object
  */
-const requestPeruseAppAuthentication = async ( ) =>
+const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 {
     try
     {
-        peruseAppObj = await initialiseApp( APP_INFO.info, null, { libPath: CONFIG.SAFE_NODE_LIB_PATH } );
+        const isMock = peruseStateObject.isMock;
+        peruseAppObj = await initialiseApp( APP_INFO.info, null, {
+            libPath: CONFIG.SAFE_NODE_LIB_PATH,
+            forceUseMock   : isMock
+        } );
 
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
@@ -154,7 +158,7 @@ const manageAuthorisationActions = async ( store ) =>
 
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
 
-        await requestPeruseAppAuthentication( );
+        await requestPeruseAppAuthentication( peruse );
         isAuthing = false;
     }
 

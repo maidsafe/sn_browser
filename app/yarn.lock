@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@git+https://github.com/maidsafe/safe_app_nodejs.git#5ce77218edbadfc39d50877af783930b6528747d":
+"@maidsafe/safe-node-app@git+https://github.com/maidsafe/safe_app_nodejs.git#58a8c8b4f40ac02d5fa8d98e8da8b0735099d7a0":
   version "0.8.1"
-  resolved "git+https://github.com/maidsafe/safe_app_nodejs.git#5ce77218edbadfc39d50877af783930b6528747d"
+  resolved "git+https://github.com/maidsafe/safe_app_nodejs.git#58a8c8b4f40ac02d5fa8d98e8da8b0735099d7a0"
   dependencies:
     cross-env "5.1.3"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
