@@ -11,7 +11,7 @@ const s = `\\${path.sep}`;
 let pattern;
 const arg = process.argv[2];
 
-const argsArray = [ ...process.argv.slice( 2 ), '--notify'];
+const argsArray = [ '--notify'];
 let testCommand = path.normalize( './node_modules/.bin/jest' );
 
 if (process.platform === 'win32') {
@@ -24,6 +24,17 @@ switch ( arg )
     {
         pattern = `test${s}e2e${s}.+\\.spec\\.js`;
         argsArray.push( `--bail`);
+        argsArray.push( `--runInBand`);
+
+        console.log('RUNNNING E@EEE@E2eeeeee')
+
+
+        //exclude weakref tests for now.
+        if ( platform === WINDOWS )
+        {
+            pattern = `test${s}e2e${s}(?!safe).+\\.spec\\.js`;
+        }
+
         break;
     }
     case ( 'exts' ) :
@@ -42,8 +53,8 @@ switch ( arg )
         }
     }
 }
-
-argsArray.push( `--testPathPattern=${pattern}`);
+// should be first
+argsArray.unshift( pattern );
 
 console.log('Running tests via: ', testCommand, argsArray );
 
