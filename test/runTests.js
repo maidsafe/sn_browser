@@ -26,9 +26,6 @@ switch ( arg )
         argsArray.push( `--bail`);
         argsArray.push( `--runInBand`);
 
-        console.log('RUNNNING E@EEE@E2eeeeee')
-
-
         //exclude weakref tests for now.
         if ( platform === WINDOWS )
         {
