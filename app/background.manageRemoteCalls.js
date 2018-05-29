@@ -20,14 +20,14 @@ const allAPICalls = {
      * with auth respnose.
      * @type {[type]}
      */
-    authenticateFromURI : async ( authUri ) =>
+    authenticateFromUriObject : async ( authUriObject ) =>
     {
         logger.silly( 'Authenticating a webapp via remote call.');
 
         return new Promise( ( resolve, reject ) =>
         {
-            setAuthCallbacks( authUri, resolve, reject );
-            callIPC.decryptRequest( authUri, CONSTANTS.CLIENT_TYPES.WEB );
+            setAuthCallbacks( authUriObject, resolve, reject );
+            callIPC.decryptRequest( authUriObject, CONSTANTS.CLIENT_TYPES.WEB );
         });
     }
 }

@@ -41,7 +41,7 @@ describe('Setup Preload APIs', () =>
             await win.safe.authorise();
 
         } catch (e) {
-            expect( e.message ).toBe('AuthUri string is required')
+            expect( e.message ).toBe('Auth object is required')
         }
     })
 

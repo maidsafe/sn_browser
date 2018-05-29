@@ -61,11 +61,11 @@ export const setupSafeAPIs = ( store, win = window ) =>
      * @param  {[type]}  authUri [description]
      * @return {Promise}         resolves to URI string.
      */
-    win.safe.authorise = async ( authUri ) =>
+    win.safe.authorise = async ( authObj ) =>
     {
-        if( !authUri || typeof authUri !== 'string' ) throw new Error('AuthUri string is required');
+        if( !authObj || typeof authObj !== 'object' ) throw new Error('Auth object is required');
 
-        return await createRemoteCall( 'authenticateFromURI', store )( authUri );
+        return await createRemoteCall( 'authenticateFromUriObject', store )( authObj );
     };
 };
 
