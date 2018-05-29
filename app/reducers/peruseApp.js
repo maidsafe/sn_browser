@@ -3,7 +3,8 @@ import { TYPES } from 'actions/peruse_actions';
 import initialAppState from './initialAppState';
 import logger from 'logger';
 
-import { SAFE, CONFIG } from 'appConstants';
+import { CONFIG } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 
 const initialState = initialAppState.peruseApp;
 

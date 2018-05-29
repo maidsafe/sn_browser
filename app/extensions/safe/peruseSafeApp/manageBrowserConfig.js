@@ -5,7 +5,8 @@ import {
     setReadConfigStatus
 } from 'actions/peruse_actions';
 import { addNotification } from 'actions/notification_actions';
-import { CONFIG, SAFE, SAFE_APP_ERROR_CODES } from 'appConstants';
+import { CONFIG } from 'appConstants';
+import { SAFE, SAFE_APP_ERROR_CODES } from 'extensions/safe/constants';
 
 /**
  * Parses the browser state to json (removes peruseApp) and saves to an MD on the app Homecontainer,

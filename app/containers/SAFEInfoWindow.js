@@ -7,7 +7,7 @@ import * as UiActions from 'actions/ui_actions';
 
 // TODO: Enable creation of windows via an api...? Or mvoe this into safe extension. Is that the way?
 import * as AuthenticatorActions from 'extensions/safe/actions/authenticator_actions';
-import { SAFE } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 import { TextInput } from 'nessie-ui';
 import Notifier from 'components/Notifier';
 

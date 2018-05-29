@@ -1,4 +1,4 @@
-import { SAFE } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 
 import { requestAuth, clearAppObj } from '../network';
 import * as peruseAppActions from 'actions/peruse_actions';

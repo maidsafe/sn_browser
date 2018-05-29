@@ -13,7 +13,7 @@ import {
     setSaveConfigStatus,
     setReadConfigStatus
 } from 'actions/peruse_actions';
-import { SAFE } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 import { selectAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';
 import { getLastClosedTab } from 'reducers/tabs';

@@ -20,7 +20,8 @@ import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
 
-import { SAFE, isRunningNodeEnvTest } from 'appConstants';
+import { isRunningNodeEnvTest } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );

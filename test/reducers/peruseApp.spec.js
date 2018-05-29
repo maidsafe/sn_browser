@@ -2,7 +2,8 @@
 import peruseApp from 'reducers/peruseApp';
 import { TYPES } from 'actions/peruse_actions';
 import initialState from 'reducers/initialAppState';
-import { SAFE, CONFIG } from 'appConstants';
+import { CONFIG } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 
 const safeInitialState = initialState.peruseApp;
 

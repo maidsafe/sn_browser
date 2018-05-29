@@ -3,7 +3,8 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { SAFE, CLASSES, isRunningSpectronTestProcess } from 'appConstants';
+import { CLASSES, isRunningSpectronTestProcess } from 'appConstants';
+import { SAFE } from 'extensions/safe/constants';
 import AddressBar from 'components/AddressBar';
 import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
