@@ -10,6 +10,7 @@ module.exports = {
         "<rootDir>/mocks/fileMock.js",
         "\\.(css|scss)$": "<rootDir>/mocks/fileMock.js",
         '^appPackage$'      : '<rootDir>/package.json',
+        '^spectron-lib(.*)$'      : '<rootDir>/__e2e__/lib$1',
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
         '^@containers(.*)$' : '<rootDir>/app/containers$1',

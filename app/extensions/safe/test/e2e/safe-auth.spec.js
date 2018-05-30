@@ -8,10 +8,9 @@ import {
     newTab,
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
-} from './lib/browser-driver';
-import { BROWSER_UI, AUTH_UI } from './lib/constants';
-import { setupSpectronApp, isCI, travisOS } from './lib/setupSpectronApp';
-import { WAIT_FOR_EXIST_TIMEOUT, SAFE_AUTH_REQ } from './lib/constants';
+} from 'spectron-lib/browser-driver';
+import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
+import { setupSpectronApp, isCI, travisOS } from 'spectron-lib/setupSpectronApp';
 jest.unmock( 'electron' );
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;

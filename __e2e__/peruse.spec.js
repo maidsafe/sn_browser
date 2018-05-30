@@ -7,7 +7,7 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
 } from './lib/browser-driver';
-import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
 import { setupSpectronApp, isCI, travisOS } from './lib/setupSpectronApp';
 
 jest.unmock( 'electron' );

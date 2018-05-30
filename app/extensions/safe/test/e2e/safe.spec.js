@@ -8,10 +8,10 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow,
     delay
-} from './lib/browser-driver';
+} from 'spectron-lib/browser-driver';
 import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
-import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
-import { setupSpectronApp, isCI,isTestingPackagedApp, travisOS } from './lib/setupSpectronApp';
+import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
+import { setupSpectronApp, isCI,isTestingPackagedApp, travisOS } from 'spectron-lib/setupSpectronApp';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 

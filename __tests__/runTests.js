@@ -39,6 +39,21 @@ switch ( arg )
 
         break;
     }
+    case ( 'exts-e2e' ) :
+    {
+        pattern = `app${s}extensions${s}[^${s}].+e2e${s}.+\\.spec\\.js$`;
+
+        argsArray.push( `--bail`);
+        argsArray.push( `--runInBand`);
+
+        //exclude weakref tests for now.
+        if ( platform === WINDOWS )
+        {
+            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\.spec\\.js$`;
+        }
+
+        break;
+    }
     case ( 'peruse' ) :
     {
         pattern = `__tests__${s}[^${s}]+${s}.+\\.spec\\.js$`;
