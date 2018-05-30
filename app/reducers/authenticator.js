@@ -2,7 +2,7 @@
 import { createActions }from 'redux-actions';
 import initialAppState from './initialAppState';
 
-import { TYPES } from 'actions/authenticator_actions';
+import { TYPES } from 'extensions/safe/actions/authenticator_actions';
 
 const initialState = initialAppState.authenticator;
 

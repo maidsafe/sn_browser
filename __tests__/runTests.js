@@ -10,8 +10,14 @@ const WINDOWS = 'win32';
 const s = `\\${path.sep}`;
 let pattern;
 const arg = process.argv[2];
-
 const argsArray = [ '--notify'];
+
+if( process.argv.includes( '--watch' ))
+{
+    console.log('SHOULD BE WATCHINNNN')
+    argsArray.push('--watch')
+}
+
 let testCommand = path.normalize( './node_modules/.bin/jest' );
 
 if (process.platform === 'win32') {
@@ -22,14 +28,14 @@ switch ( arg )
 {
     case ( 'e2e' ) :
     {
-        pattern = `test${s}e2e${s}.+\\.spec\\.js`;
+        pattern = `__tests__${s}e2e${s}.+\\.spec\\.js`;
         argsArray.push( `--bail`);
         argsArray.push( `--runInBand`);
 
         //exclude weakref tests for now.
         if ( platform === WINDOWS )
         {
-            pattern = `test${s}e2e${s}(?!safe).+\\.spec\\.js`;
+            pattern = `__tests__${s}e2e${s}(?!safe).+\\.spec\\.js`;
         }
 
         break;
@@ -41,12 +47,12 @@ switch ( arg )
     }
     default :
     {
-        pattern = `test${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
+        pattern = `__tests__${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
 
         if ( platform === WINDOWS )
         {
             //exclude weakref tests for now.
-            pattern = `test${s}(?!e2e${s})[^${s}]+${s}(?!setupPreloadAPIs).+\\.spec\\.js$`;
+            pattern = `__tests__${s}(?!e2e${s})[^${s}]+${s}(?!setupPreloadAPIs).+\\.spec\\.js$`;
         }
     }
 }

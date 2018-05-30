@@ -1,6 +1,6 @@
 import logger from 'logger';
-import { getPeruseAppObj } from '../network';
-import { setWebFetchStatus } from '../../../actions/web_fetch_actions';
+import { getPeruseAppObj } from 'extensions/safe/network';
+import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 
 const safeRoute = ( store ) => ( {
@@ -33,7 +33,7 @@ const safeRoute = ( store ) => ( {
 	        isRangeReq = true;
                 rangeArray = rangeStringToArray(headers.range);
 		if (rangeArray.length > 1) {
-	          multipartReq = true;	
+	          multipartReq = true;
 		}
             }
 

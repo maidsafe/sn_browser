@@ -4,7 +4,7 @@ import { initAnon } from 'extensions/safe/network';
 import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import * as theAPI from 'extensions/safe/auth-api/authFuncs';
 // import via peruse webpack resolution
-import * as authActions from 'actions/authenticator_actions';
+import * as authActions from 'extensions/safe/actions/authenticator_actions';
 
 let mockStatus = null;
 

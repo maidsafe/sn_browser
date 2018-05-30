@@ -1,5 +1,5 @@
 import logger from 'logger';
-import { handleAuthUrl } from 'actions/authenticator_actions';
+import { handleAuthUrl } from 'extensions/safe/actions/authenticator_actions';
 import { initialiseApp } from '@maidsafe/safe-node-app';
 import {
     APP_INFO,

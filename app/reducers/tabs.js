@@ -2,7 +2,7 @@
 // @flow
 import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
-import { TYPES as SAFE_TYPES } from 'actions/peruse_actions';
+import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 import { CONFIG } from 'appConstants';

@@ -1,10 +1,10 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 
 import logger from 'logger';
-// TODO This handling needs to be imported via extension apis more seemlessly
-import * as authActions from 'actions/authenticator_actions';
 import * as remoteCallActions from 'actions/remoteCall_actions';
+// TODO This handling needs to be imported via extension apis more seemlessly
 import { callIPC, setAuthCallbacks } from 'extensions/safe/ffi/ipc';
+import * as authActions from 'extensions/safe/actions/authenticator_actions';
 import * as theAPI from 'extensions/safe/auth-api/authFuncs';
 
 // TODO: Unify with app constants OR SAFE CONSTANTS

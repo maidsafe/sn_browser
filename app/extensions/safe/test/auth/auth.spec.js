@@ -1,13 +1,13 @@
 /* eslint-disable func-names */
 import path from 'path';
 import i18n from 'i18n';
-import ffiLoader from '../ffi/lib';
-import client from '../ffi/authenticator';
+import ffiLoader from 'extensions/safe/ffi/lib';
+import client from 'extensions/safe/ffi/authenticator';
 import * as helper from './helper';
 
 import crypto from 'crypto';
 
-import CONST from '../auth-constants';
+import CONST from 'extensions/safe/auth-constants';
 import toBeType from 'jest-tobetype';
 
 expect.extend( toBeType );

@@ -12,7 +12,7 @@ import { setupExtensionMenus } from 'extensions';
 import {
     setSaveConfigStatus,
     setReadConfigStatus
-} from 'actions/peruse_actions';
+} from 'extensions/safe/actions/peruse_actions';
 import { SAFE } from 'extensions/safe/constants';
 import { selectAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';

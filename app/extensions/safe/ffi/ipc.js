@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
 import { getPeruseAuthReqUri, authFromInternalResponse } from '../network';
-import * as peruseAppActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
 import i18n from 'i18n';
 import authenticator from './authenticator';

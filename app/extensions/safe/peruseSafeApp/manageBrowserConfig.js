@@ -3,7 +3,7 @@ import { getPeruseAppObj } from './index.js';
 import {
     setSaveConfigStatus,
     setReadConfigStatus
-} from 'actions/peruse_actions';
+} from 'extensions/safe/actions/peruse_actions';
 import { addNotification } from 'actions/notification_actions';
 import { CONFIG } from 'appConstants';
 import { SAFE, SAFE_APP_ERROR_CODES } from 'extensions/safe/constants';

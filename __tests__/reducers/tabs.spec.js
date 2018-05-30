@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import tabs from 'reducers/tabs';
 import { TYPES } from 'actions/tabs_actions';
-import { TYPES as SAFE_TYPES } from 'actions/peruse_actions';
+import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
 import initialState from 'reducers/initialAppState';
 
 describe( 'tabs reducer', () =>

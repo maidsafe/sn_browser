@@ -1,4 +1,4 @@
-import * as peruseAppActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 
 describe( 'notification actions', () =>
 {

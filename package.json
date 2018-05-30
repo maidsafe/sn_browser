@@ -7,9 +7,9 @@
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "main": "main.js",
   "scripts": {
-    "test": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./test/runTests.js",
-    "test-e2e": "cross-env NODE_ENV=test SPECTRON_TEST=true IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./test/runTests.js e2e --runInBand",
-    "test-e2e-prod": "cross-env NODE_ENV=prod SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node ./test/runTests.js e2e --runInBand",
+    "test": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./__tests__/runTests.js",
+    "test-e2e": "cross-env NODE_ENV=test SPECTRON_TEST=true IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./__tests__/runTests.js e2e --runInBand",
+    "test-e2e-prod": "cross-env NODE_ENV=prod SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node ./__tests__/runTests.js e2e --runInBand",
     "test-exts": "yarn test exts",
     "test-watch": "yarn test --watch",
     "test-all": "yarn run lint && yarn run flow && yarn run test && yarn run test exts && yarn run build && yarn test e2e",

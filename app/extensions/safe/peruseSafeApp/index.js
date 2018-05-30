@@ -12,7 +12,7 @@ import {
     isRunningSpectronTestProcessingPackagedApp
 } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
-import * as peruseAppActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
 // import * as remoteCallActions from 'actions/remoteCall_actions';
 import logger from 'logger';

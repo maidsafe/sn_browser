@@ -3,7 +3,7 @@
 import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
 import { TYPES } from 'actions/bookmarks_actions';
-import { TYPES as SAFE_TYPES } from 'actions/peruse_actions';
+import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 

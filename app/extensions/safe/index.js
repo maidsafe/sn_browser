@@ -1,15 +1,15 @@
 import logger from 'logger';
-import * as authenticatorActions from 'actions/authenticator_actions';
+import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 
 // TODO: get this into the extension folder
-import * as peruseAppActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 
 import { parse as parseURL } from 'url';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
-import { setIsMock } from 'actions/peruse_actions';
+import { setIsMock } from 'extensions/safe/actions/peruse_actions';
 import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import handlePeruseStoreChanges from './peruseSafeApp';
 import loadSafeLibs from './loadSafeLibs';

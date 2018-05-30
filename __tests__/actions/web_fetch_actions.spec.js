@@ -1,4 +1,4 @@
-import * as webFetch from 'actions/web_fetch_actions';
+import * as webFetch from 'extensions/safe/actions/web_fetch_actions';
 
 jest.mock('extensions/safe/ffi/ipc');
 jest.mock('electron-redux', () =>

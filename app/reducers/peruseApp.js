@@ -1,5 +1,5 @@
 // @flow
-import { TYPES } from 'actions/peruse_actions';
+import { TYPES } from 'extensions/safe/actions/peruse_actions';
 import initialAppState from './initialAppState';
 import logger from 'logger';
 

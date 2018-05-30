@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import client from '../ffi/authenticator';
+import client from '../../ffi/authenticator';
 
 /* eslint-disable import/prefer-default-export */
 export const getRandomCredentials = () => (
