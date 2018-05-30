@@ -14,7 +14,6 @@ const argsArray = [ '--notify'];
 
 if( process.argv.includes( '--watch' ))
 {
-    console.log('SHOULD BE WATCHINNNN')
     argsArray.push('--watch')
 }
 
@@ -28,7 +27,7 @@ switch ( arg )
 {
     case ( 'e2e' ) :
     {
-        pattern = `__tests__${s}e2e${s}.+\\.spec\\.js`;
+        pattern = `__e2e__${s}.+\\.spec\\.js`;
         argsArray.push( `--bail`);
         argsArray.push( `--runInBand`);
 
@@ -40,6 +39,18 @@ switch ( arg )
 
         break;
     }
+    case ( 'peruse' ) :
+    {
+        pattern = `__tests__${s}[^${s}]+${s}.+\\.spec\\.js$`;
+
+        if ( platform === WINDOWS )
+        {
+            //exclude weakref tests for now.
+            pattern = `__tests__${s}[^${s}]+${s}(?!setupPreloadAPIs).+\\.spec\\.js$`;
+        }
+
+        break;
+    }
     case ( 'exts' ) :
     {
         pattern = `app${s}extensions${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
@@ -47,12 +58,12 @@ switch ( arg )
     }
     default :
     {
-        pattern = `__tests__${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
+        pattern = `_*tests?_*(?!e2e${s})${s}[^${s}]+${s}.+\\.spec\\.js$`;
 
         if ( platform === WINDOWS )
         {
             //exclude weakref tests for now.
-            pattern = `__tests__${s}(?!e2e${s})[^${s}]+${s}(?!setupPreloadAPIs).+\\.spec\\.js$`;
+            pattern = `_*tests?_*(?!e2e${s})[^${s}]+${s}(?!setupPreloadAPIs).+\\.spec\\.js$`;
         }
     }
 }

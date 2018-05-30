@@ -1,7 +1,7 @@
 import { Application } from 'spectron';
 import electron from 'electron';
 import path from 'path';
-import RELEASE_NAME from '../../../releaseName.js';
+import RELEASE_NAME from '../../releaseName.js';
 
 jest.unmock('electron')
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
@@ -28,7 +28,7 @@ export const setupSpectronApp = ( ) =>
     console.log('Packaged application location:', packedLocation );
     const app = new Application( {
         path : isTestingPackagedApp ? packedLocation : electron,
-        args : [ isTestingPackagedApp ? '' : path.join( __dirname, '..' ,'..', '..', 'app' ) ], // lib, e2e, test
+        args : [ isTestingPackagedApp ? '' : path.join( __dirname, '..' , '..', 'app' ) ], // lib, e2e, test
         env  : {
             IS_SPECTRON: true,
             // CI: isCI,

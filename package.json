@@ -8,10 +8,11 @@
   "main": "main.js",
   "scripts": {
     "test": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./__tests__/runTests.js",
+    "test-peruse": "yarn test peruse",
     "test-e2e": "cross-env NODE_ENV=test SPECTRON_TEST=true IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node ./__tests__/runTests.js e2e --runInBand",
     "test-e2e-prod": "cross-env NODE_ENV=prod SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node ./__tests__/runTests.js e2e --runInBand",
     "test-exts": "yarn test exts",
-    "test-watch": "yarn test --watch",
+    "test-watch": "yarn test peruse --watch",
     "test-all": "yarn run lint && yarn run flow && yarn run test && yarn run test exts && yarn run build && yarn test e2e",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
     "lint-fix": "npm run lint -- --fix",

@@ -44,7 +44,7 @@ script:
   fi
 - yarn run build
 - yarn run rebuild
-- yarn run test
+- yarn run test-peruse
 - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test exts;
   fi
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
