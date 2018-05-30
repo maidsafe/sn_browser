@@ -77,7 +77,7 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( theSafeClient ).toHaveProperty('VERSION');
         expect( theSafeClient ).toHaveProperty('authorise');
         expect( theSafeClient ).toHaveProperty('initialiseApp');
-        expect( theSafeClient ).toHaveProperty('fromAuthURI');
+        expect( theSafeClient ).toHaveProperty('fromAuthUri');
     })
 
 
