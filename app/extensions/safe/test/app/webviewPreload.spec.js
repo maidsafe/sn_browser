@@ -1,4 +1,4 @@
-import * as preloadFuncs from '../../app/setupPreloadApis';
+import * as webviewPreload from 'extensions/safe/webviewPreload';
 import { APP_INFO, startedRunningProduction } from 'appConstants';
 
 jest.mock('logger');
@@ -6,7 +6,7 @@ jest.mock('logger');
 // avoid appveyour for its weak.ref issues right now.
 const APPVEYOR = process.env.APPVEYOR;
 
-describe('Setup Preload APIs', () =>
+describe('SAFE Webview Preload APIs', () =>
 {
     if ( APPVEYOR )
     {
@@ -17,7 +17,7 @@ describe('Setup Preload APIs', () =>
     let store = jest.fn(); //need to mock store. should be called once.
     beforeAll( () =>
     {
-        preloadFuncs.setupSafeAPIs( store, win )
+        webviewPreload.setupSafeAPIs( store, win )
     });
 
     test('setupSafeAPIs populates the window object', async () =>

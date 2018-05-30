@@ -17,6 +17,17 @@ export const preAppLoad = ( store ) =>
     } );
 };
 
+export const triggerOnWebviewPreload = ( store ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onWebviewPreload )
+        {
+            extension.onWebviewPreload( store );
+        }
+    } );
+};
+
 export const getExtensionReducers = ( ) =>
 {
     let reducersToAdd = {};

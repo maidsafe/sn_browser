@@ -19,6 +19,13 @@ import { APP_INFO, PROTOCOLS } from 'appConstants';
 import { addTab } from 'actions/tabs_actions';
 
 import safeReducers from 'extensions/safe/reducers';
+import webviewPreload from 'extensions/safe/webviewPreload';
+
+const onWebviewPreload = ( store ) =>
+{
+    return webviewPreload( store )
+}
+
 
 const preAppLoad = () =>
 {
@@ -126,6 +133,7 @@ export default {
     onInitBgProcess,
     onReceiveUrl,
     onOpen,
+    onWebviewPreload,
     preAppLoad,
     setupRoutes,
     middleware

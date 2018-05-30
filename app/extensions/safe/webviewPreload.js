@@ -5,13 +5,15 @@ import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS, CONFIG } from 'appConstants';
 import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 
+
 const VERSION = pkg.version;
 const pendingCalls = {};
 
-window.eval = global.eval = () =>
+
+const onPreload = ( store ) =>
 {
-    throw new Error( 'Sorry, peruse does not support window.eval().' );
-};
+    setupPreloadedSafeAuthApis( store )
+}
 
 export const setupSafeAPIs = ( store, win = window ) =>
 {
@@ -68,6 +70,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
         return await createRemoteCall( 'authenticateFromUriObject', store )( authObj );
     };
 };
+
 
 export const setupPreloadedSafeAuthApis = ( store ) =>
 {
@@ -243,3 +246,5 @@ const createRemoteCall = ( functionName, store ) =>
 
     return remoteCall;
 };
+
+export default onPreload;

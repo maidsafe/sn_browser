@@ -68,7 +68,7 @@ switch ( arg )
     }
     case ( 'exts' ) :
     {
-        pattern = `app${s}extensions${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
+        pattern = `app${s}extensions${s}[^${s}]+${s}((?!e2e).)*\\w+\\.spec\\.js$`;
         break;
     }
     default :
