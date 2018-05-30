@@ -40,7 +40,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
         return app;
     };
 
-    win.safe.fromAuthURI = async ( appInfo, authUri, netStateCallback, options ) =>
+    win.safe.fromAuthUri = async ( appInfo, authUri, netStateCallback, options ) =>
     {
         // TODO: Throw warnings for these options.
         const optionsToUse = {
@@ -69,7 +69,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
     };
 };
 
-export const setupPreloadedSafeAuthAPIs = ( store ) =>
+export const setupPreloadedSafeAuthApis = ( store ) =>
 {
     setupSafeAPIs( store );
     window[pkg.name] = { version: VERSION };

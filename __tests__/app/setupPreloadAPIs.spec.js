@@ -1,4 +1,4 @@
-import * as preloadFuncs from '../../app/setupPreloadAPIs';
+import * as preloadFuncs from '../../app/setupPreloadApis';
 import { APP_INFO, startedRunningProduction } from 'appConstants';
 
 jest.mock('logger');
@@ -27,7 +27,7 @@ describe('Setup Preload APIs', () =>
         expect( win ).toHaveProperty('safe');
         expect( win.safe ).toHaveProperty('CONSTANTS');
         expect( win.safe ).toHaveProperty('initialiseApp');
-        expect( win.safe ).toHaveProperty('fromAuthURI');
+        expect( win.safe ).toHaveProperty('fromAuthUri');
         expect( win.safe ).toHaveProperty('authorise');
     });
 
@@ -48,7 +48,7 @@ describe('Setup Preload APIs', () =>
     // skip final tests in a production environment as libs dont exist
     if( startedRunningProduction ) return;
 
-    test('setupSafeAPIs\s safe.initialiseApp', async () =>
+    test('setupSafeApis\s safe.initialiseApp', async () =>
     {
         expect.assertions(5);
 
@@ -71,13 +71,13 @@ describe('Setup Preload APIs', () =>
     });
 
 
-    test('setupSafeAPIs\s safe.fromAuthURI, gets initialiseApp errors', async () =>
+    test('setupSafeAPIs\s safe.fromAuthUri, gets initialiseApp errors', async () =>
     {
         expect.assertions(3);
 
         try
         {
-            await win.safe.fromAuthURI();
+            await win.safe.fromAuthUri();
         }
         catch( e )
         {
@@ -91,7 +91,7 @@ describe('Setup Preload APIs', () =>
 
         try
         {
-            await win.safe.fromAuthURI();
+            await win.safe.fromAuthUri();
         }
         catch( e )
         {
