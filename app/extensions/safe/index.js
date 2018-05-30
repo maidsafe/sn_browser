@@ -18,11 +18,18 @@ import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
 import { addTab } from 'actions/tabs_actions';
 
+import safeReducers from 'extensions/safe/reducers';
 
 const preAppLoad = () =>
 {
 
 }
+
+const addReducersToPeruse = ( ) =>
+{
+    return safeReducers;
+}
+
 
 const onInitBgProcess = async ( store ) =>
 {
@@ -115,6 +122,7 @@ const onReceiveUrl = ( store, url ) =>
 
 
 export default {
+    addReducersToPeruse,
     onInitBgProcess,
     onReceiveUrl,
     onOpen,

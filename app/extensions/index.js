@@ -8,13 +8,31 @@ const allPackages = [ safeBrowsing ];
 
 export const preAppLoad = ( store ) =>
 {
-    allPackages.forEach( loadPackage =>
+    allPackages.forEach( extension =>
     {
-        if ( loadPackage.preAppLoad )
+        if ( extension.preAppLoad )
         {
-            loadPackage.preAppLoad( store );
+            extension.preAppLoad( store );
         }
     } );
+};
+
+export const getExtensionReducers = ( ) =>
+{
+    let reducersToAdd = {};
+    allPackages.forEach( extension =>
+    {
+        if ( extension.addReducersToPeruse )
+        {
+            const extReducers = extension.addReducersToPeruse(  );
+
+            if( typeof extReducers !== 'object' ) throw new Error( 'Extensions reducers must be passed as an object containing relevant reducers.');
+
+            reducersToAdd = { ...reducersToAdd, ...extReducers }
+        }
+    } );
+
+    return reducersToAdd;
 };
 
 /**
@@ -27,11 +45,11 @@ export const setupExtensionMenus = ( menuArray ) =>
     let updatedMenuArray = [ ...menuArray ];
 
     // TODO: This is an accumulator of changes...
-    allPackages.forEach( loadPackage =>
+    allPackages.forEach( extension =>
     {
-        if ( loadPackage.extendMenus )
+        if ( extension.extendMenus )
         {
-            updatedMenuArray = loadPackage.extendMenus( updatedMenuArray );
+            updatedMenuArray = extension.extendMenus( updatedMenuArray );
         }
     } );
 
@@ -40,16 +58,16 @@ export const setupExtensionMenus = ( menuArray ) =>
 
 export const onInitBgProcess = ( server, store ) =>
 {
-    allPackages.forEach( loadPackage =>
+    allPackages.forEach( extension =>
     {
-        if ( loadPackage.setupRoutes )
+        if ( extension.setupRoutes )
         {
-            loadPackage.setupRoutes( server, store );
+            extension.setupRoutes( server, store );
         }
 
-        if ( loadPackage.onInitBgProcess )
+        if ( extension.onInitBgProcess )
         {
-            loadPackage.onInitBgProcess( store );
+            extension.onInitBgProcess( store );
         }
 
     } );
@@ -57,22 +75,22 @@ export const onInitBgProcess = ( server, store ) =>
 
 export const onOpenLoadExtensions = ( store ) =>
 {
-    allPackages.forEach( loadPackage =>
+    allPackages.forEach( extension =>
     {
-        if ( loadPackage.onOpen )
+        if ( extension.onOpen )
         {
-            loadPackage.onOpen( store );
+            extension.onOpen( store );
         }
     } );
 };
 
 export const onReceiveUrl = ( store, url ) =>
 {
-    allPackages.forEach( loadPackage =>
+    allPackages.forEach( extension =>
     {
-        if ( loadPackage.onReceiveUrl )
+        if ( extension.onReceiveUrl )
         {
-            loadPackage.onReceiveUrl( store, url );
+            extension.onReceiveUrl( store, url );
         }
     } );
 };

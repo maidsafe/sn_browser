@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
-import peruseApp from 'reducers/peruseApp';
+import peruseApp from 'extensions/safe/reducers/peruseApp';
 import { TYPES } from 'extensions/safe/actions/peruse_actions';
-import initialState from 'reducers/initialAppState';
+import initialState from 'extensions/safe/reducers/initialAppState';
 import { CONFIG } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 

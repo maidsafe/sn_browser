@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
-import webFetch from 'reducers/webFetch';
+import webFetch from 'extensions/safe/reducers/webFetch';
 import { TYPES } from 'extensions/safe/actions/web_fetch_actions';
-import initialState from 'reducers/initialAppState';
+import initialState from 'extensions/safe/reducers/initialAppState';
 import { CONFIG } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 
