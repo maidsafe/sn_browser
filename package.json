@@ -49,7 +49,7 @@
     "post-pack": "node ./post-pack.js",
     "cleanup": "mop -v",
     "clean-tests": "pkill -f electron",
-    "prepush": "yarn test-peruse",
+    "prepush": "yarn test",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml /Users/josh/Projects/safe/forks/dev/peruse/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
     "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",

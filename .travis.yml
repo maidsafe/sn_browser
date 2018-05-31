@@ -45,7 +45,10 @@ script:
 - yarn run build
 - yarn run rebuild
 - yarn run test-peruse
-- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test exts;
+# separate tests for safe + auth as together throws error due to native libs
+- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test safe;
+  fi
+- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test safe-auth;
   fi
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
