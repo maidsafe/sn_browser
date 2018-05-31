@@ -6,8 +6,8 @@ import * as TabActions from 'actions/tabs_actions';
 import * as NotificationActions from 'actions/notification_actions';
 import * as UiActions from 'actions/ui_actions';
 import * as BookmarksActions from 'actions/bookmarks_actions';
-import * as PeruseActions from 'extensions/safe/actions/peruse_actions';
 import Browser from 'components/Browser';
+import { getActionsForBrowser } from 'extensions';
 
 class BrowserWindow extends Component
 {
@@ -32,13 +32,15 @@ function mapStateToProps( state )
 
 function mapDispatchToProps( dispatch )
 {
+    const extensionActions = getActionsForBrowser();
     const actions =
         {
             ...BookmarksActions,
             ...NotificationActions,
             ...TabActions,
             ...UiActions,
-            ...PeruseActions
+
+            ...extensionActions
         };
     return bindActionCreators( actions, dispatch );
 }

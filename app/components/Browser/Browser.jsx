@@ -128,7 +128,7 @@ export default class Browser extends Component
             closeTab( tab );
         }
     }
-
+    // TODO add API for expanding Browser with functions.
     handleSpectronTestSaveState = ( ) =>
     {
         const { setSaveConfigStatus } = this.props;

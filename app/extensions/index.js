@@ -61,6 +61,31 @@ export const getRemoteCallApis = () =>
     return apisToAdd;
 }
 
+/**
+ * get all actions to add to the browser component.
+ * @return {object} All actions for the browser
+ */
+export const getActionsForBrowser = () =>
+{
+    logger.verbose('Getting extension browser actions');
+
+    let actionsToAdd = {};
+    allPackages.forEach( extension =>
+    {
+        if ( extension.getActionsForBrowser )
+        {
+            const extActions = extension.actionsForBrowser;
+            if( typeof extActions !== 'object' ) throw new Error( 'Browser actions must be passed as an object containing relevant api functions.');
+
+            actionsToAdd = { ...actionsToAdd, ...extActions }
+        }
+    } );
+
+    return actionsToAdd;
+}
+
+
+
 export const getExtensionReducers = ( ) =>
 {
     let reducersToAdd = {};

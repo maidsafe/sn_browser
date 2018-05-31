@@ -76,6 +76,7 @@ export default class History extends Component
                 return false;
             }
 
+            // TODO add api for URL check.
             return urlIsAllowed( url );
         } );
 
