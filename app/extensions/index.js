@@ -28,6 +28,39 @@ export const triggerOnWebviewPreload = ( store ) =>
     } );
 };
 
+/**
+ * To be triggered when a remote call occurs in the main process.
+ * @param  {object} store redux store
+ */
+export const onRemoteCallInMain = ( store, allAPICalls, theCall  ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onRemoteCallInMain )
+        {
+            extension.onRemoteCallInMain( store, allAPICalls, theCall  );
+        }
+    } );
+};
+
+export const getRemoteCallApis = () =>
+{
+    logger.verbose('Getting extension remoteCall Apis')
+    let apisToAdd = {};
+    allPackages.forEach( extension =>
+    {
+        if ( extension.getRemoteCallApis )
+        {
+            const extApis = extension.getRemoteCallApis();
+            if( typeof extApis !== 'object' ) throw new Error( 'Extensions apis must be passed as an object containing relevant api functions.');
+
+            apisToAdd = { ...apisToAdd, ...extApis }
+        }
+    } );
+
+    return apisToAdd;
+}
+
 export const getExtensionReducers = ( ) =>
 {
     let reducersToAdd = {};

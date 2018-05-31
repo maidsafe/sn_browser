@@ -20,6 +20,7 @@ import { addTab } from 'actions/tabs_actions';
 
 import safeReducers from 'extensions/safe/reducers';
 import webviewPreload from 'extensions/safe/webviewPreload';
+import { handleRemoteCalls, remoteCallApis } from 'extensions/safe/handleRemoteCalls';
 
 const onWebviewPreload = ( store ) =>
 {
@@ -37,6 +38,9 @@ const addReducersToPeruse = ( ) =>
     return safeReducers;
 }
 
+const onRemoteCallInMain = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
+
+const getRemoteCallApis = () => remoteCallApis;
 
 const onInitBgProcess = async ( store ) =>
 {
@@ -129,9 +133,11 @@ const onReceiveUrl = ( store, url ) =>
 
 
 export default {
+    getRemoteCallApis,
     addReducersToPeruse,
     onInitBgProcess,
     onReceiveUrl,
+    onRemoteCallInMain,
     onOpen,
     onWebviewPreload,
     preAppLoad,

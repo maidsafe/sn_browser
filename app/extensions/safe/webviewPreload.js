@@ -101,8 +101,8 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
 
     window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
     {
-        logger.info( 'window method for get auth handle being called' );
         const state = store.getState();
+        logger.info( 'window method for get auth handle being called' , state.authenticator.authenticatorHandle);
         return state.authenticator.authenticatorHandle;
     };
 
@@ -178,15 +178,6 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
 
             if ( theCall.done && callPromises.resolve )
             {
-                if ( theCall.name === 'login' )
-                {
-                    logger.info('store subscribe calls: ', calls);
-                    logger.info('pendingCalls: ', pendingCalls);
-                    logger.info('call Promises: ', callPromises);
-		    // QUESTION: callPromises.resolve logs `null` \
-		    // Why is the condition on line  115 passing?
-                    logger.info('callpromises.resolve: ', callPromises.resolve);
-                }
                 pendingCalls[theCall.id] = theCall;
 
                 let callbackArgs = theCall.response;
@@ -204,6 +195,7 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
                 ) );
 
                 delete pendingCalls[theCall.id];
+
             }
             else if ( theCall.error && callPromises.reject )
             {
