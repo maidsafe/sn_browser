@@ -14,6 +14,7 @@ A browser designed to open `safe://` websites on the SAFE Network.
     * Node.js ^8.0.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
     * [Git](https://git-scm.com/)
     * [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
+    * Python
 
 2. Clone this GitHub repository:
 
