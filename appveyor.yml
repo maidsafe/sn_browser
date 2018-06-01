@@ -65,7 +65,7 @@ test_script:
   # - yarn run test
   # skip ext tests for now as windows fails inexcplicably
   - if [%NODE_ENV%]==[dev] ( yarn run test-peruse )
-  - IF DEFINED RUN_EXTS ( yarn run test safe ) ELSE (echo "Not dev mode, not running safe tests")
+  # - IF DEFINED RUN_EXTS ( yarn run test safe ) ELSE (echo "Not dev mode, not running safe tests")
   # - IF DEFINED RUN_EXTS ( yarn run test exts ) ELSE (echo "is not defined")
   # - IF DEFINED RUN_E2E ( yarn run test-e2e ) ELSE ( yarn run test-e2e-prod )
   # - IF DEFINED RUN_E2E ( yarn run test-exts-e2e-prod ) ELSE ( yarn run test-exts-e2e-prod )

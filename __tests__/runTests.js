@@ -73,7 +73,7 @@ switch ( arg )
     }
     case ( 'safe' ) :
     {
-        pattern = `app${s}extensions${s}safe${s}test${s}(?!e2e)(?!auth)[^${s}]+${s}\\w+\\.spec\\.js$`;
+        pattern = `app${s}extensions${s}safe${s}test${s}(?!e2e)(?!auth)[^${s}]+${s}?\\w+\\.spec\\.js$`;
         break;
     }
     case ( 'safe-auth' ) :
