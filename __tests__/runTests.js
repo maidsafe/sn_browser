@@ -31,12 +31,6 @@ switch ( arg )
         argsArray.push( `--bail`);
         argsArray.push( `--runInBand`);
 
-        //exclude weakref tests for now.
-        if ( platform === WINDOWS )
-        {
-            pattern = `__tests__${s}e2e${s}(?!safe).+\\.spec\\.js`;
-        }
-
         break;
     }
     case ( 'exts-e2e' ) :
