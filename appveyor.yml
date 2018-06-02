@@ -70,7 +70,7 @@ test_script:
   # - IF DEFINED RUN_E2E ( yarn run test-e2e ) ELSE ( yarn run test-e2e-prod )
   # - IF DEFINED RUN_E2E ( yarn run test-exts-e2e-prod ) ELSE ( yarn run test-exts-e2e-prod )
   - IF DEFINED RUN_E2E ( yarn run test-e2e )
-  - IF DEFINED RUN_E2E ( yarn run test-exts-e2e )
+  # - IF DEFINED RUN_E2E ( yarn run test-exts-e2e )
 
 
 
