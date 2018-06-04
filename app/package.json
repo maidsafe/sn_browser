@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@maidsafe/safe-node-app": "git+https://github.com/maidsafe/safe_app_nodejs.git#9cd5f1baf7786f9cb6a3a9ca228b2caaa4243153",
+    "@maidsafe/safe-node-app": "git+https://github.com/maidsafe/safe_app_nodejs.git#9a74d4cf10dde965b5f1c2fa2c6644862f5ef355",
     "cross-env": "5.1.3",
     "enum": "2.5.0",
     "ffi": "2.2.0",
