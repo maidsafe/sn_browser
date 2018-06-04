@@ -29,18 +29,18 @@ export const {
     TYPES.REMOVE_AUTH_REQUEST,
 );
 
-const triggerAuthDecoding = ( url ) =>
+const triggerAuthDecoding = ( reqObject ) =>
 {
-    logger.verbose('Triggerin auth URL decode', url)
-    callIPC.decryptRequest( url, AUTH_CONSTANTS.CLIENT_TYPES.DESKTOP );
+    logger.verbose('Triggerin auth URL decode', reqObject)
+    callIPC.enqueueRequest( reqObject );
 };
 
 export const handleAuthUrl = createAliasedAction(
     TYPES.HANDLE_AUTH_URL,
-    ( url ) => (
+    ( reqObject ) => (
         {
         // the real action
             type    : TYPES.HANDLE_AUTH_URL,
-            payload : triggerAuthDecoding( url ),
+            payload : triggerAuthDecoding( reqObject ),
         } ),
 );

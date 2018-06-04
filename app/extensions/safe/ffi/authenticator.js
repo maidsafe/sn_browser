@@ -362,8 +362,7 @@ class Authenticator extends SafeLib
 
     decodeRequest( uri )
     {
-        logger.verbose( 'Authenticator.js decoding request' );
-
+        logger.verbose( 'Authenticator.js decoding request', uri);
 
         return new Promise( ( resolve, reject ) =>
         {

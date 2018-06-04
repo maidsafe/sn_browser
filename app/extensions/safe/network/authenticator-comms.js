@@ -64,14 +64,14 @@ export const clearAppObj = () =>
     peruseAppObj.clearObjectCache();
 };
 
-export const handleSafeAuthAuthentication = ( uri, type ) =>
+export const handleSafeAuthAuthentication = ( uriOrReqObject, type ) =>
 {
-    if ( typeof uri !== 'string' )
+    if ( typeof uriOrReqObject !== 'string' && typeof uriOrReqObject.uri !== 'string' )
     {
-        throw new Error( 'Auth URI should be a string' );
+        throw new Error( 'Auth URI should be procided as a string' );
     }
 
-    store.dispatch( handleAuthUrl( uri ) );
+    store.dispatch( handleAuthUrl( uriOrReqObject ) );
 };
 
 export const getPeruseAuthReqUri = () => browserAuthReqUri;
@@ -103,8 +103,7 @@ export const initAnon = async ( passedStore ) =>
 
         if ( authType.action === 'auth' )
         {
-            // await peruseAppObj.auth.openUri( authReq.uri );
-            handleSafeAuthAuthentication( authReq.uri, null );
+            handleSafeAuthAuthentication( authReq, null );
         }
 
         return peruseAppObj;

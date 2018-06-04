@@ -95,6 +95,7 @@ const middleware = store => next => action =>
 
 const parseSafeUri = function ( uri )
 {
+    logger.verbose('Parsing safe uri', uri);
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 

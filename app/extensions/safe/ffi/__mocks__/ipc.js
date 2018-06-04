@@ -1,7 +1,7 @@
 const ipc = {
     callIPC :
     {
-        decryptRequest: jest.fn(),
+        enqueueRequest: jest.fn(),
     }
 }
 

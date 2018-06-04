@@ -42,7 +42,7 @@ export const remoteCallApis =  {
         return new Promise( ( resolve, reject ) =>
         {
             setAuthCallbacks( authUriObject, resolve, reject );
-            callIPC.decryptRequest( authUriObject, CONSTANTS.CLIENT_TYPES.WEB );
+            callIPC.enqueueRequest( authUriObject );
         });
     }
 }

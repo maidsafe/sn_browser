@@ -140,6 +140,8 @@ class ReqQueue
         }
         this.processing = true;
         this.req = this.q[0];
+
+        logger.info('waht we passing to authenticatorrrr', this.req.uri );
         // authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
 
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
@@ -223,15 +225,15 @@ const registerNetworkListener = ( e ) =>
     } );
 };
 
-const decodeRequest = ( req, type ) =>
+const enqueueRequest = ( req, type ) =>
 {
     if( !req ) throw new Error( 'The req object is missing' );
 
-    const isWebReq = ( type === CONSTANTS.CLIENT_TYPES.WEB );
+    // const isWebReq = ( type === CONSTANTS.CLIENT_TYPES.WEB );
     const isUnRegistered = req.isUnRegistered;
     const request = new Request( {
         id  : req.id,
-        uri : isWebReq ? req.uri : req,
+        uri : req.uri ? req.uri : req,
         type,
         isUnRegistered
     } );
@@ -427,7 +429,7 @@ const skipAuthReq = () =>
 
 export const callIPC = {
     registerSafeNetworkListener : registerNetworkListener,
-    decryptRequest              : decodeRequest,
+    enqueueRequest              : enqueueRequest,
     registerOnAuthReq           : onAuthReq,
     registerOnContainerReq      : onContainerReq,
     registerOnSharedMDataReq    : onSharedMDataReq,
