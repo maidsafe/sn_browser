@@ -61,7 +61,7 @@ if ( platform === WINDOWS )
 
 if ( isBuildingDev && ( platform === WINDOWS || platform === LINUX ) )
 {
-    fs.writeFileSync( path.resolve( CONTAINING_FOLDER, 'startAsMock'), 'unimportantContents' );
+    fs.writeFileSync( path.resolve( CONTAINING_FOLDER, 'resources', 'startAsMock'), 'unimportantContents' );
 }
 
 
