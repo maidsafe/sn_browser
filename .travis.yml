@@ -54,12 +54,13 @@ script:
 - sleep 15
 - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test-e2e;
   fi
-- sleep 5
+- pkill -f electron
 - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test-exts-e2e;
   fi
 - yarn run package-only
 - if [[ "$NODE_ENV" == "prod" ]]; then yarn run test-e2e-prod;
   fi
+- pkill -f electron
 - sleep 5
 - if [[ "$NODE_ENV" == "prod" ]]; then yarn run test-exts-e2e-prod;
   fi
