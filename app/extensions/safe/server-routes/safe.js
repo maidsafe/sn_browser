@@ -30,11 +30,12 @@ const safeRoute = ( store ) => ( {
 
             if ( headers.range )
             {
-	        isRangeReq = true;
+    	        isRangeReq = true;
                 rangeArray = rangeStringToArray(headers.range);
-		if (rangeArray.length > 1) {
-	          multipartReq = true;
-		}
+
+        		if (rangeArray.length > 1) {
+        	          multipartReq = true;
+        		}
             }
 
             // setup opts object
