@@ -80,8 +80,8 @@ const safeNodeAppPath = ( ) =>
     {
         return '';
     }
-
-    return isRunningUnpacked ? [remote.process.execPath, remote.getGlobal('appDir')] : [remote.app.getPath( 'exe' )];
+    // mainjs portion needed for linux.
+    return isRunningUnpacked ? [remote.process.execPath, `${remote.getGlobal('appDir')}/main.js`] : [remote.app.getPath( 'exe' )];
 };
 
 let safeNodeAppPathModifier = '';
