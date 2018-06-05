@@ -4,6 +4,11 @@ import fs from 'fs-extra';
 import { remote } from 'electron';
 import pkg from 'appPackage';
 
+const platform = process.platform;
+const OSX = 'darwin';
+const LINUX = 'linux';
+const WINDOWS = 'win32';
+
 const allPassedArgs = process.argv;
 
 let shouldRunMockNetwork = fs.existsSync( path.resolve( __dirname, '..', 'startAsMock') );
@@ -80,6 +85,12 @@ const safeNodeAppPath = ( ) =>
     {
         return '';
     }
+
+    if( platform === WINDOWS )
+    {
+        return isRunningUnpacked ? [remote.process.execPath, remote.getGlobal('appDir')] : [remote.app.getPath( 'exe' )];
+    }
+
     // mainjs portion needed for linux.
     return isRunningUnpacked ? [remote.process.execPath, `${remote.getGlobal('appDir')}/main.js`] : [remote.app.getPath( 'exe' )];
 };
