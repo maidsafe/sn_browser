@@ -3,8 +3,6 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { CLASSES, isRunningSpectronTestProcess } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
 import AddressBar from 'components/AddressBar';
 import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
@@ -12,7 +10,10 @@ import TabContents from 'components/TabContents';
 import styles from './browser.css';
 import logger from 'logger';
 
-export default class Browser extends Component
+import { wrapBrowserComponent } from 'extensions';
+
+
+class Browser extends Component
 {
     static propTypes =
     {
@@ -128,20 +129,7 @@ export default class Browser extends Component
             closeTab( tab );
         }
     }
-    // TODO add API for expanding Browser with functions.
-    handleSpectronTestSaveState = ( ) =>
-    {
-        const { setSaveConfigStatus } = this.props;
 
-        setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE );
-    }
-
-    handleSpectronTestReadState = ( ) =>
-    {
-        const { setReadConfigStatus } = this.props;
-
-        setSaveConfigStatus( SAFE.SAVE_STATUS.TO_READ );
-    }
 
     render()
     {
@@ -171,12 +159,7 @@ export default class Browser extends Component
             notifications,
             clearNotification,
 
-            //safe network
-            peruseApp
         } = this.props;
-
-        // TODO: Set focus only for this window if current
-        // const thisAddressBarIsFocussed =
 
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
@@ -185,7 +168,6 @@ export default class Browser extends Component
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
-        const isMock = peruseApp ? peruseApp.isMock : false;
 
         // TODO: if not, lets trigger close?
         if ( !activeTab )
@@ -199,27 +181,6 @@ export default class Browser extends Component
 
         return (
             <div className={ styles.container }>
-                {
-                    // TODO: Create spectron Menu spoofer component.
-                    isRunningSpectronTestProcess &&
-                    <div
-                        className={ `${CLASSES.SPECTRON_AREA} ${styles.spectronArea}` }
-                    >
-                        <button
-                            className={ `${CLASSES.SPECTRON_AREA__SPOOF_SAVE}` }
-                            onClick={ this.handleSpectronTestSaveState }
-                        />
-                        <button
-                            className={ `${CLASSES.SPECTRON_AREA__SPOOF_READ}` }
-                            onClick={ this.handleSpectronTestReadState }
-                        />
-                    </div>
-
-                }
-                {
-                    isMock &&
-                    <span>Running on a mock network</span>
-                }
                 <TabBar
                     key={ 1 }
                     updateActiveTab={ updateActiveTab }
@@ -273,3 +234,23 @@ export default class Browser extends Component
         );
     }
 }
+
+
+
+const extendComponent = ( WrappedComponent ) =>
+{
+    return class extends Component {
+        constructor(props) {
+            super(props);
+
+            this.EnWrappedComponent = wrapBrowserComponent( WrappedComponent );
+      }
+      render() {
+          const { EnWrappedComponent } = this;
+          return <EnWrappedComponent {...this.props} />;
+      }
+    }
+}
+
+export default Browser;
+// export default extendComponent( Browser );

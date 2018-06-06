@@ -24,6 +24,7 @@ import { handleRemoteCalls, remoteCallApis } from 'extensions/safe/handleRemoteC
 import * as PeruseActions from 'extensions/safe/actions/peruse_actions';
 
 import { addFileMenus } from 'extensions/safe/menus';
+import { wrapBrowser as wrapBrowserComponent } from 'extensions/safe/components/wrapBrowser';
 
 const onWebviewPreload = ( store ) =>
 {
@@ -171,6 +172,7 @@ export default {
     actionsForBrowser,
     addReducersToPeruse,
     getRemoteCallApis,
+    wrapBrowserComponent,
     onInitBgProcess,
     onReceiveUrl,
     onRemoteCallInMain,

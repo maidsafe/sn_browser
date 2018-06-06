@@ -7,6 +7,10 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
+jest.mock('extensions', () => {
+
+});
+
 describe( 'Browser', () =>
 {
     let wrapper;
