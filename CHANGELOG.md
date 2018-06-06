@@ -1,10 +1,13 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+#### [0.6.0]
 ### Changed
 - safeNetwork reducer becomes peruseSafeApp
 - specific domAPI implementations removed
+- new DOM API based upon safe-app-nodejs
+- release naming updated.
+- Much of SAFE specific functionality moved to extension
 
 ### Fixed
 - `eval` has been disabled.
