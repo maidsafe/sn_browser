@@ -32,9 +32,9 @@ if ( platform === WINDOWS )
 let devModifier = '';
 if( isBuildingDev )
 {
-    devModifier = 'dev-'
+    devModifier = '-dev'
 }
 
-const RELEASE_FOLDER_NAME = `${devModifier}${pkgName}-v${pkg.version}-${PLATFORM_NAME}-x64`;
+const RELEASE_FOLDER_NAME = `${pkgName}-v${pkg.version}-${PLATFORM_NAME}-x64${devModifier}`;
 
 module.exports = RELEASE_FOLDER_NAME;
