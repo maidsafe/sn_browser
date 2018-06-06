@@ -22,6 +22,8 @@ import safeReducers from 'extensions/safe/reducers';
 import webviewPreload from 'extensions/safe/webviewPreload';
 import { handleRemoteCalls, remoteCallApis } from 'extensions/safe/handleRemoteCalls';
 
+import { addFileMenus } from 'extensions/safe/menus';
+
 const onWebviewPreload = ( store ) =>
 {
     return webviewPreload( store )
@@ -31,6 +33,31 @@ const onWebviewPreload = ( store ) =>
 const preAppLoad = () =>
 {
 
+}
+
+const addExtensionMenuItems = ( store, menusArray ) =>
+{
+    logger.verbose( 'Adding SAFE menus to browser' );
+
+    const newMenuArray = [];
+
+    menusArray.forEach( menu => {
+        const label = menu.label;
+        logger.info('Adding menus to: ', label );
+        let newMenu = menu;
+
+        if( label == 'File' )
+        {
+            newMenu = addFileMenus( store, newMenu );
+
+            logger.info('updated the file menu, woooo', newMenu)
+        }
+
+        newMenuArray.push(newMenu);
+
+    })
+
+    return newMenuArray;
 }
 
 const addReducersToPeruse = ( ) =>
@@ -134,6 +161,7 @@ const onReceiveUrl = ( store, url ) =>
 
 
 export default {
+    addExtensionMenuItems,
     getRemoteCallApis,
     addReducersToPeruse,
     onInitBgProcess,

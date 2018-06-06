@@ -79,25 +79,21 @@ export const getExtensionReducers = ( ) =>
     return reducersToAdd;
 };
 
-/**
- * Setup menus runs per app, and is passed the whole electron menu object, for manipulation/insertion etc.
- * @param  { Array } menuArray Array of electron menu arrays.
- * @return  { Array } menuArray Array of electron menu arrays.
- */
-export const setupExtensionMenus = ( menuArray ) =>
+export const getExtensionMenuItems = ( store, menusArray ) =>
 {
-    let updatedMenuArray = [ ...menuArray ];
-
-    // TODO: This is an accumulator of changes...
+    logger.verbose('Extending menus array')
+    let newMenuArray = [];
     allPackages.forEach( extension =>
     {
-        if ( extension.extendMenus )
+        if ( extension.addExtensionMenuItems )
         {
-            updatedMenuArray = extension.extendMenus( updatedMenuArray );
+            newMenuArray = extension.addExtensionMenuItems( store, menusArray );
+
+            if( ! Array.isArray( newMenuArray ) ) throw new Error( 'Extensions must pass an array of menu items.');
         }
     } );
 
-    return updatedMenuArray;
+    return newMenuArray;
 };
 
 export const onInitBgProcess = ( server, store ) =>
