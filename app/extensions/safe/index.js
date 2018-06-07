@@ -1,7 +1,6 @@
 import logger from 'logger';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 
-// TODO: get this into the extension folder
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 
 import { parse as parseURL } from 'url';
@@ -37,6 +36,11 @@ const preAppLoad = () =>
 
 }
 
+/**
+ * Adds menu items to the main peruse menus.
+ * @param  {Object} store redux store
+ * @param {Array} menusArray Array of menu objects to be parsed by electron.
+ */
 const addExtensionMenuItems = ( store, menusArray ) =>
 {
     logger.verbose( 'Adding SAFE menus to browser' );
@@ -45,14 +49,11 @@ const addExtensionMenuItems = ( store, menusArray ) =>
 
     menusArray.forEach( menu => {
         const label = menu.label;
-        logger.info('Adding menus to: ', label );
         let newMenu = menu;
 
         if( label == 'File' )
         {
             newMenu = addFileMenus( store, newMenu );
-
-            logger.info('updated the file menu, woooo', newMenu)
         }
 
         newMenuArray.push(newMenu);
@@ -67,13 +68,24 @@ const addReducersToPeruse = ( ) =>
     return safeReducers;
 }
 
+/**
+ * Triggered when a remote call is received in the main process
+ * @param  {Object} store redux store
+ * @param  {Object} allAPICalls object containing all api calls available in main (for use via store remoteCalls)
+ * @param  {[type]} theCall     call object with id, and info
+ */
 const onRemoteCallInMain = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
 
 const getRemoteCallApis = () => remoteCallApis;
 
+/**
+ * add actions to the peruse browser container
+ * @type {Object}
+ */
 const actionsForBrowser = {
     ...PeruseActions
 };
+
 
 const onInitBgProcess = async ( store ) =>
 {
@@ -108,12 +120,21 @@ const onInitBgProcess = async ( store ) =>
     sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
 };
 
+/**
+ * on open of peruse application
+ * @param  {Object} store redux store
+ */
 const onOpen = ( store ) =>
 {
-    logger.info('OnOpen: Setting mock in store. ', startedRunningMock)
+    logger.verbose('OnOpen: Setting mock in store. ', startedRunningMock)
     store.dispatch( setIsMock( startedRunningMock ) );
 }
 
+
+/**
+ * Add middleware to Peruse redux store
+ * @param  {Object} store redux store
+ */
 const middleware = store => next => action =>
 {
     if( isRunningSpectronTestProcess )
@@ -132,6 +153,11 @@ const parseSafeUri = function ( uri )
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 
+/**
+ * Trigger when receiving a URL param in the browser.
+ * @param  {Object} store redux store
+ * @param  {String} url   url param
+ */
 const onReceiveUrl = ( store, url ) =>
 {
     const preParseUrl = parseSafeUri( url );
