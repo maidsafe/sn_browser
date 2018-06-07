@@ -2,6 +2,7 @@ import logger from 'logger';
 import { getPeruseAppObj } from 'extensions/safe/network';
 import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
+import errConsts from 'extensions/safe/err-constants';
 
 const safeRoute = ( store ) => ( {
     method  : 'GET',
@@ -59,6 +60,9 @@ const safeRoute = ( store ) => ( {
             {
                 logger.error( error.code, error.message );
                 store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
+		if (error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code) {
+	          error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
+		}
                 return reply( error.message || error );
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );

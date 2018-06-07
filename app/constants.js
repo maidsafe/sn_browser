@@ -70,7 +70,7 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
 const safeNodeLibPath = ( ) =>
 {
     //only exists in render processes
-    if( remote && remote.getGlobal )
+    if( remote && remote.getGlobal && !isRunningNodeEnvTest )
     {
         return remote.getGlobal('SAFE_NODE_LIB_PATH')
     }

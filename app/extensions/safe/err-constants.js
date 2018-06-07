@@ -1,4 +1,8 @@
 module.exports = {
+  ERR_ROUTING_INTERFACE_ERROR: {
+    code: -11,
+    msg: 'Unable to navigate to site. Please check your network connection.'
+  },
   ERR_CONNECT_INFO: {
     code: 1,
     msg: (e) => `Unable to get connection information: ${e}`
