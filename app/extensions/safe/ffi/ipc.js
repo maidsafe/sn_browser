@@ -141,9 +141,6 @@ class ReqQueue
         this.processing = true;
         this.req = this.q[0];
 
-        logger.info('what we passing to authenticatorrrr', this.req.uri );
-        // authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
-
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
             if ( !res )
@@ -163,7 +160,6 @@ class ReqQueue
                 return;
             }
 
-            logger.info( 'not an auth request.... what is it?', this.req );
 
             // if ( ipcEvent )
             // {

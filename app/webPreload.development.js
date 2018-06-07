@@ -14,6 +14,7 @@ window.eval = global.eval = () =>
     throw new Error( 'Sorry, peruse does not support window.eval().' );
 };
 
+let pendingCalls = {};
 
 store.subscribe( async () =>
 {
