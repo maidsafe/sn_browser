@@ -1,4 +1,4 @@
-import { urlIsAllowed,
+import { urlIsAllowedBySafe,
     generateBoundaryStr,
     generateResponseStr,
     rangeStringToArray
@@ -11,7 +11,7 @@ describe( 'Safe Extension', () =>
     {
         test( 'it exists', () =>
         {
-            expect( urlIsAllowed ).not.toBeNull();
+            expect( urlIsAllowedBySafe ).not.toBeNull();
         } );
 
         test( 'it does not allow non-local urls', () =>
@@ -28,16 +28,16 @@ describe( 'Safe Extension', () =>
             const home = 'http://127.0.0.1/';
             const homeBad = 'http://127.0.0.1.com/';
 
-            expect( urlIsAllowed( goog ) ).toBeFalsy();
-            expect( urlIsAllowed( googs ) ).toBeFalsy();
-            expect( urlIsAllowed( lala ) ).toBeFalsy();
-            expect( urlIsAllowed( ws ) ).toBeFalsy();
-            expect( urlIsAllowed( homeBad ) ).toBeFalsy();
+            expect( urlIsAllowedBySafe( goog ) ).toBeFalsy();
+            expect( urlIsAllowedBySafe( googs ) ).toBeFalsy();
+            expect( urlIsAllowedBySafe( lala ) ).toBeFalsy();
+            expect( urlIsAllowedBySafe( ws ) ).toBeFalsy();
+            expect( urlIsAllowedBySafe( homeBad ) ).toBeFalsy();
 
-            expect( urlIsAllowed( wsLegal ) ).toBeTruthy();
-            expect( urlIsAllowed( devtools ) ).toBeTruthy();
-            expect( urlIsAllowed( localhost ) ).toBeTruthy();
-            expect( urlIsAllowed( home ) ).toBeTruthy();
+            expect( urlIsAllowedBySafe( wsLegal ) ).toBeTruthy();
+            expect( urlIsAllowedBySafe( devtools ) ).toBeTruthy();
+            expect( urlIsAllowedBySafe( localhost ) ).toBeTruthy();
+            expect( urlIsAllowedBySafe( home ) ).toBeTruthy();
         } );
     });
 

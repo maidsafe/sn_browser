@@ -5,6 +5,13 @@ import History from 'components/PerusePages/History';
 import UrlList from 'components/UrlList';
 import { CLASSES } from 'appConstants';
 
+
+jest.mock('extensions', () => (
+    {
+    urlIsValid: () => { return true }
+    }
+) );
+
 describe( 'History Component', () =>
 {
     let wrapper;

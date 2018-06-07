@@ -6,8 +6,9 @@ export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
 
-export const urlIsAllowed = ( testUrl ) =>
+export const urlIsAllowedBySafe = ( testUrl ) =>
 {
+    logger.verbose('Checking urlIsAllowedBySafe')
     const urlObj = url.parse( testUrl );
 
     const validProtocols = pkg.build.protocols.schemes || ['http'];
@@ -28,30 +29,30 @@ export const urlIsAllowed = ( testUrl ) =>
     return false;
 };
 
-export const generateBoundaryStr = () => 
+export const generateBoundaryStr = () =>
 {
     let text = '';
     const charSet = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    
+
     for (let i = 0; i < 13; i++) {
       text += charSet.charAt(Math.floor(Math.random() * charSet.length));
     }
-    
+
     return text;
 };
 
-export const rangeStringToArray = (rangeString) => 
+export const rangeStringToArray = (rangeString) =>
 {
     const BYTES = 'bytes=';
     return rangeString.substring( BYTES.length, rangeString.length )
       .split( ',' )
-      .map(part => 
+      .map(part =>
       {
-          const partObj = {}; 
+          const partObj = {};
           part.split('-')
-              .forEach((int, i) => 
+              .forEach((int, i) =>
               {
-                if (i === 0) 
+                if (i === 0)
                 {
                   if ( Number.isInteger(parseInt(int, 10)) )
                   {
@@ -62,7 +63,7 @@ export const rangeStringToArray = (rangeString) =>
                     partObj.start = null;
                   }
                 }
-                else if (i === 1) 
+                else if (i === 1)
                 {
                   if ( Number.isInteger(parseInt(int, 10)) )
                   {

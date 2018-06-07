@@ -9,9 +9,7 @@ import UrlList from 'components/UrlList';
 import styles from './history.css';
 import { CLASSES } from 'appConstants';
 
-// TODO: Ideally this should be pulled in in a more generic fashion if we need filtering for these pages
-// (as opposed to hardcoded imports from extensions.)
-import { urlIsAllowed } from 'extensions/safe/utils/safeHelpers';
+import { urlIsValid } from 'extensions';
 
 const log = require( 'electron-log' );
 
@@ -76,8 +74,7 @@ export default class History extends Component
                 return false;
             }
 
-            // TODO add api for URL check.
-            return urlIsAllowed( url );
+            return urlIsValid( url );
         } );
 
         let moddedClass = styles.tab;

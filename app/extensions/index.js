@@ -4,6 +4,7 @@ import logger from 'logger';
 import safeBrowsing from './safe/index';
 
 // here add your packages for extensibility.
+// const allPackages = [ ];
 const allPackages = [ safeBrowsing ];
 
 export const preAppLoad = ( store ) =>
@@ -26,6 +27,25 @@ export const triggerOnWebviewPreload = ( store ) =>
             extension.onWebviewPreload( store );
         }
     } );
+};
+
+
+export const urlIsValid = ( url ) =>
+{
+    logger.info('Extensions: Checking urlIsValid via all extensions.')
+    let result = true;
+
+    allPackages.forEach( extension =>
+    {
+        if( !result ) return;
+
+        if ( extension.urlIsValid )
+        {
+            result = extension.urlIsValid( url );
+        }
+    } );
+
+    return result;
 };
 
 /**

@@ -24,6 +24,7 @@ import * as PeruseActions from 'extensions/safe/actions/peruse_actions';
 
 import { addFileMenus } from 'extensions/safe/menus';
 import { wrapBrowser as wrapBrowserComponent } from 'extensions/safe/components/wrapBrowser';
+// import { urlIsAllowedBySafe as urlIsValid } from 'extensions/safe/utils/safeHelpers';
 
 const onWebviewPreload = ( store ) =>
 {
