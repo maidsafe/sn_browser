@@ -141,7 +141,7 @@ class ReqQueue
         this.processing = true;
         this.req = this.q[0];
 
-        logger.info('waht we passing to authenticatorrrr', this.req.uri );
+        logger.info('what we passing to authenticatorrrr', this.req.uri );
         // authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
 
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
@@ -229,12 +229,11 @@ const enqueueRequest = ( req, type ) =>
 {
     if( !req ) throw new Error( 'The req object is missing' );
 
-    // const isWebReq = ( type === CONSTANTS.CLIENT_TYPES.WEB );
     const isUnRegistered = req.isUnRegistered;
     const request = new Request( {
         id  : req.id,
         uri : req.uri ? req.uri : req,
-        type,
+        type: type || CONSTANTS.CLIENT_TYPES.DESKTOP,
         isUnRegistered
     } );
 
