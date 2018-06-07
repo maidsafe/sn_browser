@@ -25,6 +25,8 @@ class Browser extends Component
         selectAddressBar   : PropTypes.func.isRequired,
         deselectAddressBar : PropTypes.func.isRequired,
         blurAddressBar     : PropTypes.func.isRequired,
+        reloadPage         : PropTypes.func.isRequired,
+        pageLoaded         : PropTypes.func.isRequired,
         addTab             : PropTypes.func,
         closeTab           : PropTypes.func,
         closeActiveTab     : PropTypes.func,
@@ -145,6 +147,8 @@ class Browser extends Component
             selectAddressBar,
             deselectAddressBar,
             blurAddressBar,
+            reloadPage,
+            pageLoaded,
 
             //tabs
             tabs,
@@ -200,6 +204,7 @@ class Browser extends Component
                     addBookmark={ addBookmark }
                     isBookmarked={ isBookmarked }
                     removeBookmark={ removeBookmark }
+                    reloadPage={ reloadPage }
                     isSelected={ ui.addressBarIsSelected }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
@@ -216,12 +221,14 @@ class Browser extends Component
                     clearNotification={ clearNotification }
                 />
                 <TabContents
+                    pageIsLoading= { ui.pageIsLoading }
                     key={ 4 }
                     addTab={ addTab }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
+                    pageLoaded= { pageLoaded }
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }

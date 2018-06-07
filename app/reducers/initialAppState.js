@@ -13,7 +13,8 @@ const initialState = {
         isClosed     : false
     }],
     ui : {
-        addressBarIsSelected : false
+        addressBarIsSelected : false,
+        pageIsLoading : false
     }
 };
 

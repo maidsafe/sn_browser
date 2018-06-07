@@ -19,7 +19,8 @@ export default class AddressBar extends Component
         removeBookmark : PropTypes.func.isRequired,
         onBlur         : PropTypes.func.isRequired,
         onSelect       : PropTypes.func.isRequired,
-        onFocus        : PropTypes.func.isRequired
+        onFocus        : PropTypes.func.isRequired,
+        reloadPage     : PropTypes.func.isRequired,
     }
 
     static defaultProps =
@@ -99,7 +100,8 @@ export default class AddressBar extends Component
     {
         // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
-        ipcRenderer.send( 'command', 'view:reload' );
+        const { reloadPage } = this.props;
+        reloadPage();
     }
 
     handleClick = ( event ) =>

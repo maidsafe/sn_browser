@@ -24,6 +24,14 @@ export default function ui( state: array = initialState, action )
         {
             return { ...state, addressBarIsSelected : false };
         }
+        case TYPES.RELOAD_PAGE :
+        {
+            return { ...state, pageIsLoading: true };
+        }
+        case TYPES.PAGE_LOADED :
+        {
+            return { ...state, pageIsLoading: false };
+        }
 
         default:
             return state;
