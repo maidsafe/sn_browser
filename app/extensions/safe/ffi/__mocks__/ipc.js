@@ -2,6 +2,7 @@ const ipc = {
     callIPC :
     {
         enqueueRequest: jest.fn(),
+
     }
 }
 

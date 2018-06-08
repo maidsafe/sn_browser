@@ -125,22 +125,6 @@ export const getExtensionReducers = ( ) =>
 };
 
 
-
-export const wrapBrowserComponent = ( Browser ) =>
-{
-    let WrappedBrowser = Browser;
-
-    allPackages.forEach( extension =>
-    {
-        if ( extension.wrapBrowserComponent )
-        {
-            WrappedBrowser = extension.wrapBrowserComponent( Browser );
-        }
-    } );
-
-    return WrappedBrowser;
-}
-
 export const getExtensionMenuItems = ( store, menusArray ) =>
 {
     logger.verbose('Extending menus array')

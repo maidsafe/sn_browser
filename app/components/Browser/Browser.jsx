@@ -10,7 +10,7 @@ import TabContents from 'components/TabContents';
 import styles from './browser.css';
 import logger from 'logger';
 
-import { wrapBrowserComponent } from 'extensions';
+import { wrapBrowserComponent } from 'extensions/components';
 
 
 class Browser extends Component
@@ -239,7 +239,7 @@ class Browser extends Component
 
 const extendComponent = ( WrappedComponent ) =>
 {
-    return class extends Component {
+    return class Browser extends Component {
         constructor(props) {
             super(props);
 

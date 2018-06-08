@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import Browser from 'components/Browser';
 import AddressBar from 'components/AddressBar';
@@ -28,7 +28,7 @@ describe( 'Browser', () =>
             addNotification      : jest.fn(),
             addLocalNotification : jest.fn()
         };
-        wrapper = shallow( <Browser { ...props } /> );
+        wrapper = mount( <Browser { ...props } /> );
         instance = wrapper.instance();
     } );
 
@@ -40,12 +40,12 @@ describe( 'Browser', () =>
         } );
     } );
 
-    describe( 'render() with one tab', () =>
+    describe( 'mount() with one tab', () =>
     {
         beforeEach( () =>
         {
             props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1 }] };
-            wrapper = shallow( <Browser { ...props } /> );
+            wrapper = mount( <Browser { ...props } /> );
             instance = wrapper.instance();
         } );
 
@@ -72,16 +72,27 @@ describe( 'Browser', () =>
 
     describe( 'props', () =>
     {
+        beforeEach( () =>
+        {
+            props = { ...props, tabs: [] };
+            wrapper = shallow( <Browser { ...props } /> );
+            instance = wrapper.instance();
+        } );
+
         describe( 'addressBarIsSelected', () =>
         {
             it( 'addressBarIsSelected should be "false" by default', () =>
             {
-                expect( instance.props.addressBarIsSelected ).toBeFalsy();
+                expect( instance.addressBarIsSelected ).toBeFalsy();
             } );
         } );
 
         describe( 'tabs', () =>
         {
+            it( 'should exist', () =>
+            {
+                expect( instance.props ).not.toBeUndefined( );
+            } );
             it( 'should be empty by default', () =>
             {
                 expect( instance.props.tabs.length ).toBe( 0 );

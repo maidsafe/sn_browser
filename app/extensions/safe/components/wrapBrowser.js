@@ -27,10 +27,19 @@ const browserContainer = {
 
 export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
 {
-    return class extends Component {
+    return class wrappedSafeBrowser extends Component {
         constructor(props) {
             super(props);
       }
+
+      static defaultProps =
+      {
+          addressBarIsSelected : false,
+          tabs                 : [],
+          bookmarks            : [],
+          notifications        : []
+      }
+
 
       handleSpectronTestSaveState = ( ) =>
       {
