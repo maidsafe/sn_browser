@@ -16,4 +16,5 @@
 {
     visibility: visible;
     composes: tab;
+    z-index: 1;
 }
