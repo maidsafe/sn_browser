@@ -252,5 +252,4 @@ const extendComponent = ( WrappedComponent ) =>
     }
 }
 
-export default Browser;
-// export default extendComponent( Browser );
+export default extendComponent( Browser );

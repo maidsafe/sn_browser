@@ -72,7 +72,7 @@ export const getActionsForBrowser = () =>
     let actionsToAdd = {};
     allPackages.forEach( extension =>
     {
-        if ( extension.getActionsForBrowser )
+        if ( extension.actionsForBrowser )
         {
             const extActions = extension.actionsForBrowser;
             if( typeof extActions !== 'object' ) throw new Error( 'Browser actions must be passed as an object containing relevant api functions.');

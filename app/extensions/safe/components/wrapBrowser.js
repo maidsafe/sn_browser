@@ -6,7 +6,7 @@ import { SAFE } from 'extensions/safe/constants';
 // jsx css as babel not currently parsing css files here.
 const spectronAreaButton = {
     width: '1px',
-    height:'1px',
+    height:'10px',
     display: 'inline-block',
 }
 
@@ -14,7 +14,7 @@ const spectronArea = {
     backgroundColor: 'blue',
     display: 'block',
     width: '100%',
-    height: '1px'
+    height: '10px'
 }
 
 const browserContainer = {
@@ -32,7 +32,6 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
             super(props);
       }
 
-      // TODO add API for expanding Browser with functions.
       handleSpectronTestSaveState = ( ) =>
       {
           const { setSaveConfigStatus } = this.props;
