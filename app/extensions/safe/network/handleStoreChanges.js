@@ -3,6 +3,7 @@ import { SAFE } from 'extensions/safe/constants';
 import { requestAuth, clearAppObj } from '../network';
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
+import * as uiActions from 'actions/ui_actions';
 import logger from 'logger';
 
 const authingStates = [
@@ -49,7 +50,7 @@ const manageLogout = async ( store ) =>
     if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_LOGOUT )
     {
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
-        store.dispatch( peruseAppActions.resetStore() );
+        store.dispatch( uiActions.resetStore() );
         clearAppObj();
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
     }
@@ -67,7 +68,7 @@ const manageLogout = async ( store ) =>
 //     if ( state.peruseApp.appStatus === SAFE.APP_STATUS.LOGGED_IN_TO_NETWORK)
 //     {
 //         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
-//         store.dispatch( peruseAppActions.resetStore() );
+//         store.dispatch( uiActions.resetStore() );
 //         clearAppObj();
 //         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
 //     }

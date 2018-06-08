@@ -33,16 +33,6 @@ describe( 'notification actions', () =>
         expect( peruseAppActions.setSaveConfigStatus( ) ).toEqual( expectedAction );
     } );
 
-    it( 'should have RECEIVED_CONFIG', () =>
-    {
-        const payload = {};
-        const expectedAction = {
-            type : peruseAppActions.TYPES.RECEIVED_CONFIG,
-            payload
-        };
-        expect( peruseAppActions.receivedConfig( payload ) ).toEqual( expectedAction );
-    } );
-
     it( 'should have RECEIVED_AUTH_RESPONSE', () =>
     {
         const payload = 'lalalalallaaaaaaa';
@@ -70,11 +60,5 @@ describe( 'notification actions', () =>
         expect( peruseAppActions.reconnectSafeApp( ) ).toEqual( expectedAction );
     } );
 
-    it( 'should resetStore', () =>
-    {
-        const expectedAction = {
-            type : peruseAppActions.TYPES.RESET_STORE
-        };
-        expect( peruseAppActions.resetStore( ) ).toEqual( expectedAction );
-    } );
+
 } );

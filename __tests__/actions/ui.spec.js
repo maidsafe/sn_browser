@@ -31,4 +31,11 @@ describe( 'ui actions', () =>
         expect( ui.blurAddressBar( ) ).toEqual( expectedAction );
     } );
 
+    it( 'should resetStore', () =>
+    {
+        const expectedAction = {
+            type : ui.TYPES.RESET_STORE
+        };
+        expect( ui.resetStore( ) ).toEqual( expectedAction );
+    } );
 } );

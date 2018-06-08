@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import tabs from 'reducers/tabs';
 import { TYPES } from 'actions/tabs_actions';
-import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
+import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import initialState from 'reducers/initialAppState';
 
 describe( 'tabs reducer', () =>
@@ -745,7 +745,7 @@ describe( 'tabs reducer', () =>
         } );
     } );
 
-    describe( 'RECEIVED_CONFIG', () =>
+    describe( 'UPDATE_TABS', () =>
     {
         const activeTab = {
             ...basicTab,
@@ -768,7 +768,7 @@ describe( 'tabs reducer', () =>
             const openReceived = { ...receivedTab, isClosed: false };
             // TODO: Add option for this?
             const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
-                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                type    : TYPES.UPDATE_TABS,
                 payload : { tabs: [openReceived] }
             } );
 
@@ -783,7 +783,7 @@ describe( 'tabs reducer', () =>
             const openReceived = { ...receivedTab, isClosed: false };
             // TODO: Add option for this?
             const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
-                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                type    : TYPES.UPDATE_TABS,
                 payload : { tabs: [openReceived] }
             } );
 
@@ -797,7 +797,7 @@ describe( 'tabs reducer', () =>
         it( 'should handle receiving the new config', () =>
         {
             const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
-                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                type    : TYPES.UPDATE_TABS,
                 payload : { tabs: [receivedTab] }
             } );
 
@@ -807,7 +807,7 @@ describe( 'tabs reducer', () =>
         it( 'should merge the new array with current array', () =>
         {
             const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
-                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                type    : TYPES.UPDATE_TABS,
                 payload : { tabs: [receivedTab] }
             } );
 
@@ -819,7 +819,7 @@ describe( 'tabs reducer', () =>
         it( 'should update the index of received tabs', () =>
         {
             const updatedTabs = tabs( [basicTab, basicTab, activeTab], {
-                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                type    : TYPES.UPDATE_TABS,
                 payload : { tabs: [receivedTab] }
             } );
 
@@ -831,12 +831,12 @@ describe( 'tabs reducer', () =>
     } );
 
 
-    describe( 'SAFE_RESET_STORE', () =>
+    describe( 'UI_RESET_STORE', () =>
     {
         it( 'should reset tabs to the inital state', () =>
         {
             const tabsPostLogout = tabs( [basicTab, basicTab, basicTab], {
-                type : SAFE_TYPES.RESET_STORE,
+                type : UI_TYPES.RESET_STORE,
             } );
             expect( tabsPostLogout ).toHaveLength( 1 );
             expect( tabsPostLogout ).toMatchObject( initialState.tabs );

@@ -9,12 +9,9 @@ export const TYPES = {
     SET_SAVE_CONFIG_STATUS : 'SET_SAVE_CONFIG_STATUS',
 
     //read status from network
-    RECEIVED_CONFIG : 'RECEIVED_CONFIG',
     RECEIVED_AUTH_RESPONSE : 'RECEIVED_AUTH_RESPONSE',
 
-    RECONNECT_SAFE_APP          : 'RECONNECT_SAFE_APP',
-
-    RESET_STORE : 'RESET_STORE'
+    RECONNECT_SAFE_APP          : 'RECONNECT_SAFE_APP'
 };
 
 export const {
@@ -25,7 +22,6 @@ export const {
     setReadConfigStatus,
     setSaveConfigStatus,
 
-    receivedConfig,
     receivedAuthResponse,
 
     reconnectSafeApp,
@@ -39,10 +35,7 @@ export const {
     TYPES.SET_READ_CONFIG_STATUS,
     TYPES.SET_SAVE_CONFIG_STATUS,
 
-    TYPES.RECEIVED_CONFIG,
     TYPES.RECEIVED_AUTH_RESPONSE,
 
-    TYPES.RECONNECT_SAFE_APP,
-
-    TYPES.RESET_STORE
+    TYPES.RECONNECT_SAFE_APP
 );

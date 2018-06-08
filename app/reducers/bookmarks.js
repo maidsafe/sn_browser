@@ -3,7 +3,7 @@
 import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
 import { TYPES } from 'actions/bookmarks_actions';
-import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
+import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 
@@ -126,14 +126,14 @@ export default function bookmarks( state: array = initialState, action )
         {
             return updateBookmark( state, payload );
         }
-        case SAFE_TYPES.RECEIVED_CONFIG :
+        case TYPES.UPDATE_BOOKMARKS :
         {
             const payloadBookmarks = payload.bookmarks;
             const newBookmarks = [...state, ...payloadBookmarks];
 
             return _.uniqBy( newBookmarks, 'url' );
         }
-        case SAFE_TYPES.RESET_STORE :
+        case UI_TYPES.RESET_STORE :
         {
             const initial = initialState;
             return [...initial];

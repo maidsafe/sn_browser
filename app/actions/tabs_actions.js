@@ -7,6 +7,7 @@ export const TYPES = {
     CLOSE_TAB            : 'CLOSE_TAB',
     CLOSE_ACTIVE_TAB     : 'CLOSE_ACTIVE_TAB',
     UPDATE_TAB           : 'UPDATE_TAB',
+    UPDATE_TABS          : 'UPDATE_TABS',
     UPDATE_ACTIVE_TAB    : 'UPDATE_ACTIVE_TAB',
     SET_ACTIVE_TAB       : 'SET_ACTIVE_TAB',
     REOPEN_TAB           : 'REOPEN_TAB'
@@ -19,6 +20,7 @@ export const {
     , closeActiveTab
     , reopenTab
     , updateTab
+    , updateTabs
     , updateActiveTab
     , activeTabForwards
     , activeTabBackwards
@@ -29,6 +31,7 @@ export const {
     , TYPES.CLOSE_ACTIVE_TAB
     , TYPES.REOPEN_TAB
     , TYPES.UPDATE_TAB
+    , TYPES.UPDATE_TABS
     , TYPES.UPDATE_ACTIVE_TAB
     , TYPES.ACTIVE_TAB_FORWARDS
     , TYPES.ACTIVE_TAB_BACKWARDS

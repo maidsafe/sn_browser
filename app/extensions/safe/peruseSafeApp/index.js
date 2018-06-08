@@ -13,8 +13,10 @@ import {
 } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
+import * as bookmarksActions from 'actions/bookmarks_actions';
+import * as tabsActions from 'actions/tabs_actions';
 import * as notificationActions from 'actions/notification_actions';
-// import * as remoteCallActions from 'actions/remoteCall_actions';
+
 import logger from 'logger';
 
 const authingStates = [
@@ -259,7 +261,9 @@ const manageReadStateActions = async ( store ) =>
     readConfigFromSafe( store )
         .then( savedState =>
         {
-            store.dispatch( peruseAppActions.receivedConfig( savedState ) );
+            // store.dispatch( peruseAppActions.receivedConfig( savedState ) );
+            store.dispatch( bookmarksActions.updateBookmarks( savedState ));
+            store.dispatch( tabsActions.updateTabs( savedState ));
             store.dispatch(
                 peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
             );

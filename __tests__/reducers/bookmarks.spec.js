@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import bookmarks from 'reducers/bookmarks';
 import { TYPES } from 'actions/bookmarks_actions';
-import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
+import { TYPES as UI_TYPES } from 'actions/ui_actions';
 
 import initialState from 'reducers/initialAppState';
 
@@ -58,7 +58,7 @@ describe( 'notification reducer', () =>
         {
             expect(
                 bookmarks( [{ url: 'i should not exist' }], {
-                    type    : SAFE_TYPES.RECEIVED_CONFIG,
+                    type    : TYPES.UPDATE_BOOKMARKS,
                     payload : { bookmarks: [{ url: 'updated', index: 0 }] }
                 } )[1]
             ).toMatchObject( { url: 'updated', index: 0 } );
@@ -67,7 +67,7 @@ describe( 'notification reducer', () =>
         it( 'should merge the new bookmarks with any current, w/o duplicates', () =>
         {
             const newBookmarks = bookmarks( [{ url: 'i should exist' }, { url: 'updated', index: 0 }], {
-                type    : SAFE_TYPES.RECEIVED_CONFIG,
+                type    : TYPES.UPDATE_BOOKMARKS,
                 payload : { bookmarks: [{ url: 'updated', index: 0 }] }
             } );
             expect( newBookmarks[0] ).toMatchObject( { url: 'i should exist' } );
@@ -76,10 +76,10 @@ describe( 'notification reducer', () =>
         } );
     } );
 
-    describe( 'SAFE_RESET_STORE', () =>
+    describe( 'UI_RESET_STORE', () =>
     {
         const bookmarksPostLogout = bookmarks( [{ url: 'i should not exist' }], {
-            type : SAFE_TYPES.RESET_STORE,
+            type : UI_TYPES.RESET_STORE,
         } );
 
         it( 'should reset bookmarks to inital state', () =>

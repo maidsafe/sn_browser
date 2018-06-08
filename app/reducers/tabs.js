@@ -2,7 +2,7 @@
 // @flow
 import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
-import { TYPES as SAFE_TYPES } from 'extensions/safe/actions/peruse_actions';
+import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 import { CONFIG } from 'appConstants';
@@ -428,7 +428,7 @@ export default function tabs( state: array = initialState, action )
         {
             return moveActiveTabBackwards( state );
         }
-        case SAFE_TYPES.RECEIVED_CONFIG :
+        case TYPES.UPDATE_TABS :
         {
             const payloadTabs = payload.tabs;
 
@@ -443,7 +443,7 @@ export default function tabs( state: array = initialState, action )
 
             return reindexTabs( newTabs );
         }
-        case SAFE_TYPES.RESET_STORE :
+        case UI_TYPES.RESET_STORE :
         {
             const initial = initialState;
             const firstTab = { ...initial[0] };
