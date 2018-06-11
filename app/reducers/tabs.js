@@ -260,8 +260,8 @@ const reopenTab = ( state ) =>
 
 /**
  * set active tab to a given index
- * @param       { Int } index index to set as activeTabIndex
  * @param       { Array } state the state array of tabs
+ * @param       { Int } index index to set as activeTabIndex
  * @constructor
  */
 const setActiveTab = ( state, payload ) =>

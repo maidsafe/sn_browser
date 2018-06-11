@@ -18,11 +18,13 @@ export default class Tab extends Component
 {
     static propTypes =
     {
-        isActiveTab : PropTypes.bool.isRequired,
-        url         : PropTypes.string.isRequired,
-        index       : PropTypes.number.isRequired,
-        updateTab   : PropTypes.func.isRequired,
-        addTab      : PropTypes.func.isRequired
+        isActiveTab  : PropTypes.bool.isRequired,
+        url          : PropTypes.string.isRequired,
+        index        : PropTypes.number.isRequired,
+        pageIsLoading: PropTypes.bool.isRequired,
+        updateTab    : PropTypes.func.isRequired,
+        addTab       : PropTypes.func.isRequired,
+        pageLoaded   : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -58,11 +60,6 @@ export default class Tab extends Component
         this.reloadIfActive = ::this.reloadIfActive;
     }
 
-    listenToCommands()
-    {
-        ipcRenderer.on( 'refreshActiveTab', this.reloadIfActive );
-    }
-
     isDevToolsOpened = () =>
     {
         const { webview } = this;
@@ -75,14 +72,14 @@ export default class Tab extends Component
 
     reloadIfActive()
     {
-        const { isActiveTab } = this.props;
-
+        const { isActiveTab, pageLoaded } = this.props;
         if ( !isActiveTab )
         {
             return;
         }
 
         this.reload();
+        pageLoaded();
     }
 
     componentDidMount()
@@ -165,6 +162,10 @@ export default class Tab extends Component
             {
                 this.loadURL( nextProps.url );
             }
+        }
+
+        if (nextProps.pageIsLoading) {
+            this.reloadIfActive();
         }
     }
 
