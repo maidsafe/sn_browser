@@ -3,6 +3,7 @@ import { callIPC, setAuthCallbacks } from 'extensions/safe/ffi/ipc';
 import * as authActions from 'extensions/safe/actions/authenticator_actions';
 import * as uiActions from 'actions/ui_actions';
 import CONSTANTS from 'extensions/safe/auth-constants';
+import * as remoteCallActions from 'actions/remoteCall_actions';
 
 import logger from 'logger';
 
