@@ -8,29 +8,32 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 import styles from './browser.css';
-import setupAuthHandling from 'extensions/safe/authIPCHandling';
 import logger from 'logger';
 
-export default class Browser extends Component
+import { wrapBrowserComponent } from 'extensions/components';
+
+
+class Browser extends Component
 {
     static propTypes =
     {
-        bookmarks            : PropTypes.array,
-        notifications        : PropTypes.array,
-        tabs                 : PropTypes.array,
-        addBookmark          : PropTypes.func.isRequired,
-        removeBookmark       : PropTypes.func.isRequired,
-        selectAddressBar     : PropTypes.func.isRequired,
-        deselectAddressBar   : PropTypes.func.isRequired,
-        blurAddressBar       : PropTypes.func.isRequired,
-        addTab               : PropTypes.func,
-        closeTab             : PropTypes.func,
-        closeActiveTab       : PropTypes.func,
-        reopenTab            : PropTypes.func,
-        // addNotification   : PropTypes.func.isRequired,
-        addLocalNotification : PropTypes.func.isRequired,
-        clearNotification    : PropTypes.func,
-        ui                   : PropTypes.object.isRequired
+        bookmarks          : PropTypes.array,
+        notifications      : PropTypes.array,
+        tabs               : PropTypes.array,
+        addBookmark        : PropTypes.func.isRequired,
+        removeBookmark     : PropTypes.func.isRequired,
+        selectAddressBar   : PropTypes.func.isRequired,
+        deselectAddressBar : PropTypes.func.isRequired,
+        blurAddressBar     : PropTypes.func.isRequired,
+        reloadPage         : PropTypes.func.isRequired,
+        pageLoaded         : PropTypes.func.isRequired,
+        addTab             : PropTypes.func,
+        closeTab           : PropTypes.func,
+        closeActiveTab     : PropTypes.func,
+        reopenTab          : PropTypes.func,
+        updateNotification : PropTypes.func.isRequired,
+        clearNotification  : PropTypes.func,
+        ui                 : PropTypes.object.isRequired
     }
 
     static defaultProps =
@@ -54,14 +57,11 @@ export default class Browser extends Component
             closeTab,
             closeActiveTab,
             reopenTab,
-            // use local notifications, keeps auth in one relevant window
-            addLocalNotification,
             clearNotification
         } = this.props;
         const addressBar = this.address;
 
         const theBrowser = this;
-        setupAuthHandling( addLocalNotification, clearNotification );
 
         // this is mounted but its not show?
         this.setState( { windowId: remote.getCurrentWebContents().id } );
@@ -132,6 +132,7 @@ export default class Browser extends Component
         }
     }
 
+
     render()
     {
         const {
@@ -146,6 +147,8 @@ export default class Browser extends Component
             selectAddressBar,
             deselectAddressBar,
             blurAddressBar,
+            reloadPage,
+            pageLoaded,
 
             //tabs
             tabs,
@@ -156,29 +159,24 @@ export default class Browser extends Component
             updateTab,
             activeTabBackwards,
             activeTabForwards,
-
-            //notifications
+            updateNotification,
             notifications,
             clearNotification,
 
-            //safe network
-            safeNetwork
         } = this.props;
 
-        // TODO: Set focus only for this window if current
-        // const thisAddressBarIsFocussed =
+        // only show the first notification without a response.
+        const notification = notifications.filter( n => !n.response )[0];
 
-        // only show the first notification
-        const notification = notifications[0];
+
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
-        const isMock = safeNetwork ? safeNetwork.isMock : false;
 
         // TODO: if not, lets trigger close?
         if ( !activeTab )
         {
-            return <div />;
+            return <div className="noTabsToShow" />;
         }
 
         const activeTabAddress = activeTab.url;
@@ -187,10 +185,6 @@ export default class Browser extends Component
 
         return (
             <div className={ styles.container }>
-                {
-                    isMock &&
-                    <span>Running on a mock network</span>
-                }
                 <TabBar
                     key={ 1 }
                     updateActiveTab={ updateActiveTab }
@@ -210,6 +204,7 @@ export default class Browser extends Component
                     addBookmark={ addBookmark }
                     isBookmarked={ isBookmarked }
                     removeBookmark={ removeBookmark }
+                    reloadPage={ reloadPage }
                     isSelected={ ui.addressBarIsSelected }
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
@@ -221,17 +216,19 @@ export default class Browser extends Component
                 />
                 <Notifier
                     key={ 3 }
-
+                    updateNotification={ updateNotification }
                     { ...notification }
                     clearNotification={ clearNotification }
                 />
                 <TabContents
+                    pageIsLoading= { ui.pageIsLoading }
                     key={ 4 }
                     addTab={ addTab }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
                     addTab={ addTab }
+                    pageLoaded= { pageLoaded }
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
@@ -244,3 +241,22 @@ export default class Browser extends Component
         );
     }
 }
+
+
+
+const extendComponent = ( WrappedComponent ) =>
+{
+    return class Browser extends Component {
+        constructor(props) {
+            super(props);
+
+            this.EnWrappedComponent = wrapBrowserComponent( WrappedComponent );
+      }
+      render() {
+          const { EnWrappedComponent } = this;
+          return <EnWrappedComponent {...this.props} />;
+      }
+    }
+}
+
+export default extendComponent( Browser );

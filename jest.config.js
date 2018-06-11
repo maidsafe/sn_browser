@@ -1,9 +1,8 @@
 module.exports = {
     verbose                : true,
-    testMatch              : ['**/test/**/*'],
-    moduleFileExtensions   : ['js', 'jsx'],
-    setupFiles   : ['raf/polyfill','<rootDir>/test/setup.js'],
-    testPathIgnorePatterns : ['node_modules', '<rootDir>/app/extensions'],
+    moduleFileExtensions   : ['js', 'jsx', 'json'],
+    setupFiles   : ['raf/polyfill','<rootDir>/__tests__/setup.js'],
+    testPathIgnorePatterns : ['node_modules'],
     moduleDirectories      : ['app', 'test', 'node_modules', 'app/node_modules'],
     moduleNameMapper       : {
         "electron": "<rootDir>/mocks/electron.js",
@@ -11,12 +10,13 @@ module.exports = {
         "<rootDir>/mocks/fileMock.js",
         "\\.(css|scss)$": "<rootDir>/mocks/fileMock.js",
         '^appPackage$'      : '<rootDir>/package.json',
+        '^spectron-lib(.*)$'      : '<rootDir>/__e2e__/lib$1',
         '^@actions(.*)$'    : '<rootDir>/app/actions$1',
         '^@components(.*)$' : '<rootDir>/app/components$1',
         '^@containers(.*)$' : '<rootDir>/app/containers$1',
         '^appConstants$'  : '<rootDir>/app/constants.js',
         '^@extensions(.*)$' : '<rootDir>/app/extensions$1',
-        '^@logger(.*)$'     : '<rootDir>/app/logger$1',
+        '^@logger$'     : '<rootDir>/app/logger.js',
         '^@reducers(.*)$'   : '<rootDir>/app/reducers$1',
         '^@store(.*)$'      : '<rootDir>/app/store',
         '^@utils(.*)$'      : '<rootDir>/app/utils$1'

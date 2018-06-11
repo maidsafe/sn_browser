@@ -10,6 +10,7 @@ import SafeLib from './safe_lib';
 import authenticator from './authenticator';
 import * as types from './refs/types';
 import CONSTANTS from '../auth-constants';
+import logger from 'logger';
 
 const _mods = Symbol('_mods');
 const _libPath = Symbol('_libPath');
@@ -20,7 +21,15 @@ class LibLoader {
     this[_libPath] = CONSTANTS.LIB_PATH.SAFE_AUTH[os.platform()];
   }
 
-  load() {
+  load( isMock = false ) {
+
+    if( isMock )
+    {
+       this[_libPath] = CONSTANTS.LIB_PATH_MOCK.SAFE_AUTH[os.platform()];
+    }
+
+    logger.verbose('Auth lib location loading: ', this[_libPath] )
+
     const safeLib = {};
     const RTLD_NOW = ffi.DynamicLibrary.FLAGS.RTLD_NOW;
     const RTLD_GLOBAL = ffi.DynamicLibrary.FLAGS.RTLD_GLOBAL;
@@ -45,6 +54,7 @@ class LibLoader {
     return new Promise((resolve, reject) => {
       try {
         const lib = ffi.DynamicLibrary(path.resolve(__dirname, this[_libPath]), mode);
+
         Object.keys(ffiFunctions).forEach((fnName) => {
           fnDefinition = ffiFunctions[fnName];
           safeLib[fnName] = ffi.ForeignFunction(lib.get(fnName),
@@ -61,6 +71,7 @@ class LibLoader {
         const setConfigSearchPath = () => {
           if (process.env.SAFE_CONFIG_PATH && process.env.SAFE_CONFIG_PATH.length > 0) {
             const configPath = types.allocCString(process.env.SAFE_CONFIG_PATH);
+
             safeLib.auth_set_additional_search_path(configPath, types.Null, ffi.Callback(types.Void,
               [types.voidPointer, types.FfiResultPointer],
               (userData, resultPtr) => {

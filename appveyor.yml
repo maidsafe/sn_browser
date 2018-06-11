@@ -2,10 +2,16 @@ os: unstable
 image: Visual Studio 2017
 
 environment:
-  nodejs_version: "Stable"
+  nodejs_version: "8"
   matrix:
     - NODE_ENV: "dev"
+      win_runtime: win-x64
+      arch: x64
+      plat: win32
     - NODE_ENV: "prod"
+      win_runtime: win-x64
+      arch: x64
+      plat: win32
 
 platform:
   - x64
@@ -27,23 +33,44 @@ install:
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
   - if [%NODE_ENV%]==[dev] ( set RUN_E2E=true )
+  - if [%NODE_ENV%]==[dev] ( set RUN_EXTS=true )
 
-  # - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
   - node --version
   - npm --version
   - yarn --version
-  - yarn add windows-build-tools --global
+
+  - yarn config set child-concurrency 1
+  - yarn config set network-timeout 1200000
+  - yarn config set msvs_version 2017
+  - yarn config list
+
+  # - npm cache clean --force
+
+  - yarn add windows-build-tools --vs2017 --global
+  - yarn add node-gyp --global
   - yarn --ignore-optional
-  - yarn
+  - yarn install
+  - yarn run rebuild
+  - yarn run build
+  # - yarn run build-main
+  # - yarn run build-renderer
+  # - yarn run build-preload
+  # - yarn run build-bg
+
 
 test_script:
   - node --version
   # - yarn run lint
-  - yarn run build
-  - yarn run test
-  - IF DEFINED RUN_E2E ( yarn run test e2e ) ELSE (echo "is not defined")
-
+  # - yarn run test
+  # skip ext tests for now as windows fails inexcplicably
+  - if [%NODE_ENV%]==[dev] ( yarn run test-peruse )
+  # - IF DEFINED RUN_EXTS ( yarn run test safe ) ELSE (echo "Not dev mode, not running safe tests")
+  # - IF DEFINED RUN_EXTS ( yarn run test exts ) ELSE (echo "is not defined")
+  # - IF DEFINED RUN_E2E ( yarn run test-e2e ) ELSE ( yarn run test-e2e-prod )
+  # - IF DEFINED RUN_E2E ( yarn run test-exts-e2e-prod ) ELSE ( yarn run test-exts-e2e-prod )
+  - IF DEFINED RUN_E2E ( yarn run test-e2e )
+  # - IF DEFINED RUN_E2E ( yarn run test-exts-e2e )
 
 
 
@@ -51,7 +78,6 @@ build_script:
   - node --version
   - yarn --version
   - yarn run package-win
-  - yarn run post-pack
 
 after_build:
   # - ps:

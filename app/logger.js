@@ -3,9 +3,12 @@ import util from 'util';
 import { env,
     isRunningUnpacked,
     isRunningPackaged,
-    isRunningProduction,
-    isRunningMock,
-    isRunningSpectronTest,
+    isRunningDebug,
+    startedRunningProduction,
+    startedRunningMock,
+    isRunningSpectronTestProcess,
+    isRunningSpectronTestProcessingPackagedApp,
+    inMainProcess,
     inRendererProcess
 } from 'appConstants';
 
@@ -15,7 +18,19 @@ if( log.transports )
 {
     // Log level
     // error, warn, info, verbose, debug, silly
-    log.transports.console.level = 'verbose';
+    log.transports.console.level = 'silly';
+    log.transports.file.level = 'silly';
+
+    if( !isRunningDebug && isRunningPackaged )
+    {
+        log.transports.console.level = 'warn';
+        log.transports.file.level = 'warn';
+    }
+
+    if( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
+    {
+        log.transports.file.file =  __dirname + '/log.log';
+    }
 
     /**
     * Set output format template. Available variables:
@@ -27,7 +42,6 @@ if( log.transports )
     // Set a function which formats output
     log.transports.console.format = ( msg ) => util.format( ...msg.data );
 
-    log.transports.file.level = 'verbose';
     log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 
     // Set approximate maximum log size in bytes. When it exceeds,
@@ -36,20 +50,27 @@ if( log.transports )
 }
 
 // HACK: for jest
-if( log.info && log.verbose )
+if( log.info && log.verbose && inMainProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
+    log.verbose( '' );
+    log.verbose( '' );
+    log.verbose( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( `      Started with node env: ${env}` );
+    console.log('       Log location:', log.transports.file.file)
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-
     log.verbose( 'Running with derived constants:' );
     log.verbose( '' );
+    log.verbose( 'isRunningDebug?', isRunningDebug );
+    log.verbose( 'shouldStartAsMockFromFlagsOrPackage?', shouldStartAsMockFromFlagsOrPackage );
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );
-    log.verbose( 'isRunningProduction?', isRunningProduction );
-    log.verbose( 'isRunningMock?', isRunningMock );
-    log.verbose( 'isRunningSpectronTest?', isRunningSpectronTest );
+    log.verbose( 'inMainProcess?', inMainProcess );
+    log.verbose( 'startedRunningProduction?', startedRunningProduction );
+    log.verbose( 'startedRunningMock?', startedRunningMock );
+    log.verbose( 'isRunningSpectronTestProcess?', isRunningSpectronTestProcess );
+    log.verbose( 'isRunningSpectronTestProcessingPackagedApp?', isRunningSpectronTestProcessingPackagedApp );
     log.verbose( '' );
     log.verbose( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.verbose( '' );

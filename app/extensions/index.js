@@ -4,22 +4,185 @@ import logger from 'logger';
 import safeBrowsing from './safe/index';
 
 // here add your packages for extensibility.
+// const allPackages = [ ];
 const allPackages = [ safeBrowsing ];
 
-const loadExtensions = ( server, store ) =>
+export const preAppLoad = ( store ) =>
 {
-    logger.info( 'Loading extensions' );
-
-    allPackages.forEach( loadPackage => {
-
-        if( loadPackage.setupRoutes )
+    allPackages.forEach( extension =>
+    {
+        if ( extension.preAppLoad )
         {
-            loadPackage.setupRoutes( server );
+            extension.preAppLoad( store );
         }
+    } );
+};
 
-        loadPackage.init( store )
+export const triggerOnWebviewPreload = ( store ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onWebviewPreload )
+        {
+            extension.onWebviewPreload( store );
+        }
     } );
 };
 
 
-export default loadExtensions;
+export const urlIsValid = ( url ) =>
+{
+    logger.info('Extensions: Checking urlIsValid via all extensions.')
+    let result = true;
+
+    allPackages.forEach( extension =>
+    {
+        if( !result ) return;
+
+        if ( extension.urlIsValid )
+        {
+            result = extension.urlIsValid( url );
+        }
+    } );
+
+    return result;
+};
+
+/**
+ * To be triggered when a remote call occurs in the main process.
+ * @param  {object} store redux store
+ */
+export const onRemoteCallInMain = ( store, allAPICalls, theCall  ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onRemoteCallInMain )
+        {
+            extension.onRemoteCallInMain( store, allAPICalls, theCall  );
+        }
+    } );
+};
+
+export const getRemoteCallApis = () =>
+{
+    logger.verbose('Getting extension remoteCall Apis')
+    let apisToAdd = {};
+    allPackages.forEach( extension =>
+    {
+        if ( extension.getRemoteCallApis )
+        {
+            const extApis = extension.getRemoteCallApis();
+            if( typeof extApis !== 'object' ) throw new Error( 'Extensions apis must be passed as an object containing relevant api functions.');
+
+            apisToAdd = { ...apisToAdd, ...extApis }
+        }
+    } );
+
+    return apisToAdd;
+}
+
+/**
+ * get all actions to add to the browser component.
+ * @return {object} All actions for the browser
+ */
+export const getActionsForBrowser = () =>
+{
+    logger.verbose('Getting extension browser actions');
+
+    let actionsToAdd = {};
+    allPackages.forEach( extension =>
+    {
+        if ( extension.actionsForBrowser )
+        {
+            const extActions = extension.actionsForBrowser;
+            if( typeof extActions !== 'object' ) throw new Error( 'Browser actions must be passed as an object containing relevant api functions.');
+
+            actionsToAdd = { ...actionsToAdd, ...extActions }
+        }
+    } );
+
+    return actionsToAdd;
+}
+
+
+
+export const getExtensionReducers = ( ) =>
+{
+    let reducersToAdd = {};
+    allPackages.forEach( extension =>
+    {
+        if ( extension.addReducersToPeruse )
+        {
+            const extReducers = extension.addReducersToPeruse(  );
+
+            if( typeof extReducers !== 'object' ) throw new Error( 'Extensions reducers must be passed as an object containing relevant reducers.');
+
+            reducersToAdd = { ...reducersToAdd, ...extReducers }
+        }
+    } );
+
+    return reducersToAdd;
+};
+
+
+export const getExtensionMenuItems = ( store, menusArray ) =>
+{
+    logger.verbose('Extending menus array')
+    let newMenuArray = [];
+    allPackages.forEach( extension =>
+    {
+        if ( extension.addExtensionMenuItems )
+        {
+            newMenuArray = extension.addExtensionMenuItems( store, menusArray );
+
+            if( ! Array.isArray( newMenuArray ) ) throw new Error( 'Extensions must pass an array of menu items.');
+        }
+    } );
+
+    return newMenuArray;
+};
+
+export const onInitBgProcess = ( server, store ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.setupRoutes )
+        {
+            extension.setupRoutes( server, store );
+        }
+
+        if ( extension.onInitBgProcess )
+        {
+            extension.onInitBgProcess( store );
+        }
+
+    } );
+};
+
+export const onOpenLoadExtensions = ( store ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onOpen )
+        {
+            extension.onOpen( store );
+        }
+    } );
+};
+
+export const onReceiveUrl = ( store, url ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onReceiveUrl )
+        {
+            extension.onReceiveUrl( store, url );
+        }
+    } );
+};
+
+
+export const getExtensionReduxMiddleware = () =>
+{
+    return allPackages.map( pack => pack.middleware )
+}

@@ -6,5 +6,6 @@
 		"unauthorised": "messages.unauthorised"
 	},
 	"Secret": "Secret",
-	"URL": "URL"
+	"URL": "URL",
+	"IsAllowed": "IsAllowed"
 }

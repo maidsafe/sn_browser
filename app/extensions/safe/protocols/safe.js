@@ -1,15 +1,14 @@
-import { session, app } from 'electron';
+import { remote } from 'electron';
 import url from 'url';
 import logger from 'logger';
-import { CONFIG, PROTOCOLS,APP_INFO, isRunningPackaged } from 'appConstants';
+import { CONFIG, PROTOCOLS, APP_INFO, isRunningPackaged } from 'appConstants';
 
 const registerSafeProtocol = () =>
 {
     logger.verbose( `${PROTOCOLS.SAFE} Registering` );
-
     // bind to partition.
     const partition = CONFIG.SAFE_PARTITION;
-    const ses = session.fromPartition( partition );
+    const ses = remote.session.fromPartition( partition );
 
     // TODO: Is it better to have one safe protocol
     // Would ports automatically routing locally make things simpler?

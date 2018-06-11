@@ -1,17 +1,9 @@
 const initialState = {
     bookmarks     : [{ url: 'safe-auth://home/#/login' }],
+    remoteCalls : [
+    ],
     notifications : [
     ],
-    safeNetwork : {
-        appStatus       : null,
-        networkStatus   : null,
-        app             : null,
-        tasks           : [],
-        readStatus      : '',
-        savedBeforeQuit : false,
-        saveStatus      : '',
-        isMock          : false
-    },
     tabs : [{
         url          : 'safe-auth://home/',
         history      : ['safe-auth://home/'],
@@ -21,7 +13,8 @@ const initialState = {
         isClosed     : false
     }],
     ui : {
-        addressBarIsSelected : false
+        addressBarIsSelected : false,
+        pageIsLoading : false
     }
 };
 

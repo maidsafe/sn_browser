@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './notifier.css';
 import logger from 'logger';
+import { CLASSES } from 'appConstants';
 
 import { Button, Column, IconButton, MessageBox, Row, Text } from 'nessie-ui';
 
@@ -20,9 +21,10 @@ export default class Notifier extends Component
        acceptText  : PropTypes.string,
        denyText    : PropTypes.string,
        dismissText : PropTypes.string,
-       onDismiss   : PropTypes.func,
-       onAccept    : PropTypes.func,
-       onDeny      : PropTypes.func
+       onDismiss   : PropTypes.string,
+       onAccept    : PropTypes.string,
+       onDeny      : PropTypes.string,
+       updateNotification : PropTypes.func
    }
     static defaultProps =
     {
@@ -35,13 +37,10 @@ export default class Notifier extends Component
 
     handleDismiss = () =>
     {
-        const { clearNotification } = this.props;
-        clearNotification();
-    }
+        const { id, updateNotification } = this.props;
+        //TODO: Use constants
+        updateNotification({ id, response: 'ignore' })
 
-    handleIPCProxy = ( proxy ) =>
-    {
-        ipcRenderer.send( proxy );
     }
 
     render()
@@ -49,49 +48,38 @@ export default class Notifier extends Component
         const { acceptText,
             denyText,
             dismissText,
-            onDismiss,
-            onAccept,
-            onDeny,
+            id,
+            isPrompt,
             text,
-            type
+            type,
+            updateNotification
         } = this.props;
-
-        // TODO: Enable IPC comms for functionality with some string/phrasing
-        // to catch and implement the cb.
-        // OR: Use electron-redux aliasing.
 
         if ( !text )
         {
             return ( <div /> );
         }
 
-        let handleOnAccept = onAccept;
-        let handleOnDeny = onDeny;
+        let handleOnAccept;
+        let handleOnDeny;
 
-        // Handle proxy back to main process
-        // Im mainprocess we would have set, eg:
-        //
-        // ipcMain.on( 'notifier:accept', ( e ) =>
-        // {
-        //     store.dispatch( clearNotification() );
-        // } );
-        if( typeof onAccept === 'string' )
+        if( isPrompt )
         {
-            this.proxyAccept = onAccept;
-            handleOnAccept = () => this.handleIPCProxy( onAccept );
+            handleOnAccept = () =>
+            {
+                updateNotification({ id, response: 'allow' })
+            };
+            handleOnDeny = () => {
+                updateNotification({ id, response: 'deny' })
+            };
         }
 
-        if( typeof onDeny === 'string' )
-        {
-            this.proxyDeny = onDeny;
-            handleOnDeny = () => this.handleIPCProxy( onDeny );
-        }
 
         return (
             <Row hasMinHeight className={ styles.container }>
                 <MessageBox messageType={type}>
                     <Row verticalAlign="middle" align="center">
-                        <Text>{ text }</Text>
+                        <Text className={CLASSES.NOTIFIER_TEXT}>{ text }</Text>
                         {
                             handleOnAccept &&
                             <Column align="left">
@@ -108,7 +96,7 @@ export default class Notifier extends Component
                             <IconButton
                                 role="subtle"
                                 iconType="close"
-                                onClick={ onDismiss || this.handleDismiss }
+                                onClick={ this.handleDismiss }
                             >
                                 { dismissText }
                             </IconButton>

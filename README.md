@@ -7,13 +7,24 @@ An electron web browser. Built to be a basis. Extendable by design.
 
 There are `dev-` prefixed releases of Peruse available. These come with both live network and mock network libs, bundled.
 
-By default, opening the app will open Peruse for the live network.
+By default, opening the app will open Peruse for the mock network (when you're running in a `NODE_ENV=dev` environment).
 
-Otherwise, there is the option to pass a `--mock` flag to the browser (when you're running in a `NODE_ENV=dev` environment). This will start the browser in a `mock` network mode.
+Otherwise, there is the option to pass a `--live` flag to the browser. This will start the browser in a `live` network mode.
 
 eg, on OSX:
 
-`NODE_ENV=dev open Peruse.app --args --mock`
+`NODE_ENV=dev open Peruse.app --args --live`
+
+### Debugging
+
+A `--debug` flag is also available to get extra logs and devtool windows when working with a packaged application.
+
+Additionally, the `--preload` flag can be passed in order to get the following features preloaded in `mock` network mode:
+
+- an [interactive tool](https://github.com/maidsafe/safe_examples/tree/master/safe_web_api_playground) to learn about the browser's SAFE network API, located at `safe://api.playground`
+- Account login credentials, both secret and password being `mocksafenetworkdeveloper`
+
+`NODE_ENV=dev open Peruse.app --args --mock --new`
 
 ### Compiling
 

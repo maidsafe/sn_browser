@@ -2,7 +2,13 @@
 	"Locator": "Locator",
 	"messages": {
 		"should_not_be_empty": "messages.should_not_be_empty",
-		"must_be_string": "messages.must_be_string"
+		"must_be_string": "messages.must_be_string",
+		"shouuuld_not_be_empty": "messages.shouuuld_not_be_empty",
+		"invalid_params": "messages.invalid_params",
+		"invalid_paramss": "messages.invalid_paramss",
+		"invalid_req": "messages.invalid_req",
+		"unauthorised": "messages.unauthorised"
 	},
-	"Secret": "Secret"
+	"Secret": "Secret",
+	"AppId": "AppId"
 }

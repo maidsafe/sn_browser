@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@maidsafe/safe-node-app@0.8.1":
+"@maidsafe/safe-node-app@git+https://github.com/maidsafe/safe_app_nodejs.git#9a74d4cf10dde965b5f1c2fa2c6644862f5ef355":
   version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.8.1.tgz#9920849263978bb55452e69cead9c3b98694c08d"
+  resolved "git+https://github.com/maidsafe/safe_app_nodejs.git#9a74d4cf10dde965b5f1c2fa2c6644862f5ef355"
   dependencies:
     cross-env "5.1.3"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
@@ -815,7 +815,7 @@ redent@^1.0.0:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
 
-ref-array@^1.2.0:
+ref-array@1.2.0, ref-array@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ref-array/-/ref-array-1.2.0.tgz#bba870152d4ee0abed1421b062392f0b0184290c"
   dependencies:
@@ -823,7 +823,7 @@ ref-array@^1.2.0:
     debug "2"
     ref "1"
 
-ref-struct@1, ref-struct@^1.1.0:
+ref-struct@1, ref-struct@1.1.0, ref-struct@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ref-struct/-/ref-struct-1.1.0.tgz#5d5ee65ad41cefc3a5c5feb40587261e479edc13"
   dependencies:
@@ -1062,7 +1062,7 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-weak@^1.0.1:
+weak@1.0.1, weak@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/weak/-/weak-1.0.1.tgz#ab99aab30706959aa0200cb8cf545bb9cb33b99e"
   dependencies:

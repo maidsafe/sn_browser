@@ -1,113 +1,88 @@
 // following @pfrazee's beaker pattern again here.
-import { ipcRenderer, webFrame } from 'electron';
-import rpc from 'pauls-electron-rpc';
-import pkg from 'appPackage';
-// import log from '   electron-log';
-// it would be better to import this from package.json
-const VERSION = pkg.version;
-const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
-const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
-const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
+// import setModuleImportLocations from 'setModuleImportLocations';
+import { ipcRenderer } from 'electron';
+import { triggerOnWebviewPreload } from 'extensions';
 
-// Use a readable RPC stream to invoke a provided callback function,
-// resolving the promise upon the closure of the stream the sender.
-const readableToCallback = ( rpcAPI ) =>
-    ( arg1, cb ) =>
-        new Promise( ( resolve, reject ) =>
-        {
-            const r = rpcAPI( arg1 );
-            r.on( 'data', data => cb.apply( cb, data ) );
-            r.on( 'error', err => reject( err ) );
-            r.on( 'end', () => resolve() );
-        } );
+// var { setupPreloadedSafeAuthApis } = require( './setupPreloadAPIs');
+var configureStore = require( './store/configureStore').configureStore;
 
-// Use a readable RPC stream to invoke a provided callback function even after
-// resolving the promise.
-const readableToAsyncCallback = ( rpcAPI, safeAppGroupId ) =>
-    ( arg1, cb, arg2 ) =>
-        new Promise( ( resolve, reject ) =>
-        {
-            let firstValueReceived = false;
-            const r = rpcAPI( arg1, arg2, safeAppGroupId );
-            r.on( 'data', data =>
-            {
-                if ( !firstValueReceived )
-                {
-                    firstValueReceived = true;
-                    resolve( data[0] );
-                }
-                else
-                {
-                    cb.apply( cb, data );
-                }
-            } );
-            r.on( 'error', err => reject( err ) );
-        } );
+// TODO This handling needs to be imported via extension apis more seemlessly
+const store = configureStore( );
 
-
-// method which will populate window with the APIs deemed appropriate for the protocol
-const setupPreload = () =>
+window.eval = global.eval = () =>
 {
-    // mark the safe protocol as 'secure' to enable all DOM APIs
-    // webFrame.registerURLSchemeAsSecure('safe');
-    window[ pkg.name ] = { version: VERSION };
-    const webAPIs = ipcRenderer.sendSync( 'get-web-api-manifests', window.location.protocol );
-    // create an id to group all safeApp objects
-    const safeAppGroupId = ( Math.random() * 1000 | 0 ) + Date.now();
-    window.safeAppGroupId = safeAppGroupId;
+    throw new Error( 'Sorry, peruse does not support window.eval().' );
+};
 
-    Object.keys( webAPIs ).forEach( k =>
+let pendingCalls = {};
+
+store.subscribe( async () =>
+{
+    const state = store.getState();
+    const calls = state.remoteCalls;
+
+    calls.forEach( theCall =>
     {
-        const fnsToImport = [];
-        const fnsWithCallback = [];
-        const fnsWithAsyncCallback = [];
-        const staticObjs = [];
-
-        Object.keys( webAPIs[k] ).forEach( fn =>
+        if ( theCall === pendingCalls[theCall.id] )
         {
-            // We adapt the functions which contain a callback
-            if ( fn.startsWith( WITH_CALLBACK_TYPE_PREFIX ) )
-            {
-                // We use a readable type to receive the data from the RPC channel
-                const manifest = { [fn]: 'readable' };
-                const rpcAPI = rpc.importAPI( WITH_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false } );
-                // We expose the function removing the WITH_CALLBACK_TYPE_PREFIX prefix
-                const newFnName = fn.replace( WITH_CALLBACK_TYPE_PREFIX, '' );
-                fnsWithCallback[newFnName] = readableToCallback( rpcAPI[fn] );
-            }
-            else if ( fn.startsWith( WITH_ASYNC_CALLBACK_TYPE_PREFIX ) )
-            {
-                // We use a readable type to receive the data from the RPC channel
-                const manifest = { [fn]: 'readable' };
-                const rpcAPI = rpc.importAPI( WITH_ASYNC_CALLBACK_TYPE_PREFIX + k, manifest, { timeout: false } );
-                // We expose the function removing the WITH_ASYNC_CALLBACK_TYPE_PREFIX prefix
-                const newFnName = fn.replace( WITH_ASYNC_CALLBACK_TYPE_PREFIX, '' );
-                // Provide the safeAppGroupId to map it to all safeApp instances created,
-                // so they can be automatically freed when the page is closed or refreshed
-                fnsWithAsyncCallback[newFnName] = readableToAsyncCallback( rpcAPI[fn], safeAppGroupId );
-            }
-            else if ( fn.startsWith( EXPORT_AS_STATIC_OBJ_PREFIX ) )
-            {
-                const manifest = { [fn]: 'sync' };
-                const rpcAPI = rpc.importAPI( EXPORT_AS_STATIC_OBJ_PREFIX + k, manifest, { timeout: false } );
-                // We expose the object name removing the EXPORT_AS_STATIC_OBJ_PREFIX prefix
-                const objName = fn.replace( EXPORT_AS_STATIC_OBJ_PREFIX, '' );
-                // Call the function to expose just the returned value
-                staticObjs[objName] = rpcAPI[fn].call();
-            }
-            else
-            {
-                fnsToImport[fn] = webAPIs[k][fn];
-            }
-        });
+            return;
+        }
 
-        window[k] = Object.assign( rpc.importAPI( k, fnsToImport, { timeout: false } ), staticObjs, fnsWithCallback, fnsWithAsyncCallback );
+        const callPromises = pendingCalls[theCall.id];
+
+        if ( !callPromises )
+        {
+            return;
+        }
+
+        if ( theCall.done && callPromises.resolve )
+        {
+            if ( theCall.name === 'login' )
+            {
+                logger.info('store subscribe calls: ', calls);
+                logger.info('pendingCalls: ', pendingCalls);
+                logger.info('call Promises: ', callPromises);
+	    // QUESTION: callPromises.resolve logs `null` \
+	    // Why is the condition on line  115 passing?
+                logger.info('callpromises.resolve: ', callPromises.resolve);
+            }
+            pendingCalls[theCall.id] = theCall;
+
+            let callbackArgs = theCall.response;
+
+            callbackArgs = [theCall.response];
+
+            if ( theCall.isListener )
+            {
+                // error first
+                callPromises.resolve( null, ...callbackArgs );
+            }
+            callPromises.resolve( ...callbackArgs );
+            store.dispatch( remoteCallActions.removeRemoteCall(
+                theCall
+            ) );
+
+            delete pendingCalls[theCall.id];
+        }
+        else if ( theCall.error && callPromises.reject )
+        {
+            pendingCalls[theCall.id] = theCall;
+
+            logger.error( 'remoteCall ', theCall.name, 'was rejected with: ', theCall.error );
+            callPromises.reject( new Error( theCall.error.message || theCall.error ) );
+            store.dispatch( remoteCallActions.removeRemoteCall(
+                theCall
+            ) );
+            delete pendingCalls[theCall.id];
+        }
     } );
-}
+} );
 
 
-setupPreload();
+triggerOnWebviewPreload( store );
+// setupPreloadedSafeAuthApis( store );
 
-window.onerror = function(error, url, line) {
-    ipcRenderer.send('errorInWindow', error);
+window.onerror = function ( error, url, line )
+{
+    ipcRenderer.send( 'errorInWindow', error );
 };

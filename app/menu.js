@@ -7,16 +7,14 @@ import {
     closeActiveTab,
     reopenTab
 } from 'actions/tabs_actions';
-import {
-    setSaveConfigStatus,
-    setReadConfigStatus
-} from 'actions/safe_actions';
-import { SAFE } from 'appConstants';
+
 import { selectAddressBar } from 'actions/ui_actions';
 import { isHot } from 'appConstants';
 import { getLastClosedTab } from 'reducers/tabs';
 import logger from 'logger';
 import pkg from 'appPackage';
+
+import { getExtensionMenuItems } from 'extensions';
 
 export default class MenuBuilder
 {
@@ -137,30 +135,7 @@ export default class MenuBuilder
                         }
                     }
                 },
-                {
-                    label       : 'Save Browser State to SAFE',
-                    accelerator : 'CommandOrControl+Shift+E',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
-                            this.store.dispatch( setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE ) )
 
-                        }
-                    }
-                },
-                {
-                    label       : 'Read Browser State from SAFE',
-                    accelerator : 'CommandOrControl+Alt+F',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
-                            this.store.dispatch( setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) )
-
-                        }
-                    }
-                },
                 {
                     label       : 'Close Window',
                     accelerator : 'CommandOrControl+Shift+W',
@@ -329,7 +304,8 @@ export default class MenuBuilder
             ]
         };
 
-        return [
+
+        const initialMenusArray = [
             subMenuAbout,
             subMenuFile,
             ...( process.platform === 'darwin' ? [subMenuEdit] : [] ) ,
@@ -338,6 +314,10 @@ export default class MenuBuilder
             subMenuWindow,
             subMenuHelp
         ];
+
+        const extendedMenusArray = getExtensionMenuItems( store, initialMenusArray );
+
+        return extendedMenusArray;
     }
 
 }

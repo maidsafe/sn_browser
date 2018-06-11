@@ -1,6 +1,6 @@
-import { session, shell } from 'electron';
+import { remote, shell } from 'electron';
 import { CONFIG } from 'appConstants';
-import { urlIsAllowed } from './utils/safeHelpers';
+import { urlIsAllowedBySafe } from './utils/safeHelpers';
 import logger from 'logger';
 
 // const isForLocalServer = ( parsedUrlObject ) =>
@@ -13,11 +13,11 @@ const blockNonSAFERequests = () =>
         urls : ['*://*']
     };
 
-    const safeSession = session.fromPartition( CONFIG.SAFE_PARTITION );
+    const safeSession = remote.session.fromPartition( CONFIG.SAFE_PARTITION );
 
     safeSession.webRequest.onBeforeRequest( filter, ( details, callback ) =>
     {
-        if ( urlIsAllowed( details.url ) )
+        if ( urlIsAllowedBySafe( details.url ) )
         {
             logger.debug( `Allowing url ${details.url}` );
             callback( {} );

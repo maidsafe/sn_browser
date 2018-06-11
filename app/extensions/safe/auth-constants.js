@@ -1,40 +1,34 @@
 import Enum from 'enum';
 import path from 'path';
+import logger from 'logger';
+
 import { isHot,
     isRunningPackaged,
-    isRunningProduction,
-    isRunningMock,
-    isRunningSpectronTest
+    inRendererProcess,
+    startedRunningProduction,
+    startedRunningMock,
+    isRunningNodeEnvTest,
+    isRunningSpectronTestProcess
 } from 'appConstants';
 
 
-let libLocaleModifier = '';
+// let libLocaleModifier = '';
+let libLocaleModifier = 'extensions/safe/';
 
 let libEnvModifier = 'prod';
 
-if ( isRunningMock )
+if ( startedRunningMock || isRunningNodeEnvTest )
 {
     libEnvModifier = 'mock';
 }
 
-if ( isRunningProduction )
+if ( isRunningNodeEnvTest )
 {
-    libEnvModifier = 'prod';
-}
-
-
-if ( isHot )
-{
-    // libLocaleModifier = 'extensions/safe/';
-    // TODO. Questions about mock. Hmm
-}
-else if ( isRunningSpectronTest )
-{
-    libLocaleModifier = `extensions/safe`;
+    libLocaleModifier = '';
 }
 else if ( isRunningPackaged )
 {
-    libLocaleModifier = `../extensions/safe`;
+    libLocaleModifier = '../extensions/safe/';
 }
 
 
@@ -55,6 +49,19 @@ export default {
             win32  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'system_uri.dll' ),
             darwin : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsystem_uri.dylib' ),
             linux  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsystem_uri.so' )
+        }
+    },
+    LIB_PATH_MOCK : {
+        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock',  'libwinpthread-1.dll' ),
+        SAFE_AUTH : {
+            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'safe_authenticator.dll' ),
+            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsafe_authenticator.dylib' ),
+            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsafe_authenticator.so' )
+        },
+        SYSTEM_URI : {
+            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'system_uri.dll' ),
+            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsystem_uri.dylib' ),
+            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsystem_uri.so' )
         }
     },
     LISTENER_TYPES : new Enum( [

@@ -1,6 +1,28 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [0.6.0]
+### Changed
+- safeNetwork reducer becomes peruseSafeApp
+- specific domAPI implementations removed
+- new DOM API based upon safe-app-nodejs
+- release naming updated.
+- Much of SAFE specific functionality moved to extension
+
+### Fixed
+- `eval` has been disabled.
+- domAPI handles removed
+
+### Added
+- background process
+- remoteCalls actions/reducers for passing around remote calls (in place of pauls-RPC)
+- peruseSafeApp moved to background process
+- authenticator redux store and actions.
+- authenticator moved to background process
+- uses safe-node-app directly for DOM APIs
+- Preloaded MockVault
+- Logic to copy MockVault into TEMPDIR, if executable flag is passed
+
 #### [0.5.3]
 ### Changed 
 - Electron to 1.8.4

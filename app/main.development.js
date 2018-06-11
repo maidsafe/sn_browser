@@ -1,5 +1,4 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -10,54 +9,73 @@
  *
  * @flow
  */
-import { app, BrowserWindow, protocol, ipcMain } from 'electron';
+
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+
+import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
 import logger from 'logger';
-import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
-import { parse as parseURL } from 'url';
+
+import {
+    isRunningUnpacked,
+    isRunningSpectronTestProcess,
+    isRunningPackaged,
+    isCI,
+    travisOS,
+    I18N_CONFIG,
+    PROTOCOLS,
+    CONFIG
+} from 'appConstants';
+
 import pkg from 'appPackage';
 
+import setupBackground from './setupBackground';
+
 import openWindow from './openWindow';
-import loadExtensions from './extensions';
-import {configureStore} from './store/configureStore';
-import handleCommands from './commandHandling';
-import { setupWebAPIs } from './webAPIs';
+import { configureStore } from './store/configureStore';
+import { onReceiveUrl, preAppLoad } from 'extensions'
 
-// TODO: This should be handled in an extensible fashion
-import { handleOpenUrl } from './extensions/safe/network';
-import { addTab, closeActiveTab } from 'actions/tabs_actions';
-import { setupServerVars, startServer } from './server';
-
+// import { createSafeInfoWindow, createTray } from './setupTray';
 
 const initialState = {};
+let bgProcessWindow = null;
 
 // Add middleware from extensions here.
 const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
+logger.info('Main process starting.');
 global.mainProcessStore = store;
+
 // renderer error notifications
-ipcMain.on('errorInWindow', function(event, data){
-    logger.error(data)
-});
-
-const mainWindow = null;
-
-const handleSafeUrls = ( url ) =>
+ipcMain.on( 'errorInWindow', ( event, data ) =>
 {
-    // TODO. Queue incase of not started.
-    handleOpenUrl( url );
+    logger.error( data );
+} );
 
-    const parsedUrl = parseURL( url );
+let mainWindow = null;
 
-    // TODO: Use constants // 'shouldOpenUrl...'
-    if ( parsedUrl.protocol === 'safe:' )
-    {
-        store.dispatch( addTab( { url, isActiveTab: true } ) );
+// Do any pre app extension work
+preAppLoad();
+
+// Apply MockVault if wanted for prealod
+if ( process.argv.includes('--mock') && process.argv.includes('--preload') )
+{
+    try{
+
+        let data = fs.readFileSync(CONFIG.PRELOADED_MOCK_VAULT_PATH );
+
+        fs.writeFileSync(path.join(os.tmpdir(), 'MockVault'), data)
     }
+    catch( error )
+    {
+        logger.error('Error preloading MockVault')
+    }
+
 };
 
-// Register all schemes from package.json
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
 if ( isRunningPackaged )
@@ -66,7 +84,7 @@ if ( isRunningPackaged )
     sourceMapSupport.install();
 }
 
-if ( isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -89,18 +107,14 @@ const installExtensions = async () =>
 };
 
 
-const parseSafeUri = function ( uri )
-{
-    return uri.replace( '//', '' ).replace( '==/', '==' );
-};
-
 const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     // We expect the URI to be the last argument
     const uri = commandLine[commandLine.length - 1];
+    logger.info('Checking if should quit', uri )
     if ( commandLine.length >= 2 && uri )
     {
-        handleSafeUrls( parseSafeUri( uri ) );
+        onReceiveUrl( store, uri );
     }
 
     // Someone tried to run a second instance, we should focus our window
@@ -115,7 +129,7 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+    if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
     {
         await installExtensions();
     }
@@ -125,7 +139,7 @@ app.on( 'ready', async () =>
         const uriArg = process.argv[process.argv.length - 1];
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
-            handleSafeUrls( parseSafeUri( uriArg ) );
+            onReceiveUrl( store, uriArg );
         }
     }
 
@@ -134,29 +148,19 @@ app.on( 'ready', async () =>
         app.exit();
     }
 
+    mainWindow = openWindow( store );
 
-    const server = await setupServerVars();
+    // TODO: Reenable for adding Safe Network popup
+    // createTray();
+    // createSafeInfoWindow();
 
-    openWindow( store );
-    loadExtensions( server, store );
-    startServer( server );
-
-    setupWebAPIs();
-
-    handleCommands( store );
+    bgProcessWindow = await setupBackground( );
 } );
 
 app.on( 'open-url', ( e, url ) =>
 {
-    handleSafeUrls( url );
-    // osx only for the still open but all windows closed state
-    if ( process.platform === 'darwin' && global.macAllWindowsClosed )
-    {
-        if ( url.startsWith( 'safe-' ) )
-        {
-            openWindow( store );
-        }
-    }
+    onReceiveUrl( store, url );
+
 } );
 
 
@@ -166,6 +170,9 @@ app.on( 'open-url', ( e, url ) =>
 
 app.on( 'window-all-closed', () =>
 {
+    logger.verbose( 'All Windows Closed!' );
+    app.dock.hide() //hide the icon
+
     global.macAllWindowsClosed = true;
 
     // HACK: Fix this so we can have OSX convention for closing windows.

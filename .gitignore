@@ -35,6 +35,10 @@ app/node_modules
 
 # App packaged
 release
+app/background.process.js
+app/background.process.js.map
+app/browserPreload.js.map
+app/browserPreload.js
 app/main.js
 app/main.js.map
 app/webPreload.js
