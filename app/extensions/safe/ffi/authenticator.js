@@ -457,7 +457,7 @@ class Authenticator extends SafeLib
 
             const shareMdataCb = this._pushCb( ffi.Callback( types.Void,
                 [types.voidPointer, types.u32, types.ShareMDataReqPointer, 'pointer'],
-                ( userData, reqId, req, meta ) =>
+                async ( userData, reqId, req, meta ) =>
                 {
                     const mDataReq = typeParser.parseShareMDataReq( req.deref() );
                     const metaData = typeParser.parseUserMetaDataArray( meta, mDataReq.mdata_len );
@@ -477,7 +477,7 @@ class Authenticator extends SafeLib
                         tempArr[i] = i;
                     }
 
-                    return Promise.all( tempArr.map( ( i ) =>
+                    await Promise.all( tempArr.map( ( i ) =>
                     {
                         const mdata = mDataReq.mdata[i];
                         return this._appsAccessingMData( mdata.name, mdata.type_tag )
@@ -493,6 +493,7 @@ class Authenticator extends SafeLib
                             logger.verbose('HSOULD WE RESOLVE HERE?')
                             // this[_mDataReqListener].broadcast( null, result );
                         } );
+                    resolve( result );
                 } ) );
 
             const unregisteredCb = this._getUnregisteredClientCb( resolve, reject );

@@ -9,10 +9,12 @@ All notable changes to this project will be documented in this file.
 - release naming updated.
 - Much of SAFE specific functionality moved to extension
 - Removes window frame and increases draggable area, with exception to Windows
+- Passes full auth info to Notifier
 
 ### Fixed
 - `eval` has been disabled.
 - domAPI handles removed
+- Functioning share MD request
 
 ### Added
 - background process

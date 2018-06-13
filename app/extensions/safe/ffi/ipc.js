@@ -80,8 +80,9 @@ async function sendAuthDecision( isAllowed, authReqData, reqType )
     else if ( reqType === REQ_TYPES.CONTAINER )
     {
         onContainerDecision( authReqData, isAllowed );
+    } else {
+      onSharedMDataDecision( authReqData, isAllowed );
     }
-    onSharedMDataDecision( authReqData, isAllowed );
 }
 
 
@@ -154,8 +155,15 @@ class ReqQueue
             if ( res.authReq || res.contReq || res.mDataReq )
             {
                 logger.info( 'Its an auth request!' );
+                let reqType = 'authReq';
+                if (res.contReq) {
+                  reqType = 'contReq';
+                }
+                if (res.mDataReq) {
+                  reqType = 'mDataReq';
+                }
 
-                const app = res.authReq.app;
+                const app = res[reqType].app;
                 addAuthNotification( res, app, sendAuthDecision, store );
                 return;
             }
@@ -182,6 +190,7 @@ class ReqQueue
         {
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
+            // TODO/BOOKMARK: leaving off here. share MData req URI is causing error when used to call auth_decode_ipc_msg in authenticator.js
             logger.error( 'Error at req processing for:', this.req );
 
             // TODO: Setup proper rejection from when unauthed.
@@ -315,7 +324,7 @@ const onAuthDecision = ( authData, isAllowed ) =>
         } );
 };
 
-const onContainerDecision = ( e, contData, isAllowed ) =>
+const onContainerDecision = ( contData, isAllowed ) =>
 {
     if ( !contData )
     {
@@ -331,7 +340,6 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         .then( ( res ) =>
         {
             reqQ.req.res = res;
-            e.sender.send( 'onContDecisionRes', reqQ.req );
             if ( allAuthCallBacks[reqQ.req.id] )
             {
                 allAuthCallBacks[reqQ.req.id].resolve( res );
@@ -347,7 +355,6 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         .catch( ( err ) =>
         {
             reqQ.req.error = err;
-            e.sender.send( 'onContDecisionRes', reqQ.req );
 
             if ( allAuthCallBacks[reqQ.req.id] )
             {
@@ -360,7 +367,7 @@ const onContainerDecision = ( e, contData, isAllowed ) =>
         } );
 };
 
-const onSharedMDataDecision = ( e, data, isAllowed ) =>
+const onSharedMDataDecision = ( data, isAllowed ) =>
 {
     if ( !data )
     {
@@ -376,7 +383,6 @@ const onSharedMDataDecision = ( e, data, isAllowed ) =>
         .then( ( res ) =>
         {
             reqQ.req.res = res;
-            e.sender.send( 'onSharedMDataRes', reqQ.req );
 
             if ( allAuthCallBacks[reqQ.req.id] )
             {
@@ -402,7 +408,6 @@ const onSharedMDataDecision = ( e, data, isAllowed ) =>
                 reqQ.next();
             }
 
-            e.sender.send( 'onSharedMDataRes', reqQ.req );
         } );
 };
 
