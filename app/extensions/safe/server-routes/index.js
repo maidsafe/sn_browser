@@ -7,10 +7,28 @@ const setupRoutes = ( server, store ) =>
 {
     const routes = [
         safeRoute( store ),
-        authRoute
+        authRoute,
+        {
+            method  : ['OPTIONS','PUT','POST'],
+            path    : '/dummy/{link*}',
+            handler : ( request, reply ) =>
+            {
+                reply('yes')
+                .code(200)
+                .header( 'Access-Control-Allow-Origin', '*' )
+
+            }
+
+        }
     ];
 
-    routes.forEach( route => server.route( route ) );
+    routes.forEach( route => {
+        try {
+            server.route( route )
+        } catch (e) {
+            logger.error('Problem initing a route.', route)
+        }
+    });
 };
 
 
