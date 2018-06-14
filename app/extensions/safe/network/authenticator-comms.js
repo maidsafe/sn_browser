@@ -61,6 +61,7 @@ export const getPeruseAppObj = () =>
 
 export const clearAppObj = () =>
 {
+    logger.verbose('Clearing peruseApp object cache.')
     peruseAppObj.clearObjectCache();
 };
 
