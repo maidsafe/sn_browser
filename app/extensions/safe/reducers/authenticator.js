@@ -42,6 +42,10 @@ export default function authenticator( state: object = initialState, action )
             updatedQueue.splice( indexToRemove, 1 );
             return { ...state, authenticationQueue : updatedQueue };
         }
+        case TYPES.SET_RE_AUTHORISE_STATE:
+        {
+            return { ...state, reAuthoriseState: payload };
+        }
 
         default:
             return state;

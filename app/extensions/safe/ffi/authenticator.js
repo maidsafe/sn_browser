@@ -25,7 +25,6 @@ import { SAFE } from 'extensions/safe/constants';
 // private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
-const _reAuthoriseState = Symbol( 'reAuthoriseState' );
 const _appListUpdateListener = Symbol( 'appListUpdate' );
 const _authReqListener = Symbol( 'authReq' );
 const _containerReqListener = Symbol( 'containerReq' );
@@ -60,7 +59,6 @@ class Authenticator extends SafeLib
         super();
         this[_registeredClientHandle] = null;
         this[_nwState] = CONSTANTS.NETWORK_STATUS.DISCONNECTED;
-        this[_reAuthoriseState] = null;
         this[_appListUpdateListener] = new Listener();
         this[_authReqListener] = new Listener();
         this[_containerReqListener] = new Listener();
@@ -85,7 +83,6 @@ class Authenticator extends SafeLib
     {
         this[_registeredClientHandle] = handle;
     }
-
 
     get networkState()
     {
@@ -186,11 +183,6 @@ class Authenticator extends SafeLib
                 throw new Error( errConst.INVALID_LISTENER.msg );
             }
         }
-    }
-
-    setReAuthoriseState( state )
-    {
-        this[_reAuthoriseState] = state;
     }
 
     reconnect()
@@ -396,24 +388,9 @@ class Authenticator extends SafeLib
                         {
                             if ( isAuthorised )
                             {
-                                logger.verbose( 'Authenticator.js showing isAuthorised already' );
-                                // re authorise the app
-                                if ( this[_reAuthoriseState] !== CONSTANTS.RE_AUTHORISE.STATE.UNLOCK )
-                                {
-                                    result.isAuthorized = true;
-
-                                    logger.verbose( 'Authenticator.js showing locked, so retriggering auth' );
-                                    // this[_authReqListener].broadcast( null, result );
-                                    return resolve( result );
-                                }
-                                return this.encodeAuthResp( result, true )
-                                    .then( resolve );
+                                result.isAuthorised = true;
                             }
-
-                            logger.verbose( 'Authenticator.js not authed before, so broadcasting result' );
-
-                            // this[_authReqListener].broadcast( null, result );
-                            resolve( result );
+                            return resolve( result );
                         } );
                 } ) );
 
@@ -433,25 +410,15 @@ class Authenticator extends SafeLib
 
                     logger.verbose( 'Authenticator.js decoded contReq result: ', result );
 
-                    if ( this[_reAuthoriseState] !== CONSTANTS.RE_AUTHORISE.STATE.UNLOCK )
-                    {
-
-                        // this[_containerReqListener].broadcast( null, result );
-                        return resolve(result);
-                    }
                     return this._isAlreadyAuthorisedContainer( contReq )
                         .then( ( isAuthorised ) =>
                         {
 
                             if ( isAuthorised )
                             {
-
-                                return this.encodeContainersResp( result, true )
-                                    .then( resolve );
+                                result.isAuthorised = true;
                             }
-                            logger.verbose( 'Authenticator.js container not authed before, so triggering auth' );
-                            // this[_containerReqListener].broadcast( null, result );
-                            resolve( result );
+                            return resolve( result );
                         } );
                 } ) );
 
@@ -484,16 +451,11 @@ class Authenticator extends SafeLib
                             .then( ( res ) =>
                             {
                                 appAccess[i] = res;
+                                return;
                             } );
-                    } ) )
-                        .then( () =>
-                        {
-                            result.appAccess = appAccess;
-                            logger.verbose( 'Authenticator.js decoded mDataListener would be broadcast: ', result );
-                            logger.verbose('HSOULD WE RESOLVE HERE?')
-                            // this[_mDataReqListener].broadcast( null, result );
-                        } );
-                    resolve( result );
+                    } ) );
+                    result.appAccess = appAccess;
+                    return resolve( result );
                 } ) );
 
             const unregisteredCb = this._getUnregisteredClientCb( resolve, reject );
@@ -860,7 +822,7 @@ class Authenticator extends SafeLib
                         return reject( JSON.stringify( result ) );
                     }
                     const appAccessInfo = typeParser.parseAppAccess( appAccess, len );
-                    resolve( appAccessInfo );
+                    return resolve( appAccessInfo );
                 } ) );
 
             try

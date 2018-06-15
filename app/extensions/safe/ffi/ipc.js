@@ -2,6 +2,7 @@
 import { shell } from 'electron';
 import { getPeruseAuthReqUri, authFromInternalResponse } from '../network';
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
+import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 import * as notificationActions from 'actions/notification_actions';
 import i18n from 'i18n';
 import authenticator from './authenticator';
@@ -154,17 +155,31 @@ class ReqQueue
             logger.info( 'IPC.js: another response being parsed.:', res );
             if ( res.authReq || res.contReq || res.mDataReq )
             {
-                logger.info( 'Its an auth request!' );
-                let reqType = 'authReq';
-                if (res.contReq) {
-                  reqType = 'contReq';
+                let reqType = REQ_TYPES.AUTH;
+                let app;
+                if (res.authReq)
+                {
+                  app = res.authReq.app;
                 }
-                if (res.mDataReq) {
-                  reqType = 'mDataReq';
+                if (res.contReq)
+                {
+                  reqType = REQ_TYPES.CONTAINER;
+                  app = res.contReq.app;
+                }
+                if (res.mDataReq)
+                {
+                  reqType = REQ_TYPES.MDATA;
+                  app = res.mDataReq.app;
                 }
 
-                const app = res[reqType].app;
-                addAuthNotification( res, app, sendAuthDecision, store );
+                if (res.isAuthorised && store.getState().authenticator.reAuthoriseState)
+                {
+                    sendAuthDecision( true, res, reqType );
+                }
+                else
+                {
+                    addAuthNotification( res, app, sendAuthDecision, store );
+                }
                 return;
             }
 
@@ -294,8 +309,7 @@ const onAuthDecision = ( authData, isAllowed ) =>
     authenticator.encodeAuthResp( authData, isAllowed )
         .then( ( res ) =>
         {
-            logger.info( 'IPC.js: Successfully encoded auth response. Sending.', authData );
-            reqQ.req.res = res;
+            logger.info( 'IPC.js: Successfully encoded auth response. Here is the res:', res );
 
             if ( allAuthCallBacks[reqQ.req.id] )
             {
@@ -426,6 +440,11 @@ const skipAuthReq = () =>
     reqQ.next();
 };
 
+const setReAuthoriseState = ( state, store ) => 
+{
+  store.dispatch(authenticatorActions.setReAuthoriseState(state));
+};
+
 
 export const callIPC = {
     registerSafeNetworkListener : registerNetworkListener,
@@ -437,5 +456,6 @@ export const callIPC = {
     registerContainerDecision   : onContainerDecision,
     registerSharedMDataDecision : onSharedMDataDecision,
     registerOnReqError          : onReqError,
-    skipAuthRequest             : skipAuthReq
+    skipAuthRequest             : skipAuthReq,
+    setReAuthoriseState
 };
