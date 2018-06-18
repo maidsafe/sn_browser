@@ -82,4 +82,44 @@ describe( 'Peruse App reducer', () =>
     });
 
 
+
+
+    describe( 'SET_CURRENT_WEB_ID', () =>
+    {
+        it( 'should handle updating the currently selected WebID', () =>
+        {
+            const payload = 2;
+            const newState = peruseApp( safeInitialState, {
+                type    : TYPES.SET_CURRENT_WEB_ID,
+                payload
+            } );
+            expect( newState.webIds[0] ).toMatchObject( {
+                isSelected: false
+            });
+            expect( newState.webIds[1] ).toMatchObject( {
+                isSelected: true
+            });
+        } );
+    });
+
+    describe( 'SHOW_WEB_ID_DROPDOWN', () =>
+    {
+        it( 'should handle updating the icon status', () =>
+        {
+            const payload = true;
+            const newState = peruseApp( safeInitialState, {
+                type    : TYPES.SHOW_WEB_ID_DROPDOWN,
+                payload
+            } );
+            expect( newState.showingWebIdDropdown ).toBe( true )
+
+            const newState2 = peruseApp( safeInitialState, {
+                type    : TYPES.SHOW_WEB_ID_DROPDOWN,
+                payload: false
+            } );
+            expect( newState2.showingWebIdDropdown ).toBe( false)
+
+        } );
+    });
+
 })

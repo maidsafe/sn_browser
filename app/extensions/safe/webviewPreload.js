@@ -1,4 +1,5 @@
 import pkg from 'appPackage';
+import EventEmitter from 'events';
 import logger from 'logger';
 import * as remoteCallActions from 'actions/remoteCall_actions';
 import safe from '@maidsafe/safe-node-app';
@@ -9,10 +10,49 @@ import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 const VERSION = pkg.version;
 const pendingCalls = {};
 
+class WebIdEvents extends EventEmitter {}
+
+const webIdEventEmitter = new WebIdEvents();
+
+
+const getCurrentWebId = ( webIds ) =>
+{
+    const webId = webIds.find( webId => webId.isSelected );
+    return webId;
+}
+
 
 const onPreload = ( store ) =>
 {
-    setupPreloadedSafeAuthApis( store )
+    setupPreloadedSafeAuthApis( store );
+
+    manageWebIdUpdates( store);
+
+
+}
+
+export const manageWebIdUpdates = ( store, win = window ) =>
+{
+    if (typeof win !== 'undefined' )
+    {
+        win.webIdEventEmitter = webIdEventEmitter;
+    }
+
+    //bonus subscriber.
+    store.subscribe( async( ) =>
+    {
+        const state = store.getState();
+        const webIds = state.peruseApp.webIds;
+        const newCurrentWebId = getCurrentWebId( webIds );
+
+        if( newCurrentWebId !== win.currentWebId )
+        {
+            win.currentWebId = newCurrentWebId;
+            webIdEventEmitter.emit('update', currentWebId );
+
+        }
+
+    })
 }
 
 export const setupSafeAPIs = ( store, win = window ) =>
@@ -69,6 +109,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
 
         return await createRemoteCall( 'authenticateFromUriObject', store )( authObj );
     };
+
 };
 
 

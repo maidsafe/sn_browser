@@ -3,6 +3,22 @@
 ## About
 An electron web browser. Built to be a basis. Extendable by design.
 
+## WebApp Development 
+
+Safe uses the RDF compliant WebId system for easily enabling user account management.
+
+You can retrieve the current webId via `window.currentWebId`;
+
+You can listen for changes via the event emitter, `window.webIdEventEmitter`, eg:
+
+```js
+webIdEventEmitter.on('update', ( webId ) => {
+  console.log('an updateId occurred!', webId);
+});
+
+```
+
+
 ## Development
 
 There are `dev-` prefixed releases of Peruse available. These come with both live network and mock network libs, bundled.

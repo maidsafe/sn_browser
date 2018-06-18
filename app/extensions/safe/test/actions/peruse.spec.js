@@ -17,6 +17,16 @@ describe( 'notification actions', () =>
         expect( peruseAppActions.setAppStatus( payload ) ).toEqual( expectedAction );
     } );
 
+    it( 'should setCurrentWebId', () =>
+    {
+        const payload = 'aWebId'
+        const expectedAction = {
+            type : peruseAppActions.TYPES.SET_CURRENT_WEB_ID,
+            payload
+        };
+        expect( peruseAppActions.setCurrentWebId( payload ) ).toEqual( expectedAction );
+    } );
+
     it( 'should set getConfigStatus', () =>
     {
         const expectedAction = {
@@ -58,6 +68,16 @@ describe( 'notification actions', () =>
             type : peruseAppActions.TYPES.RECONNECT_SAFE_APP
         };
         expect( peruseAppActions.reconnectSafeApp( ) ).toEqual( expectedAction );
+    } );
+
+    it( 'should showWebIdDropdown', () =>
+    {
+        const payload = 'hovered';
+        const expectedAction = {
+            type : peruseAppActions.TYPES.SHOW_WEB_ID_DROPDOWN,
+            payload
+        };
+        expect( peruseAppActions.showWebIdDropdown( payload ) ).toEqual( expectedAction );
     } );
 
 

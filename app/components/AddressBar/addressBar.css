@@ -13,6 +13,10 @@
     border-right: 0;
 
 }
+.addressBar
+{
+    width: 100%;
+}
 
 .input
 {

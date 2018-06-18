@@ -1,0 +1,38 @@
+.webIdList{
+/* display: block; */
+position: absolute;
+top: 3rem;
+text-align: left;
+list-style: none;
+background-color: white;
+padding-top: 3px;
+padding-bottom: 3px;
+background-color: rgba( 246, 246, 246, 1);
+border:             1px solid rgba( 127, 127, 127, 1);
+display:            flex;
+z-index: 1;
+flex-direction: column;
+padding-left: 1rem;
+padding-right: 1rem;
+white-space: nowrap;
+/* user-select: none; */
+
+}
+
+
+.webId
+{
+    cursor: pointer;
+    /* border-bottom: 1px solid rgba( 127, 127, 127, 1); */
+
+    /* &:last-child
+    {
+        border-bottom: 0px;
+    } */
+}
+
+.selectedWebId
+{
+    composes: webId;
+    font-weight: bold;
+}

@@ -6,6 +6,37 @@ jest.mock('logger');
 // avoid appveyour for its weak.ref issues right now.
 const APPVEYOR = process.env.APPVEYOR;
 
+describe('SAFE manageWebIdUpdates', () => {
+    if ( APPVEYOR ) return;
+
+    let win = {};
+    let store = { subscribe: jest.fn() }; //need to mock store. should be called once.
+    beforeAll( () =>
+    {
+        webviewPreload.manageWebIdUpdates( store, win )
+    });
+
+    test( 'webIdEventEmitter should exist', () =>
+    {
+        expect( win.webIdEventEmitter ).not.toBeNull()
+    })
+
+    test( 'webIdEventEmitter should emit events', async () =>
+    {
+        expect.assertions(1)
+        const theData = 'webId!!!';
+        win.webIdEventEmitter.on('update', (data) =>
+        {
+            expect( data ).toBe( theData )
+        })
+
+        win.webIdEventEmitter.emit( 'update', theData );
+    })
+
+    xtest( 'Check response to store change?');
+
+})
+
 describe('SAFE Webview Preload APIs', () =>
 {
     if ( APPVEYOR )

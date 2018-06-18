@@ -4,9 +4,11 @@ import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
 import MdStar from 'react-icons/lib/md/star';
 import MdStarOutline from 'react-icons/lib/md/star-outline';
-import { Column, IconButton, Row, InputField } from 'nessie-ui';
+import { Column, Grid, InputField } from 'nessie-ui';
+import ButtonsLHS from 'components/AddressBar/ButtonsLHS';
 
 import styles from './addressBar.css';
+
 
 export default class AddressBar extends Component
 {
@@ -156,39 +158,20 @@ export default class AddressBar extends Component
 
     render()
     {
+        const props = this.props;
         const { address } = this.state;
         const { isSelected, isBookmarked } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
-                <Row align="left" verticalAlign="middle" gutters="S">
+                <Grid align="left" verticalAlign="middle" gutters="S" className={ styles.addressBar }>
                     <Column size="content">
-                        <Row gutters="S">
-                            <Column>
-                                <IconButton
-                                    iconTheme="light"
-                                    iconType="left"
-                                    iconSize="L"
-                                    onClick={ this.handleBack }
-                                />
-                            </Column>
-                            <Column>
-                                <IconButton
-                                    iconTheme="light"
-                                    iconSize="L"
-                                    iconType="right"
-                                    onClick={ this.handleForward }
-                                />
-                            </Column>
-                            <Column>
-                                <IconButton
-                                    iconTheme="light"
-                                    iconSize="L"
-                                    iconType="reset"
-                                    onClick={ this.handleRefresh }
-                                />
-                            </Column>
-                        </Row>
+                        <ButtonsLHS
+                            handleBack={ this.handleBack }
+                            handleForward={ this.handleForward }
+                            handleRefresh={ this.handleRefresh }
+                            {...props}
+                        />
                     </Column>
                     <Column className={ styles.addressBarColumn }>
                         <InputField
@@ -212,7 +195,7 @@ export default class AddressBar extends Component
                         />
                     </Column>
                     <Column size="content">
-                        <Row gutters="S">
+                        <Grid gutters="S">
                             <Column align="left">
                                 {
                                     isBookmarked &&
@@ -223,9 +206,9 @@ export default class AddressBar extends Component
                                         <MdStarOutline className={styles.buttonIcon} onClick={this.handleBookmarking}/>
                                 }
                             </Column>
-                        </Row>
+                        </Grid>
                     </Column>
-                </Row>
+                </Grid>
             </div>
         );
     }

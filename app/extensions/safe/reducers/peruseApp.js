@@ -56,6 +56,34 @@ export default function peruseApp( state = initialState, action )
             };
         }
 
+        case TYPES.SET_CURRENT_WEB_ID:
+        {
+            const targetWebId = payload;
+            // const { targetWebId, tabIndex } = paylod;
+            const oldWebIds = state.webIds;
+            let newWebIds = [ ...oldWebIds ];
+
+            newWebIds = newWebIds.map( webId => {
+                let updatedId = { ...webId };
+
+                updatedId.isSelected = targetWebId === webId.id;
+                return updatedId
+            });
+
+            return { ...state,
+                webIds : newWebIds,
+            };
+        }
+
+        case TYPES.SHOW_WEB_ID_DROPDOWN:
+        {
+            const iconStatus = payload;
+
+            return { ...state,
+                showingWebIdDropdown : iconStatus,
+            };
+        }
+
         default:
             return state;
     }

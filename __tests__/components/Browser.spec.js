@@ -36,7 +36,7 @@ describe( 'Browser', () =>
     {
         it( 'should have name Browser', () =>
         {
-            expect( instance.constructor.name ).toBe( 'Browser' );
+            expect( instance.constructor.name ).toMatch( 'Browser' );
         } );
     } );
 
