@@ -185,17 +185,23 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
 
                 callbackArgs = [theCall.response];
 
-                if ( theCall.isListener )
+                // // hack due to auth webapp expectations. :| bleugh.
+                if ( theCall.name === 'setNetworkListener' )
                 {
-                    // error first
+                    // error first for olde auth listeners
                     callPromises.resolve( null, ...callbackArgs );
+
                 }
-                callPromises.resolve( ...callbackArgs );
+                else
+                {
+                    callPromises.resolve( ...callbackArgs );
+                }
+
+                delete pendingCalls[theCall.id];
+
                 store.dispatch( remoteCallActions.removeRemoteCall(
                     theCall
                 ) );
-
-                delete pendingCalls[theCall.id];
 
             }
             else if ( theCall.error && callPromises.reject )

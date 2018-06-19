@@ -115,7 +115,6 @@
 	      }
 	    default:
 	      {
-              console.log('the state received:::', state)
 	        throw new Error(_reactReduxI18n.I18n.t('invalid_network_state'));
 	      }
 	  }
@@ -59333,7 +59332,6 @@
 	         */
 	        var handleFulfill = function handleFulfill() {
 	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-              console.log('handling fulfullllllll', arguments, value)
 	          var resolvedAction = getAction(value, false);
 	          dispatch(resolvedAction);
 
@@ -60393,7 +60391,6 @@
 	      }
 	    case _app.GET_AUTHORISED_APPS + '_FULFILLED':
 	      {
-              console.log('GET APPSssss', action)
 	        return _extends({}, state, {
 	          fetchingApps: false,
 	          authorisedApps: action.payload
@@ -66160,8 +66157,6 @@
 	          isError = _state.isError,
 	          popupDesc = _state.popupDesc,
 	          popupTitle = _state.popupTitle;
-
-              console.log('AUTHHED APPPSSS????', authorisedApps);
 
           if( ! authorisedApps )
           {
