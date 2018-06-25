@@ -16,7 +16,7 @@ export const urlIsAllowedBySafe = ( testUrl ) =>
 
     if ( adaptedProtocols.includes( urlObj.protocol ) || isForSafeServer( urlObj ) ||
         urlObj.protocol === 'chrome-devtools:' || urlObj.protocol === 'file:' ||
-        urlObj.protocol === 'blob:' )
+        urlObj.protocol === 'blob:' || urlObj.protocol === 'chrome-extension:' )
     {
         return true;
     }

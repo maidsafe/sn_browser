@@ -76,7 +76,7 @@ export default class Notifier extends Component
 
 
         return (
-            <Row hasMinHeight className={ styles.container }>
+            <Row hasMinHeight className={ styles.container } gutters={"none"}>
                 <MessageBox messageType={type}>
                     <Row verticalAlign="middle" align="center">
                         <Text className={CLASSES.NOTIFIER_TEXT}>{ text }</Text>

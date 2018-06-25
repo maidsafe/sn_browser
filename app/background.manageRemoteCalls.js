@@ -51,9 +51,7 @@ const manageRemoteCalls = async ( store ) =>
                         const argsForCalling = theArgs || [];
 
                         // TODO: Refactor APIs to expect store as first arg?
-                        logger.info('befoooooore')
                         const response = await allApiCalls[theCall.name]( ...argsForCalling );
-                        logger.info('afteeerrr', response)
                         store.dispatch( remoteCallActions.updateRemoteCall( { ...theCall, done: true, response } ) );
                     }
                     catch ( e )

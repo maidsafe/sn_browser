@@ -19,6 +19,7 @@ import logger from 'logger';
 
 import {
     isRunningUnpacked,
+    isRunningDebug,
     isRunningSpectronTestProcess,
     isRunningPackaged,
     isCI,
@@ -61,7 +62,7 @@ let mainWindow = null;
 preAppLoad();
 
 // Apply MockVault if wanted for prealod
-if ( process.argv.includes('--mock') && process.argv.includes('--preload') )
+if ( process.argv.includes('--preload') )
 {
     try{
 
@@ -84,7 +85,7 @@ if ( isRunningPackaged )
     sourceMapSupport.install();
 }
 
-if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -129,7 +130,7 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+    if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
     {
         await installExtensions();
     }

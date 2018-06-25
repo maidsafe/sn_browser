@@ -58,7 +58,9 @@ export const manageWebIdUpdates = ( store, win = window ) =>
 export const setupSafeAPIs = ( store, win = window ) =>
 {
     logger.info( 'Setup up SAFE Dom API via @maidsafe/safe-node-app' );
-    win.safe = { ...safe };
+
+    // use from passed object if present (for testing)
+    win.safe = win.safe || { ...safe };
 
     win.safe.initialiseApp = async ( appInfo, netStateCallback, options ) =>
     {

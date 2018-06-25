@@ -46,6 +46,7 @@ const initialState = {
                         app :  'NotTwitter',
                         verified: true
                     }
+
                 ],
                 pk:     '',
                 isDefault: true,
