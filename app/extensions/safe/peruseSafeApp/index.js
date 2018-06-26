@@ -28,6 +28,9 @@ const authingStates = [
 ];
 
 let peruseAppObj;
+let peruseAppState;
+// TODO: HACK for store for now... dont resave store on each change...
+let savedStore;
 
 // TODO: Refactor away this and use aliased actions for less... sloppy
 // flow and make this more reasonable.
@@ -41,6 +44,11 @@ let isSaving = false;
  */
 const handlePeruseStoreChanges = ( store ) =>
 {
+    savedStore = store;
+    // lets set state for all funcs to have the same reference.
+    const state = store.getState();
+    peruseAppState = state.peruseApp;
+
     manageSaveStateActions( store );
     manageReadStateActions( store );
     manageAuthorisationActions( store );
@@ -84,6 +92,26 @@ const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
         throw err;
     }
 };
+
+
+export const getWebIds = async( ) =>
+{
+    const peruseApp = getPeruseAppObj();
+    logger.verbose('getWebIds');
+
+    if( !peruseApp ) throw new Error('PeruseApp should be initiated.');
+
+    if( !peruseIsAuthed() ) throw new Error('PeruseApp is not authorised');
+
+    let webIds = []
+    webIds = await peruseApp.web.getWebIds();
+    logger.verbose('ids retrieved', webIds);
+
+    savedStore.dispatch( peruseAppActions.setAvailableWebIds( webIds ) );
+
+    return webIds;
+}
+
 
 // TODO: Watch out, this is duped in network.js for funcs over there.
 export const getPeruseAppObj = () =>
@@ -152,7 +180,7 @@ const authFromStoreResponse = async ( res, store ) =>
  */
 const manageAuthorisationActions = async ( store ) =>
 {
-    const peruse = store.getState().peruseApp;
+    const peruse = peruseAppState;
 
     if ( peruse.appStatus === SAFE.APP_STATUS.TO_AUTH && !isAuthing )
     {
@@ -176,12 +204,11 @@ const manageAuthorisationActions = async ( store ) =>
 };
 
 
-const peruseAppIsConnected = ( state ) =>
+const peruseAppIsConnected = (  ) =>
 {
-    const peruseApp = state.peruseApp;
-
-    if ( peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_IN ||
-        authingStates.includes( peruseApp.appStatus ) )
+    //network state vs authstatus.... which and why?
+    if ( peruseAppState.appStatus === SAFE.NETWORK_STATE.LOGGED_IN ||
+        authingStates.includes( peruseAppState.appStatus ) )
     {
         return true
     }
@@ -198,25 +225,23 @@ const peruseIsAuthing = ( state ) =>
         SAFE.APP_STATUS.AUTHORISING
     ];
 
-    const peruseApp = state.peruseApp;
-
-    return isAuthing || pendingAuthStates.includes( peruseApp.appStatus )
+    return isAuthing || pendingAuthStates.includes( peruseAppState.appStatus )
 }
 
-const peruseIsAuthed = ( state ) =>
+const peruseIsAuthed = (  ) =>
 {
-    return state.peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED;
+    return peruseAppState.appStatus === SAFE.APP_STATUS.AUTHORISED;
 }
 
-const peruseIsConnected = ( state ) =>
+const peruseIsConnected = (  ) =>
 {
     // Q: why do we have a loggedin state?
-    return state.peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED;
+    return peruseAppState.networkStatus === SAFE.NETWORK_STATE.CONNECTED;
 }
 
 const peruseAuthFailed = ( state ) =>
 {
-    state.peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISATION_FAILED
+    peruseAppState.appStatus === SAFE.APP_STATUS.AUTHORISATION_FAILED
 }
 
 
@@ -232,25 +257,23 @@ const manageReadStateActions = async ( store ) =>
     if( isReading )
         return;
 
-    const state = store.getState();
-    const peruseApp = state.peruseApp;
 
     // if its not to save, or isnt authed yet...
-    if ( peruseApp.readStatus !== SAFE.READ_STATUS.TO_READ ||
-       peruseIsAuthing( state ) || peruseAuthFailed( state ) )
+    if ( peruseAppState.readStatus !== SAFE.READ_STATUS.TO_READ ||
+       peruseIsAuthing( ) || peruseAuthFailed( ) )
     {
         // do nothing
         return;
     }
 
-    if( !peruseIsAuthed( state ) )
+    if( !peruseIsAuthed( ) )
     {
         // come back when authed.
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
         return;
     }
 
-    if( !peruseIsConnected(state) )
+    if( !peruseIsConnected() )
     {
         return;
     }
@@ -299,26 +322,25 @@ const manageSaveStateActions = async ( store ) =>
     if( isSaving )
         return;
 
-    const state = store.getState();
-    const peruseApp = state.peruseApp;
+    const peruseApp = peruseAppState;
 
     // if its not to save, or isnt authed yet...
     if ( peruseApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE ||
-       peruseIsAuthing( state ) || peruseAuthFailed( state ) )
+       peruseIsAuthing( ) || peruseAuthFailed( ) )
     {
         // do nothing
         return;
     }
 
     //if it auth didnt happen, and hasnt failed... previously... we can try again (we're in TO SAVE, not SAVING.)
-    if( !peruseIsAuthed( state ) )
+    if( !peruseIsAuthed( ) )
     {
         // come back when authed.
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
         return;
     }
 
-    if( !peruseIsConnected(state) )
+    if( !peruseIsConnected() )
     {
         return;
     }

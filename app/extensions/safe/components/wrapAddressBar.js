@@ -28,8 +28,10 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         handleMouseEnter = ( ) =>
         {
-            const { showWebIdDropdown } = this.props;
+            const { getAvailableWebIds, showWebIdDropdown } = this.props;
 
+            logger.info('Icon hovered... triggering getWebIds')
+            getAvailableWebIds();
             showWebIdDropdown( true );
         }
 
@@ -55,7 +57,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                           onClick={ handleIdClick.bind( this, webId )  }
                           key={webId.id}
                           className={styles.selectedWebId}
-                          >{ webId.name }
+                          >{ webId.title }
                       </li>
                   )
               }
@@ -65,7 +67,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                   key={webId.id}
                   className={styles.webId}
                   >
-                      { webId.name }
+                      { webId.title }
                   </li> )
             });
 

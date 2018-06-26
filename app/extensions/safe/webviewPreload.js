@@ -6,6 +6,14 @@ import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS, CONFIG } from 'appConstants';
 import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 
+// shim for rdflib.js
+const _setImmediate = setImmediate
+ const _clearImmediate = clearImmediate
+ process.once('loaded', () => {
+   global.setImmediate = _setImmediate
+   global.clearImmediate = _clearImmediate
+ })
+
 
 const VERSION = pkg.version;
 const pendingCalls = {};
@@ -38,6 +46,7 @@ export const manageWebIdUpdates = ( store, win = window ) =>
         win.webIdEventEmitter = webIdEventEmitter;
     }
 
+
     //bonus subscriber.
     store.subscribe( async( ) =>
     {
@@ -61,6 +70,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
 
     // use from passed object if present (for testing)
     win.safe = win.safe || { ...safe };
+
 
     win.safe.initialiseApp = async ( appInfo, netStateCallback, options ) =>
     {

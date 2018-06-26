@@ -75,6 +75,14 @@ export default function peruseApp( state = initialState, action )
             };
         }
 
+        case TYPES.SET_AVAILABLE_WEB_IDS: {
+            const ids = payload || [];
+            return {
+                ...state,
+                webIds : [ ...ids ]
+            };
+        }
+
         case TYPES.SHOW_WEB_ID_DROPDOWN:
         {
             const iconStatus = payload;

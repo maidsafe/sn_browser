@@ -167,7 +167,9 @@ const appInfo = {
         own_container : true,
     },
     permissions : {
-    },
+    _public      : ['Read', 'Insert', 'Update', 'Delete'],
+    // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
+},
 };
 
 // OSX: Add bundle for electron in dev mode

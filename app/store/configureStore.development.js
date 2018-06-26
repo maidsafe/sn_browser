@@ -1,14 +1,13 @@
-import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
-import { inRendererProcess } from 'appConstants';
+import { inRendererProcess, isRunningUnpacked,isRunningSpectronTestProcess } from 'appConstants';
 import { routerMiddleware, push } from 'react-router-redux';
+import promiseMiddleware from 'redux-promise';
 import rootReducer from '../reducers';
 import logger from 'logger';
+import addPeruseMiddleware from 'store/addPeruseMiddleware';
+
 import {
-    forwardToRenderer,
-    forwardToMain,
-    triggerAlias,
     getInitialStateRenderer,
     replayActionMain,
     replayActionRenderer,
@@ -29,9 +28,6 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
     // Redux Configuration
     const enhancers = [];
 
-    // Thunk Middleware
-    middleware.push( thunk );
-
     // Router Middleware
     if( history )
     {
@@ -39,22 +35,7 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
         middleware.push( router );
     }
 
-    if ( inRendererProcess )
-    {
-        // must be first
-        middleware.unshift( forwardToMain );
-    }
-
-    if ( isBackgroundProcess )
-    {
-        middleware.push( triggerAlias );
-    }
-
-    if ( !inRendererProcess )
-    {
-        // must be last
-        middleware.push( forwardToRenderer );
-    }
+    addPeruseMiddleware( middleware, isBackgroundProcess );
 
     // Redux DevTools Configuration
     const actionCreators = {
@@ -62,7 +43,8 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
     };
 
     let composeEnhancers;
-    if ( inRendererProcess )
+
+    if ( !isRunningSpectronTestProcess && inRendererProcess && isRunningUnpacked )
     {
         composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
             ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {
@@ -75,7 +57,6 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
     {
         composeEnhancers = compose;
     }
-
 
     /* eslint-enable no-underscore-dangle */
 
