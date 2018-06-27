@@ -19,23 +19,14 @@
 
 }
 
-/* // TODO: Use compesition here */
+
 .tab
 {
-    z-index:           0;
-    display:           flex;
-    position:          absolute;
-    background-color:  white;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
+    composes: tab from 'components/Tab/tab.css';
+
 }
-
-
 
 .activeTab
 {
-    composes: tab;
-    z-index: 1;
+    composes: activeTab from 'components/Tab/tab.css';
 }

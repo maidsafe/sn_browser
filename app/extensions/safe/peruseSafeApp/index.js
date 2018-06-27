@@ -16,6 +16,7 @@ import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as bookmarksActions from 'actions/bookmarks_actions';
 import * as tabsActions from 'actions/tabs_actions';
 import * as notificationActions from 'actions/notification_actions';
+import handleLogoutActions from 'extensions/safe/network/handleLogoutActions';
 
 import logger from 'logger';
 
@@ -43,6 +44,7 @@ const handlePeruseStoreChanges = ( store ) =>
     manageSaveStateActions( store );
     manageReadStateActions( store );
     manageAuthorisationActions( store );
+    handleLogoutActions(store);
 }
 
 

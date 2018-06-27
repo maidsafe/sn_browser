@@ -17,7 +17,7 @@ const authingStates = [
  * Setup actions to be triggered in response to store state changes.
  * @param  { ReduxStore } store [description]
  */
-const handleMainStoreChanges = ( store ) =>
+const handleLogoutActions = ( store ) =>
 {
     manageLogout( store );
 }
@@ -75,4 +75,4 @@ const manageLogout = async ( store ) =>
 // };
 
 
-export default handleMainStoreChanges;
+export default handleLogoutActions;

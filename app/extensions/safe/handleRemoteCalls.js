@@ -2,7 +2,9 @@ import * as theAuthApi from 'extensions/safe/auth-api/authFuncs';
 import { callIPC, setAuthCallbacks } from 'extensions/safe/ffi/ipc';
 import * as authActions from 'extensions/safe/actions/authenticator_actions';
 import * as uiActions from 'actions/ui_actions';
+import { SAFE } from 'extensions/safe/constants';
 import CONSTANTS from 'extensions/safe/auth-constants';
+import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as remoteCallActions from 'actions/remoteCall_actions';
 
 import logger from 'logger';
@@ -30,7 +32,7 @@ export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
 
     if( theCall && theCall.name === 'logout' )
     {
-        store.dispatch( uiActions.resetStore() );
+        store.dispatch( peruseAppActions.setAppStatus(SAFE.APP_STATUS.TO_LOGOUT) );
     }
 }
 
