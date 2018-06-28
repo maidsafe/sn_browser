@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - `eval` has been disabled.
 - domAPI handles removed
 - Functioning share MD request
+- Electron close app process on window close
 
 ### Added
 - background process
