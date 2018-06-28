@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - safeNetwork reducer becomes peruseSafeApp
 - specific domAPI implementations removed
-- new DOM API based upon safe-app-nodejs
+- new DOM API based upon safe-app-nodejs(@e818f8ace834caf891cd57f4fb9186ae19541f5e)
 - release naming updated.
 - Much of SAFE specific functionality moved to extension
 
