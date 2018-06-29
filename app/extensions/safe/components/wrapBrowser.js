@@ -83,7 +83,7 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
                   }
                   {
                       isMock &&
-                      <span>Running on a mock network</span>
+                      <span style={ { "-webkit-app-region": "drag" } }>Running on a mock network</span>
                   }
                   <BrowserComponent {...this.props}/>
               </div>
