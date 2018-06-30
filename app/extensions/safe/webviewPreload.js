@@ -185,11 +185,6 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
 
                 callbackArgs = [theCall.response];
 
-                if ( theCall.isListener )
-                {
-                    // error first
-                    callPromises.resolve( null, ...callbackArgs );
-                }
                 callPromises.resolve( ...callbackArgs );
                 store.dispatch( remoteCallActions.removeRemoteCall(
                     theCall

@@ -10,12 +10,14 @@ All notable changes to this project will be documented in this file.
 - Much of SAFE specific functionality moved to extension
 - Removes window frame and increases draggable area, with exception to Windows
 - Passes full auth info to Notifier
+- Authenticator web app upgraded for react-router v4 and is buildable with webpack
 
 ### Fixed
 - `eval` has been disabled.
 - domAPI handles removed
 - Functioning share MD request
 - Electron close app process on window close
+- Link to invite.maidsafe.net no longer opens multiple external tabs
 
 ### Added
 - background process

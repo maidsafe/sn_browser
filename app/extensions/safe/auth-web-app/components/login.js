@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { I18n } from 'react-redux-i18n';
 import classNames from 'classnames';
 
@@ -33,7 +32,7 @@ export default class Login extends Component {
 
   componentWillMount() {
     if (this.props.isAuthorised) {
-      return this.context.router.push('/');
+      return this.props.push('/');
     }
     if (this.props.error) {
       this.props.clearError();
@@ -49,8 +48,7 @@ export default class Login extends Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.isAuthorised) {
-
-      return this.context.router.push('/');
+      return this.props.push('/');
     }
   }
 
@@ -149,16 +147,16 @@ export default class Login extends Component {
           </div>
         </div>
         <div className="card-f">
-          Don&lsquo;t have an account? <Link
+          Don&lsquo;t have an account? <a
             className={classNames({ disabled: this.props.loading || this.props.libErrPopup })}
             onClick={(e) => {
               e.preventDefault();
               if (this.props.loading || this.props.libErrPopup) {
                 return;
               }
-              return this.context.router.push('create-account');
+              return this.props.push('/create-account');
             }}
-          >CREATE ACCOUNT</Link>
+          >CREATE ACCOUNT</a>
         </div>
       </div>
     );

@@ -28,6 +28,7 @@ const blockNonSAFERequests = () =>
         {
             try
             {
+                logger.info('about to call shell.openExternal in blockNonSafeReqs?');
                 shell.openExternal( details.url );
             }
             catch ( e )
