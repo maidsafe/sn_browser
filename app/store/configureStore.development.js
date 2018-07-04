@@ -44,7 +44,7 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
 
     let composeEnhancers;
 
-    if ( !isRunningSpectronTestProcess && inRendererProcess && isRunningUnpacked )
+    if ( !isRunningSpectronTestProcess && inRendererProcess )
     {
         composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
             ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {

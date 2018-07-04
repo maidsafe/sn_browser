@@ -2,16 +2,21 @@ import logger from 'logger';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
+import { initAnon } from 'extensions/safe/network';
+import * as theAPI from 'extensions/safe/auth-api/authFuncs';
+
+import * as ffiLoader from './auth-api/ffiLoader';
 
 import { parse as parseURL } from 'url';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
+
 import { setIsMock } from 'extensions/safe/actions/peruse_actions';
 import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import handlePeruseStoreChanges from './peruseSafeApp';
-import loadSafeLibs from './loadSafeLibs';
+
 import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
@@ -102,10 +107,24 @@ const onInitBgProcess = async ( store ) =>
         logger.error( 'Load extensions error: ', e );
     }
 
+    //load the auth/safe libs
+    ffiLoader.loadLibrary( startedRunningMock );
+
+    let prevAuthLibStatus;
+
     store.subscribe( () =>
     {
+        const authLibStatus = theAPI.getLibStatus();
+
+        if ( authLibStatus && authLibStatus !== prevAuthLibStatus )
+        {
+            logger.verbose( 'Authenticator lib status: ', authLibStatus );
+            prevAuthLibStatus = authLibStatus;
+            store.dispatch( authenticatorActions.setAuthLibStatus( authLibStatus ) );
+            initAnon( store );
+        }
+
         handlePeruseStoreChanges( store );
-        loadSafeLibs( store );
     });
 
     const mainAppInfo = APP_INFO.info;
