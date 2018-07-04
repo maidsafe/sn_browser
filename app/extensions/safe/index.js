@@ -3,7 +3,7 @@ import * as authenticatorActions from 'extensions/safe/actions/authenticator_act
 
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import { initAnon } from 'extensions/safe/network';
-import * as theAPI from 'extensions/safe/auth-api/authFuncs';
+import { getLibStatus } from 'extensions/safe/auth-api/authFuncs';
 
 import * as ffiLoader from './auth-api/ffiLoader';
 
@@ -114,7 +114,7 @@ const onInitBgProcess = async ( store ) =>
 
     store.subscribe( () =>
     {
-        const authLibStatus = theAPI.getLibStatus();
+        const authLibStatus = getLibStatus();
 
         if ( authLibStatus && authLibStatus !== prevAuthLibStatus )
         {

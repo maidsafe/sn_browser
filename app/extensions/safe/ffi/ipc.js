@@ -212,7 +212,8 @@ const registerNetworkListener = ( e ) =>
 {
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, ( err, state ) =>
     {
-        if ( state === CONSTANTS.NETWORK_STATUS.CONNECTED )
+        if ( state === CONSTANTS.NETWORK_STATUS.CONNECTED ||
+            state === CONSTANTS.NETWORK_STATUS.LOGGED_IN )
         {
             reqQ.processing = false;
             reqQ.process();

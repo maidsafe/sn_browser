@@ -26,6 +26,7 @@ const initialState = {
         savedBeforeQuit : false,
         saveStatus      : '',
         isMock          : null,
+        showingWebIdDropdown : false,
         webIds          : [
             // {
             //     name: 'Joshuef',
@@ -83,8 +84,7 @@ const initialState = {
             //     ],
             //
             // }
-        ],
-        showingWebIdDropdown : false
+        ]
     },
     webFetch : {
         fetching : false,

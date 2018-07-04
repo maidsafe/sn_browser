@@ -9,8 +9,12 @@ import * as remoteCallActions from 'actions/remoteCall_actions';
 
 import logger from 'logger';
 
+let theStore;
+
 export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
 {
+    theStore = store;
+
     logger.verbose('Handling remote call in extension', theCall)
     if ( theCall && theCall.isListener )
     {
@@ -29,16 +33,21 @@ export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
 
         } );
     }
-
-    if( theCall && theCall.name === 'logout' )
-    {
-        store.dispatch( peruseAppActions.setAppStatus(SAFE.APP_STATUS.TO_LOGOUT) );
-    }
 }
 
 
 export const remoteCallApis =  {
     ...theAuthApi,
+    login : async( secret, password ) =>
+    {
+        await theAuthApi.login( secret, password );
+        theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
+    },
+    logout : async( secret, password ) =>
+    {
+        await theAuthApi.logout( );
+        theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.CONNECTED) );
+    },
     /**
     * Handle auth URI calls from webview processes. Should take an authURI, decode, handle auth and reply
     * with auth respnose.

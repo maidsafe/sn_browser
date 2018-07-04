@@ -21,20 +21,6 @@ const handleLogoutActions = ( store ) =>
     manageLogout( store );
 }
 
-const networkIsConnected = ( state ) =>
-{
-    const peruseApp = state.peruseApp;
-
-    if ( peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_IN ||
-        authingStates.includes( peruseApp.appStatus ) )
-    {
-        return true
-    }
-    else
-    {
-        return false;
-    }
-}
 
 let previousAppStatus;
 /**
@@ -46,8 +32,7 @@ const manageLogout = async ( store ) =>
 {
     const state = store.getState();
 
-    if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_LOGOUT
-        && previousAppStatus !== SAFE.APP_STATUS.TO_LOGOUT )
+    if ( state.peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_OUT )
     {
         logger.verbose('Performing logout cleanup.')
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );

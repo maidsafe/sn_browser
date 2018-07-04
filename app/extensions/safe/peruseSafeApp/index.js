@@ -204,20 +204,6 @@ const manageAuthorisationActions = async ( store ) =>
 };
 
 
-const peruseAppIsConnected = (  ) =>
-{
-    //network state vs authstatus.... which and why?
-    if ( peruseAppState.appStatus === SAFE.NETWORK_STATE.LOGGED_IN ||
-        authingStates.includes( peruseAppState.appStatus ) )
-    {
-        return true
-    }
-    else
-    {
-        return false;
-    }
-}
-
 const peruseIsAuthing = ( state ) =>
 {
     const pendingAuthStates = [
@@ -236,7 +222,8 @@ const peruseIsAuthed = (  ) =>
 const peruseIsConnected = (  ) =>
 {
     // Q: why do we have a loggedin state?
-    return peruseAppState.networkStatus === SAFE.NETWORK_STATE.CONNECTED;
+    return peruseAppState.networkStatus === SAFE.NETWORK_STATE.CONNECTED ||
+            peruseAppState.networkStatus === SAFE.NETWORK_STATE.LOGGED_IN;
 }
 
 const peruseAuthFailed = ( state ) =>
