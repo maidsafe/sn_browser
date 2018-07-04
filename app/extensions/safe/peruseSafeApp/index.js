@@ -69,6 +69,7 @@ let callingArray = [];
  */
 const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 {
+    logger.verbose('Requesting PeruseApp auth.')
     try
     {
         const isMock = peruseStateObject.isMock;
@@ -120,6 +121,8 @@ export const getPeruseAppObj = () =>
 const urisUnderAuth = [];
 const authFromStoreResponse = async ( res, store ) =>
 {
+    logger.verbose('Authing from a store-passed response.');
+
     if( !res.startsWith('safe') )
     {
         // it's an error!
@@ -149,7 +152,6 @@ const authFromStoreResponse = async ( res, store ) =>
         if ( store )
         {
             store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
-            store.dispatch( peruseAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED ) );
         }
     }
     catch ( err )
@@ -180,6 +182,7 @@ const authFromStoreResponse = async ( res, store ) =>
  */
 const manageAuthorisationActions = async ( store ) =>
 {
+    // TODO: Do this via aliased action.
     const peruse = peruseAppState;
 
     if ( peruse.appStatus === SAFE.APP_STATUS.TO_AUTH && !isAuthing )
@@ -191,7 +194,6 @@ const manageAuthorisationActions = async ( store ) =>
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
 
         await requestPeruseAppAuthentication( peruse );
-        isAuthing = false;
     }
 
     if( peruse.authResponseUri && peruse.authResponseUri.length )
@@ -200,11 +202,12 @@ const manageAuthorisationActions = async ( store ) =>
         // OR: Only run if not authed?
         store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
         authFromStoreResponse( peruse.authResponseUri, store );
+        isAuthing = false;
     }
 };
 
 
-const peruseIsAuthing = ( state ) =>
+const peruseIsAuthing = ( ) =>
 {
     const pendingAuthStates = [
         SAFE.APP_STATUS.TO_AUTH,

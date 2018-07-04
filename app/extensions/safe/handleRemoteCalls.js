@@ -40,11 +40,14 @@ export const remoteCallApis =  {
     ...theAuthApi,
     login : async( secret, password ) =>
     {
+        logger.verbose('Handling login call from webview.')
         await theAuthApi.login( secret, password );
         theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
+        theStore.dispatch( peruseAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
     },
     logout : async( secret, password ) =>
     {
+        logger.verbose('Handling logout call from webview.')
         await theAuthApi.logout( );
         theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.CONNECTED) );
     },
