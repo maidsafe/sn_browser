@@ -79,14 +79,14 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
             if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
             {
-                webIdDropdownContents = <li>Authorise to display your WebIds.</li>;
+                webIdDropdownContents = <li key="noAuth">Authorise to display your WebIds.</li>;
             }
             else if( webIdsList.length > 0 )
             {
                 webIdDropdownContents = webIdsList;
             } else
             {
-                webIdDropdownContents = <li>No WebIds Found.</li>;
+                webIdDropdownContents = <li  key="noId">No WebIds Found.</li>;
 
             }
 
