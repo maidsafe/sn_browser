@@ -98,7 +98,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                     <Column align="center" verticalAlign="middle">
                         <AddressBarButtons {...this.props}/>
                     </Column>
-                    <Column size="icon-M" align="center" verticalAlign="center">
+                    <Column size="icon-M" align="center" verticalAlign="middle">
                         <div onMouseEnter={ this.handleMouseEnter }
                             onMouseLeave={ this.handleMouseLeave }
                             >
