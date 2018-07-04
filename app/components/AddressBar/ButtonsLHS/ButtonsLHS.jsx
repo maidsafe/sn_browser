@@ -18,26 +18,26 @@ class ButtonsLHS extends Component
 
         return (
             <Row gutters="S">
-                <Column>
+                <Column align="center" verticalAlign="middle">
                     <IconButton
-                        iconTheme="light"
+                        iconTheme="navigation"
                         iconType="left"
-                        iconSize="L"
+                        iconSize="S"
                         onClick={ handleBack }
                     />
                 </Column>
-                <Column>
+                <Column align="center" verticalAlign="middle">
                     <IconButton
-                        iconTheme="light"
-                        iconSize="L"
+                        iconTheme="navigation"
+                        iconSize="S"
                         iconType="right"
                         onClick={ handleForward }
                     />
                 </Column>
-                <Column>
+                <Column align="center" verticalAlign="middle">
                     <IconButton
-                        iconTheme="light"
-                        iconSize="L"
+                        iconTheme="navigation"
+                        iconSize="S"
                         iconType="reset"
                         onClick={ handleRefresh }
                     />

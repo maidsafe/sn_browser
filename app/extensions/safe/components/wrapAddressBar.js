@@ -28,10 +28,14 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         handleMouseEnter = ( ) =>
         {
-            const { getAvailableWebIds, showWebIdDropdown } = this.props;
+            const { getAvailableWebIds, showWebIdDropdown, peruseApp } = this.props;
 
-            logger.info('Icon hovered... triggering getWebIds')
-            getAvailableWebIds();
+            logger.info('Icon hovered... triggering getWebIds');
+            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
+            {
+                getAvailableWebIds();
+            }
+
             showWebIdDropdown( true );
         }
 
@@ -44,11 +48,11 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         render() {
             const { peruseApp } = this.props;
-            const { showingWebIdDropdown, webIds } = peruseApp;
+            const { showingWebIdDropdown, webIds, appStatus } = peruseApp;
 
             const handleIdClick = this.handleIdClick;
 
-            const webIdDropdownContents = webIds.map( webId =>
+            const webIdsList = webIds.map( webId =>
             {
               if( webId.isSelected ){
 
@@ -71,25 +75,45 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                   </li> )
             });
 
+            let webIdDropdownContents;
+
+            if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
+            {
+                webIdDropdownContents = <li>Authorise to display your WebIds.</li>;
+            }
+            else if( webIdsList.length > 0 )
+            {
+                webIdDropdownContents = webIdsList;
+            } else
+            {
+                webIdDropdownContents = <li>No WebIds Found.</li>;
+
+            }
+
+
+
+
             return (
-                <Grid gutters="S">
-                    <Column>
+                <Grid gutters="M">
+                    <Column align="center" verticalAlign="middle">
                         <AddressBarButtons {...this.props}/>
                     </Column>
-                    <Column size="icon-L">
+                    <Column size="icon-M" align="center" verticalAlign="center">
                         <div onMouseEnter={ this.handleMouseEnter }
                             onMouseLeave={ this.handleMouseLeave }
                             >
                                 <Icon
-                                    theme="light"
+                                    theme="navigation"
                                     type="account"
-                                    size="L"
+                                    size="S"
                                     style={{cursor:'pointer'}}
                                 />
                                 {
                                     showingWebIdDropdown &&
                                     <ul className={styles.webIdList}>
-                                        { webIdDropdownContents }
+
+                                        {webIdDropdownContents}
+
                                     </ul>
                                 }
                         </div>

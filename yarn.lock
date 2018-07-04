@@ -7390,9 +7390,9 @@ neo-async@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.5.0.tgz#76b1c823130cca26acfbaccc8fbaf0a2fa33b18f"
 
-nessie-ui@5.14.1:
-  version "5.14.1"
-  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-5.14.1.tgz#82b3b16c0e13ddc77f22a690d608473e81956e7b"
+nessie-ui@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.0.0.tgz#e5bff3062483e8f2bc49d199d1377a60a1f3fd32"
 
 nice-try@^1.0.4:
   version "1.0.4"
