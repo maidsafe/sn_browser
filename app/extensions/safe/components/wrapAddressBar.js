@@ -51,17 +51,18 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             const { showingWebIdDropdown, webIds, appStatus } = peruseApp;
 
             const handleIdClick = this.handleIdClick;
-
             const webIdsList = webIds.map( webId =>
             {
-              if( webId.isSelected ){
+                const nickname = webId["#me"].nick || webId["#me"].name;
+
+                if( webId.isSelected ){
 
                   return (
                       <li
                           onClick={ handleIdClick.bind( this, webId )  }
                           key={webId.id}
                           className={styles.selectedWebId}
-                          >{ webId.title }
+                          >{ nickname }
                       </li>
                   )
               }
@@ -71,7 +72,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                   key={webId.id}
                   className={styles.webId}
                   >
-                      { webId.title }
+                      { nickname }
                   </li> )
             });
 
