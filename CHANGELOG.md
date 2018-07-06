@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - new DOM API based upon safe-app-nodejs(@e818f8ace834caf891cd57f4fb9186ae19541f5e)
 - release naming updated.
 - Much of SAFE specific functionality moved to extension
+- Removes window frame and increases draggable area, with exception to Windows
 
 ### Fixed
 - `eval` has been disabled.
