@@ -26,6 +26,14 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             setCurrentWebId( webId.id );
         }
 
+        handleIdButtonClick = ( webId, event ) =>
+        {
+            const { setCurrentWebId } = this.props;
+            console.log('clickedIdButton')
+            this.props.updateActiveTab( { url: 'http://localhost:1234' } );
+
+        }
+
         handleMouseEnter = ( ) =>
         {
             const { getAvailableWebIds, showWebIdDropdown, peruseApp } = this.props;
@@ -102,6 +110,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                     <Column size="icon-M" align="center" verticalAlign="middle">
                         <div onMouseEnter={ this.handleMouseEnter }
                             onMouseLeave={ this.handleMouseLeave }
+                            onClick={ this.handleIdButtonClick }
                             >
                                 <Icon
                                     theme="navigation"

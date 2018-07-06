@@ -160,13 +160,14 @@ export default class AddressBar extends Component
     {
         const props = this.props;
         const { address } = this.state;
-        const { isSelected, isBookmarked } = this.props;
+        const { isSelected, isBookmarked, updateActiveTab } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
                 <Grid align="left" verticalAlign="middle" gutters="S" className={ styles.addressBar }>
                     <Column size="content">
                         <ButtonsLHS
+                            updateActiveTab={ updateActiveTab }
                             handleBack={ this.handleBack }
                             handleForward={ this.handleForward }
                             handleRefresh={ this.handleRefresh }
