@@ -1,6 +1,7 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 import { BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import os from 'os';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions }  from './extensions';
@@ -47,8 +48,8 @@ const openWindow = ( store ) =>
     } );
 
     const newWindowPosition = getNewWindowPosition( mainWindowState );
-
-    let mainWindow = new BrowserWindow( {
+    const browserWindowConfig =
+    {
         show              : false,
         x                 : newWindowPosition.x,
         y                 : newWindowPosition.y,
@@ -56,12 +57,20 @@ const openWindow = ( store ) =>
         height            : mainWindowState.height,
         titleBarStyle     : 'hidden-inset',
         'standard-window' : false,
+        frame             : false,
         webPreferences    :
         {
             // preload : path.join( __dirname, 'browserPreload.js' )
         }
 
-    } );
+    };
+
+    if ( os.platform() === 'win32')
+    {
+      browserWindowConfig.frame = true;
+    }
+
+    let mainWindow = new BrowserWindow( browserWindowConfig );
 
     mainWindowState.manage( mainWindow );
 
