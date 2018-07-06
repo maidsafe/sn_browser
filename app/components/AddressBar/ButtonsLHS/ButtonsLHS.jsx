@@ -5,6 +5,7 @@ import { Column, IconButton, Row } from 'nessie-ui';
 
 import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarButtonsLHS } from 'extensions/components';
+import styles from './buttonsLHS.css';
 
 /**
  * Left hand side buttons for the Address Bar
@@ -36,6 +37,7 @@ class ButtonsLHS extends Component
                 </Column>
                 <Column align="center" verticalAlign="middle">
                     <IconButton
+                        className={ styles.refresh }
                         iconTheme="navigation"
                         iconSize="S"
                         iconType="reset"

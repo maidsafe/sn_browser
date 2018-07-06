@@ -300,6 +300,7 @@ export default class Tab extends Component
 
         if ( !this.isFrozen() )
         {
+            logger.verbose('inthis frozen checkkkkk in will nav')
             return;
         }
 
@@ -351,6 +352,7 @@ export default class Tab extends Component
 
     isFrozen( e )
     {
+        logger.verbose('Webview is frozen...')
         const { index } = this.props;
         const frozen = !index;
         // const frozen = staticTabData[index] || !index
