@@ -92,6 +92,11 @@ export default function peruseApp( state = initialState, action )
             };
         }
 
+        case TYPES.RESET_STORE:
+        {
+            return { ...initialState };
+        }
+
         default:
             return state;
     }

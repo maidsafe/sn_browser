@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import styles from './browser.css';
 import { CLASSES, isRunningSpectronTestProcess } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
-import { Column, Icon, Grid } from 'nessie-ui';
+import { Column, IconButton, Grid } from 'nessie-ui';
 import logger from 'logger';
 import styles from './webIdButtons.css'
 
@@ -20,16 +20,18 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             }
         }
 
-        handleIdClick = ( webId, event ) =>
+        handleIdClick = ( webId ) =>
         {
             const { setCurrentWebId } = this.props;
+            logger.info('HANDLICK CLICK OF IDDD')
+            // also if only 1 webID? mark as defualt?
             setCurrentWebId( webId.id );
         }
 
-        handleIdButtonClick = ( webId, event ) =>
+        handleIdButtonClick = ( ) =>
         {
             const { setCurrentWebId } = this.props;
-            console.log('clickedIdButton')
+
             this.props.updateActiveTab( { url: 'http://localhost:1234' } );
 
         }
@@ -38,8 +40,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
         {
             const { getAvailableWebIds, showWebIdDropdown, peruseApp } = this.props;
 
-            logger.info('Icon hovered... triggering getWebIds');
-            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
+            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED && peruseApp.webIds.length === 0 )
             {
                 getAvailableWebIds();
             }
@@ -65,9 +66,9 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
                 if( webId.isSelected ){
 
-                  return (
+                    return (
                       <li
-                          onClick={ handleIdClick.bind( this, webId )  }
+                          onClick={  handleIdClick.bind( this, webId )  }
                           key={webId.id}
                           className={styles.selectedWebId}
                           >{ nickname }
@@ -76,7 +77,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
               }
 
               return ( <li
-                  onClick={ handleIdClick.bind( this, webId ) }
+                  onClick={handleIdClick.bind( this, webId )   }
                   key={webId.id}
                   className={styles.webId}
                   >
@@ -88,14 +89,16 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
             if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
             {
-                webIdDropdownContents = <li key="noAuth">Authorise to display your WebIds.</li>;
+                webIdDropdownContents = <li
+                    key="noAuth">Authorise to display your WebIds.</li>;
             }
             else if( webIdsList.length > 0 )
             {
                 webIdDropdownContents = webIdsList;
             } else
             {
-                webIdDropdownContents = <li  key="noId">No WebIds Found.</li>;
+                webIdDropdownContents = <li
+                    key="noId">No WebIds Found.</li>;
 
             }
 
@@ -110,11 +113,11 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                     <Column size="icon-M" align="center" verticalAlign="middle">
                         <div onMouseEnter={ this.handleMouseEnter }
                             onMouseLeave={ this.handleMouseLeave }
-                            onClick={ this.handleIdButtonClick }
                             >
-                                <Icon
-                                    theme="navigation"
-                                    type="account"
+                                <IconButton
+                                    onClick={ this.handleIdButtonClick }
+                                    iconTheme="navigation"
+                                    iconType="account"
                                     size="S"
                                     style={{cursor:'pointer'}}
                                 />
