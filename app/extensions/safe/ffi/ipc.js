@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
-import { getPeruseAuthReqUri, authFromInternalResponse } from '../network';
+import { getPeruseAuthReqUri, authFromInternalResponse, replyToRemoteCallFromAuth } from '../network';
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
 import i18n from 'i18n';
@@ -150,7 +150,7 @@ class ReqQueue
 
             this.req.res = res;
 
-            logger.info( 'IPC.js: another response being parsed.:', res );
+            logger.info( 'IPC.js: another response being parsed.:', this.req );
             if ( res.authReq || res.contReq || res.mDataReq )
             {
                 logger.info( 'Its an auth request!' );
@@ -171,6 +171,10 @@ class ReqQueue
             if ( this.req.uri === getPeruseAuthReqUri() )
             {
                 authFromInternalResponse( parseResUrl( res ) );
+            }
+            else if( this.req.type === CLIENT_TYPES.WEB )
+            {
+                replyToRemoteCallFromAuth( this.req );
             }
             else
             {

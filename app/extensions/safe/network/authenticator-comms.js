@@ -1,5 +1,6 @@
 import logger from 'logger';
 import { handleAuthUrl } from 'extensions/safe/actions/authenticator_actions';
+import { updateRemoteCall } from 'actions/remoteCall_actions';
 import { initialiseApp } from '@maidsafe/safe-node-app';
 import {
     APP_INFO,
@@ -16,6 +17,23 @@ const queue = [];
 let peruseAppObj;
 let store;
 let browserAuthReqUri;
+
+export const replyToRemoteCallFromAuth = ( request ) =>
+{
+    const state = store.getState();
+    const remoteCalls = state.remoteCalls;
+
+    const remoteCallToReply = remoteCalls.find( theCall => {
+        if( theCall.name !== 'authenticateFromUriObject' ) return;
+
+        const theRequestFromCall = theCall.args[0].uri;
+
+        return theRequestFromCall === request.uri;
+
+    });
+
+    store.dispatch( updateRemoteCall( { ...remoteCallToReply, done: true, inProgress: true, response: request.res }) )
+}
 
 export const authFromQueue = async () =>
 {
