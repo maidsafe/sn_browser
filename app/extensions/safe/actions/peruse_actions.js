@@ -68,6 +68,8 @@ const triggerGetWebIds = async (  ) =>
 {
     logger.verbose('Retrieving webIds');
     const ids = await getWebIds();
+
+    console.log('ids >>>>>>>>>>>>>>>>>>>>>>>>>>', ids)
 };
 
 export const getAvailableWebIds = createAliasedAction(

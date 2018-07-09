@@ -27,12 +27,8 @@ const getCurrentWebId = ( webIds ) =>
 {
     const webId = webIds.find( webId => webId.isSelected );
 
-    //assuming #me for now.
-    if( webId && webId['#me'] ) return webId['#me'];
-
-
     // TODO: Should return error if non set?
-    return {};
+    return webId || {};
 }
 
 

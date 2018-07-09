@@ -40,7 +40,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
         {
             const { getAvailableWebIds, showWebIdDropdown, peruseApp } = this.props;
 
-            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED && peruseApp.webIds.length === 0 )
+            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
             {
                 getAvailableWebIds();
             }
