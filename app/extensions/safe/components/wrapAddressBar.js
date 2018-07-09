@@ -23,9 +23,9 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
         handleIdClick = ( webId ) =>
         {
             const { setCurrentWebId } = this.props;
-            logger.info('HANDLICK CLICK OF IDDD')
+            logger.info('HANDLICK CLICK OF IDDD', webId )
             // also if only 1 webID? mark as defualt?
-            setCurrentWebId( webId.id );
+            setCurrentWebId( webId );
         }
 
         handleIdButtonClick = ( ) =>

@@ -66,7 +66,7 @@ export default function peruseApp( state = initialState, action )
             newWebIds = newWebIds.map( webId => {
                 let updatedId = { ...webId };
 
-                updatedId.isSelected = targetWebId === webId.id;
+                updatedId.isSelected = targetWebId['@id'] === webId['@id'];
                 return updatedId
             });
 
@@ -77,6 +77,18 @@ export default function peruseApp( state = initialState, action )
 
         case TYPES.SET_AVAILABLE_WEB_IDS: {
             const ids = payload || [];
+
+            state.webIds.forEach( theId =>
+            {
+                if( !theId.isSelected) return;
+
+                const foundIdIndex = payload.findIndex( payloadId => payloadId["@id"] === theId["@id"] );
+                const foundId = payload[foundIdIndex];
+                foundId.isSelected = true;
+                console.log('found same ID', foundId);
+
+
+            })
             return {
                 ...state,
                 webIds : [ ...ids ]

@@ -106,7 +106,7 @@ export const getWebIds = async( ) =>
 
     let webIds = []
     webIds = await peruseApp.web.getWebIds();
-    logger.verbose('# ids retrieved', webIds.length);
+    logger.verbose('# ids retrieved', webIds);
 
     savedStore.dispatch( peruseAppActions.setAvailableWebIds( webIds ) );
 
