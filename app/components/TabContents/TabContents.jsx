@@ -37,7 +37,7 @@ export default class TabContents extends Component
                             return ( <History
                                 addTab={ addTab }
                                 history={ allTabs }
-                                key={ i }
+                                key={ tab.index }
                                 isActiveTab={ isActiveTab }
                                 ref={ ( c ) =>
                                 {
@@ -53,7 +53,7 @@ export default class TabContents extends Component
                             return ( <Bookmarks
                                 addTab={ addTab }
                                 bookmarks={ bookmarks }
-                                key={ i }
+                                key={ tab.index }
                                 isActiveTab={ isActiveTab }
                                 ref={ ( c ) =>
                                 {
@@ -82,7 +82,7 @@ export default class TabContents extends Component
                     updateTab={ updateTab }
                     updateActiveTab={ updateActiveTab }
                     pageLoaded={ pageLoaded }
-                    key={ i }
+                    key={ tab.index }
                     index={ tab.index }
                     ref={ ( c ) =>
                     {
