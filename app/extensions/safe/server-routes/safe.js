@@ -3,6 +3,7 @@ import { getPeruseAppObj } from 'extensions/safe/network';
 import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import errConsts from 'extensions/safe/err-constants';
+import { SAFE } from '../constants';
 
 const safeRoute = ( store ) => ( {
     method  : 'GET',
@@ -51,20 +52,43 @@ const safeRoute = ( store ) => ( {
                 link,
                 options  : JSON.stringify( options )
             } ) );
-            let data = null;
-            try
-            {
-                data = await app.webFetch( link, options );
-            }
-            catch ( error )
-            {
-                logger.error( error.code, error.message );
-                store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
-		if (error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code) {
-	          error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
-		}
-                return reply( error.message || error );
-            }
+
+            const webFetch = async () => {
+                try
+                {
+                  if (store.getState().peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED)
+                  {
+                  const data = await app.webFetch( link, options );
+                  return data;
+                  }
+                  else
+                  {
+                    const prms = new Promise((resolve, reject) => {
+                      store.subscribe(() => {
+                        if (store.getState().peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED)
+                        {
+                          return resolve(webFetch());
+                        }
+                      });
+                    });
+                    return prms;
+                  }
+                }
+                catch ( error )
+                {
+                    const shouldTryAgain = error.code === errConsts.ERR_OPERATION_ABORTED.code ||
+                                           error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
+                                           error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
+                    if (shouldTryAgain)
+                    {
+                      return webFetch();
+                    }
+                    logger.error( error.code, error.message );
+                    store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
+                    return reply( error.message || error );
+                }
+            };
+            const data = await webFetch();
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
             if ( isRangeReq && multipartReq )
@@ -80,13 +104,13 @@ const safeRoute = ( store ) => ( {
                     .header( 'Content-Range', data.headers['Content-Range'] )
                     .header( 'Content-Length', data.headers['Content-Length'] );
             }
-	    else
-	    {
+            else
+            {
               return reply( data.body )
                   .type( data.headers['Content-Type'] )
                   .header( 'Transfer-Encoding', 'chunked' )
                   .header( 'Accept-Ranges', 'bytes' );
-	    }
+            }
         }
         catch ( e )
         {

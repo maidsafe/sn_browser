@@ -13,7 +13,8 @@ import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
 import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
 import { setupSpectronApp, isCI,isTestingPackagedApp, travisOS } from 'spectron-lib/setupSpectronApp';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
+jest.setTimeout(120000);
 
 
 describe( 'SAFE network webFetch operation', async () =>

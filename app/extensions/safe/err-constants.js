@@ -3,6 +3,12 @@ module.exports = {
     code: -11,
     msg: 'Unable to navigate to site. Please check your network connection.'
   },
+  ERR_OPERATION_ABORTED: {
+    code: -14
+  },
+  ERR_REQUEST_TIMEOUT: {
+    code: -17
+  },
   ERR_CONNECT_INFO: {
     code: 1,
     msg: (e) => `Unable to get connection information: ${e}`

@@ -4,7 +4,7 @@ import path from 'path';
 import RELEASE_NAME from '../../releaseName.js';
 
 jest.unmock('electron')
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 
 export const isCI = process.env.CI || false;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
