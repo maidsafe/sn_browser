@@ -1,8 +1,10 @@
 import logger from 'logger';
 import { getPeruseAppObj } from 'extensions/safe/network';
 import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
+import { addTab, closeTab } from 'actions/tabs_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import errConsts from 'extensions/safe/err-constants';
+import { SAFE } from '../constants';
 
 const safeRoute = ( store ) => ( {
     method  : 'GET',
@@ -51,6 +53,7 @@ const safeRoute = ( store ) => ( {
                 link,
                 options  : JSON.stringify( options )
             } ) );
+
             let data = null;
             try
             {
@@ -60,9 +63,27 @@ const safeRoute = ( store ) => ( {
             {
                 logger.error( error.code, error.message );
                 store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
-		if (error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code) {
-	          error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
-		}
+                const shouldTryAgain = error.code === errConsts.ERR_OPERATION_ABORTED.code ||
+                                       error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
+                                       error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
+                if (shouldTryAgain)
+                {
+                  const unsubscribe = store.subscribe(() => {
+                    if (store.getState().peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED)
+                    {
+                      store.getState().tabs.forEach( (tab) => {
+                        logger.info(tab.url, link, link.includes(tab.url ));
+                        if ( link.includes(tab.url ) && !tab.isActive ) {
+                          store.dispatch(closeTab( { index: tab.index } )); 
+                        }
+                      } );
+                      store.dispatch( addTab( { url: link, isActiveTab: true } ) );
+                      unsubscribe();
+                    }
+                  });
+                  error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
+                  return reply(error.message);
+                }
                 return reply( error.message || error );
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
@@ -80,13 +101,13 @@ const safeRoute = ( store ) => ( {
                     .header( 'Content-Range', data.headers['Content-Range'] )
                     .header( 'Content-Length', data.headers['Content-Length'] );
             }
-	    else
-	    {
+            else
+            {
               return reply( data.body )
                   .type( data.headers['Content-Type'] )
                   .header( 'Transfer-Encoding', 'chunked' )
                   .header( 'Accept-Ranges', 'bytes' );
-	    }
+            }
         }
         catch ( e )
         {

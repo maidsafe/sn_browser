@@ -22,6 +22,7 @@ export default class Tab extends Component
         url                  : PropTypes.string.isRequired,
         index                : PropTypes.number.isRequired,
         isActiveTabReloading : PropTypes.bool.isRequired,
+        closeTab             : PropTypes.func.isRequired,
         updateTab            : PropTypes.func.isRequired,
         addTab               : PropTypes.func.isRequired,
         pageLoaded           : PropTypes.func.isRequired,
@@ -114,6 +115,7 @@ export default class Tab extends Component
             webview.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
             webview.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
             webview.addEventListener( 'new-window', ::this.newWindow );
+            webview.addEventListener( 'did-fail-load', ::this.didFailLoad );
 
             webview.addEventListener( 'contextmenu', ( e ) =>
             {
@@ -225,6 +227,13 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
+    }
+
+    didFailLoad( )
+    {
+      const { url, index, addTab, closeTab } = this.props;
+      closeTab( { index } );
+      addTab( { url, isActiveTab: true } );
     }
 
     didStopLoading( )
