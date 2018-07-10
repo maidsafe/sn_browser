@@ -109,7 +109,7 @@ export default class TabBar extends Component
 
             const isActiveTab = tab.isActiveTab;
             let tabStyleClass = styles.tab;
-            const tabData = { key: i, tabIndex: tab.index, url: tab.url };
+            const tabData = { key: tab.index, tabIndex: tab.index, url: tab.url };
 
             if ( isActiveTab )
             {
@@ -118,7 +118,7 @@ export default class TabBar extends Component
 
 
             return ( <div
-                key={ i }
+                key={ tab.index }
                 className={ `${tabStyleClass} ${CLASSES.TAB}` }
                 onClick={ this.handleTabClick.bind( this, tabData ) }
             >
