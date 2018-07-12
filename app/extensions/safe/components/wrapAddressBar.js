@@ -6,6 +6,8 @@ import { Column, IconButton, Grid } from 'nessie-ui';
 import logger from 'logger';
 import styles from './webIdButtons.css'
 
+const hideDropdownTimeout = 0.75; //seconds
+const webIdManagerURI = 'http://localhost:1234';
 export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} ) =>
 {
     return class wrappedAddressbarButtons extends Component {
@@ -22,38 +24,58 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         handleIdClick = ( webId ) =>
         {
-            const { setCurrentWebId } = this.props;
-            logger.info('HANDLICK CLICK OF IDDD', webId )
+            const { setCurrentWebId, showWebIdDropdown } = this.props;
             // also if only 1 webID? mark as defualt?
             setCurrentWebId( webId );
         }
 
         handleIdButtonClick = ( ) =>
         {
-            const { setCurrentWebId } = this.props;
-
-            this.props.updateActiveTab( { url: 'http://localhost:1234' } );
-
+            const { showWebIdDropdown } = this.props;
+            this.hoverTime = new Date();
+            showWebIdDropdown( true );
         }
 
         handleMouseEnter = ( ) =>
         {
-            const { getAvailableWebIds, showWebIdDropdown, peruseApp } = this.props;
+            this.hoverTime = new Date().getTime();
+            this.isMouseOverIdButton = true;
+
+            const { getAvailableWebIds, peruseApp } = this.props;
 
             if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
             {
                 getAvailableWebIds();
             }
+        }
 
-            showWebIdDropdown( true );
+        launchWebIdManager = () =>
+        {
+            const { setCurrentWebId } = this.props;
+
+            this.props.updateActiveTab( { url: webIdManagerURI } );
         }
 
         handleMouseLeave = ( ) =>
         {
+            this.isMouseOverIdButton = false;
+
+            setTimeout( this.closeIfNotOver, hideDropdownTimeout * 1000 )
+        }
+
+        closeIfNotOver = () =>
+        {
             const { showWebIdDropdown } = this.props;
 
-            showWebIdDropdown( false );
+            const now = new Date().getTime();
+            const diff = ( now - this.hoverTime ) / 1000 ;
+
+            if( diff > hideDropdownTimeout )
+            {
+                showWebIdDropdown( false );
+            }
         }
+
 
         render() {
             const { peruseApp } = this.props;
@@ -90,6 +112,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
             {
                 webIdDropdownContents = <li
+                    className={styles.webIdInfo}
                     key="noAuth">Authorise to display your WebIds.</li>;
             }
             else if( webIdsList.length > 0 )
@@ -98,6 +121,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             } else
             {
                 webIdDropdownContents = <li
+                    className={styles.webIdInfo}
                     key="noId">No WebIds Found.</li>;
 
             }
@@ -111,7 +135,8 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                         <AddressBarButtons {...this.props}/>
                     </Column>
                     <Column size="icon-M" align="center" verticalAlign="middle">
-                        <div onMouseEnter={ this.handleMouseEnter }
+                        <div
+                            onMouseEnter={ this.handleMouseEnter }
                             onMouseLeave={ this.handleMouseLeave }
                             >
                                 <IconButton
@@ -126,7 +151,12 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                                     <ul className={styles.webIdList}>
 
                                         {webIdDropdownContents}
-
+                                        <li
+                                            onClick={ this.launchWebIdManager }
+                                            className={styles.webIdManager}
+                                            >
+                                                <a href="#">Launch WebIdManager</a>
+                                            </li>
                                     </ul>
                                 }
                         </div>
