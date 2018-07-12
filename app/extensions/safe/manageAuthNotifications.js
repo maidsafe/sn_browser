@@ -2,7 +2,7 @@
 import * as notificationActions from 'actions/notification_actions';
 import CONSTANTS from './auth-constants';
 import logger from 'logger';
-
+import { createAuthRequestElement } from './components/authRequest';
 
 export const CLIENT_TYPES = {
     DESKTOP : 'DESKTOP',
@@ -14,7 +14,6 @@ export const REQ_TYPES = {
     CONTAINER : 'CONTAINER',
     MDATA     : 'MDATA'
 };
-
 
 
 export const addAuthNotification = ( authReqData, app, sendAuthDecision, store ) =>
@@ -63,18 +62,15 @@ export const addAuthNotification = ( authReqData, app, sendAuthDecision, store )
         sendAuthDecision( false, authReqData, reqType );
         clearNotification();
     };
-
-    // const successCall = {
-    //     id:
-    // }
+    const reactNode = createAuthRequestElement(authReqData);
     const notificationId = Math.random().toString( 36 );
     const theNotification = {
         // TODO: where should ID actually be applied?
         id: notificationId,
         text,
-        isPrompt: true
+        isPrompt: true,
+        reactNode
     };
-
     const responseMap = {
         allow: success,
         deny: denial,
