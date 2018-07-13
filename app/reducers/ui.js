@@ -1,7 +1,6 @@
 // @flow
 import { createActions }from 'redux-actions';
 import initialAppState from './initialAppState';
-
 import { TYPES } from 'actions/ui_actions';
 
 const initialState = initialAppState.ui;
@@ -26,11 +25,11 @@ export default function ui( state: array = initialState, action )
         }
         case TYPES.RELOAD_PAGE :
         {
-            return { ...state, pageIsLoading: true };
+            return { ...state, isActiveTabReloading: true };
         }
         case TYPES.PAGE_LOADED :
         {
-            return { ...state, pageIsLoading: false };
+            return { ...state, isActiveTabReloading: false };
         }
 
         default:

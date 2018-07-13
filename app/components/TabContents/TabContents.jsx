@@ -19,7 +19,7 @@ export default class TabContents extends Component
     render()
     {
         const { addTab, bookmarks, allTabs, tabs, updateActiveTab,
-                updateTab, pageIsLoading, pageLoaded } = this.props;
+                updateTab, isActiveTabReloading, pageLoaded } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
         {
@@ -76,7 +76,7 @@ export default class TabContents extends Component
                 const TheTab = ( <Tab
                     url={ tab.url }
                     isActiveTab={ isActiveTab }
-                    pageIsLoading= { pageIsLoading }
+                    isActiveTabReloading={ isActiveTabReloading }
                     addTab={ addTab }
                     updateTab={ updateTab }
                     updateActiveTab={ updateActiveTab }

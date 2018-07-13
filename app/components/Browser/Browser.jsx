@@ -209,6 +209,7 @@ class Browser extends Component
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }
+                    activeTab={ activeTab }
                     ref={ ( c ) =>
                     {
                         this.address = c;
@@ -221,7 +222,7 @@ class Browser extends Component
                     clearNotification={ clearNotification }
                 />
                 <TabContents
-                    pageIsLoading= { ui.pageIsLoading }
+                    isActiveTabReloading={ ui.isActiveTabReloading }
                     key={ 4 }
                     addTab={ addTab }
                     updateActiveTab={ updateActiveTab }

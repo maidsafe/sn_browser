@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - uses safe-node-app directly for DOM APIs
 - Preloaded MockVault
 - Logic to copy MockVault into TEMPDIR, if executable flag is passed
+- UI indication of webview loading
 
 #### [0.5.3]
 ### Changed 

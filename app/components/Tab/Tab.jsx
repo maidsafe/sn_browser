@@ -18,13 +18,13 @@ export default class Tab extends Component
 {
     static propTypes =
     {
-        isActiveTab  : PropTypes.bool.isRequired,
-        url          : PropTypes.string.isRequired,
-        index        : PropTypes.number.isRequired,
-        pageIsLoading: PropTypes.bool.isRequired,
-        updateTab    : PropTypes.func.isRequired,
-        addTab       : PropTypes.func.isRequired,
-        pageLoaded   : PropTypes.func.isRequired
+        isActiveTab          : PropTypes.bool.isRequired,
+        url                  : PropTypes.string.isRequired,
+        index                : PropTypes.number.isRequired,
+        isActiveTabReloading : PropTypes.bool.isRequired,
+        updateTab            : PropTypes.func.isRequired,
+        addTab               : PropTypes.func.isRequired,
+        pageLoaded           : PropTypes.func.isRequired,
     }
 
     static defaultProps =
@@ -164,7 +164,7 @@ export default class Tab extends Component
             }
         }
 
-        if (nextProps.pageIsLoading) {
+        if (nextProps.isActiveTabReloading) {
             this.reloadIfActive();
         }
     }
@@ -216,13 +216,28 @@ export default class Tab extends Component
     didStartLoading( )
     {
         logger.silly( 'webview started loading' );
+        const { updateTab, index, isActiveTab } = this.props;
+
+        const tabUpdate = {
+            index,
+            isLoading: true
+        };
 
         this.updateBrowserState( { loading: true } );
+        updateTab( tabUpdate );
     }
 
     didStopLoading( )
     {
+        const { updateTab, index, isActiveTab } = this.props;
+
+        const tabUpdate = {
+            index,
+            isLoading: false
+        };
+
         this.updateBrowserState( { loading: false } );
+        updateTab( tabUpdate );
     }
 
     pageTitleUpdated( e )

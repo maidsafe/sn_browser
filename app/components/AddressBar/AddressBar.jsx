@@ -14,6 +14,7 @@ export default class AddressBar extends Component
     {
         address        : PropTypes.string,
         isSelected     : PropTypes.bool,
+        activeTab      : PropTypes.object,
         isBookmarked   : PropTypes.bool.isRequired,
         addBookmark    : PropTypes.func.isRequired,
         removeBookmark : PropTypes.func.isRequired,
@@ -157,7 +158,7 @@ export default class AddressBar extends Component
     render()
     {
         const { address } = this.state;
-        const { isSelected, isBookmarked } = this.props;
+        const { isSelected, isBookmarked, activeTab } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
@@ -181,12 +182,13 @@ export default class AddressBar extends Component
                                 />
                             </Column>
                             <Column>
-                                <IconButton
-                                    iconTheme="light"
-                                    iconSize="L"
-                                    iconType="reset"
-                                    onClick={ this.handleRefresh }
-                                />
+                              <IconButton
+                                  iconTheme="light"
+                                  iconSize="L"
+                                  iconType="reset"
+                                  isDisabled={ activeTab.isLoading } 
+                                  onClick={ this.handleRefresh }
+                              />
                             </Column>
                         </Row>
                     </Column>
