@@ -1,6 +1,14 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [Unreleased]
+### Added
+- Notification on network disconnect event with automatic reconnect upon network resolve
+- Browser executed with no network connection shows notification upon loginFromUri attempt and autmotically connects user upon network resolve
+
+### SAFE libraries Dependencies
+- @maidsafe/safe-node-app: `fe5dc54aa9c8a1c5dd71809b616f4a2353b598e8`
+
 #### [0.6.0]
 ### Changed
 - safeNetwork reducer becomes peruseSafeApp

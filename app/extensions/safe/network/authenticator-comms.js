@@ -8,8 +8,10 @@ import {
     isCI,
     isRunningSpectronTestProcessingPackagedApp
 } from 'appConstants';
+import { SAFE } from '../constants';
 import { parse as parseURL } from 'url';
 import { addNotification, clearNotification } from 'actions/notification_actions';
+import { setNetworkStatus } from '../actions/peruse_actions';
 import { setIPCStore } from '../ffi/ipc';
 
 const queue = [];
@@ -23,6 +25,20 @@ export const authFromQueue = async () =>
     {
         authFromInternalResponse( queue[0] ); // hack for testing
     }
+};
+
+const tryConnect = async (res) => {
+  try
+  {
+    peruseAppObj = await peruseAppObj.auth.loginFromUri( res );
+    store.dispatch(clearNotification()); 
+  }
+  catch ( err )
+  {
+    setTimeout(() => {
+      tryConnect( res );
+    }, 5000);
+  }
 };
 
 export const authFromInternalResponse = async ( res, isAuthenticated ) =>
@@ -42,13 +58,14 @@ export const authFromInternalResponse = async ( res, isAuthenticated ) =>
 
             if ( err.message.startsWith( 'Unexpected (probably a logic' ) )
             {
-                message = 'Check your current IP address matches your registered address at invite.maidsafe.net';
+                message = 'Attempting to connect. Check your network connection, then verify that your current IP address matches your registered address at invite.maidsafe.net';
             }
 
             // TODO: Remove check when network is opened up
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
             store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
+            tryConnect( res );
         }
 
         logger.error( err.message || err );
@@ -77,6 +94,45 @@ export const handleSafeAuthAuthentication = ( uriOrReqObject, type ) =>
 
 export const getPeruseAuthReqUri = () => browserAuthReqUri;
 
+export const attemptReconnect = ( store ) =>
+{
+  setTimeout(() => {
+    logger.info('Attempting reconnect...');
+    peruseAppObj.reconnect();
+
+    if( store.getState().peruseApp.networkStatus === SAFE.NETWORK_STATE.DISCONNECTED )
+    {
+      attemptReconnect(store);
+    }
+  }, 5000);
+};
+
+export const onNetworkStateChange = (store, mockAttemptReconnect) => (state) =>
+{
+  const previousState = store.getState().peruseApp.networkStatus;
+  logger.info('previousState: ', previousState);
+  store.dispatch( setNetworkStatus( state ) );
+  const isDisconnected = state === SAFE.NETWORK_STATE.DISCONNECTED;
+  if(isDisconnected)
+  {
+    if(store)
+    {
+      store.dispatch( addNotification(
+        {
+          text: `Network state: ${state}. Reconnecting...`,
+          type: 'error',
+          onDismiss: clearNotification
+        } 
+      ));
+      mockAttemptReconnect ? mockAttemptReconnect(store) : attemptReconnect(store);
+    }
+  }
+  if(state === SAFE.NETWORK_STATE.CONNECTED && previousState === SAFE.NETWORK_STATE.DISCONNECTED)
+  {
+    store.dispatch(clearNotification()); 
+  }
+};
+
 export const initAnon = async ( passedStore ) =>
 {
     store = passedStore;
@@ -89,15 +145,13 @@ export const initAnon = async ( passedStore ) =>
         joinSchemes    : [PROTOCOLS.SAFE],
         configPath     : CONFIG.CONFIG_PATH,
         forceUseMock   : isMock
-
-    }
+    };
 
     try
     {
         // does it matter if we override?
-        peruseAppObj = await initialiseApp( APP_INFO.info, null, appOptions );
+        peruseAppObj = await initialiseApp( APP_INFO.info, onNetworkStateChange(store), appOptions );
         const authReq = await peruseAppObj.auth.genConnUri( {} );
-
         const authType = parseSafeAuthUrl( authReq.uri );
 
         browserAuthReqUri = authReq.uri;
@@ -174,12 +228,6 @@ export const requestAuth = async () =>
 {
     try
     {
-        peruseAppObj = await initialiseApp(
-            APP_INFO.info,
-            null,
-            { libPath: CONFIG.SAFE_NODE_LIB_PATH }
-        );
-
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         global.browserAuthReqUri = authReq.uri;
