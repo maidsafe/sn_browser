@@ -10,6 +10,7 @@ import { onInitBgProcess, getExtensionReduxMiddleware }  from './extensions';
 import { setupServerVars, startServer } from './server';
 import { remote } from 'electron';
 
+window.thisIsTheBackgroundProcess = true;
 
 const initSafeServer = ( store ) =>
 {

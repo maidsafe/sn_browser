@@ -36,7 +36,7 @@ const onPreload = ( store ) =>
 {
     setupPreloadedSafeAuthApis( store );
 
-    manageWebIdUpdates( store);
+    manageWebIdUpdates( store );
 
 
 }
@@ -48,15 +48,20 @@ export const manageWebIdUpdates = ( store, win = window ) =>
         win.webIdEventEmitter = webIdEventEmitter;
     }
 
-
     //bonus subscriber.
     store.subscribe( async( ) =>
     {
         const state = store.getState();
         const webIds = state.peruseApp.webIds;
+
+        if( !webIds.length ) return;
+
         const newCurrentWebId = getCurrentWebId( webIds );
 
-        if( newCurrentWebId !== win.currentWebId )
+        const currentWebId = win.currentWebId || {};
+
+        if( typeof newCurrentWebId['@id'] !== 'undefined' &&
+            newCurrentWebId['@id'] !== currentWebId['@id'] )
         {
             win.currentWebId = newCurrentWebId;
             webIdEventEmitter.emit('update', currentWebId );
@@ -72,6 +77,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
 
     // use from passed object if present (for testing)
     win.safe = win.safe || { ...safe };
+    win.process = null;
 
 
     win.safe.initialiseApp = async ( appInfo, netStateCallback, options ) =>

@@ -66,10 +66,10 @@ export const {
 
 const triggerGetWebIds = async (  ) =>
 {
+    if( !window || !window.thisIsTheBackgroundProcess ) return;
+
     logger.verbose('Retrieving webIds');
     const ids = await getWebIds();
-
-    console.log('ids >>>>>>>>>>>>>>>>>>>>>>>>>>', ids)
 };
 
 export const getAvailableWebIds = createAliasedAction(

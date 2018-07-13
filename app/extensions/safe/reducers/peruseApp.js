@@ -85,9 +85,6 @@ export default function peruseApp( state = initialState, action )
                 const foundIdIndex = payload.findIndex( payloadId => payloadId["@id"] === theId["@id"] );
                 const foundId = payload[foundIdIndex];
                 foundId.isSelected = true;
-                console.log('found same ID', foundId);
-
-
             })
             return {
                 ...state,
