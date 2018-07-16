@@ -35,6 +35,21 @@ before_script:
 - sleep 5
 
 script:
+- export APP_PKG_DIR="$(ls release)";
+- export CRUST_CONFIG="crust.config"
+- export OUTPUT_PATH=resources/
+- echo $OUTPUT_PATH
+- export TOKEN="$ACCESS_TOKEN"
+- export OWNER="MaidSafe" REPO="release_config"
+- export REPO_PATH="safe_authenticator"
+- export CRUST_FILE_NAME="safe_browser.crust.config";
+- export LOG_TOML_NAME="log.toml";
+- export FILE_PATH="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH/"
+- if [[ "$NODE_ENV" == "prod" ]]; then 
+  curl "$FILE_PATH$CRUST_FILE_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
+  --output "$OUTPUT_PATH$CRUST_CONFIG"; fi
+- curl "$FILE_PATH$LOG_TOML_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw" --output "$OUTPUT_PATH$LOG_TOML_NAME"
+- ls resources 
 # update the xdg implementation on the machine. older version is buggy
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/opn/xdg-open ~/bin/;
   fi
@@ -93,7 +108,7 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key: $GITHUB_ACCESS_TOKEN
+  api_key: $ACCESS_TOKEN
   file:
     - "${RELEASE_ZIP}"
     - "${SHA_256_SUM}"

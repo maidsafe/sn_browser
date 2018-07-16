@@ -47,6 +47,31 @@ install:
 
   - npm cache clean --force
   - yarn cache clean --force
+  
+  - ps: >-
+      If ($env:NODE_ENV -Match "prod") {
+        $TOKEN="$env:ACCESS_TOKEN"
+        $OWNER="MaidSafe"
+        $REPO="release_config"
+        $REPO_PATH="safe_authenticator/safe_browser.crust.config"
+        $FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        $headers.Add("Authorization", "token $TOKEN")
+        $headers.Add("Accept", 'application/vnd.github.v3.raw')
+        Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\resources\crust.config"
+      }
+  - ps: |
+      $TOKEN="$env:ACCESS_TOKEN"
+      $OWNER="MaidSafe"
+      $REPO="release_config"
+      $REPO_PATH="safe_authenticator/log.toml"
+      $FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+      $APP_DIR="$env:APP_PKG_DIR"
+      $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+      $headers.Add("Authorization", "token $TOKEN")
+      $headers.Add("Accept", 'application/vnd.github.v3.raw')
+      Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\resources\log.toml"
+  - for /f %%H in ('dir resources /b') do echo %%H
 
   - yarn add windows-build-tools --vs2017 --global
   - yarn add node-gyp --global
@@ -54,10 +79,6 @@ install:
   - appveyor-retry yarn install
   - yarn run rebuild
   - yarn run build
-  # - yarn run build-main
-  # - yarn run build-renderer
-  # - yarn run build-preload
-  # - yarn run build-bg
 
 
 test_script:
@@ -102,7 +123,7 @@ deploy:
   tag: $(appveyor_repo_tag_name)
   description: 'Peruse [Safe] Browser'
   provider: GitHub
-  auth_token: $(GITHUB_ACCESS_TOKEN)
+  auth_token: $(ACCESS_TOKEN)
  # your encrypted token from GitHub
   # artifact: /.*\.zip/
   draft: true

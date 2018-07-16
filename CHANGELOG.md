@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Removes window frame and increases draggable area, with exception to Windows
 - Passes full auth info to Notifier
 - Authenticator web app upgraded for react-router v4 and is buildable with webpack
+- CI configs updated to pull file resources from `release_config` repo and to release on `safe_browser` repo
 
 ### Fixed
 - `eval` has been disabled.
