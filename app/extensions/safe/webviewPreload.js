@@ -64,7 +64,7 @@ export const manageWebIdUpdates = ( store, win = window ) =>
             newCurrentWebId['@id'] !== currentWebId['@id'] )
         {
             win.currentWebId = newCurrentWebId;
-            webIdEventEmitter.emit('update', currentWebId );
+            webIdEventEmitter.emit('update', win.currentWebId );
 
         }
 
