@@ -1,4 +1,4 @@
-import opn from 'opn';
+// import opn from 'opn';
 import {
     saveConfigToSafe,
     readConfigFromSafe
@@ -82,8 +82,8 @@ const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 
         logger.verbose('generated auth uri:', authReq);
         global.browserAuthReqUri = authReq.uri;
-        opn( authReq.uri );
-        // await peruseAppObj.auth.openUri( authReq.uri );
+        // opn( authReq.uri );
+        await peruseAppObj.auth.openUri( authReq.uri );
 
         return peruseAppObj;
     }
