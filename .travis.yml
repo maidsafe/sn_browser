@@ -37,6 +37,21 @@ before_script:
 - sleep 5
 
 script:
+- export APP_PKG_DIR="$(ls release)";
+- export CRUST_CONFIG="crust.config"
+- export OUTPUT_PATH=resources/
+- echo $OUTPUT_PATH
+- export TOKEN="$ACCESS_TOKEN"
+- export OWNER="MaidSafe" REPO="release_config"
+- export REPO_PATH="safe_authenticator"
+- export CRUST_FILE_NAME="safe_browser.crust.config";
+- export LOG_TOML_NAME="log.toml";
+- export FILE_PATH="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH/"
+- if [[ "$NODE_ENV" == "prod" ]]; then 
+  curl "$FILE_PATH$CRUST_FILE_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
+  --output "$OUTPUT_PATH$CRUST_CONFIG"; fi
+- curl "$FILE_PATH$LOG_TOML_NAME" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw" --output "$OUTPUT_PATH$LOG_TOML_NAME"
+- ls resources 
 # update the xdg implementation on the machine. older version is buggy
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/opn/xdg-open ~/bin/;
   fi
@@ -104,8 +119,7 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: i7J0VE/UAxfpei1AjMNrCP440wQNh2iLGFMip8FPotFIPBqHxxJlxmz9FCkVim/3XgtdgdQbT5M29IqkIt1pwtLn4xwx5LXgVNGy5/yW7uvqR2pnowhu2/G9YdOEZti+ZPLFnWCjqgMjdvbg8CE4K6is/Qa613EeDP1PBvCf2e0lvathNX9LOKDZk0G8DpTgFKp7ndCYBH4JmPLVbyWn2D9w4nmzpaYI2sk4ma+O7yrkDaE9u+AKrLn/RtshjgBovBSfMFqlaYUipIhkukAPYynArOUOCEoGNsOxthMbyPYOlH0PqY4OWEt2pSqQOYDOq14zemeskmcoGJeKmpw2WWHdz5ZKGBex6HSq6RbxOaPot0PSfnZxis2q/P9CwlPoTBjtk16UI+Y/ZPreL2dC+PRz2+NCTqVcl2yUKs6Z8HeuCG6ntnUlcWxqURzW5kdfD/lWxJMEtyqi1MAfieLyNpZiBsF08uOJeHfjW/QwB9zL6nSzkUznUWpvKQmS19yEb2bmUyFogyQj8KRnBhJTq74HMgRAbCT/fPnvIGvq63bwjKekqF1fAViTe/z8WL5l2B5D1cFJWy+l6VUlW6O8DpFe04jmzWo3vFYWmqNok2MzesMXQHLe6yE/Mo5+wfbUr5BS87sjCAw4GXF9ThcbYk0MjLKzfOBFafTFQoiM/Rs=
+  api_key: $ACCESS_TOKEN
   file:
     - "${RELEASE_ZIP}"
     - "${SHA_256_SUM}"

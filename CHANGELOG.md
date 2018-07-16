@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Much of SAFE specific functionality moved to extension
 - Removes window frame and increases draggable area, with exception to Windows
 - Passes full auth info to Notifier
+- Travis config updated to pull resources and to release on tag push
 
 ### Fixed
 - `eval` has been disabled.
