@@ -91,7 +91,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                     return (
                       <li
                           onClick={  handleIdClick.bind( this, webId )  }
-                          key={webId.id}
+                          key={webId['@id']}
                           className={styles.selectedWebId}
                           >{ nickname }
                       </li>
@@ -100,7 +100,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
               return ( <li
                   onClick={handleIdClick.bind( this, webId )   }
-                  key={webId.id}
+                  key={webId['@id']}
                   className={styles.webId}
                   >
                       { nickname }
