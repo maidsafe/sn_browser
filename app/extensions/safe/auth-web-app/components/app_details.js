@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { parseAppName, getAppIconClassName } from '../utils';
 import CardLoaderFull from './card_loader_full';
+import { parseUrl } from 'query-string';
 
 export default class AppDetails extends Component {
   static propTypes = {
@@ -45,13 +46,13 @@ export default class AppDetails extends Component {
 
   componentWillUpdate(nextProps) {
     if (!nextProps.isAuthorised) {
-      return this.context.router.push('/login');
+      return this.props.push('/login');
     }
   }
 
   componentDidUpdate() {
     if (this.props.revoked || this.props.revokeError) {
-      this.props.router.push('/');
+      return this.props.push('/');
     }
   }
 
@@ -81,10 +82,11 @@ export default class AppDetails extends Component {
 
   render() {
     const { location, authorisedApps, revokeApp } = this.props;
-    const appId = location.query.id;
-    const appIndex = location.query.index;
+    const query = parseUrl(location.search).query;
+    const appId = query.id;
+    const appIndex = query.index;
     if (!(appId && appIndex)) {
-      this.props.router.push('/');
+      this.props.push('/');
       return <span>{''}</span>;
     }
     const appDetail = authorisedApps.filter((app) => (appId === app.app_info.id))[0];
@@ -122,7 +124,7 @@ export default class AppDetails extends Component {
                   type="button"
                   className="lft btn flat"
                   onClick={() => {
-                    this.props.router.push('/');
+                    this.props.push('/');
                   }}
                 >Back</button>
                 <button

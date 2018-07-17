@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
+import { withRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
 import CreateAccount from '../components/create_account';
 import * as authActions from '../actions/auth';
@@ -19,7 +21,10 @@ const mapStateToProps = (state) => (
   }
 );
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(authActions, dispatch)
+  {
+    push: (path) => dispatch(push(path)),
+    ...bindActionCreators(authActions, dispatch)
+  }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateAccount));

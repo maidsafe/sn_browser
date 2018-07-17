@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { I18n } from 'react-redux-i18n';
 import zxcvbn from 'zxcvbn';
 import classNames from 'classnames';
 import { getStrengthMsg } from '../utils';
-import CONSTANTS from '../../constants';
+import CONSTANTS from '../constants';
 import CardLoaderFull from './card_loader_full';
 
 export default class CreateAccount extends Component {
@@ -72,14 +71,14 @@ export default class CreateAccount extends Component {
 
   componentWillMount() {
     if (this.props.isAuthorised) {
-      return this.context.router.push('/');
+      return this.props.push('/');
     }
     this.reset();
   }
 
   componentWillUpdate(nextProps) {
     if (nextProps.isAuthorised) {
-      return this.context.router.push('/');
+      return this.props.push('/');
     }
   }
 
@@ -591,16 +590,16 @@ export default class CreateAccount extends Component {
           { this.getContainer() }
         </div>
         <div className="card-f">
-          Already have an account? <Link
+          Already have an account? <a
             className={classNames({ disabled: this.props.loading })}
             onClick={(e) => {
               e.preventDefault();
               if (this.props.loading) {
                 return;
               }
-              return this.context.router.push('/');
+              return this.props.push('/');
             }}
-          >LOG IN</Link>
+          >LOG IN</a>
         </div>
       </div>
     );

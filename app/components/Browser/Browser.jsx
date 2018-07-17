@@ -229,7 +229,6 @@ class Browser extends Component
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
-                    addTab={ addTab }
                     pageLoaded= { pageLoaded }
                     tabs={ openTabs }
                     allTabs={ tabs }

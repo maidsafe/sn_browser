@@ -1,13 +1,17 @@
 import React from 'react';
+import { Route, Switch } from 'react-router';
+import App from './containers/app';
+import AppDetails from './containers/app_details';
+import Login from './containers/login';
+import CreateAccount from './containers/create_account';
+import Home from './containers/app_list';
+import { ConnectedRouter } from 'connected-react-router'
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, hashHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
 import { I18n } from 'react-redux-i18n';
-import {configureStore} from './store';
-import routes from './router';
-import CONSTANTS from '../constants';
-import { fetchReAuthoriseState } from './utils';
+import { configureStore, history } from './store';
+import CONSTANTS from './constants';
+import { fetchReAuthoriseState, isUserAuthorised } from './utils';
 import './sass/main.scss';
 
 import {
@@ -18,9 +22,7 @@ import {
 
 import { setAppList, setReAuthoriseState } from './actions/app';
 import { setInviteCode, toggleInvitePopup, showLibErrPopup } from './actions/auth';
-
 const store = configureStore();
-const history = syncHistoryWithStore(hashHistory, store);
 
 if (!window.safeAuthenticator.getLibStatus()) {
   store.dispatch(showLibErrPopup());
@@ -78,7 +80,16 @@ window.addEventListener('message', (evt) => {
 
 render(
   <Provider store={store}>
-    <Router history={history} routes={routes} />
+    <ConnectedRouter history={history}>
+      <App>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/app_details" component={AppDetails} />
+          <Route path="/login" component={Login} />
+          <Route path="/create-account" component={CreateAccount} />
+        </Switch>
+      </App>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('safe-auth-home')
 );

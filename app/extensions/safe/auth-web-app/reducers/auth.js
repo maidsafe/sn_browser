@@ -19,15 +19,15 @@ import {
   LOGOUT,
   SHOW_LIB_ERR_POPUP
 } from '../actions/auth';
-import CONSTANTS from '../../constants';
+import CONSTANTS from '../constants';
 import { isUserAuthorised, parseErrCode } from '../utils';
 
 const initialState = {
   isAuthorised: !!isUserAuthorised(),
   createAccNavPos: 1,
-  userSecret: null,
-  userPassword: null,
-  inviteCode: null,
+  userSecret: '',
+  userPassword: '',
+  inviteCode: '',
   secretStrength: 0,
   passwordStrength: 0,
   error: null,

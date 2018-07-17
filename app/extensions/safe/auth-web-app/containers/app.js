@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { push } from 'connected-react-router';
+import { withRouter } from 'react-router';
 import App from '../components/app';
 import { logout } from '../actions/auth';
 import { getAccountInfo } from '../actions/app';
@@ -16,7 +18,10 @@ const mapStateToProps = (state) => (
 );
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators({ logout, setNetworkConnecting, getAccountInfo }, dispatch)
+  {
+    push: (path) => dispatch(push(path)),
+    ...bindActionCreators({ logout, setNetworkConnecting, getAccountInfo }, dispatch)
+  }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
