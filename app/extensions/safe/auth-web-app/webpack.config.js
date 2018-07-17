@@ -5,7 +5,7 @@ export default {
   devtool: 'cheap-module-source-map',
   entry: path.resolve(__dirname, 'index.js'),
   output: {
-    path: path.join(__dirname, 'temp_dist'),
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js'
   },
   mode : 'development',
