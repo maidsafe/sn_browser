@@ -120,7 +120,7 @@ export const getPeruseAppObj = () =>
 const urisUnderAuth = [];
 const authFromStoreResponse = async ( res, store ) =>
 {
-    logger.verbose('Authing from a store-passed response.');
+    logger.verbose('Authing from a store-passed response.', Date.now() );
 
     if( !res.startsWith('safe') )
     {
