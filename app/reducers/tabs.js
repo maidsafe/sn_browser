@@ -6,6 +6,7 @@ import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 import { CONFIG } from 'appConstants';
+import logger from 'logger';
 
 const initialState = initialAppState.tabs;
 
@@ -60,6 +61,7 @@ const getCurrentWindowId = ( ) =>
 
 const addTab = ( state, tab ) =>
 {
+    logger.info('add Tab happening in reducer');
     if ( !tab )
     {
         throw new Error( 'You must pass a tab object with url' );
@@ -72,14 +74,6 @@ const addTab = ( state, tab ) =>
     const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length };
 
     let newState = [...state];
-
-    // Prevent http tabs at all
-    // TODO. This via middleware
-    if ( tab.url.startsWith( 'http' ) )
-    {
-        shell.openExternal( tab.url );
-        return state;
-    }
 
     if ( newTab.isActiveTab )
     {

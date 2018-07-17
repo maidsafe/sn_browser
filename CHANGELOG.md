@@ -1,6 +1,14 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [Unreleased]
+### Added
+- Notification on network disconnect event with automatic reconnect upon network resolve
+- Browser executed with no network connection shows notification upon loginFromUri attempt and autmotically connects client upon network resolve
+
+### SAFE libraries Dependencies
+- @maidsafe/safe-node-app: `fe5dc54aa9c8a1c5dd71809b616f4a2353b598e8`
+
 #### [0.6.0]
 ### Changed
 - safeNetwork reducer becomes peruseSafeApp
@@ -9,10 +17,15 @@ All notable changes to this project will be documented in this file.
 - release naming updated.
 - Much of SAFE specific functionality moved to extension
 - Removes window frame and increases draggable area, with exception to Windows
+- Passes full auth info to Notifier
+- Authenticator web app upgraded for react-router v4 and is buildable with webpack
 
 ### Fixed
 - `eval` has been disabled.
 - domAPI handles removed
+- Functioning share MD request
+- Electron close app process on window close
+- Link to invite.maidsafe.net no longer opens multiple external tabs
 
 ### Added
 - background process
@@ -23,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - uses safe-node-app directly for DOM APIs
 - Preloaded MockVault
 - Logic to copy MockVault into TEMPDIR, if executable flag is passed
+- UI indication of webview loading
 
 #### [0.5.3]
 ### Changed 

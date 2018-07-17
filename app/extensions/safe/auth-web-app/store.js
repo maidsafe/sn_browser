@@ -1,9 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { routerMiddleware, push } from 'react-router-redux';
+import { connectRouter, routerMiddleware, push} from 'connected-react-router'
 import promise from 'redux-promise-middleware';
 import thunk from 'redux-thunk';
-import { hashHistory } from 'react-router';
-import createLogger from 'redux-logger';
+import { createHashHistory } from 'history';
+import { createLogger } from 'redux-logger';
 import { loadTranslations, setLocale, syncTranslationWithStore } from 'react-redux-i18n';
 import rootReducer from './reducers';
 
@@ -22,7 +22,9 @@ const logger = createLogger({
   collapsed: true,
 });
 
-const router = routerMiddleware(hashHistory);
+export const history = createHashHistory();
+
+const router = routerMiddleware( history );
 
 const enhancer = compose(
   applyMiddleware(thunk, router, logger, promise()),
@@ -31,8 +33,8 @@ const enhancer = compose(
     (noop) => noop
 );
 
-export default function configureStore(initialState) {
-  const store = createStore(rootReducer, initialState, enhancer);
+export function configureStore(initialState) {
+  const store = createStore(connectRouter(history)(rootReducer), initialState, enhancer);
 
   syncTranslationWithStore(store);
   store.dispatch(loadTranslations(translationsObject));

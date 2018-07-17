@@ -18,13 +18,14 @@ export default class Tab extends Component
 {
     static propTypes =
     {
-        isActiveTab  : PropTypes.bool.isRequired,
-        url          : PropTypes.string.isRequired,
-        index        : PropTypes.number.isRequired,
-        pageIsLoading: PropTypes.bool.isRequired,
-        updateTab    : PropTypes.func.isRequired,
-        addTab       : PropTypes.func.isRequired,
-        pageLoaded   : PropTypes.func.isRequired
+        isActiveTab          : PropTypes.bool.isRequired,
+        url                  : PropTypes.string.isRequired,
+        index                : PropTypes.number.isRequired,
+        isActiveTabReloading : PropTypes.bool.isRequired,
+        closeTab             : PropTypes.func.isRequired,
+        updateTab            : PropTypes.func.isRequired,
+        addTab               : PropTypes.func.isRequired,
+        pageLoaded           : PropTypes.func.isRequired,
     }
 
     static defaultProps =
@@ -114,6 +115,7 @@ export default class Tab extends Component
             webview.addEventListener( 'page-title-updated', ::this.pageTitleUpdated );
             webview.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
             webview.addEventListener( 'new-window', ::this.newWindow );
+            webview.addEventListener( 'did-fail-load', ::this.didFailLoad );
 
             webview.addEventListener( 'contextmenu', ( e ) =>
             {
@@ -164,7 +166,7 @@ export default class Tab extends Component
             }
         }
 
-        if (nextProps.pageIsLoading) {
+        if (nextProps.isActiveTabReloading) {
             this.reloadIfActive();
         }
     }
@@ -216,13 +218,35 @@ export default class Tab extends Component
     didStartLoading( )
     {
         logger.silly( 'webview started loading' );
+        const { updateTab, index, isActiveTab } = this.props;
+
+        const tabUpdate = {
+            index,
+            isLoading: true
+        };
 
         this.updateBrowserState( { loading: true } );
+        updateTab( tabUpdate );
+    }
+
+    didFailLoad( )
+    {
+      const { url, index, addTab, closeTab } = this.props;
+      closeTab( { index } );
+      addTab( { url, isActiveTab: true } );
     }
 
     didStopLoading( )
     {
+        const { updateTab, index, isActiveTab } = this.props;
+
+        const tabUpdate = {
+            index,
+            isLoading: false
+        };
+
         this.updateBrowserState( { loading: false } );
+        updateTab( tabUpdate );
     }
 
     pageTitleUpdated( e )

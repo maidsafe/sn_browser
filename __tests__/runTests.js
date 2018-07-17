@@ -68,11 +68,20 @@ switch ( arg )
     case ( 'safe' ) :
     {
         pattern = `app${s}extensions${s}safe${s}test${s}(?!e2e)(?!auth)[^${s}]+${s}?\\w+\\.spec\\.js$`;
+        argsArray.push( `--no-cache`);
+        argsArray.push( `--maxWorkers=2`);
         break;
     }
     case ( 'safe-auth' ) :
     {
         pattern = `app${s}extensions${s}safe${s}test${s}auth${s}\\w+\\.spec\\.js$`;
+        break;
+    }
+    case ( 'safe-app' ) :
+    {
+        pattern = `app${s}extensions${s}safe${s}test${s}app${s}\\w+\\.spec\\.js$`;
+        argsArray.push( `--no-cache`);
+        argsArray.push( `--maxWorkers=2`);
         break;
     }
     default :

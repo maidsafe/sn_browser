@@ -1,5 +1,5 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import os from 'os';
 import windowStateKeeper from 'electron-window-state';
@@ -113,6 +113,10 @@ const openWindow = ( store ) =>
         {
             browserWindowArray.splice( index, 1 );
         }
+        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 )
+        {
+            app.quit();
+        }
     } );
 
     browserWindowArray.push( mainWindow );
@@ -134,5 +138,9 @@ ipcMain.on( 'command:close-window', ( ) =>
     if ( win )
     {
         win.close();
+    }
+    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 )
+    {
+        app.quit();
     }
 } );

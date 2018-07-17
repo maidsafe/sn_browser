@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { parseAppName, getAppIconClassName } from '../utils';
 import Popup from './popup';
 import CardLoaderFull from './card_loader_full';
-import CONSTANTS from '../../constants';
+import CONSTANTS from '../constants';
 
 export default class AppList extends Component {
   static propTypes = {
@@ -56,14 +56,23 @@ export default class AppList extends Component {
     };
   }
 
+  componentWillMount() {
+    if (!this.props.isAuthorised) {
+      return this.props.push('/login');
+    }
+  }
+
   componentDidMount() {
+    if (!this.props.isAuthorised) {
+      return this.props.push('/login');
+    }
     this.props.getAuthorisedApps();
     this.props.getAccountInfo();
   }
 
   componentWillUpdate(nextProps) {
     if (!nextProps.isAuthorised) {
-      return this.context.router.push('/login');
+      return this.props.push('/login');
     }
     if (this.state.showPopup) {
       return;
@@ -175,16 +184,21 @@ export default class AppList extends Component {
       if (a.app_info.name < b.app_info.name) return -1;
       if (a.app_info.name > b.app_info.name) return 1;
       return 0;
-    }).map((app, i) => (
-      <Link key={i} to={`/app_details?id=${app.app_info.id}&index=${i}`}>
-        <div className="app-list-i">
-          <div className="app-list-i-b">
-            <div className={getAppIconClassName(i)}>{app.app_info.name.slice(0, 2)}</div>
-            <div className="app-list-i-name">{parseAppName(app.app_info.name)}</div>
-          </div>
-        </div>
-      </Link>
-    ));
+    }).map((app, i) => {
+       const path = `/app_details?id=${app.app_info.id}&index=${i}`;
+       return (
+         <div key={i}>
+           <a onClick={() => {this.props.push(path);}}>
+             <div className="app-list-i">
+               <div className="app-list-i-b">
+                 <div className={getAppIconClassName(i)}>{app.app_info.name.slice(0, 2)}</div>
+                 <div className="app-list-i-name">{parseAppName(app.app_info.name)}</div>
+               </div>
+             </div>
+           </a>
+         </div>
+       );
+    });
     return apps;
   }
 

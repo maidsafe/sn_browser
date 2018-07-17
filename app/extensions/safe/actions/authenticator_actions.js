@@ -35,7 +35,7 @@ const triggerAuthDecoding = ( reqObject ) =>
     callIPC.enqueueRequest( reqObject );
 };
 
-export const handleAuthUrl = createAliasedAction(
+export const handleAuthUrl = createAliasedAction ? createAliasedAction(
     TYPES.HANDLE_AUTH_URL,
     ( reqObject ) => (
         {
@@ -43,4 +43,8 @@ export const handleAuthUrl = createAliasedAction(
             type    : TYPES.HANDLE_AUTH_URL,
             payload : triggerAuthDecoding( reqObject ),
         } ),
-);
+) : ( reqObject ) => (
+    {
+        type    : TYPES.HANDLE_AUTH_URL,
+        payload : triggerAuthDecoding( reqObject ),
+    } );
