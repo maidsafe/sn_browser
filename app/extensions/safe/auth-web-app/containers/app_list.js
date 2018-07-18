@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { push } from 'connected-react-router';
+import { withRouter } from 'react-router';
 import AppList from '../components/app_list';
 import * as appActions from '../actions/app';
 
@@ -16,8 +18,13 @@ const mapStateToProps = (state) => (
   }
 );
 
+
+
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(appActions, dispatch)
+  {
+    push: (path) => dispatch(push(path)),
+    ...bindActionCreators(appActions, dispatch)
+  }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppList);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppList));

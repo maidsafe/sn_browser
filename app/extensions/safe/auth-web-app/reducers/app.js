@@ -13,8 +13,8 @@ import { parseAppName } from '../utils';
 const initialState = {
   authorisedApps: [],
   fetchingApps: false,
-  appListError: null,
-  revokeError: null,
+  appListError: '',
+  revokeError: '',
   revoked: false,
   loading: false,
   reAuthoriseState: false,
@@ -22,7 +22,8 @@ const initialState = {
     done: 0,
     available: 0
   },
-  fetchingAccountInfo: false
+  fetchingAccountInfo: false,
+  searchResult: []
 };
 const app = (state = initialState, action) => {
   switch (action.type) {

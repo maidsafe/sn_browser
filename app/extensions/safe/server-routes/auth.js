@@ -15,7 +15,7 @@ const authRoute = {
             let authDistLocale = isRunningPackaged ? `../extensions/safe/` : `./extensions/safe/`;
             authDistLocale = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp) ? `extensions/safe/` : authDistLocale;
 
-            const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/temp_dist/' );
+            const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/dist/' );
 
             switch ( linkUrl.path )
             {

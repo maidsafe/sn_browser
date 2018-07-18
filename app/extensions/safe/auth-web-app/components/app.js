@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 
-import CONSTANTS from '../../constants';
+import CONSTANTS from '../constants';
 import NetworkStatus from './network_status';
 import AccountInfo from './account_info';
 
@@ -59,6 +59,7 @@ export default class App extends Component {
         'safe-auth-icon': !isAuthorised
       }
     );
+
     return (
       <div className="root">
         <header>

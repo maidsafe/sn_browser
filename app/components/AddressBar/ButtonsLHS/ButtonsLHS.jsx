@@ -15,7 +15,7 @@ class ButtonsLHS extends Component
 {
     render()
     {
-        const { handleBack, handleForward, handleRefresh } = this.props;
+        const { activeTab, handleBack, handleForward, handleRefresh } = this.props;
 
         return (
             <Row gutters="S">
@@ -41,6 +41,7 @@ class ButtonsLHS extends Component
                         iconTheme="navigation"
                         iconSize="S"
                         iconType="reset"
+                        isDisabled={ activeTab.isLoading }
                         onClick={ handleRefresh }
                     />
                 </Column>

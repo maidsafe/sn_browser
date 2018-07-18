@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router';
+import { push } from 'connected-react-router';
 import Login from '../components/login';
 import {
   login,
@@ -18,11 +20,14 @@ const mapStateToProps = (state) => (
 );
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators({
+ {
+   push: (path) => dispatch(push(path)),
+  ...bindActionCreators({
     login,
     clearAuthLoader,
     clearError,
     hideLibErrPopup }, dispatch)
+ }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

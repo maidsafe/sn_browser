@@ -24,6 +24,7 @@ export default class Notifier extends Component
        onDismiss   : PropTypes.string,
        onAccept    : PropTypes.string,
        onDeny      : PropTypes.string,
+       reactNode    : PropTypes.object,
        updateNotification : PropTypes.func
    }
     static defaultProps =
@@ -51,11 +52,12 @@ export default class Notifier extends Component
             id,
             isPrompt,
             text,
+            reactNode,
             type,
             updateNotification
         } = this.props;
 
-        if ( !text )
+        if ( !text && !reactNode )
         {
             return ( <div /> );
         }
@@ -73,26 +75,74 @@ export default class Notifier extends Component
                 updateNotification({ id, response: 'deny' })
             };
         }
+		 
+        const reactNodeToElement = ( nodeObject ) =>
+        {
+            const nodeDescription = {};
+            Object.keys( nodeObject ).forEach( key => {
+                if( key === 'type' )
+                {
+                    return nodeDescription[key] = nodeObject[key];
+                }
 
+                if( key === 'props' )
+                {
+                    Object.keys( nodeObject[key] ).forEach( prop => {
 
+                        if( prop === 'children' )
+                        {
+                            return nodeDescription.children = nodeObject.props.children;
+                        }
+
+                        nodeDescription.props = {
+                            [prop] : nodeObject[key][prop]
+                        }
+                     } )
+
+                }
+            } );
+            if( Array.isArray( nodeDescription.children ) )
+            {
+                nodeDescription.children = nodeDescription.children.reduce((acc, val) => acc.concat(val), []).map( child => reactNodeToElement(child) );
+            } else if ( nodeDescription.children instanceof Object && !Array.isArray( nodeDescription.children ) ) {
+                nodeDescription.children = reactNodeToElement(nodeDescription.children);
+            }
+
+            const elementType = nodeDescription.type;
+            const elementProps = nodeDescription.props || null;
+            const elementChildren = nodeDescription.children || null;
+
+            return React.createElement( elementType, elementProps, elementChildren );
+        };
+
+        const reactElement = reactNode ? reactNodeToElement(reactNode) : null;
+        
         return (
             <Row hasMinHeight className={ styles.container } gutters={"none"}>
                 <MessageBox messageType={type}>
                     <Row verticalAlign="middle" align="center">
-                        <Text className={CLASSES.NOTIFIER_TEXT}>{ text }</Text>
+                        <Column key="notifier-text" align="left">
+                          {
+                            reactNode && reactElement
+                          }
+                          {
+                            !reactNode &&
+                            <Text className={CLASSES.NOTIFIER_TEXT}>{ text } </Text>
+                          }
+                        </Column>
                         {
                             handleOnAccept &&
-                            <Column align="left">
+                            <Column key="notifier-accept" align="left">
                                 <Button role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
                             </Column>
                         }
                         {
                             handleOnDeny &&
-                            <Column align="left">
+                            <Column key="notifier-deny" align="left">
                                 <Button onClick={ handleOnDeny }>{ denyText }</Button>
                             </Column>
                         }
-                        <Column align="left">
+                        <Column key="notifier-dismiss" align="left">
                             <IconButton
                                 role="subtle"
                                 iconType="close"

@@ -19,7 +19,7 @@ const initialState = {
     },
     peruseApp : {
         appStatus       : null,
-        networkStatus   : undefined,
+        networkStatus   : null,
         app             : null,
         readStatus      : '',
         authResponseUri : '',

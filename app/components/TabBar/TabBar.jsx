@@ -10,6 +10,7 @@ import MdAdd from 'react-icons/lib/md/add';
 import logger from 'logger';
 import { isInternalPage } from 'utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from 'appConstants';
+import { Column, Spinner, Row } from 'nessie-ui';
 
 export default class TabBar extends Component
 {
@@ -121,12 +122,24 @@ export default class TabBar extends Component
                 className={ `${tabStyleClass} ${CLASSES.TAB}` }
                 onClick={ this.handleTabClick.bind( this, tabData ) }
             >
-                <span className={ styles.tabText }>{ title || 'New Tab' }</span>
-                <MdClose
-                    className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
-                    onClick={ this.handleTabClose.bind( this, tabData ) }
-                    title="Close"
-                />
+                
+                <Row verticalAlign="middle" gutters="S">
+                    <Column align="left" className={ styles.favicon }>
+                      {tab.isLoading &&
+                        <Spinner size="small" />
+                      }
+                    </Column>
+                    <Column className={ styles.tabText } align="left">
+                      { title || 'New Tab' }
+                    </Column>
+                    <Column align="right" className={ styles.favicon }>
+                      <MdClose
+                          className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
+                          onClick={ this.handleTabClose.bind( this, tabData ) }
+                          title="Close"
+                      />
+                    </Column>
+                </Row>
             </div> );
         } );
     }

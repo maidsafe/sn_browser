@@ -13,6 +13,15 @@ body,
     flex-direction: column;
 }
 
+.tabBar__tabBox,
+.tabBar__addTab {
+  -webkit-app-region: no-drag;
+}
+
+.tabBar__tabBar {
+  -webkit-app-region: drag;
+}
+
 html
 {
     font-size: 62.5%;

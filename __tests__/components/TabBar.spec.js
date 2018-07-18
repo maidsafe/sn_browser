@@ -5,6 +5,7 @@ import TabBar from 'components/TabBar';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
 import { CLASSES } from 'appConstants';
+import { Spinner } from 'nessie-ui';
 
 describe( 'TabBar', () =>
 {
@@ -57,6 +58,19 @@ describe( 'TabBar', () =>
         } );
     } );
 
+    describe( 'render() with one loading tab', () =>
+    {
+        beforeEach( () =>
+        {
+            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, isLoading: true }] };
+            wrapper = shallow( <TabBar { ...props } /> );
+        } );
+
+        it( 'should have exactly 1 tab with loading indicator', () =>
+        {
+            expect( wrapper.find( Spinner ).length ).toBe( 1 );
+        } );
+    } );
 
     // describe( 'render() with many tabs', () =>
     // {
