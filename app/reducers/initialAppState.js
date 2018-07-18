@@ -14,7 +14,8 @@ const initialState = {
     }],
     ui : {
         addressBarIsSelected : false,
-        pageIsLoading : false
+        pageIsLoading : false,
+        isActiveTabReloading: false
     }
 };
 

@@ -214,6 +214,9 @@ class Browser extends Component
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }
                     activeTab={ activeTab }
+
+                    //pass everything as we're extending here...
+                    {...props}
                     ref={ ( c ) =>
                     {
                         this.address = c;

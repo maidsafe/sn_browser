@@ -52,8 +52,6 @@
     position: relative;
     max-width: 400px;
     text-align: left;
-
-    flex-basis: 100%;
     justify-content: space-between;
 }
 
