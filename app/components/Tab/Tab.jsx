@@ -232,8 +232,12 @@ export default class Tab extends Component
     didFailLoad( )
     {
       const { url, index, addTab, closeTab } = this.props;
+      const httpRegExp = new RegExp('^http');
       closeTab( { index } );
-      addTab( { url, isActiveTab: true } );
+      if ( !httpRegExp.test(url) )
+      {
+        addTab( { url, isActiveTab: true } );
+      }
     }
 
     didStopLoading( )
