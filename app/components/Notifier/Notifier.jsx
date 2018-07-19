@@ -120,7 +120,7 @@ export default class Notifier extends Component
         return (
             <Row hasMinHeight className={ styles.container }>
                 <MessageBox messageType={type}>
-                    <Row verticalAlign="middle" align="center">
+                    <Row verticalAlign="top" align="center">
                         <Column key="notifier-text" align="left">
                           {
                             reactNode && reactElement
@@ -132,17 +132,17 @@ export default class Notifier extends Component
                         </Column>
                         {
                             handleOnAccept &&
-                            <Column key="notifier-accept" align="left">
+                            <Column verticalAlign="top" key="notifier-accept" align="right">
                                 <Button role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
                             </Column>
                         }
                         {
                             handleOnDeny &&
-                            <Column key="notifier-deny" align="left">
+                            <Column verticalAlign="top" key="notifier-deny" align="right">
                                 <Button onClick={ handleOnDeny }>{ denyText }</Button>
                             </Column>
                         }
-                        <Column key="notifier-dismiss" align="left">
+                        <Column verticalAlign="top" key="notifier-dismiss" align="right">
                             <IconButton
                                 role="subtle"
                                 iconType="close"

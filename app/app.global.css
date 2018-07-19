@@ -27,3 +27,14 @@ html
     font-size: 62.5%;
     line-height: 1.2em;
 }
+
+.info_box_details
+{
+    display: none;
+    margin-top: 5%;
+}
+
+.info_box_expander:hover + .info_box_details
+{
+    display: block;
+}
