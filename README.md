@@ -46,6 +46,7 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 
 Make sure you have both git and [yarn](https://yarnpkg.com/en/docs/install) installed.
 
+You need to use node.js version `8.x` to build the browser currently.
 
 - `git clone https://github.com/joshuef/peruse.git`
 - `cd peruse`
