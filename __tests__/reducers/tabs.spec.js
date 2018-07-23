@@ -320,11 +320,26 @@ describe( 'tabs reducer', () =>
             anotherWindowActiveTab = { ...activeTab, windowId: 2 };
         } );
 
+        it( 'should throw if no windowId passed', () =>
+        {
+            try{
+
+                const newState = tabs( [basicTab, basicTab, activeTab], {
+                    type    : TYPES.UPDATE_ACTIVE_TAB,
+                    payload : { url: 'changed!', title: 'hi' }
+                } );
+            }
+            catch( e )
+            {
+                expect(e.message).toMatch(/windowId/)
+            }
+        } );
+
         it( 'should update the active tab\'s properties', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed!', title: 'hi' }
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
             expect( newState[2] ).toMatchObject(
@@ -345,7 +360,7 @@ describe( 'tabs reducer', () =>
         {
             const newState = tabs( [basicTab, basicTab, anotherWindowActiveTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed!', title: 'hi' }
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
             expect( newState[3] ).toMatchObject(
@@ -373,7 +388,7 @@ describe( 'tabs reducer', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed!', title: 'hi' }
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
             expect( newState[2] ).toMatchObject(
@@ -394,7 +409,7 @@ describe( 'tabs reducer', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed!', title: 'hi' }
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
             expect( newState[2].history ).not.toBe( activeTab.history );
@@ -404,21 +419,21 @@ describe( 'tabs reducer', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed!', title: 'hi' }
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
             const secondState = tabs( newState, {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed!', title: 'hi' }
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
             const thirdState = tabs( secondState, {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed#woooo', title: 'hi' }
+                payload : { url: 'changed#woooo', title: 'hi', windowId: 1 }
             } );
 
             const fourthState = tabs( thirdState, {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'changed#woooo', title: 'hi' }
+                payload : { url: 'changed#woooo', title: 'hi', windowId: 1 }
             } );
 
             expect( secondState[2] ).toMatchObject(
@@ -688,7 +703,8 @@ describe( 'tabs reducer', () =>
             ...basicTab,
             isActiveTab  : true,
             history      : ['safe://hello', 'safe://forward', 'safe://forward again', 'safe://another', 'safe://anotheranother'],
-            historyIndex : 0
+            historyIndex : 0,
+            windowId: 1
         };
 
         it( 'should remove history on forward/backwards/newURL navigations', () =>
@@ -727,7 +743,7 @@ describe( 'tabs reducer', () =>
 
             const thirdUpdate = tabs( secondUpdate, {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'safe://new url overwriting previous history array' }
+                payload : { url: 'safe://new url overwriting previous history array', windowId: 1 }
             } );
 
             const updatedTabThree = thirdUpdate[2];

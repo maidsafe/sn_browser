@@ -168,8 +168,9 @@ class Browser extends Component
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
 
-
+        // TODO: Move windowId from state to store.
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
+        const windowId = this.state.windowId;
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
 
@@ -210,6 +211,10 @@ class Browser extends Component
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }
                     activeTab={ activeTab }
+                    windowId={windowId}
+
+                    //pass everything as we're extending here...
+                    {...props}
                     ref={ ( c ) =>
                     {
                         this.address = c;
@@ -233,6 +238,7 @@ class Browser extends Component
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
+                    windowId={ windowId}
                     ref={ ( c ) =>
                     {
                         this.tabContents = c;

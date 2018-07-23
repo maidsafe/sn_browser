@@ -346,6 +346,8 @@ export default class Tab extends Component
 
         const { url } = e;
         const { webview } = this;
+        const { windowId } = this.props;
+
         if ( this.lastNavigationUrl === url && e.timeStamp - this.lastNavigationTimeStamp < WILL_NAVIGATE_GRACE_PERIOD )
         {
 
@@ -365,7 +367,7 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            this.props.updateActiveTab( { url } );
+            this.props.updateActiveTab( { url, windowId } );
         }
 
 
