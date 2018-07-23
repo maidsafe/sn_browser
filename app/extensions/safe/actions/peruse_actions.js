@@ -9,7 +9,6 @@ export const TYPES = {
     SET_IS_MOCK    : 'SET_IS_MOCK',
 
     //webId
-    SET_CURRENT_WEB_ID : 'SET_CURRENT_WEB_ID',
     GET_AVAILABLE_WEB_IDS : 'GET_AVAILABLE_WEB_IDS',
     SET_AVAILABLE_WEB_IDS : 'SET_AVAILABLE_WEB_IDS',
 
@@ -31,7 +30,6 @@ export const {
     setNetworkStatus,
     setIsMock,
 
-    setCurrentWebId,
     setAvailableWebIds,
 
     setReadConfigStatus,
@@ -49,7 +47,6 @@ export const {
     TYPES.SET_NETWORK_STATUS,
     TYPES.SET_IS_MOCK,
 
-    TYPES.SET_CURRENT_WEB_ID,
     TYPES.SET_AVAILABLE_WEB_IDS,
 
     TYPES.SET_READ_CONFIG_STATUS,

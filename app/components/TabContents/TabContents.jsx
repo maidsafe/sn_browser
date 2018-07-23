@@ -74,6 +74,7 @@ export default class TabContents extends Component
 
                 const isActiveTab = tab.isActiveTab;
                 const TheTab = ( <Tab
+                    webId={ tab.webId }
                     url={ tab.url }
                     isActiveTab={ isActiveTab }
                     isActiveTabReloading={ isActiveTabReloading }

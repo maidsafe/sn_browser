@@ -10,7 +10,8 @@ const initialState = {
         historyIndex : 0,
         index        : 0,
         isActiveTab  : true,
-        isClosed     : false
+        isClosed     : false,
+        webId        : undefined
     }],
     ui : {
         addressBarIsSelected : false,

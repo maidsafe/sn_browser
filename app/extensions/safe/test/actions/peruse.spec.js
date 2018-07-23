@@ -17,16 +17,6 @@ describe( 'notification actions', () =>
         expect( peruseAppActions.setAppStatus( payload ) ).toEqual( expectedAction );
     } );
 
-    it( 'should setCurrentWebId', () =>
-    {
-        const payload = 'aWebId'
-        const expectedAction = {
-            type : peruseAppActions.TYPES.SET_CURRENT_WEB_ID,
-            payload
-        };
-        expect( peruseAppActions.setCurrentWebId( payload ) ).toEqual( expectedAction );
-    } );
-
     it( 'should set getConfigStatus', () =>
     {
         const expectedAction = {

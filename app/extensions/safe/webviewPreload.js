@@ -23,52 +23,18 @@ class WebIdEvents extends EventEmitter {}
 const webIdEventEmitter = new WebIdEvents();
 
 
-const getCurrentWebId = ( webIds ) =>
-{
-    const webId = webIds.find( webId => webId.isSelected );
-
-    // TODO: Should return error if non set?
-    return webId || {};
-}
-
-
 const onPreload = ( store ) =>
 {
     setupPreloadedSafeAuthApis( store );
-
-    manageWebIdUpdates( store );
-
-
+    setupWebIdEventEmitter( store );
 }
 
-export const manageWebIdUpdates = ( store, win = window ) =>
+export const setupWebIdEventEmitter = ( store, win = window ) =>
 {
     if (typeof win !== 'undefined' )
     {
         win.webIdEventEmitter = webIdEventEmitter;
     }
-
-    //bonus subscriber.
-    store.subscribe( async( ) =>
-    {
-        const state = store.getState();
-        const webIds = state.peruseApp.webIds;
-
-        if( !webIds.length ) return;
-
-        const newCurrentWebId = getCurrentWebId( webIds );
-
-        const currentWebId = win.currentWebId || {};
-
-        if( typeof newCurrentWebId['@id'] !== 'undefined' &&
-            newCurrentWebId['@id'] !== currentWebId['@id'] )
-        {
-            win.currentWebId = newCurrentWebId;
-            webIdEventEmitter.emit('update', win.currentWebId );
-
-        }
-
-    })
 }
 
 export const setupSafeAPIs = ( store, win = window ) =>

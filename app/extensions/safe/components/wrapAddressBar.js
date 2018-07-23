@@ -24,9 +24,9 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         handleIdClick = ( webId ) =>
         {
-            const { setCurrentWebId, showWebIdDropdown } = this.props;
+            const { updateActiveTab, windowId, showWebIdDropdown } = this.props;
             // also if only 1 webID? mark as defualt?
-            setCurrentWebId( webId );
+            updateActiveTab({ windowId, webId })
         }
 
         handleIdButtonClick = ( ) =>
@@ -51,9 +51,9 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         launchWebIdManager = () =>
         {
-            const { setCurrentWebId } = this.props;
+            const { addTab } = this.props;
 
-            this.props.addTab( { url: webIdManagerURI, isActiveTab: true } );
+            addTab( { url: webIdManagerURI, isActiveTab: true } );
         }
 
         handleMouseLeave = ( ) =>
@@ -78,15 +78,19 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
 
         render() {
-            const { peruseApp } = this.props;
+            const { peruseApp, activeTab } = this.props;
             const { showingWebIdDropdown, webIds, appStatus } = peruseApp;
+
+            const activeWebId = activeTab.webId || {};
 
             const handleIdClick = this.handleIdClick;
             const webIdsList = webIds.map( webId =>
             {
                 const nickname = webId["#me"].nick || webId["#me"].name;
 
-                if( webId.isSelected ){
+                const isSelected = webId['@id'] === activeWebId['@id'];
+
+                if( isSelected ){
 
                     return (
                       <li

@@ -1,6 +1,7 @@
 // @flow
 import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
 import path from 'path';
@@ -88,7 +89,6 @@ export default class Tab extends Component
         const { webview } = this;
         let rightClickPosition;
 
-
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
             { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
@@ -108,6 +108,7 @@ export default class Tab extends Component
         {
             webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
             webview.addEventListener( 'did-stop-loading', ::this.didStopLoading );
+            webview.addEventListener( 'did-finish-load', ::this.didFinishLoading );
             webview.addEventListener( 'will-navigate', ::this.willNavigate );
             webview.addEventListener( 'did-navigate', ::this.didNavigate );
             webview.addEventListener( 'did-navigate-in-page', ::this.didNavigateInPage );
@@ -142,20 +143,28 @@ export default class Tab extends Component
     componentWillReceiveProps( nextProps )
     {
         if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
-        {
             return;
-        }
 
         if ( !this.state.browserState.mountedAndReady )
-        {
             return;
-        }
 
-        logger.silly( 'Webview: did receive updated props' );
+        const { webview } = this;
+
+        logger.silly( 'Tab: did receive updated props' );
+
+        const nextId = nextProps.webId || {};
+        const currentId = this.props.webId || {}
+        if( nextId['@id'] !== currentId['@id'] )
+        {
+            if ( !webview ) return;
+
+            logger.verbose('New WebID set for ', nextProps.url )
+
+            this.setCurrentWebId( nextProps.webId );
+        }
 
         if ( nextProps.url )
         {
-            const { webview } = this;
 
             if ( !webview ) return;
 
@@ -212,6 +221,8 @@ export default class Tab extends Component
         {
             this.loadURL( url )
                 .catch( err => console.log( 'err in loadurl', err ) );
+
+            this.setCurrentWebId( null );
         }
     }
 
@@ -247,6 +258,24 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
+
+        this.setCurrentWebId( null );
+    }
+
+    didFinishLoading( )
+    {
+        const { updateTab, index, isActiveTab } = this.props;
+
+        const tabUpdate = {
+            index,
+            isLoading: false
+        };
+
+        this.updateBrowserState( { loading: false } );
+        updateTab( tabUpdate );
+
+        this.setCurrentWebId( null );
+
     }
 
     pageTitleUpdated( e )
@@ -276,13 +305,15 @@ export default class Tab extends Component
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
-        logger.silly( 'webview did navigate' );
+        logger.verbose( 'webview did navigate' );
 
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
             this.updateBrowserState( { url, redirects: [url] } );
             updateTab( { index, url } );
+
+            this.setCurrentWebId( null );
         }
     }
 
@@ -299,6 +330,9 @@ export default class Tab extends Component
         {
             this.updateBrowserState( { url, redirects: [url] } );
             updateTab( { index, url } );
+
+            this.setCurrentWebId( null );
+
         }
     }
 
@@ -362,6 +396,49 @@ export default class Tab extends Component
             webview.stop();
             this.loadURL( url );
         } );
+    }
+
+    setCurrentWebId( newWebId ) {
+        const { updateTab, index, webId } = this.props;
+        const { webview } = this;
+
+        const theWebId = newWebId ? newWebId : webId;
+
+        logger.verbose('Setting currentWebid in tab')
+
+        if ( !webview  || !theWebId ) return;
+
+        const setupEventEmitter = `
+            webIdUpdater = () =>
+            {
+                var oldWebId_Id = '';
+                var currentIdDefined = typeof window.currentWebId !== 'undefined';
+
+                if( currentIdDefined )
+                {
+                    oldWebId_Id = window.currentWebId['@id'];
+                }
+
+                window.currentWebId = ${JSON.stringify(theWebId)};
+
+                if( typeof webIdEventEmitter !== 'undefined' &&
+                    oldWebId_Id !== window.currentWebId['@id'] )
+                    {
+                        webIdEventEmitter.emit('update', currentWebId );
+                    }
+            }
+
+            webIdUpdater();
+        `;
+
+        const updateTheIdInWebview = () =>
+        {
+            webview.executeJavaScript( setupEventEmitter )
+        }
+
+        const debouncedFunc = _.debounce( updateTheIdInWebview, 300 );
+
+        debouncedFunc();
     }
 
     newWindow( e )
@@ -447,7 +524,6 @@ export default class Tab extends Component
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
-
 
         // prevent looping over attempted url loading
         if ( webview && url !== 'about:blank' )
