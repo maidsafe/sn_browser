@@ -18,6 +18,7 @@ describe( 'TabBar', () =>
         props = {
             addTab : jest.fn(),
             closeTab : jest.fn(),
+            selectAddressBar : jest.fn(),
             setActiveTab : jest.fn()
         };
 

@@ -21,7 +21,8 @@ describe( 'History Component', () =>
     beforeEach( () =>
     {
         props = {
-            tabs : []
+            tabs : [],
+            addTab : jest.fn()
         };
 
         wrapper = shallow( <History { ...props } /> );

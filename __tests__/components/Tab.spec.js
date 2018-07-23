@@ -13,10 +13,14 @@ describe( 'Tab', () =>
     beforeEach( () =>
     {
         props = {
-            url       : '',
-            index     : 1,
-            updateTab : jest.fn(),
-            addTab    : jest.fn()
+            url                     : '',
+            index                   : 1,
+            updateTab               : jest.fn(),
+            closeTab                : jest.fn(),
+            addTab                  : jest.fn(),
+            pageLoaded              : false,
+            isActiveTabReloading    : false,
+
         };
 
         wrapper = mount( <Tab { ...props } setActiveTab={ jest.fn() } /> );

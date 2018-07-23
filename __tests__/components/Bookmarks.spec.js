@@ -14,7 +14,8 @@ describe( 'Bookmarks', () =>
     beforeEach( () =>
     {
         props = {
-            bookmarks : []
+            bookmarks : [],
+            addTab : jest.fn()
         };
 
         wrapper = shallow( <Bookmarks { ...props } /> );
