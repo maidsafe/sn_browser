@@ -6,7 +6,7 @@ import { Column, IconButton, Grid } from 'nessie-ui';
 import logger from 'logger';
 import styles from './webIdButtons.css'
 
-const hideDropdownTimeout = 0.75; //seconds
+const hideDropdownTimeout = 0.15; //seconds
 const webIdManagerURI = 'http://localhost:1234';
 export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} ) =>
 {
@@ -53,7 +53,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
         {
             const { setCurrentWebId } = this.props;
 
-            this.props.updateActiveTab( { url: webIdManagerURI } );
+            this.props.addTab( { url: webIdManagerURI, isActiveTab: true } );
         }
 
         handleMouseLeave = ( ) =>
