@@ -94,8 +94,8 @@
         "to": "extensions/safe/dist"
       },
       {
-        "from": "app/extensions/safe/auth-web-app/temp_dist",
-        "to": "extensions/safe/auth-web-app/temp_dist"
+        "from": "app/extensions/safe/auth-web-app/dist",
+        "to": "extensions/safe/auth-web-app/dist"
       },
       {
         "from": "node_modules/nessie-ui/dist/styles.css",
