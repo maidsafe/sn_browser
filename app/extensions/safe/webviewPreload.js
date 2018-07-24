@@ -4,6 +4,7 @@ import * as remoteCallActions from 'actions/remoteCall_actions';
 import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS, CONFIG } from 'appConstants';
 import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
+import { callIPC } from './ffi/ipc';
 
 
 const VERSION = pkg.version;
@@ -112,11 +113,13 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         return state.authenticator.libStatus;
     };
 
-    window.safeAuthenticator.setReAuthoriseState = ( ) =>
+    window.safeAuthenticator.setReAuthoriseState = ( state ) =>
     {
         // TODO: Reauth action
         // const state = store.getState();
         // return state.authenticator.authenticatorHandle;
+        //
+       return callIPC.setReAuthoriseState(state, store);
 
     };
 

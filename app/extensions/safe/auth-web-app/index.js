@@ -71,6 +71,7 @@ appListUpdateListenerCb(null, []);
 const reAuthoriseState = fetchReAuthoriseState();
 store.dispatch(setReAuthoriseState((reAuthoriseState === null) ?
   CONSTANTS.RE_AUTHORISE.STATE.LOCK : reAuthoriseState));
+window.safeAuthenticator.setReAuthoriseState(reAuthoriseState);
 
 window.addEventListener('message', (evt) => {
   console.warn('Invitation code ::', evt.data);

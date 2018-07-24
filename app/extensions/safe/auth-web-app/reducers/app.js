@@ -17,7 +17,7 @@ const initialState = {
   revokeError: '',
   revoked: false,
   loading: false,
-  reAuthoriseState: false,
+  reAuthoriseState: 0,
   accountInfo: {
     done: 0,
     available: 0

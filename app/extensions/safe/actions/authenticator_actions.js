@@ -12,6 +12,7 @@ export const TYPES = {
     ADD_AUTH_REQUEST        : 'ADD_AUTH_REQUEST',
     REMOVE_AUTH_REQUEST     : 'REMOVE_AUTH_REQUEST',
     HANDLE_AUTH_URL         : 'HANDLE_AUTH_URL',
+    SET_RE_AUTHORISE_STATE  : 'SET_RE_AUTHORISE_STATE'
 };
 
 export const {
@@ -19,7 +20,8 @@ export const {
     setAuthHandle,
     setAuthNetworkStatus,
     addAuthRequest,
-    removeAuthRequest
+    removeAuthRequest,
+    setReAuthoriseState
 
 } = createActions(
     TYPES.SET_AUTH_LIB_STATUS,
@@ -27,6 +29,7 @@ export const {
     TYPES.SET_AUTH_NETWORK_STATUS,
     TYPES.ADD_AUTH_REQUEST,
     TYPES.REMOVE_AUTH_REQUEST,
+    TYPES.SET_RE_AUTHORISE_STATE
 );
 
 const triggerAuthDecoding = ( reqObject ) =>
