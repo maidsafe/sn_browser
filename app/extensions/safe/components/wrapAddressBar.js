@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import { CLASSES, isRunningSpectronTestProcess } from 'appConstants';
+import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 import { Column, IconButton, Grid } from 'nessie-ui';
 import logger from 'logger';
 import styles from './webIdButtons.css'
 
 const hideDropdownTimeout = 0.15; //seconds
-const webIdManagerURI = 'http://localhost:1234';
+const webIdManagerURI = startedRunningMock ? 'http://localhost:1234' : 'safe://webidea.ter';
 export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} ) =>
 {
     return class wrappedAddressbarButtons extends Component {
