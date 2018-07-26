@@ -36,6 +36,9 @@ const registerNetworkStateListener = (cb) => {
 };
 
 const networkStateListenerCb = (err, state) => {
+  if (err) {
+      throw new Error(err);
+  }
   registerNetworkStateListener(networkStateListenerCb);
   switch (state) {
     case CONSTANTS.NETWORK_STATUS.CONNECTING: {
@@ -60,6 +63,9 @@ const registerAppListUpdateListener = (cb) => {
 };
 
 const appListUpdateListenerCb = (err, apps) => {
+  if (err) {
+      throw new Error(err);
+  }
   registerAppListUpdateListener(appListUpdateListenerCb);
   return store.dispatch(setAppList(apps));
 };

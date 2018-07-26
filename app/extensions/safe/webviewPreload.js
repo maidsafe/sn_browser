@@ -138,7 +138,8 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : cb
+            resolve : ( response ) =>  cb( null, response ),
+            reject: ( err ) => cb( err )
         };
     };
 
