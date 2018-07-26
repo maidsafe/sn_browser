@@ -157,7 +157,6 @@ export default class AddressBar extends Component
 
         const input = event.target.value;
 
-        logger.info('UPDATING ACTIVE TAB WITH WINDOWIFFF', windowId )
         this.props.updateActiveTab( { url: input, windowId } );
     }
 
