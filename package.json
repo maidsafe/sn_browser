@@ -94,6 +94,10 @@
         "to": "extensions/safe/dist"
       },
       {
+        "from": "app/extensions/safe/iconfont",
+        "to": "extensions/safe/iconfont"
+      },
+      {
         "from": "app/extensions/safe/auth-web-app/dist",
         "to": "extensions/safe/auth-web-app/dist"
       },

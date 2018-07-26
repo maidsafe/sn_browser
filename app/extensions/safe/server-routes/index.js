@@ -23,8 +23,8 @@ const setupRoutes = ( server, store ) =>
                 safeFolder = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp) ? `extensions/safe/` : safeFolder;
 
                 const antdIcons = path.resolve( __dirname,  safeFolder, 'iconfont/' );
-
-                reply.file( path.resolve( antdIcons, link ), { confine: false }  )
+                const finalPath = path.resolve( antdIcons, link );
+                reply.file( finalPath, { confine: false }  )
                 .header( 'Access-Control-Allow-Origin', '*' )
 
             }
