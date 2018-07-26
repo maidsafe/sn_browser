@@ -1,4 +1,6 @@
 import { remote, shell } from 'electron';
+import { parse as parseURL } from 'url';
+import path from 'path';
 import { CONFIG } from 'appConstants';
 import { urlIsAllowedBySafe } from './utils/safeHelpers';
 import logger from 'logger';
@@ -25,11 +27,24 @@ const blockNonSAFERequests = () =>
             return;
         }
 
+
+        // HACK for idMgr and Patter. until:
+        // https://github.com/parcel-bundler/parcel/issues/1663
+        if( details.url.includes( 'font_148784_v4ggb6wrjmkotj4i' ) )
+        {
+            const thePath = parseURL( details.url ).path;
+            const ext = path.extname(thePath);
+
+            let newUrl = `http://localhost:${CONFIG.PORT}/dummy/iconfont${ext}`;
+            callback({redirectURL: newUrl})
+            return;
+        }
+
         if ( httpRegExp.test(details.url))
         {
             try
             {
-                logger.info('about to call shell.openExternal in blockNonSafeReqs?');
+                logger.info('about to call shell.openExternal in blockNonSafeReqs?', details.url);
                 shell.openExternal( details.url );
             }
             catch ( e )
