@@ -239,13 +239,9 @@ export default class Tab extends Component
         const { webview } = this;
         webview.executeJavaScript(`
           const body = document.querySelector("body");
-          const h2 = document.createElement("h2");
           const h3 = document.createElement("h3");
-          h2.innerText = "404";
-          h3.innerText = "Page Not Found";
-          h2.style = "text-align: center;"
+          h3.innerText = "Page Load Failed";
           h3.style = "text-align: center;"
-          body.appendChild(h2);
           body.appendChild(h3);
         `);
         return;
