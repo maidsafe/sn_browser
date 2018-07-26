@@ -12,6 +12,7 @@ const blockNonSAFERequests = () =>
     const filter = {
         urls : ['*://*']
     };
+    const httpRegExp = new RegExp('^http');
 
     const safeSession = remote.session.fromPartition( CONFIG.SAFE_PARTITION );
 
@@ -24,7 +25,7 @@ const blockNonSAFERequests = () =>
             return;
         }
 
-        if ( details.url.indexOf( 'http' ) > -1 )
+        if ( httpRegExp.test(details.url))
         {
             try
             {

@@ -138,9 +138,9 @@ const parseAppAccessInfo = (appAccess) => {
   return {
     sign_key: signKey,
     permissions: parsePermissionSet(appAccess.permissions),
-    app_name: appAccess.app_name,
-    // app_id: appAccess.app_id,
-    // app_id_len: appAccess.app_id_len
+    app: appAccess.name,
+    // TODO: Why does uncommenting the following line break shareMData requests?
+    // app_id: appAccess.app_id
   };
 };
 

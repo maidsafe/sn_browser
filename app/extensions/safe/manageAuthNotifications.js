@@ -45,7 +45,7 @@ export const addAuthNotification = ( authReqData, app, sendAuthDecision, store )
     const ignoreRequest = ( ) =>
     {
         logger.info('replace these ipcRenderer.send calls')
-        // ipcRenderer.send( 'skipAuthRequest', true );
+        sendAuthDecision( false, authReqData, reqType );
         clearNotification();
     };
 

@@ -8,6 +8,7 @@ import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
 import logger from 'logger';
+const stdUrl = require('url');
 
 const { Menu, MenuItem } = remote;
 
@@ -243,8 +244,24 @@ export default class Tab extends Component
     didFailLoad( )
     {
       const { url, index, addTab, closeTab } = this.props;
+      const httpRegExp = new RegExp('^http');
+      const urlObj = stdUrl.parse( url );
+      if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' ) {
+        const { webview } = this;
+        webview.executeJavaScript(`
+          const body = document.querySelector("body");
+          const h3 = document.createElement("h3");
+          h3.innerText = "Page Load Failed";
+          h3.style = "text-align: center;"
+          body.appendChild(h3);
+        `);
+        return;
+      }
       closeTab( { index } );
-      addTab( { url, isActiveTab: true } );
+      if ( !httpRegExp.test(url) )
+      {
+        addTab( { url, isActiveTab: true } );
+      }
     }
 
     didStopLoading( )

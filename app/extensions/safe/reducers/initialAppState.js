@@ -1,5 +1,6 @@
 const initialState = {
     authenticator : {
+        reAuthoriseState    : 0,
         isAuthorised        : false,
         userSecret          : null,
         userPassword        : null,
