@@ -28,6 +28,8 @@ All notable changes to this project will be documented in this file.
 - Link to invite.maidsafe.net no longer opens multiple external tabs
 - Closing a tab to the left of the active tab results in rendering of correct webview
 - Properly handles http links when triggering did-fail-load events to prevent external tab spamming and to close respective tab in Peruse
+- Network state poperly propagates to auth-web-app
+- isAuthorised state properly propagates to auth-web-app to produce expected UI when reloading logged out safe-auth://home
 
 ### Added
 - background process

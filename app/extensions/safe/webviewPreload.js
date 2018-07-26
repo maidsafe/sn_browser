@@ -100,6 +100,17 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         return { state: state.authenticator.networkState };
     };
 
+    window.safeAuthenticator.isAuthorised = ( ) =>
+    {
+        const state = store.getState();
+        return state.authenticator.isAuthorised;
+    };
+
+    window.safeAuthenticator.setIsAuthorised = ( isAuthorised ) =>
+    {
+       return callIPC.setIsAuthorisedState( store, isAuthorised );
+    };
+
     window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
     {
         const state = store.getState();

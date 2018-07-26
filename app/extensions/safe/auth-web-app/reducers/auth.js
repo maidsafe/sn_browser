@@ -141,6 +141,7 @@ const auth = (state = initialState, action) => {
     }
 
     case `${LOGIN}_FULFILLED`: {
+      window.safeAuthenticator.setIsAuthorised(true);
       if (!state.loading) {
         return state;
       }
@@ -155,6 +156,7 @@ const auth = (state = initialState, action) => {
     }
 
     case `${LOGOUT}_FULFILLED`: {
+      window.safeAuthenticator.setIsAuthorised(false);
       return { ...state, loading: false, isAuthorised: false };
     }
 
