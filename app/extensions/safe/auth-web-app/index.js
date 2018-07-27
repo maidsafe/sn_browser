@@ -21,7 +21,7 @@ import {
 } from './actions/network_state';
 
 import { setAppList, setReAuthoriseState } from './actions/app';
-import { setInviteCode, toggleInvitePopup, showLibErrPopup } from './actions/auth';
+import { setInviteCode, toggleInvitePopup, showLibErrPopup, setIsAuthorised } from './actions/auth';
 const store = configureStore();
 
 if (!window.safeAuthenticator.getLibStatus()) {
@@ -56,6 +56,20 @@ const networkStateListenerCb = (err, state) => {
   }
 };
 
+const registerIsAuthorisedListener = (cb) => {
+  if (window.safeAuthenticator && window.safeAuthenticator.setIsAuthorisedListener) {
+    window.safeAuthenticator.setIsAuthorisedListener(cb);
+  }
+};
+
+const isAuthorisedListenerCb = ( err, state ) => {
+  if (err) {
+      throw new Error(err);
+  }
+  registerIsAuthorisedListener(isAuthorisedListenerCb);
+  return store.dispatch(setIsAuthorised(state));
+};
+
 const registerAppListUpdateListener = (cb) => {
   if (window.safeAuthenticator && window.safeAuthenticator.setAppListUpdateListener) {
     window.safeAuthenticator.setAppListUpdateListener(cb);
@@ -72,6 +86,8 @@ const appListUpdateListenerCb = (err, apps) => {
 
 networkStateListenerCb(null, window.safeAuthenticator.getNetworkState().state);
 appListUpdateListenerCb(null, []);
+const state = store.getState();
+isAuthorisedListenerCb(null, state.auth.isAuthorised);
 
 // check Reauthorise state
 const reAuthoriseState = fetchReAuthoriseState();

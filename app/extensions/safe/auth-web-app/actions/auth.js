@@ -17,6 +17,7 @@ export const TOGGLE_INVITE_POPUP = 'TOGGLE_INVITE_POPUP';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const SHOW_LIB_ERR_POPUP = 'SHOW_LIB_ERR_POPUP';
+export const SET_IS_AUTHORISED = 'SET_IS_AUTHORISED';
 
 export const setCreateAccNavPos = (pos) => (
   {
@@ -111,4 +112,9 @@ export const logout = () => ({
 
 export const showLibErrPopup = () => ({
   type: SHOW_LIB_ERR_POPUP
+});
+
+export const setIsAuthorised = ( isAuthorised ) => ({
+  type: SET_IS_AUTHORISED,
+  payload: isAuthorised
 });

@@ -17,7 +17,8 @@ import {
   TOGGLE_INVITE_POPUP,
   LOGIN,
   LOGOUT,
-  SHOW_LIB_ERR_POPUP
+  SHOW_LIB_ERR_POPUP,
+  SET_IS_AUTHORISED
 } from '../actions/auth';
 import CONSTANTS from '../constants';
 import { isUserAuthorised, parseErrCode } from '../utils';
@@ -166,6 +167,10 @@ const auth = (state = initialState, action) => {
 
     case SHOW_LIB_ERR_POPUP: {
       return { ...state, libErrPopup: true };
+    }
+
+    case SET_IS_AUTHORISED: {
+      return { ...state, isAuthorised: action.payload };
     }
 
     default: {

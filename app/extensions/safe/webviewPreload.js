@@ -172,6 +172,23 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         };
     };
 
+    window.safeAuthenticator.setIsAuthorisedListener = ( cb ) =>
+    {
+        const callId = Math.random().toString( 36 );
+
+        store.dispatch( remoteCallActions.addRemoteCall(
+            {
+                id         : callId,
+                name       : 'setIsAuthorisedListener',
+                isListener : true
+            }
+        ) );
+
+        pendingCalls[callId] = {
+            resolve : ( response ) =>  cb( null, response ),
+            reject: ( err ) => cb( err )
+        };
+    };
 
     store.subscribe( async () =>
     {
