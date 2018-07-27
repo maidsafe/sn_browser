@@ -57,16 +57,24 @@ export default class UrlList extends Component
             parsedList.push( listItem );
         } );
 
-
+        // splitting this up to avoid nessie issue re: Table children parsing:
+        // https://github.com/sociomantic-tsunami/nessie-ui/issues/483
         return (
-            <Table
-                className={ styles.table }
-            >
-                { parsedList }
-                { !parsedList.length &&
-                    <TableCell>{'Nothing to see here yet'}</TableCell>
+            <div style={{textAlign: 'center', width: '100%'}}>
+                {
+                    ! parsedList.length &&
+                        <TableCell >{'Nothing to see here yet'}</TableCell>
                 }
-            </Table>
+                {
+                    !!parsedList.length &&
+                        <Table
+                            className={ styles.table }
+                            >
+                                { parsedList }
+                        </Table>
+                }
+
+            </div>
         );
     }
 }
