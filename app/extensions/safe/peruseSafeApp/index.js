@@ -1,4 +1,5 @@
 // import opn from 'opn';
+import _ from 'lodash';
 import {
     saveConfigToSafe,
     readConfigFromSafe
@@ -17,7 +18,6 @@ import * as bookmarksActions from 'actions/bookmarks_actions';
 import * as tabsActions from 'actions/tabs_actions';
 import * as notificationActions from 'actions/notification_actions';
 import handleLogoutActions from 'extensions/safe/network/handleLogoutActions';
-
 import logger from 'logger';
 
 const authingStates = [
@@ -199,9 +199,13 @@ const manageAuthorisationActions = async ( store ) =>
     {
         // TODO: This should 'clear' or somesuch....
         // OR: Only run if not authed?
-        store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
-        authFromStoreResponse( peruse.authResponseUri, store );
-        isAuthing = false;
+        const debouncedPassAuthUriToStore = _.debounce( () => {
+            store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
+            authFromStoreResponse( peruse.authResponseUri, store );
+            isAuthing = false;
+        }, 500 )
+
+        debouncedPassAuthUriToStore()
     }
 };
 
