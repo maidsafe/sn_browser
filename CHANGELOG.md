@@ -63,6 +63,8 @@ All notable changes to this project will be documented in this file.
 - Preloaded MockVault
 - Logic to copy MockVault into TEMPDIR, if executable flag is passed
 - UI indication of webview loading
+- Comprehensive URL validation via regular expressions
+- Improved failed-to-load UI
 
 #### [0.5.3]
 ### Changed 

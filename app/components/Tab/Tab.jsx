@@ -3,11 +3,12 @@ import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
+import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged, validUrlRegExp } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
 import logger from 'logger';
+import { PROTOCOLS } from 'appConstants';
 const stdUrl = require('url');
 
 
@@ -257,23 +258,41 @@ export default class Tab extends Component
     didFailLoad( )
     {
       const { url, index, addTab, closeTab } = this.props;
+      const { webview } = this;
       const httpRegExp = new RegExp('^http');
       const urlObj = stdUrl.parse( url );
-      if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' ) {
-        const { webview } = this;
-        webview.executeJavaScript(`
-          const body = document.querySelector("body");
-          const h3 = document.createElement("h3");
-          h3.innerText = "Page Load Failed";
-          h3.style = "text-align: center;"
-          body.appendChild(h3);
-        `);
-        return;
-      }
-      closeTab( { index } );
-      if ( !httpRegExp.test(url) )
+      const setFailLoadUi = (header, subheader) => {
+          return webview.executeJavaScript(`
+            var body = document.querySelector("body");
+            body.innerHTML = '';
+            var h3 = document.createElement("h3");
+            h3.innerText = "${header}";
+            h3.style = "text-align: center;"
+            body.appendChild(h3);
+            var h4 = document.createElement("h4");
+            h4.innerText = "${subheader || ''}";
+            h4.style = "text-align: center;"
+            body.appendChild(h4);`);
+      };
+      if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
       {
-        addTab( { url, isActiveTab: true } );
+          setFailLoadUi("Page Load Failed");
+          return;
+      }
+      if ( !validUrlRegExp.test(url) )
+      {
+          setFailLoadUi(`Invalid URL: ${url}`);
+          return;
+      }
+      if (  validUrlRegExp.test(url) && httpRegExp.test(url) )
+      {
+          setFailLoadUi("Detected HTTP/S protocol.", `Redirecting ${url} to be opened by your default Web browser.`);
+          return;
+      }
+      if (  validUrlRegExp.test(url) && !httpRegExp.test(url) )
+      {
+          closeTab( { index } );
+          addTab( { url, isActiveTab: true } );
       }
     }
 
@@ -547,7 +566,6 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
-
         const { webview } = this;
         const url = addTrailingSlashIfNeeded( input );
         logger.silly( 'Webview: loading url:', url );
@@ -560,6 +578,20 @@ export default class Tab extends Component
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
+
+        logger.info('loadURL validUrlRegExp.test(url): ', url, validUrlRegExp.test(url) );
+        if ( !validUrlRegExp.test(url) )
+        {
+            webview.executeJavaScript(`
+              var body = document.querySelector("body");
+              body.innerHTML = '';
+              var h3 = document.createElement("h3");
+              h3.innerText = "Invalid URL: ${url} ";
+              h3.style = "text-align: center;"
+              body.appendChild(h3);
+            `);
+            return;
+        }
 
         // prevent looping over attempted url loading
         if ( webview && url !== 'about:blank' )
