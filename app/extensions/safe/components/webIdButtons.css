@@ -45,6 +45,16 @@ white-space: nowrap;
     border-bottom: none;
 }
 
+.openAuth
+{
+    composes: webId;
+}
+.openAuth a
+{
+    text-decoration: none;
+    /* color: #19a2e2; */
+}
+
 .webIdManager a
 {
     text-decoration: none;

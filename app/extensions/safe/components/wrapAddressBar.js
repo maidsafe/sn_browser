@@ -7,7 +7,8 @@ import logger from 'logger';
 import styles from './webIdButtons.css'
 
 const hideDropdownTimeout = 0.15; //seconds
-const webIdManagerURI = startedRunningMock ? 'http://localhost:1234' : 'safe://webidea.ter';
+const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidea.ter';
+const authHomeUri = 'safe-auth://home';
 export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} ) =>
 {
     return class wrappedAddressbarButtons extends Component {
@@ -53,7 +54,14 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
         {
             const { addTab } = this.props;
 
-            addTab( { url: webIdManagerURI, isActiveTab: true } );
+            addTab( { url: webIdManagerUri, isActiveTab: true } );
+        }
+
+        launchAuthenticator = () =>
+        {
+            const { addTab } = this.props;
+
+            addTab( { url: authHomeUri, isActiveTab: true } );
         }
 
         handleMouseLeave = ( ) =>
@@ -117,7 +125,9 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             {
                 webIdDropdownContents = <li
                     className={styles.webIdInfo}
-                    key="noAuth">Authorise to display your WebIds.</li>;
+                    onClick={ this.launchAuthenticator }
+                    className={styles.openAuth}
+                    key="noAuth"><a href="#">Authorise to display your WebIds.</a></li>;
             }
             else if( webIdsList.length > 0 )
             {
