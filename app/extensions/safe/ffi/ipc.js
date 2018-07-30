@@ -445,7 +445,7 @@ const skipAuthReq = () =>
     reqQ.next();
 };
 
-const setReAuthoriseState = ( state, store ) => 
+const setReAuthoriseState = ( state, store ) =>
 {
   store.dispatch(authenticatorActions.setReAuthoriseState(state));
 };

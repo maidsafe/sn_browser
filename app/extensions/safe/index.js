@@ -188,15 +188,18 @@ const onReceiveUrl = ( store, url ) =>
     // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
+        logger.verbose('Handling safe-auth: url')
         store.dispatch( authenticatorActions.handleAuthUrl( url ) );
     }
     if ( parsedUrl.protocol === 'safe:' )
     {
+        logger.verbose('Handling safe: url')
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...
     else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
     {
+        logger.verbose('Handling safe-???? url')
         store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
     }
 

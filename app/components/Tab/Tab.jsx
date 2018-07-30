@@ -61,6 +61,8 @@ export default class Tab extends Component
         this.openDevTools = ::this.openDevTools;
         this.loadURL = ::this.loadURL;
         this.reloadIfActive = ::this.reloadIfActive;
+
+        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );;
     }
 
     isDevToolsOpened = () =>
@@ -415,7 +417,8 @@ export default class Tab extends Component
         } );
     }
 
-    setCurrentWebId( newWebId ) {
+    updateTheIdInWebview = ( newWebId ) =>
+    {
         const { updateTab, index, webId } = this.props;
         const { webview } = this;
 
@@ -448,14 +451,16 @@ export default class Tab extends Component
             webIdUpdater();
         `;
 
-        const updateTheIdInWebview = () =>
-        {
-            webview.executeJavaScript( setupEventEmitter )
-        }
+        // const updateTheIdInWebview = () =>
+        // {
+        webview.executeJavaScript( setupEventEmitter )
+        // }
 
-        const debouncedFunc = _.debounce( updateTheIdInWebview, 300 );
+    }
 
-        debouncedFunc();
+    setCurrentWebId( newWebId ) {
+
+        this.debouncedWebIdUpdateFunc( newWebId );
     }
 
     newWindow( e )

@@ -120,7 +120,7 @@ export const getPeruseAppObj = () =>
 const urisUnderAuth = [];
 const authFromStoreResponse = async ( res, store ) =>
 {
-    logger.verbose('Authing from a store-passed response.', Date.now() );
+    logger.verbose('Authing from a store-passed response.', Date.now(), res );
 
     if( !res.startsWith('safe') )
     {
@@ -174,6 +174,9 @@ const authFromStoreResponse = async ( res, store ) =>
     }
 };
 
+
+let debouncedPassAuthUriToStore;
+
 /**
  * Handle triggering actions and related functionality for Authorising on the SAFE netowrk
  * based upon the application auth state
@@ -183,6 +186,13 @@ const manageAuthorisationActions = async ( store ) =>
 {
     // TODO: Do this via aliased action.
     const peruse = peruseAppState;
+
+    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore || _.debounce( (responseUri) => {
+
+        store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
+        authFromStoreResponse( responseUri, store );
+        isAuthing = false;
+    }, 500 );
 
     if ( peruse.appStatus === SAFE.APP_STATUS.TO_AUTH && !isAuthing )
     {
@@ -199,13 +209,7 @@ const manageAuthorisationActions = async ( store ) =>
     {
         // TODO: This should 'clear' or somesuch....
         // OR: Only run if not authed?
-        const debouncedPassAuthUriToStore = _.debounce( () => {
-            store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
-            authFromStoreResponse( peruse.authResponseUri, store );
-            isAuthing = false;
-        }, 500 )
-
-        debouncedPassAuthUriToStore()
+        debouncedPassAuthUriToStore( peruse.authResponseUri )
     }
 };
 

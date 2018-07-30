@@ -49,7 +49,7 @@ const tryConnect = async (res) => {
   try
   {
     peruseAppObj = await peruseAppObj.auth.loginFromUri( res );
-    store.dispatch(clearNotification()); 
+    store.dispatch(clearNotification());
   }
   catch ( err )
   {
@@ -61,8 +61,6 @@ const tryConnect = async (res) => {
 
 export const authFromInternalResponse = async ( res, isAuthenticated ) =>
 {
-    logger.silly('authFromInternalResponse')
-
     try
     {
         // for webFetch app only
@@ -86,7 +84,7 @@ export const authFromInternalResponse = async ( res, isAuthenticated ) =>
             tryConnect( res );
         }
 
-        logger.error( err.message || err );
+        logger.error( err );
         logger.error( '>>>>>>>>>>>>>' );
     }
 };
@@ -104,7 +102,7 @@ export const handleSafeAuthAuthentication = ( uriOrReqObject, type ) =>
 {
     if ( typeof uriOrReqObject !== 'string' && typeof uriOrReqObject.uri !== 'string' )
     {
-        throw new Error( 'Auth URI should be procided as a string' );
+        throw new Error( 'Auth URI should be provided as a string' );
     }
 
     store.dispatch( handleAuthUrl( uriOrReqObject ) );
@@ -140,14 +138,14 @@ export const onNetworkStateChange = (store, mockAttemptReconnect) => (state) =>
           text: `Network state: ${state}. Reconnecting...`,
           type: 'error',
           onDismiss: clearNotification
-        } 
+        }
       ));
       mockAttemptReconnect ? mockAttemptReconnect(store) : attemptReconnect(store);
     }
   }
   if(state === SAFE.NETWORK_STATE.CONNECTED && previousState === SAFE.NETWORK_STATE.DISCONNECTED)
   {
-    store.dispatch(clearNotification()); 
+    store.dispatch(clearNotification());
   }
 };
 
