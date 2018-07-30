@@ -274,7 +274,7 @@
     "jest-tobetype": "git+https://github.com/joshuef/jest-tobetype.git#master",
     "lodash": "4.17.4",
     "nessie-ui": "6.1.0",
-    "opn": "5.3.0",
+    "opn": "^5.3.0",
     "prop-types": "^15.5.8",
     "query-string": "^6.1.0",
     "raf": "3.4.0",

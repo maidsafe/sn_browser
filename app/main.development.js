@@ -85,7 +85,7 @@ if ( isRunningPackaged )
     sourceMapSupport.install();
 }
 
-if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
+if ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -95,6 +95,9 @@ if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
 
 const installExtensions = async () =>
 {
+    if( isCI ) return;
+
+    logger.verbose('Installing devtools extensions')
     const installer = require( 'electron-devtools-installer' );
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     const extensions = [

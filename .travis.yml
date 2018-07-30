@@ -32,8 +32,6 @@ addons:
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
-# - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gnome-shell;
-  # fi
 - sleep 5
 
 script:
@@ -46,25 +44,20 @@ script:
 - yarn run rebuild
 - yarn run test-peruse
 # separate tests for safe + auth as together throws error due to native libs
-# - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test safe;
-#   fi
 - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test safe-auth;
   fi
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
-- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test-e2e;
+# travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
+- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-e2e";
   fi
-  # -1 if not runnning, just incase we || true
-- pkill -f electron || true;
-- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test-exts-e2e;
+- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e";
   fi
 - yarn run package-only
-- if [[ "$NODE_ENV" == "prod" ]]; then yarn run test-e2e-prod;
+- if [[ "$NODE_ENV" == "prod"  ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-e2e-prod";
   fi
-  #-1 if not runnning, just incase
-- pkill -f electron || true;
 - sleep 5
-- if [[ "$NODE_ENV" == "prod" ]]; then yarn run test-exts-e2e-prod;
+- if [[ "$NODE_ENV" == "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e-prod";
   fi
 
 after_success:

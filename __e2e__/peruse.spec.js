@@ -5,13 +5,21 @@ import {
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
-    setClientToBackgroundProcessWindow
+    setClientToBackgroundProcessWindow,
+    isRunningSpectronTestProcess
 } from './lib/browser-driver';
-import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
-import { setupSpectronApp, isCI, travisOS } from './lib/setupSpectronApp';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT , DEFAULT_TIMEOUT_INTERVAL} from './lib/constants';
+import {
+    setupSpectronApp
+    , isCI
+    , travisOS
+    , afterAllTests
+    , beforeAllTests
+    , windowLoaded
+} from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 65000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 
 // TODO:
 // - Check for protocols/APIs? Via js injection?
@@ -26,28 +34,25 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 65000;
 
 describe( 'main window', () =>
 {
-    const app = setupSpectronApp();
+    let app;
 
-    beforeAll( async () =>
+    beforeEach( async () =>
     {
-        await app.start();
-        // console.log('starting', app)
-        await app.client.waitUntilWindowLoaded();
+      app = setupSpectronApp();
+
+        await beforeAllTests(app)
     } );
 
-    afterAll( () =>
+    afterEach( async () =>
     {
-        if ( app && app.isRunning() )
-        {
-            return app.stop();
-        }
+        await afterAllTests(app);
     } );
+
 
     test( 'window loaded', async () =>
     {
-        let loaded = await app.browserWindow.isVisible() ;
-        await delay(3500)
-        return loaded;
+        const loaded = await windowLoaded( app )
+        expect( loaded ).toBeTruthy()
     });
 
     //
@@ -65,46 +70,28 @@ describe( 'main window', () =>
     //     // expect( logs ).toHaveLength( 0 );
     // } );
 
-    //
-    // it( 'cannot open http:// protocol links', async () =>
-    // {
-    //     const { client } = app;
-    //     const tabIndex = await newTab( app );
-    //     await navigateTo( app, 'http://example.com' );
-    //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-    //
-    //     // const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-    //
-    //     await client.windowByIndex( tabIndex );
-    //     await client.pause( 2500 );
-    //
-    //     const clientUrl = await client.getUrl();
-    //     const parsedUrl = urlParse( clientUrl );
-    //
-    //     expect( parsedUrl.protocol ).toBe( 'about:' );
-    //
-    // } );
 
     it( 'can open a new tab + set address', async () =>
     {
-        expect.assertions(3);
+        expect.assertions(2);
         const { client } = app;
+        await delay( 2500 );
+
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
 
-
-        await client.pause( 1500 );
+        await delay( 4500 );
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
-        await client.windowByIndex( tabIndex );
-        // await client.pause( 1500 );
+        await client.windowByIndex( tabIndex   );
+        await delay( 5500 );
 
         const clientUrl = await client.getUrl();
 
         const parsedUrl = urlParse( clientUrl );
 
-        expect( parsedUrl.protocol ).toBe( 'safe:' );
+        // expect( parsedUrl.protocol ).toBe( 'safe:' );
         expect( parsedUrl.host ).toBe( 'example.com' );
 
         expect( address ).toBe( 'safe://example.com' );
@@ -163,6 +150,8 @@ describe( 'main window', () =>
     it( 'can close a tab', async () =>
     {
         const { client } = app;
+        await delay( 4500 );
+
         await setClientToMainBrowserWindow( app );
         const tabIndex = await newTab( app );
 
@@ -170,8 +159,7 @@ describe( 'main window', () =>
         await client.waitForExist( BROWSER_UI.CLOSE_TAB, WAIT_FOR_EXIST_TIMEOUT );
 
         await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
-        await client.pause( 500 );
-        // await client.pause( 500 );
+        await delay( 4500 );
 
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
         expect( address ).not.toBe( 'safe://bbc.com' );

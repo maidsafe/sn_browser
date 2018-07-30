@@ -3,6 +3,11 @@ import electron from 'electron';
 import path from 'path';
 import RELEASE_NAME from '../../releaseName.js';
 
+import {
+    delay,
+    setClientToMainBrowserWindow
+} from './browser-driver';
+
 jest.unmock('electron')
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
 
@@ -31,8 +36,7 @@ export const setupSpectronApp = ( ) =>
         args : [ isTestingPackagedApp ? '' : path.join( __dirname, '..' , '..', 'app' ) ], // lib, e2e, test
         env  : {
             IS_SPECTRON: true,
-            // CI: isCI,
-            // TRAVIS_OS_NAME : travisOS,
+            CI: isCI,
             // IS_UNPACKED : isUnpacked,
             // IS_PACKED : isTestingPackagedApp
         }
@@ -41,3 +45,35 @@ export const setupSpectronApp = ( ) =>
     return app;
 
 }
+
+
+export const afterAllTests = async ( app ) =>
+{
+    if ( app && app.isRunning() )
+    {
+        await app.stop();
+        console.log('Spectron stopped the app.')
+
+        return;
+    }
+}
+
+export const beforeAllTests =  async ( app ) =>
+{
+    await app.start();
+    // console.log('starting', app)
+    await app.client.waitUntilWindowLoaded();
+
+    return;
+} ;
+
+
+export const windowLoaded = async ( app ) =>
+{
+    await delay(2500)
+
+    await app.browserWindow.show() ; //incase now focussed
+    await delay(2500)
+    let loaded = await app.browserWindow.isVisible() ;
+    return loaded;
+};
