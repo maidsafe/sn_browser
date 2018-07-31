@@ -342,15 +342,18 @@ export default class Tab extends Component
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
-        logger.silly( 'Webview: did navigate in page' );
+        logger.verbose( 'Webview: did navigate in page', url, this.state.browserState.url );
 
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
-            this.updateBrowserState( { url, redirects: [url] } );
-            updateTab( { index, url } );
+            if( urlHasChanged( url, this.state.browserState.url ) )
+            {
+                this.updateBrowserState( { url, redirects: [url] } );
+                updateTab( { index, url } );
 
-            this.setCurrentWebId( null );
+                this.setCurrentWebId( null );
+            }
 
         }
     }

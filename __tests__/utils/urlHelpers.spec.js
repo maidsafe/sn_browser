@@ -140,4 +140,11 @@ describe( 'urlHasChanged', () =>
         expect( urlHasChanged( 'safe://hello.world/boom/', 'safe://ciao.world/boom/#/hereyouare' ) ).toBeTruthy( );
     } );
 
+    it( 'should return false for a same url with a hash and slash', () =>
+    {
+        expect( urlHasChanged( 'safe://hello.world/hashtest/', 'safe://hello.world/hashtest/#me' ) ).toBeTruthy( );
+        expect( urlHasChanged( 'safe://hello.world/hashtest/', 'safe://hello.world/hashtest/#/me' ) ).toBeTruthy( );
+        expect( urlHasChanged( 'safe://hello.world/hashtest/#me', 'safe://hello.world/hashtest/#/me' ) ).toBeFalsy( );
+    } );
+
 } );

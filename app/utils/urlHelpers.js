@@ -21,6 +21,23 @@ export const removeTrailingSlash = ( url ) =>
     return url;
 };
 
+export const removeLeadingSlash = ( url ) =>
+{
+    if ( url )
+    {
+        return url.replace( /^\//, '' );
+    }
+
+    return url;
+};
+
+export const trimSlashes = ( url ) =>
+{
+    let newUrl = removeLeadingSlash( url )
+    newUrl = removeTrailingSlash( newUrl )
+    return newUrl;
+};
+
 
 export const addTrailingSlashIfNeeded = ( url ) =>
 {
@@ -64,13 +81,16 @@ export const removeTrailingRedundancies = ( url ) =>
 
 export const urlHasChanged = ( src, newUrl ) =>
 {
-    const strippedWebviewUrl = removeTrailingRedundancies( src );
+    const strippedSrcUrl = removeTrailingRedundancies( src );
     const strippedNewUrl = removeTrailingRedundancies( newUrl );
 
     const parsedSrc = parse( src );
     const parsedNew = parse( newUrl );
 
-    if ( strippedNewUrl === strippedWebviewUrl )
+    // console.log('parsedSrc', parsedSrc)
+    // console.log('parsedNew', parsedNew)
+
+    if ( strippedNewUrl === strippedSrcUrl )
     {
         return false;
     }
@@ -82,7 +102,11 @@ export const urlHasChanged = ( src, newUrl ) =>
         return true;
     }
 
-    if ( strippedNewUrl.hash !== parsedNew.hash )
+    // here we leave the slashes on hashes up to the app/user
+    const srcHash = parsedSrc.hash ? trimSlashes( parsedSrc.hash.replace('#', '') ) : '';
+    const newHash = parsedNew.hash? trimSlashes( parsedNew.hash.replace('#', '') ) : '';
+
+    if ( srcHash !== newHash )
     {
         return true;
     }
