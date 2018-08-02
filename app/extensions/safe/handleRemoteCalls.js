@@ -38,6 +38,13 @@ export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
 
 export const remoteCallApis =  {
     ...theAuthApi,
+    createAccount : async( secret, password, invitation ) =>
+    {
+        logger.verbose('Handling create account call from webview.')
+        await theAuthApi.createAccount( secret, password, invitation );
+        theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
+        theStore.dispatch( peruseAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
+    },
     login : async( secret, password ) =>
     {
         logger.verbose('Handling login call from webview.')

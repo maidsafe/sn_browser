@@ -64,6 +64,14 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             addTab( { url: authHomeUri, isActiveTab: true } );
         }
 
+
+        authorisePeruse = () =>
+        {
+            const { setAppStatus } = this.props;
+
+            setAppStatus( SAFE.APP_STATUS.TO_AUTH );
+        }
+
         handleMouseLeave = ( ) =>
         {
             this.isMouseOverIdButton = false;
@@ -87,7 +95,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         render() {
             const { peruseApp, activeTab } = this.props;
-            const { showingWebIdDropdown, webIds, appStatus } = peruseApp;
+            const { showingWebIdDropdown, webIds, appStatus, networkStatus } = peruseApp;
 
             const activeWebId = activeTab.webId || {};
 
@@ -121,11 +129,19 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
             let webIdDropdownContents;
 
-            if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
+            if( networkStatus !== SAFE.NETWORK_STATE.LOGGED_IN )
             {
                 webIdDropdownContents = <li
                     className={styles.webIdInfo}
                     onClick={ this.launchAuthenticator }
+                    className={styles.openAuth}
+                    key="noAuth"><a href="#">Log in to authorise and display your WebIds.</a></li>;
+            }
+            else if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
+            {
+                webIdDropdownContents = <li
+                    className={styles.webIdInfo}
+                    onClick={ this.authorisePeruse }
                     className={styles.openAuth}
                     key="noAuth"><a href="#">Authorise to display your WebIds.</a></li>;
             }
