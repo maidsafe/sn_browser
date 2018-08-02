@@ -28,6 +28,7 @@ const initialState = {
         saveStatus      : '',
         isMock          : null,
         showingWebIdDropdown : false,
+        isFetchingWebIds  : false,
         webIds          : []
     },
     webFetch : {

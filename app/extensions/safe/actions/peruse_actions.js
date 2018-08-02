@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import { getWebIds } from 'extensions/safe/peruseSafeApp';
+import { getWebIds as getWebIdsFromSafe } from 'extensions/safe/peruseSafeApp';
 import logger from 'logger';
 
 export const TYPES = {
@@ -11,6 +11,7 @@ export const TYPES = {
     //webId
     GET_AVAILABLE_WEB_IDS : 'GET_AVAILABLE_WEB_IDS',
     SET_AVAILABLE_WEB_IDS : 'SET_AVAILABLE_WEB_IDS',
+    FETCHING_WEB_IDS      : 'FETCHING_WEB_IDS',
 
     SET_READ_CONFIG_STATUS     : 'SET_READ_CONFIG_STATUS',
     SET_SAVE_CONFIG_STATUS : 'SET_SAVE_CONFIG_STATUS',
@@ -31,6 +32,7 @@ export const {
     setIsMock,
 
     setAvailableWebIds,
+    fetchingWebIds,
 
     setReadConfigStatus,
     setSaveConfigStatus,
@@ -48,6 +50,7 @@ export const {
     TYPES.SET_IS_MOCK,
 
     TYPES.SET_AVAILABLE_WEB_IDS,
+    TYPES.FETCHING_WEB_IDS,
 
     TYPES.SET_READ_CONFIG_STATUS,
     TYPES.SET_SAVE_CONFIG_STATUS,
@@ -66,7 +69,7 @@ const triggerGetWebIds = async (  ) =>
     if( !window || !window.thisIsTheBackgroundProcess ) return;
 
     logger.verbose('Retrieving webIds');
-    const ids = await getWebIds();
+    const ids = await getWebIdsFromSafe();
 };
 
 export const getAvailableWebIds = createAliasedAction(

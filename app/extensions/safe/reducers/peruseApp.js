@@ -69,7 +69,8 @@ export default function peruseApp( state = initialState, action )
             })
             return {
                 ...state,
-                webIds : [ ...ids ]
+                webIds : [ ...ids ],
+                isFetchingWebIds : false
             };
         }
 
@@ -82,6 +83,10 @@ export default function peruseApp( state = initialState, action )
             };
         }
 
+        case TYPES.FETCHING_WEB_IDS:
+        {
+            return { ...state, isFetchingWebIds: true };
+        }
         case TYPES.RESET_STORE:
         {
             return { ...initialState };

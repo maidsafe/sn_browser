@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 import { Column, IconButton, Grid } from 'nessie-ui';
+import _ from 'lodash';
 import logger from 'logger';
 import styles from './webIdButtons.css'
 
@@ -14,6 +15,12 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
     return class wrappedAddressbarButtons extends Component {
         constructor(props) {
             super(props);
+
+            const { getAvailableWebIds } = props;
+
+            if( ! getAvailableWebIds ) return;
+
+            this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
         }
 
         static defaultProps =
@@ -37,16 +44,18 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
             showWebIdDropdown( true );
         }
 
+
         handleMouseEnter = ( ) =>
         {
             this.hoverTime = new Date().getTime();
             this.isMouseOverIdButton = true;
 
             const { getAvailableWebIds, peruseApp } = this.props;
+            const { isFetchingWebIds } = peruseApp;
 
-            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
+            if( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED && !isFetchingWebIds )
             {
-                getAvailableWebIds();
+                this.debouncedGetWebIds();
             }
         }
 
@@ -95,7 +104,7 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
 
         render() {
             const { peruseApp, activeTab } = this.props;
-            const { showingWebIdDropdown, webIds, appStatus, networkStatus } = peruseApp;
+            const { showingWebIdDropdown, webIds, appStatus, networkStatus, isFetchingWebIds } = peruseApp;
 
             const activeWebId = activeTab.webId || {};
 
@@ -127,33 +136,43 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                   </li> )
             });
 
-            let webIdDropdownContents;
+            let webIdDropdownContents = [];
 
             if( networkStatus !== SAFE.NETWORK_STATE.LOGGED_IN )
             {
-                webIdDropdownContents = <li
+                webIdDropdownContents.push(<li
                     className={styles.webIdInfo}
                     onClick={ this.launchAuthenticator }
                     className={styles.openAuth}
-                    key="noAuth"><a href="#">Log in to authorise and display your WebIds.</a></li>;
+                    key="noAuth"><a href="#">Log in to authorise and display your WebIds.</a></li>);
             }
             else if( appStatus !== SAFE.APP_STATUS.AUTHORISED )
             {
-                webIdDropdownContents = <li
+                webIdDropdownContents.push(<li
                     className={styles.webIdInfo}
                     onClick={ this.authorisePeruse }
                     className={styles.openAuth}
-                    key="noAuth"><a href="#">Authorise to display your WebIds.</a></li>;
+                    key="noAuth"><a href="#">Authorise to display your WebIds.</a></li>);
             }
             else if( webIdsList.length > 0 )
             {
                 webIdDropdownContents = webIdsList;
-            } else
+            }
+            else
             {
-                webIdDropdownContents = <li
+                webIdDropdownContents.push(<li
                     className={styles.webIdInfo}
-                    key="noId">No WebIds Found.</li>;
+                    key="noId">No WebIds Found.</li>);
+            }
 
+            if( isFetchingWebIds )
+            {
+                webIdDropdownContents = webIdDropdownContents || [];
+
+                webIdDropdownContents.push(<li
+                    className={styles.webIdInfo}
+                    className={styles.openAuth}
+                    key="fetching">Updating webIds.</li>)
             }
 
 

@@ -104,7 +104,9 @@ export const getWebIds = async( ) =>
 
     if( !peruseIsAuthed() ) throw new Error('PeruseApp is not authorised');
 
-    let webIds = []
+    let webIds = [];
+
+    savedStore.dispatch( peruseAppActions.fetchingWebIds() );
     webIds = await peruseApp.web.getWebIds();
 
     savedStore.dispatch( peruseAppActions.setAvailableWebIds( webIds ) );
