@@ -121,7 +121,8 @@ class Browser extends Component
     handleCloseBrowserTab = ( tab ) =>
     {
         const { closeTab, tabs } = this.props;
-        const openTabs = tabs.filter( tab => !tab.isClosed );
+
+        const openTabs = tabs.filter( tab => !tab.isClosed && tab.windowId === this.state.windowId  );
 
         if ( openTabs.length === 1 )
         {
@@ -136,6 +137,8 @@ class Browser extends Component
 
     render()
     {
+        const props = this.props;
+
         const {
 
             //bookmarks
@@ -164,9 +167,7 @@ class Browser extends Component
             notifications,
             clearNotification,
 
-        } = this.props;
-
-        const props = this.props;
+        } = props;
 
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
