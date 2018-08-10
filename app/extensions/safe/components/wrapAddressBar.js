@@ -165,6 +165,9 @@ export const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality
                     key="noId">No WebIds Found.</li>);
             }
 
+
+            // This will be quite fast on mock.
+            // TODO: Add transition.
             if( isFetchingWebIds )
             {
                 webIdDropdownContents = webIdDropdownContents || [];
