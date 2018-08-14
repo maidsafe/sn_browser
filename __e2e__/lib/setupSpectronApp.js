@@ -39,6 +39,9 @@ export const setupSpectronApp = ( ) =>
             CI: isCI,
             // IS_UNPACKED : isUnpacked,
             // IS_PACKED : isTestingPackagedApp
+        },
+        additionalChromeOptions : {
+            windowTypes: ['app', 'webview']
         }
     } );
 
