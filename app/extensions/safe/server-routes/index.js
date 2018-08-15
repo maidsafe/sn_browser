@@ -36,7 +36,7 @@ const setupRoutes = ( server, store ) =>
         try {
             server.route( route )
         } catch (e) {
-            logger.error('Problem initing a route.', route)
+            logger.error('Problem initing a route.', route, e)
         }
     });
 };
