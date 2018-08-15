@@ -144,6 +144,8 @@ app.on( 'ready', async () =>
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
             onReceiveUrl( store, uriArg );
+            mainWindow.show();
+
         }
     }
 
@@ -164,6 +166,8 @@ app.on( 'ready', async () =>
 app.on( 'open-url', ( e, url ) =>
 {
     onReceiveUrl( store, url );
+
+    mainWindow.show();
 
 } );
 
