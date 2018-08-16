@@ -7,10 +7,6 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
-jest.mock('extensions', () => {
-
-});
-
 describe( 'Browser', () =>
 {
     let wrapper;
@@ -50,7 +46,6 @@ describe( 'Browser', () =>
         {
             props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1 }] };
             wrapper = mount( <Browser { ...props } /> );
-            instance = wrapper.instance();
         } );
 
         it( 'should have exactly 1 AddressBar component', () =>
@@ -79,7 +74,7 @@ describe( 'Browser', () =>
         beforeEach( () =>
         {
             props = { ...props, tabs: [] };
-            wrapper = shallow( <Browser { ...props } /> );
+            wrapper = mount( <Browser { ...props } /> );
             instance = wrapper.instance();
         } );
 

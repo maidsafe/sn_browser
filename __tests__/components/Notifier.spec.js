@@ -12,7 +12,7 @@ describe( 'Notifier', () =>
 {
     let wrapper;
     let instance;
-    let props;
+    let props = {};
 
     beforeEach( () =>
     {
@@ -68,7 +68,7 @@ describe( 'Notifier', () =>
                     },
                     ref: null,
                     type: 'p'
-                  }, 
+                  },
                   {
                     _owner: null,
                     props: {
@@ -86,13 +86,13 @@ describe( 'Notifier', () =>
                     },
                     ref: null,
                     type: 'p'
-                  } 
-                ] 
+                  }
+                ]
               },
               ref   : null,
               type  : 'div'
             };
-            const props = { ...props, isVisible: true, reactNode: elObject };
+            props = { ...props, isVisible: true, reactNode: elObject };
             const wrapper = mount( <Notifier { ...props } /> );
             const reactNode = wrapper.find('div.parentDiv');
             const reactNodeChildren = reactNode.children();
@@ -112,7 +112,7 @@ describe( 'Notifier', () =>
           type               : 'alert',
           acceptText         : 'Accept',
           denyText           : 'Deny',
-          updateNotification : jest.fn() 
+          updateNotification : jest.fn()
         };
         wrapper = mount( <Notifier { ...props } /> );
         instance = wrapper.instance();

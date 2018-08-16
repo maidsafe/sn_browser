@@ -108,7 +108,7 @@ declare module 'flow-typed/dist/commands/create-stub.js' {
 declare module 'flow-typed/dist/commands/install.js' {
   declare module.exports: $Exports<'flow-typed/dist/commands/install'>;
 }
-declare module 'flow-typed/dist/commands/runTests.js' {
+declare module 'flow-typed/dist/commands/runE2ETests.js' {
   declare module.exports: $Exports<'flow-typed/dist/commands/runTests'>;
 }
 declare module 'flow-typed/dist/commands/search.js' {

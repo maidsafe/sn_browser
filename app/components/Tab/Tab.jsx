@@ -10,7 +10,6 @@ import styles from './tab.css';
 import logger from 'logger';
 const stdUrl = require('url');
 
-const { Menu, MenuItem } = remote;
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
@@ -87,10 +86,12 @@ export default class Tab extends Component
         pageLoaded();
     }
 
-    componentDidMount()
+    buildMenu = () =>
     {
-        const { webview } = this;
-        let rightClickPosition;
+        if( !remote ) return null; //jest workaround
+
+        const {Menu} = remote;
+
 
         const menu = Menu.buildFromTemplate( [
             { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
@@ -106,6 +107,16 @@ export default class Tab extends Component
                 }
             }
         ] );
+
+        return menu;
+    }
+
+    componentDidMount()
+    {
+        const { webview } = this;
+        let rightClickPosition;
+
+        const menu = this.buildMenu();
 
         const callbackSetup = () =>
         {
@@ -562,7 +573,7 @@ export default class Tab extends Component
     {
         const { isActiveTab } = this.props;
 
-        const preloadFile = remote.getGlobal( 'preloadFile' );
+        const preloadFile = remote ? remote.getGlobal( 'preloadFile' ) : '';
         const injectPath = preloadFile; // js we'll be chucking in
 
         let moddedClass = styles.tab;

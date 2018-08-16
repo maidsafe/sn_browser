@@ -5,7 +5,6 @@ module.exports = {
     testPathIgnorePatterns : ['node_modules'],
     moduleDirectories      : ['app', 'test', 'node_modules', 'app/node_modules'],
     moduleNameMapper       : {
-        "electron": "<rootDir>/mocks/electron.js",
         "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
         "<rootDir>/mocks/fileMock.js",
         "\\.(css|scss)$": "<rootDir>/mocks/fileMock.js",

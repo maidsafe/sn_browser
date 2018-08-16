@@ -21,7 +21,7 @@ describe( 'notification reducer', () =>
         it( 'should handle adding a remote call', () =>
         {
             expect(
-                remoteCalls( {}, {
+                remoteCalls( [], {
                     type    : TYPES.ADD_REMOTE_CALL,
                     payload : aCall
                 } )

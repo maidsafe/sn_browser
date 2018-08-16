@@ -163,7 +163,6 @@ describe( 'SAFE network webFetch operation', async () =>
     // if( travisOS !== 'linux' )
     if( process.platform !== 'linux' )
     {
-      console.log('WHJAHSHHHHHHHHHHHHHHHHHHH', process.platform)
         test( 'triggers a save for the window state', async () =>
         {
             expect.assertions(1);
