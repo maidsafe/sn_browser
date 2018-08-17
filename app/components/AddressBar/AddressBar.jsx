@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import MdStar from 'react-icons/lib/md/star';
 import MdStarOutline from 'react-icons/lib/md/star-outline';
 import { Column, IconButton, Row, InputField } from 'nessie-ui';
+import logger from 'logger';
+
 
 import styles from './addressBar.css';
 
@@ -15,6 +17,7 @@ export default class AddressBar extends Component
         address        : PropTypes.string,
         isSelected     : PropTypes.bool,
         activeTab      : PropTypes.object,
+        windowId       : PropTypes.number.isRequired,
         isBookmarked   : PropTypes.bool.isRequired,
         addBookmark    : PropTypes.func.isRequired,
         removeBookmark : PropTypes.func.isRequired,
@@ -145,6 +148,7 @@ export default class AddressBar extends Component
 
     handleKeyPress( event )
     {
+        const { windowId } = this.props;
         if ( event.key !== 'Enter' )
         {
             return;
@@ -152,7 +156,8 @@ export default class AddressBar extends Component
 
         const input = event.target.value;
 
-        this.props.updateActiveTab( { url: input } );
+        logger.info('UPDATING ACTIVE TAB WITH WINDOWIFFF', windowId )
+        this.props.updateActiveTab( { url: input, windowId } );
     }
 
     render()
@@ -186,7 +191,7 @@ export default class AddressBar extends Component
                                   iconTheme="light"
                                   iconSize="L"
                                   iconType="reset"
-                                  isDisabled={ activeTab.isLoading } 
+                                  isDisabled={ activeTab.isLoading }
                                   onClick={ this.handleRefresh }
                               />
                             </Column>

@@ -312,12 +312,16 @@ const updateTabHistory = ( tabToMerge, payload ) =>
 
 const updateActiveTab = ( state, payload ) =>
 {
-    const index = getActiveTabIndex( state );
+    const { windowId } = payload;
+
+    const index = state.findIndex( tab =>
+                tab.isActiveTab && tab.windowId === windowId );
+
+    if ( !windowId )
+        throw new Error( 'Updating Active Tab requires the relevant windowId to be passed.' );
 
     if ( index < 0 )
-    {
         return state;
-    }
 
     const tabToMerge = state[index];
     let updatedTab = { ...tabToMerge };

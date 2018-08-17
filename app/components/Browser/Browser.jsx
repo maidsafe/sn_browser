@@ -120,7 +120,8 @@ class Browser extends Component
     handleCloseBrowserTab = ( tab ) =>
     {
         const { closeTab, tabs } = this.props;
-        const openTabs = tabs.filter( tab => !tab.isClosed );
+
+        const openTabs = tabs.filter( tab => !tab.isClosed && tab.windowId === this.state.windowId  );
 
         if ( openTabs.length === 1 )
         {
@@ -135,6 +136,8 @@ class Browser extends Component
 
     render()
     {
+        const props = this.props;
+
         const {
 
             //bookmarks
@@ -163,13 +166,15 @@ class Browser extends Component
             notifications,
             clearNotification,
 
-        } = this.props;
+        } = props;
+
 
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
 
-
+        // TODO: Move windowId from state to store.
         const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
+        const windowId = this.state.windowId;
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
 
@@ -210,6 +215,10 @@ class Browser extends Component
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }
                     activeTab={ activeTab }
+                    windowId={windowId}
+
+                    //pass everything as we're extending here...
+                    {...props}
                     ref={ ( c ) =>
                     {
                         this.address = c;
@@ -233,6 +242,7 @@ class Browser extends Component
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
+                    windowId={ windowId}
                     ref={ ( c ) =>
                     {
                         this.tabContents = c;
