@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 - Closing a tab to the left of the active tab results in rendering of correct webview
 - Properly handles http links when triggering did-fail-load events to prevent external tab spamming and to close respective tab in Peruse
 
+### Changed
+- Electron to 2.0.7
+- Deps updated in general.
+
 ### SAFE libraries Dependencies
 - @maidsafe/safe-node-app: `fe5dc54aa9c8a1c5dd71809b616f4a2353b598e8`
 
