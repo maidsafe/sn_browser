@@ -30,6 +30,7 @@ const _authReqListener = Symbol( 'authReq' );
 const _containerReqListener = Symbol( 'containerReq' );
 const _mDataReqListener = Symbol( 'mDataReq' );
 const _nwStateChangeListener = Symbol( 'nwStateChangeListener' );
+const _isAuthorisedListener = Symbol( 'isAuthorisedListener' );
 const _reqErrListener = Symbol( 'reqErrListener' );
 const _cbRegistry = Symbol( 'cbRegistry' );
 const _netDisconnectCb = Symbol( 'netDisconnectCb' );
@@ -65,6 +66,7 @@ class Authenticator extends SafeLib
         this[_mDataReqListener] = new Listener();
         this[_nwStateChangeListener] = new Listener();
         this[_reqErrListener] = new Listener();
+        this[_isAuthorisedListener] = new Listener();
         this[_cbRegistry] = {};
         this[_decodeReqPool] = {};
         this[_netDisconnectCb] = ffi.Callback( types.Void,
@@ -154,6 +156,9 @@ class Authenticator extends SafeLib
             case CONSTANTS.LISTENER_TYPES.REQUEST_ERR.key: {
                 return this[_reqErrListener].add( cb );
             }
+            case CONSTANTS.LISTENER_TYPES.IS_AUTHORISED.key: {
+                return this[_isAuthorisedListener].add( cb );
+            }
             default: {
                 throw new Error( errConst.INVALID_LISTENER.msg );
             }
@@ -178,6 +183,9 @@ class Authenticator extends SafeLib
             }
             case CONSTANTS.LISTENER_TYPES.REQUEST_ERR.key: {
                 return this[_reqErrListener].remove( id );
+            }
+            case CONSTANTS.LISTENER_TYPES.IS_AUTHORISED.key: {
+                return this[_isAuthorisedListener].remove( id );
             }
             default: {
                 throw new Error( errConst.INVALID_LISTENER.msg );
@@ -296,10 +304,12 @@ class Authenticator extends SafeLib
                         const result = resultPtr.deref();
                         if ( result.error_code !== 0 && clientHandle.length === 0 )
                         {
+                            this[_isAuthorisedListener].broadcast( result );
                             return reject( JSON.stringify( result ) );
                         }
                         this.registeredClientHandle = clientHandle;
                         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
+                        this[_isAuthorisedListener].broadcast( null, true );
 
                         resolve();
                     } ) );
@@ -308,6 +318,7 @@ class Authenticator extends SafeLib
                 {
                     if ( err || res !== 0 )
                     {
+                        this[_isAuthorisedListener].broadcast( err );
                         return reject( err );
                     }
                 };
@@ -323,6 +334,7 @@ class Authenticator extends SafeLib
             catch ( e )
             {
                 logger.info('Login error', e )
+                this[_isAuthorisedListener].broadcast( e );
                 reject( e );
             }
         } );
@@ -342,11 +354,12 @@ class Authenticator extends SafeLib
                 }
 
                 this.registeredClientHandle = null;
-
+                this[_isAuthorisedListener].broadcast( null, false );
                 resolve();
 
             }catch(e)
             {
+                this[_isAuthorisedListener].broadcast( e );
                 reject(e)
             }
         })

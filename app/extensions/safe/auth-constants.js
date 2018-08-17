@@ -70,7 +70,8 @@ export default {
         'CONTAINER_REQ',
         'MDATA_REQ',
         'NW_STATE_CHANGE',
-        'REQUEST_ERR'
+        'REQUEST_ERR',
+        'IS_AUTHORISED'
     ] ),
     CLIENT_TYPES : {
         DESKTOP : 'DESKTOP',
