@@ -586,7 +586,7 @@ export default class Tab extends Component
               var body = document.querySelector("body");
               body.innerHTML = '';
               var h3 = document.createElement("h3");
-              h3.innerText = "Invalid URL: ${url} ";
+              h3.innerText = "Invalid URL: ${url}";
               h3.style = "text-align: center;"
               body.appendChild(h3);
             `);
