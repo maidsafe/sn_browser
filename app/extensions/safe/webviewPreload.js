@@ -24,10 +24,10 @@ class WebIdEvents extends EventEmitter {}
 const webIdEventEmitter = new WebIdEvents();
 
 
-const onPreload = ( store ) =>
+export const onPreload = ( store, win = window ) =>
 {
-    setupPreloadedSafeAuthApis( store );
-    setupWebIdEventEmitter( store );
+    setupPreloadedSafeAuthApis( store, win );
+    setupWebIdEventEmitter( store, win );
 }
 
 export const setupWebIdEventEmitter = ( store, win = window ) =>

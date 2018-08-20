@@ -1,18 +1,24 @@
 import { onNetworkStateChange } from 'extensions/safe/network';
 import { TYPES as PERUSE_TYPES } from 'extensions/safe/actions/peruse_actions';
-import { TYPES } from 'actions/notification_actions'; 
+import { TYPES } from 'actions/notification_actions';
 import { SAFE } from 'extensions/safe/constants';
 
-jest.mock('logger');
+// jest.mock('extensions/safe/peruseSafeApp', () =>
+// {
+//     return {
+//         getWebIds : () => []
+//     }
+// });
+
 
 describe( 'Authenticator comms', () =>
 {
-  
+
     it( 'network callback dispatches action on Connected', () => {
         const initialState = {
           peruseApp: {
-            networkStatus: null 
-          } 
+            networkStatus: null
+          }
         };
         const mockStore = {
           getState : () => initialState,
@@ -30,8 +36,8 @@ describe( 'Authenticator comms', () =>
     it( 'network callback dispatches actions on Disconnected', () => {
         const initialState = {
           peruseApp: {
-            networkStatus: null 
-          } 
+            networkStatus: null
+          }
         };
         const mockStore = {
           getState : () => initialState,
@@ -54,8 +60,8 @@ describe( 'Authenticator comms', () =>
     it('network callback invokes operation to begin reconnection attempts upon Disconnect event', () => {
         const initialState = {
           peruseApp: {
-            networkStatus: null 
-          } 
+            networkStatus: null
+          }
         };
         const mockStore = {
           getState : () => initialState,

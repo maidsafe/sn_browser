@@ -43,7 +43,8 @@ script:
 - yarn run build
 - yarn run rebuild
 - yarn run test-peruse
-# - yarn run test-exts
+# - travis_retry yarn run test-exts # super occasionally times out in tests.
+
 # separate tests for safe + auth as together throws error due to native libs
 # - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test safe-auth;
 #   fi
