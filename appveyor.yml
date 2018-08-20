@@ -45,7 +45,8 @@ install:
   - yarn config set msvs_version 2017
   - yarn config list
 
-  # - npm cache clean --force
+  - npm cache clean --force
+  - yarn cache clean --force
 
   - yarn add windows-build-tools --vs2017 --global
   - yarn add node-gyp --global

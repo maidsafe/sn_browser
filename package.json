@@ -18,7 +18,7 @@
     "test-e2e-all": "yarn test-e2e && yarn test-exts-e2e",
     "test-all": "yarn run lint && yarn run flow && yarn run test && yarn run test exts && yarn run build && yarn test e2e",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
-    "lint-fix": "npm run lint -- --fix",
+    "lint-fix": "yarn run lint --fix",
     "log-osx": "tail -f ~/Library/Logs/Peruse/log.log",
     "log-linux": "tail -f ~/.config/Peruse/log.log",
     "log-windows": "Get-Content -Path \"%USERPROFILE%\\AppData\\Roaming\\Peruse\\log.log\" -Wait",
