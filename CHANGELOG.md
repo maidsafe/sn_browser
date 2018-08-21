@@ -4,10 +4,39 @@ All notable changes to this project will be documented in this file.
 #### [Unreleased]
 ### Added
 - Notification on network disconnect event with automatic reconnect upon network resolve
-- Browser executed with no network connection shows notification upon loginFromUri attempt and autmotically connects client upon network resolve
+- Browser executed with no network connection shows notification upon `loginFromUri` attempt and automatically connects client upon network resolve
+- POC for WebID handling in the browser.
+- WebId DOM variables and event emitter added.
+- Loading indicators
+- Error pages
+
+
+### Fixed 
+- Functioning share MD request
+- Electron close app process on window close
+- Link to invite.maidsafe.net no longer opens multiple external tabs
+- Closing a tab to the left of the active tab results in rendering of correct webview
+- Properly handles http links when triggering did-fail-load events to prevent external tab spamming and to close respective tab in Peruse
+- E2E tests stabilised.
+- Browser window gets focused when auth requests come in.
+- App auth revocation.
+- Window / tab handling.
+- Functioning share MD request
+- Electron close app process on window close
+- Link to invite.maidsafe.net no longer opens multiple external tabs
+- Closing a tab to the left of the active tab results in rendering of correct webview
+- Properly handles http links when triggering did-fail-load events to prevent external tab spamming and to close respective tab in Peruse
+- Network state poperly propagates to auth-web-app
+- isAuthorised state properly propagates to auth-web-app to produce expected UI when reloading logged out safe-auth://home
+
+### Changed
+- Electron to 2.0.7
+- Deps updated in general.
+- Jest tests run in electron env.
 
 ### SAFE libraries Dependencies
 - @maidsafe/safe-node-app: `fe5dc54aa9c8a1c5dd71809b616f4a2353b598e8`
+
 
 #### [0.6.0]
 ### Changed
@@ -23,13 +52,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - `eval` has been disabled.
 - domAPI handles removed
-- Functioning share MD request
-- Electron close app process on window close
-- Link to invite.maidsafe.net no longer opens multiple external tabs
-- Closing a tab to the left of the active tab results in rendering of correct webview
-- Properly handles http links when triggering did-fail-load events to prevent external tab spamming and to close respective tab in Peruse
-- Network state poperly propagates to auth-web-app
-- isAuthorised state properly propagates to auth-web-app to produce expected UI when reloading logged out safe-auth://home
 
 ### Added
 - background process

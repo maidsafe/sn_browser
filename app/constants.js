@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { remote } from 'electron';
 import pkg from 'appPackage';
+import getPort from 'get-port';
 
 const platform = process.platform;
 const OSX = 'darwin';
@@ -28,6 +29,14 @@ if( allPassedArgs.includes('--live') )
 if( allPassedArgs.includes('--debug') )
 {
     hasDebugFlag = true;
+}
+
+let forcedPort;
+if( allPassedArgs.includes('--port') )
+{
+    const index = allPassedArgs.indexOf('--port');
+
+    forcedPort = allPassedArgs[ index + 1 ]
 }
 
 export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
@@ -121,8 +130,21 @@ export const INTERNAL_PAGES = {
     BOOKMARKS : 'bookmarks'
 };
 
+const getRandomPort = async () =>
+{
+    let port = await getPort();
+    if( forcedPort )
+    {
+        port = forcedPort;
+    }
+
+    global.port = port
+
+    return port;
+};
+
 export const CONFIG = {
-    PORT                 : 3984,
+    PORT                 :  remote ? remote.getGlobal('port') : getRandomPort(),
     SAFE_PARTITION       : 'persist:safe-tab',
     SAFE_NODE_LIB_PATH   : safeNodeLibPath(),
     APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
@@ -167,7 +189,9 @@ const appInfo = {
         own_container : true,
     },
     permissions : {
-    },
+    _public      : ['Read', 'Insert', 'Update', 'Delete'],
+    // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
+},
 };
 
 // OSX: Add bundle for electron in dev mode

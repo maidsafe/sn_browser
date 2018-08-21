@@ -19,6 +19,7 @@ import logger from 'logger';
 
 import {
     isRunningUnpacked,
+    isRunningDebug,
     isRunningSpectronTestProcess,
     isRunningPackaged,
     isCI,
@@ -61,7 +62,7 @@ let mainWindow = null;
 preAppLoad();
 
 // Apply MockVault if wanted for prealod
-if ( process.argv.includes('--mock') && process.argv.includes('--preload') )
+if ( process.argv.includes('--preload') )
 {
     try{
 
@@ -84,7 +85,7 @@ if ( isRunningPackaged )
     sourceMapSupport.install();
 }
 
-if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+if ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
 {
     require( 'electron-debug' )();
     const path = require( 'path' );
@@ -94,6 +95,9 @@ if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PRO
 
 const installExtensions = async () =>
 {
+    if( isCI ) return;
+
+    logger.verbose('Installing devtools extensions')
     const installer = require( 'electron-devtools-installer' );
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     const extensions = [
@@ -129,7 +133,7 @@ app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
 
-    if ( !isRunningSpectronTestProcess && isRunningUnpacked || process.env.DEBUG_PROD === 'true' )
+    if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
     {
         await installExtensions();
     }
@@ -140,6 +144,8 @@ app.on( 'ready', async () =>
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
             onReceiveUrl( store, uriArg );
+            mainWindow.show();
+
         }
     }
 
@@ -160,6 +166,8 @@ app.on( 'ready', async () =>
 app.on( 'open-url', ( e, url ) =>
 {
     onReceiveUrl( store, url );
+
+    mainWindow.show();
 
 } );
 

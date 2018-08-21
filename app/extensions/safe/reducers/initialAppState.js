@@ -26,7 +26,10 @@ const initialState = {
         authResponseUri : '',
         savedBeforeQuit : false,
         saveStatus      : '',
-        isMock          : null
+        isMock          : null,
+        showingWebIdDropdown : false,
+        isFetchingWebIds  : false,
+        webIds          : []
     },
     webFetch : {
         fetching : false,

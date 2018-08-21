@@ -9,39 +9,45 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
 } from 'spectron-lib/browser-driver';
-import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
-import { setupSpectronApp, isCI, travisOS } from 'spectron-lib/setupSpectronApp';
+import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+import {
+    setupSpectronApp
+    , isCI
+    , travisOS
+    , afterAllTests
+    , beforeAllTests
+    , windowLoaded
+} from 'spectron-lib/setupSpectronApp';
+
 jest.unmock( 'electron' );
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 
 describe( 'safe authenticator protocol', () =>
 {
-    const app = setupSpectronApp();
+  let app;
 
-    beforeAll( async () =>
-    {
-        await app.start();
-        await app.client.waitUntilWindowLoaded();
-    } );
+  beforeEach( async () =>
+  {
+    app = setupSpectronApp();
 
-    afterAll( () =>
-    {
-        if ( app && app.isRunning() )
-        {
-            return app.stop();
-        }
-    } );
+      await beforeAllTests(app)
+  } );
+
+  afterEach( async () =>
+  {
+      await afterAllTests(app);
+      console.log('APP SHOULD BE STOPPED', app.isRunning())
+  } );
 
     test( 'window loaded', async () =>
     {
-        let loaded = await app.browserWindow.isVisible() ;
-        await delay(3500)
-        return loaded;
-    })
+        expect( await windowLoaded( app ) ).toBeTruthy()
+    });
 
 
-    if( travisOS !== 'linux' )
+    // if( travisOS !== 'linux' )
+    if( process.platform  !== 'linux' )
     {
         it( 'is registered to handle safe-auth/home js requests:', async( ) =>
         {

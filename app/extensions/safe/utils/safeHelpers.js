@@ -8,15 +8,18 @@ export const isForSafeServer = ( parsedUrlObject ) =>
 
 export const urlIsAllowedBySafe = ( testUrl ) =>
 {
-    logger.verbose('Checking urlIsAllowedBySafe')
+    logger.verbose('Checking urlIsAllowedBySafe', testUrl)
     const urlObj = url.parse( testUrl );
 
     const validProtocols = pkg.build.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
 
+
+    //TODO: locally server appspot files to avoid reqs thereto.
     if ( adaptedProtocols.includes( urlObj.protocol ) || isForSafeServer( urlObj ) ||
         urlObj.protocol === 'chrome-devtools:' || urlObj.protocol === 'file:' ||
-        urlObj.protocol === 'blob:' )
+        urlObj.protocol === 'blob:' || urlObj.protocol === 'chrome-extension:' ||
+        urlObj.host === 'chrome-devtools-frontend.appspot.com')
     {
         return true;
     }

@@ -4,7 +4,7 @@ import initialAppState from './initialAppState';
 import logger from 'logger';
 import { TYPES } from 'actions/remoteCall_actions';
 
-const initialState = initialAppState.notifications;
+const initialState = initialAppState.remoteCalls;
 
 const findCallIndexById = ( theState, theCall ) =>
 {

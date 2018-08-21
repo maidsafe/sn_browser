@@ -6,7 +6,6 @@ import logger from 'logger';
 export const setupServerVars = () =>
 {
     const server = new Hapi.Server();
-
     server.connection( { port: CONFIG.PORT, host: 'localhost' } );
     server.register( inert );
     return server;

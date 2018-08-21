@@ -1,7 +1,6 @@
 const spawn = require( 'cross-spawn' );
 const path = require( 'path' );
 
-
 const platform = process.platform;
 const OSX = 'darwin';
 const LINUX = 'linux';
@@ -48,51 +47,13 @@ switch ( arg )
 
         break;
     }
-    case ( 'peruse' ) :
-    {
-        pattern = `__tests__${s}[^${s}]+${s}.+\\.spec\\.js$`;
-
-        if ( platform === WINDOWS )
-        {
-            //exclude weakref tests for now.
-            pattern = `__tests__${s}[^${s}]+${s}(?!setupPreloadAPIs).+\\.spec\\.js$`;
-        }
-
-        break;
-    }
-    case ( 'exts' ) :
-    {
-        pattern = `app${s}extensions${s}[^${s}]+${s}((?!e2e).)*\\w+\\.spec\\.js$`;
-        break;
-    }
-    case ( 'safe' ) :
-    {
-        pattern = `app${s}extensions${s}safe${s}test${s}(?!e2e)(?!auth)[^${s}]+${s}?\\w+\\.spec\\.js$`;
-        argsArray.push( `--no-cache`);
-        argsArray.push( `--maxWorkers=2`);
-        break;
-    }
-    case ( 'safe-auth' ) :
-    {
-        pattern = `app${s}extensions${s}safe${s}test${s}auth${s}\\w+\\.spec\\.js$`;
-        break;
-    }
-    case ( 'safe-app' ) :
-    {
-        pattern = `app${s}extensions${s}safe${s}test${s}app${s}\\w+\\.spec\\.js$`;
-        argsArray.push( `--no-cache`);
-        argsArray.push( `--maxWorkers=2`);
-        break;
-    }
     default :
     {
-        pattern = `_*tests?_*${s}(?!e2e${s})[^${s}]+${s}\\w+\\.spec\\.js$`;
+        pattern = `__e2e__${s}.+\\.spec\\.js`;
+        argsArray.push( `--bail`);
+        argsArray.push( `--runInBand`);
 
-        if ( platform === WINDOWS )
-        {
-            //exclude weakref tests for now.
-            pattern = `_*tests?_*${s}(?!e2e${s})[^${s}]+${s}(?!setupPreloadAPIs)\\w+\\.spec\\.js$`;
-        }
+        break;
     }
 }
 // should be first

@@ -1,5 +1,4 @@
 import { SAFE } from 'extensions/safe/constants';
-
 import { requestAuth, clearAppObj } from '../network';
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
@@ -22,22 +21,8 @@ const handleLogoutActions = ( store ) =>
     manageLogout( store );
 }
 
-const networkIsConnected = ( state ) =>
-{
-    const peruseApp = state.peruseApp;
 
-    if ( peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_IN ||
-        authingStates.includes( peruseApp.appStatus ) )
-    {
-        return true
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
+let previousAppStatus;
 /**
  * Handle triggering actions and related functionality for logout of the Safe Network
  * based upon the application auth state
@@ -47,14 +32,17 @@ const manageLogout = async ( store ) =>
 {
     const state = store.getState();
 
-    if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_LOGOUT )
+    if ( state.peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_OUT )
     {
-        store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
-        store.dispatch( uiActions.resetStore() );
-        clearAppObj();
+        logger.verbose('Performing logout cleanup.')
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
+        clearAppObj();
+        store.dispatch( uiActions.resetStore() );
     }
+
+    previousAppStatus = state.peruseApp.appStatus;
 };
+
 
 /**
  * Handle triggering actions and related functionality for login to the SAFE netowrk

@@ -7,10 +7,6 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
-jest.mock('extensions', () => {
-
-});
-
 describe( 'Browser', () =>
 {
     let wrapper;
@@ -23,9 +19,13 @@ describe( 'Browser', () =>
             ui                   : {},
             addBookmark          : jest.fn(),
             removeBookmark       : jest.fn(),
-            selectAddressBar      : jest.fn(),
+            selectAddressBar     : jest.fn(),
+            deselectAddressBar   : jest.fn(),
+            reloadPage           : jest.fn(),
+            pageLoaded           : jest.fn(),
             blurAddressBar       : jest.fn(),
             addNotification      : jest.fn(),
+            updateNotification   : jest.fn(),
             addLocalNotification : jest.fn()
         };
         wrapper = mount( <Browser { ...props } /> );
@@ -36,7 +36,7 @@ describe( 'Browser', () =>
     {
         it( 'should have name Browser', () =>
         {
-            expect( instance.constructor.name ).toBe( 'Browser' );
+            expect( instance.constructor.name ).toMatch( 'Browser' );
         } );
     } );
 
@@ -46,7 +46,6 @@ describe( 'Browser', () =>
         {
             props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1 }] };
             wrapper = mount( <Browser { ...props } /> );
-            instance = wrapper.instance();
         } );
 
         it( 'should have exactly 1 AddressBar component', () =>
@@ -75,7 +74,7 @@ describe( 'Browser', () =>
         beforeEach( () =>
         {
             props = { ...props, tabs: [] };
-            wrapper = shallow( <Browser { ...props } /> );
+            wrapper = mount( <Browser { ...props } /> );
             instance = wrapper.instance();
         } );
 

@@ -1,6 +1,7 @@
 // @flow
 import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
 import path from 'path';
@@ -9,7 +10,6 @@ import styles from './tab.css';
 import logger from 'logger';
 const stdUrl = require('url');
 
-const { Menu, MenuItem } = remote;
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
@@ -60,6 +60,8 @@ export default class Tab extends Component
         this.openDevTools = ::this.openDevTools;
         this.loadURL = ::this.loadURL;
         this.reloadIfActive = ::this.reloadIfActive;
+
+        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );;
     }
 
     isDevToolsOpened = () =>
@@ -84,10 +86,11 @@ export default class Tab extends Component
         pageLoaded();
     }
 
-    componentDidMount()
+    buildMenu = () =>
     {
-        const { webview } = this;
-        let rightClickPosition;
+        if( !remote ) return null; //jest workaround
+
+        const {Menu} = remote;
 
 
         const menu = Menu.buildFromTemplate( [
@@ -105,10 +108,21 @@ export default class Tab extends Component
             }
         ] );
 
+        return menu;
+    }
+
+    componentDidMount()
+    {
+        const { webview } = this;
+        let rightClickPosition;
+
+        const menu = this.buildMenu();
+
         const callbackSetup = () =>
         {
             webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
             webview.addEventListener( 'did-stop-loading', ::this.didStopLoading );
+            webview.addEventListener( 'did-finish-load', ::this.didFinishLoading );
             webview.addEventListener( 'will-navigate', ::this.willNavigate );
             webview.addEventListener( 'did-navigate', ::this.didNavigate );
             webview.addEventListener( 'did-navigate-in-page', ::this.didNavigateInPage );
@@ -143,20 +157,28 @@ export default class Tab extends Component
     componentWillReceiveProps( nextProps )
     {
         if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
-        {
             return;
-        }
 
         if ( !this.state.browserState.mountedAndReady )
-        {
             return;
-        }
 
-        logger.silly( 'Webview: did receive updated props' );
+        const { webview } = this;
+
+        logger.silly( 'Tab: did receive updated props' );
+
+        const nextId = nextProps.webId || {};
+        const currentId = this.props.webId || {}
+        if( nextId['@id'] !== currentId['@id'] )
+        {
+            if ( !webview ) return;
+
+            logger.verbose('New WebID set for ', nextProps.url )
+
+            this.setCurrentWebId( nextProps.webId );
+        }
 
         if ( nextProps.url )
         {
-            const { webview } = this;
 
             if ( !webview ) return;
 
@@ -213,6 +235,8 @@ export default class Tab extends Component
         {
             this.loadURL( url )
                 .catch( err => console.log( 'err in loadurl', err ) );
+
+            this.setCurrentWebId( null );
         }
     }
 
@@ -264,6 +288,24 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
+
+        this.setCurrentWebId( null );
+    }
+
+    didFinishLoading( )
+    {
+        const { updateTab, index, isActiveTab } = this.props;
+
+        const tabUpdate = {
+            index,
+            isLoading: false
+        };
+
+        this.updateBrowserState( { loading: false } );
+        updateTab( tabUpdate );
+
+        this.setCurrentWebId( null );
+
     }
 
     pageTitleUpdated( e )
@@ -293,13 +335,15 @@ export default class Tab extends Component
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
-        logger.silly( 'webview did navigate' );
+        logger.verbose( 'webview did navigate' );
 
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
             this.updateBrowserState( { url, redirects: [url] } );
             updateTab( { index, url } );
+
+            this.setCurrentWebId( null );
         }
     }
 
@@ -309,13 +353,19 @@ export default class Tab extends Component
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
 
-        logger.silly( 'Webview: did navigate in page' );
+        logger.verbose( 'Webview: did navigate in page', url, this.state.browserState.url );
 
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) )
         {
-            this.updateBrowserState( { url, redirects: [url] } );
-            updateTab( { index, url } );
+            if( urlHasChanged( url, this.state.browserState.url ) )
+            {
+                this.updateBrowserState( { url, redirects: [url] } );
+                updateTab( { index, url } );
+
+                this.setCurrentWebId( null );
+            }
+
         }
     }
 
@@ -341,6 +391,7 @@ export default class Tab extends Component
 
         if ( !this.isFrozen() )
         {
+            logger.verbose('inthis frozen checkkkkk in will nav')
             return;
         }
 
@@ -380,6 +431,52 @@ export default class Tab extends Component
         } );
     }
 
+    updateTheIdInWebview = ( newWebId ) =>
+    {
+        const { updateTab, index, webId } = this.props;
+        const { webview } = this;
+
+        const theWebId = newWebId ? newWebId : webId;
+
+        logger.verbose('Setting currentWebid in tab')
+
+        if ( !webview  || !theWebId ) return;
+
+        const setupEventEmitter = `
+            webIdUpdater = () =>
+            {
+                var oldWebId_Id = '';
+                var currentIdDefined = typeof window.currentWebId !== 'undefined';
+
+                if( currentIdDefined )
+                {
+                    oldWebId_Id = window.currentWebId['@id'];
+                }
+
+                window.currentWebId = ${JSON.stringify(theWebId)};
+
+                if( typeof webIdEventEmitter !== 'undefined' &&
+                    oldWebId_Id !== window.currentWebId['@id'] )
+                    {
+                        webIdEventEmitter.emit('update', currentWebId );
+                    }
+            }
+
+            webIdUpdater();
+        `;
+
+        // const updateTheIdInWebview = () =>
+        // {
+        webview.executeJavaScript( setupEventEmitter )
+        // }
+
+    }
+
+    setCurrentWebId( newWebId ) {
+
+        this.debouncedWebIdUpdateFunc( newWebId );
+    }
+
     newWindow( e )
     {
         const { addTab } = this.props;
@@ -394,6 +491,7 @@ export default class Tab extends Component
 
     isFrozen( e )
     {
+        logger.verbose('Webview is frozen...')
         const { index } = this.props;
         const frozen = !index;
         // const frozen = staticTabData[index] || !index
@@ -463,7 +561,6 @@ export default class Tab extends Component
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
 
-
         // prevent looping over attempted url loading
         if ( webview && url !== 'about:blank' )
         {
@@ -476,7 +573,7 @@ export default class Tab extends Component
     {
         const { isActiveTab } = this.props;
 
-        const preloadFile = remote.getGlobal( 'preloadFile' );
+        const preloadFile = remote ? remote.getGlobal( 'preloadFile' ) : '';
         const injectPath = preloadFile; // js we'll be chucking in
 
         let moddedClass = styles.tab;

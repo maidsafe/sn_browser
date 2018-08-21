@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
-import { getPeruseAuthReqUri, authFromInternalResponse } from '../network';
+import { getPeruseAuthReqUri, authFromInternalResponse, replyToRemoteCallFromAuth } from '../network';
 import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 import * as notificationActions from 'actions/notification_actions';
@@ -152,7 +152,7 @@ class ReqQueue
 
             this.req.res = res;
 
-            logger.info( 'IPC.js: another response being parsed.:', res );
+            logger.info( 'IPC.js: another response being parsed.:', this.req );
             if ( res.authReq || res.contReq || res.mDataReq )
             {
                 let reqType = REQ_TYPES.AUTH;
@@ -195,6 +195,10 @@ class ReqQueue
             {
                 authFromInternalResponse( parseResUrl( res ) );
             }
+            else if( this.req.type === CLIENT_TYPES.WEB )
+            {
+                replyToRemoteCallFromAuth( this.req );
+            }
             else
             {
                 openExternal( res );
@@ -236,7 +240,8 @@ const registerNetworkListener = ( e ) =>
 {
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, ( err, state ) =>
     {
-        if ( state === CONSTANTS.NETWORK_STATUS.CONNECTED )
+        if ( state === CONSTANTS.NETWORK_STATUS.CONNECTED ||
+            state === CONSTANTS.NETWORK_STATUS.LOGGED_IN )
         {
             reqQ.processing = false;
             reqQ.process();
@@ -440,7 +445,7 @@ const skipAuthReq = () =>
     reqQ.next();
 };
 
-const setReAuthoriseState = ( state, store ) => 
+const setReAuthoriseState = ( state, store ) =>
 {
   store.dispatch(authenticatorActions.setReAuthoriseState(state));
 };

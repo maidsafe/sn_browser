@@ -118,7 +118,7 @@ export default class Notifier extends Component
         const reactElement = reactNode ? reactNodeToElement(reactNode) : null;
         
         return (
-            <Row hasMinHeight className={ styles.container }>
+            <Row hasMinHeight className={ styles.container } gutters={"none"}>
                 <MessageBox messageType={type}>
                     <Row verticalAlign="top" align="center">
                         <Column key="notifier-text" align="left">

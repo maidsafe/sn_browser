@@ -11,7 +11,12 @@
     justify-content: space-around;
     box-sizing: border-box;
     border-right: 0;
+    z-index: 3;
 
+}
+.addressBar
+{
+    width: 100%;
 }
 
 .input

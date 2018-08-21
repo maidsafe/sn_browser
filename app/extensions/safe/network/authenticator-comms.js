@@ -1,5 +1,6 @@
 import logger from 'logger';
 import { handleAuthUrl } from 'extensions/safe/actions/authenticator_actions';
+import { updateRemoteCall } from 'actions/remoteCall_actions';
 import { initialiseApp } from '@maidsafe/safe-node-app';
 import {
     APP_INFO,
@@ -19,6 +20,23 @@ let peruseAppObj;
 let store;
 let browserAuthReqUri;
 
+export const replyToRemoteCallFromAuth = ( request ) =>
+{
+    const state = store.getState();
+    const remoteCalls = state.remoteCalls;
+
+    const remoteCallToReply = remoteCalls.find( theCall => {
+        if( theCall.name !== 'authenticateFromUriObject' ) return;
+
+        const theRequestFromCall = theCall.args[0].uri;
+
+        return theRequestFromCall === request.uri;
+
+    });
+
+    store.dispatch( updateRemoteCall( { ...remoteCallToReply, done: true, inProgress: true, response: request.res }) )
+}
+
 export const authFromQueue = async () =>
 {
     if ( queue.length )
@@ -31,7 +49,7 @@ const tryConnect = async (res) => {
   try
   {
     peruseAppObj = await peruseAppObj.auth.loginFromUri( res );
-    store.dispatch(clearNotification()); 
+    store.dispatch(clearNotification());
   }
   catch ( err )
   {
@@ -43,8 +61,6 @@ const tryConnect = async (res) => {
 
 export const authFromInternalResponse = async ( res, isAuthenticated ) =>
 {
-    logger.silly('authFromInternalResponse')
-
     try
     {
         // for webFetch app only
@@ -68,7 +84,7 @@ export const authFromInternalResponse = async ( res, isAuthenticated ) =>
             tryConnect( res );
         }
 
-        logger.error( err.message || err );
+        logger.error( err );
         logger.error( '>>>>>>>>>>>>>' );
     }
 };
@@ -86,7 +102,7 @@ export const handleSafeAuthAuthentication = ( uriOrReqObject, type ) =>
 {
     if ( typeof uriOrReqObject !== 'string' && typeof uriOrReqObject.uri !== 'string' )
     {
-        throw new Error( 'Auth URI should be procided as a string' );
+        throw new Error( 'Auth URI should be provided as a string' );
     }
 
     store.dispatch( handleAuthUrl( uriOrReqObject ) );
@@ -122,14 +138,14 @@ export const onNetworkStateChange = (store, mockAttemptReconnect) => (state) =>
           text: `Network state: ${state}. Reconnecting...`,
           type: 'error',
           onDismiss: clearNotification
-        } 
+        }
       ));
       mockAttemptReconnect ? mockAttemptReconnect(store) : attemptReconnect(store);
     }
   }
   if(state === SAFE.NETWORK_STATE.CONNECTED && previousState === SAFE.NETWORK_STATE.DISCONNECTED)
   {
-    store.dispatch(clearNotification()); 
+    store.dispatch(clearNotification());
   }
 };
 

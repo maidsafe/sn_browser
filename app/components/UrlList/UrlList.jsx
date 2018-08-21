@@ -57,16 +57,18 @@ export default class UrlList extends Component
             parsedList.push( listItem );
         } );
 
-
         return (
-            <Table
-                className={ styles.table }
-            >
-                { parsedList }
-                { !parsedList.length &&
-                    <TableCell>{'Nothing to see here yet'}</TableCell>
-                }
-            </Table>
+                <Table
+                    className={ styles.table }
+                    >
+                        { parsedList }
+                        {
+                            !parsedList.length &&
+                            <TableRow >
+                                <TableCell>Nothing to see here yet.</TableCell>
+                            </TableRow>
+                    }
+                </Table>
         );
     }
 }
