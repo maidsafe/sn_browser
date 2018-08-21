@@ -1,8 +1,7 @@
 import {
     addTrailingSlashIfNeeded,
     makeValidAddressBarUrl,
-    urlHasChanged,
-    validUrlRegExp
+    urlHasChanged
 } from 'utils/urlHelpers';
 
 describe( 'makeValidAddressBarUrl', () =>
@@ -147,32 +146,4 @@ describe( 'urlHasChanged', () =>
         expect( urlHasChanged( 'safe://hello.world/hashtest/', 'safe://hello.world/hashtest/#/me' ) ).toBeTruthy( );
         expect( urlHasChanged( 'safe://hello.world/hashtest/#me', 'safe://hello.world/hashtest/#/me' ) ).toBeFalsy( );
     } );
-
 } );
-
-describe('validUrlRegExp returns regular expression to validate URL\'s', () => {
-    it( 'should exist', () =>
-    {
-        expect( validUrlRegExp ).not.toBeNull();
-    } );
-
-    it( 'trailing period should not be valid', () => {
-        expect( validUrlRegExp.test( 'safe://service.' ) ).toBeFalsy( );
-    } );
-
-    it( 'domain pathname without proceding top-level domain should be valid', () => {
-        expect( validUrlRegExp.test( 'safe://domain' ) ).toBeTruthy( );
-    });
-
-    it( 'colon preceding pathname should not be valid', () => {
-        expect( validUrlRegExp.test( 'safe://:service' ) ).toBeFalsy( );
-    } );
-
-    it( 'colon preceding port number should be valid', () => {
-        expect( validUrlRegExp.test( 'http://localhost:3001' ) ).toBeTruthy( );
-    } );
-
-    it( 'underscores in any part of domain pathname should be valid', () => {
-        expect( validUrlRegExp.test( 'safe://842_183.931_1783' ) ).toBeTruthy( );
-    } );
-});

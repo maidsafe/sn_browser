@@ -3,12 +3,11 @@ import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged, validUrlRegExp } from 'utils/urlHelpers';
+import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
 import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
 import logger from 'logger';
-import { PROTOCOLS } from 'appConstants';
 const stdUrl = require('url');
 
 
@@ -255,45 +254,44 @@ export default class Tab extends Component
         updateTab( tabUpdate );
     }
 
-    didFailLoad( )
+    didFailLoad( err )
     {
-      const { url, index, addTab, closeTab } = this.props;
-      const { webview } = this;
-      const httpRegExp = new RegExp('^http');
-      const urlObj = stdUrl.parse( url );
-      const setFailLoadUi = (header, subheader) => {
-          return webview.executeJavaScript(`
-            var body = document.querySelector("body");
-            body.innerHTML = '';
-            var h3 = document.createElement("h3");
-            h3.innerText = "${header}";
-            h3.style = "text-align: center;"
-            body.appendChild(h3);
-            var h4 = document.createElement("h4");
-            h4.innerText = "${subheader || ''}";
-            h4.style = "text-align: center;"
-            body.appendChild(h4);`);
-      };
-      if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
-      {
-          setFailLoadUi("Page Load Failed");
-          return;
-      }
-      if ( !validUrlRegExp.test(url) )
-      {
-          setFailLoadUi(`Invalid URL: ${url}`);
-          return;
-      }
-      if (  validUrlRegExp.test(url) && httpRegExp.test(url) )
-      {
-          setFailLoadUi("Detected HTTP/S protocol.", `Redirecting ${url} to be opened by your default Web browser.`);
-          return;
-      }
-      if (  validUrlRegExp.test(url) && !httpRegExp.test(url) )
-      {
-          closeTab( { index } );
-          addTab( { url, isActiveTab: true } );
-      }
+        const { url, index, addTab, closeTab } = this.props;
+        const { webview } = this;
+        const urlObj = stdUrl.parse( url );
+        const setFailLoadUi =
+        (
+            header,
+            subheader
+        ) => webview.executeJavaScript( `
+              var body = document.querySelector("body");
+              body.innerHTML = '';
+              var h3 = document.createElement("h3");
+              h3.innerText = "${header}";
+              h3.style = "text-align: center;"
+              body.appendChild(h3);
+              var h4 = document.createElement("h4");
+              h4.innerText = "${subheader || ''}";
+              h4.style = "text-align: center;"
+              body.appendChild(h4);` );
+
+        if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
+        {
+            setFailLoadUi( 'Page Load Failed' );
+            return;
+        }
+        if ( err && err.errorDescription === 'ERR_INVALID_URL' )
+        {
+            setFailLoadUi( `Invalid URL: ${url}` );
+            return;
+        }
+        if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
+        {
+            setFailLoadUi( 'Detected HTTP/S protocol.', `Redirecting ${url} to be opened by your default Web browser.` );
+            return;
+        }
+        closeTab( { index } );
+        addTab( { url, isActiveTab: true } );
     }
 
     didStopLoading( )
@@ -578,20 +576,6 @@ export default class Tab extends Component
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
-
-        logger.info('loadURL validUrlRegExp.test(url): ', url, validUrlRegExp.test(url) );
-        if ( !validUrlRegExp.test(url) )
-        {
-            webview.executeJavaScript(`
-              var body = document.querySelector("body");
-              body.innerHTML = '';
-              var h3 = document.createElement("h3");
-              h3.innerText = "Invalid URL: ${url}";
-              h3.style = "text-align: center;"
-              body.appendChild(h3);
-            `);
-            return;
-        }
 
         // prevent looping over attempted url loading
         if ( webview && url !== 'about:blank' )

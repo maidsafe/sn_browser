@@ -106,26 +106,6 @@ describe( 'SAFE network webFetch operation', async () =>
     //     // expect( parsedUrl.protocol ).toBe( 'safe:' );
     // } );
 
-    it( 'validates URL before loading', async () =>
-    {
-        expect.assertions( 1 );
-
-        await setClientToMainBrowserWindow( app );
-        const { client } = await app;
-        const tabIndex = await newTab( app );
-        await delay(500)
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
-
-        await navigateTo( app, 'safe://test-url.' );
-
-        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
-
-        await client.windowByIndex( tabIndex );
-        await delay( 2500 );
-        let text = await client.getText( 'body' );
-        expect( text ).toBe( 'Invalid URL: safe://test-url.');
-    } );
-
     if( ! isTestingPackagedApp )
     {
 
