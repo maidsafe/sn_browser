@@ -450,6 +450,11 @@ const setReAuthoriseState = ( state, store ) =>
   store.dispatch(authenticatorActions.setReAuthoriseState(state));
 };
 
+const setIsAuthorisedState = ( store, isAuthorised ) =>
+{
+  store.dispatch(authenticatorActions.setIsAuthorisedState(isAuthorised));
+};
+
 
 export const callIPC = {
     registerSafeNetworkListener : registerNetworkListener,
@@ -462,5 +467,6 @@ export const callIPC = {
     registerSharedMDataDecision : onSharedMDataDecision,
     registerOnReqError          : onReqError,
     skipAuthRequest             : skipAuthReq,
-    setReAuthoriseState
+    setReAuthoriseState,
+    setIsAuthorisedState
 };

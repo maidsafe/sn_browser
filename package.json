@@ -39,7 +39,7 @@
     "start-hot-renderer": "cross-env HOT=1 NODE_ENV=development IS_UNPACKED=true electron -r babel-register -r babel-polyfill ./app/main.development",
     "start-hot-renderer-live": "cross-env HOT=1 NODE_ENV=production IS_UNPACKED=true electron -r babel-register -r babel-polyfill ./app/main.development",
     "postinstall": "concurrently \"yarn run build-dll\" \"yarn run build-preload\" \"yarn run build-auth-app\" \"cd app && yarn\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
-    "dev": "cross-env START_HOT=1 yarn run hot-updates-server",
+    "dev": "yarn build-auth-app && cross-env START_HOT=1 yarn run hot-updates-server",
     "mock-dev": "yarn run dev",
     "prod-dev": "cross-env START_HOT=1 yarn run hot-updates-server-live",
     "package": "yarn run build && build --publish never && yarn post-pack",

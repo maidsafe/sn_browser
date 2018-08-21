@@ -179,6 +179,7 @@ export default class AddressBar extends Component
                             handleRefresh={ this.handleRefresh }
                             {...props}
                         />
+
                     </Column>
                     <Column className={ styles.addressBarColumn }>
                         <InputField

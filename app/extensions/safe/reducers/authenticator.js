@@ -46,6 +46,10 @@ export default function authenticator( state: object = initialState, action )
         {
             return { ...state, reAuthoriseState: payload };
         }
+        case TYPES.SET_IS_AUTHORISED_STATE:
+        {
+            return { ...state, isAuthorised: payload };
+        }
 
         default:
             return state;

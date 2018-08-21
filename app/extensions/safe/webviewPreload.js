@@ -127,6 +127,17 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         return { state: state.authenticator.networkState };
     };
 
+    window.safeAuthenticator.isAuthorised = ( ) =>
+    {
+        const state = store.getState();
+        return state.authenticator.isAuthorised;
+    };
+
+    window.safeAuthenticator.setIsAuthorised = ( isAuthorised ) =>
+    {
+       return callIPC.setIsAuthorisedState( store, isAuthorised );
+    };
+
     window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
     {
         const state = store.getState();
@@ -165,7 +176,8 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : cb
+            resolve : ( response ) =>  cb( null, response ),
+            reject: ( err ) => cb( err )
         };
     };
 
@@ -187,6 +199,23 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         };
     };
 
+    window.safeAuthenticator.setIsAuthorisedListener = ( cb ) =>
+    {
+        const callId = Math.random().toString( 36 );
+
+        store.dispatch( remoteCallActions.addRemoteCall(
+            {
+                id         : callId,
+                name       : 'setIsAuthorisedListener',
+                isListener : true
+            }
+        ) );
+
+        pendingCalls[callId] = {
+            resolve : ( response ) =>  cb( null, response ),
+            reject: ( err ) => cb( err )
+        };
+    };
 
     store.subscribe( async () =>
     {
