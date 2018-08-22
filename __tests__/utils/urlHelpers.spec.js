@@ -146,5 +146,4 @@ describe( 'urlHasChanged', () =>
         expect( urlHasChanged( 'safe://hello.world/hashtest/', 'safe://hello.world/hashtest/#/me' ) ).toBeTruthy( );
         expect( urlHasChanged( 'safe://hello.world/hashtest/#me', 'safe://hello.world/hashtest/#/me' ) ).toBeFalsy( );
     } );
-
 } );

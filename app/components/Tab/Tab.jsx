@@ -254,27 +254,44 @@ export default class Tab extends Component
         updateTab( tabUpdate );
     }
 
-    didFailLoad( )
+    didFailLoad( err )
     {
-      const { url, index, addTab, closeTab } = this.props;
-      const httpRegExp = new RegExp('^http');
-      const urlObj = stdUrl.parse( url );
-      if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' ) {
+        const { url, index, addTab, closeTab } = this.props;
         const { webview } = this;
-        webview.executeJavaScript(`
-          const body = document.querySelector("body");
-          const h3 = document.createElement("h3");
-          h3.innerText = "Page Load Failed";
-          h3.style = "text-align: center;"
-          body.appendChild(h3);
-        `);
-        return;
-      }
-      closeTab( { index } );
-      if ( !httpRegExp.test(url) )
-      {
+        const urlObj = stdUrl.parse( url );
+        const setFailLoadUi =
+        (
+            header,
+            subheader
+        ) => webview.executeJavaScript( `
+              var body = document.querySelector("body");
+              body.innerHTML = '';
+              var h3 = document.createElement("h3");
+              h3.innerText = "${header}";
+              h3.style = "text-align: center;"
+              body.appendChild(h3);
+              var h4 = document.createElement("h4");
+              h4.innerText = "${subheader || ''}";
+              h4.style = "text-align: center;"
+              body.appendChild(h4);` );
+
+        if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
+        {
+            setFailLoadUi( 'Page Load Failed' );
+            return;
+        }
+        if ( err && err.errorDescription === 'ERR_INVALID_URL' )
+        {
+            setFailLoadUi( `Invalid URL: ${url}` );
+            return;
+        }
+        if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
+        {
+            setFailLoadUi( 'Detected HTTP/S protocol.', `Redirecting ${url} to be opened by your default Web browser.` );
+            return;
+        }
+        closeTab( { index } );
         addTab( { url, isActiveTab: true } );
-      }
     }
 
     didStopLoading( )
@@ -547,7 +564,6 @@ export default class Tab extends Component
 
     loadURL = async ( input ) =>
     {
-
         const { webview } = this;
         const url = addTrailingSlashIfNeeded( input );
         logger.silly( 'Webview: loading url:', url );

@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - WebId DOM variables and event emitter added.
 - Loading indicators
 - Error pages
+- UI view on failed-to-load webview event
 
 
 ### Fixed 
