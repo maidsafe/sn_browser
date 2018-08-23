@@ -23,11 +23,6 @@ const registerSafeProtocol = () =>
             return;
         }
 
-        if ( host.indexOf( '.' ) < 1 )
-        {
-            host = `www.${parsedUrl.host}`;
-        }
-
         const path = parsedUrl.pathname || '';
 
         // TODO. Sort out when/where with slash
