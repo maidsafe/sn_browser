@@ -49,13 +49,13 @@ describe( 'main window', () =>
     } );
 
 
-    test( 'window loaded', async () =>
+    it( 'window loaded', async () =>
     {
         const loaded = await windowLoaded( app )
         expect( loaded ).toBeTruthy()
     });
 
-    //
+    
     // it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     // {
     //     const { client } = app;
@@ -67,7 +67,7 @@ describe( 'main window', () =>
     //         console.log( log.source );
     //         console.log( log.level );
     //     } );
-    //     // expect( logs ).toHaveLength( 0 );
+    //     expect( logs ).toHaveLength( 0 );
     // } );
 
 
@@ -114,52 +114,59 @@ describe( 'main window', () =>
         expect( text ).toBe( 'Invalid URL: http://:invalid-url');
     } );
 
-    xit( 'can go backwards', async () =>
+    it( 'can go backwards', async () =>
     {
-        const { client } = app;
+        const { client } = app;       
         await setClientToMainBrowserWindow( app );
+        await client.pause( 500 );
         const tabIndex = await newTab( app );
+        await client.pause( 500 );
         await navigateTo( app, 'example.com' );
+        await client.pause( 4500 );
         await navigateTo( app, 'google.com' );
-
+        await client.pause( 4500 );
+        
         await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
         await client.click( BROWSER_UI.BACKWARDS );
+        await client.pause( 4500 );
         await client.windowByIndex( tabIndex );
-        const clientUrl = removeTrailingSlash( await client.getUrl() );
 
-        expect( clientUrl ).toBe( 'http://example.com' );
+        const clientUrl = await client.getUrl();
+        const parsedUrl = urlParse( clientUrl );
+
+        expect( parsedUrl.host ).toBe( 'example.com' );
     } );
 
 
-    xit( 'can go forwards', async () =>
+    it( 'can go forwards', async () =>
     {
-        const { client } = app;
-        await setClientToMainBrowserWindow( app );
-        const tabIndex = await newTab( app );
-        await navigateTo( app, 'example.com' );
-        await navigateTo( app, 'example.org' );
-
-        await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
-        await client.click( BROWSER_UI.BACKWARDS );
-        await client.windowByIndex( tabIndex );
-
-        const clientUrl = removeTrailingSlash( await client.getUrl() );
-
-        // TODO: URL from webview always has trailing slash
-        expect( clientUrl ).toBe( 'http://example.com' );
-
+        const { client } = app;       
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
-        await client.waitForExist( BROWSER_UI.FORWARDS, WAIT_FOR_EXIST_TIMEOUT );
-
-        // TODO: why is iting needing two clicks?
-        await client.click( BROWSER_UI.FORWARDS );
-        await client.click( BROWSER_UI.FORWARDS );
-
+        const tabIndex = await newTab( app );
+        await client.pause( 500 );
+        await navigateTo( app, 'example.com' );
+        await client.pause( 4500 );
+        await navigateTo( app, 'google.com' );
+        await client.pause( 4500 );
+        
+        await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
+        await client.click( BROWSER_UI.BACKWARDS );
+        await client.pause( 4500 );
         await client.windowByIndex( tabIndex );
-        const clientUrl2 = removeTrailingSlash( await client.getUrl() );
+        
+        await setClientToMainBrowserWindow( app );
+        await client.pause( 500 );
 
-        expect( clientUrl2 ).toBe( 'http://example.org' );
+        await client.waitForExist( BROWSER_UI.FORWARDS, WAIT_FOR_EXIST_TIMEOUT );
+        await client.click( BROWSER_UI.FORWARDS );
+        await client.pause( 4500 );
+        await client.windowByIndex( tabIndex );
+
+        const clientUrl2 = await client.getUrl();
+        const parsedUrl2 = urlParse( clientUrl2 );
+
+        expect( parsedUrl2.host ).toBe( 'google.com' );
     } );
 
 

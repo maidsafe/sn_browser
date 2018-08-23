@@ -21,6 +21,7 @@ class ButtonsLHS extends Component
             <Row gutters="S">
                 <Column align="center" verticalAlign="middle">
                     <IconButton
+                        className="js-address__backwards"
                         iconTheme="navigation"
                         iconType="left"
                         iconSize="S"
@@ -29,6 +30,7 @@ class ButtonsLHS extends Component
                 </Column>
                 <Column align="center" verticalAlign="middle">
                     <IconButton
+                        className="js-address__forwards"
                         iconTheme="navigation"
                         iconSize="S"
                         iconType="right"
