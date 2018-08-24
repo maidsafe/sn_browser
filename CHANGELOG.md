@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Properly handles http links when triggering did-fail-load events to prevent external tab spamming and to close respective tab in Peruse
 - Network state poperly propagates to auth-web-app
 - isAuthorised state properly propagates to auth-web-app to produce expected UI when reloading logged out safe-auth://home
+- Able to successfully auth when logging in on mock-dev on Windows
 
 ### Changed
 - Electron to 2.0.7
