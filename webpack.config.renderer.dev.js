@@ -37,7 +37,6 @@ export default merge.smart( baseConfig, {
     devtool : 'inline-source-map',
 
     target : 'electron-renderer',
-    // mode : 'production',
 
     entry : [
         'react-hot-loader/patch',
