@@ -72,4 +72,6 @@ Here's a good post to get started: [How to develop for the SAFE Network](https:/
 
 SAFE Browser is a lightly modified fork of the [Beaker Browser](https://www.beakerbrowser.com/).
 
-Modified MIT as per the [BeakerLicense](https://github.com/maidsafe/safe_browser/blob/master/BEAKER_LICENSE.md)
+Modified MIT as per the [BeakerLicense](https://github.com/maidsafe/safe_browser/blob/master/BEAKER_LICENSE.md).
+
+This is dual-licensed under the Modified BSD ([LICENSE-BSD](LICENSE-BSD) https://opensource.org/licenses/BSD-3-Clause) or the MIT license ([LICENSE-MIT](LICENSE-MIT) https://opensource.org/licenses/MIT) at your option.
