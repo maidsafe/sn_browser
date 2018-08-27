@@ -149,6 +149,15 @@ const onOpen = ( store ) =>
     store.dispatch( setIsMock( startedRunningMock ) );
 }
 
+/**
+ * on open of peruse application
+ * @param  {Object} store redux store
+ */
+const onAppReady = ( store ) =>
+{
+    logger.verbose('OnAppReady: Setting mock in store. ', startedRunningMock)
+    store.dispatch( setIsMock( startedRunningMock ) );
+}
 
 /**
  * Add middleware to Peruse redux store
@@ -224,6 +233,7 @@ export default {
     onReceiveUrl,
     onRemoteCallInMain,
     onOpen,
+    onAppReady,
     onWebviewPreload,
     preAppLoad,
     setupRoutes,

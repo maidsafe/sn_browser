@@ -23,7 +23,7 @@ const initBgProcess = async ( ) =>
 {
     // Add middleware from extensions here. TODO: this should be be unified somewhere.
     const loadMiddlewarePackages = getExtensionReduxMiddleware() || [];
-    const store = configureStore( {}, loadMiddlewarePackages, true );
+    const store = configureStore( undefined, loadMiddlewarePackages, true );
     initSafeServer( store );
 
     i18n.configure( I18N_CONFIG );

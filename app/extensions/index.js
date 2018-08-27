@@ -170,6 +170,17 @@ export const onOpenLoadExtensions = ( store ) =>
     } );
 };
 
+export const onAppReady = ( store ) =>
+{
+    allPackages.forEach( extension =>
+    {
+        if ( extension.onAppReady )
+        {
+            extension.onAppReady( store );
+        }
+    } );
+};
+
 export const onReceiveUrl = ( store, url ) =>
 {
     allPackages.forEach( extension =>

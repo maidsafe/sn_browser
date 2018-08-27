@@ -35,7 +35,7 @@ import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
 import { configureStore } from './store/configureStore';
-import { onReceiveUrl, preAppLoad } from 'extensions'
+import { onReceiveUrl, preAppLoad, onAppReady } from 'extensions'
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -132,7 +132,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 app.on( 'ready', async () =>
 {
     logger.info( 'App Ready' );
-
+    onAppReady( store );
     if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
     {
         await installExtensions();
