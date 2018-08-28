@@ -83,6 +83,8 @@ export const addAuthNotification = ( authReqData, app, sendAuthDecision, store )
     // now we listen....
     const stopListening = store.subscribe( () =>
     {
+        logger.verbose('Listener for addAuthNotification')
+
         const state = store.getState();
         const notifications = state.notifications;
 

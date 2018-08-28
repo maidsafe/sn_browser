@@ -19,6 +19,7 @@ const allApiCalls = {
  */
 const manageRemoteCalls = async ( store ) =>
 {
+    logger.verbose('manageRemoteCalls.')
     const state = store.getState();
     const remoteCalls = state.remoteCalls;
     if ( cachedRemoteCallArray !== remoteCalls )

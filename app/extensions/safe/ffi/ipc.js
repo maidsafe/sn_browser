@@ -11,7 +11,8 @@ import logger from 'logger';
 import { addAuthNotification } from '../manageAuthNotifications';
 import errConst from '../err-constants';
 
-let store;
+import { getSafeBackgroundProcessStore } from 'extensions/safe/index'
+
 const ipcEvent = null;
 
 
@@ -27,13 +28,6 @@ export const REQ_TYPES = {
 };
 
 const allAuthCallBacks = {};
-
-
-export const setIPCStore = ( passedStore ) =>
-{
-    store = passedStore;
-};
-
 
 /**
  * Set promise callbacks to be retrievable after authentication handling.
@@ -135,6 +129,8 @@ class ReqQueue
 
     process()
     {
+        logger.verbose('ipc.js processing req.')
+
         const self = this;
         if ( this.processing || this.q.length === 0 )
         {
@@ -142,7 +138,6 @@ class ReqQueue
         }
         this.processing = true;
         this.req = this.q[0];
-
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
             if ( !res )
@@ -172,13 +167,13 @@ class ReqQueue
                   app = res.mDataReq.app;
                 }
 
-                if (res.isAuthorised && store.getState().authenticator.reAuthoriseState)
+                if (res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState)
                 {
                     sendAuthDecision( true, res, reqType );
                 }
                 else
                 {
-                    addAuthNotification( res, app, sendAuthDecision, store );
+                    addAuthNotification( res, app, sendAuthDecision, getSafeBackgroundProcessStore() );
                 }
                 return;
             }
@@ -213,9 +208,9 @@ class ReqQueue
             logger.error( 'Error at req processing for:', this.req );
 
             // TODO: Setup proper rejection from when unauthed.
-            if ( store )
+            if ( getSafeBackgroundProcessStore() )
             {
-                store.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
+                getSafeBackgroundProcessStore.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
             }
 
             if ( ipcEvent )

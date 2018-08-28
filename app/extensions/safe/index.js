@@ -17,7 +17,6 @@ import { setIsMock } from 'extensions/safe/actions/peruse_actions';
 import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import handlePeruseStoreChanges from './peruseSafeApp';
 
-import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
 import { addTab } from 'actions/tabs_actions';
@@ -91,16 +90,24 @@ const actionsForBrowser = {
     ...PeruseActions
 };
 
+let theSafeBgProcessStore;
+
+export const getSafeBackgroundProcessStore = () =>
+{
+        if( ! theSafeBgProcessStore ) throw new Error( 'No background process store defined.' );
+
+    return theSafeBgProcessStore;
+}
 
 const onInitBgProcess = async ( store ) =>
 {
+    theSafeBgProcessStore = store;
     logger.info( 'Registering SAFE Network Protocols' );
     try
     {
         registerSafeProtocol( store );
         registerSafeAuthProtocol( store );
         blockNonSAFERequests();
-        setIPCStore(store);
     }
     catch ( e )
     {
