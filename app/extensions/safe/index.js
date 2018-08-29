@@ -116,7 +116,7 @@ const onInitBgProcess = async ( store ) =>
     }
 
     //load the auth/safe libs
-    let theLibs = await ffiLoader.loadLibrary( startedRunningMock, null, [authenticator] );
+    let theLibs = await ffiLoader.loadLibrary( startedRunningMock );
 
     let prevAuthLibStatus;
 
