@@ -37,11 +37,14 @@ export const {
 
 const triggerAuthDecoding = ( reqObject ) =>
 {
-    logger.verbose('Triggerin auth URL decode', reqObject)
+    if ( process.mainModule.filename && !process.mainModule.filename.includes( 'bg.html' ) )
+    {
+        return;
+    }
     callIPC.enqueueRequest( reqObject );
 };
 
-export const handleAuthUrl = createAliasedAction ? createAliasedAction(
+export const handleAuthUrl = createAliasedAction(
     TYPES.HANDLE_AUTH_URL,
     ( reqObject ) => (
         {
@@ -49,8 +52,4 @@ export const handleAuthUrl = createAliasedAction ? createAliasedAction(
             type    : TYPES.HANDLE_AUTH_URL,
             payload : triggerAuthDecoding( reqObject ),
         } ),
-) : ( reqObject ) => (
-    {
-        type    : TYPES.HANDLE_AUTH_URL,
-        payload : triggerAuthDecoding( reqObject ),
-    } );
+);

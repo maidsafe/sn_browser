@@ -78,7 +78,7 @@ const addReducersToPeruse = ( ) =>
  * @param  {Object} allAPICalls object containing all api calls available in main (for use via store remoteCalls)
  * @param  {[type]} theCall     call object with id, and info
  */
-const onRemoteCallInMain = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
+const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
 
 const getRemoteCallApis = () => remoteCallApis;
 
@@ -94,17 +94,18 @@ let theSafeBgProcessStore;
 
 export const getSafeBackgroundProcessStore = () =>
 {
-        if( ! theSafeBgProcessStore ) throw new Error( 'No background process store defined.' );
+        if( ! theSafeBgProcessStore ) throw new Error( `No background process store defined. ${process.mainModule.filename}'`);
 
     return theSafeBgProcessStore;
 }
 
 const onInitBgProcess = async ( store ) =>
 {
-    theSafeBgProcessStore = store;
     logger.info( 'Registering SAFE Network Protocols' );
     try
     {
+        theSafeBgProcessStore = store;
+
         registerSafeProtocol( store );
         registerSafeAuthProtocol( store );
         blockNonSAFERequests();
@@ -115,7 +116,7 @@ const onInitBgProcess = async ( store ) =>
     }
 
     //load the auth/safe libs
-    ffiLoader.loadLibrary( startedRunningMock );
+    let theLibs = await ffiLoader.loadLibrary( startedRunningMock, null, [authenticator] );
 
     let prevAuthLibStatus;
 
@@ -199,7 +200,6 @@ const onReceiveUrl = ( store, url ) =>
     const parsedUrl = parseURL( preParseUrl );
 
     // TODO. Queue incase of not started.
-    logger.verbose( 'Receiving Open Window Param (a url)', url );
 
     // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
     if ( parsedUrl.protocol === 'safe-auth:' )
@@ -238,7 +238,7 @@ export default {
     getRemoteCallApis,
     onInitBgProcess,
     onReceiveUrl,
-    onRemoteCallInMain,
+    onRemoteCallInBgProcess,
     onOpen,
     onAppReady,
     onWebviewPreload,

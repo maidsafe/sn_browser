@@ -10,6 +10,7 @@
  * @flow
  */
 
+import opn from 'opn';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -55,6 +56,15 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 {
     logger.error( data );
 } );
+
+
+
+ipcMain.on( 'opn', ( event, data ) =>
+{
+    logger.info('Opening link in system via opn.')
+    opn(data)
+} );
+
 
 let mainWindow = null;
 
@@ -115,7 +125,7 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 {
     // We expect the URI to be the last argument
     const uri = commandLine[commandLine.length - 1];
-    logger.info('Checking if should quit', uri )
+
     if ( commandLine.length >= 2 && uri )
     {
         onReceiveUrl( store, uri );
@@ -131,7 +141,17 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 
 app.on( 'ready', async () =>
 {
+
+    if ( shouldQuit )
+    {
+        console.log('This instance should quit. Ciao!')
+        app.exit();
+        return;
+    }
+
+
     logger.info( 'App Ready' );
+
     onAppReady( store );
     if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
     {
@@ -144,14 +164,14 @@ app.on( 'ready', async () =>
         if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
         {
             onReceiveUrl( store, uriArg );
-            mainWindow.show();
+
+            if( mainWindow )
+            {
+                mainWindow.show();
+
+            }
 
         }
-    }
-
-    if ( shouldQuit )
-    {
-        app.exit();
     }
 
     mainWindow = openWindow( store );

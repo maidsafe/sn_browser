@@ -52,13 +52,13 @@ export const urlIsValid = ( url ) =>
  * To be triggered when a remote call occurs in the main process.
  * @param  {object} store redux store
  */
-export const onRemoteCallInMain = ( store, allAPICalls, theCall  ) =>
+export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall  ) =>
 {
     allPackages.forEach( extension =>
     {
-        if ( extension.onRemoteCallInMain )
+        if ( extension.onRemoteCallInBgProcess )
         {
-            extension.onRemoteCallInMain( store, allAPICalls, theCall  );
+            extension.onRemoteCallInBgProcess( store, allAPICalls, theCall  );
         }
     } );
 };

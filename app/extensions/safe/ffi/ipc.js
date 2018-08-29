@@ -113,7 +113,7 @@ class ReqQueue
             return;
         }
         this.q.push( req );
-        this.process();
+        this.processTheReq();
     }
 
     next()
@@ -124,13 +124,11 @@ class ReqQueue
             return;
         }
         this.q.shift();
-        this.process();
+        this.processTheReq();
     }
 
-    process()
+    processTheReq()
     {
-        logger.verbose('ipc.js processing req.')
-
         const self = this;
         if ( this.processing || this.q.length === 0 )
         {
@@ -204,13 +202,15 @@ class ReqQueue
         {
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
+
             // TODO/BOOKMARK: leaving off here. share MData req URI is causing error when used to call auth_decode_ipc_msg in authenticator.js
-            logger.error( 'Error at req processing for:', this.req );
+
+            const bgStore = getSafeBackgroundProcessStore();
 
             // TODO: Setup proper rejection from when unauthed.
-            if ( getSafeBackgroundProcessStore() )
+            if ( bgStore )
             {
-                getSafeBackgroundProcessStore.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
+                bgStore.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
             }
 
             if ( ipcEvent )
@@ -239,7 +239,7 @@ const registerNetworkListener = ( e ) =>
             state === CONSTANTS.NETWORK_STATUS.LOGGED_IN )
         {
             reqQ.processing = false;
-            reqQ.process();
+            reqQ.processTheReq();
         }
         e.sender.send( 'onNetworkStatus', state );
     } );
