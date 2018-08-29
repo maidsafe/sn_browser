@@ -17,7 +17,6 @@ import { setIsMock } from 'extensions/safe/actions/peruse_actions';
 import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import handlePeruseStoreChanges from './peruseSafeApp';
 
-import { setIPCStore } from 'extensions/safe/ffi/ipc';
 import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
 import { addTab } from 'actions/tabs_actions';
@@ -79,7 +78,7 @@ const addReducersToPeruse = ( ) =>
  * @param  {Object} allAPICalls object containing all api calls available in main (for use via store remoteCalls)
  * @param  {[type]} theCall     call object with id, and info
  */
-const onRemoteCallInMain = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
+const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
 
 const getRemoteCallApis = () => remoteCallApis;
 
@@ -91,16 +90,25 @@ const actionsForBrowser = {
     ...PeruseActions
 };
 
+let theSafeBgProcessStore;
+
+export const getSafeBackgroundProcessStore = () =>
+{
+        if( ! theSafeBgProcessStore ) throw new Error( `No background process store defined. ${process.mainModule.filename}'`);
+
+    return theSafeBgProcessStore;
+}
 
 const onInitBgProcess = async ( store ) =>
 {
     logger.info( 'Registering SAFE Network Protocols' );
     try
     {
+        theSafeBgProcessStore = store;
+
         registerSafeProtocol( store );
         registerSafeAuthProtocol( store );
         blockNonSAFERequests();
-        setIPCStore(store);
     }
     catch ( e )
     {
@@ -108,7 +116,7 @@ const onInitBgProcess = async ( store ) =>
     }
 
     //load the auth/safe libs
-    ffiLoader.loadLibrary( startedRunningMock );
+    let theLibs = await ffiLoader.loadLibrary( startedRunningMock );
 
     let prevAuthLibStatus;
 
@@ -149,6 +157,15 @@ const onOpen = ( store ) =>
     store.dispatch( setIsMock( startedRunningMock ) );
 }
 
+/**
+ * on open of peruse application
+ * @param  {Object} store redux store
+ */
+const onAppReady = ( store ) =>
+{
+    logger.verbose('OnAppReady: Setting mock in store. ', startedRunningMock)
+    store.dispatch( setIsMock( startedRunningMock ) );
+}
 
 /**
  * Add middleware to Peruse redux store
@@ -183,7 +200,6 @@ const onReceiveUrl = ( store, url ) =>
     const parsedUrl = parseURL( preParseUrl );
 
     // TODO. Queue incase of not started.
-    logger.verbose( 'Receiving Open Window Param (a url)', url );
 
     // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
     if ( parsedUrl.protocol === 'safe-auth:' )
@@ -222,8 +238,9 @@ export default {
     getRemoteCallApis,
     onInitBgProcess,
     onReceiveUrl,
-    onRemoteCallInMain,
+    onRemoteCallInBgProcess,
     onOpen,
+    onAppReady,
     onWebviewPreload,
     preAppLoad,
     setupRoutes,

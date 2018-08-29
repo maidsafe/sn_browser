@@ -13,7 +13,6 @@ import { SAFE } from '../constants';
 import { parse as parseURL } from 'url';
 import { addNotification, clearNotification } from 'actions/notification_actions';
 import { setNetworkStatus } from '../actions/peruse_actions';
-import { setIPCStore } from '../ffi/ipc';
 
 const queue = [];
 let peruseAppObj;
@@ -22,6 +21,8 @@ let browserAuthReqUri;
 
 export const replyToRemoteCallFromAuth = ( request ) =>
 {
+    logger.verbose('replyToRemoteCallFromAuth')
+
     const state = store.getState();
     const remoteCalls = state.remoteCalls;
 

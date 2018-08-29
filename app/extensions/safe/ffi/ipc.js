@@ -11,7 +11,8 @@ import logger from 'logger';
 import { addAuthNotification } from '../manageAuthNotifications';
 import errConst from '../err-constants';
 
-let store;
+import { getSafeBackgroundProcessStore } from 'extensions/safe/index'
+
 const ipcEvent = null;
 
 
@@ -27,13 +28,6 @@ export const REQ_TYPES = {
 };
 
 const allAuthCallBacks = {};
-
-
-export const setIPCStore = ( passedStore ) =>
-{
-    store = passedStore;
-};
-
 
 /**
  * Set promise callbacks to be retrievable after authentication handling.
@@ -119,7 +113,7 @@ class ReqQueue
             return;
         }
         this.q.push( req );
-        this.process();
+        this.processTheReq();
     }
 
     next()
@@ -130,10 +124,10 @@ class ReqQueue
             return;
         }
         this.q.shift();
-        this.process();
+        this.processTheReq();
     }
 
-    process()
+    processTheReq()
     {
         const self = this;
         if ( this.processing || this.q.length === 0 )
@@ -142,7 +136,6 @@ class ReqQueue
         }
         this.processing = true;
         this.req = this.q[0];
-
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
             if ( !res )
@@ -172,13 +165,13 @@ class ReqQueue
                   app = res.mDataReq.app;
                 }
 
-                if (res.isAuthorised && store.getState().authenticator.reAuthoriseState)
+                if (res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState)
                 {
                     sendAuthDecision( true, res, reqType );
                 }
                 else
                 {
-                    addAuthNotification( res, app, sendAuthDecision, store );
+                    addAuthNotification( res, app, sendAuthDecision, getSafeBackgroundProcessStore() );
                 }
                 return;
             }
@@ -209,13 +202,15 @@ class ReqQueue
         {
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
+
             // TODO/BOOKMARK: leaving off here. share MData req URI is causing error when used to call auth_decode_ipc_msg in authenticator.js
-            logger.error( 'Error at req processing for:', this.req );
+
+            const bgStore = getSafeBackgroundProcessStore();
 
             // TODO: Setup proper rejection from when unauthed.
-            if ( store )
+            if ( bgStore )
             {
-                store.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
+                bgStore.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
             }
 
             if ( ipcEvent )
@@ -244,7 +239,7 @@ const registerNetworkListener = ( e ) =>
             state === CONSTANTS.NETWORK_STATUS.LOGGED_IN )
         {
             reqQ.processing = false;
-            reqQ.process();
+            reqQ.processTheReq();
         }
         e.sender.send( 'onNetworkStatus', state );
     } );

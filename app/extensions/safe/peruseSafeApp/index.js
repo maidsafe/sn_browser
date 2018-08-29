@@ -1,4 +1,3 @@
-// import opn from 'opn';
 import _ from 'lodash';
 import {
     saveConfigToSafe,
@@ -19,6 +18,7 @@ import * as tabsActions from 'actions/tabs_actions';
 import * as notificationActions from 'actions/notification_actions';
 import handleLogoutActions from 'extensions/safe/network/handleLogoutActions';
 import logger from 'logger';
+import { ipcRenderer, ipcMain } from 'electron';
 
 const authingStates = [
     SAFE.APP_STATUS.TO_AUTH,
@@ -69,7 +69,7 @@ let callingArray = [];
  */
 const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 {
-    logger.verbose('Requesting PeruseApp auth.')
+    logger.verbose('Requesting PeruseApp auth.', process.mainModule.filename)
     try
     {
         const isMock = peruseStateObject.isMock;
@@ -81,9 +81,9 @@ const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         logger.verbose('generated auth uri:', authReq);
+
         global.browserAuthReqUri = authReq.uri;
-        // opn( authReq.uri );
-        await peruseAppObj.auth.openUri( authReq.uri );
+        ipcRenderer.send('opn', authReq.uri);
 
         return peruseAppObj;
     }

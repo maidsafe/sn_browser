@@ -1,6 +1,6 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 import logger from 'logger';
-import { onRemoteCallInMain, getRemoteCallApis } from 'extensions';
+import { onRemoteCallInBgProcess, getRemoteCallApis } from 'extensions';
 import * as remoteCallActions from 'actions/remoteCall_actions';
 
 let cachedRemoteCallArray = [];
@@ -41,7 +41,7 @@ const manageRemoteCalls = async ( store ) =>
                     store.dispatch( remoteCallActions.updateRemoteCall( { ...theCall, inProgress: true } ) );
                     const theArgs = theCall.args;
 
-                    onRemoteCallInMain( store, allApiCalls, theCall );
+                    onRemoteCallInBgProcess( store, allApiCalls, theCall );
 
                     if ( theCall.isListener ) { return };
 

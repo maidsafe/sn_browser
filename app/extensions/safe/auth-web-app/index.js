@@ -86,6 +86,7 @@ const appListUpdateListenerCb = (err, apps) => {
 
 networkStateListenerCb(null, window.safeAuthenticator.getNetworkState().state);
 appListUpdateListenerCb(null, []);
+
 const state = store.getState();
 isAuthorisedListenerCb(null, state.auth.isAuthorised);
 
