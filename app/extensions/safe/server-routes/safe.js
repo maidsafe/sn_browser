@@ -1,4 +1,7 @@
 import logger from 'logger';
+import React from 'react';
+import Error from 'components/PerusePages/Error';
+import ReactDOMServer from 'react-dom/server';
 import { getPeruseAppObj } from 'extensions/safe/network';
 import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
 import { addTab, closeTab } from 'actions/tabs_actions';
@@ -11,10 +14,15 @@ const safeRoute = ( store ) => ( {
     path    : /safe:\//,
     handler : async ( request, res ) =>
     {
+        const link = request.url.substr( 1 ); // remove initial /
+        const sendErrResponse = ( error, errSubHeader ) => res.send(
+            ReactDOMServer.renderToStaticMarkup(
+                <Error error={ { header: error, subHeader: errSubHeader } } />
+            )
+        );
+
         try
         {
-            const link = request.url.substr( 1 ); // remove initial /
-
             const app = getPeruseAppObj() || {};
             const headers = request.headers;
             let isRangeReq = false;
@@ -87,9 +95,9 @@ const safeRoute = ( store ) => ( {
                         }
                     } );
                     error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
-                    return res.send( error.message );
+                    return sendErrResponse( error.message );
                 }
-                return res.send( error.message || error );
+                return sendErrResponse( error.message || error );
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
@@ -125,7 +133,7 @@ const safeRoute = ( store ) => ( {
             {
                 return res.status( 416 ).send( 'Requested Range Not Satisfiable' );
             }
-            return res.send( e.message || e );
+            return sendErrResponse( e.message || e );
         }
     }
 } );

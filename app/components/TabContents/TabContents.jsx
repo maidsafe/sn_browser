@@ -8,6 +8,7 @@ import { INTERNAL_PAGES } from 'appConstants';
 import { isInternalPage } from 'utils/urlHelpers';
 import History from 'components/PerusePages/History';
 import Bookmarks from 'components/PerusePages/Bookmarks';
+import logger from 'logger';
 
 export default class TabContents extends Component
 {
@@ -25,11 +26,10 @@ export default class TabContents extends Component
         {
             if ( !tab.isClosed )
             {
+                const isActiveTab = tab.isActiveTab;
                 if ( isInternalPage( tab ) )
                 {
                     const urlObj = url.parse( tab.url );
-                    const isActiveTab = tab.isActiveTab;
-
                     switch ( urlObj.host )
                     {
                         case INTERNAL_PAGES.HISTORY :
@@ -72,7 +72,6 @@ export default class TabContents extends Component
                     }
                 }
 
-                const isActiveTab = tab.isActiveTab;
                 const TheTab = ( <Tab
                     webId={ tab.webId }
                     url={ tab.url }
