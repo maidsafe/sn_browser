@@ -2,6 +2,8 @@
 import { remote, ipcRenderer } from 'electron';
 import contextMenu from 'electron-context-menu'
 import React, { Component } from 'react';
+import Error from 'components/PerusePages/Error';
+import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
@@ -34,7 +36,6 @@ export default class Tab extends Component
     {
         isActiveTab : false,
         url         : 'http://nowhere.com',
-
     }
 
 
@@ -62,7 +63,7 @@ export default class Tab extends Component
         this.loadURL = ::this.loadURL;
         this.reloadIfActive = ::this.reloadIfActive;
 
-        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );;
+        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
     }
 
     isDevToolsOpened = () =>
@@ -260,12 +261,12 @@ export default class Tab extends Component
     didStartLoading( )
     {
         logger.silly( 'webview started loading' );
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, index } = this.props;
         const { webview } = this;
 
         const tabUpdate = {
             index,
-            isLoading: true
+            isLoading : true
         };
 
         this.updateBrowserState( { loading: true } );
@@ -283,35 +284,33 @@ export default class Tab extends Component
         const { url, index, addTab, closeTab } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
-        const setFailLoadUi =
-        (
-            header,
-            subheader
-        ) => webview.executeJavaScript( `
-              var body = document.querySelector("body");
-              body.innerHTML = '';
-              var h3 = document.createElement("h3");
-              h3.innerText = "${header}";
-              h3.style = "text-align: center;"
-              body.appendChild(h3);
-              var h4 = document.createElement("h4");
-              h4.innerText = "${subheader || ''}";
-              h4.style = "text-align: center;"
-              body.appendChild(h4);` );
+        const renderError = ( header, subHeader ) =>
+        {
+            const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
+                <Error error={ { header, subHeader } } />
+            );
+            webview.executeJavaScript( `
+                const body = document.querySelector('body');
+                body.innerHTML = '${errorAsHtml}';
+            ` );
+        };
 
         if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
         {
-            setFailLoadUi( 'Page Load Failed' );
+            renderError( 'Page Load Failed' );
             return;
         }
         if ( err && err.errorDescription === 'ERR_INVALID_URL' )
         {
-            setFailLoadUi( `Invalid URL: ${url}` );
+            renderError( `Invalid URL: ${url}` );
             return;
         }
         if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
         {
-            setFailLoadUi( 'Detected HTTP/S protocol.', `Redirecting ${url} to be opened by your default Web browser.` );
+            renderError(
+                'Detected HTTP/S protocol.',
+                `Redirecting ${url} to be opened by your default Web browser.`
+            );
             return;
         }
         closeTab( { index } );
@@ -336,19 +335,18 @@ export default class Tab extends Component
 
     didFinishLoading( )
     {
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, index } = this.props;
 
-        logger.verbose('DID FINISH LAODING')
+        logger.verbose( 'DID FINISH LAODING' );
         const tabUpdate = {
             index,
-            isLoading: false
+            isLoading : false
         };
 
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
 
         this.setCurrentWebId( null );
-
     }
 
     updateTargetUrl( url )

@@ -54,7 +54,6 @@
     "bump": "standard-version -a",
     "prerelease": "standard-version --prerelease rc",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml ./node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
-
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
     "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
