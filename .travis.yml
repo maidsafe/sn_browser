@@ -99,8 +99,7 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: i7J0VE/UAxfpei1AjMNrCP440wQNh2iLGFMip8FPotFIPBqHxxJlxmz9FCkVim/3XgtdgdQbT5M29IqkIt1pwtLn4xwx5LXgVNGy5/yW7uvqR2pnowhu2/G9YdOEZti+ZPLFnWCjqgMjdvbg8CE4K6is/Qa613EeDP1PBvCf2e0lvathNX9LOKDZk0G8DpTgFKp7ndCYBH4JmPLVbyWn2D9w4nmzpaYI2sk4ma+O7yrkDaE9u+AKrLn/RtshjgBovBSfMFqlaYUipIhkukAPYynArOUOCEoGNsOxthMbyPYOlH0PqY4OWEt2pSqQOYDOq14zemeskmcoGJeKmpw2WWHdz5ZKGBex6HSq6RbxOaPot0PSfnZxis2q/P9CwlPoTBjtk16UI+Y/ZPreL2dC+PRz2+NCTqVcl2yUKs6Z8HeuCG6ntnUlcWxqURzW5kdfD/lWxJMEtyqi1MAfieLyNpZiBsF08uOJeHfjW/QwB9zL6nSzkUznUWpvKQmS19yEb2bmUyFogyQj8KRnBhJTq74HMgRAbCT/fPnvIGvq63bwjKekqF1fAViTe/z8WL5l2B5D1cFJWy+l6VUlW6O8DpFe04jmzWo3vFYWmqNok2MzesMXQHLe6yE/Mo5+wfbUr5BS87sjCAw4GXF9ThcbYk0MjLKzfOBFafTFQoiM/Rs=
+  api_key: $GITHUB_ACCESS_TOKEN
   file:
     - "${RELEASE_ZIP}"
     - "${SHA_256_SUM}"
