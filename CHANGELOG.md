@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Electron to 2.0.8
 - Deps updated in general.
 - Jest tests run in electron env.
+- CI deployment credentials
 
 ### SAFE libraries Dependencies
 - @maidsafe/safe-node-app: `c722378eca56b5cc6738d87a0a32db763914d000`

@@ -102,12 +102,10 @@ deploy:
   tag: $(appveyor_repo_tag_name)
   description: 'Peruse [Safe] Browser'
   provider: GitHub
-  auth_token:
-    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+  auth_token: $(GITHUB_ACCESS_TOKEN)
  # your encrypted token from GitHub
   # artifact: /.*\.zip/
   draft: true
   prerelease: true
   on:
-    branch: master
     appveyor_repo_tag:  true        # deploy on tag push only
