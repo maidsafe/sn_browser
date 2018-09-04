@@ -1,7 +1,7 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased]
+#### [0.7.0]
 ### Added
 - Notification on network disconnect event with automatic reconnect upon network resolve
 - Browser executed with no network connection shows notification upon `loginFromUri` attempt and automatically connects client upon network resolve
@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file.
 - Jest tests run in electron env.
 
 ### SAFE libraries Dependencies
-- @maidsafe/safe-node-app: `fe5dc54aa9c8a1c5dd71809b616f4a2353b598e8`
+- @maidsafe/safe-node-app: `c722378eca56b5cc6738d87a0a32db763914d000`
 
 
 #### [0.6.0]
