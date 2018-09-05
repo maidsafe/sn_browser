@@ -284,7 +284,7 @@ export default class CreateAccount extends Component
                                       {
                                           this.secretEle = c;
                                       } }
-                                      onKeyUp={ this.handleInputChange }
+                                      onChange={ this.handleInputChange }
                                       required
                                   />
                                   <label htmlFor="acc-secret">Account Secret</label>
@@ -380,7 +380,7 @@ export default class CreateAccount extends Component
                                       {
                                           this.passwordEle = c;
                                       } }
-                                      onKeyUp={ this.handleInputChange }
+                                      onChange={ this.handleInputChange }
                                       required
                                   />
                                   <label htmlFor="acc-password">Account Password</label>
