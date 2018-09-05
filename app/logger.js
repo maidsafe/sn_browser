@@ -1,5 +1,5 @@
-import { app } from 'electron';
-import util from 'util';
+import path from 'path';
+import os from 'os';
 import { env,
     isRunningUnpacked,
     isRunningPackaged,
@@ -9,8 +9,8 @@ import { env,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp,
     inMainProcess,
-    inRendererProcess,
-    isCI
+    isCI,
+    TESTENV
 } from 'appConstants';
 
 const log = require( 'electron-log' );
@@ -28,10 +28,7 @@ if( log.transports )
         log.transports.file.level = 'warn';
     }
 
-    if( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
-    {
-        log.transports.file.file =  __dirname + '/log.log';
-    }
+    log.transports.file.file = path.resolve( os.tmpdir() , 'peruse.log' );
 
     /**
     * Set output format template. Available variables:
@@ -59,13 +56,13 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( `      Started with node env: ${env}` );
-    console.log('       Log location:', log.transports.file.file)
+    log.info('       Log location:', log.transports.file.file)
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.verbose( 'Running with derived constants:' );
     log.verbose( '' );
     log.verbose( 'isCI?', isCI );
+    log.verbose( 'TESTENV?', TESTENV );
     log.verbose( 'isRunningDebug?', isRunningDebug );
-    log.verbose( 'shouldStartAsMockFromFlagsOrPackage?', shouldStartAsMockFromFlagsOrPackage );
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );
     log.verbose( 'inMainProcess?', inMainProcess );
