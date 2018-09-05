@@ -42,7 +42,7 @@ switch ( arg )
         //exclude weakref tests for now.
         if ( platform === WINDOWS )
         {
-            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\.spec\\.js$`;
+            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\auth.spec\\.js$`;
         }
 
         break;

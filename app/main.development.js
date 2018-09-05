@@ -15,7 +15,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-import { app, BrowserWindow, protocol, ipcMain, Menu, Tray } from 'electron';
+import { app, protocol, ipcMain, shell } from 'electron';
 import logger from 'logger';
 
 import {
@@ -58,11 +58,11 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 } );
 
 
-
+// Needed for windows w/ peruse browser app login
 ipcMain.on( 'opn', ( event, data ) =>
 {
     logger.info('Opening link in system via opn.')
-    opn(data)
+    shell.openExternal(data)
 } );
 
 

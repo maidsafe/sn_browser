@@ -15,6 +15,7 @@ export const isCI = process.env.CI || false;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
 export const isUnpacked = process.env.IS_UNPACKED || false;
 export const isTestingPackagedApp = process.env.IS_PACKED || false;
+export const nodeEnv = process.env.NODE_ENV;
 
 export const setupSpectronApp = ( ) =>
 {
@@ -37,8 +38,6 @@ export const setupSpectronApp = ( ) =>
         env  : {
             IS_SPECTRON: true,
             CI: isCI,
-            // IS_UNPACKED : isUnpacked,
-            // IS_PACKED : isTestingPackagedApp
         },
         additionalChromeOptions : {
             windowTypes: ['app', 'webview']
