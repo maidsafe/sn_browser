@@ -9,7 +9,9 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
 } from 'spectron-lib/browser-driver';
-import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+import { AUTH_UI_CLASSES } from 'extensions/safe/auth-web-app/classes';
+
 import {
     setupSpectronApp
     , isCI

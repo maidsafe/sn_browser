@@ -10,7 +10,7 @@ import {
     delay
 } from 'spectron-lib/browser-driver';
 import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
-import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
 import {
     setupSpectronApp
     , isCI

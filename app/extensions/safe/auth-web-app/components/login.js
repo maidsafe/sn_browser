@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { I18n } from 'react-redux-i18n';
 import classNames from 'classnames';
-import { AUTH_UI_CLASSES } from 'extensions/safe/auth-web-app/classes';
+import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 
 import CardLoaderFull from './card_loader_full';
 import Popup from './popup';
@@ -118,6 +118,7 @@ export default class Login extends Component
                                   <form onSubmit={ this.handleSubmit }>
                                       <div className="inp-grp">
                                           <input
+                                              className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT}
                                               type="password"
                                               id="acc-secret"
                                               name="acc-secret"
@@ -138,6 +139,7 @@ export default class Login extends Component
                                       </div>
                                       <div className="inp-grp">
                                           <input
+                                              className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT}
                                               type="password"
                                               id="acc-password"
                                               name="acc-password"
@@ -158,7 +160,7 @@ export default class Login extends Component
                                       <div className="btn-grp">
                                           <button
                                               type="submit"
-                                              className="btn primary long"
+                                              className={ `btn primary long ${AUTH_UI_CLASSES.AUTH_LOGIN_BUTTON}` }
                                               disabled={ this.props.libErrPopup }
                                           >Log in</button>
                                       </div>
@@ -170,7 +172,10 @@ export default class Login extends Component
               </div>
               <div className="card-f">
           Don&lsquo;t have an account? <a
-              className={ classNames( { disabled: this.props.loading || this.props.libErrPopup } ) }
+              className={  `${classNames(
+                  {
+                      disabled: this.props.loading || this.props.libErrPopup
+                  } ) } ${AUTH_UI_CLASSES.CREATE_ACCOUNT_BUTTON}` }
               onClick={ ( e ) =>
                       {
                           e.preventDefault();

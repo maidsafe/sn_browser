@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import { I18n } from 'react-redux-i18n';
 import zxcvbn from 'zxcvbn';
 import classNames from 'classnames';
+import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 import { getStrengthMsg } from '../utils';
 import CONSTANTS from '../constants';
 import CardLoaderFull from './card_loader_full';
-import { AUTH_UI_CLASSES } from 'extensions/safe/auth-web-app/classes';
 
 export default class CreateAccount extends Component
 {
@@ -163,7 +163,7 @@ export default class CreateAccount extends Component
                               { this.getNav() }
                               <button
                                   type="button"
-                                  className="rgt flat btn primary"
+                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
                                   onClick={ () =>
                                   {
                                       setCreateAccNavPos( navPos + 1 );
@@ -243,7 +243,7 @@ export default class CreateAccount extends Component
                               { this.getNav() }
                               <button
                                   type="button"
-                                  className="rgt flat btn primary"
+                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
                                   onClick={ ( e ) =>
                                   {
                                       this.handleInvitation( e );
@@ -275,6 +275,7 @@ export default class CreateAccount extends Component
                           <form id="secretForm">
                               <div className="inp-grp">
                                   <input
+                                      className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT}
                                       type="password"
                                       id="acc-secret"
                                       name="acc-secret"
@@ -301,6 +302,7 @@ export default class CreateAccount extends Component
                               </div>
                               <div className="inp-grp">
                                   <input
+                                      className={ AUTH_UI_CLASSES.AUTH_CONFIRM_SECRET_INPUT}
                                       type="password"
                                       id="cacc-secret"
                                       name="cacc-secret"
@@ -337,7 +339,7 @@ export default class CreateAccount extends Component
                               <button
                                   type="button"
                                   form="secretForm"
-                                  className="rgt flat btn primary"
+                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
                                   onClick={ ( e ) =>
                                   {
                                       this.handleSecret( e );
@@ -369,6 +371,7 @@ export default class CreateAccount extends Component
                           <form id="passwordForm">
                               <div className="inp-grp">
                                   <input
+                                      className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT}
                                       type="password"
                                       id="acc-password"
                                       name="acc-password"
@@ -395,6 +398,7 @@ export default class CreateAccount extends Component
                               </div>
                               <div className="inp-grp">
                                   <input
+                                      className={ AUTH_UI_CLASSES.AUTH_CONFIRM_PASSWORD_INPUT}
                                       type="password"
                                       id="cacc-password"
                                       name="cacc-password"
@@ -431,7 +435,7 @@ export default class CreateAccount extends Component
                               <button
                                   type="button"
                                   form="passwordForm"
-                                  className="rgt flat btn primary"
+                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
                                   onClick={ ( e ) =>
                                   {
                                       this.handlePassword( e );
@@ -465,35 +469,37 @@ export default class CreateAccount extends Component
   getNav()
   {
       const { navPos, setCreateAccNavPos } = this.props;
-      const getClassName = ( pos ) => (
-          classNames( { active: navPos === pos } )
+      const getNavPositionClassName = ( pos ) => (
+          classNames( {
+              active: navPos === pos
+          } )
       );
 
       return (
           <div className="auth-f-nav">
               <span
-                  className={ getClassName( CONSTANTS.CREATE_ACC_NAV.WELCOME ) }
+                  className={ getNavPositionClassName( CONSTANTS.CREATE_ACC_NAV.WELCOME ) }
                   onClick={ () =>
                   {
                       setCreateAccNavPos( 1 );
                   } }
               >{''}</span>
               <span
-                  className={ getClassName( CONSTANTS.CREATE_ACC_NAV.INVITE_CODE ) }
+                  className={ getNavPositionClassName( CONSTANTS.CREATE_ACC_NAV.INVITE_CODE ) }
                   onClick={ () =>
                   {
                       setCreateAccNavPos( 2 );
                   } }
               >{''}</span>
               <span
-                  className={ getClassName( CONSTANTS.CREATE_ACC_NAV.SECRET_FORM ) }
+                  className={ getNavPositionClassName( CONSTANTS.CREATE_ACC_NAV.SECRET_FORM ) }
                   onClick={ () =>
                   {
                       setCreateAccNavPos( 3 );
                   } }
               >{''}</span>
               <span
-                  className={ getClassName( CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM ) }
+                  className={ getNavPositionClassName( CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM ) }
                   onClick={ () =>
                   {
                       setCreateAccNavPos( 4 );
