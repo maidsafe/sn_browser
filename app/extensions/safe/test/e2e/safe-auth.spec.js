@@ -27,47 +27,46 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 
 describe( 'safe authenticator protocol', () =>
 {
-  let app;
+    let app;
 
-  beforeEach( async () =>
-  {
-    app = setupSpectronApp();
+    beforeEach( async () =>
+    {
+        app = setupSpectronApp();
 
-      await beforeAllTests(app)
-  } );
+        await beforeAllTests( app );
+    } );
 
-  afterEach( async () =>
-  {
-      await afterAllTests(app);
-      console.log('APP SHOULD BE STOPPED', app.isRunning())
-  } );
+    afterEach( async () =>
+    {
+        await afterAllTests( app );
+        console.log( 'APP SHOULD BE STOPPED', app.isRunning() );
+    } );
 
     test( 'window loaded', async () =>
     {
-        expect( await windowLoaded( app ) ).toBeTruthy()
-    });
+        expect( await windowLoaded( app ) ).toBeTruthy();
+    } );
 
 
     // if( travisOS !== 'linux' )
-    if( process.platform  !== 'linux' )
+    if ( process.platform !== 'linux' )
     {
-        it( 'is registered to handle safe-auth/home js requests:', async( ) =>
+        it( 'is registered to handle safe-auth/home js requests:', async ( ) =>
         {
             const { client } = app;
-            opn('safe-auth://blabla');
-            expect.assertions(2);
+            opn( 'safe-auth://blabla' );
+            expect.assertions( 2 );
 
 
-            setClientToMainBrowserWindow(app);
+            setClientToMainBrowserWindow( app );
             // await client.pause(1500)
-            let exists = await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            const exists = await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
             // console.log('THE NOTE', note)
             expect( note ).not.toBeNull();
             expect( note.length ).toBeGreaterThan( 5 );
-        })
+        } );
     }
-
 
 
     // it( 'loads safe-auth://bundle home page from internal protcol', async () =>
@@ -94,5 +93,4 @@ describe( 'safe authenticator protocol', () =>
     //
     //
     // } );
-
 } );
