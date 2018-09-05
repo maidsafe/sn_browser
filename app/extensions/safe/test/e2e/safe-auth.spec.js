@@ -9,8 +9,14 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
 } from 'spectron-lib/browser-driver';
+
+import {
+    createAccount,
+    login,
+    logout
+} from 'extensions/safe/test/e2e/lib/authenticator-drivers';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
-import { AUTH_UI_CLASSES } from 'extensions/safe/auth-web-app/classes';
+import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 
 import {
     setupSpectronApp
@@ -18,7 +24,8 @@ import {
     , travisOS
     , afterAllTests
     , beforeAllTests
-    , windowLoaded
+    , windowLoaded,
+    isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
@@ -39,7 +46,6 @@ describe( 'safe authenticator protocol', () =>
     afterEach( async () =>
     {
         await afterAllTests( app );
-        console.log( 'APP SHOULD BE STOPPED', app.isRunning() );
     } );
 
     test( 'window loaded', async () =>
@@ -65,6 +71,73 @@ describe( 'safe authenticator protocol', () =>
             // console.log('THE NOTE', note)
             expect( note ).not.toBeNull();
             expect( note.length ).toBeGreaterThan( 5 );
+        } );
+    }
+
+
+
+
+    if( isTestingPackagedApp )
+    {
+        // no more of these tests for you, CI. At least until we can connect you to the network.
+        return;
+    }
+
+    it( 'can create an account', async ( ) =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 2500 );
+
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'safe-auth://home' );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+
+        await delay( 2500 );
+
+        await client.windowByIndex( tabIndex );
+        await delay( 2500 );
+
+        await createAccount( app );
+
+        await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
+
+        // we wait... if this isn't reached then expect.assertions fails
+        expect( 'this to be reached' ).toBe( 'this to be reached' );
+    } );
+
+    if( travisOS !== 'linux' )
+    {
+        //linux failing with xdg-open
+
+        it( 'peruse app authenticates pops up after creating an account', async ( ) =>
+        {
+            expect.assertions( 1 );
+            const { client } = app;
+            await delay( 2500 );
+
+            const tabIndex = await newTab( app );
+            await navigateTo( app, 'safe-auth://home' );
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+
+            await delay( 2500 );
+
+            await client.windowByIndex( tabIndex );
+            await delay( 2500 );
+
+            await createAccount( app, true );
+
+            await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
+
+            await setClientToMainBrowserWindow( app );
+            await delay( 1500 );
+
+
+            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+            console.log('note', note);
+            expect( note ).toMatch( /Peruse Browser requests Auth Permission/ );
         } );
     }
 

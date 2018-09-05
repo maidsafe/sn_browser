@@ -1,5 +1,3 @@
-import { app } from 'electron';
-import util from 'util';
 import path from 'path';
 import os from 'os';
 import { env,
@@ -11,8 +9,8 @@ import { env,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp,
     inMainProcess,
-    inRendererProcess,
-    isCI
+    isCI,
+    TESTENV
 } from 'appConstants';
 
 const log = require( 'electron-log' );
@@ -63,6 +61,7 @@ if( log.info && log.verbose && inMainProcess )
     log.verbose( 'Running with derived constants:' );
     log.verbose( '' );
     log.verbose( 'isCI?', isCI );
+    log.verbose( 'TESTENV?', TESTENV );
     log.verbose( 'isRunningDebug?', isRunningDebug );
     log.verbose( 'isRunningUnpacked?', isRunningUnpacked );
     log.verbose( 'isRunningPackaged?', isRunningPackaged );

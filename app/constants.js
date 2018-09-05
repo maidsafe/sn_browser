@@ -16,6 +16,12 @@ let shouldRunMockNetwork = fs.existsSync( path.resolve( __dirname, '..', 'startA
 
 let hasDebugFlag = false;
 
+export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
+export const isRunningUnpacked = process.env.IS_UNPACKED;
+export const isRunningPackaged = !isRunningUnpacked;
+export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
+
+
 if( allPassedArgs.includes('--mock') )
 {
     shouldRunMockNetwork = true;
@@ -24,6 +30,12 @@ if( allPassedArgs.includes('--mock') )
 if( allPassedArgs.includes('--live') )
 {
     shouldRunMockNetwork = false;
+}
+
+// override for spectron dev mode
+if( isRunningSpectronTestProcess && ! isRunningSpectronTestProcessingPackagedApp )
+{
+    shouldRunMockNetwork = true;
 }
 
 if( allPassedArgs.includes('--debug') )
@@ -41,12 +53,9 @@ if( allPassedArgs.includes('--port') )
 
 export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
 
-export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
 
-export const isRunningUnpacked = process.env.IS_UNPACKED;
-export const isRunningPackaged = !isRunningUnpacked;
-export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
 
+export const TESTENV = process.env.NODE_ENV;
 
 export const env = shouldStartAsMockFromFlagsOrPackage ? 'development' : process.env.NODE_ENV || 'production';
 export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal('isCI') :  process.env.CI;

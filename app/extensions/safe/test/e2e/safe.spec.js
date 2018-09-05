@@ -43,7 +43,6 @@ describe( 'SAFE network webFetch operation', async () =>
     afterEach( async () =>
     {
         await afterAllTests(app);
-        console.log('APP SHOULD BE STOPPED', app.isRunning())
     } );
 
 

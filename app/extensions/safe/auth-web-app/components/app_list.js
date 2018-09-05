@@ -6,6 +6,7 @@ import { parseAppName, getAppIconClassName } from '../utils';
 import Popup from './popup';
 import CardLoaderFull from './card_loader_full';
 import CONSTANTS from '../constants';
+import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 
 export default class AppList extends Component {
   static propTypes = {
@@ -257,7 +258,7 @@ export default class AppList extends Component {
             title={popupTitle}
             desc={popupDesc}
           />
-          <div className="app-list">
+          <div className={ `app-list ${AUTH_UI_CLASSES.AUTH_APP_LIST}`}>
             { authorisedApps.length === 0 ? null : this.getSearchContainer() }
             { this.getApps() }
           </div>
