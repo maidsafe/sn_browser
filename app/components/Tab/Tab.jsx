@@ -1,5 +1,6 @@
 // @flow
 import { remote, ipcRenderer } from 'electron';
+import contextMenu from 'electron-context-menu'
 import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -85,35 +86,25 @@ export default class Tab extends Component
         this.reload();
         pageLoaded();
     }
-    buildMenu = ( webview ) =>
+
+    buildMenu = ( webview, rightClickPosition ) =>
     {
-        if( !remote ) return null; //jest workaround
+        if( !webview.getWebContents ) return // 'not now, as you're running jest;
 
-        const { Menu } = remote;
-        let rightClickPosition;
-
-
-        const menu = Menu.buildFromTemplate( [
-            { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-            { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-            { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
-            { type: 'separator' },
-            { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' },
-            {
-                label : 'Inspect element',
-                click : ( e ) =>
+        contextMenu( {
+            window: webview,
+            append : ( params, browserWindow ) =>
                 {
-                    webview.inspectElement( rightClickPosition.x, rightClickPosition.y );
-                }
-            }
-        ] );
-
-        webview.addEventListener( 'contextmenu', ( e ) =>
-        {
-            e.preventDefault();
-            rightClickPosition = { x: e.x, y: e.y };
-            menu.popup( remote.getCurrentWindow() );
-        }, false );
+                    return [
+                        {
+                            label: 'Open Link in New Tab.',
+                    		visible: params.linkURL.length > 0
+                        }
+                    ]
+                },
+            showCopyImageAddress : true,
+            showInspectElement : true
+        } );
     }
 
     componentDidMount()
@@ -129,8 +120,6 @@ export default class Tab extends Component
                 logger.verbose('No webview found so not doing: callback setup on window webview')
                 return;
             }
-
-            this.buildMenu( webview );
 
             webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
             webview.addEventListener( 'did-stop-loading', ::this.didStopLoading );
@@ -149,6 +138,8 @@ export default class Tab extends Component
 
             webview.removeEventListener( 'dom-ready', callbackSetup );
         };
+
+        this.buildMenu( webview )
 
         webview.src = 'about:blank';
 
@@ -504,6 +495,7 @@ export default class Tab extends Component
     {
         const { addTab } = this.props;
         const { url } = e;
+        logger.verbose('Tab: NewWindow event triggered for url: ', url)
         // navigate('url/' + url)
         const activateTab = e.disposition == 'foreground-tab';
 

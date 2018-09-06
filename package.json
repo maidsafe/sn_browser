@@ -263,6 +263,7 @@
     "connected-react-router": "^4.3.0",
     "crypto": "^1.0.1",
     "duplexer": "0.1.1",
+    "electron-context-menu": "0.10.0",
     "electron-log": "2.2.11",
     "electron-mocha": "5.0.0",
     "electron-redux": "1.3.1",
