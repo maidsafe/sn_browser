@@ -13,7 +13,7 @@ describe( 'TabBar', () =>
     let instance;
     let props;
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
             addTab : jest.fn(),
@@ -36,7 +36,7 @@ describe( 'TabBar', () =>
 
     describe( 'render() with one tab', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1 }] };
             wrapper = shallow( <TabBar { ...props } /> );
@@ -61,7 +61,7 @@ describe( 'TabBar', () =>
 
     describe( 'render() with one loading tab', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, isLoading: true }] };
             wrapper = shallow( <TabBar { ...props } /> );

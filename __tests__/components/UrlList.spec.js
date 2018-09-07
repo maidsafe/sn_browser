@@ -11,7 +11,7 @@ describe( 'UrlList', () =>
     let instance;
     let props;
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
             list : []
@@ -31,7 +31,7 @@ describe( 'UrlList', () =>
 
     describe( 'render() with one tab', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props, list: ['hello'] };
             wrapper = shallow( <UrlList { ...props } /> );

@@ -6,7 +6,7 @@ import initialState from 'reducers/initialAppState';
 describe( 'notification reducer', () =>
 {
     let aCall;
-    beforeEach( ()=>
+    beforeAll( ()=>
     {
         aCall = { id: 'A', args: [] };
     });

@@ -18,7 +18,7 @@ describe( 'History Component', () =>
     let instance;
     let props;
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
             tabs : [],
@@ -39,7 +39,7 @@ describe( 'History Component', () =>
 
     describe( 'render() with one tab', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props, history: [{ url: 'safe://hello', isActiveTab: true, windowId: 1, history: ['safe://hello'] }] };
             wrapper = shallow( <History { ...props } /> );
@@ -65,7 +65,7 @@ describe( 'History Component', () =>
 
     describe( 'History should filter excluded protocols', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props,
                 history :

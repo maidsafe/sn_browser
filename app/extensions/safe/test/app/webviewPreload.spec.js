@@ -11,7 +11,7 @@ describe.only('SAFE manageWebIdUpdates', () => {
 
     let win = {};
     let store = { subscribe: jest.fn() }; //need to mock store. should be called once.
-    beforeEach( () =>
+    beforeAll( () =>
     {
         webviewPreload.onPreload( store, win )
     });
@@ -46,7 +46,7 @@ describe('SAFE Webview Preload APIs', () =>
 
     let win = {};
     let store = jest.fn(); //need to mock store. should be called once.
-    beforeEach( () =>
+    beforeAll( () =>
     {
         webviewPreload.onPreload( store, win )
     });

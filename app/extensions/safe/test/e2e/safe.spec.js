@@ -33,14 +33,14 @@ describe( 'SAFE network webFetch operation', async () =>
     };
     let app;
 
-    beforeEach( async () =>
+    beforeAll( async () =>
     {
       app = setupSpectronApp();
 
         await beforeAllTests(app)
     } );
 
-    afterEach( async () =>
+    afterAll( async () =>
     {
         await afterAllTests(app);
     } );

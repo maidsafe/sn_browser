@@ -36,14 +36,14 @@ describe( 'safe authenticator protocol', () =>
 {
     let app;
 
-    beforeEach( async () =>
+    beforeAll( async () =>
     {
         app = setupSpectronApp();
 
         await beforeAllTests( app );
     } );
 
-    afterEach( async () =>
+    afterAll( async () =>
     {
         await afterAllTests( app );
     } );
