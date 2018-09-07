@@ -11,7 +11,7 @@ describe( 'Bookmarks', () =>
     let instance;
     let props;
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
             bookmarks : [],

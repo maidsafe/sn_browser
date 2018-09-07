@@ -14,7 +14,7 @@ describe( 'Notifier', () =>
     let instance;
     let props = {};
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
           isVisible          : false,
@@ -38,7 +38,7 @@ describe( 'Notifier', () =>
 
     describe( 'mount() Notifier', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props, isVisible: true, text: 'notifier text' };
             wrapper = mount( <Notifier { ...props } /> );
@@ -105,7 +105,7 @@ describe( 'Notifier', () =>
 
     describe( 'props', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
         props = {
           isVisible          : false,

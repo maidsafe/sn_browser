@@ -10,7 +10,7 @@ describe( 'Tab', () =>
     let instance;
     let props;
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
             url                     : '',

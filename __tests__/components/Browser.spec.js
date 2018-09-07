@@ -13,7 +13,7 @@ describe( 'Browser', () =>
     let instance;
     let props;
 
-    beforeEach( () =>
+    beforeAll( () =>
     {
         props = {
             ui                   : {},
@@ -71,7 +71,7 @@ describe( 'Browser', () =>
 
     describe( 'props', () =>
     {
-        beforeEach( () =>
+        beforeAll( () =>
         {
             props = { ...props, tabs: [] };
             wrapper = mount( <Browser { ...props } /> );

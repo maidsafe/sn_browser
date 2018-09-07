@@ -36,14 +36,14 @@ describe( 'main window', () =>
 {
     let app;
 
-    beforeEach( async () =>
+    beforeAll( async () =>
     {
-      app = setupSpectronApp();
+        app = setupSpectronApp();
 
         await beforeAllTests(app)
     } );
 
-    afterEach( async () =>
+    afterAll( async () =>
     {
         await afterAllTests(app);
     } );

@@ -314,7 +314,7 @@ describe( 'tabs reducer', () =>
         let activeTab;
         let anotherWindowActiveTab;
 
-        beforeEach( () =>
+        beforeAll( () =>
         {
             activeTab = { ...basicTab, isActiveTab: true };
             anotherWindowActiveTab = { ...activeTab, windowId: 2 };
