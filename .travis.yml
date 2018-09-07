@@ -50,17 +50,11 @@ script:
 #   fi
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
-# travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-e2e";
-  fi
-- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e";
-  fi
 - yarn run package-only
-- if [[ "$NODE_ENV" == "prod"  ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-e2e-prod";
-  fi
+# travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
+- travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-e2e-prod"
 - sleep 5
-- if [[ "$NODE_ENV" == "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e-prod";
-  fi
+- travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e-prod"
 
 after_success:
 - ls release
