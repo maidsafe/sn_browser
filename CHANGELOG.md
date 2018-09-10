@@ -38,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Deps updated in general.
 - Jest tests run in electron env.
 - CI deployment credentials
+- Testing only packaged app in CI
 
 ### SAFE libraries Dependencies
 - @maidsafe/safe-node-app: `c722378eca56b5cc6738d87a0a32db763914d000`
