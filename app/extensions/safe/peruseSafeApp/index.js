@@ -84,11 +84,14 @@ const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 
         global.browserAuthReqUri = authReq.uri;
 
-       await peruseAppObj.auth.openUri( authReq.uri );
 
        if( process.platform === 'win32')
        {
          ipcRenderer.send('opn', authReq.uri);
+       }
+       else
+       {
+           await peruseAppObj.auth.openUri( authReq.uri );
        }
 
         return peruseAppObj;
