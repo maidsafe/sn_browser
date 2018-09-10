@@ -52,14 +52,13 @@ const handlePeruseStoreChanges = ( store ) =>
     manageSaveStateActions( store );
     manageReadStateActions( store );
     manageAuthorisationActions( store );
-    handleLogoutActions(store);
-}
+    handleLogoutActions( store );
+};
 
 
-
-let cachedRemoteCallArray = [];
+const cachedRemoteCallArray = [];
 // things underway
-let callingArray = [];
+const callingArray = [];
 
 
 /**
@@ -69,30 +68,30 @@ let callingArray = [];
  */
 const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 {
-    logger.verbose('Requesting PeruseApp auth.', process.mainModule.filename)
+    logger.verbose( 'Requesting PeruseApp auth.', process.mainModule.filename );
     try
     {
         const isMock = peruseStateObject.isMock;
         peruseAppObj = await initialiseApp( APP_INFO.info, null, {
-            libPath: CONFIG.SAFE_NODE_LIB_PATH,
-            forceUseMock   : isMock
+            libPath      : CONFIG.SAFE_NODE_LIB_PATH,
+            forceUseMock : isMock
         } );
 
         const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
-        logger.verbose('generated auth uri:', authReq);
+        logger.verbose( 'generated auth uri:', authReq );
 
         global.browserAuthReqUri = authReq.uri;
 
 
-       if( process.platform === 'win32')
-       {
-         ipcRenderer.send('opn', authReq.uri);
-       }
-       else
-       {
-           await peruseAppObj.auth.openUri( authReq.uri );
-       }
+        if ( process.platform === 'win32' )
+        {
+            ipcRenderer.send( 'opn', authReq.uri );
+        }
+        else
+        {
+            await peruseAppObj.auth.openUri( authReq.uri );
+        }
 
         return peruseAppObj;
     }
@@ -104,14 +103,14 @@ const requestPeruseAppAuthentication = async ( peruseStateObject ) =>
 };
 
 
-export const getWebIds = async( ) =>
+export const getWebIds = async ( ) =>
 {
     const peruseApp = getPeruseAppObj();
-    logger.verbose('getWebIds');
+    logger.verbose( 'getWebIds' );
 
-    if( !peruseApp ) throw new Error('PeruseApp should be initiated.');
+    if ( !peruseApp ) throw new Error( 'PeruseApp should be initiated.' );
 
-    if( !peruseIsAuthed() ) throw new Error('PeruseApp is not authorised');
+    if ( !peruseIsAuthed() ) throw new Error( 'PeruseApp is not authorised' );
 
     let webIds = [];
 
@@ -121,7 +120,7 @@ export const getWebIds = async( ) =>
     savedStore.dispatch( peruseAppActions.setAvailableWebIds( webIds ) );
 
     return webIds;
-}
+};
 
 
 // TODO: Watch out, this is duped in network.js for funcs over there.
@@ -131,16 +130,16 @@ export const getPeruseAppObj = () =>
 const urisUnderAuth = [];
 const authFromStoreResponse = async ( res, store ) =>
 {
-    logger.verbose('Authing from a store-passed response.', Date.now(), res );
+    logger.verbose( 'Authing from a store-passed response.', Date.now(), res );
 
-    if( !res.startsWith('safe') )
+    if ( !res.startsWith( 'safe' ) )
     {
         // it's an error!
-        logger.error( res )
+        logger.error( res );
         store.dispatch( notificationActions.addNotification(
             {
-                text: `Unable to connect to the network. ${res}`,
-                type: 'error'
+                text : `Unable to connect to the network. ${res}`,
+                type : 'error'
             } ) );
 
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISATION_FAILED ) );
@@ -148,15 +147,15 @@ const authFromStoreResponse = async ( res, store ) =>
         return;
     }
 
-    if( urisUnderAuth.includes( res ) )
+    if ( urisUnderAuth.includes( res ) )
     {
         return;
     }
 
-    //TODO: This logic shuld be in BG process for peruse.
+    // TODO: This logic shuld be in BG process for peruse.
     try
     {
-        urisUnderAuth.push(res);
+        urisUnderAuth.push( res );
         peruseAppObj = await peruseAppObj.auth.loginFromUri( res );
 
         if ( store )
@@ -170,9 +169,9 @@ const authFromStoreResponse = async ( res, store ) =>
         {
             let message = err.message;
 
-            if( err.message.startsWith( 'Unexpected (probably a logic') )
+            if ( err.message.startsWith( 'Unexpected (probably a logic' ) )
             {
-                message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
+                message = 'Check your current IP address matches your registered address at invite.maidsafe.net';
             }
 
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
@@ -198,8 +197,8 @@ const manageAuthorisationActions = async ( store ) =>
     // TODO: Do this via aliased action.
     const peruse = peruseAppState;
 
-    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore || _.debounce( (responseUri) => {
-
+    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore || _.debounce( ( responseUri ) =>
+    {
         store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
         authFromStoreResponse( responseUri, store );
         isAuthing = false;
@@ -216,11 +215,11 @@ const manageAuthorisationActions = async ( store ) =>
         await requestPeruseAppAuthentication( peruse );
     }
 
-    if( peruse.authResponseUri && peruse.authResponseUri.length )
+    if ( peruse.authResponseUri && peruse.authResponseUri.length )
     {
         // TODO: This should 'clear' or somesuch....
         // OR: Only run if not authed?
-        debouncedPassAuthUriToStore( peruse.authResponseUri )
+        debouncedPassAuthUriToStore( peruse.authResponseUri );
     }
 };
 
@@ -232,25 +231,23 @@ const peruseIsAuthing = ( ) =>
         SAFE.APP_STATUS.AUTHORISING
     ];
 
-    return isAuthing || pendingAuthStates.includes( peruseAppState.appStatus )
-}
+    return isAuthing || pendingAuthStates.includes( peruseAppState.appStatus );
+};
 
-const peruseIsAuthed = (  ) =>
-{
-    return peruseAppState.appStatus === SAFE.APP_STATUS.AUTHORISED;
-}
+const peruseIsAuthed = ( ) =>
+    peruseAppState.appStatus === SAFE.APP_STATUS.AUTHORISED;
 
-const peruseIsConnected = (  ) =>
-{
+const peruseIsConnected = ( ) =>
+
     // Q: why do we have a loggedin state?
-    return peruseAppState.networkStatus === SAFE.NETWORK_STATE.CONNECTED ||
+    peruseAppState.networkStatus === SAFE.NETWORK_STATE.CONNECTED ||
             peruseAppState.networkStatus === SAFE.NETWORK_STATE.LOGGED_IN;
-}
+
 
 const peruseAuthFailed = ( state ) =>
 {
-    peruseAppState.appStatus === SAFE.APP_STATUS.AUTHORISATION_FAILED
-}
+    peruseAppState.appStatus === SAFE.APP_STATUS.AUTHORISATION_FAILED;
+};
 
 
 /**
@@ -260,10 +257,12 @@ const peruseAuthFailed = ( state ) =>
  */
 const manageReadStateActions = async ( store ) =>
 {
-    //Hack as store is actually unreliable.
-    //TODO: Rework this to use aliased funcs.
-    if( isReading )
+    // Hack as store is actually unreliable.
+    // TODO: Rework this to use aliased funcs.
+    if ( isReading )
+    {
         return;
+    }
 
 
     // if its not to save, or isnt authed yet...
@@ -274,29 +273,29 @@ const manageReadStateActions = async ( store ) =>
         return;
     }
 
-    if( !peruseIsAuthed( ) )
+    if ( !peruseIsAuthed( ) )
     {
         // come back when authed.
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
         return;
     }
 
-    if( !peruseIsConnected() )
+    if ( !peruseIsConnected() )
     {
         return;
     }
 
     isReading = true;
 
-    logger.verbose('Attempting to READ PeruseApp state from network')
+    logger.verbose( 'Attempting to READ PeruseApp state from network' );
     store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
 
     readConfigFromSafe( store )
         .then( savedState =>
         {
             // store.dispatch( peruseAppActions.receivedConfig( savedState ) );
-            store.dispatch( bookmarksActions.updateBookmarks( savedState ));
-            store.dispatch( tabsActions.updateTabs( savedState ));
+            store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
+            store.dispatch( tabsActions.updateTabs( savedState ) );
             store.dispatch(
                 peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
             );
@@ -313,9 +312,7 @@ const manageReadStateActions = async ( store ) =>
             );
             throw new Error( e );
         } );
-
 };
-
 
 
 /**
@@ -325,10 +322,12 @@ const manageReadStateActions = async ( store ) =>
  */
 const manageSaveStateActions = async ( store ) =>
 {
-    //Hack as store is actually unreliable.
-    //TODO: Rework this to use aliased funcs.
-    if( isSaving )
+    // Hack as store is actually unreliable.
+    // TODO: Rework this to use aliased funcs.
+    if ( isSaving )
+    {
         return;
+    }
 
     const peruseApp = peruseAppState;
 
@@ -340,35 +339,35 @@ const manageSaveStateActions = async ( store ) =>
         return;
     }
 
-    //if it auth didnt happen, and hasnt failed... previously... we can try again (we're in TO SAVE, not SAVING.)
-    if( !peruseIsAuthed( ) )
+    // if it auth didnt happen, and hasnt failed... previously... we can try again (we're in TO SAVE, not SAVING.)
+    if ( !peruseIsAuthed( ) )
     {
         // come back when authed.
         store.dispatch( peruseAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
         return;
     }
 
-    if( !peruseIsConnected() )
+    if ( !peruseIsConnected() )
     {
         return;
     }
 
 
-    //lets scrap read for now.
+    // lets scrap read for now.
     if ( peruseApp.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
         peruseApp.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT &&
         peruseApp.readStatus !== SAFE.READ_STATUS.TO_READ &&
         peruseApp.readStatus !== SAFE.READ_STATUS.READING )
     {
-            logger.verbose( 'Can\'t save state, not read yet... Triggering a read.' );
-            store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
+        logger.verbose( 'Can\'t save state, not read yet... Triggering a read.' );
+        store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
 
         return;
     }
 
     isSaving = true;
 
-    logger.verbose('Attempting to SAVE PeruseApp state to network')
+    logger.verbose( 'Attempting to SAVE PeruseApp state to network' );
     store.dispatch( peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
     saveConfigToSafe( store )
         .then( () =>
@@ -392,7 +391,6 @@ const manageSaveStateActions = async ( store ) =>
             throw new Error( e );
         } );
 };
-
 
 
 export default handlePeruseStoreChanges;
