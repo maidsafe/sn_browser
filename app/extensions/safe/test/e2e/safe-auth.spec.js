@@ -99,8 +99,10 @@ describe( 'safe authenticator protocol', () =>
         await delay( 2500 );
 
         await createAccount( app );
+        console.log('e2e: create account : created')
 
         await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
+        console.log('e2e: create account : applist')
 
         // we wait... if this isn't reached then expect.assertions fails
         expect( 'this to be reached' ).toBe( 'this to be reached' );
@@ -127,16 +129,19 @@ describe( 'safe authenticator protocol', () =>
 
             await createAccount( app, true );
 
+            console.log('e2e auth popup: account created')
+
             await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
 
+            console.log('e2e auth popup: applist exists')
             await setClientToMainBrowserWindow( app );
             await delay( 1500 );
 
 
             await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            console.log('e2e auth popup: notifier exists')
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
-            console.log('note', note);
             expect( note ).toMatch( /Peruse Browser requests Auth Permission/ );
         } );
     }
