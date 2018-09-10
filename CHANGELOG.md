@@ -41,7 +41,7 @@ All notable changes to this project will be documented in this file.
 - Testing only packaged app in CI
 
 ### SAFE libraries Dependencies
-- @maidsafe/safe-node-app: `c722378eca56b5cc6738d87a0a32db763914d000`
+- @maidsafe/safe-node-app: `338ec368e25eb2e258d2447413006d74ecc23a15`
 
 
 #### [0.6.0]
