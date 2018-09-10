@@ -26,7 +26,7 @@ export const setupSpectronApp = ( ) =>
     let application = 'peruse';
 
     if( isMac ) application = macApp;
-    if( isWin ) application = 'Peruse';
+    if( isWin ) application = 'Peruse.exe';
 
     const packedLocation = path.resolve( './release', RELEASE_NAME, application );
 

@@ -2,7 +2,7 @@ const path = require( 'path' );
 
 const pkg = require( './package.json' );
 const env = process.env.NODE_ENV || 'production';
-const isBuildingDev = /^dev/.test( env );
+const isBuildingDev = /^(dev|test)/.test( env );
 
 const targetDir = path.resolve( __dirname, 'release' );
 
