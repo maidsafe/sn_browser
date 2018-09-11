@@ -40,14 +40,14 @@ describe( 'makeValidAddressBarUrl', () =>
         expect( makeValidAddressBarUrl( 'hello.world/lalalala/' ) ).toBe( 'safe://hello.world/lalalala' );
     } );
 
-    it( 'should strip the index.html', () =>
+    it( 'should not strip the index.html', () =>
     {
-        expect( makeValidAddressBarUrl( 'hello.world/boom/index.html' ) ).toBe( 'safe://hello.world/boom' );
+        expect( makeValidAddressBarUrl( 'hello.world/boom/index.html' ) ).toBe( 'safe://hello.world/boom/index.html' );
     } );
 
     test.skip( 'should clean up url spaces etc', () =>
     {
-        expect( makeValidAddressBarUrl( 'hello world/boom/index.html' ) ).toBe( 'safe://hello%20world/boom' );
+        expect( makeValidAddressBarUrl( 'hello world/boom/index.html' ) ).toBe( 'safe://hello%20world/boom/index.html' );
     } );
 } );
 
