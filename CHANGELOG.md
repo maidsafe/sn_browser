@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Able to successfully auth when logging in on mock-dev on Windows
 - No longer hanging when logging in on Linux
 - Auths external apps on mock-dev and mock-prod
+- Bookmarks and history are wiped upon logout, without closing open tabs
 
 ### Changed
 - Electron to 2.0.8

@@ -88,10 +88,12 @@ describe( 'SAFE network webFetch operation', async () =>
 
         it( 'can save browser data.', async( ) =>
         {
-            const { client } = app;
-
             expect.assertions(1);
+	    const { client } = app;
+            await delay( 2500 );
+
             await navigateTo( app, 'shouldsavetobookmarks.com' );
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
             await delay( 1500 );
             await bookmarkActiveTabPage( app );
             await delay( 1500 );
@@ -99,7 +101,6 @@ describe( 'SAFE network webFetch operation', async () =>
 
             await navigateTo( app, 'peruse:bookmarks' );
             await delay( 3500 );
-
 
             // expect( bookmarks ).not.toMatch( 'shouldappearinbookmarks' );
 
@@ -148,7 +149,7 @@ describe( 'SAFE network webFetch operation', async () =>
             // await delay( 2500 );
 
             //bookmarks is an array
-            expect( bookmarks.join('') ).not.toMatch( 'shouldsavetobookmarks' );
+            expect( bookmarks.join('') ).toMatch( 'shouldsavetobookmarks' );
             await delay( 3500 );
 
             // const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
