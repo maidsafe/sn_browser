@@ -88,7 +88,7 @@ describe( 'safe authenticator protocol', () =>
     {
         expect.assertions( 1 );
         const { client } = app;
-        await delay( 2500 );
+        await delay( 500 );
 
         // const tabIndex = await newTab( app );
         // // await navigateTo( app, 'safe-auth://home' );
@@ -105,6 +105,45 @@ describe( 'safe authenticator protocol', () =>
 
         // we wait... if this isn't reached then expect.assertions fails
         expect( 'this to be reached' ).toBe( 'this to be reached' );
+    } );
+
+    it( 'can login, log history, logout, and clean up history', async ( ) =>
+    {
+        expect.assertions( 4 );
+        const { client } = app;
+        await delay( 2500 );
+        const authTabIndex = await newTab( app );
+
+        await navigateTo( app, 'safe-auth://home' );
+
+        await setClientToMainBrowserWindow( app );
+
+        await createAccount( app, null, null, authTabIndex );
+        await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
+
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'shouldappearinhistory.com' );
+        await client.waitForExist( BROWSER_UI.CLOSE_TAB, WAIT_FOR_EXIST_TIMEOUT );
+        await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
+        await delay( 500 );
+
+        await newTab( app );
+        await navigateTo( app, 'peruse:history' );
+        const header = await client.getText( 'h1' );
+        const history = await client.getText( '.urlList__table' );
+        expect( header ).toBe( 'History' );
+        expect( history ).toMatch( 'shouldappearinhistory' );
+
+        await logout( app, authTabIndex );
+
+        await newTab( app );
+        await navigateTo( app, 'peruse:history' );
+        await delay( 500 );
+
+        const header2 = await client.getText( 'h1' );
+        const history2 = await client.getText( '.urlList__table' );
+        expect( header2 ).toEqual( expect.arrayContaining( ["", "History"] ) );
+        expect( history2 ).toEqual( expect.arrayContaining( ["", "Nothing to see here yet."] ) );
     } );
 
     if( travisOS !== 'linux' )

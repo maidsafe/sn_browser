@@ -443,13 +443,13 @@ export default function tabs( state: array = initialState, action )
         }
         case UI_TYPES.RESET_STORE :
         {
-            const initial = initialState;
-            const firstTab = { ...initial[0] };
             const currentWindowId = getCurrentWindowId();
 
-            firstTab.windowId = currentWindowId;
-
-            return [firstTab];
+            return state.filter( ( tab ) => !tab.isClosed ).map( ( tab, i ) => {
+                tab.windowId = currentWindowId;
+                tab.index = i;
+                return tab;
+            } );
         }
         default:
             return state;
