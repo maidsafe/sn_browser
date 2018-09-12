@@ -1,9 +1,30 @@
 # Peruse
 
 ## About
-An electron web browser. Built to be a basis. Extendable by design.
+
+Built upon [peruse](https://github.com/joshuef/peruse), but using its baked in extensibility to add [SAFE Network](https://safenetwork.tech) functionality.
+
+## Installation
+
+For normal SAFE Network browsing, you should download the latest version of the browser from [The SAFE Browser releases](https://github.com/maidsafe/safe_browser/releases) page.
+
+Application developers should use the same link, but choose the `-dev` postfixed version for their platform. This version uses a `mock` network to allow local development (without the need to pay PUT costs on a live SAFE Network).
+
 
 ## WebApp Development 
+
+There are `dev-` prefixed releases of Peruse available. These come with both live network and mock network libs, bundled.
+
+By default, opening the app will open Peruse for the mock network (when you're running in a `NODE_ENV=dev` environment).
+
+Otherwise, there is the option to pass a `--live` flag to the browser. This will start the browser in a `live` network mode.
+
+eg, on OSX:
+
+`NODE_ENV=dev open Peruse.app --args --live`
+
+
+### WebId 
 
 Safe uses the RDF compliant WebId system for easily enabling user account management.
 
@@ -18,19 +39,6 @@ webIdEventEmitter.on('update', ( webId ) => {
 
 ```
 
-
-## Development
-
-There are `dev-` prefixed releases of Peruse available. These come with both live network and mock network libs, bundled.
-
-By default, opening the app will open Peruse for the mock network (when you're running in a `NODE_ENV=dev` environment).
-
-Otherwise, there is the option to pass a `--live` flag to the browser. This will start the browser in a `live` network mode.
-
-eg, on OSX:
-
-`NODE_ENV=dev open Peruse.app --args --live`
-
 ### Debugging
 
 A `--debug` flag is also available to get extra logs and devtool windows when working with a packaged application.
@@ -41,6 +49,9 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 - Account login credentials, both secret and password being `mocksafenetworkdeveloper`
 
 `NODE_ENV=dev open Peruse.app --args --mock --preload`
+
+
+## Browser Development
 
 ### Compiling
 
