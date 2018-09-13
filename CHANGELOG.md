@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.7.1"></a>
+## [0.7.1](https://github.com/joshuef/peruse/compare/v0.5.3...v0.7.1) (2018-09-13)
+
+
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
 #### [0.7.0]
 ### Added
 - Notification on network disconnect event with automatic reconnect upon network resolve
