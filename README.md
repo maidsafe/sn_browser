@@ -1,4 +1,4 @@
-# Peruse
+# SAFE Browser
 
 ## About
 
@@ -29,20 +29,20 @@ open Peruse.app --args --live
 
 Peruse exposes a set of APIs in the DOM which webapps can make use to connect to the SAFE Network, as well as fetch and store data on it.
 
-A webapp have direct access to this set of APIs thru the DOM at `window.safe`.
+A webapp has direct access to this set of APIs through the DOM at `window.safe`.
 
-The SAFE Network client API exposed by Peruse is a simple wrapper on top of the API provided by the `@maidsafe/safe-node-app` package (with a few minor exceptions explained below), therefore the documentation available for the `safe-node-app` API is valid and t's what a developer creating a webapp for Peruse needs to use as a reference.
+The SAFE Network client API exposed by Peruse is a simple wrapper on top of the API provided by the `@maidsafe/safe-node-app` package (with a few minor exceptions explained below), therefore the documentation available for the `safe-node-app` API is valid and is the main reference for any developer wanting to create a webapp for The SAFE Network.
 
 This API documentation can be found at the following URL: https://docs.maidsafe.net/safe_app_nodejs
 
 As an example, if a webapp is trying to make use of the [initialiseApp](https://docs.maidsafe.net/safe_app_nodejs/#initialiseapp) function, it simply needs to prefix the function name with `window.safe`, i.e. it shall simply call `window.safe.initialiseApp` and provide the parameters as described in that documentation. Note that it's not needed to import/require the `safe-app-node` package with `require('@maidsafe/safe-node-app')` from a webapp.
 
-You will find some example code snippets as well you can also use to learn and try the API.
+You will find some example code snippets in the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) as well, that you can use to learn, and also look at the [Debugging section](#debugging) below for the interactive tool to try out the API.
 
 As mentioned above, there are only a few functions related to the initialisation and app authorisation request process that are exposed by Peruse and which slightly differ from the `safe-app-node` API:
 * There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/#initoptions) supported by the [initialiseApp](https://docs.maidsafe.net/safe_app_nodejs/#initialiseapp) function exposed in the DOM API
 * There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/#initoptions) supported by the [fromAuthUri](https://docs.maidsafe.net/safe_app_nodejs/#fromauthuri) function exposed in the DOM API
-* [openUri](https://docs.maidsafe.net/safe_app_nodejs/#authinterfaceopenuri) from authorisation interface is not available in the DOM API. A webapp shall instead call the `window.safe.authorise` function to send an authorisation request to the Authenticator. E.g.:
+* [openUri](https://docs.maidsafe.net/safe_app_nodejs/#authinterfaceopenuri) is not available in the DOM API. A webapp shall instead call the `window.safe.authorise` function to send an authorisation request to the Authenticator. E.g.:
     ```js
     const appInfo = {
         name: 'Hello SAFE Network',
@@ -78,15 +78,36 @@ The reason they are exposed is to just allow developers to experiment and start 
 
 SAFE uses the RDF compliant WebId system for easily enabling user account management.
 
-You can retrieve the current webId via `window.currentWebId`;
+You can retrieve the current WebId via `window.currentWebId`.
 
-You can listen for changes via the event emitter, `window.webIdEventEmitter`, eg:
+Additionally, you can listen for changes via the event emitter, `window.webIdEventEmitter`, eg:
 
 ```js
 webIdEventEmitter.on('update', ( webId ) => {
-  console.log('an updateId occurred!', webId);
+  console.log('an update to current WebID occurred!', webId);
 });
+```
 
+There is a set of very experimental APIs available on a `SAFEApp` instance (the object you obtain from calling `window.safe.initialiseApp`) which are utilities to manipulate WebIDs and public names. Since they are in their very early stage there is no documentation available just yet, but in case you want to explore them, this is an example how you can access them:
+
+```js
+const safeApp = await window.safe.initialiseApp( appInfo );
+await safeApp.web.createPublicName( ... );
+```
+
+#### RDF utilities
+
+Another set of utilities in their early stage of development can be found in the RDF and WebID emulations. As you probably know our MutableData API supports emulations to be implemented on top of them, e.g. our NFS emulation allows apps to access the MutableData data as if it was a files directory.
+
+In an analogous way to the NFS emulation, the RDF and WebID emulations can be applied on top of any MutableData object, e.g.:
+
+```js
+const safeApp = await window.safe.initialiseApp( appInfo );
+// authorise and connect to the network...
+...
+const md = await safeapp.mutableData.newRandomPublic( 15001 );
+await md.quickSetup();
+const rdfEmulation = await md.emulateAs( 'rdf' );
 ```
 
 ### Debugging
@@ -188,3 +209,14 @@ Currently, we're using a `temp_dist` version of the authenticator webapp, prebui
 
 - APIs are located in `app/extensions/safe/api`;
 - APIs are located in `app/extensions/safe/auth-api`;
+
+## Further Help
+
+You can discuss development-related questions on the [SAFE Dev Forum](https://forum.safedev.org/).
+If you are just starting to develop an application for the SAFE Network, it's very advisable to visit the [SAFE Network Dev Hub](https://hub.safedev.org) where you will find a lot of relevant information, including tutorials.
+
+## License
+
+SAFE Browser is a lightly modified fork of the [Peruse Browser](https://github.com/joshuef/peruse).
+
+This SAFE Network application is dual-licensed under the Modified BSD ([LICENSE-BSD](LICENSE-BSD) https://opensource.org/licenses/BSD-3-Clause) or the MIT license ([LICENSE-MIT](LICENSE-MIT) https://opensource.org/licenses/MIT) at your option.
