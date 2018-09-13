@@ -7,16 +7,15 @@ import { I18N_CONFIG } from 'appConstants';
 
 import manageRemoteCalls from './background.manageRemoteCalls';
 import { onInitBgProcess, getExtensionReduxMiddleware }  from './extensions';
-import { setupServerVars, startServer } from './server';
+import setupServer from './server';
 import { remote } from 'electron';
 
 window.thisIsTheBackgroundProcess = true;
 
 const initSafeServer = ( store ) =>
 {
-    const server = setupServerVars();
+    const server = setupServer();
     onInitBgProcess( server, store );
-    startServer( server );
 };
 
 const initBgProcess = async ( ) =>
