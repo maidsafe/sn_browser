@@ -1,6 +1,11 @@
 # Peruse Change Log
 All notable changes to this project will be documented in this file.
 
+#### [Unreleased]
+
+### Fixed
+- Able to paste value into create_account input fields via context menu option and value be analyzed for password strength
+
 #### [0.7.0]
 ### Added
 - Notification on network disconnect event with automatic reconnect upon network resolve
