@@ -211,6 +211,7 @@ export const APP_INFO = appInfo;
 
 // TODO. Unify with test lib/constants browser UI?
 export const CLASSES = {
+    ADDRESS_BAR               : 'js-address',
     ACTIVE_TAB                : 'js-tabBar__active-tab',
     TAB                       : 'js-tab',
     ADD_TAB                   : 'js-tabBar__add-tab',
@@ -220,5 +221,21 @@ export const CLASSES = {
     SPECTRON_AREA__SPOOF_SAVE : 'js-spectron-area__spoof-save',
     SPECTRON_AREA__SPOOF_READ : 'js-spectron-area__spoof-read',
     NOTIFIER_TEXT             : 'js-notifier__text',
-
+    BOOKMARK_PAGE             : 'js-bookmark-page',
+    FORWARDS                  : 'js-address__forwards',
+    BACKWARDS                 : 'js-address__backwards',
+    REFRESH                   : 'js-address__refresh',
+    ADDRESS_INPUT             : 'js-address__input',
+    MENU                      : 'js-address__menu',
 };
+
+const getDomClasses = () =>
+{
+    const domClasses = {};
+
+    Object.keys( CLASSES ).forEach( theClass => domClasses[ theClass ] = `.${CLASSES[theClass]}`);
+
+    return domClasses;
+}
+
+export const GET_DOM_EL_CLASS = getDomClasses();

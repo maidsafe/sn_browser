@@ -24,7 +24,6 @@ export const setClientToMainBrowserWindow = async ( app ) =>
         // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
         const theWindow = await client.windowByIndex( i );
         const url = await client.getUrl();
-
         const urlObj = urlParse( url );
         // get the PeruseBrowserWindow
         // TODO: If more than one...? (checkFocus)
@@ -72,6 +71,7 @@ export const setAddress = async ( app, url ) =>
     await client.setValue( BROWSER_UI.ADDRESS_INPUT, url );
     await client.pause( 500 );
 };
+
 export const navigateTo = async ( app, url ) =>
 {
     const { client, browserWindow } = app;
@@ -102,4 +102,14 @@ export const newTab = async ( app ) =>
     const length2 = await client.getWindowCount();
     return length2 - 1 //index is count minus 1
     // return windows
+};
+
+
+export const bookmarkActiveTabPage = async ( app ) =>
+{
+    const { client } = app;
+    await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE );
+    await client.click( BROWSER_UI.BOOKMARK_PAGE  );
+    await client.pause( 500 );
+
 };
