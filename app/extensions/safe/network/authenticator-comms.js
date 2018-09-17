@@ -164,6 +164,7 @@ export const initAnon = async ( passedStore ) =>
         forceUseMock   : isMock
     };
 
+    logger.info('Initing anon connection with these options:', appOptions)
     try
     {
         // does it matter if we override?

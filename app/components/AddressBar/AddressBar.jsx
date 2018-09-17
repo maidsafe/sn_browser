@@ -8,6 +8,8 @@ import { Column, Grid, InputField } from 'nessie-ui';
 import ButtonsLHS from 'components/AddressBar/ButtonsLHS';
 import logger from 'logger';
 
+import { CLASSES } from 'appConstants';
+
 import styles from './addressBar.css';
 
 
@@ -207,11 +209,11 @@ export default class AddressBar extends Component
                             <Column align="left">
                                 {
                                     isBookmarked &&
-                                        <MdStar className={styles.buttonIcon} onClick={this.handleBookmarking}/>
+                                        <MdStar className={`${styles.buttonIcon} ${CLASSES.BOOKMARK_PAGE}`} onClick={this.handleBookmarking}/>
                                 }
                                 {
                                     ! isBookmarked &&
-                                        <MdStarOutline className={styles.buttonIcon} onClick={this.handleBookmarking}/>
+                                        <MdStarOutline className={`${styles.buttonIcon} ${CLASSES.BOOKMARK_PAGE}`} onClick={this.handleBookmarking}/>
                                 }
                             </Column>
                         </Grid>

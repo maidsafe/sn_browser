@@ -11,6 +11,7 @@ import {
 } from 'spectron-lib/browser-driver';
 
 import {
+    createAccountDetails,
     createAccount,
     login,
     logout
@@ -83,6 +84,8 @@ describe( 'safe authenticator protocol', () =>
         return;
     }
 
+    const { secret, password } = createAccountDetails();
+
     it( 'can create an account', async ( ) =>
     {
         expect.assertions( 1 );
@@ -98,7 +101,7 @@ describe( 'safe authenticator protocol', () =>
         await client.windowByIndex( tabIndex );
         await delay( 2500 );
 
-        await createAccount( app );
+        await createAccount( app, secret, password );
 
         await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
 
@@ -118,8 +121,7 @@ describe( 'safe authenticator protocol', () =>
         await delay( 2500 );
 
         await client.windowByIndex( tabIndex );
-
-        await login( app );
+        await login( app, secret, password );
         await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
 
         await newTab( app );
@@ -160,14 +162,8 @@ describe( 'safe authenticator protocol', () =>
 
             const tabIndex = await newTab( app );
             await navigateTo( app, 'safe-auth://home' );
-            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
-            await delay( 2500 );
-
-            await client.windowByIndex( tabIndex );
-            await delay( 2500 );
-
-            await createAccount( app, true );
+            await createAccount( app, null, null, tabIndex );
 
             await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
 

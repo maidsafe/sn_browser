@@ -38,6 +38,26 @@ switch ( arg )
 
         argsArray.push( `--bail`);
         argsArray.push( `--runInBand`);
+        argsArray.push( `--testPathIgnorePatterns=network`);
+
+        //exclude weakref tests for now.
+        if ( platform === WINDOWS )
+        {
+            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\auth.spec\\.js$`;
+        }
+
+        break;
+    }
+    case ( 'exts-e2e-network' ) :
+    {
+        // These tests involve actual log in/out of the netowrk and saving data.
+        // eventually to be rolled against the live net (if that makes sense).
+        // Separated out for now to avoid runnin in prod against prod (only against mock in a packaged app version)
+        console.log('Running network specific tests (those that must be on mock)')
+        pattern = `app${s}extensions${s}[^${s}].+e2e${s}.+\\.network\\.spec\\.js$`;
+
+        argsArray.push( `--bail`);
+        argsArray.push( `--runInBand`);
 
         //exclude weakref tests for now.
         if ( platform === WINDOWS )
