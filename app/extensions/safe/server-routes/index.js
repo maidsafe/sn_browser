@@ -1,5 +1,5 @@
 import logger from 'logger';
-import { isRunningPackaged, isRunningSpectronTestProcess,isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
+import { isRunningPackaged, isRunningSpectronTestProcess, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
 import path from 'path';
 import url from 'url';
 
@@ -10,35 +10,36 @@ const setupRoutes = ( server, store ) =>
 {
     const routes = [
         safeRoute( store ),
-        authRoute,
-        {
-            method  : ['GET','OPTIONS','PUT','POST'],
-            path    : '/dummy/{link*}',
-            handler : ( request, reply ) =>
-            {
-                const link = request.params.link;
-                const linkUrl = url.parse( link );
-
-                let safeFolder = isRunningPackaged ? `../extensions/safe/` : `./extensions/safe/`;
-                safeFolder = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp) ? `extensions/safe/` : safeFolder;
-
-                const antdIcons = path.resolve( __dirname,  safeFolder, 'iconfont/' );
-                const finalPath = path.resolve( antdIcons, link );
-                reply.file( finalPath, { confine: false }  )
-                .header( 'Access-Control-Allow-Origin', '*' )
-
-            }
-
-        }
+        authRoute
     ];
 
-    routes.forEach( route => {
-        try {
-            server.route( route )
-        } catch (e) {
-            logger.error('Problem initing a route.', route, e)
+    // TODO: Remove serving onf antd files when we can package
+    // webId manager properly.
+    server.get( /dummy/, ( request, res ) =>
+    {
+        const link = request.params.link;
+        const linkUrl = url.parse( link );
+
+        let safeFolder = isRunningPackaged ? '../extensions/safe/' : './extensions/safe/';
+        safeFolder = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp ) ? 'extensions/safe/' : safeFolder;
+
+        const antdIcons = path.resolve( __dirname, safeFolder, 'iconfont/' );
+        const finalPath = path.resolve( antdIcons, link );
+        res.sendFile( finalPath, { confine: false } )
+            .header( 'Access-Control-Allow-Origin', '*' );
+    } );
+
+    routes.forEach( route =>
+    {
+        try
+        {
+            server.get( route.path, route.handler );
         }
-    });
+        catch ( e )
+        {
+            logger.error( 'Problem initing a route.', route, e );
+        }
+    } );
 };
 
 

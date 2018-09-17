@@ -124,6 +124,8 @@ export default class Tab extends Component
             webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
             webview.addEventListener( 'did-stop-loading', ::this.didStopLoading );
             webview.addEventListener( 'did-finish-load', ::this.didFinishLoading );
+            webview.addEventListener( 'crashed', ::this.onCrash );
+            webview.addEventListener( 'gpu-crashed', ::this.onGpuCrash );
             webview.addEventListener( 'will-navigate', ::this.willNavigate );
             webview.addEventListener( 'did-navigate', ::this.didNavigate );
             webview.addEventListener( 'did-navigate-in-page', ::this.didNavigateInPage );
@@ -237,6 +239,16 @@ export default class Tab extends Component
         }
     }
 
+    onCrash = (e) =>
+    {
+        logger.err('The webview crashed', e)
+    }
+
+    onGpuCrash = (e) =>
+    {
+        logger.err('The webview GPU crashed', e)
+    }
+
     didStartLoading( )
     {
         logger.silly( 'webview started loading' );
@@ -293,6 +305,7 @@ export default class Tab extends Component
 
     didStopLoading( )
     {
+        logger.verbose('DID STOP')
         const { updateTab, index, isActiveTab } = this.props;
 
         const tabUpdate = {
@@ -310,6 +323,7 @@ export default class Tab extends Component
     {
         const { updateTab, index, isActiveTab } = this.props;
 
+        logger.verbose('DID FINISH LAODING')
         const tabUpdate = {
             index,
             isLoading: false
@@ -403,9 +417,9 @@ export default class Tab extends Component
     {
         logger.silly( 'webview will navigate', e );
 
-        if ( !this.isFrozen() )
+        if (!this.isFrozen() )
         {
-            logger.verbose('inthis frozen checkkkkk in will nav')
+            logger.verbose('frozen checkkkkk in will nav')
             return;
         }
 
