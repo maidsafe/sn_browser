@@ -24,15 +24,15 @@ let CONTAINING_FOLDER;
 if ( platform === OSX )
 {
     CONTAINING_FOLDER = path.resolve( targetDir, 'mac' );
-    const PERUSE_FOLDER = path.resolve( CONTAINING_FOLDER, 'Peruse.app' );
+    const PERUSE_FOLDER = path.resolve( CONTAINING_FOLDER, 'Safe Browser.app' );
     const PERUSE_CONTENTS_FOLDER = path.resolve( PERUSE_FOLDER, 'Contents' );
     const PERUSE_RESOURCES_FOLDER = path.resolve( PERUSE_CONTENTS_FOLDER, 'Resources' );
-    const PERUSE_CONFIG_FOLDER = path.resolve( PERUSE_FOLDER, 'Contents/Frameworks/Peruse Helper.app/Contents/MacOS' );
+    const PERUSE_CONFIG_FOLDER = path.resolve( PERUSE_FOLDER, 'Contents/Frameworks/Safe Browser Helper.app/Contents/MacOS' );
 
     const LOGS = 'log.toml';
 
-    fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, 'Peruse.crust.config' ), path.resolve( PERUSE_CONFIG_FOLDER, 'Peruse Helper.crust.config' ), { overwrite: true } );
-    fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, 'Peruse.crust.config' ), path.resolve( PERUSE_CONTENTS_FOLDER, 'Peruse.crust.config' ), { overwrite: true } );
+    fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, 'Safe Browser.crust.config' ), path.resolve( PERUSE_CONFIG_FOLDER, 'Safe Browser Helper.crust.config' ), { overwrite: true } );
+    fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, 'Safe Browser.crust.config' ), path.resolve( PERUSE_CONTENTS_FOLDER, 'Safe Browser.crust.config' ), { overwrite: true } );
     fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, LOGS ), path.resolve( PERUSE_CONFIG_FOLDER, LOGS ), { overwrite: true } );
     fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, LOGS ), path.resolve( PERUSE_CONTENTS_FOLDER, LOGS ), { overwrite: true } );
 

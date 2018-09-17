@@ -1,5 +1,6 @@
 # SAFE Browser
 
+
 ## About
 
 Built upon [peruse](https://github.com/joshuef/peruse), but using its baked in extensibility to add [SAFE Network](https://safenetwork.tech) functionality.
