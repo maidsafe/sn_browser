@@ -51,35 +51,29 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( await windowLoaded( app ) ).toBeTruthy()
     });
 
-    // it( 'populates the DOM api in the tab window:', async( ) =>
-    // {
-    //     expect.assertions(5);
-    //     await setClientToMainBrowserWindow( app );
-    //
-    //     const { client } = app;
-    //     const tabIndex = await newTab( app );
-    //
-    //     await navigateTo( app, 'safeAPI.com' );
-    //     // await delay( 1500 );
-    //
-    //     // const windows = await client.getWindowCount()
-    //
-    //     // TODO: Why -1 here? when others not... ? Something is hanging around...
-    //     await client.windowByIndex( tabIndex - 1 );
-    //     await client.pause( 1500 );
-    //
-    //     let theSafeClient = await client.execute( function (){ return window.safe } );
-    //     theSafeClient = theSafeClient.value;
-    //     // await delay( 2500 );
-    //     // await client.pause(1500)
-    //
-    //
-    //     expect( theSafeClient ).toHaveProperty('CONSTANTS');
-    //     expect( theSafeClient ).toHaveProperty('VERSION');
-    //     expect( theSafeClient ).toHaveProperty('authorise');
-    //     expect( theSafeClient ).toHaveProperty('initialiseApp');
-    //     expect( theSafeClient ).toHaveProperty('fromAuthUri');
-    // })
+    it( 'populates the DOM api in the tab window:', async( ) =>
+    {
+        expect.assertions(5);
+        await setClientToMainBrowserWindow( app );
+
+        const { client } = app;
+        const tabIndex = await newTab( app );
+
+        await navigateTo( app, 'safeAPI.com' );
+
+        // TODO: Why -1 here? when others not... ? Something is hanging around...
+        await client.windowByIndex( tabIndex - 1 );
+        await client.pause( 1500 );
+
+        let theSafeClient = await client.execute( function (){ return window.safe } );
+        theSafeClient = theSafeClient.value;
+
+        expect( theSafeClient ).toHaveProperty('CONSTANTS');
+        expect( theSafeClient ).toHaveProperty('VERSION');
+        expect( theSafeClient ).toHaveProperty('authorise');
+        expect( theSafeClient ).toHaveProperty('initialiseApp');
+        expect( theSafeClient ).toHaveProperty('fromAuthUri');
+    })
 
 
     // it( 'has safe:// protocol', async () =>

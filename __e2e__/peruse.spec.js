@@ -222,8 +222,6 @@ describe( 'main window', () =>
     } );
 
 
-
-
     // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async () =>
     {
