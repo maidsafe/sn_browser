@@ -142,7 +142,7 @@ Want to run 'production' variables, but with hot reloading?
 - `yarn put-live-net-files-for-<windows|osx|linux>`
 - `yarn prod-dev`
 
-Note, you'll need a crust.config set for the application. [Helper commands are available on osx/linux](https://github.com/maidsafe/safe_browser/blob/master/package.json#L53-L54) (not windows yet, sorry! this is only temporary.)
+Note, you'll need a crust.config set for the application. [Helper commands for osx/linux/windows](https://github.com/maidsafe/safe_browser/blob/master/package.json#L53-L56)
 
 And to package:
 - `yarn package`
