@@ -43,7 +43,7 @@ describe( 'main window', () =>
 
     afterEach( async () =>
     {
-        // await afterAllTests(app);
+        await afterAllTests(app);
     } );
 
 
@@ -187,9 +187,9 @@ describe( 'main window', () =>
     } );
 
 
-    it.only( 'can go to bookmarks', async () =>
+    it.only( 'can go to and add bookmarks', async () =>
     {
-        expect.assertions(1)
+        expect.assertions(2)
         const { client } = app;
         await delay( 4500 );
 
@@ -197,8 +197,6 @@ describe( 'main window', () =>
         await navigateTo( app, 'shouldappearinbookmarks.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
         await bookmarkActiveTabPage( app );
-
-        console.log('----------->1', bookmarked)
 
         await delay( 2500 );
 
@@ -213,12 +211,13 @@ describe( 'main window', () =>
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
 
         const header = await client.getText( 'h1' );
-        console.log('----------->3', header)
+
+        const bookmarks = await client.getText( '.urlList__table' );
+
         await delay( 2500 );
 
         expect( header ).toBe( 'Bookmarks' );
-
-        // expect( that page ).toBe( there in the list... );
+        expect( bookmarks ).toMatch( 'shouldappearinbookmarks' );
 
     } );
 
