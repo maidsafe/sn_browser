@@ -29,6 +29,7 @@ export default class App extends Component {
 
   getHeaderOptions() {
     const { isAuthorised, logout } = this.props;
+
     if (!isAuthorised) {
       return null;
     }

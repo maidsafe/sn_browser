@@ -52,7 +52,7 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
       {
           const { setReadConfigStatus } = this.props;
 
-          setSaveConfigStatus( SAFE.SAVE_STATUS.TO_READ );
+          setReadConfigStatus( SAFE.READ_STATUS.TO_READ );
       }
 
       render() {
@@ -75,7 +75,7 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
                           />
                           <button
                               style={spectronAreaButton}
-                              className={ `${CLASSES.SPECTRON_AREA__SPOOF_READ}` }
+                              className={ `${CLASSES.SPECTRON_AREA__SPOOF_LOAD}` }
                               onClick={ this.handleSpectronTestReadState }
                           />
                       </div>
