@@ -8,18 +8,20 @@ import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 import { callIPC } from './ffi/ipc';
 
 // shim for rdflib.js
-const _setImmediate = setImmediate
- const _clearImmediate = clearImmediate
- process.once('loaded', () => {
-   global.setImmediate = _setImmediate
-   global.clearImmediate = _clearImmediate
- })
+const _setImmediate = setImmediate;
+const _clearImmediate = clearImmediate;
+process.once( 'loaded', () =>
+{
+    global.setImmediate = _setImmediate;
+    global.clearImmediate = _clearImmediate;
+} );
 
 
 const VERSION = pkg.version;
 const pendingCalls = {};
 
-class WebIdEvents extends EventEmitter {}
+class WebIdEvents extends EventEmitter
+{}
 
 const webIdEventEmitter = new WebIdEvents();
 
@@ -28,15 +30,25 @@ export const onPreload = ( store, win = window ) =>
 {
     setupPreloadedSafeAuthApis( store, win );
     setupWebIdEventEmitter( store, win );
-}
+};
 
 export const setupWebIdEventEmitter = ( store, win = window ) =>
 {
-    if (typeof win !== 'undefined' )
+    console.warn(
+        `%cSAFE Browser Experimental Feature
+%cThe webIdEventEmitter is still an experimental API.
+It may be deprecated or change in future.
+
+For updates or to submit ideas and suggestions, visit https://github.com/maidsafe/safe_browser`,
+        'font-weight: bold',
+        'font-weight: normal'
+    );
+
+    if ( typeof win !== 'undefined' )
     {
         win.webIdEventEmitter = webIdEventEmitter;
     }
-}
+};
 
 export const setupSafeAPIs = ( store, win = window ) =>
 {
@@ -59,11 +71,11 @@ export const setupSafeAPIs = ( store, win = window ) =>
             forceUseMock   : store.getState().peruseApp.isMock
         };
 
-        let app = await safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
+        const app = await safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
 
         app.auth.openUri = () =>
         {
-            logger.warn('This function is not accessible in the Browser DOM. Please check the docs:')
+            logger.warn( 'This function is not accessible in the Browser DOM. Please check the docs:' );
         };
 
         return app;
@@ -79,7 +91,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
             libPath        : null,
             configPath     : null
         };
-        let app =  await win.safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
+        const app = await win.safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
 
         await app.auth.loginFromUri( authURI );
         return app;
@@ -92,11 +104,10 @@ export const setupSafeAPIs = ( store, win = window ) =>
      */
     win.safe.authorise = async ( authObj ) =>
     {
-        if( !authObj || typeof authObj !== 'object' ) throw new Error('Auth object is required');
+        if ( !authObj || typeof authObj !== 'object' ) throw new Error( 'Auth object is required' );
 
         return await createRemoteCall( 'authenticateFromUriObject', store )( authObj );
     };
-
 };
 
 
@@ -134,14 +145,12 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
     };
 
     window.safeAuthenticator.setIsAuthorised = ( isAuthorised ) =>
-    {
-       return callIPC.setIsAuthorisedState( store, isAuthorised );
-    };
+        callIPC.setIsAuthorisedState( store, isAuthorised );
 
     window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
     {
         const state = store.getState();
-        logger.info( 'window method for get auth handle being called' , state.authenticator.authenticatorHandle);
+        logger.info( 'window method for get auth handle being called', state.authenticator.authenticatorHandle );
         return state.authenticator.authenticatorHandle;
     };
 
@@ -152,14 +161,14 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
     };
 
     window.safeAuthenticator.setReAuthoriseState = ( state ) =>
-    {
+
         // TODO: Reauth action
         // const state = store.getState();
         // return state.authenticator.authenticatorHandle;
         //
-       return callIPC.setReAuthoriseState(state, store);
+        callIPC.setReAuthoriseState( state, store )
 
-    };
+    ;
 
 
     // Add custom and continual listeners.
@@ -176,8 +185,8 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : ( response ) =>  cb( null, response ),
-            reject: ( err ) => cb( err )
+            resolve : ( response ) => cb( null, response ),
+            reject  : ( err ) => cb( err )
         };
     };
 
@@ -194,8 +203,8 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : ( response ) =>  cb( null, response ),
-            reject: ( err ) => cb( err )
+            resolve : ( response ) => cb( null, response ),
+            reject  : ( err ) => cb( err )
         };
     };
 
@@ -212,8 +221,8 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : ( response ) =>  cb( null, response ),
-            reject: ( err ) => cb( err )
+            resolve : ( response ) => cb( null, response ),
+            reject  : ( err ) => cb( err )
         };
     };
 
@@ -263,7 +272,6 @@ export const setupPreloadedSafeAuthApis = ( store ) =>
                 store.dispatch( remoteCallActions.removeRemoteCall(
                     theCall
                 ) );
-
             }
             else if ( theCall.error && callPromises.reject )
             {
