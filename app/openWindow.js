@@ -55,20 +55,14 @@ const openWindow = ( store ) =>
         y                 : newWindowPosition.y,
         width             : mainWindowState.width,
         height            : mainWindowState.height,
-        titleBarStyle     : 'hidden-inset',
-        'standard-window' : false,
-        frame             : false,
+        titleBarStyle     : 'hiddenInset',
+        thickFrame        : false,
         webPreferences    :
         {
             // preload : path.join( __dirname, 'browserPreload.js' )
         }
 
     };
-
-    if ( os.platform() === 'win32')
-    {
-      browserWindowConfig.frame = true;
-    }
 
     let mainWindow = new BrowserWindow( browserWindowConfig );
 
