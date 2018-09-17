@@ -504,6 +504,16 @@ export default class Tab extends Component
         const setupEventEmitter = `
             webIdUpdater = () =>
             {
+                console.warn(
+                    \`%cSAFE Browser Experimental Feature
+%cThe webIdEventEmitter and window.currentWebId are experimental features.
+They may be deprecated or change in future.
+
+For updates or to submit ideas and suggestions, visit https://github.com/maidsafe/safe_browser\`,
+                'font-weight: bold',
+                'font-weight: normal'
+                );
+
                 var oldWebId_Id = '';
                 var currentIdDefined = typeof window.currentWebId !== 'undefined';
 
