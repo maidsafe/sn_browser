@@ -75,7 +75,7 @@ export default class Notifier extends Component
                 updateNotification({ id, response: 'deny' })
             };
         }
-		 
+
         const reactNodeToElement = ( nodeObject ) =>
         {
             const nodeDescription = {};
@@ -116,7 +116,7 @@ export default class Notifier extends Component
         };
 
         const reactElement = reactNode ? reactNodeToElement(reactNode) : null;
-        
+
         return (
             <Row hasMinHeight className={ styles.container } gutters={"none"}>
                 <MessageBox messageType={type}>
@@ -133,18 +133,19 @@ export default class Notifier extends Component
                         {
                             handleOnAccept &&
                             <Column verticalAlign="top" key="notifier-accept" align="right">
-                                <Button role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
+                                <Button className={CLASSES.NOTIFICATION__ACCEPT} role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
                             </Column>
                         }
                         {
                             handleOnDeny &&
                             <Column verticalAlign="top" key="notifier-deny" align="right">
-                                <Button onClick={ handleOnDeny }>{ denyText }</Button>
+                                <Button className={CLASSES.NOTIFICATION__REJECT} onClick={ handleOnDeny }>{ denyText }</Button>
                             </Column>
                         }
                         <Column verticalAlign="top" key="notifier-dismiss" align="right">
                             <IconButton
                                 role="subtle"
+                                className={CLASSES.NOTIFICATION__IGNORE}
                                 iconType="close"
                                 onClick={ this.handleDismiss }
                             >

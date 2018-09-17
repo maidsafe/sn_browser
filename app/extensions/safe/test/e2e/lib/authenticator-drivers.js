@@ -1,17 +1,24 @@
 import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 
-const persistentSecret = Math.random().toString( 36 );
-const persistentPassword = Math.random().toString( 36 );
+/**
+ * Helper to creat valid accounts.
+ * @return {[type]} [description]
+ */
+export const createAccountDetails = () => ({
+    secret   : Math.random().toString( 36 ),
+    password : Math.random().toString( 36 )
+})
 
-export const createAccount = async ( app, isTransient ) =>
+export const createAccount = async ( app, secret, password ) =>
 {
-    let ourSecret = persistentSecret;
-    let ourPassword = persistentPassword;
+    let ourSecret = secret;
+    let ourPassword = password;
 
-    if( isTransient )
+    if( !secret )
     {
-        ourSecret = Math.random().toString( 36 );
-        ourPassword = Math.random().toString( 36 );
+        let newAccount = createAccountDetails();
+        ourSecret = newAccount.secret;
+        ourPassword = newAccount.password;
     }
 
     let i = 0;
@@ -54,13 +61,13 @@ export const logout = async ( app ) =>
 };
 
 
-export const login = async ( app ) =>
+export const login = async ( app, secret, password ) =>
 {
     // await setAppToAuthTab( app );
     await app.client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_FORM}` );
     await app.client.click( `.${AUTH_UI_CLASSES.AUTH_SECRET_INPUT}` );
-    await app.client.keys( persistentSecret );
+    await app.client.keys( secret );
     await app.client.click( `.${AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT}` );
-    await app.client.keys( persistentPassword );
+    await app.client.keys( password );
     await app.client.click( `.${AUTH_UI_CLASSES.AUTH_LOGIN_BUTTON}` );
 };

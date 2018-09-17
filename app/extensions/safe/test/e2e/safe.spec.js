@@ -3,13 +3,20 @@ import opn from 'opn';
 import { parse as urlParse } from 'url';
 import {removeTrailingSlash} from 'utils/urlHelpers';
 import {
+    bookmarkActiveTabPage,
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow,
     delay
 } from 'spectron-lib/browser-driver';
-import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
+import {
+    createAccountDetails,
+    createAccount,
+    login,
+    logout
+} from 'extensions/safe/test/e2e/lib/authenticator-drivers';
+import { createSafeApp, createRandomDomain } from 'extensions/safe/test/e2e/lib/safe-helpers';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
 import {
     setupSpectronApp
@@ -75,6 +82,40 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( theSafeClient ).toHaveProperty('fromAuthUri');
     })
 
+    describe.only( 'saving browser data and access it again.', async( ) =>
+    {
+        const { secret, password } = createAccountDetails();
+
+        it( 'can save browser data.', async( ) =>
+        {
+            const { client } = app;
+            await navigateTo( app, 'shouldsavetobookmarks.com' );
+            await delay( 1500 );
+            await bookmarkActiveTabPage( app );
+
+            // login
+            createAccount( app, secret, password );
+            await delay( 1500 );
+
+            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
+            await delay( 2500 );
+            await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+            await delay( 2500 );
+            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
+
+            await delay( 2500 );
+
+            logout();
+
+            await delay( 2500 );
+
+            login( secret, password );
+
+            // const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+        })
+    })
 
     // it( 'has safe:// protocol', async () =>
     // {
@@ -150,7 +191,6 @@ describe( 'SAFE network webFetch operation', async () =>
     //         expect( address ).toBe('safe://blabla');
     //     })
     // }
-
 
 
     // if( travisOS !== 'linux' )

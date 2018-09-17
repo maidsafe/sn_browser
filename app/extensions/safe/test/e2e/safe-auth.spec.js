@@ -11,6 +11,7 @@ import {
 } from 'spectron-lib/browser-driver';
 
 import {
+    createAccountDetails,
     createAccount,
     login,
     logout

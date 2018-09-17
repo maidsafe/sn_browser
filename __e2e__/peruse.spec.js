@@ -187,7 +187,7 @@ describe( 'main window', () =>
     } );
 
 
-    it.only( 'can go to and add bookmarks', async () =>
+    it( 'can go to and add bookmarks', async () =>
     {
         expect.assertions(2)
         const { client } = app;
