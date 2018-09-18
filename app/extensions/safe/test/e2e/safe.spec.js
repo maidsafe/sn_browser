@@ -28,7 +28,7 @@ import {
     , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL ;
 
 
 describe( 'SAFE network webFetch operation', async () =>
@@ -92,16 +92,29 @@ describe( 'SAFE network webFetch operation', async () =>
             await navigateTo( app, 'shouldsavetobookmarks.com' );
             await delay( 1500 );
             await bookmarkActiveTabPage( app );
+            await delay( 1500 );
+            console.log('----------> yup')
 
             // login
-            createAccount( app, secret, password );
+            await createAccount( app, secret, password );
             await delay( 1500 );
 
+
+            await setClientToMainBrowserWindow( app );
+
+            console.log('----------> yup?')
             await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
             await delay( 2500 );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+            console.log('----------> yup????????')
             await delay( 2500 );
             await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, WAIT_FOR_EXIST_TIMEOUT );
+            console.log('----------> yup?????????????????????????, and now:', BROWSER_UI.NOTIFICATION__ACCEPT)
+            const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+            console.log('and here we are...', note )
+            const button = await client.getText( BROWSER_UI.NOTIFICATION__ACCEPT );
+            console.log('and here we are...', button )
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
 
             await delay( 2500 );

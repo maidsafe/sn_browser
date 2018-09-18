@@ -90,14 +90,14 @@ describe( 'safe authenticator protocol', () =>
         const { client } = app;
         await delay( 2500 );
 
-        const tabIndex = await newTab( app );
-        await navigateTo( app, 'safe-auth://home' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
-
-        await delay( 2500 );
-
-        await client.windowByIndex( tabIndex );
-        await delay( 2500 );
+        // const tabIndex = await newTab( app );
+        // // await navigateTo( app, 'safe-auth://home' );
+        // // await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+        //
+        // await delay( 2500 );
+        //
+        // await client.windowByIndex( tabIndex );
+        // await delay( 2500 );
 
         await createAccount( app );
 
