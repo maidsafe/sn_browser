@@ -50,7 +50,7 @@
     "cleanup": "mop -v",
     "clean-tests": "pkill -f electron",
     "prepush": "yarn test-peruse",
-    "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml /Users/josh/Projects/safe/forks/dev/peruse/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
+    "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml ./node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
     "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
@@ -143,7 +143,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joshuef/peruse"
+    "url": "git+https://github.com/maidsafe/safe_browser"
   },
   "author": {
     "name": "Maidsafe.net Ltd",
@@ -152,7 +152,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joshuef/peruse/issues"
+    "url": "https://github.com/maidsafe/safe_browser/issues"
   },
   "keywords": [
     "electron",
@@ -164,7 +164,7 @@
     "hot",
     "reload"
   ],
-  "homepage": "https://github.com//joshuef/peruse/#readme",
+  "homepage": "https://github.com//maidsafe/safe_browser/#readme",
   "devDependencies": {
     "asar": "^0.13.0",
     "autoprefixer": "^7.1.2",
