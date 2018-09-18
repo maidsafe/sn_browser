@@ -26,14 +26,12 @@ const registerSafeProtocol = () =>
         const path = parsedUrl.pathname || '';
 
         // TODO. Sort out when/where with slash
-        let newUrl = `http://localhost:${CONFIG.PORT}/safe/${host}${path}`;
+        let newUrl = `http://localhost:${CONFIG.PORT}/safe://${host}${path}`;
 
         // Allow localhost to be served as safe://
         if ( parsedUrl.hostname === 'localhost' && parsedUrl.port )
         {
             newUrl = `http://localhost:${parsedUrl.port}${path}`
-
-            logger.info('new urllll', newUrl)
         }
 
         cb( { url: newUrl } );

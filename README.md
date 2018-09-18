@@ -130,8 +130,8 @@ Make sure you have both git and [yarn](https://yarnpkg.com/en/docs/install) inst
 
 You need to use node.js version `8.x` to build the browser currently.
 
-- `git clone https://github.com/maidsafe/safe_browser.git --branch peruse`
-- `cd peruse`
+- `git clone https://github.com/maidsafe/safe_browser.git`
+- `cd safe_browser`
 - `NODE_ENV=dev yarn` (`NODE_ENV` is needed to install mock libs and to run `yarn mock-dev`).
 - `yarn rebuild`
 
@@ -142,7 +142,7 @@ Want to run 'production' variables, but with hot reloading?
 - `yarn put-live-net-files-for-<windows|osx|linux>`
 - `yarn prod-dev`
 
-Note, you'll need a crust.config set for the application. [Helper commands are available on osx/linux](https://github.com/maidsafe/safe_browser/blob/peruse/package.json#L43-L44) (not windows yet, sorry! this is only temporary.)
+Note, you'll need a crust.config set for the application. [Helper commands for osx/linux/windows](https://github.com/maidsafe/safe_browser/blob/peruse/package.json#L53-55)
 
 And to package:
 - `yarn package`
@@ -159,6 +159,11 @@ There are a few build commands for various situations:
 - `yarn prod-dev` will run a peruse developer version of the application using the live network.
 - `yarn build` compiles all code, but you shouldn't need to use this
 - `yarn build-preload` will need to be run whenever you change the `preload.js` file for changes to show up in the browser.
+
+### Release
+
+`yarn bump` is available for automatically updating versions and generating a changelog update based upon conventional-commits.
+
 
 ### Redux
 
