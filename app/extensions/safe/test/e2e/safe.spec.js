@@ -137,14 +137,19 @@ describe( 'SAFE network webFetch operation', async () =>
             await delay( 2500 );
 
             await navigateTo( app, 'peruse:bookmarks' );
-            // await delay( 3500 );
 
             console.log('gone to................');
-            await client.windowByIndex( authTab );
+            // await client.windowByIndex( authTab );
 
+            // console.log('gone twwwwo................', await client.ge);
             const bookmarks = await client.getText( '.urlList__table' );
 
-            expect( bookmarks ).not.toMatch( 'shouldsavetobookmarks' );
+            console.log('bookmarkssssssss', bookmarks)
+            // await delay( 2500 );
+
+            //bookmarks is an array
+            expect( bookmarks.join('') ).not.toMatch( 'shouldsavetobookmarks' );
+            await delay( 3500 );
 
             // const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
