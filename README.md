@@ -160,6 +160,11 @@ There are a few build commands for various situations:
 - `yarn build` compiles all code, but you shouldn't need to use this
 - `yarn build-preload` will need to be run whenever you change the `preload.js` file for changes to show up in the browser.
 
+### Release
+
+`yarn bump` is available for automatically updating versions and generating a changelog update based upon conventional-commits.
+
+
 ### Redux
 
 The core is built around redux for simple state management allowing for easy
