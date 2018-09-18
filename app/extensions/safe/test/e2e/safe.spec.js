@@ -28,7 +28,7 @@ import {
     , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL ;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 30000 ;
 
 
 describe( 'SAFE network webFetch operation', async () =>
@@ -89,14 +89,28 @@ describe( 'SAFE network webFetch operation', async () =>
         it( 'can save browser data.', async( ) =>
         {
             const { client } = app;
+
+            expect.assertions(1);
             await navigateTo( app, 'shouldsavetobookmarks.com' );
             await delay( 1500 );
             await bookmarkActiveTabPage( app );
             await delay( 1500 );
             console.log('----------> yup')
 
+            await navigateTo( app, 'peruse:bookmarks' );
+            await delay( 3500 );
+
+
+            // expect( bookmarks ).not.toMatch( 'shouldappearinbookmarks' );
+
+            await delay( 3500 );
+
+            const authTab = await newTab( app );
+            await navigateTo( app, 'safe-auth://home' );
+            await delay( 1500 );
+
             // login
-            await createAccount( app, secret, password );
+            await createAccount( app, secret, password, authTab );
             await delay( 1500 );
 
 
@@ -104,23 +118,34 @@ describe( 'SAFE network webFetch operation', async () =>
 
             console.log('----------> yup?')
             await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
-            await delay( 2500 );
+            // await delay( 2500 );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
 
             await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, WAIT_FOR_EXIST_TIMEOUT );
-            await delay( 2500 );
-
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
 
             await delay( 2500 );
 
-            logout( app );
+            await logout( app, authTab );
+            console.log('----------> logged out?')
 
             await delay( 2500 );
 
-            login( app, secret, password );
+            await login( app, secret, password, authTab );
+            console.log('----------> logged innnn?')
 
             await delay( 2500 );
+
+            await navigateTo( app, 'peruse:bookmarks' );
+            // await delay( 3500 );
+
+            console.log('gone to................');
+            await client.windowByIndex( authTab );
+
+            const bookmarks = await client.getText( '.urlList__table' );
+
+            expect( bookmarks ).not.toMatch( 'shouldsavetobookmarks' );
+
             // const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
         })

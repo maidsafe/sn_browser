@@ -108,8 +108,11 @@ export const newTab = async ( app ) =>
 export const bookmarkActiveTabPage = async ( app ) =>
 {
     const { client } = app;
+
+    console.log('bookmakring')
     await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE );
     await client.click( BROWSER_UI.BOOKMARK_PAGE  );
+    console.log('bookmakringgggggggggggggg')
     await client.pause( 500 );
 
 };
