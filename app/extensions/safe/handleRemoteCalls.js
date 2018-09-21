@@ -57,6 +57,7 @@ export const remoteCallApis =  {
         logger.verbose('Handling logout call from webview.')
         await theAuthApi.logout( );
         theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.CONNECTED) );
+        theStore.dispatch( uiActions.resetStore( ) );
     },
     /**
     * Handle auth URI calls from webview processes. Should take an authURI, decode, handle auth and reply

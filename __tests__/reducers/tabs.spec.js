@@ -14,6 +14,15 @@ describe( 'tabs reducer', () =>
         history      : ['safe://hello']
     };
 
+    const basicClosedTab = {
+        url          : 'safe://hello',
+        windowId     : 1,
+        index        : 0,
+        historyIndex : 0,
+        history      : ['safe://hello'],
+        isClosed     : true
+    };
+
     it( 'should return the initial state', () =>
     {
         expect( tabs( undefined, {} ) ).toEqual( initialState.tabs );
@@ -849,13 +858,15 @@ describe( 'tabs reducer', () =>
 
     describe( 'UI_RESET_STORE', () =>
     {
-        it( 'should reset tabs to the inital state', () =>
+        it( 'should remove closed tabs from state', () =>
         {
-            const tabsPostLogout = tabs( [basicTab, basicTab, basicTab], {
-                type : UI_TYPES.RESET_STORE,
-            } );
-            expect( tabsPostLogout ).toHaveLength( 1 );
-            expect( tabsPostLogout ).toMatchObject( initialState.tabs );
+            const tabsPostLogout = tabs(
+                [basicTab, basicTab, basicTab, basicClosedTab, basicClosedTab],
+                {
+                    type : UI_TYPES.RESET_STORE,
+                }
+            );
+            expect( tabsPostLogout ).toHaveLength( 3 );
         } );
     } );
 } );
