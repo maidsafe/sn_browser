@@ -20,27 +20,27 @@ const authRoute = {
             switch ( linkUrl.path )
             {
                 case '/bundle.js':
-                    res.sendFile( path.resolve( authDist, 'bundle.js' ), { confine: false } );
+                    res.sendFile( path.resolve( authDist, 'bundle.js' ) );
                     break;
                 case '/styles.css':
-                    res.sendFile( path.resolve( authDist, 'styles.css' ), { confine: false } );
+                    res.sendFile( path.resolve( authDist, 'styles.css' ) );
                     break;
                 case '/bundle.js.map':
-                    res.sendFile( path.resolve( authDist, 'bundle.js.map' ), { confine: false } );
+                    res.sendFile( path.resolve( authDist, 'bundle.js.map' ) );
 
                     break;
                 case '/favicon.png':
-                    res.sendFile( path.resolve( authDist, 'favicon.png' ), { confine: false } );
+                    res.sendFile( path.resolve( authDist, 'favicon.png' ) );
                     break;
                 default:
-                    res.sendFile( path.resolve( authDist, 'app.html' ), { confine: false } ).type( 'text/html' );
+                    res.sendFile( path.resolve( authDist, 'app.html' ) );
                     break;
             }
         }
         catch ( e )
         {
             logger.error( e );
-            return res( e.message || e );
+            return res.send( e.message || e );
         }
     }
 };
