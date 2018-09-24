@@ -3,13 +3,20 @@ import opn from 'opn';
 import { parse as urlParse } from 'url';
 import {removeTrailingSlash} from 'utils/urlHelpers';
 import {
+    bookmarkActiveTabPage,
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow,
     delay
 } from 'spectron-lib/browser-driver';
-import { createSafeApp, createRandomDomain } from './lib/safe-helpers';
+import {
+    createAccountDetails,
+    createAccount,
+    login,
+    logout
+} from 'extensions/safe/test/e2e/lib/authenticator-drivers';
+import { createSafeApp, createRandomDomain } from 'extensions/safe/test/e2e/lib/safe-helpers';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
 import {
     setupSpectronApp
@@ -21,7 +28,7 @@ import {
     , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 30000 ;
 
 
 describe( 'SAFE network webFetch operation', async () =>
@@ -51,36 +58,104 @@ describe( 'SAFE network webFetch operation', async () =>
         expect( await windowLoaded( app ) ).toBeTruthy()
     });
 
-    // it( 'populates the DOM api in the tab window:', async( ) =>
-    // {
-    //     expect.assertions(5);
-    //     await setClientToMainBrowserWindow( app );
-    //
-    //     const { client } = app;
-    //     const tabIndex = await newTab( app );
-    //
-    //     await navigateTo( app, 'safeAPI.com' );
-    //     // await delay( 1500 );
-    //
-    //     // const windows = await client.getWindowCount()
-    //
-    //     // TODO: Why -1 here? when others not... ? Something is hanging around...
-    //     await client.windowByIndex( tabIndex - 1 );
-    //     await client.pause( 1500 );
-    //
-    //     let theSafeClient = await client.execute( function (){ return window.safe } );
-    //     theSafeClient = theSafeClient.value;
-    //     // await delay( 2500 );
-    //     // await client.pause(1500)
-    //
-    //
-    //     expect( theSafeClient ).toHaveProperty('CONSTANTS');
-    //     expect( theSafeClient ).toHaveProperty('VERSION');
-    //     expect( theSafeClient ).toHaveProperty('authorise');
-    //     expect( theSafeClient ).toHaveProperty('initialiseApp');
-    //     expect( theSafeClient ).toHaveProperty('fromAuthUri');
-    // })
+    it( 'populates the DOM api in the tab window:', async( ) =>
+    {
+        expect.assertions(5);
+        await setClientToMainBrowserWindow( app );
 
+        const { client } = app;
+        const tabIndex = await newTab( app );
+
+        await navigateTo( app, 'safeAPI.com' );
+
+        // TODO: Why -1 here? when others not... ? Something is hanging around...
+        await client.windowByIndex( tabIndex - 1 );
+        await client.pause( 1500 );
+
+        let theSafeClient = await client.execute( function (){ return window.safe } );
+        theSafeClient = theSafeClient.value;
+
+        expect( theSafeClient ).toHaveProperty('CONSTANTS');
+        expect( theSafeClient ).toHaveProperty('VERSION');
+        expect( theSafeClient ).toHaveProperty('authorise');
+        expect( theSafeClient ).toHaveProperty('initialiseApp');
+        expect( theSafeClient ).toHaveProperty('fromAuthUri');
+    })
+
+    describe.only( 'saving browser data and access it again.', async( ) =>
+    {
+        const { secret, password } = createAccountDetails();
+
+        it( 'can save browser data.', async( ) =>
+        {
+            expect.assertions(1);
+	    const { client } = app;
+            await delay( 2500 );
+
+            await navigateTo( app, 'shouldsavetobookmarks.com' );
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+            await delay( 1500 );
+            await bookmarkActiveTabPage( app );
+            await delay( 1500 );
+            console.log('----------> yup')
+
+            await navigateTo( app, 'peruse:bookmarks' );
+            await delay( 3500 );
+
+            // expect( bookmarks ).not.toMatch( 'shouldappearinbookmarks' );
+
+            await delay( 3500 );
+
+            const authTab = await newTab( app );
+            await navigateTo( app, 'safe-auth://home' );
+            await delay( 1500 );
+
+            // login
+            await createAccount( app, secret, password, authTab );
+            await delay( 1500 );
+
+
+            await setClientToMainBrowserWindow( app );
+
+            console.log('----------> yup?')
+            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
+            // await delay( 2500 );
+            await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+
+            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, WAIT_FOR_EXIST_TIMEOUT );
+            await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
+
+            await delay( 2500 );
+
+            await logout( app, authTab );
+            console.log('----------> logged out?')
+
+            await delay( 2500 );
+
+            await login( app, secret, password, authTab );
+            console.log('----------> logged innnn?')
+
+            await delay( 2500 );
+
+            await navigateTo( app, 'peruse:bookmarks' );
+
+            console.log('gone to................');
+            // await client.windowByIndex( authTab );
+
+            // console.log('gone twwwwo................', await client.ge);
+            const bookmarks = await client.getText( '.urlList__table' );
+
+            console.log('bookmarkssssssss', bookmarks)
+            // await delay( 2500 );
+
+            //bookmarks is an array
+            expect( bookmarks.join('') ).toMatch( 'shouldsavetobookmarks' );
+            await delay( 3500 );
+
+            // const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+        })
+    })
 
     // it( 'has safe:// protocol', async () =>
     // {
@@ -156,7 +231,6 @@ describe( 'SAFE network webFetch operation', async () =>
     //         expect( address ).toBe('safe://blabla');
     //     })
     // }
-
 
 
     // if( travisOS !== 'linux' )

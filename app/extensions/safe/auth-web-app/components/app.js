@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 
 import CONSTANTS from '../constants';
 import NetworkStatus from './network_status';
@@ -35,7 +36,7 @@ export default class App extends Component {
       <div className="h-opt">
         <button
           type="button"
-          className="logout"
+          className={`logout ${AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON}`}
           onClick={() => {
             logout();
           }}
