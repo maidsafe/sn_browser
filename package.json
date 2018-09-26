@@ -50,10 +50,19 @@
     "cleanup": "mop -v",
     "clean-tests": "pkill -f electron",
     "prepush": "yarn test-peruse",
+    "bump": "standard-version -a",
+    "prerelease": "standard-version --prerelease rc",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml ./node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
+
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
     "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --build-from-source && cd app && yarn rebuild"
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "node updateAppVersionWithChangelog.js",
+      "postchangelog": "git add -A ."
+    }
   },
   "browserslist": "Electron 2.0",
   "build": {
@@ -247,6 +256,7 @@
     "should": "13.1.3",
     "sinon": "^2.1.0",
     "spectron": "git+https://github.com/westernacher-solutions/spectron.git#7a106c81f7c9c04441ef0398c808b6ae0901b1e9",
+    "standard-version": "4.4.0",
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "1.2.4",
     "url-loader": "^0.5.8",
@@ -258,6 +268,8 @@
     "zxcvbn": "^4.4.2"
   },
   "dependencies": {
+    "@commitlint/cli": "7.1.2",
+    "@commitlint/config-conventional": "7.1.2",
     "archiver": "2.1.0",
     "connected-react-router": "^4.3.0",
     "crypto": "^1.0.1",

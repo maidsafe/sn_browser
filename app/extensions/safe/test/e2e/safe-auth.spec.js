@@ -30,7 +30,7 @@ import {
 
 jest.unmock( 'electron' );
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 55000;
 
 describe( 'safe authenticator protocol', () =>
 {
@@ -94,7 +94,7 @@ describe( 'safe authenticator protocol', () =>
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         await delay( 2500 );
-
+        await setClientToMainBrowserWindow( app );
         await client.windowByIndex( tabIndex );
         await delay( 2500 );
 
@@ -104,6 +104,48 @@ describe( 'safe authenticator protocol', () =>
 
         // we wait... if this isn't reached then expect.assertions fails
         expect( 'this to be reached' ).toBe( 'this to be reached' );
+    } );
+
+    it( 'can login, log history, logout, and clean up history', async ( ) =>
+    {
+        expect.assertions( 4 );
+        const { client } = app;
+        await delay( 2500 );
+        let tabIndex = await newTab( app );
+
+        await navigateTo( app, 'safe-auth://home' );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+        await delay( 2500 );
+
+        await client.windowByIndex( tabIndex );
+
+        await login( app );
+        await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_APP_LIST}`, WAIT_FOR_EXIST_TIMEOUT );
+
+        await newTab( app );
+        await navigateTo( app, 'shouldappearinhistory.com' );
+
+        await newTab( app );
+        await navigateTo( app, 'peruse:history' );
+        let header = await client.getText( 'h1' );
+        let history = await client.getText( '.urlList__table' );
+        expect( header ).toBe( 'History' );
+        expect( history ).toMatch( 'shouldappearinhistory' );
+
+        await logout( app, tabIndex );
+        await delay( 2500 );
+
+        tabIndex = await newTab( app );
+        await client.windowByIndex( tabIndex );
+        await delay( 2500 );
+        await navigateTo( app, 'peruse:history' );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+        await delay( 2500 );
+
+        header = await client.getText( 'h1' );
+        history = await client.getText( '.urlList__table' );
+        expect( header ).toBe( 'History' );
+        expect( history ).toMatch( 'Nothing to see here yet' );
     } );
 
     if( travisOS !== 'linux' )
