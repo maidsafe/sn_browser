@@ -1,4 +1,11 @@
 import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
+import {
+    delay,
+    navigateTo,
+    newTab,
+    setClientToMainBrowserWindow,
+    setClientToBackgroundProcessWindow
+} from 'spectron-lib/browser-driver';
 
 const persistentSecret = Math.random().toString( 36 );
 const persistentPassword = Math.random().toString( 36 );
@@ -45,12 +52,21 @@ export const createAccount = async ( app, isTransient ) =>
     await app.client.click( `.${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` );
 };
 
-export const logout = async ( app ) =>
+export const logout = async ( app, authTabIndex ) =>
 {
-    // await setAppToAuthTab( app );
-    await app.client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON}` );
-    await app.client.click( `.${AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON}` );
-    await app.client.waitForExist( `.${AUTH_UI_CLASSES.START_CREATE_BUTTON}` );
+    const { client } = app;
+    let tabIndex = authTabIndex;
+    if( !tabIndex)
+    {
+        tabIndex = await newTab( app );
+        await setClientToMainBrowserWindow( app );
+        await navigateTo( app, 'safe-auth://home' );
+    }
+    await client.windowByIndex( tabIndex );
+    await delay( 2500 );
+
+    await client.waitForExist( `.${AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON}` );
+    await client.click( `.${AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON}` );
 };
 
 
