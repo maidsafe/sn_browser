@@ -224,6 +224,7 @@ class ReqQueue
                 // We need to send one for the app to know...
                 // authenticator.encodeAuthResp( this.req, false )
             }
+            self.next();
         } );
     }
 }
