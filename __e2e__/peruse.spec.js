@@ -97,20 +97,20 @@ describe( 'main window', () =>
         expect( address ).toBe( 'safe://example.com' );
     } );
 
-    test( 'shows error in UI if invalid URL', async () =>
+    it( 'shows error in UI if invalid URL', async () =>
     {
         expect.assertions( 1 );
 
         const { client } = await app;
-        const tabIndex = await newTab( app );
         await delay( 500 );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        const tabIndex = await newTab( app );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         await navigateTo( app, 'http://:invalid-url' );
 
         await client.windowByIndex( tabIndex );
         await delay( 2500 );
-        let text = await client.getText( 'body' );
+        const text = await client.getText( 'body' );
         expect( text ).toBe( 'Invalid URL: http://:invalid-url');
     } );
 
