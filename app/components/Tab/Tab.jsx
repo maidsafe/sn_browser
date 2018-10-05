@@ -134,6 +134,7 @@ export default class Tab extends Component
             webview.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
             webview.addEventListener( 'new-window', ::this.newWindow );
             webview.addEventListener( 'did-fail-load', ::this.didFailLoad );
+            webview.addEventListener( 'update-target-url', ::this.updateTargetUrl );
 
 
             this.domReady();
@@ -261,6 +262,11 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
+        const body = document.querySelector( 'body' );
+        const div = document.createElement( 'div' );
+        div.setAttribute( 'class', 'no_display' );
+        div.setAttribute( 'id', 'link_revealer' );
+        body.appendChild( div );
     }
 
     didFailLoad( err )
@@ -334,6 +340,21 @@ export default class Tab extends Component
 
         this.setCurrentWebId( null );
 
+    }
+
+    updateTargetUrl( url )
+    {
+        const linkRevealer = document.getElementById( 'link_revealer' );
+        if ( url.url )
+        {
+            linkRevealer.setAttribute( 'class', 'reveal_link' );
+            linkRevealer.innerText = url.url;
+        }
+        else
+        {
+            linkRevealer.setAttribute( 'class', 'no_display' );
+            linkRevealer.innerText = '';
+        }
     }
 
     pageTitleUpdated( e )
