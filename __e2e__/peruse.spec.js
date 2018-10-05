@@ -16,6 +16,8 @@ import {
     , afterAllTests
     , beforeAllTests
     , windowLoaded
+    , nodeEnv
+    , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
@@ -96,6 +98,34 @@ describe( 'main window', () =>
 
         expect( address ).toBe( 'safe://example.com' );
     } );
+
+    if ( isTestingPackagedApp && nodeEnv === 'dev' )
+    {
+        it( 'preloaded with API playground for development', async () =>
+        {
+            expect.assertions(2);
+            const { client } = app;
+            await delay( 2500 );
+
+            const tabIndex = await newTab( app );
+            await navigateTo( app, 'safe://api.playground' );
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+
+            await delay( 4500 );
+            const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
+
+            await client.windowByIndex( tabIndex );
+            await delay( 5500 );
+
+            const clientUrl = await client.getUrl();
+
+            const parsedUrl = urlParse( clientUrl );
+            const text = await client.getText( 'body' );
+
+            expect( address ).toBe( 'safe://api.playground' );
+            expect( text ).toMatch( 'SAFE web API playground');
+        } );
+    }
 
     it( 'shows error in UI if invalid URL', async () =>
     {
