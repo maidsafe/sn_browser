@@ -34,7 +34,7 @@ export const setupSpectronApp = ( ) =>
     console.log('Packaged application location:', packedLocation );
     const app = new Application( {
         path : isTestingPackagedApp ? packedLocation : electron,
-        args : [ isTestingPackagedApp ? '' : path.join( __dirname, '..' , '..', 'app', 'main.js' ) ], // lib, e2e, test
+        args : [ isTestingPackagedApp ? '--preload' : path.join( __dirname, '..' , '..', 'app', 'main.js' ) ], // lib, e2e, test
         env  : {
             IS_SPECTRON: true,
             CI: isCI,
