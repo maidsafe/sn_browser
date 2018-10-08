@@ -129,7 +129,6 @@ export default class Login extends Component
                                               required
                                           />
                                           <label htmlFor="acc-secret">Account Secret</label>
-                                          <span className="msg error">{ error }</span>
                                           <button
                                               type="button"
                                               tabIndex="-1"
@@ -163,6 +162,9 @@ export default class Login extends Component
                                               className={ `btn primary long ${AUTH_UI_CLASSES.AUTH_LOGIN_BUTTON}` }
                                               disabled={ this.props.libErrPopup }
                                           >Log in</button>
+                                          <div className="inp-grp">
+                                              <span className="msg error">{ error }</span>
+                                          </div>
                                       </div>
                                   </form>
                               </div>
