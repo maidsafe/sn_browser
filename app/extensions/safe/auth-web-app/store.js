@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger';
 import { loadTranslations, setLocale, syncTranslationWithStore } from 'react-redux-i18n';
 import rootReducer from './reducers';
 
-import en from '../../locales/en.json';
+import en from '../locales/en.json';
 
 const translationsObject = {
   en
