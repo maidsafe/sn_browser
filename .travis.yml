@@ -52,9 +52,9 @@ script:
 - sleep 15
 - yarn run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-- travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-e2e-prod"
+- travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod"
 - sleep 5
-- travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e-prod"
+- travis_retry eval " pkill -f electron || pkill -f SAFE Browser || yarn run test-exts-e2e-prod"
 
 after_success:
 - ls release
@@ -71,7 +71,7 @@ after_success:
 - ls release
 
 after_failure:
-- ls /home/travis/peruse/app/node_modules/@maidsafe/safe-node-app/src/native
+- ls /home/travis/safe-browser/app/node_modules/@maidsafe/safe-node-app/src/native
 # - cat ~/.local/share/applications/mimeapps.list
 # - cat ~/.local/share/applications/maidsafenet-ltd-safe-browser-authenticator.desktop
 - which xdg-open
