@@ -162,9 +162,16 @@ export default class Tab extends Component
         if ( !this.state.browserState.mountedAndReady )
             return;
 
+        const { isActiveTab } = this.props;
         const { webview } = this;
 
         logger.silly( 'Tab: did receive updated props' );
+
+        if ( webview && webview.getWebContents )
+        {
+            const webContents = webview.getWebContents();
+            webContents.focus();
+        }
 
         const nextId = nextProps.webId || {};
         const currentId = this.props.webId || {}
@@ -254,6 +261,7 @@ export default class Tab extends Component
     {
         logger.silly( 'webview started loading' );
         const { updateTab, index, isActiveTab } = this.props;
+        const { webview } = this;
 
         const tabUpdate = {
             index,
@@ -267,6 +275,7 @@ export default class Tab extends Component
         div.setAttribute( 'class', 'no_display' );
         div.setAttribute( 'id', 'link_revealer' );
         body.appendChild( div );
+        window.addEventListener( 'focus', () => webview.focus() );
     }
 
     didFailLoad( err )
