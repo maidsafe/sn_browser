@@ -27,32 +27,55 @@ export const getStrengthMsg = (strength) => {
   }
 };
 
-export const parseErrCode = (errStr) => {
-  try {
-    const err = JSON.parse(errStr);
-    switch (parseInt(err.error_code, 10)) {
-      case -3: {
-        return 'Incorrect Password';
-      }
-      case -101: {
-        return 'Account does not exist';
-      }
-      case -102: {
-        return 'Account already exist';
-      }
-      case -116: {
-        return 'Invalid invitation';
-      }
-      case -117: {
-        return 'Invitation already claimed';
-      }
-      default: {
-        return err.description;
-      }
+export const parseErrCode = ( errStr ) =>
+{
+    try
+    {
+        const err = JSON.parse( errStr );
+        switch ( parseInt( err.error_code, 10 ) )
+        {
+            case -3: {
+                return {
+                    code        : err.error_code,
+                    description : 'Incorrect Password'
+                };
+            }
+            case -101: {
+                return {
+                    code        : err.error_code,
+                    description : 'Account does not exist'
+                };
+            }
+            case -102: {
+                return {
+                    code        : err.error_code,
+                    description : 'Account already exist'
+                };
+            }
+            case -116: {
+                return {
+                    code        : err.error_code,
+                    description : 'Invalid invitation'
+                };
+            }
+            case -117: {
+                return {
+                    code        : err.error_code,
+                    description : 'Invitation already claimed'
+                };
+            }
+            default: {
+                return {
+                    code        : err.error_code,
+                    description : err.description
+                };
+            }
+        }
     }
-  } catch (err) {
-    return 'Something went wrong. Please try again';
-  }
+    catch ( err )
+    {
+        return 'Something went wrong. Please try again';
+    }
 };
 
 export const parseAppName = (name) => {
