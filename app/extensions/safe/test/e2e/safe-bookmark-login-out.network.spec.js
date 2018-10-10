@@ -5,7 +5,7 @@ import {
     bookmarkActiveTabPage,
     navigateTo,
     newTab,
-    setClientToMainBrowserWindow
+    setClientToMainBrowserWindow,
     delay
 } from 'spectron-lib/browser-driver';
 import {
