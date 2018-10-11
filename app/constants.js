@@ -125,7 +125,7 @@ export const PROTOCOLS = {
     SAFE           : 'safe',
     SAFE_AUTH      : 'safe-auth',
     SAFE_LOGS      : 'safe-logs',
-    INTERNAL_PAGES : 'peruse'
+    INTERNAL_PAGES : 'safe-browser'
 };
 
 export const INTERNAL_PAGES = {
@@ -153,7 +153,7 @@ export const CONFIG = {
     APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
     DATE_FORMAT          : 'h:MM-mmm dd',
     NET_STATUS_CONNECTED : 'Connected',
-    STATE_KEY            : 'peruseState',
+    STATE_KEY            : 'safeBrowserState',
     BROWSER_TYPE_TAG     : 8467,
     PRELOADED_MOCK_VAULT_PATH: path.join(__dirname, '..', 'PreloadDevVault')
 };
@@ -204,7 +204,7 @@ if ( isRunningUnpacked && process.platform === 'darwin' )
 }
 else if ( process.platform === 'darwin' )
 {
-    appInfo.info.bundle = 'com.electron.peruse';
+    appInfo.info.bundle = 'com.electron.safe-browser';
 }
 
 export const APP_INFO = appInfo;
@@ -215,7 +215,7 @@ export const CLASSES = {
     TAB                       : 'js-tab',
     ADD_TAB                   : 'js-tabBar__add-tab',
     CLOSE_TAB                 : 'js-tabBar__close-tab',
-    PERUSE_PAGE               : 'js-peruse__page',
+    SAFE_BROWSER_PAGE         : 'js-safeBrowser__page',
     SPECTRON_AREA             : 'js-spectron-area',
     SPECTRON_AREA__SPOOF_SAVE : 'js-spectron-area__spoof-save',
     SPECTRON_AREA__SPOOF_READ : 'js-spectron-area__spoof-read',

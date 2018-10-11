@@ -28,7 +28,7 @@ if( log.transports )
         log.transports.file.level = 'warn';
     }
 
-    log.transports.file.file = path.resolve( os.tmpdir() , 'peruse.log' );
+    log.transports.file.file = path.resolve( os.tmpdir() , 'safe-browser.log' );
 
     /**
     * Set output format template. Available variables:

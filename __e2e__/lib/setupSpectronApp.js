@@ -21,12 +21,12 @@ export const setupSpectronApp = ( ) =>
 {
     const isMac = process.platform === 'darwin'
     const isWin = process.platform === 'win32'
-    const macApp = 'Peruse.app/Contents/MacOS/Peruse';
+    const macApp = 'SAFE Browser.app/Contents/MacOS/SAFE Browser';
 
-    let application = 'peruse';
+    let application = 'safe-browser';
 
     if( isMac ) application = macApp;
-    if( isWin ) application = 'Peruse.exe';
+    if( isWin ) application = 'SAFE Browser.exe';
 
     const packedLocation = path.resolve( './release', RELEASE_NAME, application );
 

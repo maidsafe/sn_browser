@@ -45,9 +45,9 @@ describe( 'History Component', () =>
             wrapper = shallow( <History { ...props } /> );
         } );
 
-        it( 'should have a peruse__page class', () =>
+        it( 'should have a safeBrowser__page class', () =>
         {
-            expect( wrapper.find( `.${CLASSES.PERUSE_PAGE}` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${CLASSES.SAFE_BROWSER_PAGE}` ).length ).toBe( 1 );
         } );
 
         it( 'should have one url list', () =>
@@ -77,8 +77,8 @@ describe( 'History Component', () =>
                             'safe-auth://lalala',
                             'safe://somethingreal',
                             'about:blank',
-                            'peruse://history',
-                            'peruse://bookmarks'
+                            'safe-browser://history',
+                            'safe-browser://bookmarks'
                         ] }
                 ] };
             wrapper = shallow( <History { ...props } /> );

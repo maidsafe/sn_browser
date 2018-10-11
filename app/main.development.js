@@ -58,7 +58,7 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 } );
 
 
-// Needed for windows w/ peruse browser app login
+// Needed for windows w/ SAFE browser app login
 ipcMain.on( 'opn', ( event, data ) =>
 {
     logger.info('Opening link in system via opn.')
