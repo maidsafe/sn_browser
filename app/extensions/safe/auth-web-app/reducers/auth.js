@@ -75,7 +75,7 @@ const auth = (state = initialState, action) => {
     }
 
     case SET_AUTH_ERROR: {
-      return { ...state, error: action.error };
+      return { ...state, error: { description: action.error } };
     }
 
     case CLEAR_AUTH_ERROR: {

@@ -19,7 +19,6 @@ export default class CreateAccount extends Component
       userSecret           : PropTypes.string,
       inviteCode           : PropTypes.string,
       userPassword         : PropTypes.string,
-      error                : PropTypes.string,
       setCreateAccNavPos   : PropTypes.func,
       clearError           : PropTypes.func,
       clearAccSecret       : PropTypes.func,
@@ -33,6 +32,10 @@ export default class CreateAccount extends Component
       clearInviteCode      : PropTypes.func,
       setPasswordStrength  : PropTypes.func,
       setSecretStrength    : PropTypes.func,
+      error                : PropTypes.shape( {
+          code        : PropTypes.number,
+          description : PropTypes.string
+      } )
   };
 
   static contextTypes = {
@@ -163,7 +166,7 @@ export default class CreateAccount extends Component
                               { this.getNav() }
                               <button
                                   type="button"
-                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
+                                  className={ `rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` }
                                   onClick={ () =>
                                   {
                                       setCreateAccNavPos( navPos + 1 );
@@ -183,7 +186,7 @@ export default class CreateAccount extends Component
       const { navPos, error, setCreateAccNavPos } = this.props;
       const msgClassNames = classNames(
           'msg',
-          { error: error || this.state.inviteError } );
+          { error: error ? error.description : false || this.state.inviteError } );
 
       return (
           <div className="card-main-cntr">
@@ -214,7 +217,12 @@ export default class CreateAccount extends Component
                                       required
                                   />
                                   <label htmlFor="invitation-code">Invitation Token</label>
-                                  <span className={ msgClassNames }>{ error || this.state.inviteError }</span>
+                                  <span className={ msgClassNames }>
+                                      {
+                                          error ? error.description : false
+                                          || this.state.inviteError
+                                      }
+                                  </span>
                               </div>
                               <div className="invitation">
                                   <span className="separator">or</span>
@@ -243,7 +251,7 @@ export default class CreateAccount extends Component
                               { this.getNav() }
                               <button
                                   type="button"
-                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
+                                  className={ `rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` }
                                   onClick={ ( e ) =>
                                   {
                                       this.handleInvitation( e );
@@ -262,7 +270,7 @@ export default class CreateAccount extends Component
       const { navPos, error, secretStrength, setCreateAccNavPos } = this.props;
       const msgClassNames = classNames(
           'msg',
-          { error: error || this.state.accSecError } );
+          { error: error ? error.description : false || this.state.accSecError } );
       return (
           <div className="card-main-cntr">
               <div className="auth">
@@ -275,7 +283,7 @@ export default class CreateAccount extends Component
                           <form id="secretForm">
                               <div className="inp-grp">
                                   <input
-                                      className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT}
+                                      className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }
                                       type="password"
                                       id="acc-secret"
                                       name="acc-secret"
@@ -291,7 +299,11 @@ export default class CreateAccount extends Component
                                   { this.getStrength( secretStrength ) }
                                   <span className="limit short">{''}</span>
                                   <span className={ msgClassNames }>
-                                      { error || getStrengthMsg( secretStrength ) || this.state.accSecError }
+                                      {
+                                          error ? error.description : false
+                                          || getStrengthMsg( secretStrength )
+                                          || this.state.accSecError
+                                      }
                                   </span>
                                   <button
                                       type="button"
@@ -302,7 +314,7 @@ export default class CreateAccount extends Component
                               </div>
                               <div className="inp-grp">
                                   <input
-                                      className={ AUTH_UI_CLASSES.AUTH_CONFIRM_SECRET_INPUT}
+                                      className={ AUTH_UI_CLASSES.AUTH_CONFIRM_SECRET_INPUT }
                                       type="password"
                                       id="cacc-secret"
                                       name="cacc-secret"
@@ -339,7 +351,7 @@ export default class CreateAccount extends Component
                               <button
                                   type="button"
                                   form="secretForm"
-                                  className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
+                                  className={ `rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` }
                                   onClick={ ( e ) =>
                                   {
                                       this.handleSecret( e );
@@ -358,7 +370,7 @@ export default class CreateAccount extends Component
       const { navPos, error, passwordStrength, setCreateAccNavPos } = this.props;
       const msgClassNames = classNames(
           'msg',
-          { error: error || this.state.accPassErr } );
+          { error: error ? error.description : false || this.state.accPassErr } );
       return (
           <div className="card-main-cntr">
               <div className="auth">
@@ -371,7 +383,7 @@ export default class CreateAccount extends Component
                           <form id="passwordForm">
                               <div className="inp-grp">
                                   <input
-                                      className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT}
+                                      className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }
                                       type="password"
                                       id="acc-password"
                                       name="acc-password"
@@ -387,7 +399,11 @@ export default class CreateAccount extends Component
                                   { this.getStrength( passwordStrength ) }
                                   <span className="limit long">{''}</span>
                                   <span className={ msgClassNames }>
-                                      { error || getStrengthMsg( passwordStrength ) || this.state.accPassErr }
+                                      {
+                                          error ? error.description : false
+                                          || getStrengthMsg( passwordStrength )
+                                          || this.state.accPassErr
+                                      }
                                   </span>
                                   <button
                                       type="button"
@@ -398,7 +414,7 @@ export default class CreateAccount extends Component
                               </div>
                               <div className="inp-grp">
                                   <input
-                                      className={ AUTH_UI_CLASSES.AUTH_CONFIRM_PASSWORD_INPUT}
+                                      className={ AUTH_UI_CLASSES.AUTH_CONFIRM_PASSWORD_INPUT }
                                       type="password"
                                       id="cacc-password"
                                       name="cacc-password"
