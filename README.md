@@ -13,25 +13,25 @@ Application developers should use the same link, but choose the `-dev` postfixed
 
 ## WebApp Development
 
-There are `-dev` postfixed releases of Peruse available. These come with both live network and mock network libs, bundled.
+There are `-dev` postfixed releases of SAFE Browser available. These come with both live network and mock network libs, bundled.
 
-By default, opening the app will open Peruse for the mock network.
+By default, opening the app will open SAFE Browser for the mock network.
 
 Otherwise, there is the option to pass a `--live` flag to the browser. This will start the browser in a `live` network mode.
 
 eg, on OSX:
 
 ```bash
-open Peruse.app --args --live
+open SAFE Browser.app --args --live
 ```
 
 ### SAFE Network API
 
-Peruse exposes a set of APIs in the DOM which webapps can make use to connect to the SAFE Network, as well as fetch and store data on it.
+SAFE Browser exposes a set of APIs in the DOM which webapps can make use to connect to the SAFE Network, as well as fetch and store data on it.
 
 A webapp has direct access to this set of APIs through the DOM at `window.safe`.
 
-The SAFE Network client API exposed by Peruse is a simple wrapper on top of the API provided by the `@maidsafe/safe-node-app` package (with a few minor exceptions explained below), therefore the documentation available for the `safe-node-app` API is valid and is the main reference for any developer wanting to create a webapp for The SAFE Network.
+The SAFE Network client API exposed by SAFE Browser is a simple wrapper on top of the API provided by the `@maidsafe/safe-node-app` package (with a few minor exceptions explained below), therefore the documentation available for the `safe-node-app` API is valid and is the main reference for any developer wanting to create a webapp for The SAFE Network.
 
 This API documentation can be found at the following URL: https://docs.maidsafe.net/safe_app_nodejs
 
@@ -39,7 +39,7 @@ As an example, if a webapp is trying to make use of the [initialiseApp](https://
 
 You will find some example code snippets in the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) as well, that you can use to learn, and also look at the [Debugging section](#debugging) below for the interactive tool to try out the API.
 
-As mentioned above, there are only a few functions related to the initialisation and app authorisation request process that are exposed by Peruse and which slightly differ from the `safe-app-node` API:
+As mentioned above, there are only a few functions related to the initialisation and app authorisation request process that are exposed by SAFE Browser and which slightly differ from the `safe-app-node` API:
 * There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/#initoptions) supported by the [initialiseApp](https://docs.maidsafe.net/safe_app_nodejs/#initialiseapp) function exposed in the DOM API
 * There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/#initoptions) supported by the [fromAuthUri](https://docs.maidsafe.net/safe_app_nodejs/#fromauthuri) function exposed in the DOM API
 * [openUri](https://docs.maidsafe.net/safe_app_nodejs/#authinterfaceopenuri) is not available in the DOM API. A webapp shall instead call the `window.safe.authorise` function to send an authorisation request to the Authenticator. E.g.:
@@ -119,7 +119,7 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 - An [interactive tool](https://github.com/maidsafe/safe_examples/tree/master/safe_web_api_playground) to learn about the browser's SAFE network API, located at `safe://api.playground`
 - Account login credentials, both secret and password being `mocksafenetworkdeveloper`
 
-`open Peruse.app --args --mock --preload`
+`open SAFE Browser.app --args --mock --preload`
 
 
 ## Browser Development
@@ -142,7 +142,7 @@ Want to run 'production' variables, but with hot reloading?
 - `yarn put-live-net-files-for-<windows|osx|linux>`
 - `yarn prod-dev`
 
-Note, you'll need a crust.config set for the application. [Helper commands for osx/linux/windows](https://github.com/maidsafe/safe_browser/blob/peruse/package.json#L53-55)
+Note, you'll need a crust.config set for the application. [Helper commands for osx/linux/windows](https://github.com/maidsafe/safe_browser/blob/master/package.json#L55-L58)
 
 And to package:
 - `yarn package`
@@ -155,8 +155,8 @@ A packaged application, built in a `NODE_ENV=dev`, can access either `prod` or `
 
 There are a few build commands for various situations:
 
-- `yarn mock-dev` will run a peruse developer version of the application using `MockVault`
-- `yarn prod-dev` will run a peruse developer version of the application using the live network.
+- `yarn mock-dev` will run a developer version of the application using `MockVault`
+- `yarn prod-dev` will run a developer version of the application using the live network.
 - `yarn build` compiles all code, but you shouldn't need to use this
 - `yarn build-preload` will need to be run whenever you change the `preload.js` file for changes to show up in the browser.
 

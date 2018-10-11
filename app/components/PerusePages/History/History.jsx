@@ -58,8 +58,8 @@ export default class History extends Component
         const ignoreProtocolList = ['safe-auth:'];
         const ignoreList = [
             'about:blank',
-            'peruse://history',
-            'peruse://bookmarks'
+            'safe-browser://history',
+            'safe-browser://bookmarks'
         ];
 
         // TODO: uniq by object props, so will be less harsh once we have title etc.
@@ -89,7 +89,7 @@ export default class History extends Component
             <div className={ moddedClass } >
                 <div className={ `${styles.container} js-history` } >
                     <Page
-                        className={ `${CLASSES.PERUSE_PAGE} ${styles.page}` }
+                        className={ `${CLASSES.SAFE_BROWSER_PAGE} ${styles.page}` }
                         overflow='auto'
                     >
                         <PageHeader>

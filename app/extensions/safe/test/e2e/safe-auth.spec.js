@@ -126,7 +126,7 @@ describe( 'safe authenticator protocol', () =>
         await navigateTo( app, 'shouldappearinhistory.com' );
 
         await newTab( app );
-        await navigateTo( app, 'peruse:history' );
+        await navigateTo( app, 'safe-browser:history' );
         let header = await client.getText( 'h1' );
         let history = await client.getText( '.urlList__table' );
         expect( header ).toBe( 'History' );
@@ -138,7 +138,7 @@ describe( 'safe authenticator protocol', () =>
         tabIndex = await newTab( app );
         await client.windowByIndex( tabIndex );
         await delay( 2500 );
-        await navigateTo( app, 'peruse:history' );
+        await navigateTo( app, 'safe-browser:history' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
         await delay( 2500 );
 
@@ -179,7 +179,7 @@ describe( 'safe authenticator protocol', () =>
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
             console.log('note', note);
-            expect( note ).toMatch( /Peruse Browser requests Auth Permission/ );
+            expect( note ).toMatch( /SAFE Browser requests Auth Permission/ );
         } );
     }
 

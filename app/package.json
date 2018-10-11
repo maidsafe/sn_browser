@@ -1,6 +1,6 @@
 {
-  "name": "peruse",
-  "productName": "Peruse",
+  "name": "safe-browser",
+  "productName": "SAFE Browser",
   "version": "0.7.0",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "main": "./main.js",

@@ -40,7 +40,7 @@ export default class Bookmarks extends Component
             <div className={ moddedClass } >
                 <div className={ `${styles.container}` } >
                     <Page
-                        className={ `${CLASSES.PERUSE_PAGE} ${styles.page}` }
+                        className={ `${CLASSES.SAFE_BROWSER_PAGE} ${styles.page}` }
                         overflow='auto'
                     >
                         <PageHeader>

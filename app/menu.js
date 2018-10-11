@@ -65,9 +65,9 @@ export default class MenuBuilder
         const store = this.store;
 
         const subMenuAbout = {
-            label   : 'Peruse',
+            label   : 'SAFE Browser',
             submenu : [
-                { label: 'About Peruse', selector: 'orderFrontStandardAboutPanel:' },
+                { label: 'About SAFE Browser', selector: 'orderFrontStandardAboutPanel:' },
                 { type: 'separator' },
                 { label: 'Services', submenu: [] },
                 { type: 'separator' },
@@ -255,7 +255,7 @@ export default class MenuBuilder
                         if ( win )
                         {
                             const windowId = win.webContents.id;
-                            this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( addTab( { url: 'safe-browser://bookmarks', windowId, isActiveTab: true } ) );
                         }
                     } },
                 { type: 'separator' },
@@ -289,7 +289,7 @@ export default class MenuBuilder
                         if ( win )
                         {
                             const windowId = win.webContents.id;
-                            this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( addTab( { url: 'safe-browser://history', windowId, isActiveTab: true } ) );
                         }
                     } },
                 { type: 'separator' },
@@ -328,7 +328,7 @@ export default class MenuBuilder
                 { type: 'separator' },
                 { label: 'Bring All to Front', selector: 'arrangeInFront:' },
                 { type: 'separator' },
-                { label : 'Toggle Peruse-shell Devtools (not for web dev debug)',
+                { label : 'Toggle SAFE Browser-shell Devtools (not for web dev debug)',
                     click : ( item, win ) =>
                     {
                         if ( win )
@@ -345,12 +345,12 @@ export default class MenuBuilder
                 { label : 'Learn More about the Safe Network',
                     click()
                     {
-                        shell.openExternal( 'https://maidsafe.net/' );
+                        shell.openExternal( 'https://safenetwork.tech/' );
                     } },
                 { label : 'Documentation',
                     click()
                     {
-                        shell.openExternal( 'https://github.com/joshuef/peruse/blob/master/README.md' );
+                        shell.openExternal( 'https://github.com/maidsafe/safe_browser/blob/master/README.md' );
                     } },
                 { label : 'Community Discussions',
                     click()
@@ -360,7 +360,7 @@ export default class MenuBuilder
                 { label : 'Search Issues',
                     click()
                     {
-                        shell.openExternal( 'https://github.com/joshuef/peruse/issues' );
+                        shell.openExternal( 'https://github.com/maidsafe/safe_browser/issues' );
                     } }
             ]
         };
