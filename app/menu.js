@@ -5,7 +5,8 @@ import {
     activeTabForwards,
     activeTabBackwards,
     closeActiveTab,
-    reopenTab
+    reopenTab,
+    setActiveTab
 } from 'actions/tabs_actions';
 
 import { selectAddressBar } from 'actions/ui_actions';
@@ -107,6 +108,66 @@ export default class MenuBuilder
                         {
                             const windowId = win.webContents.id;
                             this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( selectAddressBar() );
+                        }
+                    }
+                },
+                {
+                    label       : 'Select Next Tab',
+                    accelerator : 'Ctrl+Tab',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            const state = store.getState();
+                            let index;
+                            const openTabs = state.tabs.filter( ( tab ) => !tab.isClosed && tab.windowId === windowId );
+                            openTabs.forEach( ( tab, i ) =>
+                            {
+                                if ( tab.isActiveTab )
+                                {
+                                    if ( i === openTabs.length - 1 )
+                                    {
+                                        index = openTabs[0].index;
+                                    }
+                                    else
+                                    {
+                                        index = openTabs[i + 1].index;
+                                    }
+                                }
+                            } );
+                            this.store.dispatch( setActiveTab( { index } ) );
+                            this.store.dispatch( selectAddressBar() );
+                        }
+                    }
+                },
+                {
+                    label       : 'Select Previous Tab',
+                    accelerator : 'Ctrl+Shift+Tab',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            const state = store.getState();
+                            let index;
+                            const openTabs = state.tabs.filter( ( tab ) => !tab.isClosed && tab.windowId === windowId );
+                            openTabs.forEach( ( tab, i ) =>
+                            {
+                                if ( tab.isActiveTab )
+                                {
+                                    if ( i === 0 )
+                                    {
+                                        index = openTabs[openTabs.length - 1].index;
+                                    }
+                                    else
+                                    {
+                                        index = openTabs[i - 1].index;
+                                    }
+                                }
+                            } );
+                            this.store.dispatch( setActiveTab( { index } ) );
                             this.store.dispatch( selectAddressBar() );
                         }
                     }
