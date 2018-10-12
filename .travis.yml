@@ -3,6 +3,8 @@ dist: trusty
 os:
 - osx
 - linux
+- windows
+
 env:
 - NODE_ENV=dev
 - NODE_ENV=prod
