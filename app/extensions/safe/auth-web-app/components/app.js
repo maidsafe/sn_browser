@@ -6,6 +6,7 @@ import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 import CONSTANTS from '../constants';
 import NetworkStatus from './network_status';
 import AccountInfo from './account_info';
+import { I18n } from 'react-redux-i18n';
 
 export default class App extends Component {
   static propTypes = {
@@ -38,10 +39,11 @@ export default class App extends Component {
         <button
           type="button"
           className={`logout ${AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON}`}
+          aria-label={ I18n.t( 'buttons.logout' ) }
           onClick={() => {
             logout();
           }}
-        >Logout</button>
+        >{ I18n.t( 'buttons.logout' ) }</button>
       </div>
     );
   }
@@ -73,13 +75,14 @@ export default class App extends Component {
           { (networkState === CONSTANTS.NETWORK_STATUS.DISCONNECTED) && isAuthorised ? (
             <div className="nw-state-alert">
               <div className="nw-status-alert-b">
-                You have been disconnected from the network.
+                  { I18n.t( 'messages.disconnected' ) }
                 <button
                   type="button"
+                  aria-label={ I18n.t( 'buttons.reconnect' ) }
                   onClick={() => {
                     setNetworkConnecting();
                   }}
-                >Reconnect now</button>.
+                >{ I18n.t( 'buttons.reconnect' ) }</button>
               </div>
             </div>
             ) : null }

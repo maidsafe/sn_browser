@@ -36,7 +36,8 @@ export default class AddressBar extends Component
         activeTabBackwards    : PropTypes.func.isRequired,
         activeTabForwards     : PropTypes.func.isRequired,
         showSettingsMenu      : PropTypes.func.isRequired,
-        hideSettingsMenu      : PropTypes.func.isRequired
+        hideSettingsMenu      : PropTypes.func.isRequired,
+        focusWebview          : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -123,7 +124,8 @@ export default class AddressBar extends Component
             updateActiveTab,
             settingsMenuIsVisible,
             showSettingsMenu,
-            hideSettingsMenu
+            hideSettingsMenu,
+            focusWebview
         } = this.props;
 
         const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
@@ -165,6 +167,7 @@ export default class AddressBar extends Component
                             showSettingsMenu={ showSettingsMenu }
                             settingsMenuIsVisible={ settingsMenuIsVisible }
                             hideSettingsMenu={ hideSettingsMenu }
+                            focusWebview={ focusWebview }
                         />
                     </Col>
                 </Row>

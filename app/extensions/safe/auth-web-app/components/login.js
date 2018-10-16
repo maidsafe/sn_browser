@@ -49,14 +49,6 @@ export default class Login extends Component
       this.setState( { libErrPopup: this.props.libErrPopup } );
   }
 
-  componentDidMount()
-  {
-      setTimeout( () =>
-      {
-          this.secretEle.focus();
-      }, 300 );
-  }
-
   componentWillUpdate( nextProps )
   {
       if ( nextProps.isAuthorised )
@@ -89,6 +81,16 @@ export default class Login extends Component
       login( secret, password );
   }
 
+  createAccount( e )
+  {
+      e.preventDefault();
+      if ( this.props.loading || this.props.libErrPopup )
+      {
+          return;
+      }
+      return this.props.push( '/create-account' );
+  }
+
   render()
   {
       const { error } = this.props;
@@ -113,7 +115,7 @@ export default class Login extends Component
                           desc={ I18n.t( 'messages.failed_to_load_lib' ) }
                       />
                       {this.props.loading &&
-                      <CardLoaderFull msg="Signing in, please wait!">{''}</CardLoaderFull>
+                      <CardLoaderFull msg={ I18n.t( 'messages.signing_in' ) }>{''}</CardLoaderFull>
                       }
                       <div className="auth">
                           <div className="auth-b login-b">
@@ -121,8 +123,9 @@ export default class Login extends Component
                                   <form onSubmit={ this.handleSubmit }>
                                       <div className="inp-grp">
                                           <input
-                                          key="userName"
+                                              key="userName"
                                               className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }
+                                              tabIndex="0"
                                               type="password"
                                               id="acc-secret"
                                               name="acc-secret"
@@ -132,21 +135,23 @@ export default class Login extends Component
                                               } }
                                               required
                                           />
-                                          <label htmlFor="acc-secret">Account Secret</label>
+                                          <label htmlFor="acc-secret">{ I18n.t( 'account_secret' ) }</label>
                                           { error && error.code !== -3 &&
                                               <span className="msg error">{ error.description }</span>
                                           }
                                           <button
                                               type="button"
-                                              tabIndex="-1"
+                                              tabIndex="0"
                                               className="eye-btn"
+                                              aria-label={ I18n.t( 'aria.show_secret_toggle' ) }
                                               onClick={ this.togglePassword }
                                           >{' '}</button>
                                       </div>
                                       <div className="inp-grp">
                                           <input
-                                          key="accPassword"
+                                              key="accPassword"
                                               className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }
+                                              tabIndex="0"
                                               type="password"
                                               id="acc-password"
                                               name="acc-password"
@@ -156,14 +161,15 @@ export default class Login extends Component
                                               } }
                                               required
                                           />
-                                          <label htmlFor="acc-password">Account Password</label>
+                                          <label htmlFor="acc-password">{ I18n.t( 'account_password' ) }</label>
                                           { error && error.code === -3 &&
                                               <span className="msg error">{ error.description }</span>
                                           }
                                           <button
                                               type="button"
-                                              tabIndex="-1"
+                                              tabIndex="0"
                                               className="eye-btn"
+                                              aria-label={ I18n.t( 'aria.show_password_toggle' ) }
                                               onClick={ this.togglePassword }
                                           >{' '}</button>
                                       </div>
@@ -172,7 +178,7 @@ export default class Login extends Component
                                               type="submit"
                                               className={ `btn primary long ${AUTH_UI_CLASSES.AUTH_LOGIN_BUTTON}` }
                                               disabled={ this.props.libErrPopup }
-                                          >Log in</button>
+                                          >{ I18n.t( 'buttons.login' ) }</button>
                                       </div>
                                   </form>
                               </div>
@@ -181,21 +187,23 @@ export default class Login extends Component
                   </div>
               </div>
               <div className="card-f">
-          Don&rsquo;t have an account? <a
-              className={  `${classNames(
-                  {
-                      disabled: this.props.loading || this.props.libErrPopup
-                  } ) } ${AUTH_UI_CLASSES.CREATE_ACCOUNT_BUTTON}` }
-              onClick={ ( e ) =>
-                      {
-                          e.preventDefault();
-                          if ( this.props.loading || this.props.libErrPopup )
+                  { I18n.t( 'no_account_question' ) }&nbsp;
+                  <a
+                      className={ `${classNames(
                           {
-                              return;
+                              disabled : this.props.loading || this.props.libErrPopup
+                          } )} ${AUTH_UI_CLASSES.CREATE_ACCOUNT_BUTTON}` }
+                      tabIndex="0"
+                      role="button"
+                      onClick={ ( e ) => this.createAccount( e ) }
+                      onKeyDown={ ( e ) =>
+                      {
+                          if ( e.keyCode === 13 )
+                          {
+                              this.createAccount( e );
                           }
-                          return this.props.push( '/create-account' );
                       } }
-          >CREATE ACCOUNT</a>
+                  >{ I18n.t( 'buttons.create_account' ) }</a>
               </div>
           </div>
       );

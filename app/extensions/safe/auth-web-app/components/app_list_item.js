@@ -29,12 +29,12 @@ export default class ListItem extends Component {
 
     if (loading) {
       return (
-        <div className="app-list-i default"><Translate value="Fetching apps" />...</div>
+        <div className="app-list-i default"><Translate value="messages.fetching_apps" />...</div>
       );
     }
     if (isDefault) {
       return (
-        <div className="app-list-i default"><Translate value="No Apps Found" /></div>
+        <div className="app-list-i default"><Translate value="messages.no_apps" /></div>
       );
     }
     return (
@@ -59,7 +59,7 @@ export default class ListItem extends Component {
           </div>
           <div className="app-list-detail">
             <div className="permission">
-              <span className="permission-h"><Translate value="Permissions" /></span>
+              <span className="permission-h"><Translate value="permissions" /></span>
               <ul>
                 { data.containers ?
                   data.containers.map((container, index) =>
@@ -85,7 +85,7 @@ export default class ListItem extends Component {
                   ) : (
                     <li>
                       <span className="permission-icn safe-drive">{''}</span>
-                      <span className="permission-title">No permission</span>
+                      <span className="permission-title"><Translate value="no_permissions" /></span>
                     </li>
                   )
                 }
@@ -103,7 +103,7 @@ export default class ListItem extends Component {
                 e.nativeEvent.stopImmediatePropagation();
                 revokeApp(data.app_info.id);
               }}
-            ><Translate value="Revoke Access" /></button>
+            ><Translate value="buttons.revoke_access" /></button>
           </div>
         </div>
       </div>
