@@ -7,6 +7,7 @@ import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
+import { I18n } from 'react-redux-i18n';
 
 import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarButtonsLHS } from 'extensions/components';
@@ -42,6 +43,7 @@ class ButtonsLHS extends Component
                         disabled={ !canGoBackwards }
                         icon="left"
                         shape="circle"
+                        label={ I18n.t( 'aria.navigate_back' ) }
                         onClick={ handleBack }
                     />
                 </Col>
@@ -51,6 +53,7 @@ class ButtonsLHS extends Component
                         disabled={ !canGoForwards }
                         shape="circle"
                         icon="right"
+                        label={ I18n.t( 'aria.navigate_forward' ) }
                         onClick={ handleForward }
                     />
                 </Col>
@@ -59,6 +62,7 @@ class ButtonsLHS extends Component
                         className={ CLASSES.REFRESH }
                         shape="circle"
                         icon="reload"
+                        label={ I18n.t( 'aria.reload_page' ) }
                         disabled={ activeTab.isLoading }
                         onClick={ handleRefresh }
                     />

@@ -152,13 +152,13 @@ export default class Notifier extends Component
                         {
                             handleOnAccept &&
                             <Column verticalAlign="top" key="notifier-accept" align="right">
-                                <Button className={CLASSES.NOTIFICATION__ACCEPT} role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
+                                <Button tabIndex="0" className={CLASSES.NOTIFICATION__ACCEPT} role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
                             </Column>
                         }
                         {
                             handleOnDeny &&
                             <Column verticalAlign="top" key="notifier-deny" align="right">
-                                <Button className={CLASSES.NOTIFICATION__REJECT} onClick={ handleOnDeny }>{ denyText }</Button>
+                                <Button tabIndex="0" className={CLASSES.NOTIFICATION__REJECT} onClick={ handleOnDeny }>{ denyText }</Button>
                             </Column>
                         }
                         <Column verticalAlign="top" key="notifier-dismiss" align="right">
@@ -166,6 +166,7 @@ export default class Notifier extends Component
                                 role="subtle"
                                 className={CLASSES.NOTIFICATION__IGNORE}
                                 iconType="close"
+                                tabIndex="0"
                                 onClick={ this.handleDismiss }
                             >
                                 { dismissText }

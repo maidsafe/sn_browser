@@ -8,7 +8,8 @@ export const TYPES = {
     SELECT_ADDRESS_BAR   : 'SELECT_ADDRESS_BAR',
     RESET_STORE          : 'RESET_STORE',
     RELOAD_PAGE          : 'RELOAD_PAGE',
-    PAGE_LOADED          : 'PAGE_LOADED'
+    PAGE_LOADED          : 'PAGE_LOADED',
+    FOCUS_WEBVIEW        : 'FOCUS_WEBVIEW'
 };
 
 export const {
@@ -19,7 +20,8 @@ export const {
     selectAddressBar,
     resetStore,
     reloadPage,
-    pageLoaded
+    pageLoaded,
+    focusWebview
 } = createActions(
     TYPES.SHOW_SETTINGS_MENU,
     TYPES.HIDE_SETTINGS_MENU,
@@ -28,5 +30,6 @@ export const {
     TYPES.SELECT_ADDRESS_BAR,
     TYPES.RESET_STORE,
     TYPES.RELOAD_PAGE,
-    TYPES.PAGE_LOADED
+    TYPES.PAGE_LOADED,
+    TYPES.FOCUS_WEBVIEW
 );

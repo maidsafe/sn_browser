@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { remote } from 'electron';
 import PropTypes from 'prop-types';
 import { CLASSES } from 'appConstants';
+import { I18n } from 'react-redux-i18n';
 
 import logger from 'logger';
 
@@ -135,6 +136,7 @@ class AddressBarInput extends Component
         return (
             <Input
                 className={ CLASSES.ADDRESS_INPUT }
+                aria-label={ I18n.t( 'aria.address_bar' ) }
                 addonBefore={ addonBefore.length ? addonBefore : undefined }
                 addonAfter={ addonAfter.length ? addonAfter : undefined }
                 size={ 'large' }

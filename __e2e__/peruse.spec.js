@@ -340,6 +340,12 @@ describe( 'main window', () =>
         expect( header ).toBe( 'History' );
     } );
 
+    it( 'accessibility audit', async () =>
+    {
+        const audit = await app.client.auditAccessibility();
+        expect( audit.failed ).toBe( false );
+    } );
+
     // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async () =>
     {

@@ -188,6 +188,9 @@
         &:hover {
           background-image: url("../img/eye-hover.svg");
         }
+        &:focus {
+          background-image: url("../img/eye-focus.svg");
+        }
       }
     }
   }

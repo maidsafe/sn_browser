@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { I18n } from 'react-redux-i18n';
 
 import { Row, Col, Icon, Button } from 'antd';
 import 'antd/lib/row/style';
@@ -32,7 +33,8 @@ class ButtonsRHS extends Component
         showSettingsMenu      : PropTypes.func.isRequired,
         hideSettingsMenu      : PropTypes.func.isRequired,
         settingsMenuIsVisible : PropTypes.bool.isRequired,
-        menuItems             : PropTypes.arrayOf( PropTypes.node ).isRequired
+        menuItems             : PropTypes.arrayOf( PropTypes.node ).isRequired,
+        focusWebview          : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -65,7 +67,8 @@ class ButtonsRHS extends Component
             addTab,
             showSettingsMenu,
             hideSettingsMenu,
-            menuItems
+            menuItems,
+            focusWebview
         } = this.props;
 
 
@@ -81,6 +84,15 @@ class ButtonsRHS extends Component
                         className={ `${CLASSES.BOOKMARK_PAGE}` }
                         shape="circle"
                         onClick={ this.handleBookmarking }
+                        tabIndex="0"
+                        aria-label={ isBookmarked ? I18n.t( 'aria.is_bookmarked' ) : I18n.t( 'aria.not_bookmarked' ) }
+                        onKeyDown={ ( e ) =>
+                        {
+                            if ( e.keyCode === 13 )
+                            {
+                                this.handleBookmarking( );
+                            }
+                        } }
                     >
                         <Icon
                             type="star"
@@ -94,6 +106,9 @@ class ButtonsRHS extends Component
                         menuItems={ menuItems }
                         showMenu={ showSettingsMenu }
                         hideMenu={ hideSettingsMenu }
+                        tabIndex="0"
+                        aria-label={ I18n.t( 'aria.settings_menu' ) }
+                        onBlur={ () => focusWebview( true ) }
                         // todo add icon option
                     />
                 </Col>

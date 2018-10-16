@@ -35,9 +35,9 @@ class Browser extends Component
         updateNotification : PropTypes.func.isRequired,
         clearNotification  : PropTypes.func.isRequired,
         ui                 : PropTypes.object.isRequired,
-
-        showSettingsMenu      : PropTypes.func.isRequired,
-        hideSettingsMenu      : PropTypes.func.isRequired
+        showSettingsMenu   : PropTypes.func.isRequired,
+        hideSettingsMenu   : PropTypes.func.isRequired,
+        focusWebview       : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -171,6 +171,7 @@ class Browser extends Component
             blurAddressBar,
             reloadPage,
             pageLoaded,
+            focusWebview,
 
             //tabs
             tabs,
@@ -257,6 +258,7 @@ class Browser extends Component
                     activeTab={ activeTab }
 
                     windowId={windowId}
+                    focusWebview={ focusWebview }
 
                     ref={ ( c ) =>
                     {
@@ -271,6 +273,8 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
+                    focusWebview={ focusWebview }
+                    shouldFocusWebview={ ui.shouldFocusWebview }
                     closeTab={ closeTab }
                     key={ 4 }
                     addTab={ addTab }

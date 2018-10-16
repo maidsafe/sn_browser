@@ -17,7 +17,8 @@ const initialState = {
         settingsMenuIsVisible : false,
         addressBarIsSelected  : false,
         pageIsLoading         : false,
-        isActiveTabReloading  : false
+        isActiveTabReloading  : false,
+        shouldFocusWebview    : false
     }
 };
 

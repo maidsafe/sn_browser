@@ -39,6 +39,10 @@ export default function ui( state: array = initialState, action )
         {
             return { ...state, isActiveTabReloading: false };
         }
+        case TYPES.FOCUS_WEBVIEW :
+        {
+            return { ...state, shouldFocusWebview: payload };
+        }
 
         default:
             return state;

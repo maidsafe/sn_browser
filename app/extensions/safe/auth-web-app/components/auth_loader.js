@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { I18n } from 'react-redux-i18n';
 
 export default class AuthLoader extends Component {
   static propTypes = {
@@ -11,7 +12,7 @@ export default class AuthLoader extends Component {
     return (
       <div className="auth-loader">
         <h3 className="title">
-          {window.location.hash.slice(1) === '/create-account' ? 'Registering you on the' : 'Authorising with'} SAFE Network!
+          {window.location.hash.slice(1) === '/create-account' ? I18n.t( 'registering' ) : I18n.t( 'authorising' ) } SAFE Network!
         </h3>
         <span className="loader">{' '}</span>
         <div className="opt">
@@ -19,11 +20,10 @@ export default class AuthLoader extends Component {
             <button
               type="button"
               className="btn primary"
-              name="cancel"
               onClick={() => {
                 cancelAuthReq();
               }}
-            >Cancel</button>
+            >{ I18n.t( 'buttons.cancel' ) }</button>
           </div>
         </div>
       </div>

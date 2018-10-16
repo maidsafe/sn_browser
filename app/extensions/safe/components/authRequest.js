@@ -10,7 +10,7 @@ import { CLASSES } from 'appConstants';
 const createAppContainersElement = ( containers ) =>
     (
         <div key="req_containers_parent_div">
-            <a key="info_box_expander" className="info_box_expander">Details</a>
+            <a key="info_box_expander" className="info_box_expander" tabIndex="0">Details</a>
             <div key="info_box_details" className="info_box_details">
                 <p className="blockText" key="requested_containers">With access to the following containers:</p>
                 {
@@ -87,7 +87,7 @@ export const createAuthRequestElement = ( authReqData ) =>
         {
             return (
                 <div key="share_mdata_parent_div">
-                    <a key="info_box_expander" className="info_box_expander">Details</a>
+                    <a key="info_box_expander" className="info_box_expander" tabIndex="0">Details</a>
                     <div key="info_box_details" className="info_box_details">
                         <p className="blockText"  key="requested_mdata">Requested Mutable Data:</p>
                         {
