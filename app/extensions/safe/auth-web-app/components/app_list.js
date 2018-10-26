@@ -104,10 +104,10 @@ export default class AppList extends Component {
 
   getNoAppsContainer() {
     return (
-      <div className="no-apps">
+      <div key={"noApps"} className="no-apps">
         <h3 className="no-apps-h">Looks like you haven&rsquo;t authorised any apps yet.</h3>
-        <div className="no-apps-img">{''}</div>
-        <div className="no-apps-down">
+        <div key={"noAppsIMG"} className="no-apps-img">{''}</div>
+        <div key={"noAppsDown"} className="no-apps-down">
           <h3 className="no-apps-down-h">Download sample applications here...</h3>
           <a
             rel="noopener noreferrer"
@@ -128,16 +128,17 @@ export default class AppList extends Component {
       }
     );
     return (
-      <div className={searchClassNames}>
-        <button
+      <div key={"searchClassNames"} className={searchClassNames}>
+        <button key={"searchClassButtonIcn"}
           type="button"
           className="app-list-search-icn"
           onClick={() => {
             this.setState({ searchActive: true });
           }}
         >{''}</button>
-        <div className="app-list-search-ipt">
+        <div key={"searchClassListIpt"} className="app-list-search-ipt">
           <input
+          key={"searchClassSearchList"}
             type="text"
             name="appListSearch"
             ref={(c) => {
@@ -148,6 +149,7 @@ export default class AppList extends Component {
             }}
           />
           <button
+          key={"searchClassSearchListCancel"}
             type="button"
             className="app-list-search-cancel"
             onClick={() => {
@@ -181,6 +183,7 @@ export default class AppList extends Component {
     if (appList.length === 0) {
       return this.getNoMatchingAppsContainer();
     }
+    if (authorisedApps.length !== 0){
     apps = appList.sort((a, b) => {
       if (a.app_info.name < b.app_info.name) return -1;
       if (a.app_info.name > b.app_info.name) return 1;
@@ -189,17 +192,17 @@ export default class AppList extends Component {
        const path = `/app_details?id=${app.app_info.id}&index=${i}`;
        return (
          <div key={i}>
-           <a onClick={() => {this.props.push(path);}}>
-             <div className="app-list-i">
-               <div className="app-list-i-b">
-                 <div className={getAppIconClassName(i)}>{app.app_info.name.slice(0, 2)}</div>
-                 <div className="app-list-i-name">{parseAppName(app.app_info.name)}</div>
+           <a  key={"appName1"+i} onClick={() => {this.props.push(path);}}>
+             <div  key={"appNamei"+i} className="app-list-i">
+               <div  key={"appNameb"+i}className="app-list-i-b">
+                 <div key={"appNameIcon"+i} className={getAppIconClassName(i)}>{app.app_info.name.slice(0, 2)}</div>
+                 <div key={"appNameParse"+i} className="app-list-i-name">{parseAppName(app.app_info.name)}</div>
                </div>
              </div>
            </a>
          </div>
        );
-    });
+    });}
     return apps;
   }
 
@@ -258,11 +261,12 @@ export default class AppList extends Component {
             title={popupTitle}
             desc={popupDesc}
           />
-          <div className={ `app-list ${AUTH_UI_CLASSES.AUTH_APP_LIST}`}>
-            { authorisedApps.length === 0 ? null : this.getSearchContainer() }
-            { this.getApps() }
+           <div className={ `app-list ${AUTH_UI_CLASSES.AUTH_APP_LIST}`}>
+           { authorisedApps.length === 0 ? null : this.getSearchContainer() }
+           { this.getApps() }
           </div>
-        </div>
+          </div>
+         
       </div>
     );
   }

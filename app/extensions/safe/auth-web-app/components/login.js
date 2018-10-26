@@ -119,8 +119,9 @@ export default class Login extends Component
                           <div className="auth-b login-b">
                               <div className="auth-form">
                                   <form onSubmit={ this.handleSubmit }>
-                                      <div className="inp-grp">
+                                      <div className="inp-grp" key={"accountSecret"}>
                                           <input
+                                          key={"userName"}
                                               className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }
                                               type="password"
                                               id="acc-secret"
@@ -131,19 +132,21 @@ export default class Login extends Component
                                               } }
                                               required
                                           />
-                                          <label htmlFor="acc-secret">Account Secret</label>
+                                          <label key={"accountSecretLabel"} htmlFor="acc-secret">Account Secret</label>
                                           { error && error.code !== -3 &&
                                               <span className="msg error">{ error.description }</span>
                                           }
                                           <button
+                                          key={"toggleSecret"}
                                               type="button"
                                               tabIndex="-1"
                                               className="eye-btn"
                                               onClick={ this.togglePassword }
                                           >{' '}</button>
                                       </div>
-                                      <div className="inp-grp">
+                                      <div className="inp-grp" key={"accountPassword"}>
                                           <input
+                                          key={"accPassword"}
                                               className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }
                                               type="password"
                                               id="acc-password"
@@ -154,19 +157,21 @@ export default class Login extends Component
                                               } }
                                               required
                                           />
-                                          <label htmlFor="acc-password">Account Password</label>
+                                          <label key={"accountPasswordLabel"} htmlFor="acc-password">Account Password</label>
                                           { error && error.code === -3 &&
                                               <span className="msg error">{ error.description }</span>
                                           }
                                           <button
+                                          key={"togglePassword"}
                                               type="button"
                                               tabIndex="-1"
                                               className="eye-btn"
                                               onClick={ this.togglePassword }
                                           >{' '}</button>
                                       </div>
-                                      <div className="btn-grp">
+                                      <div className="btn-grp" key={"submitLogin"}>
                                           <button
+                                          key={"loginEvent"}
                                               type="submit"
                                               className={ `btn primary long ${AUTH_UI_CLASSES.AUTH_LOGIN_BUTTON}` }
                                               disabled={ this.props.libErrPopup }

@@ -50,6 +50,15 @@ class Browser extends Component
         super( props );
         this.state = {};
     }
+    componentWillMount()
+    {
+
+        //jest/electron workaround as no remote in non-render process
+        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+
+        // this is mounted but its not show?
+        this.setState( { windowId: currentWebContentsId } );
+    }
 
     componentDidMount( )
     {
@@ -64,11 +73,7 @@ class Browser extends Component
 
         const theBrowser = this;
 
-        //jest/electron workaround as no remote in non-render process
-        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
-
-        // this is mounted but its not show?
-        this.setState( { windowId: currentWebContentsId } );
+        
 
         if( !ipcRenderer ) return; //avoid for jest/Electron where we're not in renderer process
 
