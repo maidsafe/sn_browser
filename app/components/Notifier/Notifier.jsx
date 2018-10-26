@@ -93,12 +93,31 @@ export default class Notifier extends Component
                         {
                             return nodeDescription.children = nodeObject.props.children;
                         }
-
-                        nodeDescription.props = {
-                            [prop] : nodeObject[key][prop]
+                        if ( nodeDescription.props )
+                        {
+                            nodeDescription.props = Object.assign(
+                                {},
+                                nodeDescription.props,
+                                {
+                                    [prop] : nodeObject[key][prop]
+                                }
+                            );
+                        }
+                        else
+                        {
+                            nodeDescription.props = {
+                                [prop] : nodeObject[key][prop]
+                            }
                         }
                      } )
-
+                }
+                if ( key === 'key' && nodeObject.key )
+                {
+                    if ( !nodeDescription.props )
+                    {
+                        nodeDescription.props = {};
+                    }
+                    nodeDescription.props.key = nodeObject.key;
                 }
             } );
             if( Array.isArray( nodeDescription.children ) )

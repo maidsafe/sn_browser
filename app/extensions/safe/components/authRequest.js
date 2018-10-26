@@ -28,15 +28,15 @@ export const createAuthRequestElement = ( authReqData ) =>
         if ( authReqData[reqType].containers && authReqData[reqType].containers.length )
         {
             return (
-                <div>
+                <div key="req_containers_parent_div">
                     <a key="info_box_expander" className="info_box_expander">Details</a>
                     <div key="info_box_details" className="info_box_details">
-                        <p className="blockText" key="Requested containers:">Requested containers:</p>
+                        <p className="blockText" key="requested_containers">Requested containers:</p>
                         {
-                            authReqData[reqType].containers.map( ( container ) =>
+                            authReqData[reqType].containers.map( ( container, i ) =>
                                 (
-                                    <div>
-                                        <p className={ `blockText`} key={ container.cont_name }>{container.cont_name}</p>
+                                    <div key={ `${container.cont_name}_parent_${i}` }>
+                                        <p className='blockText' key={ container.cont_name }>{container.cont_name}</p>
                                         <ul key={ `${container.cont_name}_ul` }>
                                             {
                                                 Object.keys( container.access ).filter( ( permission ) => container.access[permission] ).map( ( permission ) => <li key={ `${container.cont_name}_${permission}` }>{permission}</li> )
@@ -49,7 +49,7 @@ export const createAuthRequestElement = ( authReqData ) =>
                 </div>
             );
         }
-        return ( <div /> );
+        return ( <div key="empty_containers_req" /> );
     };
 
     const ifReqShareMData = () =>
@@ -57,17 +57,17 @@ export const createAuthRequestElement = ( authReqData ) =>
         if ( reqType === 'mDataReq' )
         {
             return (
-                <div>
+                <div key="share_mdata_parent_div">
                     <a key="info_box_expander" className="info_box_expander">Details</a>
                     <div key="info_box_details" className="info_box_details">
-                        <p className={ `blockText ${CLASSES.NOTIFIER_TEXT}`}  key="Requested Mutable Data:">Requested Mutable Data:</p>
+                        <p className={ `blockText ${CLASSES.NOTIFIER_TEXT}`}  key="requested_mdata">Requested Mutable Data:</p>
                         {
                             authReqData[reqType].mdata.map( ( mdatum, i ) =>
                             {
                                 const metaName = authReqData.metaData[i].name;
                                 const metaDesc = authReqData.metaData[i].description;
                                 return (
-                                    <div>
+                                    <div key={ `${metaName}_parent_${i}` }>
                                         <p key={ metaName + i }>{metaName}</p>
                                         <p key={ metaDesc + i }>{metaDesc}</p>
                                         <p key={ metaName + mdatum.type_tag + i }>{mdatum.type_tag}</p>
@@ -83,7 +83,7 @@ export const createAuthRequestElement = ( authReqData ) =>
                 </div>
             );
         }
-        return ( <div /> );
+        return ( <div key="empty_share_mdata" /> );
     };
 
     return (

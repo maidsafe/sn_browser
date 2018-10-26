@@ -57,12 +57,6 @@ export default class AppList extends Component {
     };
   }
 
-  componentWillMount() {
-    if (!this.props.isAuthorised) {
-      return this.props.push('/login');
-    }
-  }
-
   componentDidMount() {
     if (!this.props.isAuthorised) {
       return this.props.push('/login');
