@@ -34,7 +34,8 @@ addons:
 
 
 before_install:
-- npm install --global --production windows-build-tools
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm --add-python-to-path='true' --debug install --global windows-build-tools;
+  fi
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
