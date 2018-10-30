@@ -91,6 +91,8 @@ after_failure:
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then where python
+  fi
 
 
 before_deploy:
