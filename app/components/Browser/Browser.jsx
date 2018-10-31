@@ -53,7 +53,6 @@ class Browser extends Component
 
     componentWillMount()
     {
-
         //jest/electron workaround as no remote in non-render process
         const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
 
@@ -73,8 +72,6 @@ class Browser extends Component
         const addressBar = this.address;
 
         const theBrowser = this;
-
-        
 
         if( !ipcRenderer ) return; //avoid for jest/Electron where we're not in renderer process
 
