@@ -33,6 +33,10 @@ app/node_modules
 # OSX
 .DS_Store
 
+# tmp libs
+
+lib_zips
+
 # App packaged
 release
 app/background.process.js

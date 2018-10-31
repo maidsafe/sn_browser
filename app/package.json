@@ -30,13 +30,13 @@
   "download_deps": {
     "system_uri": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/system-uri",
-      "version": "v0.4.0",
+      "version": "0.4.0",
       "targetDir": "extensions/safe/dist/prod",
       "filePattern": "^.*\\.(dll|so|dylib)$"
     },
     "safe_authenticator": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/safe-client-libs",
-      "version": "v0.6.0",
+      "version": "0.6.0",
       "targetDir": "extensions/safe/dist/prod",
       "filename": "safe_authenticator",
       "filePattern": "^.*\\.(dll|so|dylib)$",
@@ -55,6 +55,6 @@
     }
   },
   "devDependencies": {
-    "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
+    "deps_downloader": "git+https://github.com/joshuef/deps_downloader#useElectronDownload"
   }
 }
