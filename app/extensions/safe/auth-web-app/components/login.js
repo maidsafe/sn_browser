@@ -54,7 +54,7 @@ export default class Login extends Component
       setTimeout( () =>
       {
           this.secretEle.focus();
-      }, 100 );
+      }, 300 );
   }
 
   componentWillUpdate( nextProps )
@@ -121,6 +121,7 @@ export default class Login extends Component
                                   <form onSubmit={ this.handleSubmit }>
                                       <div className="inp-grp">
                                           <input
+                                          key="userName"
                                               className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }
                                               type="password"
                                               id="acc-secret"
@@ -144,6 +145,7 @@ export default class Login extends Component
                                       </div>
                                       <div className="inp-grp">
                                           <input
+                                          key="accPassword"
                                               className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }
                                               type="password"
                                               id="acc-password"

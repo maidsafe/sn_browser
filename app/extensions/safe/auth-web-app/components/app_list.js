@@ -57,12 +57,6 @@ export default class AppList extends Component {
     };
   }
 
-  componentWillMount() {
-    if (!this.props.isAuthorised) {
-      return this.props.push('/login');
-    }
-  }
-
   componentDidMount() {
     if (!this.props.isAuthorised) {
       return this.props.push('/login');
@@ -102,6 +96,7 @@ export default class AppList extends Component {
     }
   }
 
+  
   getNoAppsContainer() {
     return (
       <div className="no-apps">
