@@ -50,6 +50,7 @@ class Browser extends Component
         super( props );
         this.state = {};
     }
+
     componentWillMount()
     {
 
