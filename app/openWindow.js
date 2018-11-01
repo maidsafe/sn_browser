@@ -47,6 +47,13 @@ const openWindow = ( store ) =>
         defaultHeight : 1024
     } );
 
+    let appIcon = path.join( __dirname, '../resources/safeicon.png' );
+        
+    if( process.platform === 'win32' )
+    {
+        appIcon = path.join( __dirname, '../resources/icon.ico' );
+    }
+
     const newWindowPosition = getNewWindowPosition( mainWindowState );
     const browserWindowConfig =
     {
@@ -56,6 +63,7 @@ const openWindow = ( store ) =>
         width             : mainWindowState.width,
         height            : mainWindowState.height,
         titleBarStyle     : 'hiddenInset',
+        icon              : appIcon,  
         thickFrame        : false,
         webPreferences    :
         {
