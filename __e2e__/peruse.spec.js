@@ -11,7 +11,6 @@ import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT , DEFAULT_TIMEOUT_INTERVAL} from './
 import {
     setupSpectronApp
     , isCI
-    , travisOS
     , afterAllTests
     , beforeAllTests
     , windowLoaded

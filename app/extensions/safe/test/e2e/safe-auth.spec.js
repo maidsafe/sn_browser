@@ -150,7 +150,7 @@ describe( 'safe authenticator protocol', () =>
         expect( history ).toMatch( 'Nothing to see here yet' );
     } );
 
-    if( travisOS !== 'linux' )
+    if( travisOS !== 'osx'  )
     {
         //linux failing with xdg-open
 

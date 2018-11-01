@@ -57,7 +57,7 @@ describe( 'SAFE network log in and out', async () =>
     } );
 
 
-    if ( travisOS === 'linux' )
+    if ( travisOS !== 'osx' )
     {
         // negate as xdg-open has problems with travis
         return;
