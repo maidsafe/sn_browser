@@ -58,6 +58,10 @@ script:
 # separate tests for safe + auth as together throws error due to native libs
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
+
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then takeown /f "C:\Users\travis\build\joshuef\safe_browser\" /r;
+  fi
+
 - yarn run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
 - if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
