@@ -467,13 +467,12 @@ delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
 
-"deps_downloader@git+https://github.com/joshuef/deps_downloader#useElectronDownload":
+"deps_downloader@git+https://github.com/joshuef/deps_downloader#Updated":
   version "0.3.0"
-  resolved "git+https://github.com/joshuef/deps_downloader#f78e2788fc08a3163c98e433aaf8163e69274a2d"
+  resolved "git+https://github.com/joshuef/deps_downloader#88f51176f61cafdbf377ca5a88559d7e433b4fe4"
   dependencies:
     async "^2.1.5"
-    electron-download "4.1.1"
-    electron-download-fork "https://s3.eu-west-2.amazonaws.com/electron-download-fork/electron-download-fork-4.1.0.tgz"
+    electron-download "git+https://github.com/joshuef/electron-download#ForSafe"
     extend "^3.0.0"
     minimalist "^1.0.0"
     unzip "^0.1.11"
@@ -514,9 +513,9 @@ ecc-jsbn@~0.1.1:
     semver "^5.3.0"
     sumchecker "^2.0.1"
 
-electron-download@4.1.1:
+"electron-download@git+https://github.com/joshuef/electron-download#ForSafe":
   version "4.1.1"
-  resolved "https://registry.yarnpkg.com/electron-download/-/electron-download-4.1.1.tgz#02e69556705cc456e520f9e035556ed5a015ebe8"
+  resolved "git+https://github.com/joshuef/electron-download#b5ffcff26618010b7d78a29d3c800ddb41203dfe"
   dependencies:
     debug "^3.0.0"
     env-paths "^1.0.0"

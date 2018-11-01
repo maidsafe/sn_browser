@@ -55,6 +55,6 @@
     }
   },
   "devDependencies": {
-    "deps_downloader": "git+https://github.com/joshuef/deps_downloader#useElectronDownload"
+    "deps_downloader": "git+https://github.com/joshuef/deps_downloader#Updated"
   }
 }
