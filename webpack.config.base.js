@@ -50,10 +50,6 @@ export default {
                 }
             },
             {
-                test : /\.ejs$/,
-                use  : 'ejs-loader'
-            },
-            {
                 test : /\.global\.css$/,
                 use  : [
                     {
