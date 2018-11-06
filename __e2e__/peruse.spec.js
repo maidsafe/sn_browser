@@ -115,6 +115,42 @@ describe( 'main window', () =>
         expect( text ).toBe( 'Invalid URL: http://:invalid-url');
     } );
 
+    it( 'shows error in UI if URL resource does not exist', async () =>
+    {
+        expect.assertions(1);
+        const { client } = app;
+        await delay( 2500 );
+
+        const tabIndex = await newTab( app );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+
+        await navigateTo( app, 'example.com' );
+
+        await client.windowByIndex( tabIndex   );
+        await delay( 5500 );
+
+        const text = await client.getText( 'body' );
+        expect( text ).toBe( 'Requested public name is not found');
+    } );
+
+    it( 'shows error in UI if localhost resource does not exist', async () =>
+    {
+        expect.assertions(1);
+        const { client } = app;
+        await delay( 2500 );
+
+        const tabIndex = await newTab( app );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+
+        await navigateTo( app, 'localhost:9001' );
+
+        await client.windowByIndex( tabIndex   );
+        await delay( 5500 );
+
+        const text = await client.getText( 'body' );
+        expect( text ).toBe( 'Page Load Failed');
+    } );
+
     it( 'can go backwards', async () =>
     {
         const { client } = app;

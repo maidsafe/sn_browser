@@ -7,7 +7,7 @@ export default class Error extends Component
     static propTypes =
     {
         error : PropTypes.shape( {
-            header    : PropTypes.string,
+            header    : PropTypes.string.isRequired,
             subHeader : PropTypes.string
         } )
     }
