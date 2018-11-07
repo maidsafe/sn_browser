@@ -120,94 +120,93 @@ const installExtensions = async () =>
         .catch( console.log );
 };
 
+const obtainedAppLock = app.requestSingleInstanceLock();
 
-const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
+if ( !obtainedAppLock )
 {
-    // We expect the URI to be the last argument
-    const uri = commandLine[commandLine.length - 1];
-
-    if ( commandLine.length >= 2 && uri )
-    {
-        onReceiveUrl( store, uri );
-    }
-
-    // Someone tried to run a second instance, we should focus our window
-    if ( mainWindow )
-    {
-        if ( mainWindow.isMinimized() ) mainWindow.restore();
-        mainWindow.focus();
-    }
-} );
-
-app.on( 'ready', async () =>
+    console.log( 'This instance should quit. Ciao!' );
+    app.exit();
+}
+else
 {
-
-    if ( shouldQuit )
+    app.on( 'second-instance', ( _e, commandLine ) =>
     {
-        console.log('This instance should quit. Ciao!')
-        app.exit();
-        return;
-    }
+        // We expect the URI to be the last argument
+        const uri = commandLine[commandLine.length - 1];
 
-
-    logger.info( 'App Ready' );
-
-    onAppReady( store );
-    if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
-    {
-        await installExtensions();
-    }
-
-    if ( ( process.platform === 'linux' ) || ( process.platform === 'win32' ) )
-    {
-        const uriArg = process.argv[process.argv.length - 1];
-        if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
+        if ( commandLine.length >= 2 && uri )
         {
-            onReceiveUrl( store, uriArg );
-
-            if( mainWindow )
-            {
-                mainWindow.show();
-
-            }
-
+            onReceiveUrl( store, uri );
         }
-    }
 
-    mainWindow = openWindow( store );
+        // Someone tried to run a second instance, we should focus our window
+        if ( mainWindow )
+        {
+            if ( mainWindow.isMinimized() ) mainWindow.restore();
+            mainWindow.focus();
+        }
+    } );
 
-    // TODO: Reenable for adding Safe Network popup
-    // createTray();
-    // createSafeInfoWindow();
-
-    bgProcessWindow = await setupBackground( );
-} );
-
-app.on( 'open-url', ( e, url ) =>
-{
-    onReceiveUrl( store, url );
-
-    mainWindow.show();
-
-} );
-
-
-/**
- * Add event listeners...
- */
-
-app.on( 'window-all-closed', () =>
-{
-    logger.verbose( 'All Windows Closed!' );
-    app.dock.hide() //hide the icon
-
-    global.macAllWindowsClosed = true;
-
-    // HACK: Fix this so we can have OSX convention for closing windows.
-    // Respect the OSX convention of having the application in memory even
-    // after all windows have been closed
-    if ( process.platform !== 'darwin' )
+    app.on( 'ready', async () =>
     {
-        app.quit();
-    }
-} );
+        logger.info( 'App Ready' );
+
+        onAppReady( store );
+        if ( !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDebug )
+        {
+            await installExtensions();
+        }
+
+        if ( ( process.platform === 'linux' ) || ( process.platform === 'win32' ) )
+        {
+            const uriArg = process.argv[process.argv.length - 1];
+            if ( process.argv.length >= 2 && uriArg && ( uriArg.indexOf( 'safe' ) === 0 ) )
+            {
+                onReceiveUrl( store, uriArg );
+
+                if ( mainWindow )
+                {
+                    mainWindow.show();
+                }
+            }
+        }
+
+        mainWindow = openWindow( store );
+
+        // TODO: Reenable for adding Safe Network popup
+        // createTray();
+        // createSafeInfoWindow();
+
+        bgProcessWindow = await setupBackground( );
+    } );
+
+    app.on( 'open-url', ( e, url ) =>
+    {
+        onReceiveUrl( store, url );
+        if ( mainWindow )
+        {
+            mainWindow.show();
+        }
+    } );
+
+    /**
+     * Add event listeners...
+     */
+
+    app.on( 'window-all-closed', () =>
+    {
+        logger.verbose( 'All Windows Closed!' );
+        app.dock.hide(); // hide the icon
+
+        global.macAllWindowsClosed = true;
+
+        // HACK: Fix this so we can have OSX convention for closing windows.
+        // Respect the OSX convention of having the application in memory even
+        // after all windows have been closed
+        if ( process.platform !== 'darwin' )
+        {
+            app.quit();
+        }
+    } );
+}
+

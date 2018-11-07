@@ -44,7 +44,7 @@ const _decodeReqPool = Symbol( 'decodeReqPool' );
 */
 const genAppUri = ( str ) =>
 {
-    const urlSafeBase64 = ( new Buffer( str ) )
+    const urlSafeBase64 = ( Buffer.from( str ) )
         .toString( 'base64' )
         .replace( /\+/g, '-' ) // Convert '+' to '-'
         .replace( /\//g, '_' ) // Convert '/' to '_'

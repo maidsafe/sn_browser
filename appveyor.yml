@@ -2,7 +2,7 @@ os: unstable
 image: Visual Studio 2017
 
 environment:
-  nodejs_version: "8"
+  nodejs_version: "10"
   matrix:
     - NODE_ENV: "dev"
       win_runtime: win-x64
