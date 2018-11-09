@@ -99,18 +99,16 @@
     background-color: rgba(187, 45, 0, 0.9);
 }
 
-
-
-
 .favicon
 {
   min-width: 20px;
   max-width: 20px;
 }
 
-
-
-
+.favicon img
+{
+  max-width: 16px;
+}
 
 .activeTab
 {

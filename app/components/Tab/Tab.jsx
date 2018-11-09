@@ -88,32 +88,29 @@ export default class Tab extends Component
         pageLoaded();
     }
 
-    buildMenu = ( webview, rightClickPosition ) =>
+    buildMenu = ( webview ) =>
     {
-        if( !webview.getWebContents ) return // 'not now, as you're running jest;
+        if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
 
         contextMenu( {
-            window: webview,
-            append : ( params, browserWindow ) =>
-                {
-                    return [
+            window : webview,
+            append : ( params ) =>
+                (
+                    [
                         {
-                            label: 'Open Link in New Tab.',
-                    		visible: params.linkURL.length > 0
+                            label   : 'Open Link in New Tab.',
+                            visible : params.linkURL.length > 0
                         }
                     ]
-                },
+                ),
             showCopyImageAddress : true,
-            showInspectElement : true
+            showInspectElement   : true
         } );
     }
 
     componentDidMount()
     {
         const { webview } = this;
-        let rightClickPosition;
-
-
         const callbackSetup = () =>
         {
             if ( !webview )
@@ -380,9 +377,15 @@ export default class Tab extends Component
 
     pageFaviconUpdated( e )
     {
-        logger.silly( 'Webview: page favicon updated' );
-        // const {index, tabDataFetched} = this.props
-        // tabDataFetched(index, {webFavicon: e.favicons[0]})
+        logger.silly( 'Webview: page favicon updated: ', e );
+        const { updateTab, index } = this.props;
+
+        const tabUpdate = {
+            index,
+            favicon : e.favicons[0]
+        };
+
+        updateTab( tabUpdate );
     }
 
     didNavigate( e )

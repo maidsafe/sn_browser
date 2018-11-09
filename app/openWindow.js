@@ -67,6 +67,7 @@ const openWindow = ( store ) =>
         thickFrame        : false,
         webPreferences    :
         {
+            partition : 'persist:safe-tab'
             // preload : path.join( __dirname, 'browserPreload.js' )
         }
 

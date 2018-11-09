@@ -3,6 +3,9 @@ import tabs from 'reducers/tabs';
 import { TYPES } from 'actions/tabs_actions';
 import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import initialState from 'reducers/initialAppState';
+import { isRunningUnpacked } from 'appConstants';
+
+const favicon = isRunningUnpacked ? '../resources/favicon.ico' : '../favicon.ico';
 
 describe( 'tabs reducer', () =>
 {
@@ -11,7 +14,8 @@ describe( 'tabs reducer', () =>
         windowId     : 1,
         index        : 0,
         historyIndex : 0,
-        history      : ['safe://hello']
+        history      : ['safe://hello'],
+        favicon
     };
 
     it( 'should return the initial state', () =>
@@ -53,6 +57,7 @@ describe( 'tabs reducer', () =>
                     historyIndex : 0,
                     index        : 1,
                     history      : ['safe://another-url'],
+                    favicon
                 }
             ] );
         } );
@@ -85,7 +90,8 @@ describe( 'tabs reducer', () =>
                     historyIndex : 0,
                     index        : 2,
                     history      : ['safe://another-url'],
-                    isActiveTab  : true
+                    isActiveTab  : true,
+                    favicon
                 }
             ] );
         } );
