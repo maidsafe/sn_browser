@@ -88,6 +88,10 @@
         "to": "log.toml"
       },
       {
+        "from": "resources/favicon.ico",
+        "to": "favicon.ico"
+      },
+      {
         "from": "resources/PreloadDevVault",
         "to": "PreloadDevVault"
       },

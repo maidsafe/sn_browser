@@ -122,22 +122,25 @@ export default class TabBar extends Component
                 className={ `${tabStyleClass} ${CLASSES.TAB}` }
                 onClick={ this.handleTabClick.bind( this, tabData ) }
             >
-                
+
                 <Row verticalAlign="middle" gutters="S">
                     <Column align="left" className={ styles.favicon }>
-                      {tab.isLoading &&
-                        <Spinner size="small" />
-                      }
+                        {tab.isLoading &&
+                            <Spinner size="small" />
+                        }
+                        {!tab.isLoading && tab.favicon &&
+                            <img alt="" id="favicon-img" src={ tab.favicon } />
+                        }
                     </Column>
                     <Column className={ styles.tabText } align="left">
-                      { title || 'New Tab' }
+                        { title || 'New Tab' }
                     </Column>
                     <Column align="right" className={ styles.favicon }>
-                      <MdClose
-                          className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
-                          onClick={ this.handleTabClose.bind( this, tabData ) }
-                          title="Close"
-                      />
+                        <MdClose
+                            className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
+                            onClick={ this.handleTabClose.bind( this, tabData ) }
+                            title="Close"
+                        />
                     </Column>
                 </Row>
             </div> );
@@ -146,8 +149,6 @@ export default class TabBar extends Component
 
     render()
     {
-        const { tabs } = this.props;
-
         return (
             <div className={ styles.container }>
                 <div className={ styles.tabBar }>

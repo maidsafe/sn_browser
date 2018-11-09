@@ -5,7 +5,7 @@ import { TYPES } from 'actions/tabs_actions';
 import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
-import { CONFIG } from 'appConstants';
+import { CONFIG, isRunningUnpacked } from 'appConstants';
 import logger from 'logger';
 
 const initialState = initialAppState.tabs;
@@ -71,7 +71,8 @@ const addTab = ( state, tab ) =>
 
     const targetWindowId = tab.windowId || currentWindowId;
     const tabUrl = makeValidAddressBarUrl( tab.url || '' );
-    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length };
+    const faviconPath = isRunningUnpacked ? '../resources/favicon.ico' : '../favicon.ico';
+    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length, favicon: faviconPath };
 
     let newState = [...state];
 
