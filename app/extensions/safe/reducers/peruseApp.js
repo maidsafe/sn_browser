@@ -31,6 +31,10 @@ export default function peruseApp( state = initialState, action )
         {
             return { ...state, networkStatus: payload };
         }
+        case TYPES.SET_NETWORK_STATUS:
+        {
+            return { ...state, networkStatus: payload };
+        }
         case TYPES.SET_READ_CONFIG_STATUS:
         {
             return { ...state,
@@ -53,6 +57,18 @@ export default function peruseApp( state = initialState, action )
         {
             return { ...state,
                 isMock : payload,
+            };
+        }
+        case TYPES.ENABLE_EXPERIMENTS:
+        {
+            return { ...state,
+                experimentsEnabled : true,
+            };
+        }
+        case TYPES.DISABLE_EXPERIMENTS:
+        {
+            return { ...state,
+                experimentsEnabled : false,
             };
         }
 

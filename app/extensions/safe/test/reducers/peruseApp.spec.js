@@ -8,12 +8,10 @@ import { SAFE } from 'extensions/safe/constants';
 const safeInitialState = initialState.peruseApp;
 
 // https://github.com/facebook/jest/issues/3552
-jest.mock('extensions/safe/peruseSafeApp', () =>
-{
-    return {
+jest.mock( 'extensions/safe/peruseSafeApp', () =>
+    ( {
         getWebIds : () => []
-    }
-});
+    } ) );
 
 describe( 'Peruse App reducer', () =>
 {
@@ -27,18 +25,48 @@ describe( 'Peruse App reducer', () =>
     {
         it( 'should handle app authorisation', () =>
         {
-            const payload =   SAFE.APP_STATUS.AUTHORISING;
+            const payload = SAFE.APP_STATUS.AUTHORISING;
 
             expect(
                 peruseApp( safeInitialState, {
-                    type    : TYPES.SET_APP_STATUS,
+                    type : TYPES.SET_APP_STATUS,
                     payload
                 } )
             ).toMatchObject( {
-                appStatus     : SAFE.APP_STATUS.AUTHORISING,
-            });
+                appStatus : SAFE.APP_STATUS.AUTHORISING,
+            } );
         } );
-    });
+    } );
+
+
+    describe( 'ENABLE_EXPERIMENTS', () =>
+    {
+        it( 'should handle enabling experiments', () =>
+        {
+            expect(
+                peruseApp( safeInitialState, {
+                    type : TYPES.ENABLE_EXPERIMENTS
+                } )
+            ).toMatchObject( {
+                experimentsEnabled : true
+            } );
+        } );
+    } );
+
+
+    describe( 'DISABLE_EXPERIMENTS', () =>
+    {
+        it( 'should handle disabling experiments', () =>
+        {
+            expect(
+                peruseApp( safeInitialState, {
+                    type : TYPES.DISABLE_EXPERIMENTS
+                } )
+            ).toMatchObject( {
+                experimentsEnabled : false
+            } );
+        } );
+    } );
 
 
     describe( 'SET_NETWORK_STATUS', () =>
@@ -49,45 +77,45 @@ describe( 'Peruse App reducer', () =>
 
             expect(
                 peruseApp( safeInitialState, {
-                    type    : TYPES.SET_NETWORK_STATUS,
+                    type : TYPES.SET_NETWORK_STATUS,
                     payload
                 } )
             ).toMatchObject( {
                 networkStatus : CONFIG.NET_STATUS_CONNECTED
-            });
+            } );
         } );
-    });
+    } );
 
     describe( 'SET_SAVE_CONFIG_STATUS', () =>
     {
         it( 'should handle saving browser', () =>
         {
-            const payload =  SAFE.SAVE_STATUS.TO_SAVE;
+            const payload = SAFE.SAVE_STATUS.TO_SAVE;
 
             expect(
                 peruseApp( safeInitialState, {
-                    type    : TYPES.SET_SAVE_CONFIG_STATUS,
+                    type : TYPES.SET_SAVE_CONFIG_STATUS,
                     payload
                 } )
-            ).toMatchObject( { saveStatus : SAFE.SAVE_STATUS.TO_SAVE } );
+            ).toMatchObject( { saveStatus: SAFE.SAVE_STATUS.TO_SAVE } );
         } );
-    });
+    } );
 
 
     describe( 'RECEIVED_AUTH_RESPONSE', () =>
     {
         it( 'should handle saving browser', () =>
         {
-            const payload =  'URLofAUTHResponse';
+            const payload = 'URLofAUTHResponse';
 
             expect(
                 peruseApp( safeInitialState, {
-                    type    : TYPES.RECEIVED_AUTH_RESPONSE,
+                    type : TYPES.RECEIVED_AUTH_RESPONSE,
                     payload
                 } )
-            ).toMatchObject( { authResponseUri : payload } );
+            ).toMatchObject( { authResponseUri: payload } );
         } );
-    });
+    } );
 
 
     describe( 'SHOW_WEB_ID_DROPDOWN', () =>
@@ -96,18 +124,16 @@ describe( 'Peruse App reducer', () =>
         {
             const payload = true;
             const newState = peruseApp( safeInitialState, {
-                type    : TYPES.SHOW_WEB_ID_DROPDOWN,
+                type : TYPES.SHOW_WEB_ID_DROPDOWN,
                 payload
             } );
-            expect( newState.showingWebIdDropdown ).toBe( true )
+            expect( newState.showingWebIdDropdown ).toBe( true );
 
             const newState2 = peruseApp( safeInitialState, {
                 type    : TYPES.SHOW_WEB_ID_DROPDOWN,
-                payload: false
+                payload : false
             } );
-            expect( newState2.showingWebIdDropdown ).toBe( false)
-
+            expect( newState2.showingWebIdDropdown ).toBe( false );
         } );
-    });
-
-})
+    } );
+} );
