@@ -9,6 +9,10 @@ export const TYPES = {
     SET_IS_MOCK    : 'SET_IS_MOCK',
 
     //webId
+    ENABLE_EXPERIMENTS : 'ENABLE_EXPERIMENTS',
+    DISBALE_EXPERIMENTS : 'DISBALE_EXPERIMENTS',
+
+    //webId
     GET_AVAILABLE_WEB_IDS : 'GET_AVAILABLE_WEB_IDS',
     SET_AVAILABLE_WEB_IDS : 'SET_AVAILABLE_WEB_IDS',
     FETCHING_WEB_IDS      : 'FETCHING_WEB_IDS',
@@ -31,6 +35,9 @@ export const {
     setNetworkStatus,
     setIsMock,
 
+    enableExperiments,
+    disableExperiments,
+
     setAvailableWebIds,
     fetchingWebIds,
 
@@ -48,6 +55,9 @@ export const {
     TYPES.SET_APP_STATUS,
     TYPES.SET_NETWORK_STATUS,
     TYPES.SET_IS_MOCK,
+
+    TYPES.ENABLE_EXPERIMENTS,
+    TYPES.DISBALE_EXPERIMENTS,
 
     TYPES.SET_AVAILABLE_WEB_IDS,
     TYPES.FETCHING_WEB_IDS,

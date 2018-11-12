@@ -3,13 +3,11 @@ import logger from 'logger';
 import {
     wrapBrowser as safeWrapBrowser
 } from 'extensions/safe/components/wrapBrowser';
-import {
-    wrapAddressbarButtons as safeWrapAddressbarButtons
-} from 'extensions/safe/components/wrapAddressBar';
+import safeWrapAddressbarButtons from 'extensions/safe/components/wrapAddressBar';
 
 
-const allBrowserExtensions = [ safeWrapBrowser ];
-const allAddressBarButtonExtensions = [ safeWrapAddressbarButtons ];
+const allBrowserExtensions = [safeWrapBrowser];
+const allAddressBarButtonExtensions = [safeWrapAddressbarButtons];
 
 /**
  * Wrap the browser with a HOC or replace it entirely.
@@ -21,17 +19,25 @@ const allAddressBarButtonExtensions = [ safeWrapAddressbarButtons ];
  */
 export const wrapBrowserComponent = ( Browser ) =>
 {
-    logger.verbose('Wrapping browser');
-
-    let WrappedBrowser = Browser;
-
-    allBrowserExtensions.forEach( wrapper =>
+    try
     {
-        WrappedBrowser = wrapper( Browser );
-    } );
+        logger.verbose( 'Wrapping browser' );
 
-    return WrappedBrowser;
-}
+        let WrappedBrowser = Browser;
+
+        allBrowserExtensions.forEach( wrapper =>
+        {
+            WrappedBrowser = wrapper( Browser );
+        } );
+
+        return WrappedBrowser;
+    }
+    catch ( e )
+    {
+        console.error( 'Problem with extension wrapping of the Browser component' );
+        throw new Error( e );
+    }
+};
 
 /**
  * Wrap the addressbar component or replace it entirely.
@@ -43,13 +49,21 @@ export const wrapBrowserComponent = ( Browser ) =>
  */
 export const wrapAddressBarButtonsLHS = ( AddressBar ) =>
 {
-    logger.verbose('Wrapping Address bar buttons LHS');
-    let WrappedAddressBarButtons = AddressBar;
-
-    allAddressBarButtonExtensions.forEach( wrapper =>
+    try
     {
-        WrappedAddressBarButtons = wrapper( AddressBar );
-    } );
+        logger.verbose( 'Wrapping Address bar buttons LHS' );
+        let WrappedAddressBarButtons = AddressBar;
 
-    return WrappedAddressBarButtons;
-}
+        allAddressBarButtonExtensions.forEach( wrapper =>
+        {
+            WrappedAddressBarButtons = wrapper( AddressBar );
+        } );
+
+        return WrappedAddressBarButtons;
+    }
+    catch ( e )
+    {
+        console.error( 'Problem with extension wrapping of Addressbar Buttons component' );
+        throw new Error( e );
+    }
+};
