@@ -416,13 +416,13 @@ const onSharedMDataDecision = ( data, isAllowed ) =>
             reqQ.req.error = err;
             logger.error( errConst.SHAREMD_DECISION_RESP.msg( err ) );
 
-            if ( !allAuthCallBacks[reqQ.req.id] )
+            if ( allAuthCallBacks[reqQ.req.id] )
             {
-                allAuthCallBacks[reqQ.req.id].reject( res );
+                allAuthCallBacks[reqQ.req.id].reject( err );
                 delete allAuthCallBacks[reqQ.req.id];
-                reqQ.next();
             }
-
+            
+            reqQ.next();
         } );
 };
 
