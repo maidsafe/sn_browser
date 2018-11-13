@@ -5,7 +5,7 @@ import os from 'os';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions }  from './extensions';
-
+import { isRunningSpectronTestProcess,isRunningDebug } from 'appConstants';
 import logger from 'logger';
 import {
     addTab,
@@ -93,6 +93,11 @@ const openWindow = ( store ) =>
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
+        
+        if ( isRunningDebug && !isRunningSpectronTestProcess )
+        {
+            mainWindow.openDevTools({ mode:'undocked' });
+        }
 
         const webContentsId = mainWindow.webContents.id;
         if ( browserWindowArray.length === 1 )
