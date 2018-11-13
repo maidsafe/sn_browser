@@ -6,48 +6,77 @@ import { CLASSES } from 'appConstants';
 // import { Text, Column } from 'nessie-ui';
 
 // import './authRequest.css';
+//
+const createAppContainersElement = ( containers ) =>
+    (
+        <div key="req_containers_parent_div">
+            <a key="info_box_expander" className="info_box_expander">Details</a>
+            <div key="info_box_details" className="info_box_details">
+                <p className="blockText" key="requested_containers">With access to the following containers:</p>
+                {
+                    containers.map( ( container, i ) =>
+                        (
+                            <div key={ `${container.cont_name}_parent_${i}` }>
+                                <p className='blockText' key={ container.cont_name }>{container.cont_name}</p>
+                                <ul key={ `${container.cont_name}_ul` }>
+                                    {
+                                        Object.keys( container.access ).filter( ( permission ) => container.access[permission] ).map( ( permission ) => <li key={ `${container.cont_name}_${permission}` }>{permission}</li> )
+                                    }
+                                </ul>
+                            </div>
+                        ) )
+                }
+            </div>
+        </div>
+    );
 
 export const createAuthRequestElement = ( authReqData ) =>
 {
     let reqType = 'authReq';
-    let reqTypeText = ' requests Auth Permission';
+    let reqTypeText = ' requests authorisation.';
+    if ( authReqData.authReq && authReqData.isAuthorised )
+    {
+        reqTypeText = ' is asking to be reauthorised, since you previously granted authorisation.';
+    }
     if ( authReqData.contReq )
     {
         reqType = 'contReq';
-        reqTypeText = ' requests Container Access';
+        reqTypeText = ' requests container access.';
     }
 
     if ( authReqData.mDataReq )
     {
         reqType = 'mDataReq';
-        reqTypeText = ' requests mData Access';
+        reqTypeText = ' requests to share access to data created for you by another app.';
     }
 
     const ifReqWithContainers = () =>
     {
+        if ( authReqData.isAuthorised &&
+             authReqData.previouslyAuthorisedContainers &&
+             authReqData.previouslyAuthorisedContainers.length )
+        {
+            return createAppContainersElement( authReqData.previouslyAuthorisedContainers );
+        }
         if ( authReqData[reqType].containers && authReqData[reqType].containers.length )
         {
-            return (
-                <div key="req_containers_parent_div">
-                    <a key="info_box_expander" className="info_box_expander">Details</a>
-                    <div key="info_box_details" className="info_box_details">
-                        <p className="blockText" key="requested_containers">Requested containers:</p>
-                        {
-                            authReqData[reqType].containers.map( ( container, i ) =>
-                                (
-                                    <div key={ `${container.cont_name}_parent_${i}` }>
-                                        <p className='blockText' key={ container.cont_name }>{container.cont_name}</p>
-                                        <ul key={ `${container.cont_name}_ul` }>
-                                            {
-                                                Object.keys( container.access ).filter( ( permission ) => container.access[permission] ).map( ( permission ) => <li key={ `${container.cont_name}_${permission}` }>{permission}</li> )
-                                            }
-                                        </ul>
-                                    </div>
-                                ) )
-                        }
-                    </div>
-                </div>
-            );
+            logger.info( 'auth req containers: ', authReqData[reqType].containers );
+            const containers = authReqData[reqType].containers.slice( 0 );
+            if ( authReqData[reqType].app_container )
+            {
+                const ownContainer = {
+                    access : {
+                        delete             : true,
+                        insert             : true,
+                        manage_permissions : true,
+                        read               : true,
+                        update             : true
+                    },
+                    cont_name : `apps/${authReqData[reqType].app.id}`
+                };
+                containers.push( ownContainer );
+            }
+            return createAppContainersElement( containers );
         }
         return ( <div key="empty_containers_req" /> );
     };
