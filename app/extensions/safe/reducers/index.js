@@ -1,11 +1,11 @@
 // @flow
 import authenticator from './authenticator';
-import peruseApp from './peruseApp';
+import safeBrowserApp from './safeBrowserApp';
 import webFetch from './webFetch';
 
 const safeReducers = {
     authenticator,
-    peruseApp,
+    safeBrowserApp,
     webFetch
 };
 

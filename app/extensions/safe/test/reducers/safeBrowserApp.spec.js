@@ -1,23 +1,23 @@
 /* eslint-disable func-names */
-import peruseApp from 'extensions/safe/reducers/peruseApp';
-import { TYPES } from 'extensions/safe/actions/peruse_actions';
+import safeBrowserApp from 'extensions/safe/reducers/safeBrowserApp';
+import { TYPES } from 'extensions/safe/actions/safeBrowserApplication_actions';
 import initialState from 'extensions/safe/reducers/initialAppState';
 import { CONFIG } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 
-const safeInitialState = initialState.peruseApp;
+const safeInitialState = initialState.safeBrowserApp;
 
 // https://github.com/facebook/jest/issues/3552
-jest.mock( 'extensions/safe/peruseSafeApp', () =>
+jest.mock( 'extensions/safe/safeBrowserApplication', () =>
     ( {
         getWebIds : () => []
     } ) );
 
-describe( 'Peruse App reducer', () =>
+describe( 'SafeBrowserApp App reducer', () =>
 {
     it( 'should return the initial state', () =>
     {
-        expect( peruseApp( undefined, {} ) ).toEqual( initialState.peruseApp );
+        expect( safeBrowserApp( undefined, {} ) ).toEqual( initialState.safeBrowserApp );
     } );
 
 
@@ -28,7 +28,7 @@ describe( 'Peruse App reducer', () =>
             const payload = SAFE.APP_STATUS.AUTHORISING;
 
             expect(
-                peruseApp( safeInitialState, {
+                safeBrowserApp( safeInitialState, {
                     type : TYPES.SET_APP_STATUS,
                     payload
                 } )
@@ -44,7 +44,7 @@ describe( 'Peruse App reducer', () =>
         it( 'should handle enabling experiments', () =>
         {
             expect(
-                peruseApp( safeInitialState, {
+                safeBrowserApp( safeInitialState, {
                     type : TYPES.ENABLE_EXPERIMENTS
                 } )
             ).toMatchObject( {
@@ -59,7 +59,7 @@ describe( 'Peruse App reducer', () =>
         it( 'should handle disabling experiments', () =>
         {
             expect(
-                peruseApp( safeInitialState, {
+                safeBrowserApp( safeInitialState, {
                     type : TYPES.DISABLE_EXPERIMENTS
                 } )
             ).toMatchObject( {
@@ -76,7 +76,7 @@ describe( 'Peruse App reducer', () =>
             const payload = CONFIG.NET_STATUS_CONNECTED;
 
             expect(
-                peruseApp( safeInitialState, {
+                safeBrowserApp( safeInitialState, {
                     type : TYPES.SET_NETWORK_STATUS,
                     payload
                 } )
@@ -93,7 +93,7 @@ describe( 'Peruse App reducer', () =>
             const payload = SAFE.SAVE_STATUS.TO_SAVE;
 
             expect(
-                peruseApp( safeInitialState, {
+                safeBrowserApp( safeInitialState, {
                     type : TYPES.SET_SAVE_CONFIG_STATUS,
                     payload
                 } )
@@ -109,7 +109,7 @@ describe( 'Peruse App reducer', () =>
             const payload = 'URLofAUTHResponse';
 
             expect(
-                peruseApp( safeInitialState, {
+                safeBrowserApp( safeInitialState, {
                     type : TYPES.RECEIVED_AUTH_RESPONSE,
                     payload
                 } )
@@ -123,13 +123,13 @@ describe( 'Peruse App reducer', () =>
         it( 'should handle updating the icon status', () =>
         {
             const payload = true;
-            const newState = peruseApp( safeInitialState, {
+            const newState = safeBrowserApp( safeInitialState, {
                 type : TYPES.SHOW_WEB_ID_DROPDOWN,
                 payload
             } );
             expect( newState.showingWebIdDropdown ).toBe( true );
 
-            const newState2 = peruseApp( safeInitialState, {
+            const newState2 = safeBrowserApp( safeInitialState, {
                 type    : TYPES.SHOW_WEB_ID_DROPDOWN,
                 payload : false
             } );
