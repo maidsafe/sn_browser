@@ -97,3 +97,37 @@ export const generateResponseStr = (data) => {
   responseStr += `--${boundaryStr}--`;
   return responseStr;
 };
+
+
+export function parseSafeAuthUrl( safeUrl, isClient )
+{
+    if ( typeof safeUrl !== 'string' )
+    {
+        throw new Error( 'URl should be a string to parse' );
+    }
+
+    const safeAuthUrl = {};
+    const parsedUrl = url.parse( safeUrl );
+
+    if ( !( /^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test( parsedUrl.hostname ) ) )
+    {
+        return { action: 'auth' };
+    }
+
+    safeAuthUrl.protocol = parsedUrl.protocol;
+    safeAuthUrl.action = parsedUrl.hostname;
+
+    const data = parsedUrl.pathname ? parsedUrl.pathname.split( '/' ) : null;
+    if ( !isClient && !!data )
+    {
+        safeAuthUrl.appId = data[1];
+        safeAuthUrl.payload = data[2];
+    }
+    else
+    {
+        safeAuthUrl.appId = parsedUrl.protocol.split( '-' ).slice( -1 )[0];
+        safeAuthUrl.payload = null;
+    }
+    safeAuthUrl.search = parsedUrl.search;
+    return safeAuthUrl;
+}

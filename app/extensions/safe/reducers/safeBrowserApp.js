@@ -1,14 +1,12 @@
 // @flow
-import { TYPES } from 'extensions/safe/actions/peruse_actions';
+import { TYPES } from 'extensions/safe/actions/safeBrowserApplication_actions';
 import initialAppState from './initialAppState';
 import logger from 'logger';
 
-import { CONFIG } from 'appConstants';
-import { SAFE, startedRunningMock } from 'extensions/safe/constants';
 
-const initialState = initialAppState.peruseApp;
+const initialState = initialAppState.safeBrowserApp;
 
-export default function peruseApp( state = initialState, action )
+export default function safeBrowserApp( state = initialState, action )
 {
     if ( action.error )
     {

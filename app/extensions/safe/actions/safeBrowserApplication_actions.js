@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import { getWebIds as getWebIdsFromSafe } from 'extensions/safe/peruseSafeApp';
+import { getWebIds as getWebIdsFromSafe } from 'extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
 
 export const TYPES = {

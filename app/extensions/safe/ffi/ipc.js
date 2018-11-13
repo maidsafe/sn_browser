@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
-import { getPeruseAuthReqUri, authFromInternalResponse, replyToRemoteCallFromAuth } from '../network';
-import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
+// import { authFromInternalResponse } from 'extensions/safe/safeBrowserApplication/authentication/auth';
+import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 import * as notificationActions from 'actions/notification_actions';
 import i18n from 'i18n';
@@ -176,26 +176,7 @@ class ReqQueue
                 return;
             }
 
-
-            // if ( ipcEvent )
-            // {
-            //     ipcEvent.sender.send( self.resChannelName, self.req );
-            // }
-
-            // TODO. Use openUri and parse received url once decoded to decide app
-            // OR: upgrade connection
-            if ( this.req.uri === getPeruseAuthReqUri() )
-            {
-                authFromInternalResponse( parseResUrl( res ) );
-            }
-            else if( this.req.type === CLIENT_TYPES.WEB )
-            {
-                replyToRemoteCallFromAuth( this.req );
-            }
-            else
-            {
-                openExternal( res );
-            }
+            openExternal( res );
 
             self.next();
         } ).catch( ( err ) =>
@@ -210,7 +191,7 @@ class ReqQueue
             // TODO: Setup proper rejection from when unauthed.
             if ( bgStore )
             {
-                bgStore.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
+                bgStore.dispatch( safeBrowserAppActions.receivedAuthResponse( err.message ) );
             }
 
             if ( ipcEvent )

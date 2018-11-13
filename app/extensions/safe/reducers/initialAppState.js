@@ -18,7 +18,7 @@ const initialState = {
         // libErrPopup: false
 
     },
-    peruseApp : {
+    safeBrowserApp : {
         appStatus            : null,
         networkStatus        : null,
         app                  : null,

@@ -15,7 +15,7 @@ class WebIdDropdown extends Component
 {
     static defaultProps =
     {
-        peruseApp : {
+        safeBrowserApp : {
             webIds : []
         }
     }
@@ -51,10 +51,10 @@ class WebIdDropdown extends Component
         this.hoverTime = new Date().getTime();
         this.isMouseOverIdButton = true;
 
-        const { getAvailableWebIds, peruseApp } = this.props;
-        const { isFetchingWebIds } = peruseApp;
+        const { getAvailableWebIds, safeBrowserApp } = this.props;
+        const { isFetchingWebIds } = safeBrowserApp;
 
-        if ( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED && !isFetchingWebIds )
+        if ( safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISED && !isFetchingWebIds )
         {
             this.debouncedGetWebIds();
         }
@@ -105,7 +105,7 @@ class WebIdDropdown extends Component
 
     render()
     {
-        const { peruseApp, activeTab } = this.props;
+        const { safeBrowserApp, activeTab } = this.props;
         const {
             showingWebIdDropdown
             , webIds
@@ -113,7 +113,7 @@ class WebIdDropdown extends Component
             , appStatus
             , networkStatus
             , isFetchingWebIds
-        } = peruseApp;
+        } = safeBrowserApp;
 
         const activeWebId = activeTab.webId || {};
 

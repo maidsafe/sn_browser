@@ -1,8 +1,8 @@
 import logger from 'logger';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
 
-import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
-import { initAnon } from 'extensions/safe/network';
+import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
+import { initSafeBrowserApp } from 'extensions/safe/safeBrowserApplication';
 import { getLibStatus } from 'extensions/safe/auth-api/authFuncs';
 
 import * as ffiLoader from './auth-api/ffiLoader';
@@ -13,9 +13,9 @@ import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 
-import { setIsMock } from 'extensions/safe/actions/peruse_actions';
+import { setIsMock } from 'extensions/safe/actions/safeBrowserApplication_actions';
 import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
-import handlePeruseStoreChanges from './peruseSafeApp';
+import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
 
 import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
@@ -24,7 +24,7 @@ import { addTab } from 'actions/tabs_actions';
 import safeReducers from 'extensions/safe/reducers';
 import webviewPreload from 'extensions/safe/webviewPreload';
 import { handleRemoteCalls, remoteCallApis } from 'extensions/safe/handleRemoteCalls';
-import * as PeruseActions from 'extensions/safe/actions/peruse_actions';
+import * as PeruseActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 
 import { addFileMenus } from 'extensions/safe/menus';
 import { urlIsAllowedBySafe as urlIsValid } from 'extensions/safe/utils/safeHelpers';
@@ -129,10 +129,11 @@ const onInitBgProcess = async ( store ) =>
             logger.verbose( 'Authenticator lib status: ', authLibStatus );
             prevAuthLibStatus = authLibStatus;
             store.dispatch( authenticatorActions.setAuthLibStatus( authLibStatus ) );
-            initAnon( store );
+
+            initSafeBrowserApp( store );
         }
 
-        handlePeruseStoreChanges( store );
+        handleSafeBrowserStoreChanges( store );
     });
 
     const mainAppInfo = APP_INFO.info;
@@ -216,7 +217,7 @@ const onReceiveUrl = ( store, url ) =>
     else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
     {
         logger.verbose('Handling safe-???? url')
-        store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
+        store.dispatch( safeBrowserAppActions.receivedAuthResponse( url ) );
     }
 
 
@@ -235,7 +236,6 @@ export default {
     getRemoteCallApis,
     actionsForBrowser,
     addReducersToPeruse,
-    getRemoteCallApis,
     onInitBgProcess,
     onReceiveUrl,
     onRemoteCallInBgProcess,

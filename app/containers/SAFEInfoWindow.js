@@ -30,10 +30,10 @@ class SAFEInfoWindow extends Component
 
     render()
     {
-        const { peruseApp, clearNotification, notifications } = this.props;
+        const { safeBrowserApp, clearNotification, notifications } = this.props;
         const notification = notifications[0];
 
-        const loggedIn = peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_IN;
+        const loggedIn = safeBrowserApp.appStatus === SAFE.NETWORK_STATE.LOGGED_IN;
 
         return (
             <div>
@@ -76,7 +76,7 @@ function mapStateToProps( state )
     return {
         notifications : state.notifications,
         ui            : state.ui,
-        peruseApp     : state.peruseApp,
+        safeBrowserApp     : state.safeBrowserApp,
     };
 }
 

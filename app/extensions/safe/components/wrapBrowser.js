@@ -56,8 +56,8 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
       }
 
       render() {
-          const { peruseApp } = this.props;
-          const isMock = peruseApp ? peruseApp.isMock : false;
+          const { safeBrowserApp } = this.props;
+          const isMock = safeBrowserApp ? safeBrowserApp.isMock : false;
 
           return (
               <div style={browserContainer}>

@@ -16,17 +16,17 @@ const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} )
     {
         static defaultProps =
         {
-            peruseApp : {
+            safeBrowserApp : {
                 webIds : []
             }
         }
 
         handleExperimentalToggleClick = ( webId ) =>
         {
-            const { enableExperiments, disableExperiments, peruseApp } = this.props;
-            const { experimentsEnabled } = peruseApp;
+            const { enableExperiments, disableExperiments, safeBrowserApp } = this.props;
+            const { experimentsEnabled } = safeBrowserApp;
 
-            if( experimentsEnabled )
+            if ( experimentsEnabled )
             {
                 disableExperiments();
                 return;
@@ -37,10 +37,10 @@ const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} )
 
         render()
         {
-            const { peruseApp, activeTab } = this.props;
+            const { safeBrowserApp, activeTab } = this.props;
             const {
                 experimentsEnabled
-            } = peruseApp;
+            } = safeBrowserApp;
 
             return (
                 <Grid gutters="M">
@@ -60,9 +60,9 @@ const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} )
                         {
                             experimentsEnabled &&
                             <WebIdDropdown
-                                peruseApp ={ peruseApp }
-                                activeTab = { activeTab }
-                                />
+                                safeBrowserApp={ safeBrowserApp }
+                                activeTab={ activeTab }
+                            />
                         }
                     </Column>
 

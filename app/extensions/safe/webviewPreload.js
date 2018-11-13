@@ -68,7 +68,7 @@ export const setupSafeAPIs = ( store, win = window ) =>
             joinSchemes    : false,
             libPath        : CONFIG.SAFE_NODE_LIB_PATH,
             configPath     : null,
-            forceUseMock   : store.getState().peruseApp.isMock
+            forceUseMock   : store.getState().safeBrowserApp.isMock
         };
 
         const app = await safe.initialiseApp( appInfo, netStateCallback, optionsToUse );
