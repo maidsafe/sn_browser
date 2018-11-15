@@ -29,6 +29,8 @@ class WebIdDropdown extends Component
         if ( !getAvailableWebIds ) return;
 
         this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
+
+        console.log('construction of webIdDroppppper', this.debouncedGetWebIds );
     }
 
     handleIdClick = ( webId ) =>

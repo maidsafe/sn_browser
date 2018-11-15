@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import { getWebIds as getWebIdsFromSafe } from 'extensions/safe/safeBrowserApplication/webIds';
+import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
 
 export const TYPES = {
@@ -10,7 +10,7 @@ export const TYPES = {
 
     //webId
     ENABLE_EXPERIMENTS : 'ENABLE_EXPERIMENTS',
-    DISBALE_EXPERIMENTS : 'DISBALE_EXPERIMENTS',
+    DISABLE_EXPERIMENTS : 'DISABLE_EXPERIMENTS',
 
     //webId
     GET_AVAILABLE_WEB_IDS : 'GET_AVAILABLE_WEB_IDS',
@@ -57,7 +57,7 @@ export const {
     TYPES.SET_IS_MOCK,
 
     TYPES.ENABLE_EXPERIMENTS,
-    TYPES.DISBALE_EXPERIMENTS,
+    TYPES.DISABLE_EXPERIMENTS,
 
     TYPES.SET_AVAILABLE_WEB_IDS,
     TYPES.FETCHING_WEB_IDS,

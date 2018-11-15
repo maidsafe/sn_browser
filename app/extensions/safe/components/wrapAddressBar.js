@@ -21,7 +21,7 @@ const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} )
             }
         }
 
-        handleExperimentalToggleClick = ( webId ) =>
+        handleExperimentalToggleClick = ( ) =>
         {
             const { enableExperiments, disableExperiments, safeBrowserApp } = this.props;
             const { experimentsEnabled } = safeBrowserApp;
@@ -60,8 +60,7 @@ const wrapAddressbarButtons = ( AddressBarButtons, extensionFunctionality = {} )
                         {
                             experimentsEnabled &&
                             <WebIdDropdown
-                                safeBrowserApp={ safeBrowserApp }
-                                activeTab={ activeTab }
+                                { ...this.props }
                             />
                         }
                     </Column>

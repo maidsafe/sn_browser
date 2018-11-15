@@ -490,6 +490,7 @@ export default class Tab extends Component
         } );
     }
 
+    // TODO Move this functinoality to extensions
     updateTheIdInWebview = ( newWebId ) =>
     {
         const { updateTab, index, webId } = this.props;
@@ -504,6 +505,10 @@ export default class Tab extends Component
         const setupEventEmitter = `
             webIdUpdater = () =>
             {
+                // check for experiments set...
+                if( ! safeExperimentsEnabled )
+                    return;
+
                 console.warn(
                     \`%cSAFE Browser Experimental Feature
 %cThe webIdEventEmitter and window.currentWebId are experimental features.
@@ -534,10 +539,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
             webIdUpdater();
         `;
 
-        // const updateTheIdInWebview = () =>
-        // {
         webview.executeJavaScript( setupEventEmitter )
-        // }
 
     }
 
@@ -626,11 +628,11 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         const url = addTrailingSlashIfNeeded( input );
         logger.silly( 'Webview: loading url:', url );
 
-        if ( !urlHasChanged( this.state.browserState.url, url) )
-        {
-            logger.verbose( 'not loading URL as it has not changed');
-            return;
-        }
+        // if ( !urlHasChanged( this.state.browserState.url, url) )
+        // {
+        //     logger.verbose( 'not loading URL as it has not changed');
+        //     return;
+        // }
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );

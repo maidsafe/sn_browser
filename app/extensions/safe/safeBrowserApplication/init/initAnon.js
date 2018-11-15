@@ -19,18 +19,15 @@ export const getSafeBrowserUnauthedReqUri = () => browserAuthReqUri;
 
 let safeBrowserAppObject;
 
-export const initAnon = async ( passedStore ) =>
+export const initAnon = async ( passedStore, options ) =>
 {
-    const store = passedStore;
-
-    const isMock = passedStore.getState().safeBrowserApp.isMock;
-
     const appOptions = {
-        libPath        : CONFIG.SAFE_NODE_LIB_PATH,
-        registerScheme : false,
-        joinSchemes    : [PROTOCOLS.SAFE],
-        configPath     : CONFIG.CONFIG_PATH,
-        forceUseMock   : isMock
+        libPath                : CONFIG.SAFE_NODE_LIB_PATH,
+        registerScheme         : false,
+        joinSchemes            : [PROTOCOLS.SAFE],
+        configPath             : CONFIG.CONFIG_PATH,
+        forceUseMock           : options.forceUseMock,
+        enableExperimentalApis : options.enableExperimentalApis
     };
 
 
@@ -39,7 +36,7 @@ export const initAnon = async ( passedStore ) =>
     {
         // does it matter if we override?
         safeBrowserAppObject =
-            await initialiseApp( APP_INFO.info, onNetworkStateChange( store ), appOptions );
+            await initialiseApp( APP_INFO.info, onNetworkStateChange( passedStore ), appOptions );
 
         const authReq = await safeBrowserAppObject.auth.genConnUri( {} );
         const authType = parseSafeAuthUrl( authReq.uri );
@@ -48,10 +45,10 @@ export const initAnon = async ( passedStore ) =>
 
         if ( authType.action === 'auth' )
         {
-            handleAuthentication( store, authReq );
+            handleAuthentication( passedStore, authReq );
         }
 
-        console.log('The application has returned!', safeBrowserAppObject)
+        console.log( 'The application has returned!', safeBrowserAppObject );
 
         return safeBrowserAppObject;
     }

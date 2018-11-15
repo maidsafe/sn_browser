@@ -240,7 +240,7 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
-		    closeTab={ closeTab }
+		            closeTab={ closeTab }
                     key={ 4 }
                     addTab={ addTab }
                     updateActiveTab={ updateActiveTab }

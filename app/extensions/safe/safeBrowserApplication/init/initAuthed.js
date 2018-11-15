@@ -4,7 +4,6 @@ import onNetworkStateChange from 'extensions/safe/safeBrowserApplication/init/ne
 import {
     APP_INFO,
     CONFIG,
-    startedRunningMock,
 } from 'appConstants';
 
 import logger from 'logger';
@@ -17,19 +16,16 @@ import { ipcRenderer } from 'electron';
  */
 const initAuthedApplication = async ( passedStore, options ) =>
 {
-    const safeBrowserAppState = passedStore.getState().safeBrowserApp;
-
     logger.verbose( 'Requesting safeBrowserApp auth.', process.mainModule.filename );
     let safeBrowserAppObject;
 
     try
     {
-        const isMock = safeBrowserAppState.isMock;
-        logger.info('request peruse app authhhh, isMock???', isMock, startedRunningMock)
         safeBrowserAppObject =
             await initialiseApp( APP_INFO.info, onNetworkStateChange( passedStore ), {
-                libPath      : CONFIG.SAFE_NODE_LIB_PATH,
-                forceUseMock : isMock || startedRunningMock
+                libPath                : CONFIG.SAFE_NODE_LIB_PATH,
+                forceUseMock           : options.forceUseMock,
+                enableExperimentalApis : options.enableExperimentalApis
             } );
 
         const authReq =
@@ -53,7 +49,7 @@ const initAuthedApplication = async ( passedStore, options ) =>
     }
     catch ( err )
     {
-        logger.error( 'Auth init failed',err );
+        logger.error( 'Auth init failed', err );
         throw err;
     }
 };
