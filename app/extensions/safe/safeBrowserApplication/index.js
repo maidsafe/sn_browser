@@ -8,6 +8,7 @@ import {
 
 import {
     isCI,
+    startedRunningMock,
     isRunningSpectronTestProcessingPackagedApp
 } from 'appConstants';
 
@@ -81,24 +82,28 @@ export const handleSafeBrowserStoreChanges = ( store ) =>
 };
 
 
-const defaultSafeBrowserAppInitOptions = {
-    enableExperimentalApis : false,
-    auth                   : false,
-    useMock                : false
-};
-
 /**
  * Everything we need to do to start the SafeBrowser App for fetching at least.
  * @param  {object} passedStore redux store
  */
 export const initSafeBrowserApp =
-    async ( passedStore, options = defaultSafeBrowserAppInitOptions ) =>
+    async ( passedStore, authorise = false ) =>
     {
-    // TODO: here check store and what is desired from a connection!
+        const defaultOptions = {
+            enableExperimentalApis : false,
+            forceUseMock           : startedRunningMock
+        };
+
+        const safeBrowserAppState = passedStore.getState().safeBrowserApp;
+        const isMock = safeBrowserAppState.isMock;
+
+        const options = { ...defaultOptions, forceUseMock: isMock };
+
+        // TODO: here check store and what is desired from a connection!
         logger.info( 'Initialising Safe Browser App with options:', options );
         try
         {
-            if ( options && options.auth )
+            if ( authorise )
             {
                 safeBrowserAppObject = await initAuthedApplication( passedStore, options );
             }
@@ -109,7 +114,7 @@ export const initSafeBrowserApp =
         }
         catch ( e )
         {
-            //denied authentication is handled in `authFromStoreResponse`
+            // denied authentication is handled in `authFromStoreResponse`
 
             console.error( e );
             throw new Error( 'Safe Browser init failed' );
@@ -152,7 +157,7 @@ const authFromStoreResponse = async ( res, store ) =>
         urisUnderAuth.push( res );
         safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
 
-        if ( store )
+        if ( safeBrowserAppObject.auth.registered )
         {
             store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
         }
@@ -220,10 +225,10 @@ const manageAuthorisationActions = async ( store ) =>
     }
 
     // update check for auth state.
-    if( prevSafeBrowserAppAuthState !== safeBrowserAppIsAuthed() )
+    if ( prevSafeBrowserAppAuthState !== safeBrowserAppIsAuthed() )
     {
         // if it was authed...
-        if( prevSafeBrowserAppAuthState )
+        if ( prevSafeBrowserAppAuthState )
         {
             // start an anonymous app
             initSafeBrowserApp( store );
