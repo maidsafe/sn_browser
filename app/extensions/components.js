@@ -3,12 +3,14 @@ import logger from 'logger';
 import {
     wrapBrowser as safeWrapBrowser
 } from 'extensions/safe/components/wrapBrowser';
-import safeWrapAddressBarButtons from 'extensions/safe/components/wrapAddressBarLHSButtons';
+import safeWrapAddressBarButtonsLHS from 'extensions/safe/components/wrapAddressBarButtonsLHS';
+import safeWrapAddressBarButtonsRHS from 'extensions/safe/components/wrapAddressBarButtonsRHS';
 import safeWrapAddressBarInput from 'extensions/safe/components/wrapAddressBarInput';
 
 
 const allBrowserExtensions = [safeWrapBrowser];
-const allAddressBarButtonExtensions = [safeWrapAddressBarButtons];
+const allAddressBarButtonLHSExtensions = [safeWrapAddressBarButtonsLHS];
+const allAddressBarButtonRHSExtensions = [safeWrapAddressBarButtonsRHS];
 const allAddressBarInputExtensions = [safeWrapAddressBarInput];
 
 /**
@@ -49,23 +51,51 @@ export const wrapBrowserComponent = ( Browser ) =>
  * @param  {React Component} AddressBar AddressBar react component
  * @param  {React Component} AddressBar AddressBar react component
  */
-export const wrapAddressBarButtonsLHS = ( AddressBar ) =>
+export const wrapAddressBarButtonsLHS = ( Buttons ) =>
 {
     try
     {
         logger.verbose( 'Wrapping Address bar buttons LHS' );
-        let WrappedAddressBarButtons = AddressBar;
+        let WrappedAddressBarButtonsLHS = Buttons;
 
-        allAddressBarButtonExtensions.forEach( wrapper =>
+        allAddressBarButtonLHSExtensions.forEach( wrapper =>
         {
-            WrappedAddressBarButtons = wrapper( AddressBar );
+            WrappedAddressBarButtonsLHS = wrapper( Buttons );
         } );
 
-        return WrappedAddressBarButtons;
+        return WrappedAddressBarButtonsLHS;
     }
     catch ( e )
     {
         console.error( 'Problem with extension wrapping of Addressbar Buttons component' );
+        throw new Error( e );
+    }
+};
+/**
+ * Wrap the addressbar component or replace it entirely.
+ *
+ * This is separate to the extensions/index file to prevent pulling in libs which will break tests
+ *
+ * @param  {React Component} AddressBar AddressBar react component
+ * @param  {React Component} AddressBar AddressBar react component
+ */
+export const wrapAddressBarButtonsRHS = ( Buttons ) =>
+{
+    try
+    {
+        logger.verbose( 'Wrapping Address bar buttons RHS' );
+        let WrappedAddressBarButtonsRHS = Buttons;
+
+        allAddressBarButtonRHSExtensions.forEach( wrapper =>
+        {
+            WrappedAddressBarButtonsRHS = wrapper( Buttons );
+        } );
+
+        return WrappedAddressBarButtonsRHS;
+    }
+    catch ( e )
+    {
+        console.error( 'Problem with extension wrapping of Addressbar Buttons RHS component' );
         throw new Error( e );
     }
 };

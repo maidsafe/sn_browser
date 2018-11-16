@@ -1,9 +1,9 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 
-import AddressBar from 'components/AddressBar';
+import AddressBarButtonsLHS from 'components/AddressBar/ButtonsLHS';
 
-describe( 'AddressBar', () =>
+describe( 'AddressBarButtonsLHS', () =>
 {
     let wrapper;
     let instance;
@@ -33,12 +33,13 @@ describe( 'AddressBar', () =>
     {
         beforeEach( () =>
         {
-            wrapper = mount( <AddressBar { ...props } /> );
+            wrapper = mount( <AddressBarButtonsLHS { ...props } /> );
             instance = wrapper.instance();
         } );
-        it( 'should have name AddressBar', () =>
+
+        it( 'should have name AddressBarButtonsLHS', () =>
         {
-            expect( instance.constructor.name ).toBe( 'AddressBar' );
+            expect( instance.constructor.name ).toMatch( 'ButtonsLHS' );
         } );
     } );
 } );
