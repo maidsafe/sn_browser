@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Column, Grid } from 'nessie-ui';
+// import { Column, Grid } from 'nessie-ui';
 import ButtonsLHS from 'components/AddressBar/ButtonsLHS';
 import ButtonsRHS from 'components/AddressBar/ButtonsRHS';
 import Input from 'components/AddressBar/Input';
@@ -10,6 +10,9 @@ import logger from 'logger';
 
 import styles from './addressBar.css';
 
+import { Row, Col } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
 
 export default class AddressBar extends Component
 {
@@ -67,8 +70,14 @@ export default class AddressBar extends Component
 
         return (
             <div className={ `${styles.container} js-address` } >
-                <Grid align="left" verticalAlign="middle" gutters="S" className={ styles.addressBar }>
-                    <Column size="content">
+                <Row
+                    className={ styles.addressBar }
+                    type="flex"
+                    justify="start"
+                    align="middle"
+                    gutter={ { xs: 4, sm: 8, md: 12 } }
+                >
+                    <Col >
                         <ButtonsLHS
                             activeTab={ activeTab }
                             updateActiveTab={ updateActiveTab }
@@ -78,14 +87,14 @@ export default class AddressBar extends Component
                             { ...props }
                         />
 
-                    </Column>
-                    <Column className={ styles.addressBarColumn }>
+                    </Col>
+                    <Col className={ styles.addressBarCol }>
                         <Input { ...this.props } />
-                    </Column>
-                    <Column size="content">
+                    </Col>
+                    <Col>
                         <ButtonsRHS { ...this.props } />
-                    </Column>
-                </Grid>
+                    </Col>
+                </Row>
             </div>
         );
     }

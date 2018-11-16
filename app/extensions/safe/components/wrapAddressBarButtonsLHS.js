@@ -3,13 +3,16 @@ import React, { Component } from 'react';
 import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
 import WebIdDropdown from 'extensions/safe/components/WebIdDropdown';
-import { Column, IconButton, Grid } from 'nessie-ui';
+// import { Column, IconButton, Grid } from 'nessie-ui';
 import _ from 'lodash';
 import logger from 'logger';
+import styles from './wrapAddressBarButtons.css';
 
-const hideDropdownTimeout = 0.15; // seconds
-const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidea.ter';
-const authHomeUri = 'safe-auth://home';
+import { Row, Col, Button } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
+
 
 const wrapAddressBarButtonsLHS = ( AddressBarButtons, extensionFunctionality = {} ) =>
     class wrappedAddressBarButtonsLHS extends Component
@@ -43,29 +46,35 @@ const wrapAddressBarButtonsLHS = ( AddressBarButtons, extensionFunctionality = {
             } = safeBrowserApp;
 
             return (
-                <Grid gutters="M">
-                    <Column align="center" verticalAlign="middle">
+                <Row
+                    type="flex"
+                    justify="end"
+                    align="middle"
+                    gutter={ { xs: 2, sm: 4, md: 6 } }
+                >
+                    <Col >
                         <AddressBarButtons { ...this.props } />
-                    </Column>
-                    <Column size="icon-M" align="center" verticalAlign="middle">
-                        <div>
-                            <IconButton
-                                onClick={ this.handleExperimentalToggleClick }
-                                iconTheme="navigation"
-                                iconType="inspect"
-                                size="S"
-                                style={ { cursor: 'pointer' } }
-                            />
-                        </div>
-                        {
-                            experimentsEnabled &&
-                            <WebIdDropdown
-                                { ...this.props }
-                            />
-                        }
-                    </Column>
+                    </Col>
+                    <Col >
+                        <Button
+                        // className = { }
+                            icon="experiment"
+                            shape="circle"
+                            onClick={ this.handleExperimentalToggleClick }
+                        // size="S"
+                        // style={ { cursor: 'pointer' } }
+                        />
+                    </Col>
+                    {
+                        experimentsEnabled &&
+                            <Col >
+                                <WebIdDropdown
+                                    { ...this.props }
+                                />
+                            </Col>
+                    }
 
-                </Grid>
+                </Row>
             );
         }
     };

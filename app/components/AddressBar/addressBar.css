@@ -14,9 +14,16 @@
     z-index: 3;
 
 }
+
 .addressBar
 {
     width: 100%;
+}
+
+/* let it grow*/
+.addressBarCol
+{
+    flex: 1;
 }
 
 .input

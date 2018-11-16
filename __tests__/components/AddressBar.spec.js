@@ -1,13 +1,19 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
+import { Provider } from 'react-redux';
 
 import AddressBar from 'components/AddressBar';
+import configureStore from 'redux-mock-store';
+
+const mockStore = configureStore();
+
 
 describe( 'AddressBar', () =>
 {
     let wrapper;
     let instance;
     let props;
+    let store;
 
     beforeEach( () =>
     {
@@ -27,13 +33,21 @@ describe( 'AddressBar', () =>
             reloadPage         : jest.fn(),
             activeTab          : { isLoading: false }
         };
+
+
     } );
 
     describe( 'constructor( props )', () =>
     {
         beforeEach( () =>
         {
-            wrapper = mount( <AddressBar { ...props } /> );
+            store = mockStore( props );
+
+            wrapper = shallow(
+                <Provider store={ store } >
+                    <AddressBar { ...props } />
+                </Provider > ).dive();
+
             instance = wrapper.instance();
         } );
         it( 'should have name AddressBar', () =>

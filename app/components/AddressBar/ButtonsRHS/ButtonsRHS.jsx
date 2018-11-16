@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Column, Grid } from 'nessie-ui';
-import MdStar from 'react-icons/lib/md/star';
-import MdStarOutline from 'react-icons/lib/md/star-outline';
+import { Row, Col, Icon } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
+
 import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarButtonsRHS } from 'extensions/components';
-import styles from './buttonsRHS.css';
+// import styles from './buttonsRHS.css';
 
 import { CLASSES } from 'appConstants';
 
@@ -50,18 +52,16 @@ class ButtonsRHS extends Component
         const { isBookmarked } = this.props;
 
         return (
-            <Grid gutters="S">
-                <Column align="left">
-                    {
-                        isBookmarked &&
-                            <MdStar className={ `${styles.buttonIcon} ${CLASSES.BOOKMARK_PAGE}` } onClick={ this.handleBookmarking } />
-                    }
-                    {
-                        !isBookmarked &&
-                            <MdStarOutline className={ `${styles.buttonIcon} ${CLASSES.BOOKMARK_PAGE}` } onClick={ this.handleBookmarking } />
-                    }
-                </Column>
-            </Grid>
+            <Row type="flex" justify="end" align="middle">
+                <Col>
+                    <Icon
+                        className={ `${CLASSES.BOOKMARK_PAGE}` }
+                        onClick={ this.handleBookmarking }
+                        type="star"
+                        theme={ isBookmarked ? 'filled' : 'outlined' }
+                    />
+                </Col>
+            </Row>
         );
     }
 }

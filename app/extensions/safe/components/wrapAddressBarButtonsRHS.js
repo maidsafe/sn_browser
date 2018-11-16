@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // import styles from './browser.css';
-import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
-// import { SAFE } from 'extensions/safe/constants';
-// import _ from 'lodash';
+// import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
+import { Row, Col, Button } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
+
 import logger from 'logger';
 
 const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {} ) =>
@@ -14,7 +17,7 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
         {
             isMock             : PropTypes.bool.isRequired,
             experimentsEnabled : PropTypes.bool.isRequired,
-            enableExperiments : PropTypes.func.isRequired,
+            enableExperiments  : PropTypes.func.isRequired,
             disableExperiments : PropTypes.func.isRequired,
 
         }
@@ -22,8 +25,8 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
         static defaultProps =
         {
             // safeBrowserApp : {
-                isMock             : false,
-                experimentsEnabled : false
+            isMock             : false,
+            experimentsEnabled : false
             // }
         }
 
@@ -49,7 +52,22 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
             // } = safeBrowserApp;
 
             return (
-                <AddressBarButtons { ...this.props } />
+                <Row
+                    type="flex"
+                    justify="end"
+                    align="middle"
+                    gutter={ { xs: 2, sm: 4, md: 6 } }
+                >
+                    <Col>
+                        <AddressBarButtons { ...this.props } />
+                    </Col>
+                    <Col>
+                        <Button
+                            icon="experiment"
+                            shape="circle"
+                        />
+                    </Col>
+                </Row>
             );
         }
     };

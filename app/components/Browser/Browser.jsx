@@ -28,12 +28,12 @@ class Browser extends Component
         blurAddressBar     : PropTypes.func.isRequired,
         reloadPage         : PropTypes.func.isRequired,
         pageLoaded         : PropTypes.func.isRequired,
-        addTab             : PropTypes.func,
-        closeTab           : PropTypes.func,
-        closeActiveTab     : PropTypes.func,
-        reopenTab          : PropTypes.func,
+        addTab             : PropTypes.func.isRequired,
+        closeTab           : PropTypes.func.isRequired,
+        closeActiveTab     : PropTypes.func.isRequired,
+        reopenTab          : PropTypes.func.isRequired,
         updateNotification : PropTypes.func.isRequired,
-        clearNotification  : PropTypes.func,
+        clearNotification  : PropTypes.func.isRequired,
         ui                 : PropTypes.object.isRequired
     }
 
@@ -49,6 +49,13 @@ class Browser extends Component
     {
         super( props );
         this.state = {};
+
+        //jest/electron workaround as no remote in non-render process
+        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+
+        // this is mounted but its not show?
+        this.state.windowId = currentWebContentsId;
+
     }
 
     componentWillMount()
@@ -72,6 +79,7 @@ class Browser extends Component
         const addressBar = this.address;
 
         const theBrowser = this;
+
 
         if( !ipcRenderer ) return; //avoid for jest/Electron where we're not in renderer process
 
@@ -179,9 +187,12 @@ class Browser extends Component
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
 
-        // TODO: Move windowId from state to store.
-        const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
         const windowId = this.state.windowId;
+        // TODO: Move windowId from state to store.
+        const windowTabs = tabs.filter( tab =>{
+            return tab.windowId === windowId
+        }  );
+
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
 
