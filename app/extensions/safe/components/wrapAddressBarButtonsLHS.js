@@ -11,8 +11,8 @@ const hideDropdownTimeout = 0.15; // seconds
 const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidea.ter';
 const authHomeUri = 'safe-auth://home';
 
-const wrapAddressBarLHSButtons = ( AddressBarButtons, extensionFunctionality = {} ) =>
-    class wrappedAddressbarButtons extends Component
+const wrapAddressBarButtonsLHS = ( AddressBarButtons, extensionFunctionality = {} ) =>
+    class wrappedAddressBarButtonsLHS extends Component
     {
         static defaultProps =
         {
@@ -71,4 +71,4 @@ const wrapAddressBarLHSButtons = ( AddressBarButtons, extensionFunctionality = {
     };
 
 
-export default wrapAddressBarLHSButtons;
+export default wrapAddressBarButtonsLHS;

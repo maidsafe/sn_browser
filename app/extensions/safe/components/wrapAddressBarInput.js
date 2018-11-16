@@ -12,7 +12,7 @@ const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://w
 const authHomeUri = 'safe-auth://home';
 
 const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
-    class wrappedAddressbarButtons extends Component
+    class wrappedAddressBarInput extends Component
     {
         // static defaultProps =
         // {
@@ -22,35 +22,17 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
 
         render()
         {
-            const { safeBrowserApp, activeTab } = this.props;
-            const {
-                experimentsEnabled,
-                isMock
-            } = safeBrowserApp;
+            const { activeTab } = this.props;
+            // const {
+            //     experimentsEnabled,
+            //     isMock
+            // } = safeBrowserApp;
 
             return (
                 <Grid gutters="M">
                     <Column align="center" verticalAlign="middle">
                         <AddressBarInput { ...this.props } />
                     </Column>
-                    <Column size="icon-M" align="center" verticalAlign="middle">
-                        <div>
-                            <IconButton
-                                onClick={ this.handleExperimentalToggleClick }
-                                iconTheme="navigation"
-                                iconType="inspect"
-                                size="S"
-                                style={ { cursor: 'pointer' } }
-                            />
-                        </div>
-                        {
-                            experimentsEnabled &&
-                            <WebIdDropdown
-                                { ...this.props }
-                            />
-                        }
-                    </Column>
-
                 </Grid>
             );
         }

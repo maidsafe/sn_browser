@@ -1,15 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-import MdStar from 'react-icons/lib/md/star';
-import MdStarOutline from 'react-icons/lib/md/star-outline';
+
 import { Column, Grid } from 'nessie-ui';
 import ButtonsLHS from 'components/AddressBar/ButtonsLHS';
+import ButtonsRHS from 'components/AddressBar/ButtonsRHS';
 import Input from 'components/AddressBar/Input';
 import logger from 'logger';
-
-import { CLASSES } from 'appConstants';
 
 import styles from './addressBar.css';
 
@@ -41,21 +38,6 @@ export default class AddressBar extends Component
         editingUrl : false
     }
 
-
-    handleBookmarking = ( ) =>
-    {
-        const { address, addBookmark, removeBookmark, isBookmarked } = this.props;
-
-        if ( isBookmarked )
-        {
-            removeBookmark( { url: address } );
-        }
-        else
-        {
-            addBookmark( { url: address } );
-        }
-    }
-
     handleBack = ( ) =>
     {
         const { activeTabBackwards } = this.props;
@@ -81,7 +63,7 @@ export default class AddressBar extends Component
     {
         const props = this.props;
 
-        const { isBookmarked, activeTab, updateActiveTab } = this.props;
+        const { activeTab, updateActiveTab } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
@@ -101,18 +83,7 @@ export default class AddressBar extends Component
                         <Input { ...this.props } />
                     </Column>
                     <Column size="content">
-                        <Grid gutters="S">
-                            <Column align="left">
-                                {
-                                    isBookmarked &&
-                                        <MdStar className={ `${styles.buttonIcon} ${CLASSES.BOOKMARK_PAGE}` } onClick={ this.handleBookmarking } />
-                                }
-                                {
-                                    !isBookmarked &&
-                                        <MdStarOutline className={ `${styles.buttonIcon} ${CLASSES.BOOKMARK_PAGE}` } onClick={ this.handleBookmarking } />
-                                }
-                            </Column>
-                        </Grid>
+                        <ButtonsRHS { ...this.props } />
                     </Column>
                 </Grid>
             </div>
