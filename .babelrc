@@ -7,11 +7,18 @@
     "stage-0",
     "react"
   ],
-  "plugins": ["add-module-exports" ],
+  "plugins": [
+      "add-module-exports",
+      ["import", {
+      "libraryName": "antd",
+      "style" : "css"
+       }] ],
   "env": {
     "production": {
       "presets": ["react-optimize"],
-      "plugins": ["babel-plugin-dev-expression",  [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ]]
+      "plugins": ["babel-plugin-dev-expression",
+          [ "babel-plugin-webpack-alias", { "config": "./webpack.config.base.js" } ]
+      ]
     },
     "development": {
       "plugins": [

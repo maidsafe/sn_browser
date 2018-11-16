@@ -1,4 +1,12 @@
-.refresh svg
+
+.buttonIcon
 {
-    width: 20px;
+    display: block;
+    width: 25px;
+    height: 100%;
+    padding-left: 0;
+    fill:  rgba( 127, 127, 127, 1);
+    padding-right: 1rem;
+
+
 }

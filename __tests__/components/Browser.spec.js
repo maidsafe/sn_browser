@@ -1,5 +1,8 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount, shallow, render } from 'enzyme';
+import { Provider } from 'react-redux';
+
+import configureStore from 'redux-mock-store';
 
 import Browser from 'components/Browser';
 import AddressBar from 'components/AddressBar';
@@ -7,33 +10,53 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
+
+// create any initial state needed
+const initialState = {
+    ui : {
+        isActiveTabReloading : false
+    },
+    tabs                 : [],
+    addTab               : jest.fn(),
+    updateTab            : jest.fn(),
+    closeTab             : jest.fn(),
+    setActiveTab         : jest.fn(),
+    closeActiveTab       : jest.fn(),
+    reopenTab            : jest.fn(),
+    addBookmark          : jest.fn(),
+    removeBookmark       : jest.fn(),
+    selectAddressBar     : jest.fn(),
+    deselectAddressBar   : jest.fn(),
+    reloadPage           : jest.fn(),
+    pageLoaded           : jest.fn(),
+    blurAddressBar       : jest.fn(),
+    addNotification      : jest.fn(),
+    clearNotification    : jest.fn(),
+    updateNotification   : jest.fn(),
+    addLocalNotification : jest.fn()
+};
+
+
+// here it is possible to pass in any middleware if needed into //configureStore
+const mockStore = configureStore();
+let store;
+
 describe( 'Browser', () =>
 {
     let wrapper;
     let instance;
-    let props;
+    let newState;
 
-    beforeEach( () =>
+    describe( 'constructor( )', () =>
     {
-        props = {
-            ui                   : {},
-            addBookmark          : jest.fn(),
-            removeBookmark       : jest.fn(),
-            selectAddressBar     : jest.fn(),
-            deselectAddressBar   : jest.fn(),
-            reloadPage           : jest.fn(),
-            pageLoaded           : jest.fn(),
-            blurAddressBar       : jest.fn(),
-            addNotification      : jest.fn(),
-            updateNotification   : jest.fn(),
-            addLocalNotification : jest.fn()
-        };
-        wrapper = mount( <Browser { ...props } /> );
+        store = mockStore( initialState );
+
+        wrapper = shallow(
+            <Provider store={ store } >
+                <Browser { ...initialState } />
+            </Provider> ).dive();
         instance = wrapper.instance();
-    } );
 
-    describe( 'constructor( props )', () =>
-    {
         it( 'should have name Browser', () =>
         {
             expect( instance.constructor.name ).toMatch( 'Browser' );
@@ -42,11 +65,22 @@ describe( 'Browser', () =>
 
     describe( 'mount() with one tab', () =>
     {
-        beforeEach( () =>
-        {
-            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1 }] };
-            wrapper = mount( <Browser { ...props } /> );
-        } );
+        newState = { ...initialState,
+            tabs : [
+                { url         : 'hello',
+                    isActiveTab : true,
+                    windowId    : 1,
+                    index       : 1,
+                    isClosed    : false
+                }] };
+
+        store = mockStore( newState );
+
+        // must be mount for component did mount
+        wrapper = mount(
+            <Provider store={ store } >
+                <Browser { ...newState } />
+            </Provider> );
 
         it( 'should have exactly 1 AddressBar component', () =>
         {
@@ -73,8 +107,13 @@ describe( 'Browser', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [] };
-            wrapper = mount( <Browser { ...props } /> );
+            newState = { ...initialState, tabs: [] };
+            store = mockStore( newState );
+
+            wrapper = shallow(
+                <Provider store={ store } >
+                    <Browser { ...newState } />
+                </Provider> ).dive();
             instance = wrapper.instance();
         } );
 

@@ -120,6 +120,25 @@ export default {
                     }
                 ]
             },
+            // Add LESS support  - compile all other .less files and pipe it to style.css
+            {
+                test : /^((?!\.global).)*\.less/,
+                use  : [
+                    {
+                        loader : 'style-loader'
+                    },
+                    {
+                        loader  : 'css-loader'
+                    },
+                    {
+                        loader : 'less-loader',
+                        options: {
+                            javascriptEnabled: true
+                        }
+                    }
+                ]
+            },
+            // WOF
             // WOFF Font
             {
                 test : /\.woff(\?v=\d+\.\d+\.\d+)?$/,

@@ -3,11 +3,18 @@ import { mount, shallow } from 'enzyme';
 
 import AddressBarInput from 'components/AddressBar/Input';
 
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+const mockStore = configureStore();
+
+
 describe( 'AddressBarInput', () =>
 {
     let wrapper;
     let instance;
     let props;
+    let store;
+
 
     beforeEach( () =>
     {
@@ -33,7 +40,12 @@ describe( 'AddressBarInput', () =>
     {
         beforeEach( () =>
         {
-            wrapper = mount( <AddressBarInput { ...props } /> );
+            store = mockStore( props );
+
+            wrapper = shallow(
+                <Provider store={ store } >
+                    <AddressBarInput { ...props } />
+                </Provider > ).dive();
             instance = wrapper.instance();
         } );
 

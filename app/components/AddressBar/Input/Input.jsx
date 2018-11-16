@@ -5,17 +5,18 @@ import PropTypes from 'prop-types';
 // import { Column, Grid } from 'nessie-ui';
 
 import logger from 'logger';
-import { InputField } from 'nessie-ui';
 
 import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarInput } from 'extensions/components';
-// import styles from './input.css';
+
+import { Input } from 'antd';
+import 'antd/lib/input/style'
 
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class Input extends Component
+class AddressBarInput extends Component
 {
     static propTypes =
     {
@@ -132,15 +133,17 @@ class Input extends Component
 
     render()
     {
-        const { isSelected } = this.props;
+        const { isSelected, addonBefore } = this.props;
         const { address } = this.state;
 
         return (
-            <InputField
-                className={ 'js-address__input' }
+            <Input
+                // className={ 'js-address__input' }
+                addonBefore={addonBefore}
+                size={'large'}
                 value={ address }
                 type="text"
-                inputRef={ ( input ) =>
+                ref={ ( input ) =>
                 {
                     this.addressInput = input;
 
@@ -159,4 +162,4 @@ class Input extends Component
     }
 }
 
-export default extendComponent( Input, wrapAddressBarInput );
+export default extendComponent( AddressBarInput, wrapAddressBarInput );

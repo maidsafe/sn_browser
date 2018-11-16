@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 
 import logger from 'logger';
-import { Column, IconButton, Row } from 'nessie-ui';
+// import { Column, IconButton, Row } from 'nessie-ui';
+import { Row, Col, Button } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
 
 import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarButtonsLHS } from 'extensions/components';
@@ -18,35 +22,43 @@ class ButtonsLHS extends Component
         const { activeTab, handleBack, handleForward, handleRefresh } = this.props;
 
         return (
-            <Row gutters="S">
-                <Column align="center" verticalAlign="middle">
-                    <IconButton
+            <Row
+                type="flex"
+                justify="end"
+                align="middle"
+                gutter={ { xs: 2, sm: 4, md: 6 } }
+            >
+                <Col>
+                    <Button
                         className="js-address__backwards"
-                        iconTheme="navigation"
-                        iconType="left"
-                        iconSize="S"
+                        icon="left"
+                        // iconTheme="navigation"
+                        // iconType="left"
+                        // iconSize="S"
                         onClick={ handleBack }
                     />
-                </Column>
-                <Column align="center" verticalAlign="middle">
-                    <IconButton
+                </Col>
+                <Col>
+                    <Button
                         className="js-address__forwards"
-                        iconTheme="navigation"
-                        iconSize="S"
-                        iconType="right"
+                        icon="right"
+                        // iconTheme="navigation"
+                        // iconSize="S"
+                        // iconType="right"
                         onClick={ handleForward }
                     />
-                </Column>
-                <Column align="center" verticalAlign="middle">
-                    <IconButton
+                </Col>
+                <Col>
+                    <Button
                         className={ styles.refresh }
-                        iconTheme="navigation"
-                        iconSize="S"
-                        iconType="reset"
-                        isDisabled={ activeTab.isLoading }
+                        icon="reload"
+                        // iconTheme="navigation"
+                        // iconSize="S"
+                        // iconType="reset"
+                        disabled={ activeTab.isLoading }
                         onClick={ handleRefresh }
                     />
-                </Column>
+                </Col>
             </Row>
         )
     }
