@@ -32,7 +32,6 @@ export const onPreload = ( passedStore, win = window ) =>
     watchForExpermentalChangesAndReload( passedStore, win );
     setupPreloadedSafeAuthApis( passedStore, win );
     setupWebIdEventEmitter( passedStore, win );
-
 };
 
 /**
@@ -41,7 +40,6 @@ export const onPreload = ( passedStore, win = window ) =>
  */
 const watchForExpermentalChangesAndReload = ( passedStore, win = window ) =>
 {
-
     const stopListening = passedStore.subscribe( async ( ) =>
     {
         const safeBrowserAppState = passedStore.getState().safeBrowserApp;
@@ -59,9 +57,7 @@ const watchForExpermentalChangesAndReload = ( passedStore, win = window ) =>
             win.safeExperimentsEnabled = experimentsEnabled;
             location.reload();
         }
-    })
-
-
+    } );
 };
 
 export const setupWebIdEventEmitter = ( passedStore, win = window ) =>
