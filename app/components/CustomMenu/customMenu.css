@@ -1,0 +1,21 @@
+
+.menuContainer{
+    position: relative;
+}
+.menu
+{
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 0.4px;
+    box-shadow: 2px 2px 4px black;
+
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 0;
+
+}
+
+.customMenuItem{
+    cursor: pointer;
+}

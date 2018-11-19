@@ -11,6 +11,14 @@ export default function ui( state: array = initialState, action )
 
     switch ( action.type )
     {
+        case TYPES.SHOW_SETTINGS_MENU :
+        {
+            return { ...state, settingsMenuIsVisible : true };
+        }
+        case TYPES.HIDE_SETTINGS_MENU :
+        {
+            return { ...state, settingsMenuIsVisible : false };
+        }
         case TYPES.SELECT_ADDRESS_BAR :
         {
             return { ...state, addressBarIsSelected : true };

@@ -32,29 +32,23 @@ class ButtonsLHS extends Component
                     <Button
                         className="js-address__backwards"
                         icon="left"
-                        // iconTheme="navigation"
-                        // iconType="left"
-                        // iconSize="S"
+                        shape="circle"
                         onClick={ handleBack }
                     />
                 </Col>
                 <Col>
                     <Button
                         className="js-address__forwards"
+                        shape="circle"
                         icon="right"
-                        // iconTheme="navigation"
-                        // iconSize="S"
-                        // iconType="right"
                         onClick={ handleForward }
                     />
                 </Col>
                 <Col>
                     <Button
                         className={ styles.refresh }
+                        shape="circle"
                         icon="reload"
-                        // iconTheme="navigation"
-                        // iconSize="S"
-                        // iconType="reset"
                         disabled={ activeTab.isLoading }
                         onClick={ handleRefresh }
                     />

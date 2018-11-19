@@ -46,9 +46,8 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
 
             const addOns = [];
 
-            if ( isMock ) addOns.push( <Tag color="#F5222D">Mock Network</Tag> );
-            if ( experimentsEnabled ) addOns.push( <Tag color="#42566E"><Icon type="experiment" /></Tag> );
-            // if ( experimentsEnabled ) addOns.push( <Tag color="#42566E">Experimental</Tag> );
+            if ( isMock ) addOns.push( <Tag key="F5222D" color="#F5222D">Mock Network</Tag> );
+            if ( experimentsEnabled ) addOns.push( <Tag key="42566E" color="#42566E"><Icon type="experiment" /></Tag> );
 
             return (
                 <Grid gutters="M">

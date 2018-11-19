@@ -18,27 +18,32 @@ export default class AddressBar extends Component
 {
     static propTypes =
     {
-        address            : PropTypes.string,
-        isSelected         : PropTypes.bool,
-        activeTab          : PropTypes.shape( { url: PropTypes.string } ),
-        windowId           : PropTypes.number.isRequired,
-        isBookmarked       : PropTypes.bool.isRequired,
-        addBookmark        : PropTypes.func.isRequired,
-        removeBookmark     : PropTypes.func.isRequired,
-        onBlur             : PropTypes.func.isRequired,
-        onSelect           : PropTypes.func.isRequired,
-        onFocus            : PropTypes.func.isRequired,
-        reloadPage         : PropTypes.func.isRequired,
-        updateActiveTab    : PropTypes.func.isRequired,
-        activeTabBackwards : PropTypes.func.isRequired,
-        activeTabForwards  : PropTypes.func.isRequired,
+        address               : PropTypes.string,
+        isSelected            : PropTypes.bool,
+        settingsMenuIsVisible : PropTypes.bool,
+        activeTab             : PropTypes.shape( { url: PropTypes.string } ),
+        windowId              : PropTypes.number.isRequired,
+        isBookmarked          : PropTypes.bool.isRequired,
+        addTab                : PropTypes.func.isRequired,
+        addBookmark           : PropTypes.func.isRequired,
+        removeBookmark        : PropTypes.func.isRequired,
+        onBlur                : PropTypes.func.isRequired,
+        onSelect              : PropTypes.func.isRequired,
+        onFocus               : PropTypes.func.isRequired,
+        reloadPage            : PropTypes.func.isRequired,
+        updateActiveTab       : PropTypes.func.isRequired,
+        activeTabBackwards    : PropTypes.func.isRequired,
+        activeTabForwards     : PropTypes.func.isRequired,
+        showSettingsMenu      : PropTypes.func.isRequired,
+        hideSettingsMenu      : PropTypes.func.isRequired
     }
 
     static defaultProps =
     {
-        address    : '',
-        isSelected : false,
-        editingUrl : false
+        address               : '',
+        isSelected            : false,
+        settingsMenuIsVisible : false,
+        editingUrl            : false
     }
 
     handleBack = ( ) =>
@@ -61,12 +66,45 @@ export default class AddressBar extends Component
         reloadPage();
     }
 
+    getSettingsMenuItems = () =>
+    {
+        const { addTab } = this.props;
+
+        const addATab = ( tab ) =>
+        {
+            addTab( { url: `safe-browser://${tab}`, isActiveTab: true } );
+        };
+
+        return [
+            <div
+                role="menuitem"
+                tabIndex={ 0 }
+                className={ styles.menuItem }
+                onClick={
+                    () => addATab( 'bookmarks ' ) }
+            >Bookmarks</div>,
+            <div
+                role="menuitem"
+                tabIndex={ 0 }
+                className={ styles.menuItem }
+                onClick={
+                    () => addATab( 'history ' ) }
+            >History</div>
+        ];
+    }
+
 
     render()
     {
         const props = this.props;
 
-        const { activeTab, updateActiveTab } = this.props;
+        const {
+            activeTab,
+            updateActiveTab,
+            settingsMenuIsVisible,
+            showSettingsMenu,
+            hideSettingsMenu
+        } = this.props;
 
         return (
             <div className={ `${styles.container} js-address` } >
@@ -92,7 +130,12 @@ export default class AddressBar extends Component
                         <Input { ...this.props } />
                     </Col>
                     <Col>
-                        <ButtonsRHS { ...this.props } />
+                        <ButtonsRHS
+                            menuItems={ this.getSettingsMenuItems() }
+                            showSettingsMenu={ showSettingsMenu }
+                            settingsMenuIsVisible={ settingsMenuIsVisible }
+                            hideSettingsMenu={ hideSettingsMenu }
+                        />
                     </Col>
                 </Row>
             </div>

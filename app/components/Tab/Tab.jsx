@@ -108,6 +108,19 @@ export default class Tab extends Component
         } );
     }
 
+    webviewFocussed (event)
+    {
+        logger.verbose('Webview focussed: Triggering click event on browser window');
+
+        var fakeClick = new MouseEvent('click', {
+           view: window,
+           bubbles: true,
+           cancelable: true
+         });
+
+         window.dispatchEvent( fakeClick )
+    }
+
     componentDidMount()
     {
         const { webview } = this;
@@ -133,6 +146,8 @@ export default class Tab extends Component
             webview.addEventListener( 'new-window', ::this.newWindow );
             webview.addEventListener( 'did-fail-load', ::this.didFailLoad );
             webview.addEventListener( 'update-target-url', ::this.updateTargetUrl );
+
+            webview.addEventListener( 'focus', ::this.webviewFocussed );
 
 
             this.domReady();

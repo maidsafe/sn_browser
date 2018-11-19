@@ -34,7 +34,10 @@ class Browser extends Component
         reopenTab          : PropTypes.func.isRequired,
         updateNotification : PropTypes.func.isRequired,
         clearNotification  : PropTypes.func.isRequired,
-        ui                 : PropTypes.object.isRequired
+        ui                 : PropTypes.object.isRequired,
+
+        showSettingsMenu      : PropTypes.func.isRequired,
+        hideSettingsMenu      : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -182,6 +185,9 @@ class Browser extends Component
             notifications,
             clearNotification,
 
+            showSettingsMenu,
+            hideSettingsMenu
+
         } = props;
 
         // only show the first notification without a response.
@@ -221,23 +227,30 @@ class Browser extends Component
                 <AddressBar
                     key={ 2 }
                     address={ activeTabAddress }
+                    addTab={ addTab }
                     activeTab={ activeTab }
                     onSelect={ deselectAddressBar }
                     onFocus={ selectAddressBar }
                     onBlur={ blurAddressBar }
+
                     addBookmark={ addBookmark }
                     isBookmarked={ isBookmarked }
                     removeBookmark={ removeBookmark }
                     reloadPage={ reloadPage }
+
+                    hideSettingsMenu={ hideSettingsMenu }
+                    showSettingsMenu={ showSettingsMenu }
+                    settingsMenuIsVisible={ ui.settingsMenuIsVisible }
+
                     isSelected={ ui.addressBarIsSelected }
+
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }
                     activeTab={ activeTab }
+
                     windowId={windowId}
 
-                    //pass everything as we're extending here...
-                    {...props}
                     ref={ ( c ) =>
                     {
                         this.address = c;

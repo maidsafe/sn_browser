@@ -1,22 +1,52 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-// import styles from './browser.css';
-// import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Switch } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
-import 'antd/lib/button/style';
+import 'antd/lib/switch/style';
 
-import logger from 'logger';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as SafeBrowserAppActions
+    from 'extensions/safe/actions/SafeBrowserApplication_actions';
+
+import styles from './wrapAddressBarButtons.css';
+
+
+function mapStateToProps( state )
+{
+    return {
+        safeBrowserApp : state.safeBrowserApp
+    };
+}
+
+
+function mapDispatchToProps( dispatch )
+{
+    const actions =
+        {
+            ...SafeBrowserAppActions
+        };
+
+    return bindActionCreators( actions, dispatch );
+}
+
 
 const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {} ) =>
-    class wrappedAddressBarButtonsRHS extends Component
+{
+    class WrappedAddressBarButtonsRHS extends Component
     {
         static propTypes =
         {
-            isMock             : PropTypes.bool.isRequired,
-            experimentsEnabled : PropTypes.bool.isRequired,
+            safeBrowserApp : PropTypes.shape( {
+                isMock             : PropTypes.bool,
+                experimentsEnabled : PropTypes.bool.isRequired,
+                webIds             : PropTypes.arrayOf( PropTypes.shape( {
+                    name : PropTypes.string
+                } ) )
+            } ).isRequired,
+            menuItems          : PropTypes.arrayOf( PropTypes.node ).isRequired,
             enableExperiments  : PropTypes.func.isRequired,
             disableExperiments : PropTypes.func.isRequired,
 
@@ -24,16 +54,22 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
 
         static defaultProps =
         {
-            // safeBrowserApp : {
-            isMock             : false,
-            experimentsEnabled : false
-            // }
+            safeBrowserApp : {
+                isMock             : false,
+                experimentsEnabled : false
+            }
         }
+
 
         handleExperimentalToggleClick = ( ) =>
         {
-            const { enableExperiments, disableExperiments, experimentsEnabled } = this.props;
-            // const { experimentsEnabled } = safeBrowserApp;
+            const {
+                enableExperiments,
+                disableExperiments,
+                safeBrowserApp
+            } = this.props;
+
+            const { experimentsEnabled } = safeBrowserApp;
 
             if ( experimentsEnabled )
             {
@@ -44,33 +80,50 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
             enableExperiments();
         }
 
-        render()
+        getNewMenuItems = () =>
         {
-            // const { safeBrowserApp, activeTab, experimentsEnabled } = this.props;
-            // const {
-            //     experimentsEnabled
-            // } = safeBrowserApp;
+            const { menuItems } = this.props;
+            const {
+                safeBrowserApp
+            } = this.props;
+            const { experimentsEnabled } = safeBrowserApp;
 
-            return (
-                <Row
-                    type="flex"
-                    justify="end"
-                    align="middle"
-                    gutter={ { xs: 2, sm: 4, md: 6 } }
-                >
+            const itemsToAdd = [
+                <Row type="flex" className={ styles.toggleRow }>
+                    <Col className={ styles.toggleText }>Toggle Experiments</Col>
                     <Col>
-                        <AddressBarButtons { ...this.props } />
-                    </Col>
-                    <Col>
-                        <Button
-                            icon="experiment"
-                            shape="circle"
+                        <Switch
+                            size="small"
+                            checked={ experimentsEnabled }
+                            onChange={ this.handleExperimentalToggleClick }
                         />
                     </Col>
-                </Row>
+                </Row>,
+            ];
+
+            return [].concat( menuItems, itemsToAdd );
+        }
+
+        render()
+        {
+            return (
+                <AddressBarButtons
+                    { ...this.props }
+                    menuItems={ this.getNewMenuItems() }
+                />
+
             );
         }
-    };
+    }
+
+    const hookedUpInput =
+        connect(
+            mapStateToProps,
+            mapDispatchToProps
+        )( WrappedAddressBarButtonsRHS );
+
+    return hookedUpInput;
+};
 
 
 export default wrapAddressBarButtonsRHS;
