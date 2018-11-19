@@ -1,5 +1,5 @@
 const initialState = {
-    bookmarks     : [{ url: 'safe-auth://home/#/login' }],
+    bookmarks   : [{ url: 'safe-auth://home/#/login' }],
     remoteCalls : [
     ],
     notifications : [
@@ -14,9 +14,10 @@ const initialState = {
         webId        : undefined
     }],
     ui : {
-        addressBarIsSelected : false,
-        pageIsLoading : false,
-        isActiveTabReloading: false
+        settingsMenuIsVisible : false,
+        addressBarIsSelected  : false,
+        pageIsLoading         : false,
+        isActiveTabReloading  : false
     }
 };
 

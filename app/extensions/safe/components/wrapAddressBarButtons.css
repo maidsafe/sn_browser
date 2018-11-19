@@ -1,0 +1,7 @@
+.toggleText{
+    white-space: nowrap;
+}
+
+.toggleRow {
+    flex-wrap: nowrap;
+}

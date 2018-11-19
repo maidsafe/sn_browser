@@ -10,17 +10,41 @@ describe( 'notification reducer', () =>
         expect( ui( undefined, {} ) ).toEqual( initialState.ui );
     } );
 
+    describe( 'SHOW_SETTINGS_MENU', () =>
+    {
+        it( 'should handle showing the settings menu', () =>
+        {
+            expect(
+                ui( {}, {
+                    type : TYPES.SHOW_SETTINGS_MENU
+                } )
+            ).toEqual( { settingsMenuIsVisible: true } );
+        } );
+    } );
+
+    describe( 'HIDE_SETTINGS_MENU', () =>
+    {
+        it( 'should handle showing the settings menu', () =>
+        {
+            expect(
+                ui( {}, {
+                    type : TYPES.HIDE_SETTINGS_MENU
+                } )
+            ).toEqual( { settingsMenuIsVisible: false } );
+        } );
+    } );
+
     describe( 'SELECT_ADDRESS_BAR', () =>
     {
         it( 'should handle setting address bar focus', () =>
         {
             expect(
                 ui( {}, {
-                    type    : TYPES.SELECT_ADDRESS_BAR
+                    type : TYPES.SELECT_ADDRESS_BAR
                 } )
             ).toEqual( { addressBarIsSelected: true } );
         } );
-    })
+    } );
 
     describe( 'BLUR_ADDRESS_BAR', () =>
     {
@@ -28,10 +52,9 @@ describe( 'notification reducer', () =>
         {
             expect(
                 ui( {}, {
-                    type    : TYPES.BLUR_ADDRESS_BAR
+                    type : TYPES.BLUR_ADDRESS_BAR
                 } )
             ).toEqual( { addressBarIsSelected: false } );
         } );
-    })
-
-})
+    } );
+} );
