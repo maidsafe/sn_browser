@@ -1,13 +1,21 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import AddressBarButtonsRHS from 'components/AddressBar/ButtonsRHS';
+
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+
+const mockStore = configureStore();
+
+jest.mock( 'extensions/safe/actions/SafeBrowserApplication_actions' );
 
 describe( 'AddressBarButtonsRHS', () =>
 {
     let wrapper;
     let instance;
     let props;
+    let store;
 
     beforeEach( () =>
     {
@@ -33,7 +41,12 @@ describe( 'AddressBarButtonsRHS', () =>
     {
         beforeEach( () =>
         {
-            wrapper = mount( <AddressBarButtonsRHS { ...props } /> );
+            store = mockStore( props );
+
+            wrapper = shallow(
+                <Provider store={ store } >
+                    <AddressBarButtonsRHS { ...props } />
+                </Provider> ).dive();
             instance = wrapper.instance();
         } );
 
