@@ -1,7 +1,7 @@
 import logger from 'logger';
 
 import {
-    wrapBrowser as safeWrapBrowser
+    default as safeWrapBrowser
 } from 'extensions/safe/components/wrapBrowser';
 import safeWrapAddressBarButtonsLHS from 'extensions/safe/components/wrapAddressBarButtonsLHS';
 import safeWrapAddressBarButtonsRHS from 'extensions/safe/components/wrapAddressBarButtonsRHS';
