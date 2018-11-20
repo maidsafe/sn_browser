@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { showWebIdDropdown } from '../actions/safeBrowserApplication_actions';
 import WebIdDropdown from 'extensions/safe/components/WebIdDropdown';
 import { Row, Col } from 'antd';
 import 'antd/lib/row/style';
@@ -15,6 +17,16 @@ function mapStateToProps( state )
         safeBrowserApp : state.safeBrowserApp
     };
 }
+
+function mapDispatchToProps( dispatch )
+{
+    const actions =
+        {
+            showWebIdDropdown
+        };
+    return bindActionCreators( actions, dispatch );
+}
+
 
 const wrapAddressBarButtonsLHS = ( AddressBarButtons, extensionFunctionality = {} ) =>
 {
@@ -69,10 +81,9 @@ const wrapAddressBarButtonsLHS = ( AddressBarButtons, extensionFunctionality = {
         }
     }
 
-    const hookedUpInput = connect( mapStateToProps )( WrappedAddressBarButtonsLHS );
+    const hookedUpInput = connect( mapStateToProps, mapDispatchToProps )( WrappedAddressBarButtonsLHS );
 
     return hookedUpInput;
 };
-
 
 export default wrapAddressBarButtonsLHS;
