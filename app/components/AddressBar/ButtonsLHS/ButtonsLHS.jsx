@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import logger from 'logger';
-// import { Column, IconButton, Row } from 'nessie-ui';
+
 import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';

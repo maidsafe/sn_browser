@@ -39,7 +39,6 @@ const wrapAddressBarButtonsLHS = ( AddressBarButtons, extensionFunctionality = {
 
         render()
         {
-            console.log( 'WRAPPED ADDDDDDDDDD', this.props );
             const { safeBrowserApp } = this.props;
             const {
                 experimentsEnabled
