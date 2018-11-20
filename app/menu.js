@@ -10,7 +10,7 @@ import {
 } from 'actions/tabs_actions';
 
 import { selectAddressBar } from 'actions/ui_actions';
-import { isHot } from 'appConstants';
+import { isHot,isRunningDebug } from 'appConstants';
 import { getLastClosedTab } from 'reducers/tabs';
 import logger from 'logger';
 import pkg from 'appPackage';
@@ -32,7 +32,7 @@ export default class MenuBuilder
         {
             this.setupDevelopmentEnvironment();
         }
-
+        
         const template = this.buildMenusTemplate();
 
         const menu = Menu.buildFromTemplate( template );
