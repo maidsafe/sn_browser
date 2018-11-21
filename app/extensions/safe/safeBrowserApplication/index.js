@@ -5,7 +5,6 @@ import {
     manageSaveStateActions
 } from 'extensions/safe/safeBrowserApplication/manageBrowserConfig';
 
-
 import {
     isCI,
     startedRunningMock,
@@ -20,7 +19,7 @@ import { initAnon } from 'extensions/safe/safeBrowserApplication/init/initAnon';
 import initAuthedApplication from 'extensions/safe/safeBrowserApplication/init/initAuthed';
 
 let safeBrowserAppObject;
-// let safeBrowserAppState;
+
 // TODO: HACK for store for now... dont resave store on each change...
 let currentStore;
 
@@ -96,8 +95,13 @@ export const initSafeBrowserApp =
 
         const safeBrowserAppState = passedStore.getState().safeBrowserApp;
         const isMock = safeBrowserAppState.isMock;
+        const experimentsEnabled = safeBrowserAppState.experimentsEnabled;
 
-        const options = { ...defaultOptions, forceUseMock: isMock };
+        const options = {
+            ...defaultOptions,
+            forceUseMock           : isMock,
+            enableExperimentalApis : experimentsEnabled
+        };
 
         // TODO: here check store and what is desired from a connection!
         logger.info( 'Initialising Safe Browser App with options:', options );
@@ -195,6 +199,7 @@ const authFromStoreResponse = async ( res, store ) =>
 
 let debouncedPassAuthUriToStore;
 let prevSafeBrowserAppAuthState;
+let prevSafeBrowserAppExperimentalState;
 /**
  * Handle triggering actions and related functionality for Authorising on the SAFE netowrk
  * based upon the application auth state
@@ -212,6 +217,7 @@ const manageAuthorisationActions = async ( store ) =>
         isAuthing = false;
     }, 500 );
 
+
     if ( safeBrowserState.appStatus === SAFE.APP_STATUS.TO_AUTH && !isAuthing )
     {
         // cannot rely solely on store as can change in other ways
@@ -220,8 +226,10 @@ const manageAuthorisationActions = async ( store ) =>
 
         store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
 
-        initSafeBrowserApp( store, { auth: true } );
-        // TODO if this auth fails?
+        const authorise = true;
+        initSafeBrowserApp( store, authorise );
+
+        return;
     }
 
     // update check for auth state.
@@ -235,6 +243,8 @@ const manageAuthorisationActions = async ( store ) =>
         }
 
         prevSafeBrowserAppAuthState = safeBrowserAppIsAuthed();
+
+        return;
     }
 
     if ( safeBrowserState.authResponseUri && safeBrowserState.authResponseUri.length )
@@ -242,5 +252,13 @@ const manageAuthorisationActions = async ( store ) =>
         // TODO: This should 'clear' or somesuch....
         // OR: Only run if not authed?
         debouncedPassAuthUriToStore( safeBrowserState.authResponseUri );
+    }
+
+    const experimentsEnabled = safeBrowserState.experimentsEnabled;
+
+    if ( experimentsEnabled !== prevSafeBrowserAppExperimentalState )
+    {
+        prevSafeBrowserAppExperimentalState = experimentsEnabled;
+        initSafeBrowserApp( store, safeBrowserAppIsAuthed() );
     }
 };

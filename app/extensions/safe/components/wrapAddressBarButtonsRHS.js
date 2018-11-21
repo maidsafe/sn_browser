@@ -9,7 +9,7 @@ import 'antd/lib/switch/style';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as SafeBrowserAppActions
-    from 'extensions/safe/actions/SafeBrowserApplication_actions';
+    from 'extensions/safe/actions/safeBrowserApplication_actions';
 
 import styles from './wrapAddressBarButtons.css';
 

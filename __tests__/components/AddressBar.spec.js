@@ -7,7 +7,7 @@ import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();
 
-jest.mock('extensions/safe/actions/SafeBrowserApplication_actions')
+jest.mock('extensions/safe/actions/safeBrowserApplication_actions')
 
 describe( 'AddressBar', () =>
 {
