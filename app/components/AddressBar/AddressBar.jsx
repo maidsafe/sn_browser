@@ -99,6 +99,11 @@ export default class AddressBar extends Component
         const props = this.props;
 
         const {
+            address,
+            addTab,
+            addBookmark,
+            removeBookmark,
+            isBookmarked,
             activeTab,
             updateActiveTab,
             settingsMenuIsVisible,
@@ -131,6 +136,11 @@ export default class AddressBar extends Component
                     </Col>
                     <Col>
                         <ButtonsRHS
+                            address={ address }
+                            addTab={ addTab }
+                            isBookmarked={ isBookmarked }
+                            addBookmark={ addBookmark }
+                            removeBookmark={ removeBookmark }
                             menuItems={ this.getSettingsMenuItems() }
                             showSettingsMenu={ showSettingsMenu }
                             settingsMenuIsVisible={ settingsMenuIsVisible }

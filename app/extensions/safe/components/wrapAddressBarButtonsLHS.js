@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { showWebIdDropdown } from '../actions/safeBrowserApplication_actions';
+import { showWebIdDropdown, getAvailableWebIds } from '../actions/safeBrowserApplication_actions';
 import WebIdDropdown from 'extensions/safe/components/WebIdDropdown';
 import { Row, Col } from 'antd';
 import 'antd/lib/row/style';
@@ -22,7 +22,8 @@ function mapDispatchToProps( dispatch )
 {
     const actions =
         {
-            showWebIdDropdown
+            showWebIdDropdown,
+            getAvailableWebIds
         };
     return bindActionCreators( actions, dispatch );
 }
