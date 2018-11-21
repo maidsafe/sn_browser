@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { showWebIdDropdown, getAvailableWebIds } from '../actions/safeBrowserApplication_actions';
-import WebIdDropdown from 'extensions/safe/components/WebIdDropdown';
+import WebIdDropdown from 'extensions/safe/components/webIdDropdown';
 import { Row, Col } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
