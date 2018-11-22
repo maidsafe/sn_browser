@@ -77,7 +77,7 @@ export default class CustomMenu extends Component
             <div>
                 <Button
                     shape="circle"
-                    className={ styles.meatball }
+                    className={ `${styles.meatball} ${CLASSES.SETTINGS_MENU__BUTTON}` }
                     onClick={ this.handleShowingMenu }
                 >
                     <Icon component={ Meatball } />

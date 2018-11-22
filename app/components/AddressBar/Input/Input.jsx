@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { remote } from 'electron';
 import PropTypes from 'prop-types';
-// import { Column, Grid } from 'nessie-ui';
+import { CLASSES } from 'appConstants';
 
 import logger from 'logger';
 
@@ -10,7 +10,7 @@ import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarInput } from 'extensions/components';
 
 import { Input } from 'antd';
-import 'antd/lib/input/style'
+import 'antd/lib/input/style';
 
 /**
  * Left hand side buttons for the Address Bar
@@ -82,9 +82,9 @@ class AddressBarInput extends Component
     {
         const { onSelect } = this.props;
 
-        logger.info('CHANGE OF THE INPUTTTT', this.state )
+        logger.info( 'CHANGE OF THE INPUTTTT', this.state );
         this.setState( { editingUrl: true, address: event.target.value } );
-        logger.info('CHANGE OF THE INPUTTTT', this.state )
+        logger.info( 'CHANGE OF THE INPUTTTT', this.state );
 
         if ( onSelect )
         {
@@ -108,7 +108,7 @@ class AddressBarInput extends Component
 
     handleKeyPress( event )
     {
-        console.log('KEYPRESSSS', event.key)
+        console.log( 'KEYPRESSSS', event.key );
         const { windowId } = this.props;
         if ( event.key !== 'Enter' )
         {
@@ -138,9 +138,9 @@ class AddressBarInput extends Component
 
         return (
             <Input
-                // className={ 'js-address__input' }
-                addonBefore={addonBefore}
-                size={'large'}
+                className={ CLASSES.ADDRESS_INPUT }
+                addonBefore={ addonBefore }
+                size={ 'large' }
                 value={ address }
                 type="text"
                 ref={ ( input ) =>
