@@ -331,7 +331,7 @@ export default class Tab extends Component
 
     didStopLoading( )
     {
-        logger.verbose('DID STOP')
+        logger.verbose('Tab did stop loading')
         const { updateTab, index, isActiveTab } = this.props;
 
         const tabUpdate = {
@@ -349,7 +349,7 @@ export default class Tab extends Component
     {
         const { updateTab, index } = this.props;
 
-        logger.verbose( 'DID FINISH LAODING' );
+        logger.verbose('Tab did finish loading')
         const tabUpdate = {
             index,
             isLoading : false

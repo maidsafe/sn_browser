@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@maidsafe/safe-node-app": "git+https://github.com/maidsafe/safe_app_nodejs#49515769b01d9d3ffdb2310f143d01e963b0990f",
+    "@maidsafe/safe-node-app": "git+https://github.com/maidsafe/safe_app_nodejs#0c1a08535ff570c8f477b4ead0f9143d7f00a550",
     "cross-env": "5.1.3",
     "enum": "2.5.0",
     "ffi": "2.2.0",
@@ -36,7 +36,7 @@
     },
     "safe_authenticator": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/safe-client-libs",
-      "version": "v0.6.0",
+      "version": "0.9.0",
       "targetDir": "extensions/safe/dist/prod",
       "filename": "safe_authenticator",
       "filePattern": "^.*\\.(dll|so|dylib)$",

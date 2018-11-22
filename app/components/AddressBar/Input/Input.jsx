@@ -81,10 +81,7 @@ class AddressBarInput extends Component
     handleChange( event )
     {
         const { onSelect } = this.props;
-
-        logger.info( 'CHANGE OF THE INPUTTTT', this.state );
         this.setState( { editingUrl: true, address: event.target.value } );
-        logger.info( 'CHANGE OF THE INPUTTTT', this.state );
 
         if ( onSelect )
         {
@@ -108,7 +105,6 @@ class AddressBarInput extends Component
 
     handleKeyPress( event )
     {
-        console.log( 'KEYPRESSSS', event.key );
         const { windowId } = this.props;
         if ( event.key !== 'Enter' )
         {
