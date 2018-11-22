@@ -77,20 +77,34 @@ export default class AddressBar extends Component
         };
 
         return [
-            <div
-                role="menuitem"
-                tabIndex={ 0 }
-                className={ styles.menuItem }
-                onClick={
-                    () => addATab( 'bookmarks ' ) }
-            >Bookmarks</div>,
-            <div
-                role="menuitem"
-                tabIndex={ 0 }
-                className={ styles.menuItem }
-                onClick={
-                    () => addATab( 'history ' ) }
-            >History</div>
+            <Row
+                key={ 'menuItem-bookmarks' }
+                type="flex"
+                justify="start"
+                align="middle"
+            >
+                <div
+                    role="menuitem"
+                    tabIndex={ 0 }
+                    className={ styles.menuItem }
+                    onClick={
+                        () => addATab( 'bookmarks ' ) }
+                >Bookmarks</div>,
+            </Row>,
+            <Row
+                key={ 'menuItem-history' }
+                type="flex"
+                justify="start"
+                align="middle"
+            >
+                <div
+                    role="menuitem"
+                    tabIndex={ 0 }
+                    className={ styles.menuItem }
+                    onClick={
+                        () => addATab( 'history ' ) }
+                >History</div>
+            </Row>,
         ];
     }
 
