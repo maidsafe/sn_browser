@@ -262,12 +262,14 @@ export default class Tab extends Component
 
     onCrash = (e) =>
     {
-        logger.err('The webview crashed', e)
+        console.error(e)
+        logger.error('The webview crashed', e)
     }
 
     onGpuCrash = (e) =>
     {
-        logger.err('The webview GPU crashed', e)
+        console.error(e)
+        logger.error('The webview GPU crashed', e)
     }
 
     didStartLoading( )
