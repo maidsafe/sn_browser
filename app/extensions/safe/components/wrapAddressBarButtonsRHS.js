@@ -89,11 +89,19 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
             const { experimentsEnabled } = safeBrowserApp;
 
             const itemsToAdd = [
-                <Row type="flex" className={ styles.toggleRow }>
-                    <Col className={ styles.toggleText }>Toggle Experiments</Col>
-                    <Col>
+                <Row
+                    key={ 'menuItem-experimental-toggle' }
+                    type="flex"
+                    justify="space-between"
+                    align="middle"
+                    className={ styles.toggleRow }
+                >
+                    <Col span={6} className={ styles.toggleText }>Toggle Experiments</Col>
+                    <Col span={6} offset={6}>
                         <Switch
                             size="small"
+                            tabIndex={ 0 }
+                            style={ { float: 'right' } }
                             checked={ experimentsEnabled }
                             onChange={ this.handleExperimentalToggleClick }
                         />

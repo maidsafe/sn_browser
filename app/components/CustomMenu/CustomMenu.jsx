@@ -46,9 +46,9 @@ export default class CustomMenu extends Component
     {
         event.nativeEvent.stopImmediatePropagation();
 
-        const { showMenu, hideMenu, settingsMenuIsVisible } = this.props;
+        const { showMenu, hideMenu, isVisible } = this.props;
 
-        if ( settingsMenuIsVisible )
+        if ( isVisible )
         {
             hideMenu( );
         }
@@ -89,13 +89,7 @@ export default class CustomMenu extends Component
                             {
                                 menuItems.map( ( item, i ) =>
                                     (
-                                        <Row
-                                            key={ `menuItem-${i}` }
-                                            type="flex"
-                                            justify="start"
-                                            align="top">
-                                            { item }
-                                        </Row>
+                                        item
                                     ) )
                             }
                         </div>

@@ -11,8 +11,8 @@
     justify-content: space-around;
     box-sizing: border-box;
     border-right: 0;
+    border-left: 0;
     z-index: 3;
-
 }
 
 .addressBar
@@ -102,4 +102,5 @@
 /*  settings menu item */
 .menuItem{
     cursor: pointer;
+    padding: 2%;
 }
