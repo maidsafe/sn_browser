@@ -8,11 +8,12 @@ import ButtonsRHS from 'components/AddressBar/ButtonsRHS';
 import Input from 'components/AddressBar/Input';
 import logger from 'logger';
 
-import styles from './addressBar.css';
-
 import { Row, Col } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
+
+import styles from './addressBar.css';
+
 
 export default class AddressBar extends Component
 {

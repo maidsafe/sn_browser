@@ -402,7 +402,7 @@ const onSharedMDataDecision = ( data, isAllowed ) =>
                 allAuthCallBacks[reqQ.req.id].reject( err );
                 delete allAuthCallBacks[reqQ.req.id];
             }
-            
+
             reqQ.next();
         } );
 };

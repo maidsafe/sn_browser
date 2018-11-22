@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import logger from 'logger';
+import { CLASSES } from 'appConstants';
 
 import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
@@ -30,7 +31,7 @@ class ButtonsLHS extends Component
             >
                 <Col>
                     <Button
-                        className="js-address__backwards"
+                        className={ CLASSES.BACKWARDS }
                         icon="left"
                         shape="circle"
                         onClick={ handleBack }
@@ -38,7 +39,7 @@ class ButtonsLHS extends Component
                 </Col>
                 <Col>
                     <Button
-                        className="js-address__forwards"
+                        className={ CLASSES.FORWARDS }
                         shape="circle"
                         icon="right"
                         onClick={ handleForward }
@@ -46,7 +47,7 @@ class ButtonsLHS extends Component
                 </Col>
                 <Col>
                     <Button
-                        className={ styles.refresh }
+                        className={ CLASSES.REFRESH }
                         shape="circle"
                         icon="reload"
                         disabled={ activeTab.isLoading }
@@ -54,7 +55,7 @@ class ButtonsLHS extends Component
                     />
                 </Col>
             </Row>
-        )
+        );
     }
 }
 

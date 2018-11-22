@@ -226,7 +226,9 @@ export const CLASSES = {
 
     NOTIFICATION__ACCEPT : 'js-notification__accept',
     NOTIFICATION__REJECT : 'js-notification__reject',
-    NOTIFICATION__IGNORE : 'js-notification__ignore'
+    NOTIFICATION__IGNORE : 'js-notification__ignore',
+
+    SETTINGS_MENU__BUTTON : 'js-settingsMenu_button'
 };
 
 const getDomClasses = () =>

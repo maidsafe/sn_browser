@@ -78,12 +78,11 @@ class ButtonsRHS extends Component
             >
                 <Col>
                     <Button
-                        className={ styles.meatball }
+                        className={ `${CLASSES.BOOKMARK_PAGE}` }
                         shape="circle"
                         onClick={ this.handleBookmarking }
                     >
                         <Icon
-                            className={ `${CLASSES.BOOKMARK_PAGE}` }
                             type="star"
                             theme={ isBookmarked ? 'filled' : 'outlined' }
                         />
