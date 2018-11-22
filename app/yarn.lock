@@ -8,15 +8,17 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@maidsafe/safe-node-app@git+https://github.com/maidsafe/safe_app_nodejs#0c1a08535ff570c8f477b4ead0f9143d7f00a550":
+"@maidsafe/safe-node-app@git+https://github.com/maidsafe/safe_app_nodejs#1271bca705ca9e21f89a153573938b911b1a2d37":
   version "0.9.1"
-  resolved "git+https://github.com/maidsafe/safe_app_nodejs#0c1a08535ff570c8f477b4ead0f9143d7f00a550"
+  resolved "git+https://github.com/maidsafe/safe_app_nodejs#1271bca705ca9e21f89a153573938b911b1a2d37"
   dependencies:
+    cids bochaco/js-cid#temp-use-bochaco-multicodec
     cross-env "5.1.3"
     deps_downloader "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.3.0.tgz"
     enum "^2.3.0"
     ffi "^2.2.0"
     mime "^2.0.3"
+    multihashes "^0.4.14"
     rdflib "^0.19.0"
     ref "^1.3.3"
     ref-array "^1.2.0"
@@ -137,6 +139,18 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
+base-x@3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.4.tgz#94c1788736da065edb1d68808869e357c977fa77"
+  dependencies:
+    safe-buffer "^5.0.1"
+
+base-x@^3.0.2:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.5.tgz#d3ada59afed05b921ab581ec3112e6444ba0795a"
+  dependencies:
+    safe-buffer "^5.0.1"
+
 base64url@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/base64url/-/base64url-3.0.0.tgz#f2ba30b15f80413d88e3e6116c4f3f7f61e28a2a"
@@ -189,6 +203,12 @@ brorand@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
 
+bs58@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/bs58/-/bs58-4.0.1.tgz#be161e76c354f6f788ae4071f63f34e8c4f0a42a"
+  dependencies:
+    base-x "^3.0.2"
+
 buffers@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/buffers/-/buffers-0.1.1.tgz#b24579c3bed4d6d396aeee6d9a8ae7f5482ab7bb"
@@ -217,6 +237,14 @@ chainsaw@~0.1.0:
   resolved "https://registry.yarnpkg.com/chainsaw/-/chainsaw-0.1.0.tgz#5eab50b28afe58074d0d58291388828b5e5fbc98"
   dependencies:
     traverse ">=0.3.0 <0.4"
+
+cids@bochaco/js-cid#temp-use-bochaco-multicodec:
+  version "0.5.3"
+  resolved "https://codeload.github.com/bochaco/js-cid/tar.gz/fdd908ad57edd5359008adffde1ce32e3e970b15"
+  dependencies:
+    multibase "~0.4.0"
+    multicodec bochaco/js-multicodec#mime-types-as-codecs
+    multihashes "~0.4.13"
 
 co@^4.6.0:
   version "4.6.0"
@@ -788,6 +816,25 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+multibase@~0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/multibase/-/multibase-0.4.0.tgz#1bdb62c82de0114f822a1d8751bcbee91cd2efba"
+  dependencies:
+    base-x "3.0.4"
+
+multicodec@bochaco/js-multicodec#mime-types-as-codecs:
+  version "0.2.7"
+  resolved "https://codeload.github.com/bochaco/js-multicodec/tar.gz/71f81e833bb35776d21f4c1f6e6427379055c264"
+  dependencies:
+    varint "^5.0.0"
+
+multihashes@^0.4.14, multihashes@~0.4.13:
+  version "0.4.14"
+  resolved "https://registry.yarnpkg.com/multihashes/-/multihashes-0.4.14.tgz#774db9a161f81a8a27dc60788f91248e020f5244"
+  dependencies:
+    bs58 "^4.0.1"
+    varint "^5.0.0"
+
 n3@^0.4.1:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/n3/-/n3-0.4.5.tgz#5b70d3ab6a21c9e8d4c9bda2a3d4d90909beb508"
@@ -1323,6 +1370,10 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
+
+varint@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/varint/-/varint-5.0.0.tgz#d826b89f7490732fabc0c0ed693ed475dcb29ebf"
 
 verror@1.10.0:
   version "1.10.0"
