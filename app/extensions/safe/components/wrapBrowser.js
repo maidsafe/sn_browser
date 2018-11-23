@@ -5,7 +5,7 @@ import { SAFE } from 'extensions/safe/constants';
 
 // jsx css as babel not currently parsing css files here.
 const spectronAreaButton = {
-    width   : '1px',
+    width   : '10px',
     height  : '10px',
     display : 'inline-block',
 };
@@ -14,7 +14,7 @@ const spectronArea = {
     backgroundColor : 'blue',
     display         : 'block',
     width           : '100%',
-    height          : '10px'
+    height          : '40px'
 };
 
 const browserContainer = {
