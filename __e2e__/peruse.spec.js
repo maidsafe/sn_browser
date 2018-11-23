@@ -132,7 +132,7 @@ describe( 'main window', () =>
             await delay( 5500 );
 
             const text = await client.getText( 'body' );
-            expect( text ).toBe( 'Requested public name is not found');
+            expect( text ).toBe( 'No content found at requested address.');
         } );
     }
 
