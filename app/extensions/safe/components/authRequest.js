@@ -89,7 +89,7 @@ export const createAuthRequestElement = ( authReqData ) =>
                 <div key="share_mdata_parent_div">
                     <a key="info_box_expander" className="info_box_expander">Details</a>
                     <div key="info_box_details" className="info_box_details">
-                        <p className={ `blockText ${CLASSES.NOTIFIER_TEXT}`}  key="requested_mdata">Requested Mutable Data:</p>
+                        <p className="blockText"  key="requested_mdata">Requested Mutable Data:</p>
                         {
                             authReqData[reqType].mdata.map( ( mdatum, i ) =>
                             {

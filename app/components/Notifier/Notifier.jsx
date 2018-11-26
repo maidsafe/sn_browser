@@ -141,13 +141,13 @@ export default class Notifier extends Component
                 <MessageBox messageType={type}>
                     <Row verticalAlign="top" align="center">
                         <Column key="notifier-text" align="left">
-                          {
-                            reactNode && reactElement
-                          }
-                          {
-                            !reactNode &&
-                            <Text className={CLASSES.NOTIFIER_TEXT}>{ text } </Text>
-                          }
+                            {
+                                reactNode && reactElement
+                            }
+                            {
+                                !reactNode &&
+                                <Text className={CLASSES.NOTIFIER_TEXT}>{ text } </Text>
+                            }
                         </Column>
                         {
                             handleOnAccept &&
