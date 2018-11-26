@@ -28,6 +28,9 @@ import {
     , windowLoaded,
     isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
+import { CLASSES } from 'appConstants';
+
+const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
 
 jest.unmock( 'electron' );
 
@@ -151,6 +154,43 @@ describe( 'safe authenticator protocol', () =>
         expect( history ).toMatch( 'Nothing to see here yet' );
     } );
 
+    it( 'renders different messages between first authorisation and reauthorisations', async ( ) =>
+    {
+        expect.assertions( 2 );
+        const { client } = app;
+        await delay( 2500 );
+        const tabIndex = await newTab( app );
+
+        await navigateTo( app, 'safe-auth://home' );
+        await delay( 2500 );
+
+        await login( app, secret, password, tabIndex );
+        await delay( 2500 );
+        await setClientToMainBrowserWindow( app );
+        await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+        await setClientToMainBrowserWindow( app );
+        await delay( 2500 );
+        let notifierText = await client.getText( `.${CLASSES.NOTIFIER_TEXT}` );
+        expect( notifierText ).toMatch( 'SAFE Browser requests authorisation' );
+        await delay( 2500 );
+        await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
+
+        await delay( 2500 );
+        await logout( app, tabIndex );
+        await delay( 2500 );
+
+        await login( app, secret, password );
+        await delay( 2500 );
+        await setClientToMainBrowserWindow( app );
+        await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+        await setClientToMainBrowserWindow( app );
+        await delay( 2500 );
+
+        notifierText = await client.getText( `.${CLASSES.NOTIFIER_TEXT}` );
+        expect( notifierText ).toMatch( 'SAFE Browser is asking to be reauthorised, since you previously granted authorisation.' );
+    } );
+
+
     if( travisOS !== 'linux' )
     {
         //linux failing with xdg-open
@@ -176,10 +216,9 @@ describe( 'safe authenticator protocol', () =>
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
             console.log('note', note);
-            expect( note ).toMatch( /SAFE Browser requests Auth Permission/ );
+            expect( note ).toMatch( 'SAFE Browser requests authorisation' );
         } );
     }
-
 
     // it( 'loads safe-auth://bundle home page from internal protcol', async () =>
     // {
