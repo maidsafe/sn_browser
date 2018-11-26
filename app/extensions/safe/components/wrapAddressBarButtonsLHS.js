@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { showWebIdDropdown, getAvailableWebIds } from '../actions/safeBrowserApplication_actions';
 import WebIdDropdown from 'extensions/safe/components/webIdDropdown';
@@ -7,7 +8,6 @@ import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 // import styles from './wrapAddressBarButtons.css';
 

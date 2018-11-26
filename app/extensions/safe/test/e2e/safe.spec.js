@@ -173,6 +173,8 @@ describe( 'SAFE network webFetch operation', async () =>
             await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
             await delay( 4500 );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+
+            console.log('I DID A CLICCKKKKK', BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE)
             await delay( 4500 );
             await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );

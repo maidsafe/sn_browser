@@ -186,10 +186,14 @@ class Browser extends Component
             clearNotification,
 
             showSettingsMenu,
-            hideSettingsMenu
+            hideSettingsMenu,
+
+            // TODO extend tab to not need this
+            safeBrowserApp
 
         } = props;
 
+        const experimentsEnabled = safeBrowserApp ? safeBrowserApp.experimentsEnabled : false;
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
 
@@ -275,6 +279,7 @@ class Browser extends Component
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
                     windowId={ windowId}
+                    safeExperimentsEnabled={ experimentsEnabled }
                     ref={ ( c ) =>
                     {
                         this.tabContents = c;
