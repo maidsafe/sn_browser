@@ -60,10 +60,11 @@ describe( 'safe authenticator protocol', () =>
     {
         it( 'is registered to handle safe-auth/home js requests:', async ( ) =>
         {
-            const { client } = app;
-            opn( 'safe-auth://blabla' );
             expect.assertions( 2 );
-
+            const { client } = app;
+            await delay( 2500 );
+            opn( 'safe-auth://blabla' );
+            await delay( 2500 );
 
             setClientToMainBrowserWindow( app );
             // await client.pause(1500)
