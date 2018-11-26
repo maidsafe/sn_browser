@@ -8,9 +8,9 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@maidsafe/safe-node-app@git+https://github.com/maidsafe/safe_app_nodejs#1271bca705ca9e21f89a153573938b911b1a2d37":
-  version "0.9.1"
-  resolved "git+https://github.com/maidsafe/safe_app_nodejs#1271bca705ca9e21f89a153573938b911b1a2d37"
+"@maidsafe/safe-node-app@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.10.0.tgz#9fc9ed9dba25905f26092b280e8d62e3f1ef62dc"
   dependencies:
     cids bochaco/js-cid#temp-use-bochaco-multicodec
     cross-env "5.1.3"
@@ -19,7 +19,7 @@
     ffi "^2.2.0"
     mime "^2.0.3"
     multihashes "^0.4.14"
-    rdflib "^0.19.0"
+    rdflib "^0.19.1"
     ref "^1.3.3"
     ref-array "^1.2.0"
     ref-struct "^1.1.0"
@@ -238,7 +238,7 @@ chainsaw@~0.1.0:
   dependencies:
     traverse ">=0.3.0 <0.4"
 
-cids@bochaco/js-cid#temp-use-bochaco-multicodec:
+"cids@github:bochaco/js-cid#temp-use-bochaco-multicodec":
   version "0.5.3"
   resolved "https://codeload.github.com/bochaco/js-cid/tar.gz/fdd908ad57edd5359008adffde1ce32e3e970b15"
   dependencies:
@@ -1009,7 +1009,7 @@ rc@^1.1.2:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-rdflib@^0.19.0:
+rdflib@^0.19.1:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-0.19.1.tgz#66141051902c7e7e407b4b61d075461cc0c0a28c"
   dependencies:
