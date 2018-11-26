@@ -562,7 +562,13 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
 
     setCurrentWebId( newWebId ) {
 
-        this.debouncedWebIdUpdateFunc( newWebId );
+        // TODO: move webId func into extensions
+        const { safeExperimentsEnabled } = this.props;
+
+        if( safeExperimentsEnabled )
+        {
+            this.debouncedWebIdUpdateFunc( newWebId );
+        }
     }
 
     newWindow( e )
