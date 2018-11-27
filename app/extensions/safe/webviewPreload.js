@@ -146,7 +146,6 @@ export const setupSafeAPIs = ( passedStore, win = window ) =>
     win.safe.authorise = async ( authObj ) =>
     {
         if ( !authObj || typeof authObj !== 'object' ) throw new Error( 'Auth object is required' );
-
         return await createRemoteCall( 'authenticateFromUriObject', passedStore )( authObj );
     };
 };

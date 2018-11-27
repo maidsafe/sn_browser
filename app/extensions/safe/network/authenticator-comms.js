@@ -2,6 +2,7 @@ import logger from 'logger';
 import { handleAuthUrl } from 'extensions/safe/actions/authenticator_actions';
 import { updateRemoteCall } from 'actions/remoteCall_actions';
 import { parseSafeAuthUrl } from 'extensions/safe/utils/safeHelpers';
+import { getCurrentStore } from 'extensions/safe/safeBrowserApplication';
 import {
     PROTOCOLS
 } from 'appConstants';
@@ -67,4 +68,34 @@ export const reconnect = ( app ) =>
         return Promise.reject( new Error( 'Application not initialised' ) );
     }
     return app.reconnect();
+};
+
+/**
+ * Reply to a remoteCall requeting auth from a webview DOM API.
+ * (ClientType === 'WEB' )
+ * @param  {Object} request request object from ipc.js
+ */
+export const replyToRemoteCallFromAuth = ( request ) =>
+{
+    logger.verbose( 'Replying to RemoteCall From Auth' );
+    const store = getCurrentStore();
+    const state = store.getState();
+    const remoteCalls = state.remoteCalls;
+
+    const remoteCallToReply = remoteCalls.find( theCall =>
+    {
+        if ( theCall.name !== 'authenticateFromUriObject' ) return;
+
+        const theRequestFromCall = theCall.args[0].uri;
+
+        return theRequestFromCall === request.uri;
+    } );
+
+    store.dispatch(
+        updateRemoteCall( {
+            ...remoteCallToReply,
+            done       : true,
+            inProgress : true,
+            response   : request.res }
+        ) );
 };

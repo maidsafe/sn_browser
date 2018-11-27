@@ -1,9 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
-// import { authFromInternalResponse } from 'extensions/safe/safeBrowserApplication/authentication/auth';
 import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
-import * as notificationActions from 'actions/notification_actions';
 import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
@@ -11,7 +9,9 @@ import logger from 'logger';
 import { addAuthNotification } from '../manageAuthNotifications';
 import errConst from '../err-constants';
 
-import { getSafeBackgroundProcessStore } from 'extensions/safe/index'
+// TODO unify this with calls for safeBrowserApp store...
+import { getSafeBackgroundProcessStore } from 'extensions/safe/index';
+import { replyToRemoteCallFromAuth } from 'extensions/safe/network';
 
 const ipcEvent = null;
 
@@ -37,6 +37,7 @@ const allAuthCallBacks = {};
  */
 export const setAuthCallbacks = ( req, resolve, reject ) =>
 {
+    logger.verbose('IPC.js Setting authCallbacks')
     allAuthCallBacks[req.id] = {
         resolve, reject
     };
@@ -107,11 +108,14 @@ class ReqQueue
 
     add( req )
     {
+        logger.verbose('IPC.js adding req')
         if ( !( req instanceof Request ) )
         {
+            logger.error('IPC.js not a Request instance, so ignoring')
             this.next();
             return;
         }
+        logger.verbose('IPC.js pushing req')
         this.q.push( req );
         this.processTheReq();
     }
@@ -130,12 +134,14 @@ class ReqQueue
     processTheReq()
     {
         const self = this;
+
         if ( this.processing || this.q.length === 0 )
         {
             return;
         }
         this.processing = true;
         this.req = this.q[0];
+
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
             if ( !res )
@@ -173,6 +179,24 @@ class ReqQueue
                 {
                     addAuthNotification( res, app, sendAuthDecision, getSafeBackgroundProcessStore() );
                 }
+
+                //each of the above func trigger self.next()
+                return;
+            }
+
+            // if (res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState)
+            // {
+            //     sendAuthDecision( true, res, reqType );
+            // }
+
+            // WEB && not an auth req (that's handled above)
+            if( this.req.type === CLIENT_TYPES.WEB  )
+            {
+                logger.info('IPC.js About to open send remoteCall response for auth req', res)
+
+                replyToRemoteCallFromAuth( this.req );
+                self.next();
+
                 return;
             }
 
@@ -246,6 +270,7 @@ const enqueueRequest = ( req, type ) =>
     }
     else
     {
+        logger.verbose('IPC.js enqueue authQ req...')
         reqQ.add( request );
     }
 };
