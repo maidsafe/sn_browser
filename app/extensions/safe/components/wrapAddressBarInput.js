@@ -44,10 +44,11 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
 
             const { isMock, experimentsEnabled } = safeBrowserApp;
 
-            const addOns = [];
+            const addOnsBefore = [];
+            const addOnsAfter = [];
 
-            if ( isMock ) addOns.push( <Tag key="F5222D" color="#F5222D">Mock Network</Tag> );
-            if ( experimentsEnabled ) addOns.push( <Tag key="42566E" color="#42566E"><Icon type="experiment" /></Tag> );
+            if ( isMock ) addOnsBefore.push( <Tag key="F5222D" color="#F5222D">Mock Network</Tag> );
+            if ( experimentsEnabled ) addOnsAfter.push( <Tag key="42566E" color="#42566E"><Icon type="experiment" /></Tag> );
 
             return (
                 <Grid gutters="M">
@@ -56,7 +57,8 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
                         <AddressBarInput
                             // className={ styles.addressBar }
                             { ...this.props }
-                            addonBefore={ addOns }
+                            addonBefore={ addOnsBefore }
+                            addonAfter={ addOnsAfter }
                         />
                     </Column>
                 </Grid>
