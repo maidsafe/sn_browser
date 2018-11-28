@@ -23,7 +23,7 @@ export const initAnon = async ( passedStore, options ) =>
 {
     const appOptions = {
         libPath                : CONFIG.SAFE_NODE_LIB_PATH,
-        registerScheme         : false,
+        registerScheme         : true,
         joinSchemes            : [PROTOCOLS.SAFE],
         configPath             : CONFIG.CONFIG_PATH,
         forceUseMock           : options.forceUseMock,
