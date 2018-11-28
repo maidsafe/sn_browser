@@ -88,8 +88,8 @@ export default class AddressBar extends Component
                     tabIndex={ 0 }
                     className={ styles.menuItem }
                     onClick={
-                        () => addATab( 'bookmarks ' ) }
-                >Bookmarks</div>,
+                        () => addATab( 'bookmarks' ) }
+                >Bookmarks</div>
             </Row>,
             <Row
                 key={ 'menuItem-history' }
@@ -102,9 +102,9 @@ export default class AddressBar extends Component
                     tabIndex={ 0 }
                     className={ styles.menuItem }
                     onClick={
-                        () => addATab( 'history ' ) }
+                        () => addATab( 'history' ) }
                 >History</div>
-            </Row>,
+            </Row>
         ];
     }
 

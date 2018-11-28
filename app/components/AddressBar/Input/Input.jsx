@@ -129,13 +129,14 @@ class AddressBarInput extends Component
 
     render()
     {
-        const { isSelected, addonBefore } = this.props;
+        const { isSelected, addonBefore, addonAfter } = this.props;
         const { address } = this.state;
 
         return (
             <Input
                 className={ CLASSES.ADDRESS_INPUT }
-                addonBefore={ addonBefore }
+                addonBefore={ addonBefore.length ? addonBefore : undefined }
+                addonAfter={ addonAfter.length ? addonAfter : undefined }
                 size={ 'large' }
                 value={ address }
                 type="text"
