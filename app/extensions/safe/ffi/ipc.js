@@ -50,21 +50,7 @@ const parseResUrl = ( url ) =>
     return split.join( ':' );
 };
 
-const openExternal = ( uri ) =>
-{
-    if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || reqQ.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
-    {
-        return;
-    }
-    try
-    {
-        shell.openExternal( parseResUrl( uri ) );
-    }
-    catch ( err )
-    {
-        logger.error( err.message );
-    }
-};
+ 
 
 async function sendAuthDecision( isAllowed, authReqData, reqType )
 {
@@ -104,6 +90,22 @@ class ReqQueue
         this.req = null;
         this.resChannelName = resChannelName;
         this.errChannelName = errChannelName;
+    }
+
+    openExternal( uri )
+    {
+        if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || this.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
+        {
+            return;
+        }
+        try
+        {
+            shell.openExternal( parseResUrl( uri ) );
+        }
+        catch ( err )
+        {
+            logger.error( err.message );
+        }
     }
 
     add( req )
@@ -195,12 +197,14 @@ class ReqQueue
                 logger.info('IPC.js About to open send remoteCall response for auth req', res)
 
                 replyToRemoteCallFromAuth( this.req );
+
                 self.next();
 
                 return;
+
             }
 
-            openExternal( res );
+            self.openExternal( res );
 
             self.next();
         } ).catch( ( err ) =>
@@ -325,7 +329,7 @@ const onAuthDecision = ( authData, isAllowed ) =>
             }
             else
             {
-                openExternal( res );
+                reqQ.openExternal( res );
             }
 
             reqQ.next();
@@ -368,7 +372,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
             }
             else
             {
-                openExternal( res );
+                reqQ.openExternal( res );
             }
 
             reqQ.next();
@@ -388,7 +392,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
         } );
 };
 
-const onSharedMDataDecision = ( data, isAllowed ) =>
+export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBacks=allAuthCallBacks) =>
 {
     if ( !data )
     {
@@ -403,32 +407,34 @@ const onSharedMDataDecision = ( data, isAllowed ) =>
     authenticator.encodeMDataResp( data, isAllowed )
         .then( ( res ) =>
         {
-            reqQ.req.res = res;
+            queue.req.res = res;
 
-            if ( allAuthCallBacks[reqQ.req.id] )
+            if ( authCallBacks[queue.req.id] )
             {
-                allAuthCallBacks[reqQ.req.id].resolve( res );
-                delete allAuthCallBacks[reqQ.req.id];
+                authCallBacks[queue.req.id].resolve( res );
+                delete authCallBacks[queue.req.id];
             }
             else
             {
-                openExternal( res );
+                queue.openExternal( res );
             }
 
-            reqQ.next();
+            queue.next();
         } )
         .catch( ( err ) =>
-        {
-            reqQ.req.error = err;
+        {   console.log(err,"this is an error log");
+            queue.req.error = err;
             logger.error( errConst.SHAREMD_DECISION_RESP.msg( err ) );
 
-            if ( allAuthCallBacks[reqQ.req.id] )
-            {
-                allAuthCallBacks[reqQ.req.id].reject( err );
-                delete allAuthCallBacks[reqQ.req.id];
-            }
 
-            reqQ.next();
+            if ( authCallBacks[queue.req.id] )
+            {
+                authCallBacks[queue.req.id].reject( err );
+                delete authCallBacks[queue.req.id];
+            }
+            
+            queue.next();
+
         } );
 };
 
