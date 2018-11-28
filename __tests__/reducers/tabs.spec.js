@@ -7,14 +7,18 @@ import { isRunningUnpacked } from 'appConstants';
 
 const favicon = isRunningUnpacked ? '../resources/favicon.ico' : '../favicon.ico';
 
+jest.mock('utils/urlHelpers', () => ({
+    makeValidAddressBarUrl : jest.fn( uri => uri )
+}))
+
 describe( 'tabs reducer', () =>
 {
     const basicTab = {
-        url          : 'safe://hello',
+        url          : 'hello',
         windowId     : 1,
         index        : 0,
         historyIndex : 0,
-        history      : ['safe://hello'],
+        history      : ['hello'],
         favicon
     };
 
@@ -30,7 +34,7 @@ describe( 'tabs reducer', () =>
             expect(
                 tabs( [], {
                     type    : TYPES.ADD_TAB,
-                    payload : { url: 'safe://hello' }
+                    payload : { url: 'hello' }
                 } )
             ).toEqual( [
                 basicTab
@@ -45,18 +49,18 @@ describe( 'tabs reducer', () =>
                     {
                         type    : TYPES.ADD_TAB,
                         payload : {
-                            url : 'safe://another-url'
+                            url : 'another-url'
                         }
                     }
                 )
             ).toEqual( [
                 basicTab,
                 {
-                    url          : 'safe://another-url',
+                    url          : 'another-url',
                     windowId     : 1,
                     historyIndex : 0,
                     index        : 1,
-                    history      : ['safe://another-url'],
+                    history      : ['another-url'],
                     favicon
                 }
             ] );
@@ -73,7 +77,7 @@ describe( 'tabs reducer', () =>
                     {
                         type    : TYPES.ADD_TAB,
                         payload : {
-                            url         : 'safe://another-url',
+                            url         : 'another-url',
                             isActiveTab : true
                         }
                     }
@@ -85,11 +89,11 @@ describe( 'tabs reducer', () =>
                 },
                 activeTabAnotherWindow,
                 {
-                    url          : 'safe://another-url',
+                    url          : 'another-url',
                     windowId     : 1,
                     historyIndex : 0,
                     index        : 2,
-                    history      : ['safe://another-url'],
+                    history      : ['another-url'],
                     isActiveTab  : true,
                     favicon
                 }
@@ -351,10 +355,10 @@ describe( 'tabs reducer', () =>
             expect( newState[2] ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://changed!',
+                    url          : 'changed!',
                     title        : 'hi',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://changed!']
+                    history      : ['hello', 'changed!']
                 }
             );
 
@@ -372,10 +376,10 @@ describe( 'tabs reducer', () =>
             expect( newState[3] ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://changed!',
+                    url          : 'changed!',
                     title        : 'hi',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://changed!']
+                    history      : ['hello', 'changed!']
 
                 }
             );
@@ -390,7 +394,7 @@ describe( 'tabs reducer', () =>
             expect( newState[3].history ).toHaveLength( 2 );
         } );
 
-        it( 'should update the active tab\'s with a safe:// url when no protocol is given', () =>
+        it( 'should update the active tab\'s with a  url when no protocol is given', () =>
         {
             const newState = tabs( [basicTab, basicTab, activeTab], {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
@@ -400,10 +404,10 @@ describe( 'tabs reducer', () =>
             expect( newState[2] ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://changed!',
+                    url          : 'changed!',
                     title        : 'hi',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://changed!']
+                    history      : ['hello', 'changed!']
                 }
             );
 
@@ -445,20 +449,20 @@ describe( 'tabs reducer', () =>
             expect( secondState[2] ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://changed!',
+                    url          : 'changed!',
                     title        : 'hi',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://changed!']
+                    history      : ['hello', 'changed!']
                 }
             );
 
             expect( fourthState[2] ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://changed#woooo',
+                    url          : 'changed#woooo',
                     title        : 'hi',
                     historyIndex : 2,
-                    history      : ['safe://hello', 'safe://changed!', 'safe://changed#woooo']
+                    history      : ['hello', 'changed!', 'changed#woooo']
                 }
             );
 
@@ -482,113 +486,17 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://changedagain!',
+                    url          : 'changedagain!',
                     title        : 'hi',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://changedagain!']
+                    history      : ['hello', 'changedagain!']
                 }
             );
 
             expect( updatedTab ).toHaveProperty( 'history' );
         } );
 
-        // REENABLE once visiableURL and URL are added
-        xit( 'should not update the history/index with minor a slash addition', () =>
-        {
-            const newState = tabs( [basicTab, secondTab, activeTab], {
-                type    : TYPES.UPDATE_TAB,
-                payload : { url: 'safe://hello/', title: 'hi', index: 2 }
-            } );
-            const updatedTab = newState[2];
-            expect( updatedTab ).toMatchObject(
-                {
-                    ...activeTab,
-                    url          : 'safe://hello',
-                    title        : 'hi',
-                    historyIndex : 0,
-                    history      : ['safe://hello']
-                }
-            );
 
-            expect( updatedTab ).toHaveProperty( 'history' );
-            expect( updatedTab.history ).toHaveLength( 1 );
-        } );
-
-        it( 'should not update the history/index with minor a slash removal', () =>
-        {
-            const newState = tabs( [{ ...basicTab, url: 'safe://hello/' }, secondTab, activeTab], {
-                type    : TYPES.UPDATE_TAB,
-                payload : { url: 'safe://hello', title: 'hi', index: 2 }
-            } );
-            const updatedTab = newState[2];
-            expect( updatedTab ).toMatchObject(
-                {
-                    ...activeTab,
-                    url          : 'safe://hello',
-                    title        : 'hi',
-                    historyIndex : 0,
-                    history      : ['safe://hello']
-                }
-            );
-
-            expect( updatedTab ).toHaveProperty( 'history' );
-            expect( updatedTab.history ).toHaveLength( 1 );
-        } );
-
-        it( 'should not update the history/index with minor a hash addition', () =>
-        {
-            const newState = tabs( [basicTab, secondTab, activeTab], {
-                type    : TYPES.UPDATE_TAB,
-                payload : { url: 'safe://hello/#', title: 'hi', index: 2 }
-            } );
-            const updatedTab = newState[2];
-            expect( updatedTab ).toMatchObject(
-                {
-                    ...activeTab,
-                    url          : 'safe://hello',
-                    title        : 'hi',
-                    historyIndex : 0,
-                    history      : ['safe://hello']
-                }
-            );
-
-            const secondState = tabs( newState, {
-                type    : TYPES.UPDATE_TAB,
-                payload : { url: 'safe://hello/#/', title: 'hi', index: 2 }
-            } );
-
-            const tabAgain = secondState[2];
-
-            expect( updatedTab.url ).toBe( 'safe://hello' );
-            expect( updatedTab ).toHaveProperty( 'history' );
-            expect( updatedTab.history ).toHaveLength( 1 );
-
-
-            expect( tabAgain.url ).toBe( 'safe://hello' );
-            expect( tabAgain ).toHaveProperty( 'history' );
-            expect( tabAgain.history ).toHaveLength( 1 );
-        } );
-
-        it( 'should update the history/index with large a hash addition', () =>
-        {
-            const newState = tabs( [basicTab, secondTab, activeTab], {
-                type    : TYPES.UPDATE_TAB,
-                payload : { url: 'safe://hello/#/boom/', title: 'hi', index: 2 }
-            } );
-            const updatedTab = newState[2];
-            expect( updatedTab ).toMatchObject(
-                {
-                    ...activeTab,
-                    url          : 'safe://hello/#/boom',
-                    title        : 'hi',
-                    historyIndex : 1,
-                    history      : ['safe://hello', 'safe://hello/#/boom']
-                }
-            );
-
-            expect( updatedTab ).toHaveProperty( 'history' );
-            expect( updatedTab.history ).toHaveLength( 2 );
-        } );
     } );
 
 
@@ -652,7 +560,7 @@ describe( 'tabs reducer', () =>
         const activeTab = {
             ...basicTab,
             isActiveTab  : true,
-            history      : ['hello', 'forward', 'forward again'],
+            history      : ['hello', 'second', 'third'],
             historyIndex : 2,
             url          : 'forward again'
         };
@@ -667,7 +575,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'forward',
+                    url          : 'second',
                     historyIndex : 1
                 }
             );
@@ -700,6 +608,7 @@ describe( 'tabs reducer', () =>
                 }
             );
         } );
+
     } );
 
 
@@ -708,7 +617,7 @@ describe( 'tabs reducer', () =>
         const activeTab = {
             ...basicTab,
             isActiveTab  : true,
-            history      : ['safe://hello', 'safe://forward', 'safe://forward again', 'safe://another', 'safe://anotheranother'],
+            history      : ['hello', 'forward', 'forward again', 'another', 'anotheranother'],
             historyIndex : 0,
             windowId: 1
         };
@@ -723,7 +632,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://forward',
+                    url          : 'forward',
                     historyIndex : 1
                 }
             );
@@ -739,7 +648,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTabAgain ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://hello',
+                    url          : 'hello',
                     historyIndex : 0
                 }
             );
@@ -749,16 +658,16 @@ describe( 'tabs reducer', () =>
 
             const thirdUpdate = tabs( secondUpdate, {
                 type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : { url: 'safe://new url overwriting previous history array', windowId: 1 }
+                payload : { url: 'new url overwriting previous history array', windowId: 1 }
             } );
 
             const updatedTabThree = thirdUpdate[2];
             expect( updatedTabThree ).toMatchObject(
                 {
                     ...activeTab,
-                    url          : 'safe://new url overwriting previous history array',
+                    url          : 'new url overwriting previous history array',
                     historyIndex : 1,
-                    history      : ['safe://hello', 'safe://new url overwriting previous history array']
+                    history      : ['hello', 'new url overwriting previous history array']
                 }
             );
 
@@ -780,7 +689,7 @@ describe( 'tabs reducer', () =>
 
         const receivedTab = {
             ...basicTab,
-            url          : 'safe://received',
+            url          : 'received',
             historyIndex : 0,
             index        : 2
         };
