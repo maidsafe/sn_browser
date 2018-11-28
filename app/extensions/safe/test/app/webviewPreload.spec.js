@@ -5,6 +5,18 @@ import { APP_INFO, startedRunningProduction } from 'appConstants';
 // avoid appveyour for its weak.ref issues right now.
 const APPVEYOR = process.env.APPVEYOR;
 
+// Some mocks to negate FFI and native libs we dont care about
+jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
+jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
+jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
+
+
+jest.mock( 'ref-array', () => jest.fn() );
+//
+jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
+
+jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
 describe.only( 'SAFE manageWebIdUpdates', () =>
 {
