@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-// import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
+import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
 
 export const TYPES = {
@@ -78,9 +78,9 @@ const triggerGetWebIds = async ( ) =>
 {
     if ( !window || !window.thisIsTheBackgroundProcess ) return;
 
-    logger.verbose( '(Test so not actually) Retrieving webIds...' );
+    logger.verbose( 'Retrieving webIds...' );
 
-    // const ids = await getWebIdsFromSafe();
+    await getWebIdsFromSafe();
 };
 
 export const getAvailableWebIds = createAliasedAction(
