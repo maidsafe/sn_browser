@@ -61,7 +61,6 @@ export const safeBrowserAppIsConnected = ( ) =>
                 netState === SAFE.NETWORK_STATE.LOGGED_IN;
 };
 
-
 export const safeBrowserAppAuthFailed = ( ) =>
     currentStore.getState().safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISATION_FAILED;
 
@@ -107,13 +106,19 @@ export const initSafeBrowserApp =
         logger.info( 'Initialising Safe Browser App with options:', options );
         try
         {
+            let tempObject;
             if ( authorise )
             {
-                safeBrowserAppObject = await initAuthedApplication( passedStore, options );
+                tempObject = await initAuthedApplication( passedStore, options );
             }
             else
             {
-                safeBrowserAppObject = await initAnon( passedStore, options );
+                tempObject = await initAnon( passedStore, options );
+            }
+
+            if ( !safeBrowserAppObject )
+            {
+                safeBrowserAppObject = tempObject;
             }
         }
         catch ( e )
