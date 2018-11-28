@@ -7,9 +7,9 @@ import { isRunningUnpacked } from 'appConstants';
 
 const favicon = isRunningUnpacked ? '../resources/favicon.ico' : '../favicon.ico';
 
-jest.mock('utils/urlHelpers', () => ({
+jest.mock( 'utils/urlHelpers', () => ( {
     makeValidAddressBarUrl : jest.fn( uri => uri )
-}))
+} ) );
 
 describe( 'tabs reducer', () =>
 {
@@ -332,16 +332,16 @@ describe( 'tabs reducer', () =>
 
         it( 'should throw if no windowId passed', () =>
         {
-            try{
-
+            try
+            {
                 const newState = tabs( [basicTab, basicTab, activeTab], {
                     type    : TYPES.UPDATE_ACTIVE_TAB,
                     payload : { url: 'changed!', title: 'hi' }
                 } );
             }
-            catch( e )
+            catch ( e )
             {
-                expect(e.message).toMatch(/windowId/)
+                expect( e.message ).toMatch( /windowId/ );
             }
         } );
 
@@ -499,7 +499,7 @@ describe( 'tabs reducer', () =>
 
         it( 'should increase the history/index with a url update', () =>
         {
-            expect.assertions(4);
+            expect.assertions( 4 );
             const newState = tabs( [basicTab, secondTab, activeTab], {
                 type    : TYPES.UPDATE_TAB,
                 payload : { url: 'hello/newurl', title: 'hi', index: 2 }
@@ -591,7 +591,7 @@ describe( 'tabs reducer', () =>
             history      : ['hello', 'second', 'third'],
             historyIndex : 2,
             url          : 'forward again',
-            index: 1
+            index        : 1
         };
 
         it( 'should move the active tab backwards in time', () =>
@@ -653,7 +653,7 @@ describe( 'tabs reducer', () =>
             } );
 
             const backwardsOnce = tabs( secondState, {
-                type    : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.ACTIVE_TAB_BACKWARDS
             } );
 
             const updatedTab = backwardsOnce[1];
@@ -673,7 +673,7 @@ describe( 'tabs reducer', () =>
 
 
             const backwardsAgain = tabs( backwardsOnce, {
-                type    : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.ACTIVE_TAB_BACKWARDS
             } );
 
             const updatedTabAgain = backwardsAgain[1];
@@ -723,7 +723,7 @@ describe( 'tabs reducer', () =>
             isActiveTab  : true,
             history      : ['hello', 'forward', 'forward again', 'another', 'anotheranother'],
             historyIndex : 0,
-            windowId: 1
+            windowId     : 1
         };
 
         it( 'should remove history on forward/backwards/newURL navigations', () =>
