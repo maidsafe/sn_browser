@@ -20,7 +20,12 @@ class ButtonsLHS extends Component
 {
     render()
     {
-        const { activeTab, handleBack, handleForward, handleRefresh } = this.props;
+        const {
+            activeTab,
+            handleBack,
+            handleForward,
+            handleRefresh
+        } = this.props;
 
         return (
             <Row

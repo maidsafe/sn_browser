@@ -49,14 +49,14 @@ export default class AddressBar extends Component
 
     handleBack = ( ) =>
     {
-        const { activeTabBackwards } = this.props;
-        activeTabBackwards();
+        const { activeTabBackwards, windowId } = this.props;
+        activeTabBackwards( windowId );
     }
 
     handleForward = ( ) =>
     {
-        const { activeTabForwards } = this.props;
-        activeTabForwards();
+        const { activeTabForwards, windowId } = this.props;
+        activeTabForwards( windowId );
     }
 
     handleRefresh = ( event ) =>
