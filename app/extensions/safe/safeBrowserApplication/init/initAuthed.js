@@ -23,6 +23,7 @@ const initAuthedApplication = async ( passedStore, options ) =>
     {
         safeBrowserAppObject =
             await initialiseApp( APP_INFO.info, onNetworkStateChange( passedStore ), {
+                ...APP_INFO.opts,
                 libPath                : CONFIG.SAFE_NODE_LIB_PATH,
                 forceUseMock           : options.forceUseMock,
                 enableExperimentalApis : options.enableExperimentalApis
