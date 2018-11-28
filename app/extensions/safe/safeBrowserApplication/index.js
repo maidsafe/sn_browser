@@ -19,6 +19,7 @@ import { initAnon } from 'extensions/safe/safeBrowserApplication/init/initAnon';
 import initAuthedApplication from 'extensions/safe/safeBrowserApplication/init/initAuthed';
 
 let safeBrowserAppObject;
+let tempSafeBrowserObjectUntilAuthed;
 
 // TODO: HACK for store for now... dont resave store on each change...
 let currentStore;
@@ -106,20 +107,16 @@ export const initSafeBrowserApp =
         logger.info( 'Initialising Safe Browser App with options:', options );
         try
         {
-            let tempObject;
             if ( authorise )
             {
-                tempObject = await initAuthedApplication( passedStore, options );
+                tempSafeBrowserObjectUntilAuthed =
+                    await initAuthedApplication( passedStore, options );
             }
             else
             {
-                tempObject = await initAnon( passedStore, options );
+                tempSafeBrowserObjectUntilAuthed = await initAnon( passedStore, options );
             }
 
-            if ( !safeBrowserAppObject )
-            {
-                safeBrowserAppObject = tempObject;
-            }
         }
         catch ( e )
         {
@@ -164,6 +161,12 @@ const authFromStoreResponse = async ( res, store ) =>
     try
     {
         urisUnderAuth.push( res );
+
+        if( tempSafeBrowserObjectUntilAuthed )
+        {
+            safeBrowserAppObject = tempSafeBrowserObjectUntilAuthed;
+            tempSafeBrowserObjectUntilAuthed = null;
+        }
         safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
 
         if ( safeBrowserAppObject.auth.registered )
