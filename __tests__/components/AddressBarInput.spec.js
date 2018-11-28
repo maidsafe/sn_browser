@@ -7,6 +7,18 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 const mockStore = configureStore();
 
+
+// Some mocks to negate FFI and native libs we dont care about
+jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
+jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
+jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
+
+jest.mock( 'ref-array', () => jest.fn() );
+//
+jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
+
+jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'AddressBarInput', () =>
