@@ -160,26 +160,51 @@ describe( 'SAFE network webFetch operation', async () =>
 
 
     // if( travisOS !== 'linux' )
-    if ( process.platform !== 'linux' )
+    if ( process.platform === 'linux' )
     {
-        test( 'triggers a save for the window state', async () =>
+        // no more as these depend on sysUri registration
+        return;
+    }
+
+    test( 'triggers a save for the window state', async () =>
+    {
+        expect.assertions( 1 );
+
+        const { client } = app;
+        await setClientToMainBrowserWindow( app );
+        await delay( 1500 );
+
+        await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
+        await delay( 4500 );
+        await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+
+        console.log('I DID A CLICCKKKKK', BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE)
+        await delay( 4500 );
+        await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+        const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+        expect( note ).toBe( 'Unable to connect to the network. Unauthorised' );
+    } );
+
+
+    if ( nodeEnv === 'dev' )
+    {
+        it( 'shows error in UI if URL resource does not exist', async () =>
         {
-            expect.assertions( 1 );
-
+            expect.assertions(1);
             const { client } = app;
-            await setClientToMainBrowserWindow( app );
-            await delay( 1500 );
+            await delay( 2500 );
 
-            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
-            await delay( 4500 );
-            await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+            const tabIndex = await newTab( app );
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
 
-            console.log('I DID A CLICCKKKKK', BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE)
-            await delay( 4500 );
-            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
-            const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+            await navigateTo( app, 'example.com' );
 
-            expect( note ).toBe( 'Unable to connect to the network. Unauthorised' );
+            await client.windowByIndex( tabIndex   );
+            await delay( 5500 );
+
+            const text = await client.getText( 'body' );
+            expect( text ).toBe( 'No content found at requested address.');
         } );
     }
 
