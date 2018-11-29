@@ -28,6 +28,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 320000;
 
 const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
 
+console.warn( 'This test runs against a packaged version of the DEV browser. If not built, this will FAIL')
 describe( 'SAFE network log in and out', async () =>
 {
     const appInfo = {
@@ -114,13 +115,19 @@ describe( 'SAFE network log in and out', async () =>
 
             await setClientToMainBrowserWindow( app );
 
+            console.log('THIS ONE WE GO**********************************')
             await navigateTo( app, 'safe-browser:bookmarks' );
             // fetch browser config
             await client.waitForExist( BROWSER_UI.SPECTRON_AREA, NOTIFICATION_WAIT );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_LOAD );
-            await delay( 5000 );
 
-            await delay( 1500 );
+            console.log('clicked loaaaaaaaddddddd')
+            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+            await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
+
+            console.log('clicked loaaaaaaaddddddd and now waitinggggg')
+            await delay( 8000 );
+            // await delay( 1500 );
             const bookmarks = await client.getText( '.urlList__table' );
             // bookmarks is an array
             expect( bookmarks ).toMatch( 'shouldsavetobookmarks' );
@@ -209,7 +216,7 @@ describe( 'SAFE network log in and out', async () =>
 
             await navigateTo( app, 'safe-browser:bookmarks' );
 
-            await delay( 1500 );
+            await delay( 2500 );
             const bookmarksFinalCheck = await client.getText( '.urlList__table' );
 
             // bookmarksFinalCheck is an array
