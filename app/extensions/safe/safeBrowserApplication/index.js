@@ -8,6 +8,8 @@ import {
 import {
     isCI,
     startedRunningMock,
+    isRunningSpectronTest,
+    travisOS,
     isRunningSpectronTestProcessingPackagedApp
 } from 'appConstants';
 
@@ -115,6 +117,14 @@ export const initSafeBrowserApp =
             else
             {
                 tempSafeBrowserObjectUntilAuthed = await initAnon( passedStore, options );
+            }
+
+
+            // evade xdg missing dep on CI (where we dont do auth tests...)
+            if( isRunningSpectronTestProcess )
+            // if( travisOS === 'linux' && isRunningSpectronTestProcess )
+            {
+                tempSafeBrowserObjectUntilAuthed = await safeBrowserAppObject.auth.loginForTest();
             }
 
         }
