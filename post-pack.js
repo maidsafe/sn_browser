@@ -55,6 +55,8 @@ if ( platform === LINUX )
 if ( platform === WINDOWS )
 {
     CONTAINING_FOLDER = path.resolve( targetDir, 'win-unpacked' );
+    const PERUSE_RESOURCES_FOLDER = path.resolve( CONTAINING_FOLDER, 'resources' );
+    fs.copySync( path.resolve( PERUSE_RESOURCES_FOLDER, 'SAFE Browser.crust.config' ), path.resolve( CONTAINING_FOLDER, 'SAFE Browser.crust.config' ), { overwrite: true } );
 
     PLATFORM_NAME = 'win';
 }
