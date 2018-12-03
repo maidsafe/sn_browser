@@ -24,7 +24,9 @@ class ButtonsLHS extends Component
             activeTab,
             handleBack,
             handleForward,
-            handleRefresh
+            handleRefresh,
+            canGoForwards,
+            canGoBackwards
         } = this.props;
 
         return (
@@ -37,6 +39,7 @@ class ButtonsLHS extends Component
                 <Col>
                     <Button
                         className={ CLASSES.BACKWARDS }
+                        disabled={ !canGoBackwards }
                         icon="left"
                         shape="circle"
                         onClick={ handleBack }
@@ -45,6 +48,7 @@ class ButtonsLHS extends Component
                 <Col>
                     <Button
                         className={ CLASSES.FORWARDS }
+                        disabled={ !canGoForwards }
                         shape="circle"
                         icon="right"
                         onClick={ handleForward }

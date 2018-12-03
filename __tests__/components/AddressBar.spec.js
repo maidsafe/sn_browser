@@ -43,7 +43,11 @@ describe( 'AddressBar', () =>
             onSelect           : jest.fn(),
             onFocus            : jest.fn(),
             reloadPage         : jest.fn(),
-            activeTab          : { isLoading: false }
+            activeTab          : {
+                isLoading: false,
+                historyIndex: 1,
+                history : ['a','b']
+            }
         };
 
 

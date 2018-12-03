@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow, render } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { Provider } from 'react-redux';
 
 import configureStore from 'redux-mock-store';
@@ -17,6 +17,7 @@ const initialState = {
         isActiveTabReloading : false
     },
     tabs                 : [],
+    windowId             : 1,
     addTab               : jest.fn(),
     updateTab            : jest.fn(),
     closeTab             : jest.fn(),
@@ -67,11 +68,14 @@ describe( 'Browser', () =>
     {
         newState = { ...initialState,
             tabs : [
-                { url         : 'hello',
-                    isActiveTab : true,
-                    windowId    : 1,
-                    index       : 1,
-                    isClosed    : false
+                {
+                    url          : 'hello',
+                    isActiveTab  : true,
+                    windowId     : 1,
+                    index        : 1,
+                    isClosed     : false,
+                    historyIndex : 1,
+                    history      : ['a', 'hello']
                 }] };
 
         store = mockStore( newState );
