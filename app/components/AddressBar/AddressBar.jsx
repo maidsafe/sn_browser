@@ -49,14 +49,14 @@ export default class AddressBar extends Component
 
     handleBack = ( ) =>
     {
-        const { activeTabBackwards } = this.props;
-        activeTabBackwards();
+        const { activeTabBackwards, windowId } = this.props;
+        activeTabBackwards( windowId );
     }
 
     handleForward = ( ) =>
     {
-        const { activeTabForwards } = this.props;
-        activeTabForwards();
+        const { activeTabForwards, windowId } = this.props;
+        activeTabForwards( windowId );
     }
 
     handleRefresh = ( event ) =>
@@ -126,6 +126,9 @@ export default class AddressBar extends Component
             hideSettingsMenu
         } = this.props;
 
+        const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
+        const canGoForwards = activeTab ? activeTab.historyIndex < activeTab.history.length - 1 : false;
+
         return (
             <div className={ `${styles.container} js-address` } >
                 <Row
@@ -140,6 +143,8 @@ export default class AddressBar extends Component
                             activeTab={ activeTab }
                             updateActiveTab={ updateActiveTab }
                             handleBack={ this.handleBack }
+                            canGoForwards={ canGoForwards }
+                            canGoBackwards={ canGoBackwards }
                             handleForward={ this.handleForward }
                             handleRefresh={ this.handleRefresh }
                             { ...props }

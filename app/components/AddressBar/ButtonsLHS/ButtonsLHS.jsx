@@ -20,7 +20,14 @@ class ButtonsLHS extends Component
 {
     render()
     {
-        const { activeTab, handleBack, handleForward, handleRefresh } = this.props;
+        const {
+            activeTab,
+            handleBack,
+            handleForward,
+            handleRefresh,
+            canGoForwards,
+            canGoBackwards
+        } = this.props;
 
         return (
             <Row
@@ -32,6 +39,7 @@ class ButtonsLHS extends Component
                 <Col>
                     <Button
                         className={ CLASSES.BACKWARDS }
+                        disabled={ !canGoBackwards }
                         icon="left"
                         shape="circle"
                         onClick={ handleBack }
@@ -40,6 +48,7 @@ class ButtonsLHS extends Component
                 <Col>
                     <Button
                         className={ CLASSES.FORWARDS }
+                        disabled={ !canGoForwards }
                         shape="circle"
                         icon="right"
                         onClick={ handleForward }
