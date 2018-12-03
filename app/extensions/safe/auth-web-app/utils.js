@@ -80,6 +80,10 @@ export const parseErrCode = ( errStr ) =>
 
 export const parseAppName = (name) => {
   const parsedName = name.replace(/-|_/g, ' ');
+  // if the app's name it's just a sequence
+  // of '-' and/or '_' chars, then return it as is
+  if (parsedName.trim().length === 0) return name;
+
   return parsedName.split(' ').map((i) => `${i[0].toUpperCase()}${i.slice(1)}`).join(' ');
 };
 
