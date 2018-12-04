@@ -121,7 +121,7 @@ after_build:
 deploy:
   release: $(appveyor_repo_tag_name)
   tag: $(appveyor_repo_tag_name)
-  description: 'Peruse [Safe] Browser'
+  description: 'SAFE Browser'
   provider: GitHub
   auth_token: $(ACCESS_TOKEN)
  # your encrypted token from GitHub

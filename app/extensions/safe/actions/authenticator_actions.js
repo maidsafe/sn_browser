@@ -37,10 +37,8 @@ export const {
 
 const triggerAuthDecoding = ( reqObject ) =>
 {
-    if ( process.mainModule.filename && !process.mainModule.filename.includes( 'bg.html' ) )
-    {
-        return;
-    }
+    if ( !window || !window.thisIsTheBackgroundProcess ) return;
+
     callIPC.enqueueRequest( reqObject );
 };
 

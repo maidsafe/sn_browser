@@ -18,18 +18,19 @@ const initialState = {
         // libErrPopup: false
 
     },
-    peruseApp : {
-        appStatus       : null,
-        networkStatus   : null,
-        app             : null,
-        readStatus      : '',
-        authResponseUri : '',
-        savedBeforeQuit : false,
-        saveStatus      : '',
-        isMock          : null,
+    safeBrowserApp : {
+        appStatus            : null,
+        networkStatus        : null,
+        app                  : null,
+        readStatus           : '',
+        authResponseUri      : '',
+        savedBeforeQuit      : false,
+        saveStatus           : '',
+        isMock               : null,
+        experimentsEnabled   : false,
         showingWebIdDropdown : false,
-        isFetchingWebIds  : false,
-        webIds          : []
+        isFetchingWebIds     : false,
+        webIds               : []
     },
     webFetch : {
         fetching : false,

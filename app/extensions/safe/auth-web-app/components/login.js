@@ -13,9 +13,12 @@ export default class Login extends Component
       isAuthorised : PropTypes.bool,
       libErrPopup  : PropTypes.bool,
       loading      : PropTypes.bool,
-      error        : PropTypes.string,
       login        : PropTypes.func,
-      clearError   : PropTypes.func
+      clearError   : PropTypes.func,
+      error                : PropTypes.shape( {
+          code        : PropTypes.number,
+          description : PropTypes.string
+      } )
   };
 
   static contextTypes = {
@@ -51,7 +54,7 @@ export default class Login extends Component
       setTimeout( () =>
       {
           this.secretEle.focus();
-      }, 100 );
+      }, 300 );
   }
 
   componentWillUpdate( nextProps )
@@ -118,7 +121,8 @@ export default class Login extends Component
                                   <form onSubmit={ this.handleSubmit }>
                                       <div className="inp-grp">
                                           <input
-                                              className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT}
+                                          key="userName"
+                                              className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }
                                               type="password"
                                               id="acc-secret"
                                               name="acc-secret"
@@ -129,7 +133,9 @@ export default class Login extends Component
                                               required
                                           />
                                           <label htmlFor="acc-secret">Account Secret</label>
-                                          <span className="msg error">{ error }</span>
+                                          { error && error.code !== -3 &&
+                                              <span className="msg error">{ error.description }</span>
+                                          }
                                           <button
                                               type="button"
                                               tabIndex="-1"
@@ -139,7 +145,8 @@ export default class Login extends Component
                                       </div>
                                       <div className="inp-grp">
                                           <input
-                                              className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT}
+                                          key="accPassword"
+                                              className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }
                                               type="password"
                                               id="acc-password"
                                               name="acc-password"
@@ -150,6 +157,9 @@ export default class Login extends Component
                                               required
                                           />
                                           <label htmlFor="acc-password">Account Password</label>
+                                          { error && error.code === -3 &&
+                                              <span className="msg error">{ error.description }</span>
+                                          }
                                           <button
                                               type="button"
                                               tabIndex="-1"

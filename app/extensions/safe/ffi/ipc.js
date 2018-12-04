@@ -1,9 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
-import { getPeruseAuthReqUri, authFromInternalResponse, replyToRemoteCallFromAuth } from '../network';
-import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
+import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
-import * as notificationActions from 'actions/notification_actions';
 import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
@@ -11,7 +9,9 @@ import logger from 'logger';
 import { addAuthNotification } from '../manageAuthNotifications';
 import errConst from '../err-constants';
 
-import { getSafeBackgroundProcessStore } from 'extensions/safe/index'
+// TODO unify this with calls for safeBrowserApp store...
+import { getSafeBackgroundProcessStore } from 'extensions/safe/index';
+import { replyToRemoteCallFromAuth } from 'extensions/safe/network';
 
 const ipcEvent = null;
 
@@ -37,6 +37,7 @@ const allAuthCallBacks = {};
  */
 export const setAuthCallbacks = ( req, resolve, reject ) =>
 {
+    logger.verbose('IPC.js Setting authCallbacks')
     allAuthCallBacks[req.id] = {
         resolve, reject
     };
@@ -49,21 +50,7 @@ const parseResUrl = ( url ) =>
     return split.join( ':' );
 };
 
-const openExternal = ( uri ) =>
-{
-    if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || reqQ.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
-    {
-        return;
-    }
-    try
-    {
-        shell.openExternal( parseResUrl( uri ) );
-    }
-    catch ( err )
-    {
-        logger.error( err.message );
-    }
-};
+ 
 
 async function sendAuthDecision( isAllowed, authReqData, reqType )
 {
@@ -105,13 +92,32 @@ class ReqQueue
         this.errChannelName = errChannelName;
     }
 
+    openExternal( uri )
+    {
+        if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || this.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
+        {
+            return;
+        }
+        try
+        {
+            shell.openExternal( parseResUrl( uri ) );
+        }
+        catch ( err )
+        {
+            logger.error( err.message );
+        }
+    }
+
     add( req )
     {
+        logger.verbose('IPC.js adding req')
         if ( !( req instanceof Request ) )
         {
+            logger.error('IPC.js not a Request instance, so ignoring')
             this.next();
             return;
         }
+        logger.verbose('IPC.js pushing req')
         this.q.push( req );
         this.processTheReq();
     }
@@ -130,12 +136,14 @@ class ReqQueue
     processTheReq()
     {
         const self = this;
+
         if ( this.processing || this.q.length === 0 )
         {
             return;
         }
         this.processing = true;
         this.req = this.q[0];
+
         authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
         {
             if ( !res )
@@ -173,29 +181,30 @@ class ReqQueue
                 {
                     addAuthNotification( res, app, sendAuthDecision, getSafeBackgroundProcessStore() );
                 }
+
+                //each of the above func trigger self.next()
                 return;
             }
 
-
-            // if ( ipcEvent )
+            // if (res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState)
             // {
-            //     ipcEvent.sender.send( self.resChannelName, self.req );
+            //     sendAuthDecision( true, res, reqType );
             // }
 
-            // TODO. Use openUri and parse received url once decoded to decide app
-            // OR: upgrade connection
-            if ( this.req.uri === getPeruseAuthReqUri() )
+            // WEB && not an auth req (that's handled above)
+            if( this.req.type === CLIENT_TYPES.WEB  )
             {
-                authFromInternalResponse( parseResUrl( res ) );
-            }
-            else if( this.req.type === CLIENT_TYPES.WEB )
-            {
+                logger.info('IPC.js About to open send remoteCall response for auth req', res)
+
                 replyToRemoteCallFromAuth( this.req );
+
+                self.next();
+
+                return;
+
             }
-            else
-            {
-                openExternal( res );
-            }
+
+            self.openExternal( res );
 
             self.next();
         } ).catch( ( err ) =>
@@ -210,7 +219,7 @@ class ReqQueue
             // TODO: Setup proper rejection from when unauthed.
             if ( bgStore )
             {
-                bgStore.dispatch( peruseAppActions.receivedAuthResponse( err.message ) );
+                bgStore.dispatch( safeBrowserAppActions.receivedAuthResponse( err.message ) );
             }
 
             if ( ipcEvent )
@@ -265,6 +274,7 @@ const enqueueRequest = ( req, type ) =>
     }
     else
     {
+        logger.verbose('IPC.js enqueue authQ req...')
         reqQ.add( request );
     }
 };
@@ -319,7 +329,7 @@ const onAuthDecision = ( authData, isAllowed ) =>
             }
             else
             {
-                openExternal( res );
+                reqQ.openExternal( res );
             }
 
             reqQ.next();
@@ -362,7 +372,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
             }
             else
             {
-                openExternal( res );
+                reqQ.openExternal( res );
             }
 
             reqQ.next();
@@ -382,7 +392,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
         } );
 };
 
-const onSharedMDataDecision = ( data, isAllowed ) =>
+export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBacks=allAuthCallBacks) =>
 {
     if ( !data )
     {
@@ -397,31 +407,33 @@ const onSharedMDataDecision = ( data, isAllowed ) =>
     authenticator.encodeMDataResp( data, isAllowed )
         .then( ( res ) =>
         {
-            reqQ.req.res = res;
+            queue.req.res = res;
 
-            if ( allAuthCallBacks[reqQ.req.id] )
+            if ( authCallBacks[queue.req.id] )
             {
-                allAuthCallBacks[reqQ.req.id].resolve( res );
-                delete allAuthCallBacks[reqQ.req.id];
+                authCallBacks[queue.req.id].resolve( res );
+                delete authCallBacks[queue.req.id];
             }
             else
             {
-                openExternal( res );
+                queue.openExternal( res );
             }
 
-            reqQ.next();
+            queue.next();
         } )
         .catch( ( err ) =>
-        {
-            reqQ.req.error = err;
+        {   console.log(err,"this is an error log");
+            queue.req.error = err;
             logger.error( errConst.SHAREMD_DECISION_RESP.msg( err ) );
 
-            if ( !allAuthCallBacks[reqQ.req.id] )
+
+            if ( authCallBacks[queue.req.id] )
             {
-                allAuthCallBacks[reqQ.req.id].reject( res );
-                delete allAuthCallBacks[reqQ.req.id];
-                reqQ.next();
+                authCallBacks[queue.req.id].reject( err );
+                delete authCallBacks[queue.req.id];
             }
+            
+            queue.next();
 
         } );
 };

@@ -1,28 +1,32 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import { getWebIds as getWebIdsFromSafe } from 'extensions/safe/peruseSafeApp';
+import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
 
 export const TYPES = {
-    SET_APP_STATUS    : 'SET_APP_STATUS',
-    SET_NETWORK_STATUS    : 'SET_NETWORK_STATUS',
-    SET_IS_MOCK    : 'SET_IS_MOCK',
+    SET_APP_STATUS     : 'SET_APP_STATUS',
+    SET_NETWORK_STATUS : 'SET_NETWORK_STATUS',
+    SET_IS_MOCK        : 'SET_IS_MOCK',
 
-    //webId
+    // webId
+    ENABLE_EXPERIMENTS  : 'ENABLE_EXPERIMENTS',
+    DISABLE_EXPERIMENTS : 'DISABLE_EXPERIMENTS',
+
+    // webId
     GET_AVAILABLE_WEB_IDS : 'GET_AVAILABLE_WEB_IDS',
     SET_AVAILABLE_WEB_IDS : 'SET_AVAILABLE_WEB_IDS',
     FETCHING_WEB_IDS      : 'FETCHING_WEB_IDS',
 
-    SET_READ_CONFIG_STATUS     : 'SET_READ_CONFIG_STATUS',
+    SET_READ_CONFIG_STATUS : 'SET_READ_CONFIG_STATUS',
     SET_SAVE_CONFIG_STATUS : 'SET_SAVE_CONFIG_STATUS',
 
-    //read status from network
+    // read status from network
     RECEIVED_AUTH_RESPONSE : 'RECEIVED_AUTH_RESPONSE',
 
-    RECONNECT_SAFE_APP          : 'RECONNECT_SAFE_APP',
-    RESET_STORE          : 'RESET_STORE',
+    RECONNECT_SAFE_APP : 'RECONNECT_SAFE_APP',
+    RESET_STORE        : 'RESET_STORE',
 
-    //UI actions.
+    // UI actions.
     SHOW_WEB_ID_DROPDOWN : 'SHOW_WEB_ID_DROPDOWN'
 };
 
@@ -30,6 +34,9 @@ export const {
     setAppStatus,
     setNetworkStatus,
     setIsMock,
+
+    enableExperiments,
+    disableExperiments,
 
     setAvailableWebIds,
     fetchingWebIds,
@@ -49,6 +56,9 @@ export const {
     TYPES.SET_NETWORK_STATUS,
     TYPES.SET_IS_MOCK,
 
+    TYPES.ENABLE_EXPERIMENTS,
+    TYPES.DISABLE_EXPERIMENTS,
+
     TYPES.SET_AVAILABLE_WEB_IDS,
     TYPES.FETCHING_WEB_IDS,
 
@@ -64,12 +74,13 @@ export const {
 );
 
 
-const triggerGetWebIds = async (  ) =>
+const triggerGetWebIds = async ( ) =>
 {
-    if( !window || !window.thisIsTheBackgroundProcess ) return;
+    if ( !window || !window.thisIsTheBackgroundProcess ) return;
 
-    logger.verbose('Retrieving webIds');
-    const ids = await getWebIdsFromSafe();
+    logger.verbose( 'Retrieving webIds...' );
+
+    await getWebIdsFromSafe();
 };
 
 export const getAvailableWebIds = createAliasedAction(

@@ -49,7 +49,7 @@ const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
 
             if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {
-                backgroundProcess.webContents.openDevTools();
+                backgroundProcess.webContents.openDevTools({ mode: 'detach' });
             }
             resolve( backgroundProcess );
         } );

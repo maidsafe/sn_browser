@@ -75,7 +75,7 @@ export default class Notifier extends Component
                 updateNotification({ id, response: 'deny' })
             };
         }
-		 
+
         const reactNodeToElement = ( nodeObject ) =>
         {
             const nodeDescription = {};
@@ -93,12 +93,31 @@ export default class Notifier extends Component
                         {
                             return nodeDescription.children = nodeObject.props.children;
                         }
-
-                        nodeDescription.props = {
-                            [prop] : nodeObject[key][prop]
+                        if ( nodeDescription.props )
+                        {
+                            nodeDescription.props = Object.assign(
+                                {},
+                                nodeDescription.props,
+                                {
+                                    [prop] : nodeObject[key][prop]
+                                }
+                            );
+                        }
+                        else
+                        {
+                            nodeDescription.props = {
+                                [prop] : nodeObject[key][prop]
+                            }
                         }
                      } )
-
+                }
+                if ( key === 'key' && nodeObject.key )
+                {
+                    if ( !nodeDescription.props )
+                    {
+                        nodeDescription.props = {};
+                    }
+                    nodeDescription.props.key = nodeObject.key;
                 }
             } );
             if( Array.isArray( nodeDescription.children ) )
@@ -116,35 +135,36 @@ export default class Notifier extends Component
         };
 
         const reactElement = reactNode ? reactNodeToElement(reactNode) : null;
-        
+
         return (
             <Row hasMinHeight className={ styles.container } gutters={"none"}>
                 <MessageBox messageType={type}>
                     <Row verticalAlign="top" align="center">
                         <Column key="notifier-text" align="left">
-                          {
-                            reactNode && reactElement
-                          }
-                          {
-                            !reactNode &&
-                            <Text className={CLASSES.NOTIFIER_TEXT}>{ text } </Text>
-                          }
+                            {
+                                reactNode && reactElement
+                            }
+                            {
+                                !reactNode &&
+                                <Text className={CLASSES.NOTIFIER_TEXT}>{ text } </Text>
+                            }
                         </Column>
                         {
                             handleOnAccept &&
                             <Column verticalAlign="top" key="notifier-accept" align="right">
-                                <Button role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
+                                <Button className={CLASSES.NOTIFICATION__ACCEPT} role="promoted" onClick={ handleOnAccept }>{ acceptText }</Button>
                             </Column>
                         }
                         {
                             handleOnDeny &&
                             <Column verticalAlign="top" key="notifier-deny" align="right">
-                                <Button onClick={ handleOnDeny }>{ denyText }</Button>
+                                <Button className={CLASSES.NOTIFICATION__REJECT} onClick={ handleOnDeny }>{ denyText }</Button>
                             </Column>
                         }
                         <Column verticalAlign="top" key="notifier-dismiss" align="right">
                             <IconButton
                                 role="subtle"
+                                className={CLASSES.NOTIFICATION__IGNORE}
                                 iconType="close"
                                 onClick={ this.handleDismiss }
                             >

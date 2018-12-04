@@ -8,9 +8,15 @@ import { INTERNAL_PAGES } from 'appConstants';
 import { isInternalPage } from 'utils/urlHelpers';
 import History from 'components/PerusePages/History';
 import Bookmarks from 'components/PerusePages/Bookmarks';
+import logger from 'logger';
 
 export default class TabContents extends Component
 {
+    constructor( props )
+    {
+        super( props );
+        this.allTabComponents = [];
+    }
     getActiveTab()
     {
         return this.activeTab;
@@ -18,18 +24,28 @@ export default class TabContents extends Component
 
     render()
     {
-        const { addTab, closeTab, bookmarks, allTabs, tabs, updateActiveTab,
-                updateTab, isActiveTabReloading, pageLoaded, windowId } = this.props;
+        const {
+            addTab,
+            closeTab,
+            bookmarks,
+            allTabs,
+            tabs,
+            updateActiveTab,
+            updateTab,
+            isActiveTabReloading,
+            pageLoaded,
+            windowId,
+            safeExperimentsEnabled
+        } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
         {
             if ( !tab.isClosed )
             {
+                const isActiveTab = tab.isActiveTab;
                 if ( isInternalPage( tab ) )
                 {
                     const urlObj = url.parse( tab.url );
-                    const isActiveTab = tab.isActiveTab;
-
                     switch ( urlObj.host )
                     {
                         case INTERNAL_PAGES.HISTORY :
@@ -72,20 +88,20 @@ export default class TabContents extends Component
                     }
                 }
 
-                const isActiveTab = tab.isActiveTab;
                 const TheTab = ( <Tab
                     webId={ tab.webId }
                     url={ tab.url }
                     isActiveTab={ isActiveTab }
                     isActiveTabReloading={ isActiveTabReloading }
                     addTab={ addTab }
-                    closeTab={  closeTab }
+                    closeTab={ closeTab }
                     updateTab={ updateTab }
                     updateActiveTab={ updateActiveTab }
                     pageLoaded={ pageLoaded }
                     key={ tab.index }
                     index={ tab.index }
                     windowId={ windowId }
+                    safeExperimentsEnabled={ safeExperimentsEnabled }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )

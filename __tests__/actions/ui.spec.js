@@ -7,6 +7,22 @@ describe( 'ui actions', () =>
         expect( ui.TYPES ).toBeDefined();
     } );
 
+    it( 'should show settings menu', () =>
+    {
+        const expectedAction = {
+            type : ui.TYPES.SHOW_SETTINGS_MENU
+        };
+        expect( ui.showSettingsMenu( ) ).toEqual( expectedAction );
+    } );
+
+    it( 'should hide settings menu', () =>
+    {
+        const expectedAction = {
+            type : ui.TYPES.HIDE_SETTINGS_MENU
+        };
+        expect( ui.hideSettingsMenu( ) ).toEqual( expectedAction );
+    } );
+
     it( 'should set addressbar selected', () =>
     {
         const expectedAction = {

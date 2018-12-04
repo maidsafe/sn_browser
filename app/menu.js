@@ -5,11 +5,12 @@ import {
     activeTabForwards,
     activeTabBackwards,
     closeActiveTab,
-    reopenTab
+    reopenTab,
+    setActiveTab
 } from 'actions/tabs_actions';
 
 import { selectAddressBar } from 'actions/ui_actions';
-import { isHot } from 'appConstants';
+import { isHot,isRunningDebug } from 'appConstants';
 import { getLastClosedTab } from 'reducers/tabs';
 import logger from 'logger';
 import pkg from 'appPackage';
@@ -31,7 +32,7 @@ export default class MenuBuilder
         {
             this.setupDevelopmentEnvironment();
         }
-
+        
         const template = this.buildMenusTemplate();
 
         const menu = Menu.buildFromTemplate( template );
@@ -64,9 +65,9 @@ export default class MenuBuilder
         const store = this.store;
 
         const subMenuAbout = {
-            label   : 'Peruse',
+            label   : 'SAFE Browser',
             submenu : [
-                { label: 'About Peruse', selector: 'orderFrontStandardAboutPanel:' },
+                { label: 'About SAFE Browser', selector: 'orderFrontStandardAboutPanel:' },
                 { type: 'separator' },
                 { label: 'Services', submenu: [] },
                 { type: 'separator' },
@@ -107,6 +108,66 @@ export default class MenuBuilder
                         {
                             const windowId = win.webContents.id;
                             this.store.dispatch( addTab( { url: 'about:blank', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( selectAddressBar() );
+                        }
+                    }
+                },
+                {
+                    label       : 'Select Next Tab',
+                    accelerator : 'Ctrl+Tab',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            const state = store.getState();
+                            let index;
+                            const openTabs = state.tabs.filter( ( tab ) => !tab.isClosed && tab.windowId === windowId );
+                            openTabs.forEach( ( tab, i ) =>
+                            {
+                                if ( tab.isActiveTab )
+                                {
+                                    if ( i === openTabs.length - 1 )
+                                    {
+                                        index = openTabs[0].index;
+                                    }
+                                    else
+                                    {
+                                        index = openTabs[i + 1].index;
+                                    }
+                                }
+                            } );
+                            this.store.dispatch( setActiveTab( { index } ) );
+                            this.store.dispatch( selectAddressBar() );
+                        }
+                    }
+                },
+                {
+                    label       : 'Select Previous Tab',
+                    accelerator : 'Ctrl+Shift+Tab',
+                    click       : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            const state = store.getState();
+                            let index;
+                            const openTabs = state.tabs.filter( ( tab ) => !tab.isClosed && tab.windowId === windowId );
+                            openTabs.forEach( ( tab, i ) =>
+                            {
+                                if ( tab.isActiveTab )
+                                {
+                                    if ( i === 0 )
+                                    {
+                                        index = openTabs[openTabs.length - 1].index;
+                                    }
+                                    else
+                                    {
+                                        index = openTabs[i - 1].index;
+                                    }
+                                }
+                            } );
+                            this.store.dispatch( setActiveTab( { index } ) );
                             this.store.dispatch( selectAddressBar() );
                         }
                     }
@@ -194,7 +255,7 @@ export default class MenuBuilder
                         if ( win )
                         {
                             const windowId = win.webContents.id;
-                            this.store.dispatch( addTab( { url: 'peruse://bookmarks', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( addTab( { url: 'safe-browser://bookmarks', windowId, isActiveTab: true } ) );
                         }
                     } },
                 { type: 'separator' },
@@ -228,7 +289,7 @@ export default class MenuBuilder
                         if ( win )
                         {
                             const windowId = win.webContents.id;
-                            this.store.dispatch( addTab( { url: 'peruse://history', windowId, isActiveTab: true } ) );
+                            this.store.dispatch( addTab( { url: 'safe-browser://history', windowId, isActiveTab: true } ) );
                         }
                     } },
                 { type: 'separator' },
@@ -267,7 +328,7 @@ export default class MenuBuilder
                 { type: 'separator' },
                 { label: 'Bring All to Front', selector: 'arrangeInFront:' },
                 { type: 'separator' },
-                { label : 'Toggle Peruse-shell Devtools (not for web dev debug)',
+                { label : 'Toggle SAFE Browser-shell Devtools (not for web dev debug)',
                     click : ( item, win ) =>
                     {
                         if ( win )
@@ -284,12 +345,12 @@ export default class MenuBuilder
                 { label : 'Learn More about the Safe Network',
                     click()
                     {
-                        shell.openExternal( 'https://maidsafe.net/' );
+                        shell.openExternal( 'https://safenetwork.tech/' );
                     } },
                 { label : 'Documentation',
                     click()
                     {
-                        shell.openExternal( 'https://github.com/joshuef/peruse/blob/master/README.md' );
+                        shell.openExternal( 'https://github.com/maidsafe/safe_browser/blob/master/README.md' );
                     } },
                 { label : 'Community Discussions',
                     click()
@@ -299,7 +360,7 @@ export default class MenuBuilder
                 { label : 'Search Issues',
                     click()
                     {
-                        shell.openExternal( 'https://github.com/joshuef/peruse/issues' );
+                        shell.openExternal( 'https://github.com/maidsafe/safe_browser/issues' );
                     } }
             ]
         };

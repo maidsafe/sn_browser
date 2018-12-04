@@ -2,7 +2,7 @@ import express from 'express';
 import { CONFIG, startedRunningProduction } from 'appConstants';
 import logger from 'logger';
 
-const app = express()
+const app = express();
 
 const setupServer = () =>
 {

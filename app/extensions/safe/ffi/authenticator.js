@@ -397,11 +397,15 @@ class Authenticator extends SafeLib
                     };
                     logger.verbose( 'Authenticator.js decoded authReq result: ', result );
                     return this._isAlreadyAuthorised( authReq )
-                        .then( ( isAuthorised ) =>
+                        .then( ( resolved ) =>
                         {
-                            if ( isAuthorised )
+                            if ( resolved.isAuthorised )
                             {
                                 result.isAuthorised = true;
+                                if ( resolved.previouslyAuthorisedContainers )
+                                {
+                                    result.previouslyAuthorisedContainers = resolved.previouslyAuthorisedContainers;
+                                }
                             }
                             return resolve( result );
                         } );
@@ -974,9 +978,23 @@ class Authenticator extends SafeLib
         {
             try
             {
-                this.getRegisteredApps().then( ( authorisedApps ) => (
-                    authorisedApps.filter( ( apps ) => lodash.isEqual( apps.app_info, req.app ) ).length !== 0
-                ) ).then( resolve );
+                this.getRegisteredApps().then( ( authorisedApps ) =>
+                {
+                    let previouslyAuthorisedContainers;
+                    const isAuthorised = authorisedApps.some( ( app ) =>
+                    {
+                        const appIsPresent = lodash.isEqual( app.app_info, req.app );
+                        if ( appIsPresent && app.containers )
+                        {
+                            previouslyAuthorisedContainers = app.containers;
+                        }
+                        return appIsPresent;
+                    } );
+                    return {
+                        isAuthorised,
+                        previouslyAuthorisedContainers
+                    };
+                } ).then( resolve );
             }
             catch ( err )
             {

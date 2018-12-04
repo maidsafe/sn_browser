@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 
 import logger from 'logger';
-import { Column, IconButton, Row } from 'nessie-ui';
+import { CLASSES } from 'appConstants';
+
+import { Row, Col, Button } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
 
 import extendComponent from 'utils/extendComponent';
 import { wrapAddressBarButtonsLHS } from 'extensions/components';
@@ -15,40 +20,51 @@ class ButtonsLHS extends Component
 {
     render()
     {
-        const { activeTab, handleBack, handleForward, handleRefresh } = this.props;
+        const {
+            activeTab,
+            handleBack,
+            handleForward,
+            handleRefresh,
+            canGoForwards,
+            canGoBackwards
+        } = this.props;
 
         return (
-            <Row gutters="S">
-                <Column align="center" verticalAlign="middle">
-                    <IconButton
-                        className="js-address__backwards"
-                        iconTheme="navigation"
-                        iconType="left"
-                        iconSize="S"
+            <Row
+                type="flex"
+                justify="end"
+                align="middle"
+                gutter={ { xs: 2, sm: 4, md: 6 } }
+            >
+                <Col>
+                    <Button
+                        className={ CLASSES.BACKWARDS }
+                        disabled={ !canGoBackwards }
+                        icon="left"
+                        shape="circle"
                         onClick={ handleBack }
                     />
-                </Column>
-                <Column align="center" verticalAlign="middle">
-                    <IconButton
-                        className="js-address__forwards"
-                        iconTheme="navigation"
-                        iconSize="S"
-                        iconType="right"
+                </Col>
+                <Col>
+                    <Button
+                        className={ CLASSES.FORWARDS }
+                        disabled={ !canGoForwards }
+                        shape="circle"
+                        icon="right"
                         onClick={ handleForward }
                     />
-                </Column>
-                <Column align="center" verticalAlign="middle">
-                    <IconButton
-                        className={ styles.refresh }
-                        iconTheme="navigation"
-                        iconSize="S"
-                        iconType="reset"
-                        isDisabled={ activeTab.isLoading }
+                </Col>
+                <Col>
+                    <Button
+                        className={ CLASSES.REFRESH }
+                        shape="circle"
+                        icon="reload"
+                        disabled={ activeTab.isLoading }
                         onClick={ handleRefresh }
                     />
-                </Column>
+                </Col>
             </Row>
-        )
+        );
     }
 }
 

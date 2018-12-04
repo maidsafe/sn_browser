@@ -2,6 +2,8 @@
 import { remote, ipcRenderer } from 'electron';
 import contextMenu from 'electron-context-menu'
 import React, { Component } from 'react';
+import Error from 'components/PerusePages/Error';
+import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { addTrailingSlashIfNeeded, removeTrailingSlash, urlHasChanged } from 'utils/urlHelpers';
@@ -34,7 +36,6 @@ export default class Tab extends Component
     {
         isActiveTab : false,
         url         : 'http://nowhere.com',
-
     }
 
 
@@ -62,7 +63,7 @@ export default class Tab extends Component
         this.loadURL = ::this.loadURL;
         this.reloadIfActive = ::this.reloadIfActive;
 
-        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );;
+        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
     }
 
     isDevToolsOpened = () =>
@@ -87,32 +88,42 @@ export default class Tab extends Component
         pageLoaded();
     }
 
-    buildMenu = ( webview, rightClickPosition ) =>
+    buildMenu = ( webview ) =>
     {
-        if( !webview.getWebContents ) return // 'not now, as you're running jest;
+        if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
 
         contextMenu( {
-            window: webview,
-            append : ( params, browserWindow ) =>
-                {
-                    return [
+            window : webview,
+            append : ( params ) =>
+                (
+                    [
                         {
-                            label: 'Open Link in New Tab.',
-                    		visible: params.linkURL.length > 0
+                            label   : 'Open Link in New Tab.',
+                            visible : params.linkURL.length > 0
                         }
                     ]
-                },
+                ),
             showCopyImageAddress : true,
-            showInspectElement : true
+            showInspectElement   : true
         } );
+    }
+
+    webviewFocussed (event)
+    {
+        logger.verbose('Webview focussed: Triggering click event on browser window');
+
+        var fakeClick = new MouseEvent('click', {
+           view: window,
+           bubbles: true,
+           cancelable: true
+         });
+
+         window.dispatchEvent( fakeClick )
     }
 
     componentDidMount()
     {
         const { webview } = this;
-        let rightClickPosition;
-
-
         const callbackSetup = () =>
         {
             if ( !webview )
@@ -134,6 +145,9 @@ export default class Tab extends Component
             webview.addEventListener( 'page-favicon-updated', ::this.pageFaviconUpdated );
             webview.addEventListener( 'new-window', ::this.newWindow );
             webview.addEventListener( 'did-fail-load', ::this.didFailLoad );
+            webview.addEventListener( 'update-target-url', ::this.updateTargetUrl );
+
+            webview.addEventListener( 'focus', ::this.webviewFocussed );
 
 
             this.domReady();
@@ -161,9 +175,16 @@ export default class Tab extends Component
         if ( !this.state.browserState.mountedAndReady )
             return;
 
+        const { isActiveTab } = this.props;
         const { webview } = this;
 
         logger.silly( 'Tab: did receive updated props' );
+
+        if ( webview && webview.getWebContents )
+        {
+            const webContents = webview.getWebContents();
+            webContents.focus();
+        }
 
         const nextId = nextProps.webId || {};
         const currentId = this.props.webId || {}
@@ -241,26 +262,35 @@ export default class Tab extends Component
 
     onCrash = (e) =>
     {
-        logger.err('The webview crashed', e)
+        console.error(e)
+        logger.error('The webview crashed', e)
     }
 
     onGpuCrash = (e) =>
     {
-        logger.err('The webview GPU crashed', e)
+        console.error(e)
+        logger.error('The webview GPU crashed', e)
     }
 
     didStartLoading( )
     {
         logger.silly( 'webview started loading' );
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, index } = this.props;
+        const { webview } = this;
 
         const tabUpdate = {
             index,
-            isLoading: true
+            isLoading : true
         };
 
         this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
+        const body = document.querySelector( 'body' );
+        const div = document.createElement( 'div' );
+        div.setAttribute( 'class', 'no_display' );
+        div.setAttribute( 'id', 'link_revealer' );
+        body.appendChild( div );
+        window.addEventListener( 'focus', () => webview.focus() );
     }
 
     didFailLoad( err )
@@ -268,35 +298,33 @@ export default class Tab extends Component
         const { url, index, addTab, closeTab } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
-        const setFailLoadUi =
-        (
-            header,
-            subheader
-        ) => webview.executeJavaScript( `
-              var body = document.querySelector("body");
-              body.innerHTML = '';
-              var h3 = document.createElement("h3");
-              h3.innerText = "${header}";
-              h3.style = "text-align: center;"
-              body.appendChild(h3);
-              var h4 = document.createElement("h4");
-              h4.innerText = "${subheader || ''}";
-              h4.style = "text-align: center;"
-              body.appendChild(h4);` );
+        const renderError = ( header, subHeader ) =>
+        {
+            const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
+                <Error error={ { header, subHeader } } />
+            );
+            webview.executeJavaScript( `
+                const body = document.querySelector('body');
+                body.innerHTML = '${errorAsHtml}';
+            ` );
+        };
 
         if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
         {
-            setFailLoadUi( 'Page Load Failed' );
+            renderError( 'Page Load Failed' );
             return;
         }
         if ( err && err.errorDescription === 'ERR_INVALID_URL' )
         {
-            setFailLoadUi( `Invalid URL: ${url}` );
+            renderError( `Invalid URL: ${url}` );
             return;
         }
         if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
         {
-            setFailLoadUi( 'Detected HTTP/S protocol.', `Redirecting ${url} to be opened by your default Web browser.` );
+            renderError(
+                'Detected HTTP/S protocol.',
+                `Redirecting ${url} to be opened by your default Web browser.`
+            );
             return;
         }
         closeTab( { index } );
@@ -305,7 +333,7 @@ export default class Tab extends Component
 
     didStopLoading( )
     {
-        logger.verbose('DID STOP')
+        logger.verbose('Tab did stop loading')
         const { updateTab, index, isActiveTab } = this.props;
 
         const tabUpdate = {
@@ -321,19 +349,33 @@ export default class Tab extends Component
 
     didFinishLoading( )
     {
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, index } = this.props;
 
-        logger.verbose('DID FINISH LAODING')
+        logger.verbose('Tab did finish loading')
         const tabUpdate = {
             index,
-            isLoading: false
+            isLoading : false
         };
 
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
 
         this.setCurrentWebId( null );
+    }
 
+    updateTargetUrl( url )
+    {
+        const linkRevealer = document.getElementById( 'link_revealer' );
+        if ( url.url )
+        {
+            linkRevealer.setAttribute( 'class', 'reveal_link' );
+            linkRevealer.innerText = url.url;
+        }
+        else
+        {
+            linkRevealer.setAttribute( 'class', 'no_display' );
+            linkRevealer.innerText = '';
+        }
     }
 
     pageTitleUpdated( e )
@@ -352,9 +394,15 @@ export default class Tab extends Component
 
     pageFaviconUpdated( e )
     {
-        logger.silly( 'Webview: page favicon updated' );
-        // const {index, tabDataFetched} = this.props
-        // tabDataFetched(index, {webFavicon: e.favicons[0]})
+        logger.silly( 'Webview: page favicon updated: ', e );
+        const { updateTab, index } = this.props;
+
+        const tabUpdate = {
+            index,
+            favicon : e.favicons[0]
+        };
+
+        updateTab( tabUpdate );
     }
 
     didNavigate( e )
@@ -459,6 +507,7 @@ export default class Tab extends Component
         } );
     }
 
+    // TODO Move this functinoality to extensions
     updateTheIdInWebview = ( newWebId ) =>
     {
         const { updateTab, index, webId } = this.props;
@@ -473,6 +522,20 @@ export default class Tab extends Component
         const setupEventEmitter = `
             webIdUpdater = () =>
             {
+                // check for experiments set...
+                if( ! safeExperimentsEnabled )
+                    return;
+
+                console.warn(
+                    \`%cSAFE Browser Experimental Feature
+%cThe webIdEventEmitter and window.currentWebId are experimental features.
+They may be deprecated or change in future.
+
+For updates or to submit ideas and suggestions, visit https://github.com/maidsafe/safe_browser\`,
+                'font-weight: bold',
+                'font-weight: normal'
+                );
+
                 var oldWebId_Id = '';
                 var currentIdDefined = typeof window.currentWebId !== 'undefined';
 
@@ -493,16 +556,19 @@ export default class Tab extends Component
             webIdUpdater();
         `;
 
-        // const updateTheIdInWebview = () =>
-        // {
         webview.executeJavaScript( setupEventEmitter )
-        // }
 
     }
 
     setCurrentWebId( newWebId ) {
 
-        this.debouncedWebIdUpdateFunc( newWebId );
+        // TODO: move webId func into extensions
+        const { safeExperimentsEnabled } = this.props;
+
+        if( safeExperimentsEnabled )
+        {
+            this.debouncedWebIdUpdateFunc( newWebId );
+        }
     }
 
     newWindow( e )
@@ -585,11 +651,11 @@ export default class Tab extends Component
         const url = addTrailingSlashIfNeeded( input );
         logger.silly( 'Webview: loading url:', url );
 
-        if ( !urlHasChanged( this.state.browserState.url, url) )
-        {
-            logger.verbose( 'not loading URL as it has not changed');
-            return;
-        }
+        // if ( !urlHasChanged( this.state.browserState.url, url) )
+        // {
+        //     logger.verbose( 'not loading URL as it has not changed');
+        //     return;
+        // }
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );

@@ -1,14 +1,12 @@
 // @flow
-import { TYPES } from 'extensions/safe/actions/peruse_actions';
+import { TYPES } from 'extensions/safe/actions/safeBrowserApplication_actions';
 import initialAppState from './initialAppState';
 import logger from 'logger';
 
-import { CONFIG } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
 
-const initialState = initialAppState.peruseApp;
+const initialState = initialAppState.safeBrowserApp;
 
-export default function peruseApp( state = initialState, action )
+export default function safeBrowserApp( state = initialState, action )
 {
     if ( action.error )
     {
@@ -26,6 +24,10 @@ export default function peruseApp( state = initialState, action )
                 ...state,
                 appStatus     : payload,
             };
+        }
+        case TYPES.SET_NETWORK_STATUS:
+        {
+            return { ...state, networkStatus: payload };
         }
         case TYPES.SET_NETWORK_STATUS:
         {
@@ -53,6 +55,18 @@ export default function peruseApp( state = initialState, action )
         {
             return { ...state,
                 isMock : payload,
+            };
+        }
+        case TYPES.ENABLE_EXPERIMENTS:
+        {
+            return { ...state,
+                experimentsEnabled : true,
+            };
+        }
+        case TYPES.DISABLE_EXPERIMENTS:
+        {
+            return { ...state,
+                experimentsEnabled : false,
             };
         }
 
@@ -89,7 +103,7 @@ export default function peruseApp( state = initialState, action )
         }
         case TYPES.RESET_STORE:
         {
-            return { ...initialState };
+            return { ...initialState, isMock: state.isMock };
         }
 
         default:

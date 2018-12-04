@@ -29,7 +29,7 @@
 {
     padding-right:      7px;
     padding-left:       7px;
-    min-height:         25px;
+    min-height:         31px;
     padding-top:        4px;
     padding-bottom:     5px;
 
@@ -99,18 +99,16 @@
     background-color: rgba(187, 45, 0, 0.9);
 }
 
-
-
-
 .favicon
 {
   min-width: 20px;
   max-width: 20px;
 }
 
-
-
-
+.favicon img
+{
+  max-width: 16px;
+}
 
 .activeTab
 {

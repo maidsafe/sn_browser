@@ -5,7 +5,7 @@ import { TYPES } from 'actions/tabs_actions';
 import { TYPES as UI_TYPES } from 'actions/ui_actions';
 import { makeValidAddressBarUrl } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
-import { CONFIG } from 'appConstants';
+import { CONFIG, isRunningUnpacked } from 'appConstants';
 import logger from 'logger';
 
 const initialState = initialAppState.tabs;
@@ -71,7 +71,8 @@ const addTab = ( state, tab ) =>
 
     const targetWindowId = tab.windowId || currentWindowId;
     const tabUrl = makeValidAddressBarUrl( tab.url || '' );
-    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length };
+    const faviconPath = isRunningUnpacked ? '../resources/favicon.ico' : '../favicon.ico';
+    const newTab = { ...tab, windowId: targetWindowId, historyIndex: 0, history: [tabUrl], index: state.length, favicon: faviconPath };
 
     let newState = [...state];
 
@@ -185,10 +186,11 @@ export function getLastClosedTab( state )
 }
 
 
-const moveActiveTabForward = ( state ) =>
+const moveActiveTabForward = ( state, windowId ) =>
 {
-    const tab = getActiveTab( state );
-    const index = getActiveTabIndex( state );
+
+    const tab = getActiveTab( state, windowId );
+    const index = getActiveTabIndex( state, windowId );
     const updatedTab = { ...tab };
 
     const history = updatedTab.history;
@@ -213,15 +215,15 @@ const moveActiveTabForward = ( state ) =>
 };
 
 
-const moveActiveTabBackwards = ( state ) =>
+const moveActiveTabBackwards = ( state, windowId ) =>
 {
-    const tab = getActiveTab( state );
-    const index = getActiveTabIndex( state );
+    const tab = getActiveTab( state, windowId );
+    const index = getActiveTabIndex( state, windowId );
     const updatedTab = { ...tab };
     const history = updatedTab.history;
-    const nextHistoryIndex = updatedTab.historyIndex - 1 || 0;
+    const nextHistoryIndex = updatedTab.historyIndex - 1;
 
-    // -1 historyIndex signifies latest page
+    // -1 historyIndex signifies first page
     if ( !history || history.length < 2 || !history[nextHistoryIndex] ||
         nextHistoryIndex < 0 )
     {
@@ -324,6 +326,7 @@ const updateActiveTab = ( state, payload ) =>
         return state;
 
     const tabToMerge = state[index];
+
     let updatedTab = { ...tabToMerge };
 
     updatedTab = { ...updatedTab, ...payload };
@@ -420,11 +423,11 @@ export default function tabs( state: array = initialState, action )
         }
         case TYPES.ACTIVE_TAB_FORWARDS :
         {
-            return moveActiveTabForward( state );
+            return moveActiveTabForward( state, payload );
         }
         case TYPES.ACTIVE_TAB_BACKWARDS :
         {
-            return moveActiveTabBackwards( state );
+            return moveActiveTabBackwards( state, payload );
         }
         case TYPES.UPDATE_TABS :
         {

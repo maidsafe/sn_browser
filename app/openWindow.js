@@ -5,7 +5,7 @@ import os from 'os';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions }  from './extensions';
-
+import { isRunningSpectronTestProcess,isRunningDebug } from 'appConstants';
 import logger from 'logger';
 import {
     addTab,
@@ -47,6 +47,13 @@ const openWindow = ( store ) =>
         defaultHeight : 1024
     } );
 
+    let appIcon = path.join( __dirname, '../resources/safeicon.png' );
+        
+    if( process.platform === 'win32' )
+    {
+        appIcon = path.join( __dirname, '../resources/icon.ico' );
+    }
+
     const newWindowPosition = getNewWindowPosition( mainWindowState );
     const browserWindowConfig =
     {
@@ -56,9 +63,11 @@ const openWindow = ( store ) =>
         width             : mainWindowState.width,
         height            : mainWindowState.height,
         titleBarStyle     : 'hiddenInset',
+        icon              : appIcon,  
         thickFrame        : false,
         webPreferences    :
         {
+            partition : 'persist:safe-tab'
             // preload : path.join( __dirname, 'browserPreload.js' )
         }
 
@@ -85,6 +94,11 @@ const openWindow = ( store ) =>
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
+        
+        if ( isRunningDebug && !isRunningSpectronTestProcess )
+        {
+            mainWindow.openDevTools({ mode:'undocked' });
+        }
 
         const webContentsId = mainWindow.webContents.id;
         if ( browserWindowArray.length === 1 )

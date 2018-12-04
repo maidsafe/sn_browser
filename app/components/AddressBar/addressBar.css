@@ -11,12 +11,19 @@
     justify-content: space-around;
     box-sizing: border-box;
     border-right: 0;
+    border-left: 0;
     z-index: 3;
-
 }
+
 .addressBar
 {
     width: 100%;
+}
+
+/* let it grow*/
+.addressBarCol
+{
+    flex: 1;
 }
 
 .input
@@ -89,3 +96,11 @@
 {
     composes: button;
 }*/
+
+
+
+/*  settings menu item */
+.menuItem{
+    cursor: pointer;
+    padding: 2%;
+}

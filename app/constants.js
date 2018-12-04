@@ -12,7 +12,7 @@ const WINDOWS = 'win32';
 
 const allPassedArgs = process.argv;
 
-let shouldRunMockNetwork = fs.existsSync( path.resolve( __dirname, '..', 'startAsMock') );
+let shouldRunMockNetwork = fs.existsSync( path.resolve( __dirname, '..', 'startAsMock' ) );
 
 let hasDebugFlag = false;
 
@@ -22,56 +22,55 @@ export const isRunningPackaged = !isRunningUnpacked;
 export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
 
 
-if( allPassedArgs.includes('--mock') )
+if ( allPassedArgs.includes( '--mock' ) )
 {
     shouldRunMockNetwork = true;
 }
 
-if( allPassedArgs.includes('--live') )
+if ( allPassedArgs.includes( '--live' ) )
 {
     shouldRunMockNetwork = false;
 }
 
 // override for spectron dev mode
-if( isRunningSpectronTestProcess && ! isRunningSpectronTestProcessingPackagedApp )
+if ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
 {
     shouldRunMockNetwork = true;
 }
 
-if( allPassedArgs.includes('--debug') )
+if ( allPassedArgs.includes( '--debug' ) )
 {
     hasDebugFlag = true;
 }
 
 let forcedPort;
-if( allPassedArgs.includes('--port') )
+if ( allPassedArgs.includes( '--port' ) )
 {
-    const index = allPassedArgs.indexOf('--port');
+    const index = allPassedArgs.indexOf( '--port' );
 
-    forcedPort = allPassedArgs[ index + 1 ]
+    forcedPort = allPassedArgs[index + 1];
 }
 
 export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
 
 
-
 export const TESTENV = process.env.NODE_ENV;
 
 export const env = shouldStartAsMockFromFlagsOrPackage ? 'development' : process.env.NODE_ENV || 'production';
-export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal('isCI') :  process.env.CI;
+export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal( 'isCI' ) : process.env.CI;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
-//other considerations?
+// other considerations?
 export const isHot = process.env.HOT || 0;
 
 
 // const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage;
-const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage ;
+const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage;
 
 // only to be used for inital store setting in main process. Not guaranteed correct for renderers.
-export const startedRunningMock = ( remote && remote.getGlobal ) ? remote.getGlobal('startedRunningMock') : startAsMockNetwork || /^dev/.test( env );
+export const startedRunningMock = ( remote && remote.getGlobal ) ? remote.getGlobal( 'startedRunningMock' ) : startAsMockNetwork || /^dev/.test( env );
 export const startedRunningProduction = !startedRunningMock;
 export const isRunningNodeEnvTest = /^test/.test( env );
-export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess ;
+export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = typeof remote === 'undefined';
 
@@ -87,10 +86,10 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
  */
 const safeNodeLibPath = ( ) =>
 {
-    //only exists in render processes
-    if( remote && remote.getGlobal && !isRunningNodeEnvTest )
+    // only exists in render processes
+    if ( remote && remote.getGlobal && !isRunningNodeEnvTest )
     {
-        return remote.getGlobal('SAFE_NODE_LIB_PATH')
+        return remote.getGlobal( 'SAFE_NODE_LIB_PATH' );
     }
 
     return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
@@ -104,7 +103,7 @@ const safeNodeAppPath = ( ) =>
         return '';
     }
 
-    return isRunningUnpacked ? [remote.process.execPath, `${remote.getGlobal('appDir')}/main.js`] : [remote.app.getPath( 'exe' )];
+    return isRunningUnpacked ? [remote.process.execPath, `${remote.getGlobal( 'appDir' )}/main.js`] : [remote.app.getPath( 'exe' )];
 };
 
 let safeNodeAppPathModifier = '';
@@ -119,13 +118,13 @@ export const I18N_CONFIG = {
     locales        : ['en'],
     directory      : path.resolve( __dirname, 'locales' ),
     objectNotation : true
-} ;
+};
 
 export const PROTOCOLS = {
     SAFE           : 'safe',
     SAFE_AUTH      : 'safe-auth',
     SAFE_LOGS      : 'safe-logs',
-    INTERNAL_PAGES : 'peruse'
+    INTERNAL_PAGES : 'safe-browser'
 };
 
 export const INTERNAL_PAGES = {
@@ -136,12 +135,12 @@ export const INTERNAL_PAGES = {
 const getRandomPort = async () =>
 {
     let port = await getPort();
-    if( forcedPort )
+    if ( forcedPort )
     {
         port = forcedPort;
     }
 
-    global.port = port
+    global.port = port;
 
     return port;
 };
@@ -153,14 +152,14 @@ export const CONFIG = {
     APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
     DATE_FORMAT          : 'h:MM-mmm dd',
     NET_STATUS_CONNECTED : 'Connected',
-    STATE_KEY            : 'peruseState',
+    STATE_KEY            : 'safeBrowserState',
     BROWSER_TYPE_TAG     : 8467,
     PRELOADED_MOCK_VAULT_PATH: path.join(__dirname, '..', 'PreloadDevVault')
 };
 
-if( inMainProcess )
+if ( inMainProcess )
 {
-    global.preloadFile = `file://${ __dirname }/webPreload.js`;
+    global.preloadFile = `file://${__dirname}/webPreload.js`;
     global.appDir = __dirname;
     global.isCI = isCI;
     global.startedRunningMock = startedRunningMock;
@@ -171,13 +170,10 @@ if( inMainProcess )
 }
 
 
-
 // if( isRunningUnpacked )
 // {
 //     CONFIG.CONFIG_PATH = path.resolve( __dirname, '../resources' );
 // }
-
-
 
 
 const appInfo = {
@@ -192,9 +188,9 @@ const appInfo = {
         own_container : true,
     },
     permissions : {
-    _public      : ['Read', 'Insert', 'Update', 'Delete'],
+        _public : ['Read', 'Insert', 'Update', 'Delete'],
     // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
-},
+    },
 };
 
 // OSX: Add bundle for electron in dev mode
@@ -204,21 +200,44 @@ if ( isRunningUnpacked && process.platform === 'darwin' )
 }
 else if ( process.platform === 'darwin' )
 {
-    appInfo.info.bundle = 'com.electron.peruse';
+    appInfo.info.bundle = 'com.electron.safe-browser';
 }
 
 export const APP_INFO = appInfo;
 
 // TODO. Unify with test lib/constants browser UI?
 export const CLASSES = {
+    ADDRESS_BAR               : 'js-address',
     ACTIVE_TAB                : 'js-tabBar__active-tab',
     TAB                       : 'js-tab',
     ADD_TAB                   : 'js-tabBar__add-tab',
     CLOSE_TAB                 : 'js-tabBar__close-tab',
-    PERUSE_PAGE               : 'js-peruse__page',
+    SAFE_BROWSER_PAGE         : 'js-safeBrowser__page',
     SPECTRON_AREA             : 'js-spectron-area',
     SPECTRON_AREA__SPOOF_SAVE : 'js-spectron-area__spoof-save',
-    SPECTRON_AREA__SPOOF_READ : 'js-spectron-area__spoof-read',
+    SPECTRON_AREA__SPOOF_LOAD : 'js-spectron-area__spoof-read',
     NOTIFIER_TEXT             : 'js-notifier__text',
+    BOOKMARK_PAGE             : 'js-bookmark-page',
+    FORWARDS                  : 'js-address__forwards',
+    BACKWARDS                 : 'js-address__backwards',
+    REFRESH                   : 'js-address__refresh',
+    ADDRESS_INPUT             : 'js-address__input',
+    MENU                      : 'js-address__menu',
 
+    NOTIFICATION__ACCEPT : 'js-notification__accept',
+    NOTIFICATION__REJECT : 'js-notification__reject',
+    NOTIFICATION__IGNORE : 'js-notification__ignore',
+
+    SETTINGS_MENU__BUTTON : 'js-settingsMenu_button'
 };
+
+const getDomClasses = () =>
+{
+    const domClasses = {};
+
+    Object.keys( CLASSES ).forEach( theClass => domClasses[theClass] = `.${CLASSES[theClass]}` );
+
+    return domClasses;
+};
+
+export const GET_DOM_EL_CLASS = getDomClasses();

@@ -57,12 +57,6 @@ export default class AppList extends Component {
     };
   }
 
-  componentWillMount() {
-    if (!this.props.isAuthorised) {
-      return this.props.push('/login');
-    }
-  }
-
   componentDidMount() {
     if (!this.props.isAuthorised) {
       return this.props.push('/login');
@@ -102,10 +96,11 @@ export default class AppList extends Component {
     }
   }
 
+  
   getNoAppsContainer() {
     return (
       <div className="no-apps">
-        <h3 className="no-apps-h">Looks like you haven&lsquo;t authorised any apps yet.</h3>
+        <h3 className="no-apps-h">Looks like you haven&rsquo;t authorised any apps yet.</h3>
         <div className="no-apps-img">{''}</div>
         <div className="no-apps-down">
           <h3 className="no-apps-down-h">Download sample applications here...</h3>

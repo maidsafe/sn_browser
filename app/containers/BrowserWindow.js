@@ -22,11 +22,11 @@ class BrowserWindow extends Component
 function mapStateToProps( state )
 {
     return {
-        bookmarks     : state.bookmarks,
-        notifications : state.notifications,
-        tabs          : state.tabs,
-        ui            : state.ui,
-        peruseApp     : state.peruseApp
+        bookmarks      : state.bookmarks,
+        notifications  : state.notifications,
+        tabs           : state.tabs,
+        ui             : state.ui,
+        safeBrowserApp : state.safeBrowserApp
     };
 }
 

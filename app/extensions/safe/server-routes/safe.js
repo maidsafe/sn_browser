@@ -1,5 +1,9 @@
 import logger from 'logger';
-import { getPeruseAppObj } from 'extensions/safe/network';
+import React from 'react';
+import Error from 'components/PerusePages/Error';
+import ReactDOMServer from 'react-dom/server';
+import { getSafeBrowserAppObject } from 'extensions/safe/safeBrowserApplication';
+
 import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
 import { addTab, closeTab } from 'actions/tabs_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
@@ -11,11 +15,18 @@ const safeRoute = ( store ) => ( {
     path    : /safe:\//,
     handler : async ( request, res ) =>
     {
+        const link = request.url.substr( 1 ); // remove initial /
+        const sendErrResponse = ( error, errSubHeader ) => res.send(
+            ReactDOMServer.renderToStaticMarkup(
+                <Error error={ { header: error, subHeader: errSubHeader } } />
+            )
+        );
+
         try
         {
             const link = request.url.substr( 1 ); // remove initial /
 
-            const app = getPeruseAppObj() || {};
+            const app = getSafeBrowserAppObject() || {};
             const headers = request.headers;
             let isRangeReq = false;
             let multipartReq = false;
@@ -69,10 +80,10 @@ const safeRoute = ( store ) => ( {
                                        error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
                 if ( shouldTryAgain )
                 {
-                    const peruseApp = store.getState().peruseApp;
+                    const safeBrowserApp = store.getState().safeBrowserApp;
                     const unsubscribe = store.subscribe( () =>
                     {
-                        if ( peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
+                        if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
                         {
                             store.getState().tabs.forEach( ( tab ) =>
                             {
@@ -87,9 +98,9 @@ const safeRoute = ( store ) => ( {
                         }
                     } );
                     error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
-                    return res.send( error.message );
+                    return sendErrResponse( error.message );
                 }
-                return res.send( error.message || error );
+                return sendErrResponse( error.message || error );
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
@@ -125,7 +136,7 @@ const safeRoute = ( store ) => ( {
             {
                 return res.status( 416 ).send( 'Requested Range Not Satisfiable' );
             }
-            return res.send( e.message || e );
+            return sendErrResponse( e.message || e );
         }
     }
 } );

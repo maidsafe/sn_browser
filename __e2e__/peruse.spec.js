@@ -1,12 +1,11 @@
 import { parse as urlParse } from 'url';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
+    bookmarkActiveTabPage,
     delay,
     navigateTo,
     newTab,
-    setClientToMainBrowserWindow,
-    setClientToBackgroundProcessWindow,
-    isRunningSpectronTestProcess
+    setClientToMainBrowserWindow
 } from './lib/browser-driver';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT , DEFAULT_TIMEOUT_INTERVAL} from './lib/constants';
 import {
@@ -16,6 +15,8 @@ import {
     , afterAllTests
     , beforeAllTests
     , windowLoaded
+    , nodeEnv
+    , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
@@ -29,8 +30,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 // - Check clicking a link in a page, updates title and webview etc.
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
-// TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
-// Check that http images are _not_ loaded.
+
 
 describe( 'main window', () =>
 {
@@ -55,7 +55,7 @@ describe( 'main window', () =>
         expect( loaded ).toBeTruthy()
     });
 
-    
+
     // it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     // {
     //     const { client } = app;
@@ -97,6 +97,7 @@ describe( 'main window', () =>
         expect( address ).toBe( 'safe://example.com' );
     } );
 
+
     it( 'shows error in UI if invalid URL', async () =>
     {
         expect.assertions( 1 );
@@ -114,9 +115,28 @@ describe( 'main window', () =>
         expect( text ).toBe( 'Invalid URL: http://:invalid-url');
     } );
 
+
+    it( 'shows error in UI if localhost resource does not exist', async () =>
+    {
+        expect.assertions(1);
+        const { client } = app;
+        await delay( 2500 );
+
+        const tabIndex = await newTab( app );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+
+        await navigateTo( app, 'localhost:9001' );
+
+        await client.windowByIndex( tabIndex   );
+        await delay( 5500 );
+
+        const text = await client.getText( 'body' );
+        expect( text ).toBe( 'Page Load Failed');
+    } );
+
     it( 'can go backwards', async () =>
     {
-        const { client } = app;       
+        const { client } = app;
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
         const tabIndex = await newTab( app );
@@ -125,7 +145,7 @@ describe( 'main window', () =>
         await client.pause( 4500 );
         await navigateTo( app, 'google.com' );
         await client.pause( 4500 );
-        
+
         await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
         await client.click( BROWSER_UI.BACKWARDS );
         await client.pause( 4500 );
@@ -140,7 +160,7 @@ describe( 'main window', () =>
 
     it( 'can go forwards', async () =>
     {
-        const { client } = app;       
+        const { client } = app;
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
         const tabIndex = await newTab( app );
@@ -149,12 +169,12 @@ describe( 'main window', () =>
         await client.pause( 4500 );
         await navigateTo( app, 'google.com' );
         await client.pause( 4500 );
-        
+
         await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
         await client.click( BROWSER_UI.BACKWARDS );
         await client.pause( 4500 );
         await client.windowByIndex( tabIndex );
-        
+
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
 
@@ -187,6 +207,42 @@ describe( 'main window', () =>
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
         expect( address ).not.toBe( 'safe://bbc.com' );
     } );
+
+
+    it( 'can go to and add bookmarks', async () =>
+    {
+        expect.assertions(2)
+        const { client } = app;
+        await delay( 4500 );
+
+        await newTab( app );
+        await navigateTo( app, 'shouldappearinbookmarks.com' );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+        await bookmarkActiveTabPage( app );
+
+        await delay( 2500 );
+
+        // dont store tabIndex, cos it's not a real tab... (pseudo tab react component.)
+        // TODO: See if this approach to internal tabs makes any sense in the long run...
+        await newTab( app );
+        await navigateTo( app, 'safe-browser:bookmarks' );
+
+        await setClientToMainBrowserWindow( app );
+
+        await delay( 6500 );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+
+        const header = await client.getText( 'h1' );
+
+        const bookmarks = await client.getText( '.urlList__table' );
+
+        await delay( 2500 );
+
+        expect( header ).toBe( 'Bookmarks' );
+        expect( bookmarks ).toMatch( 'shouldappearinbookmarks' );
+
+    } );
+
 
     // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async () =>

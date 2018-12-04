@@ -38,7 +38,7 @@ describe( 'TabBar', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1 }] };
+            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, favicon: '../../resources/favicon.ico' }] };
             wrapper = shallow( <TabBar { ...props } /> );
         } );
 
@@ -46,6 +46,11 @@ describe( 'TabBar', () =>
         {
             expect( wrapper.find( `.${CLASSES.ACTIVE_TAB}` ).length ).toBe( 1 );
             expect( wrapper.find( `.${CLASSES.TAB}` ).length ).toBe( 1 );
+        } );
+
+        it( 'should have exactly 1 favicon', () =>
+        {
+            expect( wrapper.find( '#favicon-img' ).length ).toBe( 1 );
         } );
 
         it( 'should have exactly 1 MdAdd component', () =>

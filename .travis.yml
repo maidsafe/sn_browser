@@ -29,7 +29,13 @@ addons:
     - xz-utils
     - xorriso
     - desktop-file-utils
+
+
+before_install:
+
 before_script:
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
+  fi
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 5
@@ -61,15 +67,15 @@ script:
 # - travis_retry yarn run test-exts # super occasionally times out in tests.
 
 # separate tests for safe + auth as together throws error due to native libs
-# - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test safe-auth;
-#   fi
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
 - yarn run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-- travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-e2e-prod"
+- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
+  fi
+- travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod"
 - sleep 5
-- travis_retry eval " pkill -f electron || pkill -f Peruse || yarn run test-exts-e2e-prod"
+- travis_retry eval " pkill -f electron || pkill -f SAFE Browser || yarn run test-exts-e2e-prod"
 
 after_success:
 - ls release
@@ -86,14 +92,16 @@ after_success:
 - ls release
 
 after_failure:
-- ls /home/travis/peruse/app/node_modules/@maidsafe/safe-node-app/src/native
+- ls /home/travis/safe-browser/app/node_modules/@maidsafe/safe-node-app/src/native
 # - cat ~/.local/share/applications/mimeapps.list
 # - cat ~/.local/share/applications/maidsafenet-ltd-safe-browser-authenticator.desktop
 - which xdg-open
 - xdg-open --version
 # - bash -x ~/bin/xdg-open safe-auth://whaaaaa
 - cat app/log.log;
-
+# check resolution...
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
+  fi
 
 
 before_deploy:

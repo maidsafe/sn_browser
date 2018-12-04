@@ -1,12 +1,16 @@
 // @flow
 import React, { Component } from 'react';
-import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-import MdStar from 'react-icons/lib/md/star';
-import MdStarOutline from 'react-icons/lib/md/star-outline';
-import { Column, Grid, InputField } from 'nessie-ui';
+
+// import { Column, Grid } from 'nessie-ui';
 import ButtonsLHS from 'components/AddressBar/ButtonsLHS';
+import ButtonsRHS from 'components/AddressBar/ButtonsRHS';
+import Input from 'components/AddressBar/Input';
 import logger from 'logger';
+
+import { Row, Col } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
 
 import styles from './addressBar.css';
 
@@ -15,90 +19,44 @@ export default class AddressBar extends Component
 {
     static propTypes =
     {
-        address        : PropTypes.string,
-        isSelected     : PropTypes.bool,
-        activeTab      : PropTypes.object,
-        windowId       : PropTypes.number.isRequired,
-        isBookmarked   : PropTypes.bool.isRequired,
-        addBookmark    : PropTypes.func.isRequired,
-        removeBookmark : PropTypes.func.isRequired,
-        onBlur         : PropTypes.func.isRequired,
-        onSelect       : PropTypes.func.isRequired,
-        onFocus        : PropTypes.func.isRequired,
-        reloadPage     : PropTypes.func.isRequired,
+        address               : PropTypes.string,
+        isSelected            : PropTypes.bool,
+        settingsMenuIsVisible : PropTypes.bool,
+        activeTab             : PropTypes.shape( { url: PropTypes.string } ),
+        windowId              : PropTypes.number.isRequired,
+        isBookmarked          : PropTypes.bool.isRequired,
+        addTab                : PropTypes.func.isRequired,
+        addBookmark           : PropTypes.func.isRequired,
+        removeBookmark        : PropTypes.func.isRequired,
+        onBlur                : PropTypes.func.isRequired,
+        onSelect              : PropTypes.func.isRequired,
+        onFocus               : PropTypes.func.isRequired,
+        reloadPage            : PropTypes.func.isRequired,
+        updateActiveTab       : PropTypes.func.isRequired,
+        activeTabBackwards    : PropTypes.func.isRequired,
+        activeTabForwards     : PropTypes.func.isRequired,
+        showSettingsMenu      : PropTypes.func.isRequired,
+        hideSettingsMenu      : PropTypes.func.isRequired
     }
 
     static defaultProps =
     {
-        address    : '',
-        isSelected : false,
-        editingUrl : false
+        address               : '',
+        isSelected            : false,
+        settingsMenuIsVisible : false,
+        editingUrl            : false
     }
 
-    constructor( props )
+    handleBack = ( ) =>
     {
-        super( props );
-        this.handleChange = ::this.handleChange;
-        this.handleKeyPress = ::this.handleKeyPress;
-
-        this.state = {
-            address : props.address
-        };
+        const { activeTabBackwards, windowId } = this.props;
+        activeTabBackwards( windowId );
     }
 
-
-    componentWillReceiveProps( nextProps )
+    handleForward = ( ) =>
     {
-        if ( nextProps.address !== this.props.address && nextProps.address !== this.state.address )
-        {
-            this.setState( { address: nextProps.address, editingUrl: false } );
-        }
-
-        if ( nextProps.isSelected  && !this.props.isSelected && !this.state.editingUrl && this.addressInput )
-        {
-            this.addressInput.select();
-        }
-    }
-
-    isInFocussedWindow = ( ) =>
-    {
-        const BrowserWindow = remote.BrowserWindow;
-        const focusedWindow = BrowserWindow.getFocusedWindow();
-        if( !focusedWindow )
-        {
-            return false;
-        }
-
-        const focussedWindowId = BrowserWindow.getFocusedWindow().id;
-        const currentWindowId = remote.getCurrentWindow().id;
-
-        return focussedWindowId === currentWindowId;
-    }
-
-    handleBookmarking = ( tabData, event ) =>
-    {
-        const { address, addBookmark, removeBookmark, isBookmarked } = this.props;
-
-        if ( isBookmarked )
-        {
-            removeBookmark( { url: address } );
-        }
-        else
-        {
-            addBookmark( { url: address } );
-        }
-    }
-
-    handleBack = ( tabData, event ) =>
-    {
-        const { activeTabBackwards } = this.props;
-        activeTabBackwards();
-    }
-
-    handleForward = ( tabData, event ) =>
-    {
-        const { activeTabForwards } = this.props;
-        activeTabForwards();
+        const { activeTabForwards, windowId } = this.props;
+        activeTabForwards( windowId );
     }
 
     handleRefresh = ( event ) =>
@@ -109,114 +67,107 @@ export default class AddressBar extends Component
         reloadPage();
     }
 
-    handleClick = ( event ) =>
+    getSettingsMenuItems = () =>
     {
-        const { onSelect, isSelected } = this.props;
+        const { addTab } = this.props;
 
-        if( isSelected )
+        const addATab = ( tab ) =>
         {
-            this.setState( { editingUrl: true } );
-            onSelect();
-        }
+            addTab( { url: `safe-browser://${tab}`, isActiveTab: true } );
+        };
 
+        return [
+            <Row
+                key={ 'menuItem-bookmarks' }
+                type="flex"
+                justify="start"
+                align="middle"
+            >
+                <div
+                    role="menuitem"
+                    tabIndex={ 0 }
+                    className={ styles.menuItem }
+                    onClick={
+                        () => addATab( 'bookmarks' ) }
+                >Bookmarks</div>
+            </Row>,
+            <Row
+                key={ 'menuItem-history' }
+                type="flex"
+                justify="start"
+                align="middle"
+            >
+                <div
+                    role="menuitem"
+                    tabIndex={ 0 }
+                    className={ styles.menuItem }
+                    onClick={
+                        () => addATab( 'history' ) }
+                >History</div>
+            </Row>
+        ];
     }
 
-    handleChange( event )
-    {
-        const { onSelect } = this.props;
-
-        this.setState( { editingUrl: true, address: event.target.value } );
-
-        if ( onSelect )
-        {
-            onSelect();
-        }
-    }
-
-    handleFocus = ( event ) =>
-    {
-        const { onFocus } = this.props;
-
-        onFocus();
-        event.target.select();
-    }
-
-    handleBlur = ( ) =>
-    {
-        const { onBlur } = this.props;
-        onBlur();
-    }
-
-    handleKeyPress( event )
-    {
-        const { windowId } = this.props;
-        if ( event.key !== 'Enter' )
-        {
-            return;
-        }
-
-        const input = event.target.value;
-
-        this.props.updateActiveTab( { url: input, windowId } );
-    }
 
     render()
     {
         const props = this.props;
-        const { address } = this.state;
 
-        const { isSelected, isBookmarked, activeTab, updateActiveTab } = this.props;
+        const {
+            address,
+            addTab,
+            addBookmark,
+            removeBookmark,
+            isBookmarked,
+            activeTab,
+            updateActiveTab,
+            settingsMenuIsVisible,
+            showSettingsMenu,
+            hideSettingsMenu
+        } = this.props;
+
+        const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
+        const canGoForwards = activeTab ? activeTab.historyIndex < activeTab.history.length - 1 : false;
 
         return (
             <div className={ `${styles.container} js-address` } >
-                <Grid align="left" verticalAlign="middle" gutters="S" className={ styles.addressBar }>
-                    <Column size="content">
+                <Row
+                    className={ styles.addressBar }
+                    type="flex"
+                    justify="start"
+                    align="middle"
+                    gutter={ { xs: 4, sm: 8, md: 12 } }
+                >
+                    <Col >
                         <ButtonsLHS
                             activeTab={ activeTab }
                             updateActiveTab={ updateActiveTab }
                             handleBack={ this.handleBack }
+                            canGoForwards={ canGoForwards }
+                            canGoBackwards={ canGoBackwards }
                             handleForward={ this.handleForward }
                             handleRefresh={ this.handleRefresh }
-                            {...props}
+                            { ...props }
                         />
 
-                    </Column>
-                    <Column className={ styles.addressBarColumn }>
-                        <InputField
-                            className={ 'js-address__input' }
-                            value={ address }
-                            type="text"
-                            inputRef={ ( input ) =>
-                            {
-                                this.addressInput = input;
-
-                                if ( isSelected && ! this.state.editingUrl &&
-                                    this.isInFocussedWindow() && input )
-                                {
-                                    input.select();
-                                }
-                            } }
-                            onFocus={ this.handleFocus }
-                            onBlur={ this.handleBlur }
-                            onChange={ this.handleChange }
-                            onKeyPress={ this.handleKeyPress }
+                    </Col>
+                    <Col className={ styles.addressBarCol }>
+                        <Input { ...this.props } />
+                    </Col>
+                    <Col>
+                        <ButtonsRHS
+                            address={ address }
+                            addTab={ addTab }
+                            isBookmarked={ isBookmarked }
+                            addBookmark={ addBookmark }
+                            removeBookmark={ removeBookmark }
+                            menuItems={ this.getSettingsMenuItems() }
+                            showSettingsMenu={ showSettingsMenu }
+                            settingsMenuIsVisible={ settingsMenuIsVisible }
+                            hideSettingsMenu={ hideSettingsMenu }
                         />
-                    </Column>
-                    <Column size="content">
-                        <Grid gutters="S">
-                            <Column align="left">
-                                {
-                                    isBookmarked &&
-                                        <MdStar className={styles.buttonIcon} onClick={this.handleBookmarking}/>
-                                }
-                                {
-                                    ! isBookmarked &&
-                                        <MdStarOutline className={styles.buttonIcon} onClick={this.handleBookmarking}/>
-                                }
-                            </Column>
-                        </Grid>
-                    </Column>
-                </Grid>
+                    </Col>
+                </Row>
             </div>
         );
     }

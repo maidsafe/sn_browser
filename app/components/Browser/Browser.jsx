@@ -28,13 +28,16 @@ class Browser extends Component
         blurAddressBar     : PropTypes.func.isRequired,
         reloadPage         : PropTypes.func.isRequired,
         pageLoaded         : PropTypes.func.isRequired,
-        addTab             : PropTypes.func,
-        closeTab           : PropTypes.func,
-        closeActiveTab     : PropTypes.func,
-        reopenTab          : PropTypes.func,
+        addTab             : PropTypes.func.isRequired,
+        closeTab           : PropTypes.func.isRequired,
+        closeActiveTab     : PropTypes.func.isRequired,
+        reopenTab          : PropTypes.func.isRequired,
         updateNotification : PropTypes.func.isRequired,
-        clearNotification  : PropTypes.func,
-        ui                 : PropTypes.object.isRequired
+        clearNotification  : PropTypes.func.isRequired,
+        ui                 : PropTypes.object.isRequired,
+
+        showSettingsMenu      : PropTypes.func.isRequired,
+        hideSettingsMenu      : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -49,6 +52,22 @@ class Browser extends Component
     {
         super( props );
         this.state = {};
+
+        //jest/electron workaround as no remote in non-render process
+        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+
+        // this is mounted but its not show?
+        this.state.windowId = currentWebContentsId;
+
+    }
+
+    componentWillMount()
+    {
+        //jest/electron workaround as no remote in non-render process
+        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+
+        // this is mounted but its not show?
+        this.setState( { windowId: currentWebContentsId } );
     }
 
     componentDidMount( )
@@ -64,11 +83,6 @@ class Browser extends Component
 
         const theBrowser = this;
 
-        //jest/electron workaround as no remote in non-render process
-        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
-
-        // this is mounted but its not show?
-        this.setState( { windowId: currentWebContentsId } );
 
         if( !ipcRenderer ) return; //avoid for jest/Electron where we're not in renderer process
 
@@ -171,14 +185,24 @@ class Browser extends Component
             notifications,
             clearNotification,
 
+            showSettingsMenu,
+            hideSettingsMenu,
+
+            // TODO extend tab to not need this
+            safeBrowserApp
+
         } = props;
 
+        const experimentsEnabled = safeBrowserApp ? safeBrowserApp.experimentsEnabled : false;
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
 
-        // TODO: Move windowId from state to store.
-        const windowTabs = tabs.filter( tab => tab.windowId === this.state.windowId );
         const windowId = this.state.windowId;
+        // TODO: Move windowId from state to store.
+        const windowTabs = tabs.filter( tab =>{
+            return tab.windowId === windowId
+        }  );
+
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
         const activeTab = openTabs.find( tab => tab.isActiveTab );
 
@@ -207,23 +231,30 @@ class Browser extends Component
                 <AddressBar
                     key={ 2 }
                     address={ activeTabAddress }
+                    addTab={ addTab }
                     activeTab={ activeTab }
                     onSelect={ deselectAddressBar }
                     onFocus={ selectAddressBar }
                     onBlur={ blurAddressBar }
+
                     addBookmark={ addBookmark }
                     isBookmarked={ isBookmarked }
                     removeBookmark={ removeBookmark }
                     reloadPage={ reloadPage }
+
+                    hideSettingsMenu={ hideSettingsMenu }
+                    showSettingsMenu={ showSettingsMenu }
+                    settingsMenuIsVisible={ ui.settingsMenuIsVisible }
+
                     isSelected={ ui.addressBarIsSelected }
+
                     updateActiveTab={ updateActiveTab }
                     activeTabBackwards={ activeTabBackwards }
                     activeTabForwards={ activeTabForwards }
                     activeTab={ activeTab }
+
                     windowId={windowId}
 
-                    //pass everything as we're extending here...
-                    {...props}
                     ref={ ( c ) =>
                     {
                         this.address = c;
@@ -237,7 +268,7 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
-		    closeTab={ closeTab }
+		            closeTab={ closeTab }
                     key={ 4 }
                     addTab={ addTab }
                     updateActiveTab={ updateActiveTab }
@@ -248,6 +279,7 @@ class Browser extends Component
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
                     windowId={ windowId}
+                    safeExperimentsEnabled={ experimentsEnabled }
                     ref={ ( c ) =>
                     {
                         this.tabContents = c;

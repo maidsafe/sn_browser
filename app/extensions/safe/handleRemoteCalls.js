@@ -4,8 +4,10 @@ import * as authActions from 'extensions/safe/actions/authenticator_actions';
 import * as uiActions from 'actions/ui_actions';
 import { SAFE } from 'extensions/safe/constants';
 import CONSTANTS from 'extensions/safe/auth-constants';
-import * as peruseAppActions from 'extensions/safe/actions/peruse_actions';
+import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 import * as remoteCallActions from 'actions/remoteCall_actions';
+import { clearAppObj } from 'extensions/safe/safeBrowserApplication';
+import { setIsAuthorisedState } from 'extensions/safe/actions/authenticator_actions';
 
 import logger from 'logger';
 
@@ -42,22 +44,25 @@ export const remoteCallApis =  {
     {
         logger.verbose('Handling create account call from webview.')
         await theAuthApi.createAccount( secret, password, invitation );
-        theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
-        theStore.dispatch( peruseAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
+        theStore.dispatch( safeBrowserAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
+        theStore.dispatch( safeBrowserAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
     },
     login : async( secret, password ) =>
     {
         logger.verbose('Handling login call from webview.')
         await theAuthApi.login( secret, password );
-        theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
-        theStore.dispatch( peruseAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
+        theStore.dispatch( safeBrowserAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
+        theStore.dispatch( safeBrowserAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
     },
     logout : async( secret, password ) =>
     {
         logger.verbose('Handling logout call from webview.')
         await theAuthApi.logout( );
-        theStore.dispatch( peruseAppActions.setNetworkStatus(SAFE.NETWORK_STATE.CONNECTED) );
-        theStore.dispatch( uiActions.resetStore( ) );
+
+        clearAppObj();
+        theStore.dispatch( uiActions.resetStore() );
+        theStore.dispatch( safeBrowserAppActions.setNetworkStatus(SAFE.NETWORK_STATE.CONNECTED) );
+        theStore.dispatch( setIsAuthorisedState( false ) );
     },
     /**
     * Handle auth URI calls from webview processes. Should take an authURI, decode, handle auth and reply
