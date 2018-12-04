@@ -12,7 +12,8 @@ language: node_js
 node_js:
 - 8 
 global:
-  - YARN_GPG=no
+- YARN_GPG=no
+
 addons:
   # chrome: stable
   apt:
@@ -57,9 +58,8 @@ script:
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
   fi   
 - sleep 5
-
-after_success:
-
+- echo"testing this"
+after_success: 
 - ls release
 - export RELEASE="$(ls release)";
 - echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
