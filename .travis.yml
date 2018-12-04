@@ -11,14 +11,8 @@ env:
 language: node_js
 node_js:
 - 8 
-# cache:
-#   yarn: true
-#   directories:
-#   - node_modules
-#   - app/node_modules
-#   - "$HOME/.electron"
-#   - "$HOME/.cache"
-
+global:
+  - YARN_GPG=no
 addons:
   # chrome: stable
   apt:
@@ -63,9 +57,9 @@ script:
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
   fi   
 - sleep 5
-- echo "----------------------SCRIPT DONE--------------------"
+
 after_success:
-- echo "----------------------After Success--------------------" 
+
 - ls release
 - export RELEASE="$(ls release)";
 - echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
@@ -80,6 +74,7 @@ after_success:
   fi
 - cd ..
 - ls release
+
 after_failure:
 - ls /home/travis/safe-browser/app/node_modules/@maidsafe/safe-node-app/src/native
 # - cat ~/.local/share/applications/mimeapps.list
@@ -91,12 +86,8 @@ after_failure:
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi
-- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then where python;
-  fi
-
 
 before_deploy:
-
 - export RELEASE_ZIP="$(ls release/*.zip)";
 - echo "deploying ${RELEASE_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*.zip >> release/$RELEASE.txt; fi
