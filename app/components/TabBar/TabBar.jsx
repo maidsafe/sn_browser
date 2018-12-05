@@ -5,12 +5,14 @@ import url from 'url';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './tabBar.css';
-import MdClose from 'react-icons/lib/md/close';
-import MdAdd from 'react-icons/lib/md/add';
 import logger from 'logger';
 import { isInternalPage } from 'utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from 'appConstants';
 import { Column, Spinner, Row } from 'nessie-ui';
+import { Col, Button,Icon } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
 
 export default class TabBar extends Component
 {
@@ -135,13 +137,17 @@ export default class TabBar extends Component
                     <Column className={ styles.tabText } align="left">
                         { title || 'New Tab' }
                     </Column>
-                    <Column align="right" className={ styles.favicon }>
-                        <MdClose
-                            className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
-                            onClick={ this.handleTabClose.bind( this, tabData ) }
-                            title="Close"
-                        />
-                    </Column>
+                    {/* <Column align="right"> */}
+                    <Button
+                        className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
+                        onClick={ this.handleTabClose.bind( this, tabData ) }
+                        title="Close"
+                        icon="close"
+                        size="small"
+                        block="true"
+                        align="right"
+                    />
+                    {/* </Column> */}
                 </Row>
             </div> );
         } );
@@ -155,10 +161,15 @@ export default class TabBar extends Component
                     {
                         this.getTabs()
                     }
-                    <div className={ `${styles.addTab} ${CLASSES.ADD_TAB}` } onClick={ this.handleAddTabClick.bind( this ) }>
-                        <MdAdd
+                    <div className={ `${styles.addTab} ${CLASSES.ADD_TAB}` }>
+                        <Button
+                            onClick={ this.handleAddTabClick.bind( this ) }
                             className={ styles.tabAddButton }
                             title="New Tab"
+                            icon="plus"
+                            size="small"
+                            shape="circle"
+                            block="true"
                         />
                     </div>
                 </div>
