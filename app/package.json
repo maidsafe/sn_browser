@@ -54,6 +54,6 @@
     }
   },
   "devDependencies": {
-    "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz"
+    "deps_downloader": "git+https://github.com/joshuef/deps_downloader#Updated"
   }
 }
