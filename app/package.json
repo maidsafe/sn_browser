@@ -29,7 +29,7 @@
   "download_deps": {
     "system_uri": {
       "mirror": "https://s3.eu-west-2.amazonaws.com/system-uri",
-      "version": "v0.4.0",
+      "version": "0.4.0",
       "targetDir": "extensions/safe/dist/prod",
       "filePattern": "^.*\\.(dll|so|dylib)$"
     },
