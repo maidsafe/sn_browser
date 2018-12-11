@@ -11,9 +11,9 @@
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --build-from-source"
   },
   "author": {
-    "name": "Josh Wilson",
-    "email": "joshuef@gmail.com",
-    "url": "https://github.com/joshuef"
+    "name": "Maidsafe.net Ltd",
+    "email": "qa@maidsafe.net",
+    "url": "https://github.com/maidsafe"
   },
   "license": "MIT",
   "dependencies": {
