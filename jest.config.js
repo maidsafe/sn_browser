@@ -1,4 +1,5 @@
 module.exports = {
+    "testURL"              : "http://localhost/",
     verbose                : true,
     moduleFileExtensions   : ['js', 'jsx', 'json'],
     setupFiles   : ['raf/polyfill','<rootDir>/tests_setup.js'],

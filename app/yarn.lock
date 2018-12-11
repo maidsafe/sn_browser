@@ -271,7 +271,7 @@ chainsaw@~0.1.0:
   dependencies:
     traverse ">=0.3.0 <0.4"
 
-"cids@github:bochaco/js-cid#temp-use-bochaco-multicodec":
+cids@bochaco/js-cid#temp-use-bochaco-multicodec:
   version "0.5.3"
   resolved "https://codeload.github.com/bochaco/js-cid/tar.gz/fdd908ad57edd5359008adffde1ce32e3e970b15"
   dependencies:
