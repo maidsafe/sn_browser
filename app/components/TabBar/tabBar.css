@@ -101,8 +101,9 @@
 
 .favicon
 {
-  min-width: 20px;
-  max-width: 20px;
+  min-width: 24px;
+  max-width: 24px;
+  margin-left: 10px;
 }
 
 .favicon img

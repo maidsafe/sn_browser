@@ -2,10 +2,11 @@ import React from 'react';
 import { mount, render, shallow } from 'enzyme';
 
 import TabBar from 'components/TabBar';
-import MdClose from 'react-icons/lib/md/close';
-import MdAdd from 'react-icons/lib/md/add';
+// import MdClose from 'react-icons/lib/md/close';
+// import MdAdd from 'react-icons/lib/md/add';
 import { CLASSES } from 'appConstants';
 import { Spinner } from 'nessie-ui';
+import { Button } from 'antd';
 
 describe( 'TabBar', () =>
 {
@@ -53,14 +54,19 @@ describe( 'TabBar', () =>
             expect( wrapper.find( '#favicon-img' ).length ).toBe( 1 );
         } );
 
-        it( 'should have exactly 1 MdAdd component', () =>
+        it( 'should have exactly 2 button components', () =>
         {
-            expect( wrapper.find( MdAdd ).length ).toBe( 1 );
+            expect( wrapper.find( Button ).length ).toBe( 2 );
         } );
 
-        it( 'should have exactly 1 MdClose component', () =>
+        it( 'should have exactly 1 add tab component', () =>
         {
-            expect( wrapper.find( MdClose ).length ).toBe( 1 );
+            expect( wrapper.find( `.${CLASSES.ADD_TAB}` ).length ).toBe( 1 );
+        } );
+        
+        it( 'should have exactly 1 close tab component', () =>
+        {
+            expect( wrapper.find( `.${CLASSES.CLOSE_TAB}` ).length ).toBe( 1 );
         } );
     } );
 
