@@ -20,9 +20,9 @@ import {
     , windowLoaded
 } from 'spectron-lib/setupSpectronApp';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 320000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 420000;
 
-const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
+const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 40000;
 
 console.warn( 'This test runs against a packaged version of the DEV browser. If not built, this will FAIL' );
 describe( 'SAFE network log in and out', async () =>
@@ -63,6 +63,7 @@ describe( 'SAFE network log in and out', async () =>
     describe( 'account data access', async ( ) =>
     {
         const { secret, password } = createAccountDetails();
+        await delay( 10000 );
         console.log( 'Creating authed app with deets: ', secret, password );
         it( 'can save and reaccess browser bookmark data.', async ( ) =>
         {
@@ -89,7 +90,7 @@ describe( 'SAFE network log in and out', async () =>
 
             // login
             await createAccount( app, secret, password, authTab );
-            await delay( 1500 );
+            await delay( 9500 );
 
 
             await setClientToMainBrowserWindow( app );
@@ -138,9 +139,9 @@ describe( 'SAFE network log in and out', async () =>
 
             await createAccount( app );
 
-            await delay( 1500 );
+            await delay( 9500 );
             await setClientToMainBrowserWindow( app );
-
+            await delay( 2500 );
             await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
             await delay( 1500 );
@@ -171,7 +172,7 @@ describe( 'SAFE network log in and out', async () =>
             await delay( 1500 );
 
             await login( app, secret, password );
-            await delay( 1500 );
+            await delay( 8500 );
 
             await setClientToMainBrowserWindow( app );
 
