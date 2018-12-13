@@ -9,10 +9,10 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@maidsafe/safe-node-app@0.10.2":
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.10.2.tgz#b59cb8bb0b9395fc52840883fa9b93f5e4c35eec"
-  integrity sha512-z9wmT6YEF0Nwzh3R2uNwG6lk+aAeLesD/bJNivxPEdCABviM8Bz22Bll6PXQqGR1RXlNDUeByefyd2em9+UMxg==
+"@maidsafe/safe-node-app@0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@maidsafe/safe-node-app/-/safe-node-app-0.10.3.tgz#079af197c567abe2b1eb32ae949a3242bbbbd92f"
+  integrity sha512-CtQwdR2DxPIuPDQmd2EE2wD8FWjpDWnGVkG3PJBKqbAMuR3pLlQYeh9omN+B6+fqINDHwbshiZrlzq4MZu6L4Q==
   dependencies:
     cids bochaco/js-cid#temp-use-bochaco-multicodec
     cross-env "5.1.3"
@@ -271,7 +271,7 @@ chainsaw@~0.1.0:
   dependencies:
     traverse ">=0.3.0 <0.4"
 
-cids@bochaco/js-cid#temp-use-bochaco-multicodec:
+"cids@github:bochaco/js-cid#temp-use-bochaco-multicodec":
   version "0.5.3"
   resolved "https://codeload.github.com/bochaco/js-cid/tar.gz/fdd908ad57edd5359008adffde1ce32e3e970b15"
   dependencies:
