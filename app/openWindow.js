@@ -48,7 +48,7 @@ const openWindow = ( store ) =>
     } );
 
     let appIcon = path.join( __dirname, '../resources/safeicon.png' );
-        
+
     if( process.platform === 'win32' )
     {
         appIcon = path.join( __dirname, '../resources/icon.ico' );
@@ -63,7 +63,7 @@ const openWindow = ( store ) =>
         width             : mainWindowState.width,
         height            : mainWindowState.height,
         titleBarStyle     : 'hiddenInset',
-        icon              : appIcon,  
+        icon              : appIcon,
         thickFrame        : false,
         webPreferences    :
         {
@@ -94,7 +94,7 @@ const openWindow = ( store ) =>
         // before show lets load state
         mainWindow.show();
         mainWindow.focus();
-        
+
         if ( isRunningDebug && !isRunningSpectronTestProcess )
         {
             mainWindow.openDevTools({ mode:'undocked' });
@@ -103,8 +103,13 @@ const openWindow = ( store ) =>
         const webContentsId = mainWindow.webContents.id;
         if ( browserWindowArray.length === 1 )
         {
-            // first tab needs this webContentsId.
-            store.dispatch( updateTab( { index: 0, windowId: webContentsId } ) );
+            const allTabs = store.getState().tabs;
+            const orphanedTabs = allTabs.filter( tab =>
+                !tab.windowId );
+            orphanedTabs.forEach( orphan =>
+            {
+                store.dispatch( updateTab( { index: orphan.index, windowId: webContentsId } ) );
+            } );
         }
         else
         {

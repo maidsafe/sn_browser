@@ -187,8 +187,11 @@ app.on( 'open-url', ( e, url ) =>
 {
     onReceiveUrl( store, url );
 
-    mainWindow.show();
+    if( mainWindow )
+    {
+        mainWindow.show();
 
+    }
 } );
 
 
