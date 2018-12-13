@@ -8,7 +8,7 @@ import logger from 'logger';
 import styles from './webIdButtons.css';
 
 const hideDropdownTimeout = 0.15; // seconds
-const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidea.ter';
+const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidmgr.dapp';
 const authHomeUri = 'safe-auth://home';
 
 export default class WebIdDropdown extends Component
