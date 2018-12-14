@@ -83,7 +83,7 @@ after_failure:
 - which xdg-open
 - xdg-open --version
 # - bash -x ~/bin/xdg-open safe-auth://whaaaaa
-- cat app/log.log;
+- cat $TMPDIR/safe-browser.log;
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi

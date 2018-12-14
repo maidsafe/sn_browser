@@ -49,6 +49,7 @@ const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
 
 logger.info('Main process starting.');
+
 global.mainProcessStore = store;
 
 // renderer error notifications
