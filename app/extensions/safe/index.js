@@ -16,6 +16,7 @@ import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'extensions/safe/actions/safeBrowserApplication_actions';
 import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
 import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
+import { getSafeBrowserUnauthedReqUri } from 'extensions/safe/safeBrowserApplication/init/initAnon';
 
 import sysUri from 'extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from 'appConstants';
@@ -190,27 +191,53 @@ const parseSafeUri = function ( uri )
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 
+const waitForBasicConnection = ( theStore ) => new Promise( ( resolve ) =>
+{
+    const check = () =>
+    {
+        const netState = theStore.getState().safeBrowserApp.networkStatus;
+
+        if ( netState !== null )
+        {
+            resolve();
+        }
+        else
+        {
+            setTimeout( check, 500 );
+        }
+    };
+
+    setTimeout( check, 500 )
+} );
+
 /**
  * Trigger when receiving a URL param in the browser.
+ *
+ * Occurring in the main process.
  * @param  {Object} store redux store
  * @param  {String} url   url param
  */
-const onReceiveUrl = ( store, url ) =>
+const onReceiveUrl = async ( store, url ) =>
 {
     const preParseUrl = parseSafeUri( url );
     const parsedUrl = parseURL( preParseUrl );
 
-    // TODO. Queue incase of not started.
-
-    // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
-        logger.verbose('Handling safe-auth: url')
+        if ( url !== getSafeBrowserUnauthedReqUri() )
+        {
+            // otherwise EVERYTHING waits for basic connection...
+            // so we know the libs are ready/ loaded
+            // (and we assume, _that_ happens at the correc time due to browser hooks)
+            await waitForBasicConnection( store );
+        }
         store.dispatch( authenticatorActions.handleAuthUrl( url ) );
     }
     if ( parsedUrl.protocol === 'safe:' )
     {
-        logger.verbose('Handling safe: url')
+        await waitForBasicConnection( store );
+
+        logger.verbose('Handling safe: url', url )
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...

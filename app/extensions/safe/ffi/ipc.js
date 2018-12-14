@@ -50,7 +50,7 @@ const parseResUrl = ( url ) =>
     return split.join( ':' );
 };
 
- 
+
 
 async function sendAuthDecision( isAllowed, authReqData, reqType )
 {
@@ -432,7 +432,7 @@ export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBa
                 authCallBacks[queue.req.id].reject( err );
                 delete authCallBacks[queue.req.id];
             }
-            
+
             queue.next();
 
         } );
