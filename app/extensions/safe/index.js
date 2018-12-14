@@ -1,6 +1,6 @@
 import logger from 'logger';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
-
+import { app } from 'electron';
 import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 import { initSafeBrowserApp } from 'extensions/safe/safeBrowserApplication';
 import { getLibStatus } from 'extensions/safe/auth-api/authFuncs';
@@ -38,7 +38,12 @@ const onWebviewPreload = ( store ) =>
 
 const preAppLoad = () =>
 {
-
+    app.setAsDefaultProtocolClient('safe-auth');
+    app.setAsDefaultProtocolClient('safe');
+    let isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
+    let isDefaultSafe = app.isDefaultProtocolClient( 'safe' );
+    logger.info('Registered to handle safe: urls ? ', isDefaultSafe );
+    logger.info('registered to handle safe-auth: urls ?', isDefaultAuth );
 }
 
 /**
