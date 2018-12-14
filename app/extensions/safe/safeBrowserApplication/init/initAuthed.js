@@ -34,6 +34,7 @@ const initAuthedApplication = async ( passedStore, options ) =>
 
         logger.verbose( 'generated auth uri:', authReq );
 
+        // this global is only global to the bg process...
         global.browserAuthReqUri = authReq.uri;
 
 
