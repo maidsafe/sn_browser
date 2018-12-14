@@ -30,11 +30,11 @@ import {
 } from 'spectron-lib/setupSpectronApp';
 import { CLASSES } from 'appConstants';
 
-const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
+const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 50000;
 
 jest.unmock( 'electron' );
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 55000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 75000;
 
 describe( 'safe authenticator protocol', () =>
 {
@@ -71,7 +71,7 @@ describe( 'safe authenticator protocol', () =>
 
             setClientToMainBrowserWindow( app );
             // await client.pause(1500)
-            const exists = await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            const exists = await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, NOTIFICATION_WAIT );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
             // console.log('THE NOTE', note)
             expect( note ).not.toBeNull();
