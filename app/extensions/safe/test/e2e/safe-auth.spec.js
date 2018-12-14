@@ -42,7 +42,7 @@ describe( 'safe authenticator protocol', () =>
 
     beforeEach( async () =>
     {
-        app = setupSpectronApp();
+        app = setupSpectronApp('--debug');
 
         await beforeAllTests( app );
     } );

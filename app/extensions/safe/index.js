@@ -1,6 +1,6 @@
 import logger from 'logger';
 import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
-
+import { app } from 'electron';
 import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
 import { initSafeBrowserApp } from 'extensions/safe/safeBrowserApplication';
 import { getLibStatus } from 'extensions/safe/auth-api/authFuncs';
@@ -38,7 +38,12 @@ const onWebviewPreload = ( store ) =>
 
 const preAppLoad = () =>
 {
-
+    app.setAsDefaultProtocolClient('safe-auth');
+    app.setAsDefaultProtocolClient('safe');
+    let isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
+    let isDefaultSafe = app.isDefaultProtocolClient( 'safe' );
+    logger.info('Registered to handle safe: urls ? ', isDefaultSafe );
+    logger.info('registered to handle safe-auth: urls ?', isDefaultAuth );
 }
 
 /**
@@ -191,13 +196,20 @@ const parseSafeUri = function ( uri )
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 
-const waitForBasicConnection = ( theStore ) => new Promise( ( resolve ) =>
+const waitForBasicConnection = ( theStore, timeout = 15000 ) => new Promise( ( resolve ) =>
 {
+    let timeLeft = timeout ;
     const check = () =>
     {
+        timeLeft -= 500;
         const netState = theStore.getState().safeBrowserApp.networkStatus;
+        logger.verbose('Waiting for basic connection...', netState )
 
         if ( netState !== null )
+        {
+            resolve();
+        }
+        else if ( timeLeft < 0 )
         {
             resolve();
         }
@@ -222,14 +234,19 @@ const onReceiveUrl = async ( store, url ) =>
     const preParseUrl = parseSafeUri( url );
     const parsedUrl = parseURL( preParseUrl );
 
+    logger.info('Did get a parsed url on the go', parsedUrl )
+
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
+        logger.info('this is a parsed url for auth', url )
         if ( url !== getSafeBrowserUnauthedReqUri() )
         {
             // otherwise EVERYTHING waits for basic connection...
             // so we know the libs are ready/ loaded
             // (and we assume, _that_ happens at the correc time due to browser hooks)
             await waitForBasicConnection( store );
+
+            logger.info('DONE WAITING', url)
         }
         store.dispatch( authenticatorActions.handleAuthUrl( url ) );
     }
