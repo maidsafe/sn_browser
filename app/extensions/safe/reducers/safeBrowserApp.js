@@ -106,6 +106,10 @@ export default function safeBrowserApp( state = initialState, action )
             return { ...initialState, isMock: state.isMock };
         }
 
+        case TYPES.SET_IS_CONNECTING:
+        {
+            return { ...state, isConnecting: payload };
+        }
         default:
             return state;
     }

@@ -30,7 +30,8 @@ const initialState = {
         experimentsEnabled   : false,
         showingWebIdDropdown : false,
         isFetchingWebIds     : false,
-        webIds               : []
+        webIds               : [],
+        isConnecting         : false
     },
     webFetch : {
         fetching : false,

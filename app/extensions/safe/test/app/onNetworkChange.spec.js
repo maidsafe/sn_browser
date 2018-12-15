@@ -55,7 +55,7 @@ describe( 'Network callback', () =>
         expect( dispatchArgOne.payload ).toBe( SAFE.NETWORK_STATE.DISCONNECTED );
 
         expect( dispatchArgTwo.type ).toBe( TYPES.ADD_NOTIFICATION );
-        expect( dispatchArgTwo.payload.text ).toBe( 'Network state: Disconnected. Reconnecting...' );
+        expect( dispatchArgTwo.payload.text ).toBe( 'Network state: Disconnected' );
     } );
 
     it( 'network callback invokes operation to begin reconnection attempts upon Disconnect event', () =>

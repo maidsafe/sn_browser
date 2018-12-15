@@ -66,7 +66,6 @@ ipcMain.on( 'opn', ( event, data ) =>
     shell.openExternal(data)
 } );
 
-
 let mainWindow = null;
 
 // Do any pre app extension work

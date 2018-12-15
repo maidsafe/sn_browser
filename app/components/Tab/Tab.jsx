@@ -40,7 +40,7 @@ export default class Tab extends Component
     static defaultProps =
     {
         isActiveTab : false,
-        url         : 'http://nowhere.com',
+        url         : 'http://nowhere.com'
     }
 
 
@@ -96,6 +96,7 @@ export default class Tab extends Component
     buildMenu = ( webview ) =>
     {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
+        const { addTab } = this.props;
 
         contextMenu( {
             window : webview,
@@ -104,7 +105,11 @@ export default class Tab extends Component
                     [
                         {
                             label   : 'Open Link in New Tab.',
-                            visible : params.linkURL.length > 0
+                            visible : params.linkURL.length > 0,
+                            click()
+                            {
+                                addTab( { url: params.linkURL, isActiveTab: true } );
+                            }
                         }
                     ]
                 ),
@@ -215,7 +220,6 @@ export default class Tab extends Component
 
             if (
                 webviewSrc.href === ''
-                || `${webviewSrc.protocol}${webviewSrc.hostname}` === 'about:blank'
                 || urlHasChanged( webview.src, nextProps.url )
             )
             {
@@ -226,6 +230,11 @@ export default class Tab extends Component
         if ( nextProps.isActiveTabReloading )
         {
             this.reloadIfActive();
+        }
+
+        if ( nextProps.shouldReload )
+        {
+            this.reload();
         }
     }
 
@@ -315,7 +324,7 @@ export default class Tab extends Component
 
     didFailLoad( err )
     {
-        const { url, index, addTab, closeTab, addNotification, activeTabBackwards } = this.props;
+        const { url, shouldReload, index, updateTab, addNotification, activeTabBackwards, history } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
         const renderError = ( header, subHeader ) =>
@@ -368,43 +377,87 @@ export default class Tab extends Component
                 reactNode : Error( { error: { header, subHeader } } )
             };
             addNotification( notification );
-            activeTabBackwards();
+            if ( history.length === 1 ) this.loadURL( 'about:blank' );
+            else if ( urlObj.protocol.includes( 'safe' ) ) return;
+            else activeTabBackwards( { index } );
             return;
         }
-        closeTab( { index } );
-        addTab( { url, isActiveTab: true } );
+        if ( err.errorCode <= 0 )
+        {
+            const tabUpdate = {
+                index,
+                isLoading : false,
+                error     : {
+                    chromium : true,
+                    code     : err.errorCode,
+                    message  : err.errorDescription
+                }
+            };
+            updateTab( tabUpdate );
+        }
+        logger.error( 'Chromium error: ', err );
+        renderError( err.errorDescription || err.errorCode || 'Unknown error' );
+        if ( shouldReload )
+        {
+            const tabUpdate = {
+                index,
+                isLoading    : false,
+                shouldReload : false,
+                error        : {
+                    code    : err.errorCode,
+                    message : err.errorDescription
+                }
+            };
+            updateTab( tabUpdate );
+        }
     }
 
     didStopLoading( )
     {
-        logger.verbose('Tab did stop loading')
-        const { updateTab, index, isActiveTab } = this.props;
+        logger.verbose( 'Tab did stop loading' );
+        const { updateTab, index, shouldReload } = this.props;
 
-        const tabUpdate = {
+        let tabUpdate = {
             index,
             isLoading : false
         };
 
         this.updateBrowserState( { loading: false } );
-        updateTab( tabUpdate );
 
         this.setCurrentWebId( null );
+        if ( shouldReload )
+        {
+            tabUpdate = {
+                ...tabUpdate,
+                shouldReload : false,
+                error        : null
+            };
+        }
+        updateTab( tabUpdate );
     }
 
     didFinishLoading( )
     {
-        const { updateTab, index } = this.props;
+        const { updateTab, index, shouldReload } = this.props;
 
-        logger.verbose('Tab did finish loading')
-        const tabUpdate = {
+        logger.verbose( 'Tab did finish loading' );
+        let tabUpdate = {
             index,
             isLoading : false
         };
 
         this.updateBrowserState( { loading: false } );
-        updateTab( tabUpdate );
 
         this.setCurrentWebId( null );
+        if ( shouldReload )
+        {
+            tabUpdate = {
+                ...tabUpdate,
+                shouldReload : false,
+                error        : null
+            };
+        }
+        updateTab( tabUpdate );
     }
 
     updateTargetUrl( url )
@@ -509,7 +562,7 @@ export default class Tab extends Component
     {
         logger.silly( 'webview will navigate', e );
 
-        if (!this.isFrozen() )
+        if ( this.isFrozen() )
         {
             logger.verbose('frozen checkkkkk in will nav')
             return;
@@ -705,7 +758,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         this.setState( { browserState } );
 
         // prevent looping over attempted url loading
-        if ( webview && url !== 'about:blank' )
+        if ( webview )
         {
             webview.loadURL( url );
         }

@@ -218,10 +218,16 @@ const moveActiveTabForward = ( state, windowId ) =>
 };
 
 
-const moveActiveTabBackwards = ( state, windowId ) =>
+const moveActiveTabBackwards = ( state, payload ) =>
 {
-    const tab = getActiveTab( state, windowId );
-    const index = getActiveTabIndex( state, windowId );
+    const { windowId, index } = payload;
+    let tab = getActiveTab( state, windowId );
+    let tabIndex = getActiveTabIndex( state, windowId );
+    if ( index )
+    {
+        tab = state[index];
+        tabIndex = index;
+    }
     const updatedTab = { ...tab };
     const history = updatedTab.history;
     const nextHistoryIndex = updatedTab.historyIndex - 1;
@@ -240,7 +246,7 @@ const moveActiveTabBackwards = ( state, windowId ) =>
     updatedTab.historyIndex = nextHistoryIndex;
     updatedTab.url = newUrl;
 
-    updatedState[index] = updatedTab;
+    updatedState[tabIndex] = updatedTab;
     return updatedState;
 };
 

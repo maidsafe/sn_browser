@@ -3,6 +3,7 @@ import { handleAuthUrl } from 'extensions/safe/actions/authenticator_actions';
 import { updateRemoteCall } from 'actions/remoteCall_actions';
 import { parseSafeAuthUrl } from 'extensions/safe/utils/safeHelpers';
 import { getCurrentStore } from 'extensions/safe/safeBrowserApplication';
+import { setIsConnecting } from '../actions/safeBrowserApplication_actions';
 import {
     PROTOCOLS
 } from 'appConstants';
@@ -21,18 +22,51 @@ export const handleAuthentication = ( passedStore, uriOrReqObject ) =>
     passedStore.dispatch( handleAuthUrl( uriOrReqObject ) );
 };
 
-export const attemptReconnect = ( passedStore, appObj ) =>
+export const attemptReconnect = async ( store, appObj, currentTimeoutID, immediate ) =>
 {
-    setTimeout( () =>
+    if ( store && appObj )
     {
-        logger.info( 'Attempting reconnect...' );
-        appObj.reconnect();
-
-        if ( passedStore.getState().safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.DISCONNECTED )
+        if ( immediate )
         {
-            attemptReconnect( passedStore );
+            try
+            {
+                const state = store.getState();
+                const isConnecting = state.safeBrowserApp.isConnecting;
+                const isConnected = state.safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED;
+                if ( isConnecting || isConnected ) return;
+                store.dispatch( setIsConnecting( true ) );
+                await appObj.reconnect();
+            }
+            catch ( err )
+            {
+                store.dispatch( setIsConnecting( false ) );
+                logger.error( err );
+                attemptReconnect( store, appObj );
+            }
         }
-    }, 5000 );
+        const timeoutID = setTimeout( async ( ) =>
+        {
+            const state = store.getState();
+            const isConnecting = state.safeBrowserApp.isConnecting;
+            const isConnected = state.safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED;
+            if ( isConnecting || isConnected ) return;
+            store.dispatch( setIsConnecting( true ) );
+            try
+            {
+                if ( currentTimeoutID )
+                {
+                    clearTimeout( currentTimeoutID );
+                }
+                await appObj.reconnect();
+            }
+            catch ( err )
+            {
+                store.dispatch( setIsConnecting( false ) );
+                logger.error( err );
+                attemptReconnect( store, appObj, timeoutID );
+            }
+        }, 15000 );
+    }
 };
 
 

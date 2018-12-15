@@ -110,6 +110,8 @@ export default class TabContents extends Component
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ shouldFocusWebview }
                     activeTabBackwards={ activeTabBackwards }
+                    shouldReload={ tab.shouldReload }
+                    history={ tab.history }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )

@@ -6,12 +6,14 @@ import {
 import safeWrapAddressBarButtonsLHS from 'extensions/safe/components/wrapAddressBarButtonsLHS';
 import safeWrapAddressBarButtonsRHS from 'extensions/safe/components/wrapAddressBarButtonsRHS';
 import safeWrapAddressBarInput from 'extensions/safe/components/wrapAddressBarInput';
+import safeWrapNotifier from 'extensions/safe/components/wrapNotifier';
 
 
 const allBrowserExtensions = [safeWrapBrowser];
 const allAddressBarButtonLHSExtensions = [safeWrapAddressBarButtonsLHS];
 const allAddressBarButtonRHSExtensions = [safeWrapAddressBarButtonsRHS];
 const allAddressBarInputExtensions = [safeWrapAddressBarInput];
+const allNotifierExtensions = [safeWrapNotifier];
 
 /**
  * Wrap the browser with a HOC or replace it entirely.
@@ -124,6 +126,34 @@ export const wrapAddressBarInput = ( AddressBarInput ) =>
     catch ( e )
     {
         console.error( 'Problem with extension wrapping of Addressbar input component' );
+        throw new Error( e );
+    }
+};
+
+/**
+ * Wrap the Notifier component.
+ *
+ * This is separate to the extensions/index file to prevent pulling in libs which will break tests
+ *
+ * @param  {React Component} Notifier react component
+ */
+export const wrapNotifier = ( Notifier ) =>
+{
+    try
+    {
+        logger.verbose( 'Wrapping Address bar input' );
+        let WrapNotifier = Notifier;
+
+        allNotifierExtensions.forEach( wrapper =>
+        {
+            WrapNotifier = wrapper( Notifier );
+        } );
+
+        return WrapNotifier;
+    }
+    catch ( e )
+    {
+        console.error( 'Problem with extension wrapping of Notifier component' );
         throw new Error( e );
     }
 };

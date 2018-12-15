@@ -8,23 +8,22 @@ import logger from 'logger';
 import { CLASSES } from 'appConstants';
 
 import { Button, Column, IconButton, MessageBox, Row, Text } from 'nessie-ui';
+import extendComponent from 'utils/extendComponent';
+import { wrapNotifier } from 'extensions/components';
 
 const log = require( 'electron-log' );
 
-export default class Notifier extends Component
+class Notifier extends Component
 {
     static propTypes =
    {
-       isVisible   : PropTypes.bool,
-       text        : PropTypes.string,
-       type        : PropTypes.string,
-       acceptText  : PropTypes.string,
-       denyText    : PropTypes.string,
-       dismissText : PropTypes.string,
-       onDismiss   : PropTypes.string,
-       onAccept    : PropTypes.string,
-       onDeny      : PropTypes.string,
-       reactNode    : PropTypes.object,
+       isVisible          : PropTypes.bool,
+       text               : PropTypes.string,
+       type               : PropTypes.string,
+       acceptText         : PropTypes.string,
+       denyText           : PropTypes.string,
+       dismissText        : PropTypes.string,
+       reactNode          : PropTypes.object,
        updateNotification : PropTypes.func
    }
     static defaultProps =
@@ -178,3 +177,5 @@ export default class Notifier extends Component
         );
     }
 }
+
+export default extendComponent( Notifier, wrapNotifier );

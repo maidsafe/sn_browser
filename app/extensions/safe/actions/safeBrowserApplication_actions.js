@@ -1,5 +1,7 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
+import { attemptReconnect } from 'extensions/safe/network';
+import { getSafeBrowserAppObject, getCurrentStore } from 'extensions/safe/safeBrowserApplication';
 import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
 
@@ -7,6 +9,7 @@ export const TYPES = {
     SET_APP_STATUS     : 'SET_APP_STATUS',
     SET_NETWORK_STATUS : 'SET_NETWORK_STATUS',
     SET_IS_MOCK        : 'SET_IS_MOCK',
+    RECONNECT          : 'RECONNECT',
 
     // experiments
     ENABLE_EXPERIMENTS  : 'ENABLE_EXPERIMENTS',
@@ -27,7 +30,8 @@ export const TYPES = {
     RESET_STORE        : 'RESET_STORE',
 
     // UI actions.
-    SHOW_WEB_ID_DROPDOWN : 'SHOW_WEB_ID_DROPDOWN'
+    SHOW_WEB_ID_DROPDOWN : 'SHOW_WEB_ID_DROPDOWN',
+    SET_IS_CONNECTING    : 'SET_IS_CONNECTING'
 };
 
 export const {
@@ -50,7 +54,8 @@ export const {
 
     resetStore,
 
-    showWebIdDropdown
+    showWebIdDropdown,
+    setIsConnecting
 } = createActions(
     TYPES.SET_APP_STATUS,
     TYPES.SET_NETWORK_STATUS,
@@ -70,7 +75,8 @@ export const {
     TYPES.RECONNECT_SAFE_APP,
     TYPES.RESET_STORE,
 
-    TYPES.SHOW_WEB_ID_DROPDOWN
+    TYPES.SHOW_WEB_ID_DROPDOWN,
+    TYPES.SET_IS_CONNECTING
 );
 
 
@@ -91,4 +97,21 @@ export const getAvailableWebIds = createAliasedAction(
             type    : TYPES.GET_AVAILABLE_WEB_IDS,
             payload : triggerGetWebIds(),
         } ),
+);
+
+export const reconnect = createAliasedAction(
+    TYPES.RECONNECT,
+    () =>
+        (
+            {
+            // the real action
+                type    : TYPES.RECONNECT,
+                payload : attemptReconnect(
+                    getCurrentStore(),
+                    getSafeBrowserAppObject(),
+                    null,
+                    true
+                )
+            }
+        )
 );

@@ -1,30 +1,52 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 
-import Notifier from '../../app/components/Notifier';
+import Notifier from 'components/Notifier';
 import { Text } from 'nessie-ui';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 
-jest.mock('extensions', () => {
+const mockStore = configureStore();
 
-});
+// Some mocks to negate FFI and native libs we dont care about
+jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
+jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
+jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
+
+jest.mock( 'ref-array', () => jest.fn() );
+//
+jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
+
+jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
+jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'Notifier', () =>
 {
     let wrapper;
     let instance;
     let props = {};
+    let store;
 
     beforeEach( () =>
     {
         props = {
-          isVisible          : false,
-          type               : 'alert',
-          acceptText         : 'Accept',
-          denyText           : 'Deny',
-          updateNotification : jest.fn(),
-          clearNotification  : jest.fn()
+            isVisible          : false,
+            type               : 'alert',
+            acceptText         : 'Accept',
+            denyText           : 'Deny',
+            updateNotification : jest.fn(),
+            clearNotification  : jest.fn(),
+            safeBrowserApp     : {
+                isConnecting : false
+            }
         };
-        wrapper = mount( <Notifier { ...props } /> );
+        store = mockStore( props );
+
+        wrapper = shallow(
+            <Provider store={ store } >
+                <Notifier { ...props } />
+            </Provider > ).dive();
         instance = wrapper.instance();
     } );
 
@@ -32,7 +54,7 @@ describe( 'Notifier', () =>
     {
         it( 'should have name Notifier', () =>
         {
-            expect( instance.constructor.name ).toBe( 'Notifier' );
+            expect( instance.constructor.name ).toMatch( 'Notifier' );
         } );
     } );
 
@@ -41,7 +63,10 @@ describe( 'Notifier', () =>
         beforeEach( () =>
         {
             props = { ...props, isVisible: true, text: 'notifier text' };
-            wrapper = mount( <Notifier { ...props } /> );
+            wrapper = mount(
+                <Provider store={ store } >
+                    <Notifier { ...props } />
+                </Provider > );
             instance = wrapper.instance();
         } );
 
@@ -50,72 +75,79 @@ describe( 'Notifier', () =>
             expect( wrapper.find( Text ).length ).toBe( 1 );
         } );
 
-        it('should take a element object description as prop', () => {
+        it( 'should take a element object description as prop', () =>
+        {
             const paraOne = 'Paragraph 1 text';
             const paraTwo = 'Paragraph 2 text';
             const paraThree = 'Paragraph 3 text';
             const elObject = {
-              _owner: null,
-              key   : null,
-              props : {
-                className: 'parentDiv',
-                children: [
-                  {
-                    _owner: null,
-                    props: {
-                      children: paraOne,
-                      key: 1,
-                    },
-                    ref: null,
-                    type: 'p'
-                  },
-                  {
-                    _owner: null,
-                    props: {
-                      children: paraTwo,
-                      key: 2,
-                    },
-                    ref: null,
-                    type: 'p'
-                  },
-                  {
-                    _owner: null,
-                    props: {
-                      children: paraThree,
-                       key: 3,
-                    },
-                    ref: null,
-                    type: 'p'
-                  }
-                ]
-              },
-              ref   : null,
-              type  : 'div'
+                _owner : null,
+                key    : null,
+                props  : {
+                    className : 'parentDiv',
+                    children  : [
+                        {
+                            _owner : null,
+                            props  : {
+                                children : paraOne,
+                                key      : 1,
+                            },
+                            ref  : null,
+                            type : 'p'
+                        },
+                        {
+                            _owner : null,
+                            props  : {
+                                children : paraTwo,
+                                key      : 2,
+                            },
+                            ref  : null,
+                            type : 'p'
+                        },
+                        {
+                            _owner : null,
+                            props  : {
+                                children : paraThree,
+                                key      : 3,
+                            },
+                            ref  : null,
+                            type : 'p'
+                        }
+                    ]
+                },
+                ref  : null,
+                type : 'div'
             };
             props = { ...props, isVisible: true, reactNode: elObject };
-            const wrapper = mount( <Notifier { ...props } /> );
-            const reactNode = wrapper.find('div.parentDiv');
+            const wrapper = mount(
+                <Provider store={ store } >
+                    <Notifier { ...props } />
+                </Provider > );
+            const reactNode = wrapper.find( 'div.parentDiv' );
             const reactNodeChildren = reactNode.children();
-            expect(reactNodeChildren.length).toBe(3);
-            expect(reactNodeChildren.get(0).props.children).toBe(paraOne);
-            expect(reactNodeChildren.get(1).props.children).toBe(paraTwo);
-            expect(reactNodeChildren.get(2).props.children).toBe(paraThree);
-        });
+            expect( reactNodeChildren.length ).toBe( 3 );
+            expect( reactNodeChildren.get( 0 ).props.children ).toBe( paraOne );
+            expect( reactNodeChildren.get( 1 ).props.children ).toBe( paraTwo );
+            expect( reactNodeChildren.get( 2 ).props.children ).toBe( paraThree );
+        } );
     } );
 
     describe( 'props', () =>
     {
         beforeEach( () =>
         {
-        props = {
-          isVisible          : false,
-          type               : 'alert',
-          acceptText         : 'Accept',
-          denyText           : 'Deny',
-          updateNotification : jest.fn()
-        };
-        wrapper = mount( <Notifier { ...props } /> );
-        instance = wrapper.instance();
+            props = {
+                isVisible          : false,
+                type               : 'alert',
+                acceptText         : 'Accept',
+                denyText           : 'Deny',
+                updateNotification : jest.fn()
+            };
+            wrapper = mount(
+                <Provider store={ store } >
+                    <Notifier { ...props } />
+                </Provider > );
+            instance = wrapper.instance();
         } );
 
         describe( 'isVisible', () =>

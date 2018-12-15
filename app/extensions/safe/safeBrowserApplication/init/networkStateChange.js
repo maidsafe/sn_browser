@@ -1,18 +1,12 @@
 import logger from 'logger';
-import {
-    APP_INFO,
-    CONFIG,
-    PROTOCOLS
-} from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
-import { parseSafeAuthUrl } from 'extensions/safe/utils/safeHelpers';
 
-import { handleAuthentication, attemptReconnect } from 'extensions/safe/network';
-import { initialiseApp } from '@maidsafe/safe-node-app';
-
-import { setNetworkStatus } from 'extensions/safe/actions/safeBrowserApplication_actions';
+import { setNetworkStatus, setIsConnecting } from 'extensions/safe/actions/safeBrowserApplication_actions';
+import { attemptReconnect } from 'extensions/safe/network';
 import { addNotification, clearNotification } from 'actions/notification_actions';
 import { getSafeBrowserAppObject } from 'extensions/safe/safeBrowserApplication';
+import { updateTab } from 'actions/tabs_actions';
+import errConsts from 'extensions/safe/err-constants';
 
 
 const onNetworkStateChange = ( store, mockAttemptReconnect ) => ( state ) =>
@@ -30,13 +24,20 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => ( state ) =>
         {
             store.dispatch( addNotification(
                 {
-                    text      : `Network state: ${state}. Reconnecting...`,
-                    type      : 'error',
-                    onDismiss : clearNotification
+                    text            : `Network state: ${state}`,
+                    type            : 'alert',
+                    handleReconnect : true
                 }
             ) );
 
-            mockAttemptReconnect ? mockAttemptReconnect( store ) : attemptReconnect( store, safeBrowserAppObject );
+            if ( mockAttemptReconnect )
+            {
+                mockAttemptReconnect( store );
+            }
+            else
+            {
+                attemptReconnect( store, safeBrowserAppObject );
+            }
         }
     }
 
@@ -44,6 +45,30 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => ( state ) =>
         previousState === SAFE.NETWORK_STATE.DISCONNECTED )
     {
         store.dispatch( clearNotification() );
+        store.dispatch( setIsConnecting( false ) );
+        // Why is this timeout necessary?
+        // Because once network is reconnected,
+        // a tab that was loading content during disconnection must first return the error
+        // before the following `tab.error` condition can be met.
+        // See the webFetch catch block in server-routes/safe.js to
+        // observe where the error handling occurs.
+        setTimeout( () =>
+        {
+            store.getState().tabs.forEach( ( tab ) =>
+            {
+                if ( tab.error && ( tab.error.code || tab.error.code === 0 ) && !tab.isClosed )
+                {
+                    const shouldReload = tab.error.code === errConsts.ERR_OPERATION_ABORTED.code ||
+                                       tab.error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
+                                       tab.error.code === errConsts.ERR_REQUEST_TIMEOUT.code ||
+                                       tab.error.chromium;
+                    if ( shouldReload )
+                    {
+                        store.dispatch( updateTab( { index: tab.index, shouldReload } ) );
+                    }
+                }
+            } );
+        }, 2000 );
     }
 };
 

@@ -14,6 +14,8 @@ expect.extend( toBeType );
 
 jest.mock( 'logger' );
 
+jest.setTimeout( 5000 );
+
 let randomCredentials = null;
 const encodedAuthUri = 'safe-auth:bAAAAAAFBMHKYWAAAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM' +
 'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG' +

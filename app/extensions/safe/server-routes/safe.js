@@ -5,10 +5,10 @@ import ReactDOMServer from 'react-dom/server';
 import { getSafeBrowserAppObject } from 'extensions/safe/safeBrowserApplication';
 
 import { setWebFetchStatus } from 'extensions/safe/actions/web_fetch_actions';
-import { addTab, closeTab } from 'actions/tabs_actions';
+import { updateTab } from 'actions/tabs_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
-import errConsts from 'extensions/safe/err-constants';
 import { SAFE } from '../constants';
+import errConsts from 'extensions/safe/err-constants';
 
 const safeRoute = ( store ) => ( {
     method  : 'GET',
@@ -73,34 +73,30 @@ const safeRoute = ( store ) => ( {
             }
             catch ( error )
             {
-                logger.error( error.code, error.message );
                 store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
-                const shouldTryAgain = error.code === errConsts.ERR_OPERATION_ABORTED.code ||
-                                       error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
-                                       error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
-                if ( shouldTryAgain )
+                store.getState().tabs.forEach( ( tab ) =>
                 {
-                    const safeBrowserApp = store.getState().safeBrowserApp;
-                    const unsubscribe = store.subscribe( () =>
+                    if ( link.includes( tab.url ) && tab.isLoading )
                     {
-                        if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
-                        {
-                            store.getState().tabs.forEach( ( tab ) =>
+                        store.dispatch( updateTab(
                             {
-                                logger.info( tab.url, link, link.includes( tab.url ) );
-                                if ( link.includes( tab.url ) && !tab.isActive )
-                                {
-                                    store.dispatch( closeTab( { index: tab.index } ) );
-                                }
-                            } );
-                            store.dispatch( addTab( { url: link, isActiveTab: true } ) );
-                            unsubscribe();
-                        }
-                    } );
-                    error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
-                    return sendErrResponse( error.message );
+                                index : tab.index,
+                                error : { code: error.code, message: error.message }
+                            }
+                        ) );
+                    }
+                } );
+                switch ( error.code )
+                {
+                    case errConsts.ERR_OPERATION_ABORTED.code:
+                        return sendErrResponse( errConsts.ERR_ROUTING_INTERFACE_ERROR.msg );
+                    case errConsts.ERR_ROUTING_INTERFACE_ERROR.code:
+                        return sendErrResponse( errConsts.ERR_ROUTING_INTERFACE_ERROR.msg );
+                    case errConsts.ERR_REQUEST_TIMEOUT.code:
+                        return sendErrResponse( errConsts.ERR_ROUTING_INTERFACE_ERROR.msg );
+                    default:
+                        return sendErrResponse( error.message || error.code );
                 }
-                return sendErrResponse( error.message || error );
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 

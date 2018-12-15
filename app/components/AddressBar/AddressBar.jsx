@@ -51,7 +51,7 @@ export default class AddressBar extends Component
     handleBack = ( ) =>
     {
         const { activeTabBackwards, windowId } = this.props;
-        activeTabBackwards( windowId );
+        activeTabBackwards( { windowId } );
     }
 
     handleForward = ( ) =>
