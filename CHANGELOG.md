@@ -2,13 +2,63 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.11.0"></a>
+## [0.11.0](https://github.com/maidsafe/safe_browser/compare/0.7.0...0.11.0) (2018-12-17)
 
-#### [Unreleased]
 
-### Fixed
-- Able to paste value into create_account input fields via context menu option and value be analyzed for password strength
+### Bug Fixes
 
-#### [0.7.0]
+* Update author to be Maidsafe for (c) notice in about menu ([#464](https://github.com/maidsafe/safe_browser/issues/464)) ([c31a84c](https://github.com/maidsafe/safe_browser/commit/c31a84c))
+* **TabHandling:** Opening a link with a completely new window crash fixed. ([0e35b01](https://github.com/maidsafe/safe_browser/commit/0e35b01))
+* **URL Handling:** Cold opening safe/safe-auth: URL errors fixed. ([f6f5433](https://github.com/maidsafe/safe_browser/commit/f6f5433)), closes [#471](https://github.com/maidsafe/safe_browser/issues/471)
+* **Address bar url handling:** No longer strip index/.html from urls ([#340](https://github.com/maidsafe/safe_browser/issues/340)) ([eb32eea](https://github.com/maidsafe/safe_browser/commit/eb32eea))
+* **AddressBar:** changing import of dependency for case sensitive systems like linux ([420939c](https://github.com/maidsafe/safe_browser/commit/420939c))
+* **AddressBar:** Various fixes to address bar buttons / actions ([e51d9e2](https://github.com/maidsafe/safe_browser/commit/e51d9e2))
+* **auth:** DOM unauthed connection now resolves. ([8dec25c](https://github.com/maidsafe/safe_browser/commit/8dec25c))
+* **auth:** Post refactor anon connection now registered for prod builds ([d3fd71b](https://github.com/maidsafe/safe_browser/commit/d3fd71b))
+* **browser state:** wipes bookmarks and history upon logout ([3e169c4](https://github.com/maidsafe/safe_browser/commit/3e169c4)), closes [#325](https://github.com/maidsafe/safe_browser/issues/325)
+* **browser-window:** adds frame to browser window options ([#366](https://github.com/maidsafe/safe_browser/issues/366)) ([7ed5bd8](https://github.com/maidsafe/safe_browser/commit/7ed5bd8)), closes [#362](https://github.com/maidsafe/safe_browser/issues/362)
+* **Express server:** Small fix to auth file serving. ([3fd593b](https://github.com/maidsafe/safe_browser/commit/3fd593b))
+* **install:** do a full build on 'yarn' ([3a04fca](https://github.com/maidsafe/safe_browser/commit/3a04fca))
+* **lint:** Add in extension eslintrc ([5dc3d69](https://github.com/maidsafe/safe_browser/commit/5dc3d69))
+* **logs:** Fix tab error log on crash ([eff813f](https://github.com/maidsafe/safe_browser/commit/eff813f))
+* **memory:** mocks safeBrowserApplication_actions to prevent call stack size error ([be0a4df](https://github.com/maidsafe/safe_browser/commit/be0a4df))
+* **package:** crust.config matches executable on Windows ([d83d34f](https://github.com/maidsafe/safe_browser/commit/d83d34f))
+* **SafeApp init:** Only overwrite safeBrowserAppObject used for fetch upon successful auth. ([fabc8e3](https://github.com/maidsafe/safe_browser/commit/fabc8e3)), closes [#433](https://github.com/maidsafe/safe_browser/issues/433)
+* **test:** adds delays ([6051db4](https://github.com/maidsafe/safe_browser/commit/6051db4))
+* **test:** Fix address bar tests w/mock for native libs ([984dfd2](https://github.com/maidsafe/safe_browser/commit/984dfd2))
+* **test:** update auth URIs with base32 encoded ones supported by safe_auth lib v0.9.0 ([f6e36a4](https://github.com/maidsafe/safe_browser/commit/f6e36a4))
+* **tests:** Add in more mocks to prevent FFI / rangeReq error. ([30a92bb](https://github.com/maidsafe/safe_browser/commit/30a92bb))
+* **tests:** further mocking to prevent FFI errors in jest ([0248373](https://github.com/maidsafe/safe_browser/commit/0248373))
+* **tests:** OSX and Linux e2e tweaks ([bb1fced](https://github.com/maidsafe/safe_browser/commit/bb1fced))
+* **typo:** missing comma ([a7654f5](https://github.com/maidsafe/safe_browser/commit/a7654f5))
+* **ui:** adjusts spectron area styles to fix broken test ([d0cf556](https://github.com/maidsafe/safe_browser/commit/d0cf556))
+* **UI:** adds action to props to dropdown web ID's ([0e47a13](https://github.com/maidsafe/safe_browser/commit/0e47a13))
+* **UI:** when the app name is just - or _ characters render them in the authenticator as they are ([a7c43e1](https://github.com/maidsafe/safe_browser/commit/a7c43e1))
+* **webID:** WebId retrieval readded. ([e98a87c](https://github.com/maidsafe/safe_browser/commit/e98a87c))
+* show app devtools in --debug mode after pack ([9c91a5d](https://github.com/maidsafe/safe_browser/commit/9c91a5d))
+* **webview:** Update safe_app version to prevent webview crash. ([#453](https://github.com/maidsafe/safe_browser/issues/453)) ([045dad3](https://github.com/maidsafe/safe_browser/commit/045dad3))
+* add icon to browserWindowConfig to display icon ([c121e40](https://github.com/maidsafe/safe_browser/commit/c121e40))
+* show Auth popup after denying/ignoring an shared MD auth request ([9c4a8de](https://github.com/maidsafe/safe_browser/commit/9c4a8de))
+* show Auth popup after denying/ignoring an shared MD auth request ([8dc9cf1](https://github.com/maidsafe/safe_browser/commit/8dc9cf1))
+
+
+### Features
+
+* **Experiments:** Add reducers and basic UI for experiments ([0a5ffb0](https://github.com/maidsafe/safe_browser/commit/0a5ffb0))
+* **Expermients:** Enable passing options to app init ([a84f88f](https://github.com/maidsafe/safe_browser/commit/a84f88f))
+* **safe-app:** Update safe app. ([d6e3799](https://github.com/maidsafe/safe_browser/commit/d6e3799))
+* **safe-app:** Update safe app. (Also clean up some crazy logs) ([418696f](https://github.com/maidsafe/safe_browser/commit/418696f))
+* **safe-app:** Updated safe-app-nodejs 0.10.0 ([1bb49ee](https://github.com/maidsafe/safe_browser/commit/1bb49ee))
+* **tests:** add tests for shared MD auth request ([d9f6d87](https://github.com/maidsafe/safe_browser/commit/d9f6d87))
+* **Tests:** Add tests to check login/logout behaviour. ([18386b3](https://github.com/maidsafe/safe_browser/commit/18386b3))
+* **UI:** loads favicons in tab bar ([0a1be22](https://github.com/maidsafe/safe_browser/commit/0a1be22))
+* **UI:** renders errors with React component ([10cbcd6](https://github.com/maidsafe/safe_browser/commit/10cbcd6))
+* **ux:** link revealed upon mouse over link ([#392](https://github.com/maidsafe/safe_browser/issues/392)) ([29e091c](https://github.com/maidsafe/safe_browser/commit/29e091c))
+* **UX:** key bindings to cycle tabs forwards and backwards ([c6717fa](https://github.com/maidsafe/safe_browser/commit/c6717fa))
+
+
+## [0.7.0]
 ### Added
 - Notification on network disconnect event with automatic reconnect upon network resolve
 - Browser executed with no network connection shows notification upon `loginFromUri` attempt and automatically connects client upon network resolve
@@ -20,6 +70,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 
 ### Fixed 
+- Able to paste value into create_account input fields via context menu option and value be analyzed for password strength
 - Functioning share MD request
 - Electron close app process on window close
 - Link to invite.maidsafe.net no longer opens multiple external tabs
@@ -51,7 +102,8 @@ All notable changes to this project will be documented in this file. See [standa
 - @maidsafe/safe-node-app: `338ec368e25eb2e258d2447413006d74ecc23a15`
 
 
-#### [0.6.0]
+## [0.6.0]
+
 ### Changed
 - safeNetwork reducer becomes peruseSafeApp
 - specific domAPI implementations removed
@@ -77,17 +129,17 @@ All notable changes to this project will be documented in this file. See [standa
 - Logic to copy MockVault into TEMPDIR, if executable flag is passed
 - UI indication of webview loading
 
-#### [0.5.3]
+## [0.5.3]
 ### Changed 
 - Electron to 1.8.4
 
-#### [0.5.2]
+## [0.5.2]
 ### Fixed 
 - Add missing `errConst` in ff/ipc.js
 ### Changed
 - Change default port for webpack-dev-server
 
-#### [0.5.1]
+## [0.5.1]
 ### Fixed 
 - Reopen closed tab works.
 - `mock` store update initing before loginForTest to ensure UI is up to date even when not in a `NODE_ENV=dev` env.
@@ -96,7 +148,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Added 
 - Safe extension only installs dev libs in a dev env.
 
-#### [0.5.0]
+## [0.5.0]
 ### Changed
 - Upgrade @maidsafe/safe-node-app package to v0.8.0
 - Upgrade safe_authenticator library to v0.6.0
