@@ -228,7 +228,13 @@ export const CLASSES = {
     NOTIFICATION__REJECT : 'js-notification__reject',
     NOTIFICATION__IGNORE : 'js-notification__ignore',
 
-    SETTINGS_MENU__BUTTON : 'js-settingsMenu_button'
+    SETTINGS_MENU                : 'js-settingsMenu',
+    SETTINGS_MENU__BUTTON        : 'js-settingsMenu_button',
+    SETTINGS_MENU__BOOKMARKS     : 'js-settingsMenu_bookmarks',
+    SETTINGS_MENU__HISTORY       : 'js-settingsMenu_history',
+    SETTINGS_MENU__TOGGLE        : 'js-settingsMenu_toggle',
+    SETTINGS_MENU__TOGGLE_BUTTON : 'js-settingsMenu_toggleButton',
+    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText'
 };
 
 const getDomClasses = () =>

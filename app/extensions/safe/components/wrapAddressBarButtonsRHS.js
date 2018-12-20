@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { CLASSES } from 'appConstants';
 import { Row, Col, Switch } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
@@ -94,11 +94,14 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
                     type="flex"
                     justify="space-between"
                     align="middle"
-                    className={ styles.toggleRow }
+                    className={ `${styles.toggleRow} ${CLASSES.SETTINGS_MENU__TOGGLE}` }
                 >
-                    <Col span={6} className={ styles.toggleText }>Toggle Experiments</Col>
+                    <Col span={6}>
+                        <span className={ `${styles.toggleText} ${CLASSES.SETTINGS_MENU__TOGGLE_TEXT}` }>Toggle Experiments</span>
+                    </Col>
                     <Col span={6} offset={6}>
                         <Switch
+                            classname={ CLASSES.SETTINGS_MENU__TOGGLE_BUTTON }
                             size="small"
                             tabIndex={ 0 }
                             style={ { float: 'right' } }

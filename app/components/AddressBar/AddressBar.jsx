@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { CLASSES } from 'appConstants';
 // import { Column, Grid } from 'nessie-ui';
 import ButtonsLHS from 'components/AddressBar/ButtonsLHS';
 import ButtonsRHS from 'components/AddressBar/ButtonsRHS';
@@ -86,7 +86,7 @@ export default class AddressBar extends Component
                 <div
                     role="menuitem"
                     tabIndex={ 0 }
-                    className={ styles.menuItem }
+                    className={ `${styles.menuItem} ${CLASSES.SETTINGS_MENU__BOOKMARKS}` }
                     onClick={
                         () => addATab( 'bookmarks' ) }
                 >Bookmarks</div>
@@ -100,7 +100,7 @@ export default class AddressBar extends Component
                 <div
                     role="menuitem"
                     tabIndex={ 0 }
-                    className={ styles.menuItem }
+                    className={ `${styles.menuItem} ${CLASSES.SETTINGS_MENU__HISTORY}` }
                     onClick={
                         () => addATab( 'history' ) }
                 >History</div>
