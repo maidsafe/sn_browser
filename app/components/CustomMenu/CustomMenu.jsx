@@ -84,7 +84,7 @@ export default class CustomMenu extends Component
                 </Button>
                 {
                     isVisible &&
-                    <div className={ styles.menuContainer }>
+                    <div className={ `${styles.menuContainer} ${CLASSES.SETTINGS_MENU}` }>
                         <div className={ styles.menu }>
                             {
                                 menuItems.map( ( item, i ) =>

@@ -38,7 +38,7 @@ describe( 'main window', () =>
 
     beforeEach( async () =>
     {
-      app = setupSpectronApp();
+        app = setupSpectronApp();
 
         await beforeAllTests(app)
     } );
@@ -150,8 +150,10 @@ describe( 'main window', () =>
         await client.click( BROWSER_UI.BACKWARDS );
         await client.pause( 4500 );
         await client.windowByIndex( tabIndex );
+        await delay( 4500 );
 
         const clientUrl = await client.getUrl();
+        await client.pause( 4500 );
         const parsedUrl = urlParse( clientUrl );
 
         expect( parsedUrl.host ).toBe( 'example.com' );
@@ -243,6 +245,100 @@ describe( 'main window', () =>
 
     } );
 
+    it( 'can check if settings menu exists', async () =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+
+        await setClientToMainBrowserWindow( app );
+        await delay( 4500 );
+        const menuExists = await client.waitForExist( BROWSER_UI.SETTINGS_MENU__BUTTON, WAIT_FOR_EXIST_TIMEOUT );
+        await delay( 2500 );
+
+        expect( menuExists ).toBeTruthy();
+    } );
+
+    it( 'can open settings menu', async () =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+
+        await setClientToMainBrowserWindow( app );
+        await delay( 4500 );
+        await client.click( BROWSER_UI.SETTINGS_MENU__BUTTON );
+        const settingsMenuIsShown = await client.waitForExist( BROWSER_UI.SETTINGS_MENU, WAIT_FOR_EXIST_TIMEOUT );
+        await delay( 2500 );
+
+        expect( settingsMenuIsShown ).toBeTruthy();
+    } );
+
+    it('checks if settings menu is hidden after clicking elsewhere', async () => 
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+        await setClientToMainBrowserWindow( app );
+        await delay( 4500 );
+        await client.click( BROWSER_UI.ADDRESS_BAR );
+        const settingsMenuIsShown = await client.isExisting( BROWSER_UI.SETTINGS_MENU, WAIT_FOR_EXIST_TIMEOUT, true );
+        await delay( 2500 );
+
+        expect( settingsMenuIsShown ).toBeFalsy();
+
+    } );    
+
+    it('can open settings menu and checks if Bookmarks,History,Toggle exist', async () => 
+    {
+        expect.assertions( 4 );
+        const { client } = app;
+        await delay( 4500 );
+        await setClientToMainBrowserWindow( app );
+        await delay( 4500 );
+        await client.click( BROWSER_UI.SETTINGS_MENU__BUTTON );
+        await delay( 2500 );
+        const settingsMenuIsShown = await client.waitForExist( BROWSER_UI.SETTINGS_MENU, WAIT_FOR_EXIST_TIMEOUT );
+        const bookmarks = await client.waitForExist( BROWSER_UI.SETTINGS_MENU__BOOKMARKS, WAIT_FOR_EXIST_TIMEOUT );
+        const history = await client.waitForExist( BROWSER_UI.SETTINGS_MENU__HISTORY, WAIT_FOR_EXIST_TIMEOUT );
+        const toggle = await client.waitForExist( BROWSER_UI.SETTINGS_MENU__TOGGLE, WAIT_FOR_EXIST_TIMEOUT );
+        await delay( 2500 );
+
+        expect( settingsMenuIsShown ).toBeTruthy();
+        expect( bookmarks ).toBeTruthy();
+        expect( history ).toBeTruthy();
+        expect( toggle ).toBeTruthy();
+    } );
+
+    it('can open settings menu and navigate to bookmarks', async () =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+        await setClientToMainBrowserWindow( app );
+        await delay( 4500 );
+        await client.click( BROWSER_UI.SETTINGS_MENU__BUTTON );
+        await client.click( BROWSER_UI.SETTINGS_MENU__BOOKMARKS );
+        const header = await client.getText( 'h1' );
+        await delay( 2500 );
+
+        expect( header ).toBe( 'Bookmarks' );
+    } );
+
+    it('can open settings menu and navigate to history', async () =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+        await setClientToMainBrowserWindow( app );
+        await delay( 4500 );
+        await client.click( BROWSER_UI.SETTINGS_MENU__BUTTON );
+        await client.click( BROWSER_UI.SETTINGS_MENU__HISTORY );
+        const header = await client.getText( 'h1' );
+        await delay( 2500 );
+
+        expect( header ).toBe( 'History' );
+    } );
 
     // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async () =>
