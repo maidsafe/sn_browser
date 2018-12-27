@@ -40,7 +40,7 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
   fi
-- travis_wait travis_retry eval " yarn run build";
+- yarn build
 - yarn run rebuild
 - yarn run test-peruse
 # - travis_retry yarn run test-exts # super occasionally times out in tests.
