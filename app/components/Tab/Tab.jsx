@@ -304,19 +304,40 @@ export default class Tab extends Component
                 <Error error={ { header, subHeader } } />
             );
             webview.executeJavaScript( `
-                const body = document.querySelector('body');
-                body.innerHTML = '${errorAsHtml}';
+                try
+                {
+                    const body = document.querySelector('body');
+                    body.innerHTML = '${errorAsHtml}';
+                }
+                catch ( err )
+                {
+                    console.error(err);
+                }
             ` );
         };
 
         if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
         {
-            renderError( 'Page Load Failed' );
+            try
+            {
+                renderError( 'Page Load Failed' );
+            }
+            catch ( scriptError )
+            {
+                logger.error( scriptError );
+            }
             return;
         }
         if ( err && err.errorDescription === 'ERR_INVALID_URL' )
         {
-            renderError( `Invalid URL: ${url}` );
+            try
+            {
+                renderError( `Invalid URL: ${url}` );
+            }
+            catch ( scriptError )
+            {
+                logger.error( scriptError );
+            }
             return;
         }
         if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
