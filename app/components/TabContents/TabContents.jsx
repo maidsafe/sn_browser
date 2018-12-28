@@ -26,6 +26,7 @@ export default class TabContents extends Component
     {
         const {
             addTab,
+            addNotification,
             closeTab,
             bookmarks,
             allTabs,
@@ -89,6 +90,7 @@ export default class TabContents extends Component
                 }
 
                 const TheTab = ( <Tab
+                    addNotification={ addNotification }
                     webId={ tab.webId }
                     url={ tab.url }
                     isActiveTab={ isActiveTab }
