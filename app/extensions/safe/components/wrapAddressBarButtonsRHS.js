@@ -101,7 +101,7 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
                     </Col>
                     <Col span={6} offset={6}>
                         <Switch
-                            classname={ CLASSES.SETTINGS_MENU__TOGGLE_BUTTON }
+                            className={ CLASSES.SETTINGS_MENU__TOGGLE_BUTTON }
                             size="small"
                             tabIndex={ 0 }
                             style={ { float: 'right' } }
@@ -135,6 +135,5 @@ const wrapAddressBarButtonsRHS = ( AddressBarButtons, extensionFunctionality = {
 
     return hookedUpInput;
 };
-
 
 export default wrapAddressBarButtonsRHS;
