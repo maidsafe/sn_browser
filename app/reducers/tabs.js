@@ -249,9 +249,10 @@ const reopenTab = ( state ) =>
     let { lastTab, lastTabIndex } = getLastClosedTab( state );
 
     lastTab = { ...lastTab, isClosed: false, closedTime: null };
-    const updatedState = [...state];
+    let updatedState = [...state];
 
     updatedState[lastTabIndex] = lastTab;
+    updatedState = setActiveTab( updatedState, { index: lastTabIndex } );
 
     return updatedState;
 };
