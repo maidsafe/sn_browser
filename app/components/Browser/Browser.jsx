@@ -181,6 +181,9 @@ class Browser extends Component
             updateTab,
             activeTabBackwards,
             activeTabForwards,
+
+            // notifications
+            addNotification,
             updateNotification,
             notifications,
             clearNotification,
@@ -268,17 +271,18 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
-		            closeTab={ closeTab }
+                    closeTab={ closeTab }
                     key={ 4 }
                     addTab={ addTab }
+                    addNotification={ addNotification }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
-                    pageLoaded= { pageLoaded }
+                    pageLoaded={ pageLoaded }
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
-                    windowId={ windowId}
+                    windowId={ windowId }
                     safeExperimentsEnabled={ experimentsEnabled }
                     ref={ ( c ) =>
                     {
