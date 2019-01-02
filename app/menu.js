@@ -365,7 +365,7 @@ export default class MenuBuilder
 
 
         const initialMenusArray = [
-            subMenuAbout,
+            ...( process.platform === 'darwin' ? [subMenuAbout] : [] ) ,
             subMenuFile,
             ...( process.platform === 'darwin' ? [subMenuEdit] : [] ) ,
             subMenuView,
