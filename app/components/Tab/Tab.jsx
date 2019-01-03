@@ -30,6 +30,7 @@ export default class Tab extends Component
         updateTab            : PropTypes.func.isRequired,
         addTab               : PropTypes.func.isRequired,
         pageLoaded           : PropTypes.func.isRequired,
+        addNotification      : PropTypes.func.isRequired,
     }
 
     static defaultProps =
@@ -199,11 +200,14 @@ export default class Tab extends Component
 
         if ( nextProps.url )
         {
-
             if ( !webview ) return;
+            const webviewSrc = parseURL( webview.src );
 
-            if ( webview.src === '' || webview.src === 'about:blank' ||
-                urlHasChanged(webview.src, nextProps.url ) )
+            if (
+                webviewSrc.href === ''
+                || `${webviewSrc.protocol}${webviewSrc.hostname}` === 'about:blank'
+                || urlHasChanged( webview.src, nextProps.url )
+            )
             {
                 this.loadURL( nextProps.url );
             }
@@ -295,7 +299,7 @@ export default class Tab extends Component
 
     didFailLoad( err )
     {
-        const { url, index, addTab, closeTab } = this.props;
+        const { url, index, addTab, closeTab, addNotification } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
         const renderError = ( header, subHeader ) =>
@@ -304,27 +308,51 @@ export default class Tab extends Component
                 <Error error={ { header, subHeader } } />
             );
             webview.executeJavaScript( `
-                const body = document.querySelector('body');
-                body.innerHTML = '${errorAsHtml}';
+                try
+                {
+                    const body = document.querySelector('body');
+                    body.innerHTML = '${errorAsHtml}';
+                }
+                catch ( err )
+                {
+                    console.error(err);
+                }
             ` );
         };
 
         if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
         {
-            renderError( 'Page Load Failed' );
+            try
+            {
+                renderError( 'Page Load Failed' );
+            }
+            catch ( scriptError )
+            {
+                logger.error( scriptError );
+            }
             return;
         }
         if ( err && err.errorDescription === 'ERR_INVALID_URL' )
         {
-            renderError( `Invalid URL: ${url}` );
+            try
+            {
+                renderError( `Invalid URL: ${url}` );
+            }
+            catch ( scriptError )
+            {
+                logger.error( scriptError );
+            }
             return;
         }
         if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
         {
-            renderError(
-                'Detected HTTP/S protocol.',
-                `Redirecting ${url} to be opened by your default Web browser.`
-            );
+            const header = 'Detected HTTP/S protocol.';
+            const subHeader = `Redirecting ${url} to be opened by your default Web browser.`;
+            const notification = {
+                reactNode : Error( { error: { header, subHeader } } )
+            };
+            addNotification( notification );
+            closeTab( { index } );
             return;
         }
         closeTab( { index } );

@@ -5,23 +5,12 @@ import Error from 'components/PerusePages/Error';
 describe( 'Error Component', () =>
 {
     let wrapper;
-    let instance;
     let props = {
         error : {
             header    : '',
             subHeader : ''
         }
     };
-
-    describe( 'constructor( props )', () =>
-    {
-        it( 'should have name Error', () =>
-        {
-            wrapper = shallow( <Error { ...props } /> );
-            instance = wrapper.instance();
-            expect( instance.constructor.name ).toBe( 'Error' );
-        } );
-    } );
 
     describe( 'render()', () =>
     {
