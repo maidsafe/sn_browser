@@ -20,6 +20,9 @@ const blockNonSAFERequests = () =>
 
     safeSession.webRequest.onBeforeRequest( filter, ( details, callback ) =>
     {
+        //logger.info('----------------------------------------------');
+        //logger.info('111----------------------------------------------');
+        //logger.info('details: ', details);
         if ( urlIsAllowedBySafe( details.url ) )
         {
             logger.debug( `Allowing url ${details.url}` );

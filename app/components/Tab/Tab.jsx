@@ -12,13 +12,15 @@ import { parse as parseURL } from 'url';
 import styles from './tab.css';
 import logger from 'logger';
 const stdUrl = require('url');
+import extendComponent from 'utils/extendComponent';
+import { wrapTabComponent } from 'extensions/components';
 
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
 
-export default class Tab extends Component
+class Tab extends Component
 {
     static propTypes =
     {
@@ -90,7 +92,7 @@ export default class Tab extends Component
 
     buildMenu = ( webview ) =>
     {
-        if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
+        if ( webview && !webview.getWebContents ) return; // 'not now, as you're running jest;
 
         contextMenu( {
             window : webview,
@@ -124,14 +126,13 @@ export default class Tab extends Component
     componentDidMount()
     {
         const { webview } = this;
+        if ( !webview )
+        {
+            logger.verbose('No webview found so not doing: callback setup on window webview')
+            return;
+        }
         const callbackSetup = () =>
         {
-            if ( !webview )
-            {
-                logger.verbose('No webview found so not doing: callback setup on window webview')
-                return;
-            }
-
             webview.addEventListener( 'did-start-loading', ::this.didStartLoading );
             webview.addEventListener( 'did-stop-loading', ::this.didStopLoading );
             webview.addEventListener( 'did-finish-load', ::this.didFinishLoading );
@@ -241,7 +242,7 @@ export default class Tab extends Component
         const { url } = this.props;
         const { webview } = this;
 
-        const webContents = webview.getWebContents();
+        const webContents = webview ? webview.getWebContents() : null;
         if ( !webContents || webContents.isDestroyed() ) return;
 
         if ( SHOW_DEVTOOLS )
@@ -619,7 +620,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         const { webview } = this;
         if ( !webview ) return;
 
-        const webContents = webview.getWebContents();
+        const webContents = webview ? webview.getWebContents() : null;
         if ( !webContents )
         {
             return;
@@ -674,8 +675,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         const parsedUrl = parseURL( url );
         if ( parsedUrl.protocol === 'safe:' && parsedUrl.port && Number( parsedUrl.port ) > 65535 && parsedUrl.hostname.length === 59)
         {
-           url = `${parsedUrl.protocol}//${parsedUrl.hostname}?typeTag=${parsedUrl.port}`;
-         
+            url = `${parsedUrl.protocol}//${parsedUrl.hostname}?typeTag=${parsedUrl.port}`;
         }
 
         const browserState = { ...this.state.browserState, url };
@@ -717,3 +717,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         );
     }
 }
+
+logger.info('==========________________________________________ wrapTabComponent prototype: ', wrapTabComponent.prototype);
+console.log('==========________________________________________ wrapTabComponent prototype: ', wrapTabComponent.prototype);
+export default extendComponent( Tab, wrapTabComponent );

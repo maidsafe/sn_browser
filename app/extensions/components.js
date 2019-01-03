@@ -6,12 +6,14 @@ import {
 import safeWrapAddressBarButtonsLHS from 'extensions/safe/components/wrapAddressBarButtonsLHS';
 import safeWrapAddressBarButtonsRHS from 'extensions/safe/components/wrapAddressBarButtonsRHS';
 import safeWrapAddressBarInput from 'extensions/safe/components/wrapAddressBarInput';
+import safeWrapTab from 'extensions/safe/components/wrapTab';
 
 
 const allBrowserExtensions = [safeWrapBrowser];
 const allAddressBarButtonLHSExtensions = [safeWrapAddressBarButtonsLHS];
 const allAddressBarButtonRHSExtensions = [safeWrapAddressBarButtonsRHS];
 const allAddressBarInputExtensions = [safeWrapAddressBarInput];
+const allTabExtensions = [safeWrapTab];
 
 /**
  * Wrap the browser with a HOC or replace it entirely.
@@ -124,6 +126,34 @@ export const wrapAddressBarInput = ( AddressBarInput ) =>
     catch ( e )
     {
         console.error( 'Problem with extension wrapping of Addressbar input component' );
+        throw new Error( e );
+    }
+};
+
+/**
+ * Wrap the tab component.
+ *
+ * This is separate to the extensions/index file to prevent pulling in libs which will break tests
+ *
+ * @param  {React Component} Tab react component
+ */
+export const wrapTabComponent = ( Tab ) =>
+{
+    try
+    {
+        logger.verbose( 'Wrapping Tab' );
+        let WrappedTab = Tab;
+
+        allTabExtensions.forEach( wrapper =>
+        {
+            WrappedTab = wrapper( Tab );
+        } );
+
+        return WrappedTab;
+    }
+    catch ( e )
+    {
+        console.error( 'Problem with extension wrapping of Tab component' );
         throw new Error( e );
     }
 };
