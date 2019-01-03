@@ -16,7 +16,8 @@ const registerSafeProtocol = () =>
     {
         logger.verbose( `safe:// req url being parsed: ${req.url}` );
         const parsedUrl = url.parse( req.url );
-        let host = parsedUrl.host;
+        logger.info('parsed URL: ', parsedUrl);
+        let host = parsedUrl.hostname;
 
         if ( !host )
         {
@@ -32,6 +33,11 @@ const registerSafeProtocol = () =>
         if ( parsedUrl.hostname === 'localhost' && parsedUrl.port )
         {
             newUrl = `http://localhost:${parsedUrl.port}${path}`
+        }
+
+        if ( parsedUrl.search )
+        {
+            newUrl += `${parsedUrl.search}`;
         }
 
         cb( { url: newUrl } );

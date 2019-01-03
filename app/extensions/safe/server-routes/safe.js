@@ -9,13 +9,13 @@ import { addTab, closeTab } from 'actions/tabs_actions';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import errConsts from 'extensions/safe/err-constants';
 import { SAFE } from '../constants';
+import { parse } from 'url';
 
 const safeRoute = ( store ) => ( {
     method  : 'GET',
     path    : /safe:\//,
     handler : async ( request, res ) =>
     {
-        const link = request.url.substr( 1 ); // remove initial /
         const sendErrResponse = ( error, errSubHeader ) => res.send(
             ReactDOMServer.renderToStaticMarkup(
                 <Error error={ { header: error, subHeader: errSubHeader } } />
@@ -24,7 +24,13 @@ const safeRoute = ( store ) => ( {
 
         try
         {
-            const link = request.url.substr( 1 ); // remove initial /
+            let link = request.url.substr( 1 ); // remove initial /
+            const parsedUrl = parse( link );
+            if ( parsedUrl.search && parsedUrl.search.includes( 'typeTag' ) )
+            {
+                const searchPararms = new URLSearchParams( parsedUrl.search );
+                link = `${parsedUrl.protocol}//${parsedUrl.hostname}:${searchPararms.get( 'typeTag' )}`;
+            }
 
             const app = getSafeBrowserAppObject() || {};
             const headers = request.headers;

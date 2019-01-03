@@ -669,14 +669,14 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     loadURL = async ( input ) =>
     {
         const { webview } = this;
-        const url = addTrailingSlashIfNeeded( input );
+        let url = addTrailingSlashIfNeeded( input );
         logger.silly( 'Webview: loading url:', url );
-
-        // if ( !urlHasChanged( this.state.browserState.url, url) )
-        // {
-        //     logger.verbose( 'not loading URL as it has not changed');
-        //     return;
-        // }
+        const parsedUrl = parseURL( url );
+        if ( parsedUrl.protocol === 'safe:' && parsedUrl.port && Number( parsedUrl.port ) > 65535 && parsedUrl.hostname.length === 59)
+        {
+           url = `${parsedUrl.protocol}//${parsedUrl.hostname}?typeTag=${parsedUrl.port}`;
+         
+        }
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
