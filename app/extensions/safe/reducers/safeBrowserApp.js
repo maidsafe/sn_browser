@@ -22,7 +22,7 @@ export default function safeBrowserApp( state = initialState, action )
         {
             return {
                 ...state,
-                appStatus     : payload,
+                appStatus : payload,
             };
         }
         case TYPES.SET_NETWORK_STATUS:
@@ -109,4 +109,4 @@ export default function safeBrowserApp( state = initialState, action )
         default:
             return state;
     }
-};
+}

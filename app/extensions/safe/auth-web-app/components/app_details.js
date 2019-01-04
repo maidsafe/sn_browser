@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { parseAppName, getAppIconClassName } from '../utils';
 import CardLoaderFull from './card_loader_full';
 import { parseUrl } from 'query-string';
+import { I18n } from 'react-redux-i18n';
 
 export default class AppDetails extends Component {
   static propTypes = {
@@ -60,7 +61,7 @@ export default class AppDetails extends Component {
     return app.containers.map((cont, ci) => {
       let contName = cont.cont_name;
       if (contName === `apps/${app.app_info.id}`) {
-        contName = 'App\'s own container';
+        contName = I18n.t( 'own_container_title' );
       }
       return (
         <div key={`cont-${ci}`} className="app-detail-permission">
@@ -102,17 +103,17 @@ export default class AppDetails extends Component {
         </div>
         <div className="card-main-cntr">
           {this.props.loading &&
-          <CardLoaderFull msg="Revoking application. Please wait..">{''}</CardLoaderFull>
+          <CardLoaderFull msg={ I18n.t( 'messages.revoking' ) }>{''}</CardLoaderFull>
           }
           <div className="app-detail">
             <div className="app-detail-b">
               <div className="app-detail-keys">
                 <div className="app-detail-key-i">
-                  <span className="app-detail-key">Name:</span>
+                  <span className="app-detail-key">{ I18n.t( 'app_detail.name' ) }:</span>
                   <span className="app-detail-value">{appName}</span>
                 </div>
                 <div className="app-detail-key-i">
-                  <span className="app-detail-key">Vendor:</span>
+                  <span className="app-detail-key">{ I18n.t( 'app_detail.vendor' ) }:</span>
                   <span className="app-detail-value">{appDetail.app_info.vendor}</span>
                 </div>
               </div>
@@ -126,14 +127,14 @@ export default class AppDetails extends Component {
                   onClick={() => {
                     this.props.push('/');
                   }}
-                >Back</button>
+                >{ I18n.t( 'buttons.back' ) }</button>
                 <button
                   type="button"
                   className="rgt btn flat danger"
                   onClick={() => {
                     revokeApp(appId);
                   }}
-                >Revoke Access</button>
+                >{ I18n.t( 'buttons.revoke_access' ) }</button>
               </div>
             </div>
           </div>

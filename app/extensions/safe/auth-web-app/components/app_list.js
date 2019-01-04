@@ -7,6 +7,7 @@ import Popup from './popup';
 import CardLoaderFull from './card_loader_full';
 import CONSTANTS from '../constants';
 import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
+import { I18n } from 'react-redux-i18n';
 
 export default class AppList extends Component {
   static propTypes = {
@@ -42,7 +43,7 @@ export default class AppList extends Component {
 
   constructor() {
     super();
-    this.title = 'Authorised Apps';
+    this.title = I18n.t( 'authorised_apps_title' );
     this.getSearchContainer = this.getSearchContainer.bind(this);
     this.getNoAppsContainer = this.getNoAppsContainer.bind(this);
     this.getReAuthoriseState = this.getReAuthoriseState.bind(this);
@@ -75,14 +76,14 @@ export default class AppList extends Component {
     if (this.props.revokeError) {
       this.setState({
         showPopup: true,
-        popupTitle: 'Unable to revoke app. Please try again.',
+        popupTitle: I18n.t( 'messages.err_revoke_app' ),
         popupDesc: this.props.revokeError,
         isError: true
       });
     } else if (this.props.appListError) {
       this.setState({
         showPopup: true,
-        popupTitle: 'Unable to fetch registered apps. Please try again.',
+        popupTitle: I18n.t( 'messages.err_fetch_apps' ),
         popupDesc: this.props.appListError,
         isError: true
       });
@@ -100,16 +101,18 @@ export default class AppList extends Component {
   getNoAppsContainer() {
     return (
       <div className="no-apps">
-        <h3 className="no-apps-h">Looks like you haven&rsquo;t authorised any apps yet.</h3>
+        <h3 className="no-apps-h">{ I18n.t( 'messages.no_apps_yet' ) }</h3>
         <div className="no-apps-img">{''}</div>
         <div className="no-apps-down">
-          <h3 className="no-apps-down-h">Download sample applications here...</h3>
+          <h3 className="no-apps-down-h">{ I18n.t( 'messages.get_sample_app' ) }</h3>
           <a
             rel="noopener noreferrer"
-            href="https://github.com/maidsafe/safe_examples/releases"
+            href={ I18n.t( 'urls.safe_examples' ) }
             target="_blank"
             className="no-apps-down-lnk"
-          >https://github.com/maidsafe/safe_examples/releases</a>
+          >
+              { I18n.t( 'urls.safe_examples' ) }
+          </a>
         </div>
       </div>
     );
@@ -127,6 +130,7 @@ export default class AppList extends Component {
         <button
           type="button"
           className="app-list-search-icn"
+          aria-label={ I18n.t( 'aria.search_app_list' ) }
           onClick={() => {
             this.setState({ searchActive: true });
           }}
@@ -134,7 +138,7 @@ export default class AppList extends Component {
         <div className="app-list-search-ipt">
           <input
             type="text"
-            name="appListSearch"
+            aria-label={ I18n.t( 'aria.search_app_list_input' ) }
             ref={(c) => {
               this.searchInput = c;
             }}
@@ -145,6 +149,7 @@ export default class AppList extends Component {
           <button
             type="button"
             className="app-list-search-cancel"
+            aria-label={ I18n.t( 'aria.search_app_list_cancel' ) }
             onClick={() => {
               this.setState({ searchActive: false });
               this.searchInput.value = '';
@@ -159,7 +164,7 @@ export default class AppList extends Component {
   getNoMatchingAppsContainer() {
     return (
       <div className="no-apps">
-        No apps match the search criteria
+        { I18n.t( 'messages.empty_search_result' ) }
       </div>
     );
   }
@@ -184,7 +189,7 @@ export default class AppList extends Component {
        const path = `/app_details?id=${app.app_info.id}&index=${i}`;
        return (
          <div key={i}>
-           <a onClick={() => {this.props.push(path);}}>
+           <a tabIndex="0" onClick={() => {this.props.push(path);}}>
              <div className="app-list-i">
                <div className="app-list-i-b">
                  <div className={getAppIconClassName(i)}>{app.app_info.name.slice(0, 2)}</div>
@@ -214,6 +219,7 @@ export default class AppList extends Component {
       <div className="reauthorise-state">
         <button
           className={iconClassName}
+          aria-label={ reAuthoriseState ? I18n.t( 'aria.reauth_unlock' ) : I18n.t( 'aria.reauth_lock' ) }
           onClick={() => {
             const state = (reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.LOCK) ?
               CONSTANTS.RE_AUTHORISE.STATE.UNLOCK : CONSTANTS.RE_AUTHORISE.STATE.LOCK;
@@ -242,7 +248,7 @@ export default class AppList extends Component {
         <div className="card-main-h">{ this.title }</div>
         <div className="card-main-cntr">
           { this.getReAuthoriseState() }
-          { fetchingApps ? <CardLoaderFull msg="Fetching registered apps">{''}</CardLoaderFull> : null }
+          { fetchingApps ? <CardLoaderFull msg={ I18n.t( 'messages.fetching_apps' ) }>{''}</CardLoaderFull> : null }
           <Popup
             show={showPopup}
             error={isError}

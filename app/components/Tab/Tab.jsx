@@ -11,6 +11,7 @@ import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
 import logger from 'logger';
+import { I18n } from 'react-redux-i18n';
 const stdUrl = require('url');
 
 
@@ -31,6 +32,8 @@ export default class Tab extends Component
         addTab               : PropTypes.func.isRequired,
         pageLoaded           : PropTypes.func.isRequired,
         addNotification      : PropTypes.func.isRequired,
+        focusWebview         : PropTypes.func.isRequired,
+        shouldFocusWebview   : PropTypes.bool.isRequired
     }
 
     static defaultProps =
@@ -170,30 +173,36 @@ export default class Tab extends Component
 
     componentWillReceiveProps( nextProps )
     {
-        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
-            return;
+        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) ) return;
 
-        if ( !this.state.browserState.mountedAndReady )
-            return;
+        if ( !this.state.browserState.mountedAndReady ) return;
 
-        const { isActiveTab } = this.props;
+        const { focusWebview, isActiveTab } = this.props;
         const { webview } = this;
 
         logger.silly( 'Tab: did receive updated props' );
 
-        if ( webview && webview.getWebContents )
+        if ( nextProps.shouldFocusWebview && isActiveTab )
         {
-            const webContents = webview.getWebContents();
-            webContents.focus();
+            this.with( ( webview, webContents ) =>
+            {
+                webview.focus();
+                webContents.focus();
+            } );
+            focusWebview( false );
+        }
+        if ( !this.props.shouldFocusWebview && !nextProps.shouldFocusWebview && nextProps.isActiveTab )
+        {
+            focusWebview( true );
         }
 
         const nextId = nextProps.webId || {};
-        const currentId = this.props.webId || {}
-        if( nextId['@id'] !== currentId['@id'] )
+        const currentId = this.props.webId || {};
+        if ( nextId['@id'] !== currentId['@id'] )
         {
             if ( !webview ) return;
 
-            logger.verbose('New WebID set for ', nextProps.url )
+            logger.verbose( 'New WebID set for ', nextProps.url );
 
             this.setCurrentWebId( nextProps.webId );
         }
@@ -213,7 +222,8 @@ export default class Tab extends Component
             }
         }
 
-        if (nextProps.isActiveTabReloading) {
+        if ( nextProps.isActiveTabReloading )
+        {
             this.reloadIfActive();
         }
     }
@@ -264,13 +274,13 @@ export default class Tab extends Component
         }
     }
 
-    onCrash = (e) =>
+    onCrash = ( e ) =>
     {
         console.error(e)
         logger.error('The webview crashed', e)
     }
 
-    onGpuCrash = (e) =>
+    onGpuCrash = ( e ) =>
     {
         console.error(e)
         logger.error('The webview GPU crashed', e)
@@ -280,7 +290,6 @@ export default class Tab extends Component
     {
         logger.silly( 'webview started loading' );
         const { updateTab, index } = this.props;
-        const { webview } = this;
 
         const tabUpdate = {
             index,
@@ -294,7 +303,13 @@ export default class Tab extends Component
         div.setAttribute( 'class', 'no_display' );
         div.setAttribute( 'id', 'link_revealer' );
         body.appendChild( div );
-        window.addEventListener( 'focus', () => webview.focus() );
+        window.addEventListener( 'focus', () => {
+            this.with( ( webview, webContents ) =>
+            {
+                webview.focus();
+                webContents.focus();
+            } );
+        } );
     }
 
     didFailLoad( err )
@@ -366,7 +381,7 @@ export default class Tab extends Component
 
         const tabUpdate = {
             index,
-            isLoading: false
+            isLoading : false
         };
 
         this.updateBrowserState( { loading: false } );
@@ -713,8 +728,9 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
             <div className={ moddedClass } >
                 <webview
                     style={ { height: '100%', display: 'flex', flex: '1 1' } }
+                    tabIndex="0"
                     preload={ injectPath }
-                    partition='persist:safe-tab'
+                    partition="persist:safe-tab"
                     ref={ ( c ) =>
                     {
                         this.webview = c;

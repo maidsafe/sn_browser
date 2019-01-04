@@ -6,12 +6,19 @@ import promiseMiddleware from 'redux-promise';
 import rootReducer from '../reducers';
 import logger from 'logger';
 import addPeruseMiddleware from 'store/addPeruseMiddleware';
+import { loadTranslations, setLocale, syncTranslationWithStore } from 'react-redux-i18n';
 
 import {
     getInitialStateRenderer,
     replayActionMain,
     replayActionRenderer,
 } from 'electron-redux';
+
+import en from '../locales/en.json';
+
+const translationsObject = {
+    en
+};
 
 let history;
 
@@ -82,7 +89,9 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
     {
         replayActionMain( store );
     }
-
+    syncTranslationWithStore( store );
+    store.dispatch( loadTranslations( translationsObject ) );
+    store.dispatch( setLocale( 'en' ) );
     return store;
 };
 
