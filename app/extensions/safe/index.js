@@ -14,7 +14,7 @@ import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 
 import { setIsMock } from 'extensions/safe/actions/safeBrowserApplication_actions';
-import { startedRunningMock, isRunningSpectronTestProcess } from 'appConstants';
+import { startedRunningMock, isRunningSpectronTestProcess, isRunningUnpacked } from 'appConstants';
 import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
 import { getSafeBrowserUnauthedReqUri } from 'extensions/safe/safeBrowserApplication/init/initAnon';
 
@@ -38,6 +38,7 @@ const onWebviewPreload = ( store ) =>
 
 const preAppLoad = () =>
 {
+    if ( isRunningUnpacked && process.platform === 'win32' ) return;
     app.setAsDefaultProtocolClient('safe-auth');
     app.setAsDefaultProtocolClient('safe');
     let isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
