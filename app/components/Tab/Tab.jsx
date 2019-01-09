@@ -33,7 +33,8 @@ export default class Tab extends Component
         pageLoaded           : PropTypes.func.isRequired,
         addNotification      : PropTypes.func.isRequired,
         focusWebview         : PropTypes.func.isRequired,
-        shouldFocusWebview   : PropTypes.bool.isRequired
+        shouldFocusWebview   : PropTypes.bool.isRequired,
+        activeTabBackwards   : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -314,7 +315,7 @@ export default class Tab extends Component
 
     didFailLoad( err )
     {
-        const { url, index, addTab, closeTab, addNotification } = this.props;
+        const { url, index, addTab, closeTab, addNotification, activeTabBackwards } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
         const renderError = ( header, subHeader ) =>
@@ -367,7 +368,7 @@ export default class Tab extends Component
                 reactNode : Error( { error: { header, subHeader } } )
             };
             addNotification( notification );
-            closeTab( { index } );
+            activeTabBackwards();
             return;
         }
         closeTab( { index } );
