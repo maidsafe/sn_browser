@@ -273,6 +273,7 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
+                    activeTabBackwards={ activeTabBackwards }
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ ui.shouldFocusWebview }
                     closeTab={ closeTab }

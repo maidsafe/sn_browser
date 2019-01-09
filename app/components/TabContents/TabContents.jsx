@@ -38,7 +38,8 @@ export default class TabContents extends Component
             windowId,
             safeExperimentsEnabled,
             focusWebview,
-            shouldFocusWebview
+            shouldFocusWebview,
+            activeTabBackwards
         } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
@@ -108,6 +109,7 @@ export default class TabContents extends Component
                     safeExperimentsEnabled={ safeExperimentsEnabled }
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ shouldFocusWebview }
+                    activeTabBackwards={ activeTabBackwards }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )
