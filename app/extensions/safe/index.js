@@ -62,7 +62,7 @@ const addExtensionMenuItems = ( store, menusArray ) =>
         const label = menu.label;
         let newMenu = menu;
 
-        if( label == 'File' )
+        if( label.includes( 'File' ) )
         {
             newMenu = addFileMenus( store, newMenu );
         }
