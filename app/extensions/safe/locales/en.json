@@ -47,7 +47,7 @@
   },
   "auth_intro": {
     "desc": {
-      "welcome": "Authenticator will act as your gateway to the SAFE Network, you can use it authorise apps to connect on your behalf.",
+      "welcome": "Authenticator will act as your gateway to the SAFE Network, you can use it to authorise apps to act on your behalf.",
       "secret": "Your account secret is private and should not be shared with anyone.",
       "password": "Your account password is never stored or transmitted, it will not leave your computer.",
       "invite_code": "Enter an invitation token or claim an invitation below.",
