@@ -8,7 +8,8 @@ import _ from 'lodash';
 import { Tag, Icon } from 'antd';
 import 'antd/lib/tag/style';
 import 'antd/lib/icon/style';
-import './wrapAddressBarInput.less'
+import './wrapAddressBarInput.less';
+import { CLASSES } from 'appConstants';
 
 function mapStateToProps( state )
 {
@@ -47,7 +48,7 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
             const addOnsBefore = [];
             const addOnsAfter = [];
 
-            if ( isMock ) addOnsBefore.push( <Tag key="F5222D" color="#F5222D">Mock Network</Tag> );
+            if ( isMock ) addOnsBefore.push( <Tag key="F5222D" className={ CLASSES.MOCK_TAG } color="#F5222D">Mock Network</Tag> );
             if ( experimentsEnabled ) addOnsAfter.push( <Tag key="42566E" color="#42566E"><Icon type="experiment" /></Tag> );
 
             return (

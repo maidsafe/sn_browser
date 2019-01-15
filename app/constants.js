@@ -22,6 +22,12 @@ export const isRunningPackaged = !isRunningUnpacked;
 export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
 
 
+// override for spectron dev mode
+if ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
+{
+    shouldRunMockNetwork = true;
+}
+
 if ( allPassedArgs.includes( '--mock' ) )
 {
     shouldRunMockNetwork = true;
@@ -30,12 +36,6 @@ if ( allPassedArgs.includes( '--mock' ) )
 if ( allPassedArgs.includes( '--live' ) )
 {
     shouldRunMockNetwork = false;
-}
-
-// override for spectron dev mode
-if ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
-{
-    shouldRunMockNetwork = true;
 }
 
 if ( allPassedArgs.includes( '--debug' ) )
@@ -234,7 +234,8 @@ export const CLASSES = {
     SETTINGS_MENU__HISTORY       : 'js-settingsMenu_history',
     SETTINGS_MENU__TOGGLE        : 'js-settingsMenu_toggle',
     SETTINGS_MENU__TOGGLE_BUTTON : 'js-settingsMenu_toggleButton',
-    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText'
+    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText',
+    MOCK_TAG                     : 'js-addressBar_mockTag'
 };
 
 const getDomClasses = () =>
