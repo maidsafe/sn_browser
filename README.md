@@ -165,11 +165,17 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 
 ### Compiling
 
-Make sure you have both git and [yarn](https://yarnpkg.com/en/docs/install) installed.
+#### Prerequisites
 
-If you are using Ubuntu, Mint, or Debian 9 as OS, `libgconf-2-4` and/or `build-essential` dependencies might be missing. Please install them as needed with Synaptic Package Mgr., or with `apt` from a shell console: `$ sudo apt-get install libgconf-2-4 build-essential`
+- [Node.js](https://nodejs.org) ^8.0.0 (we recommend installing it via [nvm](https://github.com/creationix/nvm))
+- [Git](https://git-scm.com/)
+- [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
+- Windows-specific:
+     - Yarn attempts to build modules concurrently with multiple child processes, which causes intermittent timing issues on Windows. Users need to run `yarn config set child-concurrency 1` just once to effect local yarn settings.
+     - In order to be able to build native Node modules for this library, run `npm install --global --production windows-build-tools` which installs Python 2.x, Visual Studio 2015 build tools, and Visual C++ build tools.
+- If you are using Ubuntu, Mint, or Debian 9 as OS, `libgconf-2-4` and/or `build-essential` dependencies might be missing. Please install them as needed with Synaptic Package Mgr., or with `apt` from a shell console: `$ sudo apt-get install libgconf-2-4 build-essential`
 
-You need to use node.js version `8.x` to build the browser currently.
+#### Building the Browser
 
 - `git clone https://github.com/maidsafe/safe_browser.git`
 - `cd safe_browser`
