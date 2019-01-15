@@ -83,11 +83,10 @@
 
 }
 
-.button:hover .buttonIcon{
+.buttonIcon:hover
+{
     fill: black;
 }
-
-
 
 /* buttons themselves */
 /*.back,

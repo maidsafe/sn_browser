@@ -35,9 +35,9 @@ class Browser extends Component
         updateNotification : PropTypes.func.isRequired,
         clearNotification  : PropTypes.func.isRequired,
         ui                 : PropTypes.object.isRequired,
-
-        showSettingsMenu      : PropTypes.func.isRequired,
-        hideSettingsMenu      : PropTypes.func.isRequired
+        showSettingsMenu   : PropTypes.func.isRequired,
+        hideSettingsMenu   : PropTypes.func.isRequired,
+        focusWebview       : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -171,6 +171,7 @@ class Browser extends Component
             blurAddressBar,
             reloadPage,
             pageLoaded,
+            focusWebview,
 
             //tabs
             tabs,
@@ -181,6 +182,9 @@ class Browser extends Component
             updateTab,
             activeTabBackwards,
             activeTabForwards,
+
+            // notifications
+            addNotification,
             updateNotification,
             notifications,
             clearNotification,
@@ -254,6 +258,7 @@ class Browser extends Component
                     activeTab={ activeTab }
 
                     windowId={windowId}
+                    focusWebview={ focusWebview }
 
                     ref={ ( c ) =>
                     {
@@ -268,17 +273,21 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
-		            closeTab={ closeTab }
+                    activeTabBackwards={ activeTabBackwards }
+                    focusWebview={ focusWebview }
+                    shouldFocusWebview={ ui.shouldFocusWebview }
+                    closeTab={ closeTab }
                     key={ 4 }
                     addTab={ addTab }
+                    addNotification={ addNotification }
                     updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
-                    pageLoaded= { pageLoaded }
+                    pageLoaded={ pageLoaded }
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }
-                    windowId={ windowId}
+                    windowId={ windowId }
                     safeExperimentsEnabled={ experimentsEnabled }
                     ref={ ( c ) =>
                     {

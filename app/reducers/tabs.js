@@ -3,9 +3,10 @@
 import { remote, shell, webContents } from 'electron';
 import { TYPES } from 'actions/tabs_actions';
 import { TYPES as UI_TYPES } from 'actions/ui_actions';
-import { makeValidAddressBarUrl } from 'utils/urlHelpers';
+import { makeValidAddressBarUrl, removeTrailingRedundancies } from 'utils/urlHelpers';
 import initialAppState from './initialAppState';
 import { CONFIG, isRunningUnpacked } from 'appConstants';
+import path from 'path';
 import logger from 'logger';
 
 const initialState = initialAppState.tabs;
@@ -50,8 +51,10 @@ const getCurrentWindowId = ( ) =>
     {
         const allWindows = webContents.getAllWebContents();
 
-        const currentWindow = allWindows.filter( win =>
-            win.history[0] === CONFIG.APP_HTML_PATH );
+        const currentWindow = allWindows.find( win => {
+           const cleanedPath = removeTrailingRedundancies( win.history[0] );
+           return path.basename( cleanedPath ) === path.basename( CONFIG.APP_HTML_PATH );
+        } );
 
         currentWindowId = currentWindow.id;
     }
@@ -246,9 +249,10 @@ const reopenTab = ( state ) =>
     let { lastTab, lastTabIndex } = getLastClosedTab( state );
 
     lastTab = { ...lastTab, isClosed: false, closedTime: null };
-    const updatedState = [...state];
+    let updatedState = [...state];
 
     updatedState[lastTabIndex] = lastTab;
+    updatedState = setActiveTab( updatedState, { index: lastTabIndex } );
 
     return updatedState;
 };

@@ -301,6 +301,7 @@ describe( 'tabs reducer', () =>
     describe( 'REOPEN_TAB', () =>
     {
         const closedTab = { ...basicTab, isClosed: true, closedTime: '100' };
+        const activeTab = { ...basicTab, isActiveTab: true };
         const closedTabOlder = { ...basicTab, isClosed: true, closedTime: '10' };
 
         it( 'should set the last closed tab to be not closed', () =>
@@ -314,6 +315,29 @@ describe( 'tabs reducer', () =>
                     ...closedTab,
                     isClosed   : false,
                     closedTime : null
+                }
+            );
+        } );
+
+        it( 'reopened tab should be active', () =>
+        {
+            const newState = tabs( [basicTab, activeTab, closedTab], {
+                type : TYPES.REOPEN_TAB
+            } );
+
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...closedTab,
+                    isClosed    : false,
+                    closedTime  : null,
+                    isActiveTab : true
+                }
+            );
+
+            expect( newState[1] ).toMatchObject(
+                {
+                    ...activeTab,
+                    isActiveTab : false
                 }
             );
         } );

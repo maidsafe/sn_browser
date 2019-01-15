@@ -11,6 +11,7 @@ import path from 'path';
 import { parse as parseURL } from 'url';
 import styles from './tab.css';
 import logger from 'logger';
+import { I18n } from 'react-redux-i18n';
 const stdUrl = require('url');
 
 
@@ -30,6 +31,10 @@ export default class Tab extends Component
         updateTab            : PropTypes.func.isRequired,
         addTab               : PropTypes.func.isRequired,
         pageLoaded           : PropTypes.func.isRequired,
+        addNotification      : PropTypes.func.isRequired,
+        focusWebview         : PropTypes.func.isRequired,
+        shouldFocusWebview   : PropTypes.bool.isRequired,
+        activeTabBackwards   : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -169,47 +174,57 @@ export default class Tab extends Component
 
     componentWillReceiveProps( nextProps )
     {
-        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) )
-            return;
+        if ( JSON.stringify( nextProps ) === JSON.stringify( this.props ) ) return;
 
-        if ( !this.state.browserState.mountedAndReady )
-            return;
+        if ( !this.state.browserState.mountedAndReady ) return;
 
-        const { isActiveTab } = this.props;
+        const { focusWebview, isActiveTab } = this.props;
         const { webview } = this;
 
         logger.silly( 'Tab: did receive updated props' );
 
-        if ( webview && webview.getWebContents )
+        if ( nextProps.shouldFocusWebview && isActiveTab )
         {
-            const webContents = webview.getWebContents();
-            webContents.focus();
+            this.with( ( webview, webContents ) =>
+            {
+                webview.focus();
+                webContents.focus();
+            } );
+            focusWebview( false );
+        }
+        if ( !this.props.shouldFocusWebview && !nextProps.shouldFocusWebview && nextProps.isActiveTab )
+        {
+            focusWebview( true );
         }
 
         const nextId = nextProps.webId || {};
-        const currentId = this.props.webId || {}
-        if( nextId['@id'] !== currentId['@id'] )
+        const currentId = this.props.webId || {};
+        if ( nextId['@id'] !== currentId['@id'] )
         {
             if ( !webview ) return;
 
-            logger.verbose('New WebID set for ', nextProps.url )
+            logger.verbose( 'New WebID set for ', nextProps.url );
 
             this.setCurrentWebId( nextProps.webId );
         }
 
         if ( nextProps.url )
         {
-
             if ( !webview ) return;
+            const webviewSrc = parseURL( webview.src );
 
-            if ( webview.src === '' || webview.src === 'about:blank' ||
-                urlHasChanged(webview.src, nextProps.url ) )
+            if (
+                webviewSrc.href === ''
+                || `${webviewSrc.protocol}${webviewSrc.hostname}` === 'about:blank'
+                || urlHasChanged( webview.src, nextProps.url )
+            )
             {
                 this.loadURL( nextProps.url );
             }
         }
 
-        if (nextProps.isActiveTabReloading) {
+        if ( nextProps.isActiveTabReloading )
+        {
             this.reloadIfActive();
         }
     }
@@ -260,13 +275,13 @@ export default class Tab extends Component
         }
     }
 
-    onCrash = (e) =>
+    onCrash = ( e ) =>
     {
         console.error(e)
         logger.error('The webview crashed', e)
     }
 
-    onGpuCrash = (e) =>
+    onGpuCrash = ( e ) =>
     {
         console.error(e)
         logger.error('The webview GPU crashed', e)
@@ -276,7 +291,6 @@ export default class Tab extends Component
     {
         logger.silly( 'webview started loading' );
         const { updateTab, index } = this.props;
-        const { webview } = this;
 
         const tabUpdate = {
             index,
@@ -290,12 +304,18 @@ export default class Tab extends Component
         div.setAttribute( 'class', 'no_display' );
         div.setAttribute( 'id', 'link_revealer' );
         body.appendChild( div );
-        window.addEventListener( 'focus', () => webview.focus() );
+        window.addEventListener( 'focus', () => {
+            this.with( ( webview, webContents ) =>
+            {
+                webview.focus();
+                webContents.focus();
+            } );
+        } );
     }
 
     didFailLoad( err )
     {
-        const { url, index, addTab, closeTab } = this.props;
+        const { url, index, addTab, closeTab, addNotification, activeTabBackwards } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
         const renderError = ( header, subHeader ) =>
@@ -304,27 +324,51 @@ export default class Tab extends Component
                 <Error error={ { header, subHeader } } />
             );
             webview.executeJavaScript( `
-                const body = document.querySelector('body');
-                body.innerHTML = '${errorAsHtml}';
+                try
+                {
+                    const body = document.querySelector('body');
+                    body.innerHTML = '${errorAsHtml}';
+                }
+                catch ( err )
+                {
+                    console.error(err);
+                }
             ` );
         };
 
         if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' )
         {
-            renderError( 'Page Load Failed' );
+            try
+            {
+                renderError( 'Page Load Failed' );
+            }
+            catch ( scriptError )
+            {
+                logger.error( scriptError );
+            }
             return;
         }
         if ( err && err.errorDescription === 'ERR_INVALID_URL' )
         {
-            renderError( `Invalid URL: ${url}` );
+            try
+            {
+                renderError( `Invalid URL: ${url}` );
+            }
+            catch ( scriptError )
+            {
+                logger.error( scriptError );
+            }
             return;
         }
         if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' )
         {
-            renderError(
-                'Detected HTTP/S protocol.',
-                `Redirecting ${url} to be opened by your default Web browser.`
-            );
+            const header = 'Detected HTTP/S protocol.';
+            const subHeader = `Redirecting ${url} to be opened by your default Web browser.`;
+            const notification = {
+                reactNode : Error( { error: { header, subHeader } } )
+            };
+            addNotification( notification );
+            activeTabBackwards();
             return;
         }
         closeTab( { index } );
@@ -338,7 +382,7 @@ export default class Tab extends Component
 
         const tabUpdate = {
             index,
-            isLoading: false
+            isLoading : false
         };
 
         this.updateBrowserState( { loading: false } );
@@ -685,8 +729,9 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
             <div className={ moddedClass } >
                 <webview
                     style={ { height: '100%', display: 'flex', flex: '1 1' } }
+                    tabIndex="0"
                     preload={ injectPath }
-                    partition='persist:safe-tab'
+                    partition="persist:safe-tab"
                     ref={ ( c ) =>
                     {
                         this.webview = c;

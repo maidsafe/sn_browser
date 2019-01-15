@@ -65,7 +65,7 @@ export default class MenuBuilder
         const store = this.store;
 
         const subMenuAbout = {
-            label   : 'SAFE Browser',
+            label   : 'SAFE &Browser',
             submenu : [
                 { label: 'About SAFE Browser', selector: 'orderFrontStandardAboutPanel:' },
                 { type: 'separator' },
@@ -85,10 +85,10 @@ export default class MenuBuilder
         };
 
         const subMenuFile = {
-            label   : 'File',
+            label   : '&File',
             submenu : [
                 {
-                    label       : '&New Window',
+                    label       : 'New Window',
                     accelerator : 'CommandOrControl+N',
                     click       : ( item, win ) =>
                     {
@@ -100,7 +100,7 @@ export default class MenuBuilder
                     }
                 },
                 {
-                    label       : 'New &Tab',
+                    label       : 'New Tab',
                     accelerator : 'CommandOrControl+T',
                     click       : ( item, win ) =>
                     {
@@ -138,7 +138,6 @@ export default class MenuBuilder
                                 }
                             } );
                             this.store.dispatch( setActiveTab( { index } ) );
-                            this.store.dispatch( selectAddressBar() );
                         }
                     }
                 },
@@ -168,7 +167,6 @@ export default class MenuBuilder
                                 }
                             } );
                             this.store.dispatch( setActiveTab( { index } ) );
-                            this.store.dispatch( selectAddressBar() );
                         }
                     }
                 },
@@ -234,7 +232,7 @@ export default class MenuBuilder
             ]
         };
         const subMenuEdit = {
-            label   : 'Edit',
+            label   : '&Edit',
             submenu : [
                 { label: 'Undo', accelerator: 'CommandOrControl+Z', selector: 'undo:' },
                 { label: 'Redo', accelerator: 'Shift+CommandOrControl+Z', selector: 'redo:' },
@@ -246,7 +244,7 @@ export default class MenuBuilder
             ]
         };
         const subMenuView = {
-            label   : 'View',
+            label   : '&View',
             submenu : [
                 { label       : 'Bookmarks',
                     accelerator :  process.platform === 'darwin' ? 'Alt+Shift+B' : 'Control+Shift+O',
@@ -280,7 +278,7 @@ export default class MenuBuilder
             ]
         };
         const subMenuHistory = {
-            label   : 'History',
+            label   : 'Hi&story',
             submenu : [
                 { label       : 'View All History',
                     accelerator :  process.platform === 'darwin' ? 'CommandOrControl+Y' : 'Control+H',
@@ -321,7 +319,7 @@ export default class MenuBuilder
         };
 
         const subMenuWindow = {
-            label   : 'Window',
+            label   : '&Window',
             submenu : [
                 { label: 'Minimize', accelerator: 'CommandOrControl+M', selector: 'performMiniaturize:' },
                 { label: 'Close', accelerator: 'CommandOrControl+Shift+W', selector: 'performClose:' },
@@ -340,7 +338,7 @@ export default class MenuBuilder
             ]
         };
         const subMenuHelp = {
-            label   : 'Help',
+            label   : '&Help',
             submenu : [
                 { label : 'Learn More about the Safe Network',
                     click()
@@ -367,7 +365,7 @@ export default class MenuBuilder
 
 
         const initialMenusArray = [
-            subMenuAbout,
+            ...( process.platform === 'darwin' ? [subMenuAbout] : [] ) ,
             subMenuFile,
             ...( process.platform === 'darwin' ? [subMenuEdit] : [] ) ,
             subMenuView,

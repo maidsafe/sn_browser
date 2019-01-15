@@ -26,6 +26,7 @@ export default class TabContents extends Component
     {
         const {
             addTab,
+            addNotification,
             closeTab,
             bookmarks,
             allTabs,
@@ -35,7 +36,10 @@ export default class TabContents extends Component
             isActiveTabReloading,
             pageLoaded,
             windowId,
-            safeExperimentsEnabled
+            safeExperimentsEnabled,
+            focusWebview,
+            shouldFocusWebview,
+            activeTabBackwards
         } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
@@ -89,6 +93,7 @@ export default class TabContents extends Component
                 }
 
                 const TheTab = ( <Tab
+                    addNotification={ addNotification }
                     webId={ tab.webId }
                     url={ tab.url }
                     isActiveTab={ isActiveTab }
@@ -102,6 +107,9 @@ export default class TabContents extends Component
                     index={ tab.index }
                     windowId={ windowId }
                     safeExperimentsEnabled={ safeExperimentsEnabled }
+                    focusWebview={ focusWebview }
+                    shouldFocusWebview={ shouldFocusWebview }
+                    activeTabBackwards={ activeTabBackwards }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )

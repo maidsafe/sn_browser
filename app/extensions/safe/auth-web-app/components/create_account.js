@@ -156,9 +156,7 @@ export default class CreateAccount extends Component
               <div className="auth">
                   <div className="auth-b">
                       <p className="auth-cont-1">
-              Authenticator will act as your gateway to the SAFE Network.<br />
-              You can use it to access data on the network and to<br />
-              authorise apps to connect on your behalf.
+                          { I18n.t( 'auth_intro.desc.welcome' ) }
                       </p>
                       <div className="auth-welcome">{''}</div>
                       <div className="auth-f">
@@ -167,11 +165,12 @@ export default class CreateAccount extends Component
                               <button
                                   type="button"
                                   className={ `rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` }
+                                  tabIndex="0"
                                   onClick={ () =>
                                   {
                                       setCreateAccNavPos( navPos + 1 );
                                   } }
-                              >Continue
+                              >{ I18n.t( 'buttons.continue' ) }
                               </button>
                           </div>
                       </div>
@@ -193,7 +192,7 @@ export default class CreateAccount extends Component
               <div className="auth">
                   <div className="auth-b">
                       <p className="auth-cont-1">
-              Enter an invitation token or claim an invitation below.
+                          { I18n.t( 'auth_intro.desc.invite_code' ) }
                       </p>
                       <div className="auth-form">
                           <form
@@ -206,6 +205,7 @@ export default class CreateAccount extends Component
                               <div className="inp-grp">
                                   <input
                                       className={ AUTH_UI_CLASSES.AUTH_INVITE_CODE_INPUT }
+                                      tabIndex="0"
                                       type="text"
                                       id="invitation-code"
                                       name="invitation-code"
@@ -216,7 +216,7 @@ export default class CreateAccount extends Component
                                       } }
                                       required
                                   />
-                                  <label htmlFor="invitation-code">Invitation Token</label>
+                                  <label htmlFor="invitation-code">{ I18n.t( 'invite_token' ) }</label>
                                   <span className={ msgClassNames }>
                                       {
                                           error ? error.description : false
@@ -233,7 +233,7 @@ export default class CreateAccount extends Component
                                       {
                                           window.open( 'https://invite.maidsafe.net/' );
                                       } }
-                                  >Claim an Invitation</button>
+                                  >{ I18n.t( 'buttons.claim_invitation' ) }</button>
                               </div>
                           </form>
                       </div>
@@ -241,22 +241,24 @@ export default class CreateAccount extends Component
                           <div className="auth-f-b">
                               <button
                                   type="button"
+                                  tabIndex="0"
                                   className="lft flat btn"
                                   onClick={ () =>
                                   {
                                       setCreateAccNavPos( navPos - 1 );
                                   } }
-                              >Back
+                              >{ I18n.t( 'buttons.back' ) }
                               </button>
                               { this.getNav() }
                               <button
                                   type="button"
+                                  tabIndex="0"
                                   className={ `rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` }
                                   onClick={ ( e ) =>
                                   {
                                       this.handleInvitation( e );
                                   } }
-                              >Continue</button>
+                              >{ I18n.t( 'buttons.continue' ) }</button>
                           </div>
                       </div>
                   </div>
@@ -276,14 +278,14 @@ export default class CreateAccount extends Component
               <div className="auth">
                   <div className="auth-b">
                       <p className="auth-cont-1">
-              Your &lsquo;Account Secret&rsquo; is private and should not be<br />
-              shared with anyone.
+                          { I18n.t( 'auth_intro.desc.secret' ) }
                       </p>
                       <div className="auth-form bottom-pad">
                           <form id="secretForm">
                               <div className="inp-grp">
                                   <input
                                       className={ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }
+                                      tabIndex="0"
                                       type="password"
                                       id="acc-secret"
                                       name="acc-secret"
@@ -295,7 +297,7 @@ export default class CreateAccount extends Component
                                       onChange={ this.handleInputChange }
                                       required
                                   />
-                                  <label htmlFor="acc-secret">Account Secret</label>
+                                  <label htmlFor="acc-secret">{ I18n.t( 'account_secret' ) }</label>
                                   { this.getStrength( secretStrength ) }
                                   <span className="limit short">{''}</span>
                                   <span className={ msgClassNames }>
@@ -307,7 +309,7 @@ export default class CreateAccount extends Component
                                   </span>
                                   <button
                                       type="button"
-                                      tabIndex="-1"
+                                      tabIndex="0"
                                       className="eye-btn"
                                       onClick={ this.togglePassword }
                                   >{' '}</button>
@@ -315,6 +317,7 @@ export default class CreateAccount extends Component
                               <div className="inp-grp">
                                   <input
                                       className={ AUTH_UI_CLASSES.AUTH_CONFIRM_SECRET_INPUT }
+                                      tabIndex="0"
                                       type="password"
                                       id="cacc-secret"
                                       name="cacc-secret"
@@ -325,11 +328,11 @@ export default class CreateAccount extends Component
                                       } }
                                       required
                                   />
-                                  <label htmlFor="cacc-secret">Confirm Account Secret</label>
+                                  <label htmlFor="cacc-secret">{ I18n.t( 'confirm_secret' ) }</label>
                                   <span className="msg error" >{this.state.confirmAccSecError}</span>
                                   <button
                                       type="button"
-                                      tabIndex="-1"
+                                      tabIndex="0"
                                       className="eye-btn"
                                       onClick={ this.togglePassword }
                                   >{' '}</button>
@@ -340,23 +343,25 @@ export default class CreateAccount extends Component
                           <div className="auth-f-b">
                               <button
                                   type="button"
+                                  tabIndex="0"
                                   className="lft flat btn"
                                   onClick={ () =>
                                   {
                                       setCreateAccNavPos( navPos - 1 );
                                   } }
-                              >Back
+                              >{ I18n.t( 'buttons.back' ) }
                               </button>
                               { this.getNav() }
                               <button
                                   type="button"
+                                  tabIndex="0"
                                   form="secretForm"
                                   className={ `rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}` }
                                   onClick={ ( e ) =>
                                   {
                                       this.handleSecret( e );
                                   } }
-                              >Continue</button>
+                              >{ I18n.t( 'buttons.continue' ) }</button>
                           </div>
                       </div>
                   </div>
@@ -376,14 +381,14 @@ export default class CreateAccount extends Component
               <div className="auth">
                   <div className="auth-b">
                       <p className="auth-cont-1">
-              Your &lsquo;Account Password&rsquo; is never stored or <br />
-              transmitted, it will not leave your computer.
+                          { I18n.t( 'auth_intro.desc.password' ) }
                       </p>
                       <div className="auth-form bottom-pad">
                           <form id="passwordForm">
                               <div className="inp-grp">
                                   <input
                                       className={ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }
+                                      tabIndex="0"
                                       type="password"
                                       id="acc-password"
                                       name="acc-password"
@@ -395,7 +400,7 @@ export default class CreateAccount extends Component
                                       onChange={ this.handleInputChange }
                                       required
                                   />
-                                  <label htmlFor="acc-password">Account Password</label>
+                                  <label htmlFor="acc-password">{ I18n.t( 'account_password' ) }</label>
                                   { this.getStrength( passwordStrength ) }
                                   <span className="limit long">{''}</span>
                                   <span className={ msgClassNames }>
@@ -407,7 +412,7 @@ export default class CreateAccount extends Component
                                   </span>
                                   <button
                                       type="button"
-                                      tabIndex="-1"
+                                      tabIndex="0"
                                       className="eye-btn"
                                       onClick={ this.togglePassword }
                                   >{' '}</button>
@@ -415,6 +420,7 @@ export default class CreateAccount extends Component
                               <div className="inp-grp">
                                   <input
                                       className={ AUTH_UI_CLASSES.AUTH_CONFIRM_PASSWORD_INPUT }
+                                      tabIndex="0"
                                       type="password"
                                       id="cacc-password"
                                       name="cacc-password"
@@ -425,11 +431,11 @@ export default class CreateAccount extends Component
                                       } }
                                       required
                                   />
-                                  <label htmlFor="cacc-password">Confirm Account Password</label>
+                                  <label htmlFor="cacc-password">{ I18n.t( 'confirm_password' ) }</label>
                                   <span className="msg error">{ this.state.confirmAccPassErr }</span>
                                   <button
                                       type="button"
-                                      tabIndex="-1"
+                                      tabIndex="0"
                                       className="eye-btn"
                                       onClick={ this.togglePassword }
                                   >{' '}</button>
@@ -440,23 +446,25 @@ export default class CreateAccount extends Component
                           <div className="auth-f-b">
                               <button
                                   type="button"
+                                  tabIndex="0"
                                   className="lft flat btn"
                                   onClick={ () =>
                                   {
                                       setCreateAccNavPos( navPos - 1 );
                                   } }
-                              >Back
+                              >{ I18n.t( 'buttons.back' ) }
                               </button>
                               { this.getNav() }
                               <button
                                   type="button"
+                                  tabIndex="0"
                                   form="passwordForm"
                                   className={`rgt flat btn primary ${AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE}`}
                                   onClick={ ( e ) =>
                                   {
                                       this.handlePassword( e );
                                   } }
-                              >Continue</button>
+                              >{ I18n.t( 'buttons.continue' ) }</button>
                           </div>
                       </div>
                   </div>
@@ -472,11 +480,11 @@ export default class CreateAccount extends Component
           case CONSTANTS.CREATE_ACC_NAV.WELCOME:
               return ( <span><b>SAFE</b> Authenticator</span> );
           case CONSTANTS.CREATE_ACC_NAV.INVITE_CODE:
-              return 'Invitation Token';
+              return I18n.t( 'invite_token' );
           case CONSTANTS.CREATE_ACC_NAV.SECRET_FORM:
-              return 'Account Secret';
+              return I18n.t( 'account_secret' );
           case CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM:
-              return 'Account Password';
+              return I18n.t( 'account_password' );
           default:
               return ( <span>Oops!!</span> );
       }
@@ -572,7 +580,7 @@ export default class CreateAccount extends Component
       }
       if ( !confirmSecret )
       {
-          this.setState( { confirmAccSecError: I18n.t( 'entries_mismatch' ) } );
+          this.setState( { confirmAccSecError: I18n.t( 'messages.entries_mismatch' ) } );
           return;
       }
       if ( this.state.confirmAccSecError )
@@ -581,12 +589,12 @@ export default class CreateAccount extends Component
       }
       if ( this.props.secretStrength < CONSTANTS.PASSPHRASE_STRENGTH.WEAK )
       {
-          this.props.setError( I18n.t( 'messages.need_to_be_stronger', { name: I18n.t( 'Account Secret' ) } ) );
+          this.props.setError( I18n.t( 'messages.need_to_be_stronger', { name: I18n.t( 'account_secret' ) } ) );
           return;
       }
       if ( secret !== confirmSecret )
       {
-          this.setState( { confirmAccSecError: I18n.t( 'entries_mismatch' ) } );
+          this.setState( { confirmAccSecError: I18n.t( 'messages.entries_mismatch' ) } );
           return;
       }
       if ( this.state.confirmAccSecError )
@@ -615,7 +623,7 @@ export default class CreateAccount extends Component
       }
       if ( !confirmPassword )
       {
-          this.setState( { confirmAccPassErr: I18n.t( 'entries_mismatch' ) } );
+          this.setState( { confirmAccPassErr: I18n.t( 'messages.entries_mismatch' ) } );
           return;
       }
       if ( this.state.confirmAccPassErr )
@@ -624,12 +632,12 @@ export default class CreateAccount extends Component
       }
       if ( this.props.passwordStrength < CONSTANTS.PASSPHRASE_STRENGTH.SOMEWHAT_SECURE )
       {
-          this.props.setError( I18n.t( 'messages.need_to_be_stronger', { name: I18n.t( 'Account Password' ) } ) );
+          this.props.setError( I18n.t( 'messages.need_to_be_stronger', { name: I18n.t( 'account_password' ) } ) );
           return;
       }
       if ( password !== confirmPassword )
       {
-          this.setState( { confirmAccPassErr: I18n.t( 'entries_mismatch' ) } );
+          this.setState( { confirmAccPassErr: I18n.t( 'messages.entries_mismatch' ) } );
           return;
       }
       if ( this.state.confirmAccPassErr )
@@ -705,6 +713,16 @@ export default class CreateAccount extends Component
       this.props.resetCreateAccNavPos();
   }
 
+  login( e )
+  {
+      e.preventDefault();
+      if ( this.props.loading )
+      {
+          return;
+      }
+      return this.props.push( '/' );
+  }
+
   render()
   {
       return (
@@ -717,18 +735,22 @@ export default class CreateAccount extends Component
                   { this.getContainer() }
               </div>
               <div className="card-f">
-          Already have an account? <a
+                  { I18n.t( 'have_account_question' ) }&nbsp;
+                  <a
                       className={ classNames( { disabled: this.props.loading } ) }
-              onClick={ ( e ) =>
+                      tabIndex="0"
+                      role="button"
+                      onClick={ ( e ) => this.login( e ) }
+                      onKeyDown={ ( e ) =>
                       {
-                          e.preventDefault();
-                          if ( this.props.loading )
+                          if ( e.keyCode === 13 )
                           {
-                              return;
+                              this.login( e );
                           }
-                          return this.props.push( '/' );
                       } }
-          >LOG IN</a>
+                  >
+                      LOG IN
+                  </a>
               </div>
           </div>
       );

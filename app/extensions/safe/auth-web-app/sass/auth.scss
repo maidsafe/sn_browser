@@ -4,8 +4,7 @@
     width: 100%;
     .auth-cont-1 {
       width: 100%;
-      padding-top: 40px;
-      padding-bottom: 20px;
+      padding: 5%;
       font: {
         size: 16px;
         weight: normal;
@@ -187,6 +186,9 @@
         z-index: 99;
         &:hover {
           background-image: url("../img/eye-hover.svg");
+        }
+        &:focus {
+          background-image: url("../img/eye-focus.svg");
         }
       }
     }
