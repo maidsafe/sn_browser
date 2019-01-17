@@ -11,6 +11,13 @@ env:
 language: node_js
 node_js:
 - 8
+cache:
+  yarn: true
+  directories:
+  - node_modules
+  - app/node_modules
+  - "$HOME/.electron"
+  - "$HOME/.cache"
 addons:
   # chrome: stable
   apt:
@@ -25,7 +32,7 @@ addons:
     - desktop-file-utils
 
 install:
-- travis_retry yarn --verbose --network-timeout 600000
+- travis_retry yarn --network-timeout 1200000
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
