@@ -6,11 +6,11 @@ os:
 - windows
 
 env:
-- NODE_ENV=dev 
+- NODE_ENV=dev
 - NODE_ENV=prod
 language: node_js
 node_js:
-- 8 
+- 8
 addons:
   # chrome: stable
   apt:
@@ -25,11 +25,11 @@ addons:
     - desktop-file-utils
 
 install:
-- travis_retry yarn --network-timeout 600000
+- travis_retry yarn --verbose --network-timeout 600000
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
-  fi 
+  fi
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 5
@@ -40,7 +40,7 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
   fi
-- yarn build --verbose
+- yarn build
 - yarn run rebuild
 - yarn run test-peruse
 # - travis_retry yarn run test-exts # super occasionally times out in tests.
@@ -56,7 +56,7 @@ script:
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
   fi
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
-  fi   
+  fi
 - sleep 5
 
 after_success:
@@ -70,7 +70,7 @@ after_success:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
   fi
 - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then 7z a ${RELEASE}.zip ${RELEASE};
-  fi  
+  fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\*;
   fi
 - cd ..
