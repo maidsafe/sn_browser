@@ -321,10 +321,10 @@ export default class MenuBuilder
         const subMenuWindow = {
             label   : '&Window',
             submenu : [
-                { label: 'Minimize', accelerator: 'CommandOrControl+M', selector: 'performMiniaturize:' },
-                { label: 'Close', accelerator: 'CommandOrControl+Shift+W', selector: 'performClose:' },
+                { label: 'Minimize', accelerator: 'CommandOrControl+M', role: 'minimize' },
+                { label: 'Close', accelerator: 'CommandOrControl+Shift+W', role: 'close' },
                 { type: 'separator' },
-                { label: 'Bring All to Front', selector: 'arrangeInFront:' },
+                { label: 'Bring All to Front', role: 'front' },
                 { type: 'separator' },
                 { label : 'Toggle SAFE Browser-shell Devtools (not for web dev debug)',
                     click : ( item, win ) =>
