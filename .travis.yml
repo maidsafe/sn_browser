@@ -8,6 +8,8 @@ os:
 env:
 - NODE_ENV=dev
 - NODE_ENV=prod
+- YARN_GPG=no
+
 language: node_js
 node_js:
 - 8
