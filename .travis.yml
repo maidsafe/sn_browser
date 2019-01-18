@@ -6,9 +6,10 @@ os:
 - windows
 
 env:
+  global
+    - YARN_GPG=no
 - NODE_ENV=dev
 - NODE_ENV=prod
-- YARN_GPG=no
 
 language: node_js
 node_js:
