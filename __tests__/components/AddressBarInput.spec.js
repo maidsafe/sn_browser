@@ -1,8 +1,6 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-
+import { mount, shallow } from 'enzyme';
 import AddressBarInput from 'components/AddressBar/Input';
-
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
@@ -65,6 +63,91 @@ describe( 'AddressBarInput', () =>
         it( 'should have name AddressBarInput', () =>
         {
             expect( instance.constructor.name ).toMatch( 'Input' );
+        } );
+    } );
+
+    describe( 'events', () =>
+    {
+        beforeEach( () =>
+        {
+            store = mockStore( props );
+
+            wrapper = mount(
+                <Provider store={ store } >
+                    <AddressBarInput { ...props } />
+                </Provider > );
+            instance = wrapper.instance();
+        } );
+
+        afterEach( () =>
+        {
+            wrapper.unmount();
+        } );
+
+        it( 'check on onBlur,handleBlur is called', () =>
+        {
+            const handleBlur = jest.fn();
+            wrapper = mount(
+                <Provider store={ store } >
+                    <AddressBarInput { ...props } onBlur={ handleBlur } />
+                </Provider > );
+            const input = wrapper.find( 'Input' );
+            input.simulate( 'blur' );
+            expect( handleBlur ).toHaveBeenCalled();
+        } );
+
+        it( 'check on onBlur,onBlur() is called', () =>
+        {
+            const input = wrapper.find( 'Input' );
+            input.simulate( 'blur' );
+            expect( props.onBlur ).toHaveBeenCalled();
+        } );
+
+        it( 'check on onFocus,handleFocus is called', () =>
+        {
+            const handleFocus = jest.fn();
+            wrapper = mount(
+                <Provider store={ store } >
+                    <AddressBarInput { ...props } onFocus={ handleFocus } />
+                </Provider > );
+            instance = wrapper.instance();
+            const input = wrapper.find( 'Input' );
+            input.simulate( 'focus' );
+            expect( handleFocus ).toHaveBeenCalled();
+        } );
+
+        it( 'check on onFocus,onFocus() is called', () =>
+        {
+            wrapper = mount(
+                <Provider store={ store } >
+                    <AddressBarInput { ...props } />
+                </Provider > );
+            instance = wrapper.instance();
+            const input = wrapper.find( 'Input' );
+            input.simulate( 'focus' );
+            expect( props.onFocus ).toHaveBeenCalled();
+        } );
+
+        it( 'check on onKeyPress if updateActiveTab is called', () =>
+        {
+            const input = wrapper.find( 'Input' );
+            input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
+            expect( props.updateActiveTab ).toHaveBeenCalled();
+        } );
+
+        it( 'check on onKeyPress if updateActiveTab is called with params', () =>
+        {
+            const input = wrapper.find( 'Input' );
+            input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
+            expect( props.updateActiveTab ).toHaveBeenCalledWith( { url: 'about:blank', windowId: 1 } );
+        } );
+
+        it( 'check on onChange, if onSelect() is called', () =>
+        {
+            const input = wrapper.find( 'Input' );
+            input.value = '123456';
+            input.simulate( 'change' );
+            expect( props.onSelect ).toHaveBeenCalled();
         } );
     } );
 } );
