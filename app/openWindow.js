@@ -64,7 +64,6 @@ const openWindow = ( store ) =>
         height            : mainWindowState.height,
         titleBarStyle     : 'hiddenInset',
         icon              : appIcon,
-        thickFrame        : false,
         webPreferences    :
         {
             partition : 'persist:safe-tab'
