@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount, render, shallow } from 'enzyme';
-
 import Tab from 'components/Tab';
 import { CLASSES } from 'appConstants';
 
@@ -13,17 +12,20 @@ describe( 'Tab', () =>
     beforeEach( () =>
     {
         props = {
-            url                     : '',
-            index                   : 1,
-            updateTab               : jest.fn(),
-            closeTab                : jest.fn(),
-            addTab                  : jest.fn(),
-            pageLoaded              : false,
-            isActiveTabReloading    : false,
+            url                  : '',
+            index                : 1,
+            updateTab            : jest.fn(),
+            setActiveTab         : jest.fn(),
+            addNotification      : jest.fn(),
+            activeTabBackwards   : jest.fn(),
+            closeTab             : jest.fn(),
+            addTab               : jest.fn(),
+            pageLoaded           : false,
+            isActiveTabReloading : false,
 
         };
 
-        wrapper = mount( <Tab { ...props } setActiveTab={ jest.fn() } /> );
+        wrapper = mount( <Tab { ...props } /> );
         instance = wrapper.instance();
     } );
 
@@ -61,6 +63,60 @@ describe( 'Tab', () =>
             expect( instance.loadURL.mock.calls.length ).toBe( 0 );
             instance.componentWillReceiveProps( { url: 'helllllllo' } );
             expect( instance.loadURL.mock.calls.length ).toBe( 1 );
+        } );
+    } );
+
+    describe( 'didFailLoad', () =>
+    {
+        beforeEach( () =>
+        {
+            props = {
+                url                  : '',
+                index                : 1,
+                updateTab            : jest.fn(),
+                setActiveTab         : jest.fn(),
+                addNotification      : jest.fn(),
+                activeTabBackwards   : jest.fn(),
+                closeTab             : jest.fn(),
+                addTab               : jest.fn(),
+                pageLoaded           : false,
+                isActiveTabReloading : false,
+
+            };
+
+            wrapper = mount( <Tab { ...props } /> );
+            instance = wrapper.instance();
+        } );
+
+        it( 'should exist', () =>
+        {
+            expect( instance.didFailLoad ).not.toBeUndefined();
+        } );
+
+        it( 'should call addNotification when ERR_BLOCKED_BY_CLIENT and trigger a tabUpdate if no canGoBack', () =>
+        {
+            instance.didFailLoad( { errorDescription: 'ERR_BLOCKED_BY_CLIENT' } );
+            expect( props.addNotification ).toHaveBeenCalled();
+        } );
+
+        it( 'trigger a closeTab if no canGoBack', () =>
+        {
+            instance.didFailLoad( { errorDescription: 'ERR_BLOCKED_BY_CLIENT' } );
+            expect( props.addNotification ).toHaveBeenCalled();
+            expect( props.activeTabBackwards ).not.toHaveBeenCalled();
+            expect( props.closeTab ).toHaveBeenCalled();
+        } );
+
+        it( 'trigger activeTabBackwards() if tab canGoBack', () =>
+        {
+            instance.state = {
+                browserState : { canGoBack: true }
+            };
+
+            instance.didFailLoad( { errorDescription: 'ERR_BLOCKED_BY_CLIENT' } );
+            expect( props.addNotification ).toHaveBeenCalled();
+            expect( props.activeTabBackwards ).toHaveBeenCalled();
+            expect( props.closeTab ).not.toHaveBeenCalled();
         } );
     } );
 } );
