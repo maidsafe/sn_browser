@@ -57,14 +57,14 @@ const openWindow = ( store ) =>
     const newWindowPosition = getNewWindowPosition( mainWindowState );
     const browserWindowConfig =
     {
-        show              : false,
-        x                 : newWindowPosition.x,
-        y                 : newWindowPosition.y,
-        width             : mainWindowState.width,
-        height            : mainWindowState.height,
-        titleBarStyle     : 'hiddenInset',
-        icon              : appIcon,
-        webPreferences    :
+        show           : false,
+        x              : newWindowPosition.x,
+        y              : newWindowPosition.y,
+        width          : mainWindowState.width,
+        height         : mainWindowState.height,
+        titleBarStyle  : 'hiddenInset',
+        icon           : appIcon,
+        webPreferences :
         {
             partition : 'persist:safe-tab'
             // preload : path.join( __dirname, 'browserPreload.js' )
