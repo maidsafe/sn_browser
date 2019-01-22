@@ -73,7 +73,8 @@ const safeRoute = ( store ) => ( {
             }
             catch ( error )
             {
-                logger.error( error.code, error.message );
+
+                logger.error( 'SAFE Fetch error:', error.code, error.message );
                 store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
                 const shouldTryAgain = error.code === errConsts.ERR_OPERATION_ABORTED.code ||
                                        error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
@@ -81,22 +82,19 @@ const safeRoute = ( store ) => ( {
                 if ( shouldTryAgain )
                 {
                     const safeBrowserApp = store.getState().safeBrowserApp;
-                    const unsubscribe = store.subscribe( () =>
+                    if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
                     {
-                        if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
+                        store.getState().tabs.forEach( ( tab ) =>
                         {
-                            store.getState().tabs.forEach( ( tab ) =>
+                            logger.info( tab.url, link, link.includes( tab.url ) );
+                            if ( link.includes( tab.url ) && !tab.isActive )
                             {
-                                logger.info( tab.url, link, link.includes( tab.url ) );
-                                if ( link.includes( tab.url ) && !tab.isActive )
-                                {
-                                    store.dispatch( closeTab( { index: tab.index } ) );
-                                }
-                            } );
-                            store.dispatch( addTab( { url: link, isActiveTab: true } ) );
-                            unsubscribe();
-                        }
-                    } );
+                                store.dispatch( closeTab( { index: tab.index } ) );
+                            }
+                        } );
+                        store.dispatch( addTab( { url: link, isActiveTab: true } ) );
+                    }
+
                     error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
                     return sendErrResponse( error.message );
                 }
