@@ -386,8 +386,6 @@ export default class Tab extends Component
             }
             return;
         }
-        closeTab( { index } );
-        addTab( { url, isActiveTab: true } );
     }
 
     didStopLoading( )
