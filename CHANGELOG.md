@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.11.1"></a>
+## [0.11.1](https://github.com/maidsafe/safe_browser/compare/v0.7.0-rc.3...v0.11.1) (2019-01-24)
+
+
+
+### Bug Fixes
+
+* **Blocked URL Handling:** Blocked urls will now only send a tab back… ([#540](https://github.com/maidsafe/safe_browser/issues/540)) ([af377c3](https://github.com/maidsafe/safe_browser/commit/af377c3)), closes [#539](https://github.com/maidsafe/safe_browser/issues/539)
+* **browserWindow:** Resizable on Windows by removing `thickFrame` option ([69cf411](https://github.com/maidsafe/safe_browser/commit/69cf411))
+* **menu:** functioning Window menu items ([42dede2](https://github.com/maidsafe/safe_browser/commit/42dede2))
+* **auth-ui:** adds missing padding and fixes grammar ([7e7e2d5](https://github.com/maidsafe/safe_browser/commit/7e7e2d5))
+* **Deps:** Webpack dev server updated above 3.1.11 ([#511](https://github.com/maidsafe/safe_browser/issues/511)) ([6997b70](https://github.com/maidsafe/safe_browser/commit/6997b70))
+* **electron-app:** only calls setAsDefaultProtocolClient if non-packed && !win32 ([0ae5930](https://github.com/maidsafe/safe_browser/commit/0ae5930))
+* **http-handling:** changes behavior to go back to last URL instead of closing tab ([46102b7](https://github.com/maidsafe/safe_browser/commit/46102b7))
+* **menu:** Save/Read browser state menu options ([472878a](https://github.com/maidsafe/safe_browser/commit/472878a))
+* **tabs:** focuses reopened last tab ([6f0281f](https://github.com/maidsafe/safe_browser/commit/6f0281f))
+* **tabs:** windowId is no longer undefined ([b084574](https://github.com/maidsafe/safe_browser/commit/b084574))
+* **ui:** removes MacOS-specific menu column ([999fc5a](https://github.com/maidsafe/safe_browser/commit/999fc5a))
+* **UI:** use right quotation mark for apostrophe ([#499](https://github.com/maidsafe/safe_browser/issues/499)) ([3b43db6](https://github.com/maidsafe/safe_browser/commit/3b43db6))
+* **webview:** loads expected error after multiple subsequent invalid URI errors and localhost resource errors ([e9e22c6](https://github.com/maidsafe/safe_browser/commit/e9e22c6))
+
+
+### Features
+
+* **ui:** enhances accessibility and i18n ([0c8eedb](https://github.com/maidsafe/safe_browser/commit/0c8eedb))
+
+
+
 <a name="0.11.0"></a>
 ## [0.11.0](https://github.com/maidsafe/safe_browser/compare/0.7.0...0.11.0) (2018-12-17)
 
