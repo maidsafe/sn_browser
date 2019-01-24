@@ -1,18 +1,25 @@
 {
-  "parser": "babel-eslint",
   "extends": "airbnb",
   "env": {
     "browser": true,
     "node": true
   },
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": true,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "rules": {
-    "arrow-parens": ["off"],
+    "arrow-parens": ["error", "as-needed"],
+    "template-curly-spacing": ["error", "always"],
     "brace-style": ["error", "allman"],
     "compat/compat": "error",
     "consistent-return": "off",
-    "comma-dangle": "off",
-    "flowtype-errors/show-errors": "error",
-    "generator-star-spacing": "off",
+    "comma-dangle": ["error", "only-multiline"],
+    "generator-star-spacing":["error", {"before": true, "after": false}],
     "key-spacing": [ "error", {
         "singleLine": {
             "beforeColon": false,
@@ -48,8 +55,6 @@
     "space-in-parens": ["error", "always"]
   },
   "plugins": [
-    "flowtype",
-    "flowtype-errors",
     "import",
     "promise",
     "compat",
@@ -57,9 +62,9 @@
   ],
   "settings": {
     "import/resolver": {
-    #   "webpack": {
-    #     "config": "webpack.config.eslint.js"
-    #   }
+       "webpack": {
+         "config": "../webpack.config.eslint.js"
+       }
     }
   }
 }
