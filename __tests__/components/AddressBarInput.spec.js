@@ -5,6 +5,7 @@ import AddressBarInput from 'components/AddressBar/Input';
 
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
+
 const mockStore = configureStore();
 
 

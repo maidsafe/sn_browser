@@ -19,102 +19,102 @@ export const LOGOUT = 'LOGOUT';
 export const SHOW_LIB_ERR_POPUP = 'SHOW_LIB_ERR_POPUP';
 export const SET_IS_AUTHORISED = 'SET_IS_AUTHORISED';
 
-export const setCreateAccNavPos = (pos) => (
-  {
-    type: SET_CREATE_ACC_NAV_POS,
-    position: pos
-  }
+export const setCreateAccNavPos = pos => (
+    {
+        type     : SET_CREATE_ACC_NAV_POS,
+        position : pos
+    }
 );
 
 export const resetCreateAccNavPos = () => (
-  {
-    type: RESET_CREATE_ACC_NAV_POS
-  }
+    {
+        type : RESET_CREATE_ACC_NAV_POS
+    }
 );
 
-export const setSecretStrength = (val) => (
-  {
-    type: SET_SECRET_STRENGTH,
-    strength: val
-  }
+export const setSecretStrength = val => (
+    {
+        type     : SET_SECRET_STRENGTH,
+        strength : val
+    }
 );
 
-export const setPasswordStrength = (val) => (
-  {
-    type: SET_PASSWORD_STRENGTH,
-    strength: val
-  }
+export const setPasswordStrength = val => (
+    {
+        type     : SET_PASSWORD_STRENGTH,
+        strength : val
+    }
 );
 
-export const setError = (err) => ({
-  type: SET_AUTH_ERROR,
-  error: err
-});
+export const setError = err => ( {
+    type  : SET_AUTH_ERROR,
+    error : err
+} );
 
-export const clearError = () => ({
-  type: CLEAR_AUTH_ERROR
-});
+export const clearError = () => ( {
+    type : CLEAR_AUTH_ERROR
+} );
 
-export const setAccSecret = (secret) => ({
-  type: SET_ACC_SECRET,
-  secret
-});
+export const setAccSecret = secret => ( {
+    type : SET_ACC_SECRET,
+    secret
+} );
 
-export const clearAccSecret = () => ({
-  type: CLEAR_ACC_SECRET
-});
+export const clearAccSecret = () => ( {
+    type : CLEAR_ACC_SECRET
+} );
 
-export const setAccPassword = (password) => ({
-  type: SET_ACC_PASSWORD,
-  password
-});
+export const setAccPassword = password => ( {
+    type : SET_ACC_PASSWORD,
+    password
+} );
 
-export const clearAccPassword = () => ({
-  type: CLEAR_ACC_PASSWORD
-});
+export const clearAccPassword = () => ( {
+    type : CLEAR_ACC_PASSWORD
+} );
 
-export const setInviteCode = (invite) => ({
-  type: SET_INVITE_CODE,
-  invite
-});
+export const setInviteCode = invite => ( {
+    type : SET_INVITE_CODE,
+    invite
+} );
 
-export const clearInviteCode = () => ({
-  type: CLEAR_INVITE_CODE
-});
+export const clearInviteCode = () => ( {
+    type : CLEAR_INVITE_CODE
+} );
 
-export const setAuthLoader = () => ({
-  type: SET_AUTH_LOADER
-});
+export const setAuthLoader = () => ( {
+    type : SET_AUTH_LOADER
+} );
 
-export const toggleInvitePopup = () => ({
-  type: TOGGLE_INVITE_POPUP
-});
+export const toggleInvitePopup = () => ( {
+    type : TOGGLE_INVITE_POPUP
+} );
 
-export const clearAuthLoader = () => ({
-  type: CLEAR_AUTH_LOADER
-});
+export const clearAuthLoader = () => ( {
+    type : CLEAR_AUTH_LOADER
+} );
 
-export const createAccount = (secret, password, invitation) => ({
-  type: CREATE_ACC,
-  payload: window.safeAuthenticator.createAccount(secret, password, invitation)
-});
+export const createAccount = ( secret, password, invitation ) => ( {
+    type    : CREATE_ACC,
+    payload : window.safeAuthenticator.createAccount( secret, password, invitation )
+} );
 
-export const login = (secret, password) => ({
-  type: LOGIN,
-  payload: window.safeAuthenticator.login(secret, password)
-});
+export const login = ( secret, password ) => ( {
+    type    : LOGIN,
+    payload : window.safeAuthenticator.login( secret, password )
+} );
 
-export const logout = () => ({
-  type: LOGOUT,
-  payload: Promise.resolve(window.safeAuthenticator.logout())
-});
+export const logout = () => ( {
+    type    : LOGOUT,
+    payload : Promise.resolve( window.safeAuthenticator.logout() )
+} );
 
 
-export const showLibErrPopup = () => ({
-  type: SHOW_LIB_ERR_POPUP
-});
+export const showLibErrPopup = () => ( {
+    type : SHOW_LIB_ERR_POPUP
+} );
 
-export const setIsAuthorised = ( isAuthorised ) => ({
-  type: SET_IS_AUTHORISED,
-  payload: isAuthorised
-});
+export const setIsAuthorised = isAuthorised => ( {
+    type    : SET_IS_AUTHORISED,
+    payload : isAuthorised
+} );

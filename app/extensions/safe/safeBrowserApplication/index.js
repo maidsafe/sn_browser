@@ -70,7 +70,7 @@ export const safeBrowserAppAuthFailed = ( ) =>
  * Setup actions to be triggered in response to store state changes.
  * @param  { ReduxStore } store [description]
  */
-export const handleSafeBrowserStoreChanges = ( store ) =>
+export const handleSafeBrowserStoreChanges = store =>
 {
     // TODO check why we need this vs passing it around
     currentStore = store;
@@ -116,7 +116,6 @@ export const initSafeBrowserApp =
             {
                 tempSafeBrowserObjectUntilAuthed = await initAnon( passedStore, options );
             }
-
         }
         catch ( e )
         {
@@ -141,7 +140,7 @@ const authFromStoreResponse = async ( res, store ) =>
         logger.error( res );
         store.dispatch( notificationActions.addNotification(
             {
-                text : `Unable to connect to the network. ${res}`,
+                text : `Unable to connect to the network. ${ res }`,
                 type : 'error'
             } ) );
 
@@ -162,7 +161,7 @@ const authFromStoreResponse = async ( res, store ) =>
     {
         urisUnderAuth.push( res );
 
-        if( tempSafeBrowserObjectUntilAuthed )
+        if ( tempSafeBrowserObjectUntilAuthed )
         {
             safeBrowserAppObject = tempSafeBrowserObjectUntilAuthed;
             tempSafeBrowserObjectUntilAuthed = null;
@@ -213,12 +212,12 @@ let prevSafeBrowserAppExperimentalState;
  * based upon the application auth state
  * @param  {Object} state Application state (from redux)
  */
-const manageAuthorisationActions = async ( store ) =>
+const manageAuthorisationActions = async store =>
 {
     // TODO: Do this via aliased action.
     const safeBrowserState = store.getState().safeBrowserApp;
 
-    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore || _.debounce( ( responseUri ) =>
+    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore || _.debounce( responseUri =>
     {
         store.dispatch( safeBrowserAppActions.receivedAuthResponse( '' ) );
         authFromStoreResponse( responseUri, store );

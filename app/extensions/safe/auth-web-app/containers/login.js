@@ -4,30 +4,30 @@ import { withRouter } from 'react-router';
 import { push } from 'connected-react-router';
 import Login from '../components/login';
 import {
-  login,
-  clearAuthLoader,
-  clearError,
-  hideLibErrPopup } from '../actions/auth';
-
-const mapStateToProps = (state) => (
-  {
-    networkState: state.networkState.state,
-    error: state.auth.error,
-    loading: state.auth.loading,
-    isAuthorised: state.auth.isAuthorised,
-    libErrPopup: state.auth.libErrPopup
-  }
-);
-
-const mapDispatchToProps = (dispatch) => (
- {
-   push: (path) => dispatch(push(path)),
-  ...bindActionCreators({
     login,
     clearAuthLoader,
     clearError,
-    hideLibErrPopup }, dispatch)
- }
+    hideLibErrPopup } from '../actions/auth';
+
+const mapStateToProps = state => (
+    {
+        networkState : state.networkState.state,
+        error        : state.auth.error,
+        loading      : state.auth.loading,
+        isAuthorised : state.auth.isAuthorised,
+        libErrPopup  : state.auth.libErrPopup
+    }
 );
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+const mapDispatchToProps = dispatch => (
+    {
+        push : path => dispatch( push( path ) ),
+        ...bindActionCreators( {
+            login,
+            clearAuthLoader,
+            clearError,
+            hideLibErrPopup }, dispatch )
+    }
+);
+
+export default withRouter( connect( mapStateToProps, mapDispatchToProps )( Login ) );

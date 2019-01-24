@@ -4,14 +4,14 @@ import pkg from 'appPackage';
 import logger from 'logger';
 import { PROTOCOLS } from 'appConstants';
 
-export const isInternalPage = ( tab ) =>
+export const isInternalPage = tab =>
 {
     const urlObj = parse( tab.url );
 
-    return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
+    return urlObj.protocol === `${ PROTOCOLS.INTERNAL_PAGES }:`;
 };
 
-export const removeTrailingSlash = ( url ) =>
+export const removeTrailingSlash = url =>
 {
     if ( url )
     {
@@ -21,7 +21,7 @@ export const removeTrailingSlash = ( url ) =>
     return url;
 };
 
-export const removeLeadingSlash = ( url ) =>
+export const removeLeadingSlash = url =>
 {
     if ( url )
     {
@@ -31,15 +31,15 @@ export const removeLeadingSlash = ( url ) =>
     return url;
 };
 
-export const trimSlashes = ( url ) =>
+export const trimSlashes = url =>
 {
-    let newUrl = removeLeadingSlash( url )
-    newUrl = removeTrailingSlash( newUrl )
+    let newUrl = removeLeadingSlash( url );
+    newUrl = removeTrailingSlash( newUrl );
     return newUrl;
 };
 
 
-export const addTrailingSlashIfNeeded = ( url ) =>
+export const addTrailingSlashIfNeeded = url =>
 {
     const urlObj = parse( url );
     const urlPath = urlObj.path;
@@ -60,10 +60,10 @@ export const addTrailingSlashIfNeeded = ( url ) =>
     return slashedUrl;
 };
 
-export const removeTrailingHash = ( url ) =>
+export const removeTrailingHash = url =>
     url.replace( /\#$/, '' );
 
-export const removeTrailingRedundancies = ( url ) =>
+export const removeTrailingRedundancies = url =>
 {
     let newUrl = removeTrailingSlash( url );
     newUrl = removeTrailingHash( newUrl );
@@ -101,8 +101,8 @@ export const urlHasChanged = ( src, newUrl ) =>
     }
 
     // here we leave the slashes on hashes up to the app/user
-    const srcHash = parsedSrc.hash ? trimSlashes( parsedSrc.hash.replace('#', '') ) : '';
-    const newHash = parsedNew.hash? trimSlashes( parsedNew.hash.replace('#', '') ) : '';
+    const srcHash = parsedSrc.hash ? trimSlashes( parsedSrc.hash.replace( '#', '' ) ) : '';
+    const newHash = parsedNew.hash ? trimSlashes( parsedNew.hash.replace( '#', '' ) ) : '';
 
     if ( srcHash !== newHash )
     {
@@ -138,7 +138,7 @@ const getProtocolPosition = ( url, inputProtocol ) =>
  * @param  {String} input address bar input
  * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
  */
-export const makeValidAddressBarUrl = ( input ) =>
+export const makeValidAddressBarUrl = input =>
 {
     if ( !input )
     {
@@ -178,7 +178,7 @@ export const makeValidAddressBarUrl = ( input ) =>
             protocolPos + port.length + lengthOfSemiColon,
             input.length );
 
-        everythingAfterProtocol = `localhost:${parsedURL.hostname}/${everythingAfterProtocol}`;
+        everythingAfterProtocol = `localhost:${ parsedURL.hostname }/${ everythingAfterProtocol }`;
     }
     else if ( inputProtocol )
     {
@@ -186,7 +186,7 @@ export const makeValidAddressBarUrl = ( input ) =>
         return removeTrailingRedundancies( input );
     }
 
-    const endUrl = `${finalProtocol}://${everythingAfterProtocol}`;
+    const endUrl = `${ finalProtocol }://${ everythingAfterProtocol }`;
 
     return removeTrailingRedundancies( endUrl );
 };

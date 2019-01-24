@@ -3,14 +3,13 @@ import authenticator from 'extensions/safe/reducers/authenticator';
 import { TYPES } from 'extensions/safe/actions/authenticator_actions';
 import initialState from 'extensions/safe/reducers/initialAppState';
 
-jest.mock('extensions/safe/ffi/ipc');
+jest.mock( 'extensions/safe/ffi/ipc' );
 
-jest.mock('electron-redux', () =>
-{
-    return {
-        createAliasedAction : () => {}
-    }
-});
+jest.mock( 'electron-redux', () =>
+    ( {
+        createAliasedAction : () =>
+        {}
+    } ) );
 
 describe( 'authenticator reducer', () =>
 {
@@ -71,8 +70,8 @@ describe( 'authenticator reducer', () =>
                 type    : TYPES.ADD_AUTH_REQUEST,
                 payload : url
             } ).authenticationQueue;
-            expect(authQueue).toMatchObject( [url] );
-            expect(authQueue.length).toBe( 1 );
+            expect( authQueue ).toMatchObject( [url] );
+            expect( authQueue.length ).toBe( 1 );
         } );
     } );
 
@@ -81,12 +80,12 @@ describe( 'authenticator reducer', () =>
         it( 'should remove an authenticator request from the queue', () =>
         {
             const url = 'safe-auth://111111';
-            const authQueue = authenticator( { authenticationQueue: [ url ] }, {
+            const authQueue = authenticator( { authenticationQueue: [url] }, {
                 type    : TYPES.REMOVE_AUTH_REQUEST,
                 payload : url
             } ).authenticationQueue;
-            expect(authQueue).toMatchObject( [] );
-            expect(authQueue.length).toBe( 0 );
+            expect( authQueue ).toMatchObject( [] );
+            expect( authQueue.length ).toBe( 0 );
         } );
     } );
 } );

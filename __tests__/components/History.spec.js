@@ -6,9 +6,10 @@ import UrlList from 'components/UrlList';
 import { CLASSES } from 'appConstants';
 
 
-jest.mock('extensions', () => (
+jest.mock( 'extensions', () => (
     {
-    urlIsValid: () => { return true }
+        urlIsValid : () =>
+            true
     }
 ) );
 
@@ -21,7 +22,7 @@ describe( 'History Component', () =>
     beforeEach( () =>
     {
         props = {
-            tabs : [],
+            tabs   : [],
             addTab : jest.fn()
         };
 
@@ -47,7 +48,7 @@ describe( 'History Component', () =>
 
         it( 'should have a safeBrowser__page class', () =>
         {
-            expect( wrapper.find( `.${CLASSES.SAFE_BROWSER_PAGE}` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${ CLASSES.SAFE_BROWSER_PAGE }` ).length ).toBe( 1 );
         } );
 
         it( 'should have one url list', () =>

@@ -17,7 +17,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import baseConfig from './webpack.config.base';
 
 const port = process.env.PORT || 1214;
-const publicPath = `http://localhost:${port}/dist`;
+const publicPath = `http://localhost:${ port }/dist`;
 const dll = path.resolve( process.cwd(), 'dll' );
 const manifest = path.resolve( dll, 'vendor.json' );
 
@@ -37,17 +37,17 @@ export default merge.smart( baseConfig, {
     devtool : 'inline-source-map',
 
     target : 'electron-renderer',
-    mode : 'development',
+    mode   : 'development',
 
     entry : [
         'react-hot-loader/patch',
-        `webpack-dev-server/client?http://localhost:${port}/`,
+        `webpack-dev-server/client?http://localhost:${ port }/`,
         'webpack/hot/only-dev-server',
         path.join( __dirname, 'app/index.js' ),
     ],
 
     output : {
-        publicPath : `http://localhost:${port}/dist/`
+        publicPath : `http://localhost:${ port }/dist/`
     },
 
     plugins : [
@@ -79,8 +79,8 @@ export default merge.smart( baseConfig, {
      * 'staging', for example, by changing the ENV variables in the npm scripts
      */
         new webpack.DefinePlugin( {
-            'process.env.NODE_ENV' : JSON.stringify( process.env.NODE_ENV || 'production' ),
-            'process.env.DEBUG_PROD' : JSON.stringify( 'true' ),
+            'process.env.NODE_ENV'    : JSON.stringify( process.env.NODE_ENV || 'production' ),
+            'process.env.DEBUG_PROD'  : JSON.stringify( 'true' ),
             'process.env.IS_UNPACKED' : JSON.stringify( 'true' )
         } ),
 

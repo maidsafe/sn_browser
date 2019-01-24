@@ -10,7 +10,7 @@ import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import errConsts from 'extensions/safe/err-constants';
 import { SAFE } from '../constants';
 
-const safeRoute = ( store ) => ( {
+const safeRoute = store => ( {
     method  : 'GET',
     path    : /safe:\//,
     handler : async ( request, res ) =>
@@ -35,7 +35,7 @@ const safeRoute = ( store ) => ( {
             let end;
             let rangeArray;
 
-            logger.verbose( `Handling SAFE req: ${link}` );
+            logger.verbose( `Handling SAFE req: ${ link }` );
 
             if ( !app )
             {
@@ -73,7 +73,6 @@ const safeRoute = ( store ) => ( {
             }
             catch ( error )
             {
-
                 logger.error( 'SAFE Fetch error:', error.code, error.message );
                 store.dispatch( setWebFetchStatus( { fetching: false, error, options: '' } ) );
                 const shouldTryAgain = error.code === errConsts.ERR_OPERATION_ABORTED.code ||
@@ -84,7 +83,7 @@ const safeRoute = ( store ) => ( {
                     const safeBrowserApp = store.getState().safeBrowserApp;
                     if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
                     {
-                        store.getState().tabs.forEach( ( tab ) =>
+                        store.getState().tabs.forEach( tab =>
                         {
                             logger.info( tab.url, link, link.includes( tab.url ) );
                             if ( link.includes( tab.url ) && !tab.isActive )

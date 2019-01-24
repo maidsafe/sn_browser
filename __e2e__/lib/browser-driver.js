@@ -1,19 +1,19 @@
 import { BROWSER_UI } from './constants';
 import { parse as urlParse } from 'url';
 
-const addressInput = ( app ) => app.client.element( BROWSER_UI.ADDRESS_INPUT );
+const addressInput = app => app.client.element( BROWSER_UI.ADDRESS_INPUT );
 
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
 
 export const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
-export const setClientToMainBrowserWindow = async ( app ) =>
+export const setClientToMainBrowserWindow = async app =>
 {
     const { client, browserWindow } = app;
     const windows = await client.getWindowCount();
 
-    if( peruseBrowserWindowIndex )
+    if ( peruseBrowserWindowIndex )
     {
         await client.windowByIndex( peruseBrowserWindowIndex );
         return;
@@ -37,7 +37,7 @@ export const setClientToMainBrowserWindow = async ( app ) =>
     await client.windowByIndex( peruseBrowserWindowIndex );
 };
 
-export const setClientToBackgroundProcessWindow = async ( app ) =>
+export const setClientToBackgroundProcessWindow = async app =>
 {
     const { client, browserWindow } = app;
     const windows = await client.getWindowCount();
@@ -82,7 +82,7 @@ export const navigateTo = async ( app, url ) =>
     await client.pause( 1500 );
 };
 
-export const newTab = async ( app ) =>
+export const newTab = async app =>
 {
     const { client } = app;
 
@@ -100,14 +100,14 @@ export const newTab = async ( app ) =>
     await client.pause( 1500 );
 
     const length2 = await client.getWindowCount();
-    return length2 - 1
+    return length2 - 1;
 };
 
 
-export const bookmarkActiveTabPage = async ( app ) =>
+export const bookmarkActiveTabPage = async app =>
 {
     const { client } = app;
     await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE );
-    await client.click( BROWSER_UI.BOOKMARK_PAGE  );
+    await client.click( BROWSER_UI.BOOKMARK_PAGE );
     await delay( 500 );
 };

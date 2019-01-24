@@ -34,5 +34,4 @@ describe( 'remote call actions', () =>
         };
         expect( remoteCall.updateRemoteCall( payload ) ).toEqual( expectedAction );
     } );
-
 } );
