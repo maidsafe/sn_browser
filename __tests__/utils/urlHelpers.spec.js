@@ -77,7 +77,6 @@ describe( 'addTrailingSlashIfNeeded', () =>
         expect( addTrailingSlashIfNeeded( 'safe://hello.world/boom#yes' ) ).toBe( 'safe://hello.world/boom#yes' );
         expect( addTrailingSlashIfNeeded( 'safe://hello.world/boom/#/yes' ) ).toBe( 'safe://hello.world/boom/#/yes' );
     } );
-
 } );
 
 describe( 'urlHasChanged', () =>

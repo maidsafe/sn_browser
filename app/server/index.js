@@ -6,7 +6,7 @@ const app = express();
 
 const setupServer = () =>
 {
-    app.listen(CONFIG.PORT, () => logger.info(`Peruse internal server listening on port ${CONFIG.PORT}!`))
+    app.listen( CONFIG.PORT, () => logger.info( `Peruse internal server listening on port ${ CONFIG.PORT }!` ) );
 
     return app;
 };

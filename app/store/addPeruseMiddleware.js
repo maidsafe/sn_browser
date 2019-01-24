@@ -11,7 +11,6 @@ import {
 
 const addPeruseMiddleware = ( middleware, isBackgroundProcess ) =>
 {
-
     middleware.push( thunk );
 
     middleware.unshift( promiseMiddleware );
@@ -32,6 +31,6 @@ const addPeruseMiddleware = ( middleware, isBackgroundProcess ) =>
         // must be last
         middleware.push( forwardToRenderer );
     }
-}
+};
 
 export default addPeruseMiddleware;

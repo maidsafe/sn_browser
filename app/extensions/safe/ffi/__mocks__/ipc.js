@@ -1,9 +1,9 @@
 const ipc = {
     callIPC :
     {
-        enqueueRequest: jest.fn(),
+        enqueueRequest : jest.fn(),
 
     }
-}
+};
 
 export default ipc;

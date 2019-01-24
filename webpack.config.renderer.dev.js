@@ -17,7 +17,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import baseConfig from './webpack.config.base';
 
 const port = process.env.PORT || 1214;
-const publicPath = `http://localhost:${port}/dist`;
+const publicPath = `http://localhost:${ port }/dist`;
 const dll = path.resolve( process.cwd(), 'dll' );
 const manifest = path.resolve( dll, 'vendor.json' );
 
@@ -41,13 +41,13 @@ export default merge.smart( baseConfig, {
 
     entry : [
         'react-hot-loader/patch',
-        `webpack-dev-server/client?http://localhost:${port}/`,
+        `webpack-dev-server/client?http://localhost:${ port }/`,
         'webpack/hot/only-dev-server',
         path.join( __dirname, 'app/index.js' ),
     ],
 
     output : {
-        publicPath : `http://localhost:${port}/dist/`
+        publicPath : `http://localhost:${ port }/dist/`
     },
 
     plugins : [

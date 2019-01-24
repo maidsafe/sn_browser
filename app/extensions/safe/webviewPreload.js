@@ -143,7 +143,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) =>
      * @param  {[type]}  authUri [description]
      * @return {Promise}         resolves to URI string.
      */
-    win.safe.authorise = async ( authObj ) =>
+    win.safe.authorise = async authObj =>
     {
         if ( !authObj || typeof authObj !== 'object' ) throw new Error( 'Auth object is required' );
         return await createRemoteCall( 'authenticateFromUriObject', passedStore )( authObj );
@@ -151,7 +151,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) =>
 };
 
 
-export const setupPreloadedSafeAuthApis = ( passedStore ) =>
+export const setupPreloadedSafeAuthApis = passedStore =>
 {
     setupSafeAPIs( passedStore );
     window[pkg.name] = { version: VERSION };
@@ -166,7 +166,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
     const safeAppGroupId = ( Math.random() * 1000 | 0 ) + Date.now();
     window.safeAppGroupId = safeAppGroupId;
 
-    authManifest.forEach( ( func ) =>
+    authManifest.forEach( func =>
     {
         window.safeAuthenticator[func] = createRemoteCall( func, passedStore );
     } );
@@ -184,7 +184,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
         return state.authenticator.isAuthorised;
     };
 
-    window.safeAuthenticator.setIsAuthorised = ( isAuthorised ) =>
+    window.safeAuthenticator.setIsAuthorised = isAuthorised =>
         callIPC.setIsAuthorisedState( passedStore, isAuthorised );
 
     window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
@@ -200,7 +200,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
         return state.authenticator.libStatus;
     };
 
-    window.safeAuthenticator.setReAuthoriseState = ( state ) =>
+    window.safeAuthenticator.setReAuthoriseState = state =>
 
         // TODO: Reauth action
         // const state = passedStore.getState();
@@ -212,7 +212,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
 
 
     // Add custom and continual listeners.
-    window.safeAuthenticator.setNetworkListener = ( cb ) =>
+    window.safeAuthenticator.setNetworkListener = cb =>
     {
         const callId = Math.random().toString( 36 );
 
@@ -225,12 +225,12 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : ( response ) => cb( null, response ),
-            reject  : ( err ) => cb( err )
+            resolve : response => cb( null, response ),
+            reject  : err => cb( err )
         };
     };
 
-    window.safeAuthenticator.setAppListUpdateListener = ( cb ) =>
+    window.safeAuthenticator.setAppListUpdateListener = cb =>
     {
         const callId = Math.random().toString( 36 );
 
@@ -243,12 +243,12 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : ( response ) => cb( null, response ),
-            reject  : ( err ) => cb( err )
+            resolve : response => cb( null, response ),
+            reject  : err => cb( err )
         };
     };
 
-    window.safeAuthenticator.setIsAuthorisedListener = ( cb ) =>
+    window.safeAuthenticator.setIsAuthorisedListener = cb =>
     {
         const callId = Math.random().toString( 36 );
 
@@ -261,8 +261,8 @@ export const setupPreloadedSafeAuthApis = ( passedStore ) =>
         ) );
 
         pendingCalls[callId] = {
-            resolve : ( response ) => cb( null, response ),
-            reject  : ( err ) => cb( err )
+            resolve : response => cb( null, response ),
+            reject  : err => cb( err )
         };
     };
 

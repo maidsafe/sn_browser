@@ -30,22 +30,20 @@ import * as SafeBrowserActions from 'extensions/safe/actions/safeBrowserApplicat
 import { addFileMenus } from 'extensions/safe/menus';
 import { urlIsAllowedBySafe as urlIsValid } from 'extensions/safe/utils/safeHelpers';
 
-const onWebviewPreload = ( store ) =>
-{
-    return webviewPreload( store )
-}
+const onWebviewPreload = store =>
+    webviewPreload( store );
 
 
 const preAppLoad = () =>
 {
     if ( isRunningUnpacked && process.platform === 'win32' ) return;
-    app.setAsDefaultProtocolClient('safe-auth');
-    app.setAsDefaultProtocolClient('safe');
-    let isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
-    let isDefaultSafe = app.isDefaultProtocolClient( 'safe' );
-    logger.info('Registered to handle safe: urls ? ', isDefaultSafe );
-    logger.info('registered to handle safe-auth: urls ?', isDefaultAuth );
-}
+    app.setAsDefaultProtocolClient( 'safe-auth' );
+    app.setAsDefaultProtocolClient( 'safe' );
+    const isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
+    const isDefaultSafe = app.isDefaultProtocolClient( 'safe' );
+    logger.info( 'Registered to handle safe: urls ? ', isDefaultSafe );
+    logger.info( 'registered to handle safe-auth: urls ?', isDefaultAuth );
+};
 
 /**
  * Adds menu items to the main peruse menus.
@@ -58,26 +56,24 @@ const addExtensionMenuItems = ( store, menusArray ) =>
 
     const newMenuArray = [];
 
-    menusArray.forEach( menu => {
+    menusArray.forEach( menu =>
+    {
         const label = menu.label;
         let newMenu = menu;
 
-        if( label.includes( 'File' ) )
+        if ( label.includes( 'File' ) )
         {
             newMenu = addFileMenus( store, newMenu );
         }
 
-        newMenuArray.push(newMenu);
-
-    })
+        newMenuArray.push( newMenu );
+    } );
 
     return newMenuArray;
-}
+};
 
 const addReducersToPeruse = ( ) =>
-{
-    return safeReducers;
-}
+    safeReducers;
 
 /**
  * Triggered when a remote call is received in the main process
@@ -85,7 +81,7 @@ const addReducersToPeruse = ( ) =>
  * @param  {Object} allAPICalls object containing all api calls available in main (for use via store remoteCalls)
  * @param  {[type]} theCall     call object with id, and info
  */
-const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => handleRemoteCalls(store, allAPICalls, theCall);
+const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => handleRemoteCalls( store, allAPICalls, theCall );
 
 const getRemoteCallApis = () => remoteCallApis;
 
@@ -101,12 +97,12 @@ let theSafeBgProcessStore;
 
 export const getSafeBackgroundProcessStore = () =>
 {
-        if( ! theSafeBgProcessStore ) throw new Error( `No background process store defined. ${process.mainModule.filename}'`);
+    if ( !theSafeBgProcessStore ) throw new Error( `No background process store defined. ${ process.mainModule.filename }'` );
 
     return theSafeBgProcessStore;
-}
+};
 
-const onInitBgProcess = async ( store ) =>
+const onInitBgProcess = async store =>
 {
     logger.info( 'Registering SAFE Network Protocols' );
     try
@@ -122,8 +118,8 @@ const onInitBgProcess = async ( store ) =>
         logger.error( 'Load extensions error: ', e );
     }
 
-    //load the auth/safe libs
-    let theLibs = await ffiLoader.loadLibrary( startedRunningMock );
+    // load the auth/safe libs
+    const theLibs = await ffiLoader.loadLibrary( startedRunningMock );
 
     let prevAuthLibStatus;
 
@@ -141,15 +137,15 @@ const onInitBgProcess = async ( store ) =>
         }
 
         handleSafeBrowserStoreChanges( store );
-    });
+    } );
 
     const mainAppInfo = APP_INFO.info;
     const authAppInfo = {
         ...mainAppInfo,
-        id     : 'net.maidsafe.app.browser.authenticator',
-        name   : 'SAFE Browser Authenticator',
-        icon   : 'iconPath'
-    }
+        id   : 'net.maidsafe.app.browser.authenticator',
+        name : 'SAFE Browser Authenticator',
+        icon : 'iconPath'
+    };
 
     logger.verbose( 'Auth application info', authAppInfo );
     sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
@@ -159,21 +155,21 @@ const onInitBgProcess = async ( store ) =>
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onOpen = ( store ) =>
+const onOpen = store =>
 {
-    logger.verbose('OnOpen: Setting mock in store. ', startedRunningMock)
+    logger.verbose( 'OnOpen: Setting mock in store. ', startedRunningMock );
     store.dispatch( setIsMock( startedRunningMock ) );
-}
+};
 
 /**
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onAppReady = ( store ) =>
+const onAppReady = store =>
 {
-    logger.verbose('OnAppReady: Setting mock in store. ', startedRunningMock)
+    logger.verbose( 'OnAppReady: Setting mock in store. ', startedRunningMock );
     store.dispatch( setIsMock( startedRunningMock ) );
-}
+};
 
 /**
  * Add middleware to Peruse redux store
@@ -181,7 +177,7 @@ const onAppReady = ( store ) =>
  */
 const middleware = store => next => action =>
 {
-    if( isRunningSpectronTestProcess )
+    if ( isRunningSpectronTestProcess )
     {
         logger.info( 'ACTION:', action );
     }
@@ -190,21 +186,20 @@ const middleware = store => next => action =>
 };
 
 
-
 const parseSafeUri = function ( uri )
 {
-    logger.verbose('Parsing safe uri', uri);
+    logger.verbose( 'Parsing safe uri', uri );
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 
-const waitForBasicConnection = ( theStore, timeout = 15000 ) => new Promise( ( resolve ) =>
+const waitForBasicConnection = ( theStore, timeout = 15000 ) => new Promise( resolve =>
 {
-    let timeLeft = timeout ;
+    let timeLeft = timeout;
     const check = () =>
     {
         timeLeft -= 500;
         const netState = theStore.getState().safeBrowserApp.networkStatus;
-        logger.verbose('Waiting for basic connection...', netState )
+        logger.verbose( 'Waiting for basic connection...', netState );
 
         if ( netState !== null )
         {
@@ -220,7 +215,7 @@ const waitForBasicConnection = ( theStore, timeout = 15000 ) => new Promise( ( r
         }
     };
 
-    setTimeout( check, 500 )
+    setTimeout( check, 500 );
 } );
 
 /**
@@ -235,11 +230,11 @@ const onReceiveUrl = async ( store, url ) =>
     const preParseUrl = parseSafeUri( url );
     const parsedUrl = parseURL( preParseUrl );
 
-    logger.info('Did get a parsed url on the go', parsedUrl )
+    logger.info( 'Did get a parsed url on the go', parsedUrl );
 
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
-        logger.info('this is a parsed url for auth', url )
+        logger.info( 'this is a parsed url for auth', url );
         if ( url !== getSafeBrowserUnauthedReqUri() )
         {
             // otherwise EVERYTHING waits for basic connection...
@@ -247,7 +242,7 @@ const onReceiveUrl = async ( store, url ) =>
             // (and we assume, _that_ happens at the correc time due to browser hooks)
             await waitForBasicConnection( store );
 
-            logger.info('DONE WAITING', url)
+            logger.info( 'DONE WAITING', url );
         }
         store.dispatch( authenticatorActions.handleAuthUrl( url ) );
     }
@@ -255,13 +250,13 @@ const onReceiveUrl = async ( store, url ) =>
     {
         await waitForBasicConnection( store );
 
-        logger.verbose('Handling safe: url', url )
+        logger.verbose( 'Handling safe: url', url );
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...
     else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
     {
-        logger.verbose('Handling safe-???? url')
+        logger.verbose( 'Handling safe-???? url' );
         store.dispatch( safeBrowserAppActions.receivedAuthResponse( url ) );
     }
 

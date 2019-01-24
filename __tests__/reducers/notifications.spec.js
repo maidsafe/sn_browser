@@ -29,7 +29,7 @@ describe( 'notification reducer', () =>
                     type    : TYPES.ADD_NOTIFICATION,
                     payload : { text: 'hihi' }
                 } )[0]
-            ).toHaveProperty( 'id');
+            ).toHaveProperty( 'id' );
         } );
 
         it( 'should use passed ID', () =>
@@ -37,11 +37,11 @@ describe( 'notification reducer', () =>
             expect(
                 notifications( [], {
                     type    : TYPES.ADD_NOTIFICATION,
-                    payload : { text: 'hellooohello', id:'boom' }
+                    payload : { text: 'hellooohello', id: 'boom' }
                 } )[0]
-            ).toMatchObject( { text: 'hellooohello', id:'boom' } );
+            ).toMatchObject( { text: 'hellooohello', id: 'boom' } );
         } );
-    })
+    } );
 
 
     describe( 'UPDATE_NOTIFICATION', () =>
@@ -50,36 +50,35 @@ describe( 'notification reducer', () =>
         {
             const note = { id: '1', text: 'hiwhat' };
             expect(
-                notifications( [ note ], {
+                notifications( [note], {
                     type    : TYPES.UPDATE_NOTIFICATION,
-                    payload : { ...note, text:'new!' }
+                    payload : { ...note, text: 'new!' }
                 } )[0].text
-            ).toBe( 'new!');
+            ).toBe( 'new!' );
         } );
 
         it( 'should throw if no ID passed', () =>
         {
             const note = { id: '1', text: 'hiwhat' };
             expect( () =>
-                notifications( [ note ], {
+                notifications( [note], {
                     type    : TYPES.UPDATE_NOTIFICATION,
-                    payload : { text:'new!' }
+                    payload : { text: 'new!' }
                 } )
-            ).toThrowError('"id"');
+            ).toThrowError( '"id"' );
         } );
-    })
+    } );
 
     describe( 'CLEAR_NOTIFICATION', () =>
     {
         it( 'should handle clearing the first notification', () =>
         {
             expect(
-                notifications( [{text:'i should not  exist', id:'ciao'}], {
-                    type    : TYPES.CLEAR_NOTIFICATION,
-                    id: 'ciao'
+                notifications( [{ text: 'i should not  exist', id: 'ciao' }], {
+                    type : TYPES.CLEAR_NOTIFICATION,
+                    id   : 'ciao'
                 } )
             ).toEqual( [] );
         } );
-    })
-
-})
+    } );
+} );

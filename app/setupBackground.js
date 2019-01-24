@@ -9,14 +9,15 @@ import {
     isCI
 } from 'appConstants';
 
-const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
+const BACKGROUND_PROCESS = `file://${ __dirname }/bg.html`;
 let backgroundProcess = null;
-const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
+const setupBackground = async ( ) => new Promise( ( resolve, reject ) =>
+{
     logger.info( 'Setting up Background Process' );
 
     if ( backgroundProcess === null )
     {
-        logger.info('loading bg:', BACKGROUND_PROCESS );
+        logger.info( 'loading bg:', BACKGROUND_PROCESS );
 
         backgroundProcess = new BrowserWindow( {
             width          : 300,
@@ -28,35 +29,35 @@ const setupBackground = async ( ) => new Promise( ( resolve, reject ) => {
             transparent    : true,
             webPreferences : {
                 // partition               : 'persist:safe-tab', // TODO make safe?
-                nodeIntegration     : true,
+                nodeIntegration      : true,
                 // Prevents renderer process code from not running when window is hidden
-                backgroundThrottling: false
+                backgroundThrottling : false
             }
         } );
 
         // Hide the window when it loses focus
-      //   backgroundProcess.on('blur', () => {
-      //     if (!backgroundProcess.webContents.isDevToolsOpened()) {
-      //       backgroundProcess.hide()
-      //     }
-      // });
+        //   backgroundProcess.on('blur', () => {
+        //     if (!backgroundProcess.webContents.isDevToolsOpened()) {
+        //       backgroundProcess.hide()
+        //     }
+        // });
 
         backgroundProcess.webContents.on( 'did-finish-load', () =>
         {
-            logger.verbose( 'Background process renderer loaded.');
+            logger.verbose( 'Background process renderer loaded.' );
 
-            if( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcess );
+            if ( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcess );
 
-            if( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
+            if ( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
             {
-                backgroundProcess.webContents.openDevTools({ mode: 'detach' });
+                backgroundProcess.webContents.openDevTools( { mode: 'detach' } );
             }
             resolve( backgroundProcess );
         } );
 
         backgroundProcess.webContents.on( 'did-fail-load', ( event, code, message ) =>
         {
-            logger.error('>>>>>>>>>>>>>>>>>>>>>>>> Bg process failed to load <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+            logger.error( '>>>>>>>>>>>>>>>>>>>>>>>> Bg process failed to load <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<' );
             reject( message );
         } );
 

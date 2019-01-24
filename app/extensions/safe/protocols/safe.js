@@ -5,7 +5,7 @@ import { CONFIG, PROTOCOLS, APP_INFO, isRunningPackaged } from 'appConstants';
 
 const registerSafeProtocol = () =>
 {
-    logger.verbose( `${PROTOCOLS.SAFE} Registering` );
+    logger.verbose( `${ PROTOCOLS.SAFE } Registering` );
     // bind to partition.
     const partition = CONFIG.SAFE_PARTITION;
     const ses = remote.session.fromPartition( partition );
@@ -14,9 +14,9 @@ const registerSafeProtocol = () =>
     // Would ports automatically routing locally make things simpler?
     ses.protocol.registerHttpProtocol( PROTOCOLS.SAFE, ( req, cb ) =>
     {
-        logger.verbose( `safe:// req url being parsed: ${req.url}` );
+        logger.verbose( `safe:// req url being parsed: ${ req.url }` );
         const parsedUrl = url.parse( req.url );
-        let host = parsedUrl.host;
+        const host = parsedUrl.host;
 
         if ( !host )
         {
@@ -26,16 +26,16 @@ const registerSafeProtocol = () =>
         const path = parsedUrl.pathname || '';
 
         // TODO. Sort out when/where with slash
-        let newUrl = `http://localhost:${CONFIG.PORT}/safe://${host}${path}`;
+        let newUrl = `http://localhost:${ CONFIG.PORT }/safe://${ host }${ path }`;
 
         // Allow localhost to be served as safe://
         if ( parsedUrl.hostname === 'localhost' && parsedUrl.port )
         {
-            newUrl = `http://localhost:${parsedUrl.port}${path}`
+            newUrl = `http://localhost:${ parsedUrl.port }${ path }`;
         }
 
         cb( { url: newUrl } );
-    }, ( err ) =>
+    }, err =>
     {
         if ( err ) console.error( 'Failed to register SAFE protocol' );
     } );

@@ -16,7 +16,7 @@ import {
 
 let history;
 
-if( inRendererProcess )
+if ( inRendererProcess )
 {
     history = createHashHistory();
 }
@@ -27,7 +27,7 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
     const enhancers = [];
 
     // Router Middleware
-    if( history )
+    if ( history )
     {
         const router = routerMiddleware( history );
         middleware.push( router );
@@ -68,11 +68,11 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
 
     if ( inRendererProcess )
     {
-        replayActionRenderer(store);
+        replayActionRenderer( store );
     }
     else
     {
-        replayActionMain(store);
+        replayActionMain( store );
     }
 
     return store;

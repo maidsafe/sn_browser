@@ -128,12 +128,12 @@ export default {
                         loader : 'style-loader'
                     },
                     {
-                        loader  : 'css-loader'
+                        loader : 'css-loader'
                     },
                     {
-                        loader : 'less-loader',
-                        options: {
-                            javascriptEnabled: true
+                        loader  : 'less-loader',
+                        options : {
+                            javascriptEnabled : true
                         }
                     }
                 ]

@@ -21,7 +21,7 @@ const allAddressBarInputExtensions = [safeWrapAddressBarInput];
  * @param  {React Component} Browser Browser react component
  * @param  {React Component} Browser Browser react component
  */
-export const wrapBrowserComponent = ( Browser ) =>
+export const wrapBrowserComponent = Browser =>
 {
     try
     {
@@ -51,7 +51,7 @@ export const wrapBrowserComponent = ( Browser ) =>
  * @param  {React Component} AddressBar AddressBar react component
  * @param  {React Component} AddressBar AddressBar react component
  */
-export const wrapAddressBarButtonsLHS = ( Buttons ) =>
+export const wrapAddressBarButtonsLHS = Buttons =>
 {
     try
     {
@@ -79,7 +79,7 @@ export const wrapAddressBarButtonsLHS = ( Buttons ) =>
  * @param  {React Component} AddressBar AddressBar react component
  * @param  {React Component} AddressBar AddressBar react component
  */
-export const wrapAddressBarButtonsRHS = ( Buttons ) =>
+export const wrapAddressBarButtonsRHS = Buttons =>
 {
     try
     {
@@ -107,7 +107,7 @@ export const wrapAddressBarButtonsRHS = ( Buttons ) =>
  *
  * @param  {React Component} AddressBar react component
  */
-export const wrapAddressBarInput = ( AddressBarInput ) =>
+export const wrapAddressBarInput = AddressBarInput =>
 {
     try
     {

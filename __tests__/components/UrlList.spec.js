@@ -51,7 +51,6 @@ describe( 'UrlList', () =>
         {
             expect( wrapper.find( TableRow ).length ).toBe( 1 );
         } );
-
     } );
 
 

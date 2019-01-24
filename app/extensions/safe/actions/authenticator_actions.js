@@ -35,17 +35,17 @@ export const {
     TYPES.SET_IS_AUTHORISED_STATE
 );
 
-const triggerAuthDecoding = ( reqObject ) =>
+const triggerAuthDecoding = reqObject =>
 {
     if ( !window || !window.thisIsTheBackgroundProcess ) return;
 
-    logger.info('Handling an AuthReq in BG process:', reqObject )
+    logger.info( 'Handling an AuthReq in BG process:', reqObject );
     callIPC.enqueueRequest( reqObject );
 };
 
 export const handleAuthUrl = createAliasedAction(
     TYPES.HANDLE_AUTH_URL,
-    ( reqObject ) => (
+    reqObject => (
         {
         // the real action
             type    : TYPES.HANDLE_AUTH_URL,

@@ -76,8 +76,6 @@ describe( 'notification actions', () =>
     xit( 'should test peruse actions but cannot due to native libs bugs', () =>
     {
         // https://github.com/facebook/jest/issues/3552
-        expect( 1 ).toEqual( 1 )
+        expect( 1 ).toEqual( 1 );
     } );
-
-
 } );
