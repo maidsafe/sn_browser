@@ -670,29 +670,23 @@ class Authenticator extends SafeLib
                 reject
             );
 
-            const decodeReqErrorCb = this._pushCb(
-                ffi.Callback(
-                    types.Void,
-                    [ types.voidPointer, types.FfiResultPointer, types.CString ],
-                    ( userData, resultPtr ) =>
+            const decodeReqErrorCb = this._pushCb( ffi.Callback( types.Void,
+                [types.voidPointer, types.FfiResultPointer, types.CString], ( userData, resultPtr ) =>
+                {
+                    const result = resultPtr.deref();
+                    const error =
                     {
-                        const result = resultPtr.deref();
-                        if (
-                            !(
-                                this[_reqErrListener]
-                                && this[_reqErrListener].len() !== 0
-                            )
-                        )
-                        {
-                            return;
-                        }
-
-                        logger.info( 'Error in auth callback.', result );
-                        this[_reqErrListener].broadcast( JSON.stringify( result ) );
-                        reject( result );
+                        error_code  : result.error_code,
+                        description : result.description
+                    };
+                    if ( !( this[_reqErrListener] && this[_reqErrListener].len() !== 0 ) )
+                    {
+                        return;
                     }
-                )
-            );
+
+                    this[_reqErrListener].broadcast( JSON.stringify( error ) );
+                    return reject( error );
+                } ) );
             try
             {
                 this.safeLib.auth_decode_ipc_msg(
