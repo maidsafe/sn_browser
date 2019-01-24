@@ -21,9 +21,18 @@ const encodedAuthUri = 'safe-auth:bAAAAAAFBMHKYWAAAAAABWAAAAAAAAAAANZSXILTNMFUWI
     + 'AL5YHKYTMNFRQCAAAAAAAAAAAAAAAAAAB';
 /* const encodedUnRegisterAuthUri = 'safe-auth:bAAAAAADKLNT46AQAAAABWAAAAAAAAAAANZSXILT' +
 'NMFUWI43BMZSS45DFON2C453FMJQXA4BONFSAC'; */
-const encodedContUri = 'safe-auth:bAAAAAAHQQQ2XQAIAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM'
-    + 'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG'
-    + 'KICMORSC4AIAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMAQAAAAAAAAAAABAAAAAAI';
+const encodedContUri = 'safe-auth:bAAAAAAHQQQ2XQAIAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM' +
+'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG' +
+'KICMORSC4AIAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMAQAAAAAAAAAAABAAAAAAI';
+
+const encodedNonExistentShareMDataReq = 'safe-auth:bAAAAAAA7BILOYAYAAAACOAAAAAAAAAAANZSXILTNMFUWI43BMZSS4YLQNFPXA3DBPFTXE33VNZSC453FMJRWY2LFNZ2C4OIAC4AAAAAAAAAAAU2BIZCSA53FMIQECUCJEBYGYYLZM5ZG65LOMQGQAAAAAAAAAACNMFUWIU3BMZSSATDUMQXACAAAAAAAAAAATE5AAAAAAAAAAXYWSFBJN6MFV5OY6TCN3SYOIESF3L7TDFYE2IEQC6WHASMCZEUPAEAQAAAAAE';
+
+const authReqWithoutMockBit = 'safe-auth:bAAAAAAEKDQ7DAAAAAAACOAAAAAAAAAAANZSXILTNMFUWI43BMZSS4YLQNFPXA3DBPFTXE33VNZSC453FMJRWY2LFNZ2C4OIAC4AAAAAAAAAAAU2BIZCSA53FMIQECUCJEBYGYYLZM5ZG65LOMQGQAAAAAAAAAACNMFUWIU3BMZSSATDUMQXACAQAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMCAAAAAAAAAAAAAAAAAAAIAAAAAEAAAAABQAAAABQAAAAAAAAAAAX3QOVRGY2LDJZQW2ZLTAQAAAAAAAAAAAAAAAAAACAAAAABAAAAAAMAAAAAA';
+
+const sixtyFourBitReq = 'safe-auth:AAAAAIdLdL0AAAAAJwAAAAAAAABuZXQubWFpZHNhZmUuYXBpX3BsYXlncm91bmQud2ViY2xpZW50LjkAFwAAAAAAAABTQUZFIHdlYiBBUEkgcGxheWdyb3VuZA0AAAAAAAAATWFpZFNhZmUgTHRkLgECAAAAAAAAAAcAAAAAAAAAX3B1YmxpYwQAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAwAAAAAAAAAX3B1YmxpY05hbWVzBAAAAAAAAAAAAAAAAQAAAAIAAAADAAAA';
+
+const decodedReqForRandomClient = uri => helper.createRandomAccount()
+    .then( () => client.decodeRequest( uri ) );
 
 const decodedReqForRandomClient = uri =>
     helper.createRandomAccount().then( () => client.decodeRequest( uri ) );
@@ -433,6 +442,48 @@ describe( 'Authenticator functions', () =>
                 // TODO: This should be 'message', 'code' to be consistent.
                 expect( e.description ).toBe( 'IPC error: UnknownApp' );
                 expect( e.error_code ).toBe( -204 );
+                await helper.clearAccount();
+            }
+        } );
+
+        it( 'throws error when encoded auth request generated in live environment, however decoding for mock routing', async () =>
+        {
+            try
+            {
+                await decodedReqForRandomClient( authReqWithoutMockBit );
+            }
+            catch ( e )
+            {
+                expect( e.error_code ).toBe( -208 );
+                expect( e.description ).toBe( 'IPC error: IncompatibleMockStatus' );
+                await helper.clearAccount();
+            }
+        } );
+
+        it( 'throws error when decoding share MData request for non-exsistent MData', async () =>
+        {
+            try
+            {
+                await decodedReqForRandomClient( encodedNonExistentShareMDataReq );
+            }
+            catch ( e )
+            {
+                expect( e.error_code ).toBe( -103 );
+                expect( e.description ).toBe( 'Core error: Routing client error -> Requested data not found' );
+                await helper.clearAccount();
+            }
+        } );
+
+        it( 'throws error when decoding 64-bit auth request', async () =>
+        {
+            try
+            {
+                await decodedReqForRandomClient( sixtyFourBitReq );
+            }
+            catch ( e )
+            {
+                expect( e.error_code ).toBe( -1 );
+                expect( e.description ).toBe( 'IPC error: EncodeDecodeError' );
                 await helper.clearAccount();
             }
         } );

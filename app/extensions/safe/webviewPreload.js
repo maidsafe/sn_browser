@@ -124,12 +124,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) =>
         return app;
     };
 
-    win.safe.fromAuthUri = async (
-        appInfo,
-        authUri,
-        netStateCallback,
-        options
-    ) =>
+    win.safe.fromAuthUri = async ( appInfo, authURI, netStateCallback, options ) =>
     {
         // TODO: Throw warnings for these options.
         const optionsToUse = {
@@ -159,9 +154,12 @@ export const setupSafeAPIs = ( passedStore, win = window ) =>
     win.safe.authorise = async authObj =>
     {
         if ( !authObj || typeof authObj !== 'object' ) throw new Error( 'Auth object is required' );
-        return createRemoteCall( 'authenticateFromUriObject', passedStore )(
-            authObj
-        );
+        let authReqObj = authObj;
+        if ( !authReqObj.id )
+        {
+            authReqObj = { ...authObj, id: Math.floor( Math.random() * ( 2 ** 32 ) ) };
+        }
+        return createRemoteCall( 'authenticateFromUriObject', passedStore )( authReqObj );
     };
 };
 
