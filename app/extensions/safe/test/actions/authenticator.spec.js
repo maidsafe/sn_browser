@@ -1,12 +1,11 @@
 import * as authenticator from 'extensions/safe/actions/authenticator_actions';
 
-jest.mock('extensions/safe/ffi/ipc');
-jest.mock('electron-redux', () =>
-{
-    return {
-        createAliasedAction : () => {}
-    }
-});
+jest.mock( 'extensions/safe/ffi/ipc' );
+jest.mock( 'electron-redux', () =>
+    ( {
+        createAliasedAction : () =>
+        {}
+    } ) );
 
 describe( 'authenticator actions', () =>
 {
@@ -65,7 +64,4 @@ describe( 'authenticator actions', () =>
         };
         expect( authenticator.removeAuthRequest( payload ) ).toEqual( expectedAction );
     } );
-
-
-
 } );

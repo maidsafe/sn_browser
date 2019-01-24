@@ -6,13 +6,13 @@ import { I18N_CONFIG, startedRunningMock } from 'appConstants';
 
 
 import manageRemoteCalls from './background.manageRemoteCalls';
-import { onInitBgProcess, getExtensionReduxMiddleware }  from './extensions';
+import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';
 import setupServer from './server';
 import { remote } from 'electron';
 
 window.thisIsTheBackgroundProcess = true;
 
-const initSafeServer = ( store ) =>
+const initSafeServer = store =>
 {
     const server = setupServer();
     onInitBgProcess( server, store );

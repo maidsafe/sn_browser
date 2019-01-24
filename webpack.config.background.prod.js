@@ -11,9 +11,9 @@ export default merge.smart( baseConfig, {
     devtool : 'source-map',
 
     target : 'electron-renderer',
-    mode : 'development',
+    mode   : 'development',
     // mode : 'production',
-    entry : ['babel-polyfill', './app/background.process.development'],
+    entry  : ['babel-polyfill', './app/background.process.development'],
 
     // 'main.js' in root
     output : {
@@ -35,7 +35,7 @@ export default merge.smart( baseConfig, {
      * development checks
      */
         new webpack.DefinePlugin( {
-            'process.env.NODE_ENV'    : JSON.stringify( process.env.NODE_ENV || 'development' )
+            'process.env.NODE_ENV' : JSON.stringify( process.env.NODE_ENV || 'development' )
         } ),
     ],
 

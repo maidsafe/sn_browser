@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
-import { inRendererProcess, isRunningUnpacked,isRunningSpectronTestProcess } from 'appConstants';
+import { inRendererProcess, isRunningUnpacked, isRunningSpectronTestProcess } from 'appConstants';
 import { routerMiddleware, push } from 'react-router-redux';
 import promiseMiddleware from 'redux-promise';
 import rootReducer from '../reducers';
@@ -22,7 +22,7 @@ const translationsObject = {
 
 let history;
 
-if( inRendererProcess )
+if ( inRendererProcess )
 {
     history = createHashHistory();
 }
@@ -36,7 +36,7 @@ const configureStore = ( initialState = initialStateFromMain, middleware = [], i
     const enhancers = [];
 
     // Router Middleware
-    if( history )
+    if ( history )
     {
         const router = routerMiddleware( history );
         middleware.push( router );

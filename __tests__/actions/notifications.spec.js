@@ -34,5 +34,4 @@ describe( 'notification actions', () =>
         };
         expect( notifications.clearNotification( ) ).toEqual( expectedAction );
     } );
-
 } );

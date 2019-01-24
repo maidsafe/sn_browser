@@ -9,11 +9,11 @@ import baseConfig from './webpack.config.base';
 
 export default merge.smart( baseConfig, {
     devtool : 'source-map',
-    mode : 'production',
+    mode    : 'production',
 
     target : 'electron-renderer',
 
-    entry : [ './app/browserPreload.development'],
+    entry : ['./app/browserPreload.development'],
 
     output : {
         path     : __dirname,

@@ -14,7 +14,8 @@ describe( 'SAFE WEB fetch reducer', () =>
 
     describe( 'SET_WEB_FETCH_STATUS', () =>
     {
-        it( 'should handle fetching status', () => {
+        it( 'should handle fetching status', () =>
+        {
 	   const payload = { fetching: true };
 	   expect(
                 webFetch( initialState.webFetch, {
@@ -27,6 +28,6 @@ describe( 'SAFE WEB fetch reducer', () =>
                 error    : null,
                 options  : ''
 	   } );
-	} );
+        } );
     } );
 } );

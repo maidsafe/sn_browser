@@ -116,15 +116,15 @@ describe( 'SAFE network webFetch operation', async () =>
             await safeApp.auth.loginForTest();
 
             expect.assertions( 4 );
-            const content = `hello world, on ${Math.round( Math.random() * 100000 )}`;
+            const content = `hello world, on ${ Math.round( Math.random() * 100000 ) }`;
             const domain = await createRandomDomain( content, '', '', safeApp );
-            const data = await safeApp.webFetch( `safe://${domain}` );
+            const data = await safeApp.webFetch( `safe://${ domain }` );
 
             expect( data.body.toString() ).toBe( content );
 
             const { client } = app;
             const tabIndex = await newTab( app );
-            await navigateTo( app, `safe://${domain}` );
+            await navigateTo( app, `safe://${ domain }` );
             await delay( 3500 );
 
             await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
@@ -178,7 +178,7 @@ describe( 'SAFE network webFetch operation', async () =>
         await delay( 4500 );
         await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
 
-        console.log('I DID A CLICCKKKKK', BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE)
+        console.log( 'I DID A CLICCKKKKK', BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
         await delay( 4500 );
         await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
         const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
@@ -191,20 +191,20 @@ describe( 'SAFE network webFetch operation', async () =>
     {
         it( 'shows error in UI if URL resource does not exist', async () =>
         {
-            expect.assertions(1);
+            expect.assertions( 1 );
             const { client } = app;
             await delay( 2500 );
 
             const tabIndex = await newTab( app );
-            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+            await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
             await navigateTo( app, 'example.com' );
 
-            await client.windowByIndex( tabIndex   );
+            await client.windowByIndex( tabIndex );
             await delay( 5500 );
 
             const text = await client.getText( 'body' );
-            expect( text ).toBe( 'No content found at requested address.');
+            expect( text ).toBe( 'No content found at requested address.' );
         } );
     }
 

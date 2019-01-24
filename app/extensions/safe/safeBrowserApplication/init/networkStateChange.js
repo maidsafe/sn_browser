@@ -15,7 +15,7 @@ import { addNotification, clearNotification } from 'actions/notification_actions
 import { getSafeBrowserAppObject } from 'extensions/safe/safeBrowserApplication';
 
 
-const onNetworkStateChange = ( store, mockAttemptReconnect ) => ( state ) =>
+const onNetworkStateChange = ( store, mockAttemptReconnect ) => state =>
 {
     const safeBrowserAppObject = getSafeBrowserAppObject();
 
@@ -30,7 +30,7 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => ( state ) =>
         {
             store.dispatch( addNotification(
                 {
-                    text      : `Network state: ${state}. Reconnecting...`,
+                    text      : `Network state: ${ state }. Reconnecting...`,
                     type      : 'error',
                     onDismiss : clearNotification
                 }

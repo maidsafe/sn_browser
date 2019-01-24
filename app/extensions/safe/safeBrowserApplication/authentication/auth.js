@@ -5,7 +5,7 @@ import {
 } from 'appConstants';
 import { addNotification, clearNotification } from 'actions/notification_actions';
 
-const tryConnect = async ( res ) =>
+const tryConnect = async res =>
 {
     let safeBrowserAppObject;
 

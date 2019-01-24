@@ -16,13 +16,13 @@ describe( 'TabBar', () =>
     beforeEach( () =>
     {
         props = {
-            addTab : jest.fn(),
-            closeTab : jest.fn(),
+            addTab           : jest.fn(),
+            closeTab         : jest.fn(),
             selectAddressBar : jest.fn(),
-            setActiveTab : jest.fn()
+            setActiveTab     : jest.fn()
         };
 
-        wrapper = mount( <TabBar { ...props } setActiveTab={ jest.fn()} /> );
+        wrapper = mount( <TabBar { ...props } setActiveTab={ jest.fn() } /> );
         instance = wrapper.instance();
     } );
 
@@ -44,8 +44,8 @@ describe( 'TabBar', () =>
 
         it( 'should have exactly 1 tab', () =>
         {
-            expect( wrapper.find( `.${CLASSES.ACTIVE_TAB}` ).length ).toBe( 1 );
-            expect( wrapper.find( `.${CLASSES.TAB}` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${ CLASSES.ACTIVE_TAB }` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${ CLASSES.TAB }` ).length ).toBe( 1 );
         } );
 
         it( 'should have exactly 1 favicon', () =>

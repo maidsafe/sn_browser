@@ -55,7 +55,7 @@ describe.only( 'SAFE manageWebIdUpdates', () =>
     {
         expect.assertions( 1 );
         const theData = 'webId!!!';
-        win.webIdEventEmitter.on( 'update', ( data ) =>
+        win.webIdEventEmitter.on( 'update', data =>
         {
             expect( data ).toBe( theData );
         } );

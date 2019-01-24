@@ -17,7 +17,7 @@ export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
 {
     theStore = store;
 
-    logger.verbose('Handling remote call in extension', theCall)
+    logger.verbose( 'Handling remote call in extension', theCall );
     if ( theCall && theCall.isListener )
     {
         // register listener with auth
@@ -32,36 +32,35 @@ export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
             }
 
             store.dispatch( remoteCallActions.updateRemoteCall( { ...theCall, done: true, response: args } ) );
-
         } );
     }
-}
+};
 
 
-export const remoteCallApis =  {
+export const remoteCallApis = {
     ...theAuthApi,
-    createAccount : async( secret, password, invitation ) =>
+    createAccount : async ( secret, password, invitation ) =>
     {
-        logger.verbose('Handling create account call from webview.')
+        logger.verbose( 'Handling create account call from webview.' );
         await theAuthApi.createAccount( secret, password, invitation );
-        theStore.dispatch( safeBrowserAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
-        theStore.dispatch( safeBrowserAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
+        theStore.dispatch( safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
+        theStore.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
     },
-    login : async( secret, password ) =>
+    login : async ( secret, password ) =>
     {
-        logger.verbose('Handling login call from webview.')
+        logger.verbose( 'Handling login call from webview.' );
         await theAuthApi.login( secret, password );
-        theStore.dispatch( safeBrowserAppActions.setNetworkStatus(SAFE.NETWORK_STATE.LOGGED_IN) );
-        theStore.dispatch( safeBrowserAppActions.setAppStatus(SAFE.APP_STATUS.TO_AUTH) );
+        theStore.dispatch( safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
+        theStore.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
     },
-    logout : async( secret, password ) =>
+    logout : async ( secret, password ) =>
     {
-        logger.verbose('Handling logout call from webview.')
+        logger.verbose( 'Handling logout call from webview.' );
         await theAuthApi.logout( );
 
         clearAppObj();
         theStore.dispatch( uiActions.resetStore() );
-        theStore.dispatch( safeBrowserAppActions.setNetworkStatus(SAFE.NETWORK_STATE.CONNECTED) );
+        theStore.dispatch( safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED ) );
         theStore.dispatch( setIsAuthorisedState( false ) );
     },
     /**
@@ -69,14 +68,14 @@ export const remoteCallApis =  {
     * with auth respnose.
     * @type {[type]}
     */
-    authenticateFromUriObject : async ( authUriObject ) =>
+    authenticateFromUriObject : async authUriObject =>
     {
-        logger.silly( 'Authenticating a webapp via remote call.');
+        logger.silly( 'Authenticating a webapp via remote call.' );
 
         return new Promise( ( resolve, reject ) =>
         {
             setAuthCallbacks( authUriObject, resolve, reject );
             callIPC.enqueueRequest( authUriObject, CONSTANTS.CLIENT_TYPES.WEB );
-        });
+        } );
     }
-}
+};
