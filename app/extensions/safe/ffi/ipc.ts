@@ -236,7 +236,12 @@ class ReqQueue
             .catch( err =>
             {
                 // FIXME: if error occurs for unregistered client process next
-                self.req.error = err.message;
+                self.req.error = err;
+                if ( allAuthCallBacks[self.req.id] )
+                {
+                    allAuthCallBacks[self.req.id].reject( err );
+                    delete allAuthCallBacks[self.req.id];
+                }
 
                 // TODO/BOOKMARK: leaving off here. share MData req URI is causing error when used to call auth_decode_ipc_msg in authenticator.js
 
@@ -245,7 +250,7 @@ class ReqQueue
                 // TODO: Setup proper rejection from when unauthed.
                 if ( bgStore )
                 {
-                    bgStore.dispatch( receivedAuthResponse( err.message ) );
+                    bgStore.dispatch( receivedAuthResponse( ( err.error_code ? `${ err.error_code }: ${ err.description }` : `${ err.message }` ) ) );
                 }
 
                 if ( ipcEvent )
@@ -294,7 +299,7 @@ const enqueueRequest = ( req, type ) =>
 
     const isUnRegistered = req.isUnRegistered;
     const request = new Request( {
-        id   : req.id,
+        id   : req.id || Math.floor( Math.random() * ( 2 ** 32 ) ),
         uri  : req.uri ? req.uri : req,
         type : type || CONSTANTS.CLIENT_TYPES.DESKTOP,
         isUnRegistered
