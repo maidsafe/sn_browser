@@ -75,15 +75,15 @@ export default function safeBrowserApp( state = initialState, action )
 
             state.webIds.forEach( theId =>
             {
-                if( !theId.isSelected) return;
+                if ( !theId.isSelected ) return;
 
-                const foundIdIndex = payload.findIndex( payloadId => payloadId["@id"] === theId["@id"] );
+                const foundIdIndex = payload.findIndex( payloadId => payloadId['@id'] === theId['@id'] );
                 const foundId = payload[foundIdIndex];
                 foundId.isSelected = true;
-            })
+            } );
             return {
                 ...state,
-                webIds : [ ...ids ],
+                webIds           : [...ids],
                 isFetchingWebIds : false
             };
         }

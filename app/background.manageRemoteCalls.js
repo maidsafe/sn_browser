@@ -10,14 +10,14 @@ const extensionApisToAdd = getRemoteCallApis();
 
 const allApiCalls = {
     ...extensionApisToAdd
-}
+};
 
 /**
  * Handle store changes to remoteCall array, binding listeners, and awaiting call completion before
  * updating the remoteCall.
  * @param  {[type]}  store Redux store
  */
-const manageRemoteCalls = async ( store ) =>
+const manageRemoteCalls = async store =>
 {
     const state = store.getState();
     const remoteCalls = state.remoteCalls;
@@ -27,7 +27,7 @@ const manageRemoteCalls = async ( store ) =>
 
         if ( !remoteCalls.length ) return;
 
-        remoteCalls.forEach( async ( theCall ) =>
+        remoteCalls.forEach( async theCall =>
         {
             if ( !theCall.inProgress && !pendingCallIds[theCall.id] )
             {
@@ -37,13 +37,16 @@ const manageRemoteCalls = async ( store ) =>
 
                 if ( allApiCalls[theCall.name] )
                 {
-                    logger.verbose('Remote Calling: ', theCall.name)
+                    logger.verbose( 'Remote Calling: ', theCall.name );
                     store.dispatch( remoteCallActions.updateRemoteCall( { ...theCall, inProgress: true } ) );
                     const theArgs = theCall.args;
 
                     onRemoteCallInBgProcess( store, allApiCalls, theCall );
 
-                    if ( theCall.isListener ) { return };
+                    if ( theCall.isListener )
+                    {
+                        return;
+                    }
 
                     try
                     {

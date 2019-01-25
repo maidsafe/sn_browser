@@ -37,19 +37,18 @@ const allAuthCallBacks = {};
  */
 export const setAuthCallbacks = ( req, resolve, reject ) =>
 {
-    logger.verbose('IPC.js Setting authCallbacks')
+    logger.verbose( 'IPC.js Setting authCallbacks' );
     allAuthCallBacks[req.id] = {
         resolve, reject
     };
 };
 
-const parseResUrl = ( url ) =>
+const parseResUrl = url =>
 {
     const split = url.split( ':' );
     split[0] = split[0].toLocaleLowerCase().replace( '==', '' );
     return split.join( ':' );
 };
-
 
 
 async function sendAuthDecision( isAllowed, authReqData, reqType )
@@ -62,8 +61,10 @@ async function sendAuthDecision( isAllowed, authReqData, reqType )
     else if ( reqType === REQ_TYPES.CONTAINER )
     {
         onContainerDecision( authReqData, isAllowed );
-    } else {
-      onSharedMDataDecision( authReqData, isAllowed );
+    }
+    else
+    {
+        onSharedMDataDecision( authReqData, isAllowed );
     }
 }
 
@@ -110,14 +111,14 @@ class ReqQueue
 
     add( req )
     {
-        logger.verbose('IPC.js adding req')
+        logger.verbose( 'IPC.js adding req' );
         if ( !( req instanceof Request ) )
         {
-            logger.error('IPC.js not a Request instance, so ignoring')
+            logger.error( 'IPC.js not a Request instance, so ignoring' );
             this.next();
             return;
         }
-        logger.verbose('IPC.js pushing req')
+        logger.verbose( 'IPC.js pushing req' );
         this.q.push( req );
         this.processTheReq();
     }
@@ -144,7 +145,7 @@ class ReqQueue
         this.processing = true;
         this.req = this.q[0];
 
-        authenticator.decodeRequest( this.req.uri ).then( ( res ) =>
+        authenticator.decodeRequest( this.req.uri ).then( res =>
         {
             if ( !res )
             {
@@ -158,22 +159,22 @@ class ReqQueue
             {
                 let reqType = REQ_TYPES.AUTH;
                 let app;
-                if (res.authReq)
+                if ( res.authReq )
                 {
-                  app = res.authReq.app;
+                    app = res.authReq.app;
                 }
-                if (res.contReq)
+                if ( res.contReq )
                 {
-                  reqType = REQ_TYPES.CONTAINER;
-                  app = res.contReq.app;
+                    reqType = REQ_TYPES.CONTAINER;
+                    app = res.contReq.app;
                 }
-                if (res.mDataReq)
+                if ( res.mDataReq )
                 {
-                  reqType = REQ_TYPES.MDATA;
-                  app = res.mDataReq.app;
+                    reqType = REQ_TYPES.MDATA;
+                    app = res.mDataReq.app;
                 }
 
-                if (res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState)
+                if ( res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState )
                 {
                     sendAuthDecision( true, res, reqType );
                 }
@@ -182,7 +183,7 @@ class ReqQueue
                     addAuthNotification( res, app, sendAuthDecision, getSafeBackgroundProcessStore() );
                 }
 
-                //each of the above func trigger self.next()
+                // each of the above func trigger self.next()
                 return;
             }
 
@@ -192,22 +193,21 @@ class ReqQueue
             // }
 
             // WEB && not an auth req (that's handled above)
-            if( this.req.type === CLIENT_TYPES.WEB  )
+            if ( this.req.type === CLIENT_TYPES.WEB )
             {
-                logger.info('IPC.js About to open send remoteCall response for auth req', res)
+                logger.info( 'IPC.js About to open send remoteCall response for auth req', res );
 
                 replyToRemoteCallFromAuth( this.req );
 
                 self.next();
 
                 return;
-
             }
 
             self.openExternal( res );
 
             self.next();
-        } ).catch( ( err ) =>
+        } ).catch( err =>
         {
             // FIXME: if error occurs for unregistered client process next
             self.req.error = err.message;
@@ -241,7 +241,7 @@ class ReqQueue
 const reqQ = new ReqQueue( 'onAuthDecisionRes', 'onAuthResError' );
 const unregisteredReqQ = new ReqQueue( 'onUnAuthDecisionRes', 'onUnAuthResError' );
 
-const registerNetworkListener = ( e ) =>
+const registerNetworkListener = e =>
 {
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, ( err, state ) =>
     {
@@ -257,13 +257,13 @@ const registerNetworkListener = ( e ) =>
 
 const enqueueRequest = ( req, type ) =>
 {
-    if( !req ) throw new Error( 'The req object is missing' );
+    if ( !req ) throw new Error( 'The req object is missing' );
 
     const isUnRegistered = req.isUnRegistered;
     const request = new Request( {
-        id  : req.id,
-        uri : req.uri ? req.uri : req,
-        type: type || CONSTANTS.CLIENT_TYPES.DESKTOP,
+        id   : req.id,
+        uri  : req.uri ? req.uri : req,
+        type : type || CONSTANTS.CLIENT_TYPES.DESKTOP,
         isUnRegistered
     } );
 
@@ -274,12 +274,12 @@ const enqueueRequest = ( req, type ) =>
     }
     else
     {
-        logger.verbose('IPC.js enqueue authQ req...')
+        logger.verbose( 'IPC.js enqueue authQ req...' );
         reqQ.add( request );
     }
 };
 
-const onAuthReq = ( e ) =>
+const onAuthReq = e =>
 {
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.AUTH_REQ, ( err, req ) =>
     {
@@ -287,7 +287,7 @@ const onAuthReq = ( e ) =>
     } );
 };
 
-const onContainerReq = ( e ) =>
+const onContainerReq = e =>
 {
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.CONTAINER_REQ, ( err, req ) =>
     {
@@ -295,7 +295,7 @@ const onContainerReq = ( e ) =>
     } );
 };
 
-const onSharedMDataReq = ( e ) =>
+const onSharedMDataReq = e =>
 {
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.MDATA_REQ, ( err, req ) =>
     {
@@ -318,7 +318,7 @@ const onAuthDecision = ( authData, isAllowed ) =>
 
 
     authenticator.encodeAuthResp( authData, isAllowed )
-        .then( ( res ) =>
+        .then( res =>
         {
             logger.info( 'IPC.js: Successfully encoded auth response. Here is the res:', res );
 
@@ -334,7 +334,7 @@ const onAuthDecision = ( authData, isAllowed ) =>
 
             reqQ.next();
         } )
-        .catch( ( err ) =>
+        .catch( err =>
         {
             reqQ.req.error = err;
             logger.error( 'Auth decision error :: ', err.message );
@@ -362,7 +362,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
     }
 
     authenticator.encodeContainersResp( contData, isAllowed )
-        .then( ( res ) =>
+        .then( res =>
         {
             reqQ.req.res = res;
             if ( allAuthCallBacks[reqQ.req.id] )
@@ -377,7 +377,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
 
             reqQ.next();
         } )
-        .catch( ( err ) =>
+        .catch( err =>
         {
             reqQ.req.error = err;
 
@@ -392,7 +392,7 @@ const onContainerDecision = ( contData, isAllowed ) =>
         } );
 };
 
-export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBacks=allAuthCallBacks) =>
+export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBacks = allAuthCallBacks ) =>
 {
     if ( !data )
     {
@@ -405,7 +405,7 @@ export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBa
     }
 
     authenticator.encodeMDataResp( data, isAllowed )
-        .then( ( res ) =>
+        .then( res =>
         {
             queue.req.res = res;
 
@@ -421,8 +421,9 @@ export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBa
 
             queue.next();
         } )
-        .catch( ( err ) =>
-        {   console.log(err,"this is an error log");
+        .catch( err =>
+        {
+            console.log( err, 'this is an error log' );
             queue.req.error = err;
             logger.error( errConst.SHAREMD_DECISION_RESP.msg( err ) );
 
@@ -434,13 +435,12 @@ export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBa
             }
 
             queue.next();
-
         } );
 };
 
-const onReqError = ( e ) =>
+const onReqError = e =>
 {
-    authenticator.setListener( CONSTANTS.LISTENER_TYPES.REQUEST_ERR, ( err ) =>
+    authenticator.setListener( CONSTANTS.LISTENER_TYPES.REQUEST_ERR, err =>
     {
         reqQ.req.error = err;
         e.sender.send( 'onAuthResError', reqQ.req );
@@ -455,18 +455,18 @@ const skipAuthReq = () =>
 
 const setReAuthoriseState = ( state, store ) =>
 {
-  store.dispatch(authenticatorActions.setReAuthoriseState(state));
+    store.dispatch( authenticatorActions.setReAuthoriseState( state ) );
 };
 
 const setIsAuthorisedState = ( store, isAuthorised ) =>
 {
-  store.dispatch(authenticatorActions.setIsAuthorisedState(isAuthorised));
+    store.dispatch( authenticatorActions.setIsAuthorisedState( isAuthorised ) );
 };
 
 
 export const callIPC = {
     registerSafeNetworkListener : registerNetworkListener,
-    enqueueRequest              : enqueueRequest,
+    enqueueRequest,
     registerOnAuthReq           : onAuthReq,
     registerOnContainerReq      : onContainerReq,
     registerOnSharedMDataReq    : onSharedMDataReq,

@@ -4,9 +4,10 @@ const path = require( 'path' );
 const fs = require( 'fs-extra' );
 const archiver = require( 'archiver' );
 
-const RELEASE_FOLDER_NAME = require('./releaseName');
+const RELEASE_FOLDER_NAME = require( './releaseName' );
 
 const pkg = require( './package.json' );
+
 const env = process.env.NODE_ENV || 'production';
 const isBuildingDev = /^dev/.test( env );
 
@@ -38,11 +39,10 @@ if ( platform === OSX )
 
     PLATFORM_NAME = 'osx';
 
-    if ( isBuildingDev  )
+    if ( isBuildingDev )
     {
-        fs.writeFileSync( path.resolve( PERUSE_RESOURCES_FOLDER, 'startAsMock'), 'unimportantContents' );
+        fs.writeFileSync( path.resolve( PERUSE_RESOURCES_FOLDER, 'startAsMock' ), 'unimportantContents' );
     }
-
 }
 
 if ( platform === LINUX )
@@ -64,7 +64,7 @@ if ( platform === WINDOWS )
 
 if ( isBuildingDev && ( platform === WINDOWS || platform === LINUX ) )
 {
-    fs.writeFileSync( path.resolve( CONTAINING_FOLDER, 'resources', 'startAsMock'), 'unimportantContents' );
+    fs.writeFileSync( path.resolve( CONTAINING_FOLDER, 'resources', 'startAsMock' ), 'unimportantContents' );
 }
 
 
@@ -74,11 +74,11 @@ fs.outputFileSync( path.resolve( CONTAINING_FOLDER, 'version' ), pkg.version );
 // remove licenses
 const removalArray = ['LICENSE.electron.txt', 'LICENSES.chromium.html', 'LICENSE'];
 
-removalArray.forEach( ( file ) =>
+removalArray.forEach( file =>
 {
-    fs.removeSync( `${CONTAINING_FOLDER}/${file}` );
+    fs.removeSync( `${ CONTAINING_FOLDER }/${ file }` );
 } );
 
-console.log( 'Renaming package to:', path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` ) );
+console.log( 'Renaming package to:', path.resolve( targetDir, `${ RELEASE_FOLDER_NAME }` ) );
 // rename release folder
-fs.moveSync( CONTAINING_FOLDER, path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` ), { overwrite: true } );
+fs.moveSync( CONTAINING_FOLDER, path.resolve( targetDir, `${ RELEASE_FOLDER_NAME }` ), { overwrite: true } );

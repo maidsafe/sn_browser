@@ -26,7 +26,7 @@ const encodedContUri = 'safe-auth:bAAAAAAHQQQ2XQAIAAAABWAAAAAAAAAAANZSXILTNMFUWI
 'KICMORSC4AIAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMAQAAAAAAAAAAABAAAAAAI';
 
 
-const decodedReqForRandomClient = ( uri ) => helper.createRandomAccount()
+const decodedReqForRandomClient = uri => helper.createRandomAccount()
     .then( () => client.decodeRequest( uri ) );
 
 
@@ -55,10 +55,10 @@ describe( 'Authenticator functions', () =>
     describe( 'Unregistered client', () =>
     {
         xit( 'gets back encoded response', () => (
-            new Promise( ( resolve ) =>
+            new Promise( resolve =>
             {
                 client.decodeRequest( encodedUnRegisterAuthUri )
-                    .then( ( res ) =>
+                    .then( res =>
                     {
                         should( res ).be.String();
                         should( res.indexOf( 'safe-' ) ).be.not.equal( -1 );
@@ -77,7 +77,6 @@ describe( 'Authenticator functions', () =>
 
     describe( 'create Account', () =>
     {
-
         it( 'should throw an error when account locator is empty', async () =>
         {
             expect.assertions( 3 );
@@ -110,7 +109,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account locator is not a string', async () =>
@@ -128,7 +126,6 @@ describe( 'Authenticator functions', () =>
                 expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) ) );
             }
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account secret is not a string', async () =>
@@ -147,7 +144,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account locator is an empty string', async () =>
@@ -166,7 +162,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account secret is an empty string', async () =>
@@ -185,7 +180,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'sets authenticator handle when account creation is successful', async () =>
@@ -205,11 +199,10 @@ describe( 'Authenticator functions', () =>
             expect( client.registeredClientHandle ).toBeInstanceOf( Buffer );
 
             await helper.clearAccount();
-
         } );
 
         it( 'emits network state as connected when account creation is successful', () => (
-            new Promise( ( resolve ) =>
+            new Promise( resolve =>
             {
                 expect.assertions( 3 );
                 const nwListener = client.setListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE,
@@ -234,7 +227,7 @@ describe( 'Authenticator functions', () =>
     describe( 'Login', () =>
     {
         beforeAll( () => helper.createRandomAccount()
-            .then( ( credential ) =>
+            .then( credential =>
             {
                 randomCredentials = credential;
             } )
@@ -256,7 +249,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account secret is empty', async () =>
@@ -275,7 +267,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account locator is not a string', async () =>
@@ -294,7 +285,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account secret is not a string', async () =>
@@ -313,7 +303,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account locator is an empty string', async () =>
@@ -332,7 +321,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
         it( 'should throw an error when account secret is an empty string', async () =>
@@ -351,7 +339,6 @@ describe( 'Authenticator functions', () =>
             }
 
             await helper.clearAccount();
-
         } );
 
 
@@ -368,12 +355,11 @@ describe( 'Authenticator functions', () =>
             expect( client.registeredClientHandle ).toBeInstanceOf( Buffer );
 
             await helper.clearAccount();
-
         } );
 
 
         it( 'emits network state as connected when account login is successful', () => (
-            new Promise( ( resolve ) =>
+            new Promise( resolve =>
             {
                 expect.assertions( 3 );
                 const nwListener = client.setListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE,
@@ -429,7 +415,7 @@ describe( 'Authenticator functions', () =>
 
             try
             {
-                await client.decodeRequest( `safe-auth:${crypto.randomBytes( 32 ).toString( 'base64' )}` );
+                await client.decodeRequest( `safe-auth:${ crypto.randomBytes( 32 ).toString( 'base64' ) }` );
             }
             catch ( e )
             {
@@ -861,7 +847,7 @@ describe( 'Authenticator functions', () =>
             expect( apps ).toHaveLength( 0 );
 
             await helper.clearAccount();
-        });
+        } );
     } );
 
     describe( 'After revoking', () =>
@@ -878,11 +864,10 @@ describe( 'Authenticator functions', () =>
             const apps = await client.getRegisteredApps();
 
             expect( apps ).toBeDefined();
-            expect( apps ).toHaveLength(1);
+            expect( apps ).toHaveLength( 1 );
 
-            helper.clearAccount() ;
-
-        });
+            helper.clearAccount();
+        } );
     } );
 
 
@@ -890,37 +875,35 @@ describe( 'Authenticator functions', () =>
     {
         it( 'doesn\'t throw error', async () =>
         {
-
-            let req = await decodedReqForRandomClient( encodedAuthUri );
+            const req = await decodedReqForRandomClient( encodedAuthUri );
             await client.encodeAuthResp( req, true );
 
-            let ourReq = await client.decodeRequest( encodedAuthUri );
-            let response = await client.encodeAuthResp( ourReq, true );
-            expect( response ).toBeType('string');
+            const ourReq = await client.decodeRequest( encodedAuthUri );
+            const response = await client.encodeAuthResp( ourReq, true );
+            expect( response ).toBeType( 'string' );
 
-            helper.clearAccount()
-
+            helper.clearAccount();
         } );
     } );
 
     describe( 'account information', () =>
     {
-        it( 'are retrievable', async() =>
+        it( 'are retrievable', async () =>
         {
             const req = await decodedReqForRandomClient( encodedAuthUri );
             await client.encodeAuthResp( req, true );
 
-            const account = await client.getAccountInfo()
+            const account = await client.getAccountInfo();
 
-            expect( account ).toBeType('object');
-            expect( account ).toHaveProperty('done');
-            expect( account ).toHaveProperty('available');
+            expect( account ).toBeType( 'object' );
+            expect( account ).toHaveProperty( 'done' );
+            expect( account ).toHaveProperty( 'available' );
             expect( account.done ).toBeDefined();
-            expect( account.done ).toBeType('number');
-            expect( account.available ).toBeType('number');
+            expect( account.done ).toBeType( 'number' );
+            expect( account.available ).toBeType( 'number' );
             expect( account.available ).toBeDefined();
 
-            await helper.clearAccount() ;
-        });
+            await helper.clearAccount();
+        } );
     } );
 } );

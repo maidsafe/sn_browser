@@ -42,7 +42,7 @@ const _decodeReqPool = Symbol( 'decodeReqPool' );
 * characters or symbols which are not valid for a URL like '=' sign,
 * and making it lower case.
 */
-const genAppUri = ( str ) =>
+const genAppUri = str =>
 {
     const urlSafeBase64 = ( new Buffer( str ) )
         .toString( 'base64' )
@@ -50,7 +50,7 @@ const genAppUri = ( str ) =>
         .replace( /\//g, '_' ) // Convert '/' to '_'
         .replace( /=+$/, '' ) // Remove ending '='
         .toLowerCase();
-    return `safe-${urlSafeBase64}`;
+    return `safe-${ urlSafeBase64 }`;
 };
 
 class Authenticator extends SafeLib
@@ -300,7 +300,6 @@ class Authenticator extends SafeLib
                     [types.voidPointer, types.FfiResultPointer, types.ClientHandlePointer],
                     ( userData, resultPtr, clientHandle ) =>
                     {
-
                         const result = resultPtr.deref();
                         if ( result.error_code !== 0 && clientHandle.length === 0 )
                         {
@@ -333,7 +332,7 @@ class Authenticator extends SafeLib
             }
             catch ( e )
             {
-                logger.info('Login error', e )
+                logger.info( 'Login error', e );
                 this[_isAuthorisedListener].broadcast( e );
                 reject( e );
             }
@@ -342,12 +341,13 @@ class Authenticator extends SafeLib
 
     logout()
     {
-        return new Promise( ( resolve, reject) =>
+        return new Promise( ( resolve, reject ) =>
         {
-            try{
+            try
+            {
                 this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
 
-                if( !isRunningNodeEnvTest  )
+                if ( !isRunningNodeEnvTest )
                 {
                     // TODO: Why does this crash testing?
                     this.safeLib.auth_free( this.registeredClientHandle );
@@ -356,18 +356,18 @@ class Authenticator extends SafeLib
                 this.registeredClientHandle = null;
                 this[_isAuthorisedListener].broadcast( null, false );
                 resolve();
-
-            }catch(e)
+            }
+            catch ( e )
             {
                 this[_isAuthorisedListener].broadcast( e );
-                reject(e)
+                reject( e );
             }
-        })
+        } );
     }
 
     decodeRequest( uri )
     {
-        logger.verbose( 'Authenticator.js decoding request', uri);
+        logger.verbose( 'Authenticator.js decoding request', uri );
 
         return new Promise( ( resolve, reject ) =>
         {
@@ -397,7 +397,7 @@ class Authenticator extends SafeLib
                     };
                     logger.verbose( 'Authenticator.js decoded authReq result: ', result );
                     return this._isAlreadyAuthorised( authReq )
-                        .then( ( resolved ) =>
+                        .then( resolved =>
                         {
                             if ( resolved.isAuthorised )
                             {
@@ -428,9 +428,8 @@ class Authenticator extends SafeLib
                     logger.verbose( 'Authenticator.js decoded contReq result: ', result );
 
                     return this._isAlreadyAuthorisedContainer( contReq )
-                        .then( ( isAuthorised ) =>
+                        .then( isAuthorised =>
                         {
-
                             if ( isAuthorised )
                             {
                                 result.isAuthorised = true;
@@ -461,14 +460,13 @@ class Authenticator extends SafeLib
                         tempArr[i] = i;
                     }
 
-                    await Promise.all( tempArr.map( ( i ) =>
+                    await Promise.all( tempArr.map( i =>
                     {
                         const mdata = mDataReq.mdata[i];
                         return this._appsAccessingMData( mdata.name, mdata.type_tag )
-                            .then( ( res ) =>
+                            .then( res =>
                             {
                                 appAccess[i] = res;
-                                return;
                             } );
                     } ) );
                     result.appAccess = appAccess;
@@ -486,9 +484,9 @@ class Authenticator extends SafeLib
                         return;
                     }
 
-                    logger.verbose('Error in auth callback.', result)
+                    logger.verbose( 'Error in auth callback.', result );
                     this[_reqErrListener].broadcast( JSON.stringify( result ) );
-                    reject( result )
+                    reject( result );
                 } ) );
             try
             {
@@ -541,7 +539,6 @@ class Authenticator extends SafeLib
                     [types.voidPointer, types.FfiResultPointer, types.CString],
                     ( userData, resultPtr, res ) =>
                     {
-
                         const result = resultPtr.deref();
                         if ( result.error_code !== 0 )
                         {
@@ -555,7 +552,7 @@ class Authenticator extends SafeLib
                             this._updateAppList();
                         }
                         const appUri = genAppUri( req.authReq.app.id );
-                        resolve( `${appUri}:${res}` );
+                        resolve( `${ appUri }:${ res }` );
                     } ) );
                 this.safeLib.encode_auth_resp(
                     this.registeredClientHandle,
@@ -612,7 +609,7 @@ class Authenticator extends SafeLib
                             this._updateAppList();
                         }
                         const appUri = genAppUri( req.contReq.app.id );
-                        resolve( `${appUri}:${res}` );
+                        resolve( `${ appUri }:${ res }` );
                     } ) );
 
                 this.safeLib.encode_containers_resp(
@@ -671,7 +668,7 @@ class Authenticator extends SafeLib
                             this._updateAppList();
                         }
                         const appUri = genAppUri( req.mDataReq.app.id );
-                        resolve( `${appUri}:${res}` );
+                        resolve( `${ appUri }:${ res }` );
                     } ) );
 
                 this.safeLib.encode_share_mdata_resp(
@@ -883,7 +880,7 @@ class Authenticator extends SafeLib
     _updateAppList()
     {
         this.getRegisteredApps()
-            .then( ( apps ) =>
+            .then( apps =>
             {
                 if ( ( this[_appListUpdateListener] && this[_appListUpdateListener].len() !== 0 ) )
                 {
@@ -938,7 +935,7 @@ class Authenticator extends SafeLib
                             return reject( JSON.stringify( result ) );
                         }
                         const appUri = genAppUri( appId );
-                        resolve( `${appUri}:${res}` );
+                        resolve( `${ appUri }:${ res }` );
                     } ) );
                 this.safeLib.encode_unregistered_resp(
                     reqId,
@@ -962,12 +959,12 @@ class Authenticator extends SafeLib
             {
                 if ( !reqId || appIdLen <= 0 )
                 {
-                    return reject( new Error( errConst,INVALID_RESPONSE.msg ) );
+                    return reject( new Error( errConst, INVALID_RESPONSE.msg ) );
                 }
 
                 const appId = ref.reinterpret( appIdPtr, appIdLen );
                 return this._encodeUnRegisteredResp( reqId, appId )
-                    .then( ( res ) => resolve( res ) );
+                    .then( res => resolve( res ) );
             } ) );
     }
 
@@ -978,10 +975,10 @@ class Authenticator extends SafeLib
         {
             try
             {
-                this.getRegisteredApps().then( ( authorisedApps ) =>
+                this.getRegisteredApps().then( authorisedApps =>
                 {
                     let previouslyAuthorisedContainers;
-                    const isAuthorised = authorisedApps.some( ( app ) =>
+                    const isAuthorised = authorisedApps.some( app =>
                     {
                         const appIsPresent = lodash.isEqual( app.app_info, req.app );
                         if ( appIsPresent && app.containers )
@@ -1011,9 +1008,9 @@ class Authenticator extends SafeLib
         {
             try
             {
-                this.getRegisteredApps().then( ( authorisedApps ) =>
+                this.getRegisteredApps().then( authorisedApps =>
                 {
-                    app = authorisedApps.filter( ( apps ) => lodash.isEqual( apps.app_info, req.app ) );
+                    app = authorisedApps.filter( apps => lodash.isEqual( apps.app_info, req.app ) );
                     // Return false if no apps found match with requested app
                     if ( app.length === 0 )
                     {

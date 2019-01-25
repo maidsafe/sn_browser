@@ -1,6 +1,7 @@
 const path = require( 'path' );
 
 const pkg = require( './package.json' );
+
 const env = process.env.NODE_ENV || 'production';
 const isBuildingDev = /^(dev|test)/.test( env );
 
@@ -30,11 +31,11 @@ if ( platform === WINDOWS )
 }
 
 let devModifier = '';
-if( isBuildingDev )
+if ( isBuildingDev )
 {
-    devModifier = '-dev'
+    devModifier = '-dev';
 }
 
-const RELEASE_FOLDER_NAME = `${pkgName}-v${pkg.version}-${PLATFORM_NAME}-x64${devModifier}`;
+const RELEASE_FOLDER_NAME = `${ pkgName }-v${ pkg.version }-${ PLATFORM_NAME }-x64${ devModifier }`;
 
 module.exports = RELEASE_FOLDER_NAME;

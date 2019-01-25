@@ -22,6 +22,12 @@ export const isRunningPackaged = !isRunningUnpacked;
 export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
 
 
+// override for spectron dev mode
+if ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
+{
+    shouldRunMockNetwork = true;
+}
+
 if ( allPassedArgs.includes( '--mock' ) )
 {
     shouldRunMockNetwork = true;
@@ -30,12 +36,6 @@ if ( allPassedArgs.includes( '--mock' ) )
 if ( allPassedArgs.includes( '--live' ) )
 {
     shouldRunMockNetwork = false;
-}
-
-// override for spectron dev mode
-if ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
-{
-    shouldRunMockNetwork = true;
 }
 
 if ( allPassedArgs.includes( '--debug' ) )
@@ -103,7 +103,7 @@ const safeNodeAppPath = ( ) =>
         return '';
     }
 
-    return isRunningUnpacked ? [remote.process.execPath, `${remote.getGlobal( 'appDir' )}/main.js`] : [remote.app.getPath( 'exe' )];
+    return isRunningUnpacked ? [remote.process.execPath, `${ remote.getGlobal( 'appDir' ) }/main.js`] : [remote.app.getPath( 'exe' )];
 };
 
 let safeNodeAppPathModifier = '';
@@ -146,20 +146,20 @@ const getRandomPort = async () =>
 };
 
 export const CONFIG = {
-    PORT                 :  remote ? remote.getGlobal('port') : getRandomPort(),
-    SAFE_PARTITION       : 'persist:safe-tab',
-    SAFE_NODE_LIB_PATH   : safeNodeLibPath(),
-    APP_HTML_PATH        : path.resolve( __dirname, './app.html' ),
-    DATE_FORMAT          : 'h:MM-mmm dd',
-    NET_STATUS_CONNECTED : 'Connected',
-    STATE_KEY            : 'safeBrowserState',
-    BROWSER_TYPE_TAG     : 8467,
-    PRELOADED_MOCK_VAULT_PATH: path.join(__dirname, '..', 'PreloadDevVault')
+    PORT                      : remote ? remote.getGlobal( 'port' ) : getRandomPort(),
+    SAFE_PARTITION            : 'persist:safe-tab',
+    SAFE_NODE_LIB_PATH        : safeNodeLibPath(),
+    APP_HTML_PATH             : path.resolve( __dirname, './app.html' ),
+    DATE_FORMAT               : 'h:MM-mmm dd',
+    NET_STATUS_CONNECTED      : 'Connected',
+    STATE_KEY                 : 'safeBrowserState',
+    BROWSER_TYPE_TAG          : 8467,
+    PRELOADED_MOCK_VAULT_PATH : path.join( __dirname, '..', 'PreloadDevVault' )
 };
 
 if ( inMainProcess )
 {
-    global.preloadFile = `file://${__dirname}/webPreload.js`;
+    global.preloadFile = `file://${ __dirname }/webPreload.js`;
     global.appDir = __dirname;
     global.isCI = isCI;
     global.startedRunningMock = startedRunningMock;
@@ -234,14 +234,15 @@ export const CLASSES = {
     SETTINGS_MENU__HISTORY       : 'js-settingsMenu_history',
     SETTINGS_MENU__TOGGLE        : 'js-settingsMenu_toggle',
     SETTINGS_MENU__TOGGLE_BUTTON : 'js-settingsMenu_toggleButton',
-    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText'
+    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText',
+    MOCK_TAG                     : 'js-addressBar_mockTag'
 };
 
 const getDomClasses = () =>
 {
     const domClasses = {};
 
-    Object.keys( CLASSES ).forEach( theClass => domClasses[theClass] = `.${CLASSES[theClass]}` );
+    Object.keys( CLASSES ).forEach( theClass => domClasses[theClass] = `.${ CLASSES[theClass] }` );
 
     return domClasses;
 };

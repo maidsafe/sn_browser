@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import { triggerOnWebviewPreload } from 'extensions';
 
 // var { setupPreloadedSafeAuthApis } = require( './setupPreloadAPIs');
-var configureStore = require( './store/configureStore').configureStore;
+const configureStore = require( './store/configureStore' ).configureStore;
 
 // TODO This handling needs to be imported via extension apis more seemlessly
 const store = configureStore( );
@@ -14,7 +14,7 @@ window.eval = global.eval = () =>
     throw new Error( 'Sorry, peruse does not support window.eval().' );
 };
 
-let pendingCalls = {};
+const pendingCalls = {};
 
 store.subscribe( async () =>
 {
@@ -39,12 +39,12 @@ store.subscribe( async () =>
         {
             if ( theCall.name === 'login' )
             {
-                logger.info('store subscribe calls: ', calls);
-                logger.info('pendingCalls: ', pendingCalls);
-                logger.info('call Promises: ', callPromises);
+                logger.info( 'store subscribe calls: ', calls );
+                logger.info( 'pendingCalls: ', pendingCalls );
+                logger.info( 'call Promises: ', callPromises );
 	    // QUESTION: callPromises.resolve logs `null` \
 	    // Why is the condition on line  115 passing?
-                logger.info('callpromises.resolve: ', callPromises.resolve);
+                logger.info( 'callpromises.resolve: ', callPromises.resolve );
             }
             pendingCalls[theCall.id] = theCall;
 

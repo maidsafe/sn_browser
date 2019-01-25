@@ -15,22 +15,23 @@ export const createRandomAccount = async () =>
 {
     const randomCredentials = getRandomCredentials();
 
-    try{
-
+    try
+    {
         await client.createAccount(
             randomCredentials.locator,
             randomCredentials.secret,
             randomCredentials.invite
-        )
+        );
         return randomCredentials;
     }
-    catch(e )
+    catch ( e )
     {
-        console.log('helper/createRandom error:', e)
+        console.log( 'helper/createRandom error:', e );
     }
 };
 
-export const clearAccount = async () => {
-    let out = await client.logout();
+export const clearAccount = async () =>
+{
+    const out = await client.logout();
     return out;
-}
+};

@@ -5,12 +5,12 @@ import app from './app';
 import auth from './auth';
 import networkState from './network_state';
 
-const rootReducer = combineReducers({
-  app,
-  auth,
-  networkState,
-  routing,
-  i18n: i18nReducer
-});
+const rootReducer = combineReducers( {
+    app,
+    auth,
+    networkState,
+    routing,
+    i18n : i18nReducer
+} );
 
 export default rootReducer;

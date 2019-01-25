@@ -15,12 +15,12 @@ export default merge.smart( baseConfig, {
     devtool : 'source-map',
 
     target : 'electron-renderer',
-    mode: 'production',
+    mode   : 'production',
 
     entry : ['./app/webPreload.development'],
 
     output : {
-        path       : __dirname,
+        path     : __dirname,
         filename : './app/webPreload.js'
     },
 

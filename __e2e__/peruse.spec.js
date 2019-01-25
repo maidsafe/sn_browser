@@ -7,7 +7,7 @@ import {
     newTab,
     setClientToMainBrowserWindow
 } from './lib/browser-driver';
-import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT , DEFAULT_TIMEOUT_INTERVAL} from './lib/constants';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from './lib/constants';
 import {
     setupSpectronApp
     , isCI
@@ -40,20 +40,20 @@ describe( 'main window', () =>
     {
         app = setupSpectronApp();
 
-        await beforeAllTests(app)
+        await beforeAllTests( app );
     } );
 
     afterEach( async () =>
     {
-        await afterAllTests(app);
+        await afterAllTests( app );
     } );
 
 
     it( 'window loaded', async () =>
     {
-        const loaded = await windowLoaded( app )
-        expect( loaded ).toBeTruthy()
-    });
+        const loaded = await windowLoaded( app );
+        expect( loaded ).toBeTruthy();
+    } );
 
 
     // it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
@@ -73,18 +73,18 @@ describe( 'main window', () =>
 
     it( 'can open a new tab + set address', async () =>
     {
-        expect.assertions(2);
+        expect.assertions( 2 );
         const { client } = app;
         await delay( 2500 );
 
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         await delay( 4500 );
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
-        await client.windowByIndex( tabIndex   );
+        await client.windowByIndex( tabIndex );
         await delay( 5500 );
 
         const clientUrl = await client.getUrl();
@@ -112,26 +112,26 @@ describe( 'main window', () =>
         await client.windowByIndex( tabIndex );
         await delay( 2500 );
         const text = await client.getText( 'body' );
-        expect( text ).toBe( 'Invalid URL: http://:invalid-url');
+        expect( text ).toBe( 'Invalid URL: http://:invalid-url' );
     } );
 
 
     it( 'shows error in UI if localhost resource does not exist', async () =>
     {
-        expect.assertions(1);
+        expect.assertions( 1 );
         const { client } = app;
         await delay( 2500 );
 
         const tabIndex = await newTab( app );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         await navigateTo( app, 'localhost:9001' );
 
-        await client.windowByIndex( tabIndex   );
+        await client.windowByIndex( tabIndex );
         await delay( 5500 );
 
         const text = await client.getText( 'body' );
-        expect( text ).toBe( 'Page Load Failed');
+        expect( text ).toBe( 'Page Load Failed' );
     } );
 
     it( 'can go backwards', async () =>
@@ -203,7 +203,7 @@ describe( 'main window', () =>
         await navigateTo( app, 'bbc.com' );
         await client.waitForExist( BROWSER_UI.CLOSE_TAB, WAIT_FOR_EXIST_TIMEOUT );
 
-        await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
+        await client.click( `${ BROWSER_UI.ACTIVE_TAB } ${ BROWSER_UI.CLOSE_TAB }` );
         await delay( 4500 );
 
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
@@ -213,13 +213,13 @@ describe( 'main window', () =>
 
     it( 'can go to and add bookmarks', async () =>
     {
-        expect.assertions(2)
+        expect.assertions( 2 );
         const { client } = app;
         await delay( 4500 );
 
         await newTab( app );
         await navigateTo( app, 'shouldappearinbookmarks.com' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
         await bookmarkActiveTabPage( app );
 
         await delay( 2500 );
@@ -232,7 +232,7 @@ describe( 'main window', () =>
         await setClientToMainBrowserWindow( app );
 
         await delay( 6500 );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         const header = await client.getText( 'h1' );
 
@@ -242,7 +242,6 @@ describe( 'main window', () =>
 
         expect( header ).toBe( 'Bookmarks' );
         expect( bookmarks ).toMatch( 'shouldappearinbookmarks' );
-
     } );
 
     it( 'can check if settings menu exists', async () =>
@@ -274,7 +273,7 @@ describe( 'main window', () =>
         expect( settingsMenuIsShown ).toBeTruthy();
     } );
 
-    it('checks if settings menu is hidden after clicking elsewhere', async () => 
+    it( 'checks if settings menu is hidden after clicking elsewhere', async () =>
     {
         expect.assertions( 1 );
         const { client } = app;
@@ -286,10 +285,9 @@ describe( 'main window', () =>
         await delay( 2500 );
 
         expect( settingsMenuIsShown ).toBeFalsy();
+    } );
 
-    } );    
-
-    it('can open settings menu and checks if Bookmarks,History,Toggle exist', async () => 
+    it( 'can open settings menu and checks if Bookmarks,History,Toggle exist', async () =>
     {
         expect.assertions( 4 );
         const { client } = app;
@@ -310,7 +308,7 @@ describe( 'main window', () =>
         expect( toggle ).toBeTruthy();
     } );
 
-    it('can open settings menu and navigate to bookmarks', async () =>
+    it( 'can open settings menu and navigate to bookmarks', async () =>
     {
         expect.assertions( 1 );
         const { client } = app;
@@ -325,7 +323,7 @@ describe( 'main window', () =>
         expect( header ).toBe( 'Bookmarks' );
     } );
 
-    it('can open settings menu and navigate to history', async () =>
+    it( 'can open settings menu and navigate to history', async () =>
     {
         expect.assertions( 1 );
         const { client } = app;
@@ -360,5 +358,4 @@ describe( 'main window', () =>
         // rest - to test on ci...
         await client.keys( ['\ue008', '\ue009', 'w'] ); // shift + ctrl + w
     } );
-
 } );

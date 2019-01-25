@@ -6,10 +6,10 @@ import initialState from 'reducers/initialAppState';
 describe( 'notification reducer', () =>
 {
     let aCall;
-    beforeEach( ()=>
+    beforeEach( () =>
     {
         aCall = { id: 'A', args: [] };
-    });
+    } );
 
     it( 'should return the initial state', () =>
     {
@@ -25,42 +25,41 @@ describe( 'notification reducer', () =>
                     type    : TYPES.ADD_REMOTE_CALL,
                     payload : aCall
                 } )
-            ).toEqual( [ aCall ] );
+            ).toEqual( [aCall] );
         } );
-    })
+    } );
 
     describe( 'REMOVE_REMOTE_CALL', () =>
     {
         it( 'should handle removing a remote call', () =>
         {
             expect(
-                remoteCalls( [ {id: 'unimportant'}, aCall], {
+                remoteCalls( [{ id: 'unimportant' }, aCall], {
                     type    : TYPES.REMOVE_REMOTE_CALL,
-                    payload:  aCall
+                    payload : aCall
                 } )
-            ).toEqual( [ {id: 'unimportant'} ] );
+            ).toEqual( [{ id: 'unimportant' }] );
         } );
-    })
+    } );
 
     describe( 'UPDATE_REMOTE_CALL', () =>
     {
         it( 'should handle updating a call', () =>
         {
             expect(
-                remoteCalls( [aCall ], {
+                remoteCalls( [aCall], {
                     type    : TYPES.UPDATE_REMOTE_CALL,
-                    payload: {
-                        id: 'A',
-                        data: ['hi']
+                    payload : {
+                        id   : 'A',
+                        data : ['hi']
                     }
                 } )
             ).toEqual( [
                 {
                     ...aCall,
-                    data: ['hi']
+                    data : ['hi']
                 }
             ] );
         } );
-    })
-
-})
+    } );
+} );

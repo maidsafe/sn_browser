@@ -32,7 +32,7 @@ let isSaving = false;
  * based upon the application stateToSave
  * @param  {Object} state Application state (from redux)
  */
-export const manageReadStateActions = async ( store ) =>
+export const manageReadStateActions = async store =>
 {
     // Hack as store is actually unreliable.
     // TODO: Rework this to use aliased funcs.
@@ -101,7 +101,7 @@ export const manageReadStateActions = async ( store ) =>
  * based upon the application stateToSave
  * @param  {Object} state Application state (from redux)
  */
-export const manageSaveStateActions = async ( store ) =>
+export const manageSaveStateActions = async store =>
 {
     // Hack as store is actually unreliable.
     // TODO: Rework this to use aliased funcs.
@@ -287,7 +287,7 @@ export const saveConfigToSafe = ( store, quit ) =>
 
 function delay( t )
 {
-    return new Promise( ( ( resolve ) =>
+    return new Promise( ( resolve =>
     {
         setTimeout( resolve, t );
     } ) );
@@ -297,7 +297,7 @@ function delay( t )
  * Read the configuration from the netowrk
  * @param  {[type]} app SafeApp reference, with handle and authUri
  */
-export const readConfigFromSafe = ( store ) =>
+export const readConfigFromSafe = store =>
     new Promise( async ( resolve, reject ) =>
     {
         const safeBrowserAppObject = getSafeBrowserAppObject();
