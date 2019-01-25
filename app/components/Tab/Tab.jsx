@@ -315,7 +315,14 @@ export default class Tab extends Component
 
     didFailLoad( err )
     {
-        const { url, index, addTab, closeTab, addNotification, activeTabBackwards } = this.props;
+        const {
+            url,
+            index,
+            addTab,
+            closeTab,
+            addNotification,
+            activeTabBackwards
+        } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
         const renderError = ( header, subHeader ) =>
@@ -368,11 +375,17 @@ export default class Tab extends Component
                 reactNode : Error( { error: { header, subHeader } } )
             };
             addNotification( notification );
-            activeTabBackwards();
+            if( this.state.browserState.canGoBack )
+            {
+
+                activeTabBackwards();
+            }
+            else
+            {
+                closeTab({ index });
+            }
             return;
         }
-        closeTab( { index } );
-        addTab( { url, isActiveTab: true } );
     }
 
     didStopLoading( )
@@ -620,7 +633,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         const { addTab } = this.props;
         const { url } = e;
         logger.verbose('Tab: NewWindow event triggered for url: ', url)
-        // navigate('url/' + url)
+
         const activateTab = e.disposition == 'foreground-tab';
 
         addTab( { url, isActiveTab: activateTab } );

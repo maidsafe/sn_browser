@@ -15,7 +15,7 @@ describe( 'Bookmarks', () =>
     {
         props = {
             bookmarks : [],
-            addTab : jest.fn()
+            addTab    : jest.fn()
         };
 
         wrapper = shallow( <Bookmarks { ...props } /> );
@@ -40,7 +40,7 @@ describe( 'Bookmarks', () =>
 
         it( 'should have a safeBrowser__page class', () =>
         {
-            expect( wrapper.find( `.${CLASSES.SAFE_BROWSER_PAGE}` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${ CLASSES.SAFE_BROWSER_PAGE }` ).length ).toBe( 1 );
         } );
 
         it( 'should have one url list', () =>
@@ -53,7 +53,6 @@ describe( 'Bookmarks', () =>
             wrapper = mount( <Bookmarks { ...props } /> );
             expect( wrapper.find( 'a' ).length ).toBe( 1 );
         } );
-
     } );
 
 

@@ -4,8 +4,8 @@ import path from 'path';
 import os from 'os';
 import windowStateKeeper from 'electron-window-state';
 import MenuBuilder from './menu';
-import { onOpenLoadExtensions }  from './extensions';
-import { isRunningSpectronTestProcess,isRunningDebug } from 'appConstants';
+import { onOpenLoadExtensions } from './extensions';
+import { isRunningSpectronTestProcess, isRunningDebug } from 'appConstants';
 import logger from 'logger';
 import {
     addTab,
@@ -40,7 +40,7 @@ function getNewWindowPosition( mainWindowState )
     return newWindowPosition;
 }
 
-const openWindow = ( store ) =>
+const openWindow = store =>
 {
     const mainWindowState = windowStateKeeper( {
         defaultWidth  : 2048,
@@ -49,7 +49,7 @@ const openWindow = ( store ) =>
 
     let appIcon = path.join( __dirname, '../resources/safeicon.png' );
 
-    if( process.platform === 'win32' )
+    if ( process.platform === 'win32' )
     {
         appIcon = path.join( __dirname, '../resources/icon.ico' );
     }
@@ -57,15 +57,14 @@ const openWindow = ( store ) =>
     const newWindowPosition = getNewWindowPosition( mainWindowState );
     const browserWindowConfig =
     {
-        show              : false,
-        x                 : newWindowPosition.x,
-        y                 : newWindowPosition.y,
-        width             : mainWindowState.width,
-        height            : mainWindowState.height,
-        titleBarStyle     : 'hiddenInset',
-        icon              : appIcon,
-        thickFrame        : false,
-        webPreferences    :
+        show           : false,
+        x              : newWindowPosition.x,
+        y              : newWindowPosition.y,
+        width          : mainWindowState.width,
+        height         : mainWindowState.height,
+        titleBarStyle  : 'hiddenInset',
+        icon           : appIcon,
+        webPreferences :
         {
             partition : 'persist:safe-tab'
             // preload : path.join( __dirname, 'browserPreload.js' )
@@ -77,7 +76,7 @@ const openWindow = ( store ) =>
 
     mainWindowState.manage( mainWindow );
 
-    mainWindow.loadURL( `file://${__dirname}/app.html` );
+    mainWindow.loadURL( `file://${ __dirname }/app.html` );
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -97,7 +96,7 @@ const openWindow = ( store ) =>
 
         if ( isRunningDebug && !isRunningSpectronTestProcess )
         {
-            mainWindow.openDevTools({ mode:'undocked' });
+            mainWindow.openDevTools( { mode: 'undocked' } );
         }
 
         const webContentsId = mainWindow.webContents.id;

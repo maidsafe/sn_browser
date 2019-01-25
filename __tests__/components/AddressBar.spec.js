@@ -18,7 +18,7 @@ jest.mock( 'ffi', () => jest.fn() );
 jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
-jest.mock('extensions/safe/actions/safeBrowserApplication_actions')
+jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'AddressBar', () =>
 {
@@ -44,13 +44,11 @@ describe( 'AddressBar', () =>
             onFocus            : jest.fn(),
             reloadPage         : jest.fn(),
             activeTab          : {
-                isLoading: false,
-                historyIndex: 1,
-                history : ['a','b']
+                isLoading    : false,
+                historyIndex : 1,
+                history      : ['a', 'b']
             }
         };
-
-
     } );
 
     describe( 'constructor( props )', () =>

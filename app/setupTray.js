@@ -11,7 +11,7 @@ export const createTray = () =>
     tray = new Tray( 'resources/icons/heart.png' );
     tray.on( 'right-click', toggleWindow );
     tray.on( 'double-click', toggleWindow );
-    tray.on( 'click', ( event ) =>
+    tray.on( 'click', event =>
     {
         toggleWindow();
 
@@ -55,7 +55,7 @@ export const createSafeInfoWindow = () =>
             nodeIntegration      : true
         }
     } );
-    safeInfoWindow.loadURL( `file://${CONFIG.APP_HTML_PATH}` );
+    safeInfoWindow.loadURL( `file://${ CONFIG.APP_HTML_PATH }` );
 
     // Hide the safeInfoWindow when it loses focus
     safeInfoWindow.on( 'blur', () =>

@@ -36,7 +36,7 @@ import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
 import { configureStore } from './store/configureStore';
-import { onReceiveUrl, preAppLoad, onAppReady } from 'extensions'
+import { onReceiveUrl, preAppLoad, onAppReady } from 'extensions';
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -48,7 +48,7 @@ const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
-logger.info('Main process starting.');
+logger.info( 'Main process starting.' );
 
 global.mainProcessStore = store;
 
@@ -62,8 +62,8 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 // Needed for windows w/ SAFE browser app login
 ipcMain.on( 'opn', ( event, data ) =>
 {
-    logger.info('Opening link in system via opn.')
-    shell.openExternal(data)
+    logger.info( 'Opening link in system via opn.' );
+    shell.openExternal( data );
 } );
 
 
@@ -73,20 +73,19 @@ let mainWindow = null;
 preAppLoad();
 
 // Apply MockVault if wanted for prealod
-if ( process.argv.includes('--preload') )
+if ( process.argv.includes( '--preload' ) )
 {
-    try{
-
-        let data = fs.readFileSync(CONFIG.PRELOADED_MOCK_VAULT_PATH );
-
-        fs.writeFileSync(path.join(os.tmpdir(), 'MockVault'), data)
-    }
-    catch( error )
+    try
     {
-        logger.error('Error preloading MockVault')
-    }
+        const data = fs.readFileSync( CONFIG.PRELOADED_MOCK_VAULT_PATH );
 
-};
+        fs.writeFileSync( path.join( os.tmpdir(), 'MockVault' ), data );
+    }
+    catch ( error )
+    {
+        logger.error( 'Error preloading MockVault' );
+    }
+}
 
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
@@ -106,9 +105,9 @@ if ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked || isRunningDeb
 
 const installExtensions = async () =>
 {
-    if( isCI ) return;
+    if ( isCI ) return;
 
-    logger.verbose('Installing devtools extensions')
+    logger.verbose( 'Installing devtools extensions' );
     const installer = require( 'electron-devtools-installer' );
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     const extensions = [
@@ -122,7 +121,7 @@ const installExtensions = async () =>
 };
 
 
-const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
+const shouldQuit = app.makeSingleInstance( commandLine =>
 {
     // We expect the URI to be the last argument
     const uri = commandLine[commandLine.length - 1];
@@ -142,10 +141,9 @@ const shouldQuit = app.makeSingleInstance( ( commandLine ) =>
 
 app.on( 'ready', async () =>
 {
-
     if ( shouldQuit )
     {
-        console.log('This instance should quit. Ciao!')
+        console.log( 'This instance should quit. Ciao!' );
         app.exit();
         return;
     }
@@ -166,12 +164,10 @@ app.on( 'ready', async () =>
         {
             onReceiveUrl( store, uriArg );
 
-            if( mainWindow )
+            if ( mainWindow )
             {
                 mainWindow.show();
-
             }
-
         }
     }
 
@@ -188,10 +184,9 @@ app.on( 'open-url', ( e, url ) =>
 {
     onReceiveUrl( store, url );
 
-    if( mainWindow )
+    if ( mainWindow )
     {
         mainWindow.show();
-
     }
 } );
 
@@ -203,7 +198,7 @@ app.on( 'open-url', ( e, url ) =>
 app.on( 'window-all-closed', () =>
 {
     logger.verbose( 'All Windows Closed!' );
-    app.dock.hide() //hide the icon
+    app.dock.hide(); // hide the icon
 
     global.macAllWindowsClosed = true;
 

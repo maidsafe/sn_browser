@@ -7,7 +7,7 @@ import { CLASSES } from 'appConstants';
 
 // import './authRequest.css';
 //
-const createAppContainersElement = ( containers ) =>
+const createAppContainersElement = containers =>
     (
         <div key="req_containers_parent_div">
             <a key="info_box_expander" className="info_box_expander" tabIndex="0">Details</a>
@@ -16,11 +16,11 @@ const createAppContainersElement = ( containers ) =>
                 {
                     containers.map( ( container, i ) =>
                         (
-                            <div key={ `${container.cont_name}_parent_${i}` }>
-                                <p className='blockText' key={ container.cont_name }>{container.cont_name}</p>
-                                <ul key={ `${container.cont_name}_ul` }>
+                            <div key={ `${ container.cont_name }_parent_${ i }` }>
+                                <p className="blockText" key={ container.cont_name }>{container.cont_name}</p>
+                                <ul key={ `${ container.cont_name }_ul` }>
                                     {
-                                        Object.keys( container.access ).filter( ( permission ) => container.access[permission] ).map( ( permission ) => <li key={ `${container.cont_name}_${permission}` }>{permission}</li> )
+                                        Object.keys( container.access ).filter( permission => container.access[permission] ).map( permission => <li key={ `${ container.cont_name }_${ permission }` }>{permission}</li> )
                                     }
                                 </ul>
                             </div>
@@ -30,7 +30,7 @@ const createAppContainersElement = ( containers ) =>
         </div>
     );
 
-export const createAuthRequestElement = ( authReqData ) =>
+export const createAuthRequestElement = authReqData =>
 {
     let reqType = 'authReq';
     let reqTypeText = ' requests authorisation.';
@@ -72,7 +72,7 @@ export const createAuthRequestElement = ( authReqData ) =>
                         read               : true,
                         update             : true
                     },
-                    cont_name : `apps/${authReqData[reqType].app.id}`
+                    cont_name : `apps/${ authReqData[reqType].app.id }`
                 };
                 containers.push( ownContainer );
             }
@@ -89,20 +89,20 @@ export const createAuthRequestElement = ( authReqData ) =>
                 <div key="share_mdata_parent_div">
                     <a key="info_box_expander" className="info_box_expander" tabIndex="0">Details</a>
                     <div key="info_box_details" className="info_box_details">
-                        <p className="blockText"  key="requested_mdata">Requested Mutable Data:</p>
+                        <p className="blockText" key="requested_mdata">Requested Mutable Data:</p>
                         {
                             authReqData[reqType].mdata.map( ( mdatum, i ) =>
                             {
                                 const metaName = authReqData.metaData[i].name;
                                 const metaDesc = authReqData.metaData[i].description;
                                 return (
-                                    <div key={ `${metaName}_parent_${i}` }>
+                                    <div key={ `${ metaName }_parent_${ i }` }>
                                         <p key={ metaName + i }>{metaName}</p>
                                         <p key={ metaDesc + i }>{metaDesc}</p>
                                         <p key={ metaName + mdatum.type_tag + i }>{mdatum.type_tag}</p>
-                                        <p key={ `Permissions:${i}` }>Permissions:</p>
+                                        <p key={ `Permissions:${ i }` }>Permissions:</p>
                                         {
-                                            Object.keys( mdatum.perms ).filter( ( perm ) => mdatum.perms[perm] ).map( ( perm, i ) => <p key={ metaName + perm + i }>{perm}</p> )
+                                            Object.keys( mdatum.perms ).filter( perm => mdatum.perms[perm] ).map( ( perm, i ) => <p key={ metaName + perm + i }>{perm}</p> )
                                         }
                                     </div>
                                 );
@@ -117,8 +117,8 @@ export const createAuthRequestElement = ( authReqData ) =>
 
     return (
         <div>
-            <p className={ `blockText ${CLASSES.NOTIFIER_TEXT}`} key={ authReqData[reqType].app.name }>
-                { `${authReqData[reqType].app.name} ${reqTypeText}` }
+            <p className={ `blockText ${ CLASSES.NOTIFIER_TEXT }` } key={ authReqData[reqType].app.name }>
+                { `${ authReqData[reqType].app.name } ${ reqTypeText }` }
             </p>
             <p className="blockText" key={ authReqData[reqType].app.vendor }>
                 { authReqData[reqType].app.vendor }

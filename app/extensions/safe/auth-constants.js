@@ -39,7 +39,7 @@ export default {
         DISCONNECTED : -1
     },
     LIB_PATH : {
-        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier,  'libwinpthread-1.dll' ),
+        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libwinpthread-1.dll' ),
         SAFE_AUTH : {
             win32  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'safe_authenticator.dll' ),
             darwin : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsafe_authenticator.dylib' ),
@@ -52,7 +52,7 @@ export default {
         }
     },
     LIB_PATH_MOCK : {
-        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock',  'libwinpthread-1.dll' ),
+        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libwinpthread-1.dll' ),
         SAFE_AUTH : {
             win32  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'safe_authenticator.dll' ),
             darwin : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsafe_authenticator.dylib' ),

@@ -1,9 +1,9 @@
 const logger = {
-    info : jest.fn(),
-    error : jest.fn(),
+    info    : jest.fn(),
+    error   : jest.fn(),
     verbose : jest.fn(),
-    silly : jest.fn(),
-    warn : jest.fn(),
-}
+    silly   : jest.fn(),
+    warn    : jest.fn(),
+};
 
 export default logger;

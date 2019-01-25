@@ -36,5 +36,4 @@ describe( 'bookmark actions', () =>
         };
         expect( bookmarks.updateBookmark( payload ) ).toEqual( expectedAction );
     } );
-
 } );
