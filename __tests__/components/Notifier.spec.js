@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import Notifier from '../../app/components/Notifier';
 import { Text } from 'nessie-ui';
@@ -95,7 +95,7 @@ describe( 'Notifier', () =>
                 type : 'div'
             };
             props = { ...props, isVisible: true, reactNode: elObject };
-            const wrapper = mount( <Notifier { ...props } /> );
+            wrapper = mount( <Notifier { ...props } /> );
             const reactNode = wrapper.find( 'div.parentDiv' );
             const reactNodeChildren = reactNode.children();
             expect( reactNodeChildren.length ).toBe( 3 );

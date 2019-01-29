@@ -10,3 +10,16 @@ dll
 *.map
 release/
 app/extensions/safe/auth-web-app/dist/bundle.js
+app/background.process.js.map
+app/browserPreload.js.map
+app/main.js.map
+app/webPreload.js.map
+app/bundle.js
+app/bundle.js.map
+app/style.css
+app/style.css.map
+dist
+main.js
+main.js.map
+locales
+npm-debug.log.*

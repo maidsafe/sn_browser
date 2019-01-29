@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount, render, shallow } from 'enzyme';
-
+import { mount, shallow } from 'enzyme';
 import TabBar from 'components/TabBar';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';

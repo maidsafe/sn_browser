@@ -45,10 +45,10 @@ describe( 'makeValidAddressBarUrl', () =>
         expect( makeValidAddressBarUrl( 'hello.world/boom/index.html' ) ).toBe( 'safe://hello.world/boom/index.html' );
     } );
 
-    test.skip( 'should clean up url spaces etc', () =>
+    /* test.skip( 'should clean up url spaces etc', () =>
     {
         expect( makeValidAddressBarUrl( 'hello world/boom/index.html' ) ).toBe( 'safe://hello%20world/boom/index.html' );
-    } );
+    } ); */
 } );
 
 
