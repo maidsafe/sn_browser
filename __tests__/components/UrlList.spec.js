@@ -2,7 +2,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import UrlList from 'components/UrlList';
-import { CLASSES } from 'appConstants';
 import { Table, TableRow } from 'nessie-ui';
 
 describe( 'UrlList', () =>

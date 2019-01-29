@@ -18,7 +18,7 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
-describe.only( 'SAFE manageWebIdUpdates', () =>
+describe( 'SAFE manageWebIdUpdates', () =>
 {
     if ( APPVEYOR ) return;
 
@@ -36,12 +36,12 @@ describe.only( 'SAFE manageWebIdUpdates', () =>
 
     test( 'webIdEventEmitter should not exist with experiments disabled', () =>
     {
-        const store = {
+        const noExpStore = {
             subscribe : jest.fn(),
             getState  : jest.fn( () => ( { safeBrowserApp: { experimentsEnabled: false } } ) )
         };
 
-        webviewPreload.onPreload( store, win );
+        webviewPreload.onPreload( noExpStore, win );
 
         expect( win.webIdEventEmitter ).toBeNull();
     } );
@@ -63,7 +63,7 @@ describe.only( 'SAFE manageWebIdUpdates', () =>
         win.webIdEventEmitter.emit( 'update', theData );
     } );
 
-    xtest( 'Check response to store change?' );
+    /* xtest( 'Check response to store change?' ); */
 } );
 
 describe( 'SAFE Webview Preload APIs', () =>

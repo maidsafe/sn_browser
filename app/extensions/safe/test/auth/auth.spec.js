@@ -19,8 +19,8 @@ const encodedAuthUri = 'safe-auth:bAAAAAAFBMHKYWAAAAAABWAAAAAAAAAAANZSXILTNMFUWI
 'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG' +
 'KICMORSC4AACAAAAAAAAAAAAUAAAAAAAAAAAL5SG6Y3VNVSW45DTAEAAAAAAAAAAAAIAAAAAOAAAAAAAAAA' +
 'AL5YHKYTMNFRQCAAAAAAAAAAAAAAAAAAB';
-const encodedUnRegisterAuthUri = 'safe-auth:bAAAAAADKLNT46AQAAAABWAAAAAAAAAAANZSXILT' +
-'NMFUWI43BMZSS45DFON2C453FMJQXA4BONFSAC';
+/* const encodedUnRegisterAuthUri = 'safe-auth:bAAAAAADKLNT46AQAAAABWAAAAAAAAAAANZSXILT' +
+'NMFUWI43BMZSS45DFON2C453FMJQXA4BONFSAC'; */
 const encodedContUri = 'safe-auth:bAAAAAAHQQQ2XQAIAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM' +
 'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG' +
 'KICMORSC4AIAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMAQAAAAAAAAAAABAAAAAAI';
@@ -54,7 +54,7 @@ describe( 'Authenticator functions', () =>
 
     describe( 'Unregistered client', () =>
     {
-        xit( 'gets back encoded response', () => (
+        /* xit( 'gets back encoded response', () => (
             new Promise( resolve =>
             {
                 client.decodeRequest( encodedUnRegisterAuthUri )
@@ -65,7 +65,7 @@ describe( 'Authenticator functions', () =>
                         return resolve();
                     } );
             } )
-        ) );
+        ) ); */
     } );
 
 
@@ -597,7 +597,7 @@ describe( 'Authenticator functions', () =>
         it( 'throws an error if request is undefined', async () =>
         {
             expect.assertions( 2 );
-            const decodedReq = await decodedReqForRandomClient( encodedAuthUri );
+            await decodedReqForRandomClient( encodedAuthUri );
 
             try
             {
@@ -615,7 +615,7 @@ describe( 'Authenticator functions', () =>
         it( 'throws an error if decision is not boolean type', async () =>
         {
             expect.assertions( 5 );
-            const decodedReq = await decodedReqForRandomClient( encodedAuthUri );
+            await decodedReqForRandomClient( encodedAuthUri );
 
             await expect( client.encodeAuthResp( {}, 123 ) ).rejects.toBeInstanceOf( Error );
             await expect( client.encodeAuthResp( {}, 123 ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
@@ -630,7 +630,7 @@ describe( 'Authenticator functions', () =>
         it( 'throws an error if request doesn\'t have request ID(reqId)', async () =>
         {
             expect.assertions( 2 );
-            const decodedReq = await decodedReqForRandomClient( encodedAuthUri );
+            await decodedReqForRandomClient( encodedAuthUri );
 
             await expect( client.encodeAuthResp( {}, true ) ).rejects.toBeInstanceOf( Error );
             await expect( client.encodeAuthResp( {}, true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_req' ) );
@@ -690,7 +690,7 @@ describe( 'Authenticator functions', () =>
         it( 'throws an error if request undefined', async () =>
         {
             expect.assertions( 2 );
-            const decodedReq = await getDecodedReq();
+            await getDecodedReq();
 
             await expect( client.encodeContainersResp() ).rejects.toBeInstanceOf( Error );
             await expect( client.encodeContainersResp() ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
@@ -702,7 +702,7 @@ describe( 'Authenticator functions', () =>
         it( 'throws an error if decision is not boolean type', async () =>
         {
             expect.assertions( 5 );
-            const decodedReq = await getDecodedReq();
+            await getDecodedReq();
 
             await expect( client.encodeContainersResp( {}, 123 ) ).rejects.toBeInstanceOf( Error );
             await expect( client.encodeContainersResp( {}, 123 ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
@@ -717,7 +717,7 @@ describe( 'Authenticator functions', () =>
         it( 'throws an error if request doesn\'t have request ID(reqId)', async () =>
         {
             expect.assertions( 2 );
-            const decodedReq = await getDecodedReq();
+            await getDecodedReq();
 
             await expect( client.encodeContainersResp( {}, true ) ).rejects.toBeInstanceOf( Error );
             await expect( client.encodeContainersResp( {}, true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_req' ) );
@@ -745,20 +745,6 @@ describe( 'Authenticator functions', () =>
             const decodedReq = await getDecodedReq();
 
             const response = await client.encodeContainersResp( decodedReq, false );
-
-            await expect( response ).toBeType( 'string' );
-            await expect( response ).toBeDefined();
-
-            await helper.clearAccount();
-        } );
-
-        it( 'returns encoded response URI on deny request', async () =>
-        {
-            expect.assertions( 2 );
-
-            const decodedReq = await getDecodedReq();
-
-            const response = await client.encodeContainersResp( decodedReq, true );
 
             await expect( response ).toBeType( 'string' );
             await expect( response ).toBeDefined();
