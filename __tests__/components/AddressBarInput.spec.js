@@ -1,5 +1,6 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
+
 import AddressBarInput from 'components/AddressBar/Input';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';

@@ -1,7 +1,6 @@
 import { BROWSER_UI } from './constants';
 import { parse as urlParse } from 'url';
 
-const addressInput = app => app.client.element( BROWSER_UI.ADDRESS_INPUT );
 
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
@@ -10,7 +9,7 @@ export const delay = time => new Promise( resolve => setTimeout( resolve, time )
 
 export const setClientToMainBrowserWindow = async app =>
 {
-    const { client, browserWindow } = app;
+    const { client } = app;
     const windows = await client.getWindowCount();
 
     if ( peruseBrowserWindowIndex )
@@ -22,7 +21,7 @@ export const setClientToMainBrowserWindow = async app =>
     for ( let i = 0; i < windows; i++ )
     {
         // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
-        const theWindow = await client.windowByIndex( i );
+        await client.windowByIndex( i );
         const url = await client.getUrl();
         const urlObj = urlParse( url );
         // get the PeruseBrowserWindow
@@ -39,12 +38,12 @@ export const setClientToMainBrowserWindow = async app =>
 
 export const setClientToBackgroundProcessWindow = async app =>
 {
-    const { client, browserWindow } = app;
+    const { client } = app;
     const windows = await client.getWindowCount();
 
     for ( let i = 0; i < windows; i++ )
     {
-        const theWindow = await client.windowByIndex( i );
+        await client.windowByIndex( i );
         const url = await client.getUrl();
         const urlObj = urlParse( url );
 
@@ -74,7 +73,7 @@ export const setAddress = async ( app, url ) =>
 
 export const navigateTo = async ( app, url ) =>
 {
-    const { client, browserWindow } = app;
+    const { client } = app;
 
     // TODO set tab + then...
     await setAddress( app, url );
@@ -91,8 +90,8 @@ export const newTab = async app =>
     for ( let i = 0; i < windows; i++ )
     {
         // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
-        const theWindow = await client.windowByIndex( i );
-        const url = await client.getUrl();
+        await client.windowByIndex( i );
+        await client.getUrl();
     }
 
     await setClientToMainBrowserWindow( app );

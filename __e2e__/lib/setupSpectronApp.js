@@ -5,7 +5,6 @@ import RELEASE_NAME from '../../releaseName.js';
 
 import {
     delay,
-    setClientToMainBrowserWindow
 } from './browser-driver';
 
 jest.unmock( 'electron' );

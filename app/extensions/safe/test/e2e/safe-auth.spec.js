@@ -1,13 +1,10 @@
-import { parse as urlParse } from 'url';
 import opn from 'opn';
 
-import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
     delay,
     navigateTo,
     newTab,
-    setClientToMainBrowserWindow,
-    setClientToBackgroundProcessWindow
+    setClientToMainBrowserWindow
 } from 'spectron-lib/browser-driver';
 
 import {
@@ -16,12 +13,11 @@ import {
     login,
     logout
 } from 'extensions/safe/test/e2e/lib/authenticator-drivers';
-import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
 import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 
 import {
     setupSpectronApp
-    , isCI
     , travisOS
     , afterAllTests
     , beforeAllTests
@@ -71,7 +67,7 @@ describe( 'safe authenticator protocol', () =>
 
             setClientToMainBrowserWindow( app );
             // await client.pause(1500)
-            const exists = await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, NOTIFICATION_WAIT );
+            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, NOTIFICATION_WAIT );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
             // console.log('THE NOTE', note)
             expect( note ).not.toBeNull();
