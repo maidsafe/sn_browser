@@ -1,27 +1,15 @@
 
-import opn from 'opn';
 import { parse as urlParse } from 'url';
-import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
-    bookmarkActiveTabPage,
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
-    setClientToBackgroundProcessWindow,
     delay
 } from 'spectron-lib/browser-driver';
-import {
-    createAccountDetails,
-    createAccount,
-    login,
-    logout
-} from 'extensions/safe/test/e2e/lib/authenticator-drivers';
 import { createSafeApp, createRandomDomain } from 'extensions/safe/test/e2e/lib/safe-helpers';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
 import {
     setupSpectronApp
-    , isCI
-    , travisOS
     , afterAllTests
     , beforeAllTests
     , nodeEnv
@@ -229,7 +217,7 @@ describe( 'SAFE network webFetch operation', async () =>
 
             const clientUrl = await client.getUrl();
 
-            const parsedUrl = urlParse( clientUrl );
+            urlParse( clientUrl );
             const text = await client.getText( 'body' );
 
             expect( address ).toBe( 'safe://api.playground' );

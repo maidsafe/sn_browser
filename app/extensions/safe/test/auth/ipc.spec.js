@@ -1,6 +1,5 @@
 import {
-    onSharedMDataDecision,
-    setAuthCallbacks
+    onSharedMDataDecision
 } from '../../ffi/ipc';
 
 
@@ -15,8 +14,6 @@ jest.mock( 'ffi', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
-
-const data = {};
 
 jest.mock( 'i18n', () =>
 {

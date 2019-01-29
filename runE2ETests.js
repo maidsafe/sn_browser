@@ -2,8 +2,6 @@ const spawn = require( 'cross-spawn' );
 const path = require( 'path' );
 
 const platform = process.platform;
-const OSX = 'darwin';
-const LINUX = 'linux';
 const WINDOWS = 'win32';
 
 const s = `\\${ path.sep }`;

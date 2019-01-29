@@ -1,6 +1,3 @@
-
-import opn from 'opn';
-import { parse as urlParse } from 'url';
 import {
     bookmarkActiveTabPage,
     navigateTo,
@@ -17,7 +14,6 @@ import {
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
 import {
     setupSpectronApp
-    , isCI
     , travisOS
     , afterAllTests
     , beforeAllTests
@@ -31,11 +27,11 @@ const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
 console.warn( 'This test runs against a packaged version of the DEV browser. If not built, this will FAIL' );
 describe( 'SAFE network log in and out', async () =>
 {
-    const appInfo = {
+    /* const appInfo = {
         id     : 'net.peruse.test',
         name   : 'SAFE App Test',
         vendor : 'Peruse'
-    };
+    }; */
 
     let app;
 
@@ -73,7 +69,7 @@ describe( 'SAFE network log in and out', async () =>
             const { client } = app;
 
             expect.assertions( 2 );
-            const bookmarkTab = await newTab( app );
+            await newTab( app );
             await navigateTo( app, 'shouldsavetobookmarks.com' );
             await delay( 2500 );
             await bookmarkActiveTabPage( app );

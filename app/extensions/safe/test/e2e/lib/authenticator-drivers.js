@@ -2,7 +2,6 @@ import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
 import {
     BROWSER_UI,
     WAIT_FOR_EXIST_TIMEOUT,
-    DEFAULT_TIMEOUT_INTERVAL
 } from 'spectron-lib/constants';
 
 import {
@@ -10,7 +9,6 @@ import {
     navigateTo,
     newTab,
     setClientToMainBrowserWindow,
-    setClientToBackgroundProcessWindow
 } from 'spectron-lib/browser-driver';
 
 /**
