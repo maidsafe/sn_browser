@@ -26,6 +26,7 @@ export default class Tab extends Component
         isActiveTab          : PropTypes.bool.isRequired,
         url                  : PropTypes.string.isRequired,
         index                : PropTypes.number.isRequired,
+        windowId             : PropTypes.number.isRequired,
         isActiveTabReloading : PropTypes.bool.isRequired,
         closeTab             : PropTypes.func.isRequired,
         updateTab            : PropTypes.func.isRequired,
@@ -321,7 +322,8 @@ export default class Tab extends Component
             addTab,
             closeTab,
             addNotification,
-            activeTabBackwards
+            activeTabBackwards,
+            windowId
         } = this.props;
         const { webview } = this;
         const urlObj = stdUrl.parse( url );
@@ -383,6 +385,9 @@ export default class Tab extends Component
             else
             {
                 closeTab({ index });
+
+                //add a fresh tab (should be only if no more tabs present)
+                addTab({url:'about:blank', windowId, isActiveTab: true });
             }
             return;
         }

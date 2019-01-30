@@ -2,8 +2,6 @@
 import webFetch from 'extensions/safe/reducers/webFetch';
 import { TYPES } from 'extensions/safe/actions/web_fetch_actions';
 import initialState from 'extensions/safe/reducers/initialAppState';
-import { CONFIG } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
 
 describe( 'SAFE WEB fetch reducer', () =>
 {
@@ -16,8 +14,8 @@ describe( 'SAFE WEB fetch reducer', () =>
     {
         it( 'should handle fetching status', () =>
         {
-	   const payload = { fetching: true };
-	   expect(
+            const payload = { fetching: true };
+            expect(
                 webFetch( initialState.webFetch, {
                     type : TYPES.SET_WEB_FETCH_STATUS,
                     payload
@@ -27,7 +25,7 @@ describe( 'SAFE WEB fetch reducer', () =>
                 link     : '',
                 error    : null,
                 options  : ''
-	   } );
+            } );
         } );
     } );
 } );

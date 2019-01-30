@@ -2,7 +2,7 @@
 
 // safeBrowserAppActions.getWebIds = jest.fn();
 
-describe( 'notification actions', () =>
+/* describe( 'notification actions', () =>
 {
     // it( 'should have types', () =>
     // {
@@ -73,9 +73,9 @@ describe( 'notification actions', () =>
     // } );
 
 
-    xit( 'should test peruse actions but cannot due to native libs bugs', () =>
+    /* xit( 'should test peruse actions but cannot due to native libs bugs', () =>
     {
         // https://github.com/facebook/jest/issues/3552
         expect( 1 ).toEqual( 1 );
-    } );
-} );
+    } ); */
+/* }); */
