@@ -180,8 +180,8 @@ class Browser extends Component
             setActiveTab,
             updateActiveTab,
             updateTab,
-            activeTabBackwards,
-            activeTabForwards,
+            tabBackwards,
+            tabForwards,
 
             // notifications
             addNotification,
@@ -253,8 +253,8 @@ class Browser extends Component
                     isSelected={ ui.addressBarIsSelected }
 
                     updateActiveTab={ updateActiveTab }
-                    activeTabBackwards={ activeTabBackwards }
-                    activeTabForwards={ activeTabForwards }
+                    tabBackwards={ tabBackwards }
+                    tabForwards={ tabForwards }
                     activeTab={ activeTab }
 
                     windowId={windowId}
@@ -273,7 +273,7 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
-                    activeTabBackwards={ activeTabBackwards }
+                    tabBackwards={ tabBackwards }
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ ui.shouldFocusWebview }
                     closeTab={ closeTab }

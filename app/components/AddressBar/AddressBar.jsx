@@ -33,8 +33,8 @@ export default class AddressBar extends Component
         onFocus               : PropTypes.func.isRequired,
         reloadPage            : PropTypes.func.isRequired,
         updateActiveTab       : PropTypes.func.isRequired,
-        activeTabBackwards    : PropTypes.func.isRequired,
-        activeTabForwards     : PropTypes.func.isRequired,
+        tabBackwards          : PropTypes.func.isRequired,
+        tabForwards           : PropTypes.func.isRequired,
         showSettingsMenu      : PropTypes.func.isRequired,
         hideSettingsMenu      : PropTypes.func.isRequired,
         focusWebview          : PropTypes.func.isRequired
@@ -50,14 +50,16 @@ export default class AddressBar extends Component
 
     handleBack = ( ) =>
     {
-        const { activeTabBackwards, windowId } = this.props;
-        activeTabBackwards( windowId );
+        const { tabBackwards, windowId } = this.props;
+        // TODO: needs tab index
+        tabBackwards( windowId );
     }
 
     handleForward = ( ) =>
     {
-        const { activeTabForwards, windowId } = this.props;
-        activeTabForwards( windowId );
+        const { tabForwards, windowId } = this.props;
+        // TODO: needs tab index
+        tabForwards( windowId );
     }
 
     handleRefresh = ( event ) =>

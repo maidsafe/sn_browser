@@ -1,16 +1,16 @@
 import { createActions } from 'redux-actions';
 
 export const TYPES = {
-    ADD_TAB              : 'ADD_TAB',
-    ACTIVE_TAB_FORWARDS  : 'ACTIVE_TAB_FORWARDS',
-    ACTIVE_TAB_BACKWARDS : 'ACTIVE_TAB_BACKWARDS',
-    CLOSE_TAB            : 'CLOSE_TAB',
-    CLOSE_ACTIVE_TAB     : 'CLOSE_ACTIVE_TAB',
-    UPDATE_TAB           : 'UPDATE_TAB',
-    UPDATE_TABS          : 'UPDATE_TABS',
-    UPDATE_ACTIVE_TAB    : 'UPDATE_ACTIVE_TAB',
-    SET_ACTIVE_TAB       : 'SET_ACTIVE_TAB',
-    REOPEN_TAB           : 'REOPEN_TAB'
+    ADD_TAB           : 'ADD_TAB',
+    TAB_FORWARDS      : 'TAB_FORWARDS',
+    TAB_BACKWARDS     : 'TAB_BACKWARDS',
+    CLOSE_TAB         : 'CLOSE_TAB',
+    CLOSE_ACTIVE_TAB  : 'CLOSE_ACTIVE_TAB',
+    UPDATE_TAB        : 'UPDATE_TAB',
+    UPDATE_TABS       : 'UPDATE_TABS',
+    UPDATE_ACTIVE_TAB : 'UPDATE_ACTIVE_TAB',
+    SET_ACTIVE_TAB    : 'SET_ACTIVE_TAB',
+    REOPEN_TAB        : 'REOPEN_TAB'
 };
 
 export const {
@@ -22,8 +22,8 @@ export const {
     , updateTab
     , updateTabs
     , updateActiveTab
-    , activeTabForwards
-    , activeTabBackwards
+    , tabForwards
+    , tabBackwards
 } = createActions(
     TYPES.ADD_TAB
     , TYPES.SET_ACTIVE_TAB
@@ -33,6 +33,6 @@ export const {
     , TYPES.UPDATE_TAB
     , TYPES.UPDATE_TABS
     , TYPES.UPDATE_ACTIVE_TAB
-    , TYPES.ACTIVE_TAB_FORWARDS
-    , TYPES.ACTIVE_TAB_BACKWARDS
+    , TYPES.TAB_FORWARDS
+    , TYPES.TAB_BACKWARDS
 );

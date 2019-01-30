@@ -189,15 +189,21 @@ export function getLastClosedTab( state )
 }
 
 
-const moveActiveTabForward = ( state, windowId ) =>
+const moveTabForwards = ( state, payload ) =>
 {
-
-    const tab = getActiveTab( state, windowId );
-    const index = getActiveTabIndex( state, windowId );
-    const updatedTab = { ...tab };
+    if ( payload && payload.index )
+    {
+        var { index } = payload;
+        var updatedTab = state[index];
+    }
+    else
+    {
+        const tab = getActiveTab( state );
+        var index = getActiveTabIndex( state );
+        var updatedTab = { ...tab };
+    }
 
     const history = updatedTab.history;
-
     const nextHistoryIndex = updatedTab.historyIndex + 1 || 1;
 
     // -1 historyIndex signifies latest page
@@ -218,11 +224,20 @@ const moveActiveTabForward = ( state, windowId ) =>
 };
 
 
-const moveActiveTabBackwards = ( state, windowId ) =>
+const moveTabBackwards = ( state, payload ) =>
 {
-    const tab = getActiveTab( state, windowId );
-    const index = getActiveTabIndex( state, windowId );
-    const updatedTab = { ...tab };
+    if ( payload && payload.index )
+    {
+        var { index } = payload;
+        var updatedTab = state[index];
+    }
+    else
+    {
+        const tab = getActiveTab( state );
+        var index = getActiveTabIndex( state );
+        var updatedTab = { ...tab };
+    }
+
     const history = updatedTab.history;
     const nextHistoryIndex = updatedTab.historyIndex - 1;
 
@@ -425,13 +440,13 @@ export default function tabs( state: array = initialState, action )
         {
             return updateTab( state, payload );
         }
-        case TYPES.ACTIVE_TAB_FORWARDS :
+        case TYPES.TAB_FORWARDS :
         {
-            return moveActiveTabForward( state, payload );
+            return moveTabForwards( state, payload );
         }
-        case TYPES.ACTIVE_TAB_BACKWARDS :
+        case TYPES.TAB_BACKWARDS :
         {
-            return moveActiveTabBackwards( state, payload );
+            return moveTabBackwards( state, payload );
         }
         case TYPES.UPDATE_TABS :
         {

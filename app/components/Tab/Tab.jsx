@@ -35,7 +35,7 @@ export default class Tab extends Component
         addNotification      : PropTypes.func.isRequired,
         focusWebview         : PropTypes.func.isRequired,
         shouldFocusWebview   : PropTypes.bool.isRequired,
-        activeTabBackwards   : PropTypes.func.isRequired
+        tabBackwards         : PropTypes.func.isRequired
     }
 
     static defaultProps =
@@ -322,7 +322,7 @@ export default class Tab extends Component
             addTab,
             closeTab,
             addNotification,
-            activeTabBackwards,
+            tabBackwards,
             windowId
         } = this.props;
         const { webview } = this;
@@ -380,7 +380,7 @@ export default class Tab extends Component
             if( this.state.browserState.canGoBack )
             {
 
-                activeTabBackwards();
+                tabBackwards( { index, windowId } );
             }
             else
             {
