@@ -31,20 +31,20 @@ describe( 'AddressBarButtonsRHS', () =>
     beforeEach( () =>
     {
         props = {
-            windowId           : 1,
-            address            : 'about:blank',
-            isSelected         : false,
-            isBookmarked       : false,
-            addBookmark        : jest.fn(),
-            removeBookmark     : jest.fn(),
-            activeTabBackwards : jest.fn(),
-            activeTabForwards  : jest.fn(),
-            updateActiveTab    : jest.fn(),
-            onBlur             : jest.fn(),
-            onSelect           : jest.fn(),
-            onFocus            : jest.fn(),
-            reloadPage         : jest.fn(),
-            activeTab          : { isLoading: false }
+            windowId        : 1,
+            address         : 'about:blank',
+            isSelected      : false,
+            isBookmarked    : false,
+            addBookmark     : jest.fn(),
+            removeBookmark  : jest.fn(),
+            tabBackwards    : jest.fn(),
+            tabForwards     : jest.fn(),
+            updateActiveTab : jest.fn(),
+            onBlur          : jest.fn(),
+            onSelect        : jest.fn(),
+            onFocus         : jest.fn(),
+            reloadPage      : jest.fn(),
+            activeTab       : { isLoading: false }
         };
     } );
 

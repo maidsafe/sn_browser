@@ -4,8 +4,8 @@ import {
 } from 'electron';
 import {
     addTab,
-    activeTabForwards,
-    activeTabBackwards,
+    tabForwards,
+    tabBackwards,
     closeActiveTab,
     reopenTab,
     setActiveTab
@@ -391,8 +391,7 @@ export default class MenuBuilder
                     {
                         if ( win )
                         {
-                            // todo check window id
-                            store.dispatch( activeTabForwards() );
+                            store.dispatch( tabForwards() );
                         }
                     }
                 },
@@ -403,8 +402,7 @@ export default class MenuBuilder
                     {
                         if ( win )
                         {
-                            // todo check window id
-                            store.dispatch( activeTabBackwards() );
+                            store.dispatch( tabBackwards() );
                         }
                     }
                 }

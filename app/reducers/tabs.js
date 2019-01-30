@@ -209,14 +209,23 @@ export function getLastClosedTab( state )
     return tabAndIndex;
 }
 
-const moveActiveTabForward = ( state, windowId ) =>
+
+const moveTabForwards = ( state, payload ) =>
 {
-    const tab = getActiveTab( state, windowId );
-    const index = getActiveTabIndex( state, windowId );
-    const updatedTab = { ...tab };
+    if ( payload && payload.index )
+    {
+        var { index } = payload;
+        var updatedTab = state[index];
+    }
+    else
+    {
+        const windowId = payload && payload.windowId ? payload.windowId : undefined;
+        const tab = getActiveTab( state, windowId );
+        var index = getActiveTabIndex( state, windowId );
+        var updatedTab = { ...tab };
+    }
 
     const history = updatedTab.history;
-
     const nextHistoryIndex = updatedTab.historyIndex + 1 || 1;
 
     // -1 historyIndex signifies latest page
@@ -236,11 +245,22 @@ const moveActiveTabForward = ( state, windowId ) =>
     return updatedState;
 };
 
-const moveActiveTabBackwards = ( state, windowId ) =>
+
+const moveTabBackwards = ( state, payload ) =>
 {
-    const tab = getActiveTab( state, windowId );
-    const index = getActiveTabIndex( state, windowId );
-    const updatedTab = { ...tab };
+    if ( payload && payload.index )
+    {
+        var { index } = payload;
+        var updatedTab = state[index];
+    }
+    else
+    {
+        const windowId = payload && payload.windowId ? payload.windowId : undefined;
+        const tab = getActiveTab( state, windowId );
+        var index = getActiveTabIndex( state, windowId );
+        var updatedTab = { ...tab };
+    }
+
     const history = updatedTab.history;
     const nextHistoryIndex = updatedTab.historyIndex - 1;
 
@@ -442,11 +462,13 @@ export default function tabs( state: array = initialState, action )
         case TYPES.UPDATE_TAB: {
             return updateTab( state, payload );
         }
-        case TYPES.ACTIVE_TAB_FORWARDS: {
-            return moveActiveTabForward( state, payload );
+        case TYPES.TAB_FORWARDS :
+        {
+            return moveTabForwards( state, payload );
         }
-        case TYPES.ACTIVE_TAB_BACKWARDS: {
-            return moveActiveTabBackwards( state, payload );
+        case TYPES.TAB_BACKWARDS :
+        {
+            return moveTabBackwards( state, payload );
         }
         case TYPES.UPDATE_TABS: {
             const payloadTabs = payload.tabs;

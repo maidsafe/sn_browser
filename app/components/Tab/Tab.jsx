@@ -38,13 +38,15 @@ export default class Tab extends Component
         addNotification      : PropTypes.func.isRequired,
         focusWebview         : PropTypes.func.isRequired,
         shouldFocusWebview   : PropTypes.bool.isRequired,
-        activeTabBackwards   : PropTypes.func.isRequired
-    };
+        tabBackwards         : PropTypes.func.isRequired
+    }
 
-    static defaultProps = {
+    static defaultProps =
+    {
         isActiveTab : false,
-        url         : 'http://nowhere.com'
-    };
+        url         : 'http://nowhere.com',
+    }
+
 
     constructor( props )
     {
@@ -359,7 +361,7 @@ export default class Tab extends Component
             addTab,
             closeTab,
             addNotification,
-            activeTabBackwards,
+            tabBackwards,
             windowId
         } = this.props;
         const { webview } = this;
@@ -417,13 +419,14 @@ export default class Tab extends Component
                 reactNode : Error( { error: { header, subHeader } } )
             };
             addNotification( notification );
-            if ( this.state.browserState.canGoBack )
+            if( this.state.browserState.canGoBack )
             {
-                activeTabBackwards();
+
+                tabBackwards( { index, windowId } );
             }
             else
             {
-                closeTab( { index } );
+                closeTab({ index });
 
                 // add a fresh tab (should be only if no more tabs present)
                 addTab( { url: 'about:blank', windowId, isActiveTab: true } );

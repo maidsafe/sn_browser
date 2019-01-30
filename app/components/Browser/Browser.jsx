@@ -190,8 +190,8 @@ class Browser extends Component
             setActiveTab,
             updateActiveTab,
             updateTab,
-            activeTabBackwards,
-            activeTabForwards,
+            tabBackwards,
+            tabForwards,
 
             // notifications
             addNotification,
@@ -261,9 +261,8 @@ class Browser extends Component
                     settingsMenuIsVisible={ ui.settingsMenuIsVisible }
                     isSelected={ ui.addressBarIsSelected }
                     updateActiveTab={ updateActiveTab }
-                    activeTabBackwards={ activeTabBackwards }
-                    activeTabForwards={ activeTabForwards }
-                    activeTab={ activeTab }
+                    tabBackwards={ tabBackwards }
+                    tabForwards={ tabForwards }
                     windowId={ windowId }
                     focusWebview={ focusWebview }
                     ref={ c =>
@@ -279,7 +278,7 @@ class Browser extends Component
                 />
                 <TabContents
                     isActiveTabReloading={ ui.isActiveTabReloading }
-                    activeTabBackwards={ activeTabBackwards }
+                    tabBackwards={ tabBackwards }
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ ui.shouldFocusWebview }
                     closeTab={ closeTab }

@@ -35,7 +35,7 @@ export default class TabContents extends Component {
             safeExperimentsEnabled,
             focusWebview,
             shouldFocusWebview,
-            activeTabBackwards
+            tabBackwards
         } = this.props;
 
         const tabComponents = tabs.map((tab, i) => {
@@ -81,32 +81,32 @@ export default class TabContents extends Component {
                     }
                 }
 
-                const TheTab = (
-                    <Tab
-                        addNotification={addNotification}
-                        webId={tab.webId}
-                        url={tab.url}
-                        isActiveTab={isActiveTab}
-                        isActiveTabReloading={isActiveTabReloading}
-                        addTab={addTab}
-                        closeTab={closeTab}
-                        updateTab={updateTab}
-                        updateActiveTab={updateActiveTab}
-                        pageLoaded={pageLoaded}
-                        key={tab.index}
-                        index={tab.index}
-                        windowId={windowId}
-                        safeExperimentsEnabled={safeExperimentsEnabled}
-                        focusWebview={focusWebview}
-                        shouldFocusWebview={shouldFocusWebview}
-                        activeTabBackwards={activeTabBackwards}
-                        ref={c => {
-                            if (isActiveTab) {
-                                this.activeTab = c;
-                            }
-                        }}
-                    />
-                );
+                const TheTab = ( <Tab
+                    addNotification={ addNotification }
+                    webId={ tab.webId }
+                    url={ tab.url }
+                    isActiveTab={ isActiveTab }
+                    isActiveTabReloading={ isActiveTabReloading }
+                    addTab={ addTab }
+                    closeTab={ closeTab }
+                    updateTab={ updateTab }
+                    updateActiveTab={ updateActiveTab }
+                    pageLoaded={ pageLoaded }
+                    key={ tab.index }
+                    index={ tab.index }
+                    windowId={ windowId }
+                    safeExperimentsEnabled={ safeExperimentsEnabled }
+                    focusWebview={ focusWebview }
+                    shouldFocusWebview={ shouldFocusWebview }
+                    tabBackwards={ tabBackwards }
+                    ref={ ( c ) =>
+                    {
+                        if ( isActiveTab )
+                        {
+                            this.activeTab = c;
+                        }
+                    } }
+                /> );
                 return TheTab;
             }
         });

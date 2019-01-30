@@ -528,19 +528,19 @@ describe( 'tabs reducer', () =>
         } );
     } );
 
-    describe( 'ACTIVE_TAB_FORWARDS', () =>
-    {
-        const activeTab = {
-            ...basicTab,
-            isActiveTab  : true,
-            history      : [ 'hello', 'forward', 'forward again' ],
-            historyIndex : 0
-        };
 
-        it( 'should move the active tab forwards', () =>
+    describe( 'TAB_FORWARDS', () =>
+    {
+        it( 'should move the active tab forwards, if no tab index specified', () =>
         {
-            const firstUpdate = tabs( [ basicTab, basicTab, activeTab ], {
-                type : TYPES.ACTIVE_TAB_FORWARDS
+            const activeTab = {
+                ...basicTab,
+                isActiveTab  : true,
+                history      : ['hello', 'forward', 'forward again'],
+                historyIndex : 0
+            };
+            const firstUpdate = tabs( [basicTab, basicTab, activeTab], {
+                type : TYPES.TAB_FORWARDS
             } );
 
             const updatedTab = firstUpdate[2];
@@ -553,7 +553,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toHaveProperty( 'history' );
 
             const secondUpdate = tabs( firstUpdate, {
-                type : TYPES.ACTIVE_TAB_FORWARDS
+                type : TYPES.TAB_FORWARDS
             } );
 
             const updatedTabAgain = secondUpdate[2];
@@ -564,7 +564,7 @@ describe( 'tabs reducer', () =>
             } );
 
             const thirdUpdate = tabs( secondUpdate, {
-                type : TYPES.ACTIVE_TAB_FORWARDS
+                type : TYPES.TAB_FORWARDS
             } );
 
             const updatedTabThree = thirdUpdate[2];
@@ -574,9 +574,64 @@ describe( 'tabs reducer', () =>
                 historyIndex : 2
             } );
         } );
+
+        it( 'should move specified tab forwards, according to tab index', () =>
+        {
+            const nonActiveTab = {
+                ...basicTab,
+                isActiveTab  : false,
+                history      : ['hello', 'forward', 'forward again'],
+                historyIndex : 0,
+                index        : 2
+            };
+            const firstUpdate = tabs( [basicTab, basicTab, nonActiveTab], {
+                type    : TYPES.TAB_FORWARDS,
+                payload : { index: 2 }
+            } );
+
+            const updatedTab = firstUpdate[2];
+            expect( updatedTab ).toMatchObject(
+                {
+                    ...nonActiveTab,
+                    url          : 'forward',
+                    historyIndex : 1
+                }
+            );
+
+            expect( updatedTab ).toHaveProperty( 'history' );
+
+            const secondUpdate = tabs( firstUpdate, {
+                type    : TYPES.TAB_FORWARDS,
+                payload : { index: 2 }
+            } );
+
+            const updatedTabAgain = secondUpdate[2];
+            expect( updatedTabAgain ).toMatchObject(
+                {
+                    ...nonActiveTab,
+                    url          : 'forward again',
+                    historyIndex : 2
+                }
+            );
+
+
+            const thirdUpdate = tabs( secondUpdate, {
+                type    : TYPES.TAB_FORWARDS,
+                payload : { index: 2 }
+            } );
+
+            const updatedTabThree = thirdUpdate[2];
+            expect( updatedTabThree ).toMatchObject(
+                {
+                    ...nonActiveTab,
+                    url          : 'forward again',
+                    historyIndex : 2
+                }
+            );
+        } );
     } );
 
-    describe( 'ACTIVE_TAB_BACKWARDS', () =>
+    describe( 'TAB_BACKWARDS', () =>
     {
         const activeTab = {
             ...basicTab,
@@ -586,11 +641,10 @@ describe( 'tabs reducer', () =>
             url          : 'forward again',
             index        : 1
         };
-
-        it( 'should move the active tab backwards in time', () =>
+        it( 'should move the active tab backwards in time, if no tab index specified', () =>
         {
-            const firstUpdate = tabs( [ basicTab, activeTab ], {
-                type : TYPES.ACTIVE_TAB_BACKWARDS
+            const firstUpdate = tabs( [basicTab, activeTab], {
+                type : TYPES.TAB_BACKWARDS
             } );
 
             const updatedTab = firstUpdate[1];
@@ -603,7 +657,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab ).toHaveProperty( 'history' );
 
             const secondState = tabs( firstUpdate, {
-                type : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.TAB_BACKWARDS
             } );
 
             const updatedTabAgain = secondState[1];
@@ -614,7 +668,7 @@ describe( 'tabs reducer', () =>
             } );
 
             const thirdState = tabs( secondState, {
-                type : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.TAB_BACKWARDS
             } );
 
             const updatedTabThree = thirdState[1];
@@ -623,6 +677,61 @@ describe( 'tabs reducer', () =>
                 url          : 'hello',
                 historyIndex : 0
             } );
+        } );
+
+        it( 'should move the specified tab backwards, according to tab index', () =>
+        {
+            const inActiveTab = {
+                ...basicTab,
+                isActiveTab  : false,
+                history      : ['hello', 'second', 'third'],
+                historyIndex : 2,
+                url          : 'forward again',
+                index        : 1
+            };
+            const firstUpdate = tabs( [basicTab, inActiveTab], {
+                type    : TYPES.TAB_BACKWARDS,
+                payload : { index: 1 }
+            } );
+
+            const updatedTab = firstUpdate[1];
+            expect( updatedTab ).toMatchObject(
+                {
+                    ...inActiveTab,
+                    url          : 'second',
+                    historyIndex : 1
+                }
+            );
+
+            expect( updatedTab ).toHaveProperty( 'history' );
+
+            const secondState = tabs( firstUpdate, {
+                type    : TYPES.TAB_BACKWARDS,
+                payload : { index: 1 }
+            } );
+
+            const updatedTabAgain = secondState[1];
+            expect( updatedTabAgain ).toMatchObject(
+                {
+                    ...inActiveTab,
+                    url          : 'hello',
+                    historyIndex : 0
+                }
+            );
+
+            const thirdState = tabs( secondState, {
+                type    : TYPES.TAB_BACKWARDS,
+                payload : { index: 1 }
+            } );
+
+            const updatedTabThree = thirdState[1];
+            expect( updatedTabThree ).toMatchObject(
+                {
+                    ...inActiveTab,
+                    url          : 'hello',
+                    historyIndex : 0
+                }
+            );
         } );
 
         it( 'should decrease the history/index when going backwards and increase going forwards', () =>
@@ -639,7 +748,7 @@ describe( 'tabs reducer', () =>
             } );
 
             const backwardsOnce = tabs( secondState, {
-                type : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.TAB_BACKWARDS
             } );
 
             const updatedTab = backwardsOnce[1];
@@ -662,7 +771,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab.history ).toHaveLength( 5 );
 
             const backwardsAgain = tabs( backwardsOnce, {
-                type : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.TAB_BACKWARDS
             } );
 
             const updatedTabAgain = backwardsAgain[1];
@@ -685,11 +794,11 @@ describe( 'tabs reducer', () =>
             expect( updatedTabAgain.history ).toHaveLength( 5 );
 
             const forwardsNow = tabs( backwardsOnce, {
-                type : TYPES.ACTIVE_TAB_FORWARDS
+                type : TYPES.TAB_FORWARDS
             } );
 
             const forwardsAgin = tabs( forwardsNow, {
-                type : TYPES.ACTIVE_TAB_FORWARDS
+                type : TYPES.TAB_FORWARDS
             } );
 
             const updatedTabForwards = forwardsAgin[1];
@@ -708,6 +817,44 @@ describe( 'tabs reducer', () =>
             } );
             expect( updatedTabForwards.historyIndex ).toBe( 4 );
             expect( updatedTabForwards.history ).toHaveLength( 5 );
+        } );
+
+        it( 'should move the specified tab backwards, according to window', () =>
+        {
+            const windowOne = {
+                ...activeTab,
+                index    : 0,
+                windowId : 1
+            };
+
+            const windowTwo = {
+                ...activeTab,
+                index    : 1,
+                windowId : 2
+            };
+            const firstUpdate = tabs( [windowOne, windowTwo], {
+                type    : TYPES.TAB_BACKWARDS,
+                payload : { index: 0 }
+            } );
+
+            expect( firstUpdate[0] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'second',
+                    index        : 0,
+                    historyIndex : 1,
+                    windowId     : 1
+                }
+            );
+            expect( firstUpdate[1] ).toMatchObject(
+                {
+                    ...activeTab,
+                    url          : 'forward again',
+                    historyIndex : 2,
+                    windowId     : 2,
+                    index        : 1,
+                }
+            );
         } );
     } );
 
@@ -729,8 +876,8 @@ describe( 'tabs reducer', () =>
 
         it( 'should remove history on forward/backwards/newURL navigations', () =>
         {
-            const firstUpdate = tabs( [ basicTab, basicTab, activeTab ], {
-                type : TYPES.ACTIVE_TAB_FORWARDS
+            const firstUpdate = tabs( [basicTab, basicTab, activeTab], {
+                type : TYPES.TAB_FORWARDS
             } );
 
             const updatedTab = firstUpdate[2];
@@ -744,7 +891,7 @@ describe( 'tabs reducer', () =>
             expect( updatedTab.history ).toHaveLength( 5 );
 
             const secondUpdate = tabs( firstUpdate, {
-                type : TYPES.ACTIVE_TAB_BACKWARDS
+                type : TYPES.TAB_BACKWARDS
             } );
 
             const updatedTabAgain = secondUpdate[2];

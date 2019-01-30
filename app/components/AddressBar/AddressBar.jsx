@@ -14,45 +14,51 @@ import 'antd/lib/col/style';
 
 import styles from './addressBar.css';
 
-export default class AddressBar extends Component {
-    static propTypes = {
-        address: PropTypes.string,
-        isSelected: PropTypes.bool,
-        settingsMenuIsVisible: PropTypes.bool,
-        activeTab: PropTypes.shape({ url: PropTypes.string }),
-        windowId: PropTypes.number.isRequired,
-        isBookmarked: PropTypes.bool.isRequired,
-        addTab: PropTypes.func.isRequired,
-        addBookmark: PropTypes.func.isRequired,
-        removeBookmark: PropTypes.func.isRequired,
-        onBlur: PropTypes.func.isRequired,
-        onSelect: PropTypes.func.isRequired,
-        onFocus: PropTypes.func.isRequired,
-        reloadPage: PropTypes.func.isRequired,
-        updateActiveTab: PropTypes.func.isRequired,
-        activeTabBackwards: PropTypes.func.isRequired,
-        activeTabForwards: PropTypes.func.isRequired,
-        showSettingsMenu: PropTypes.func.isRequired,
-        hideSettingsMenu: PropTypes.func.isRequired,
-        focusWebview: PropTypes.func.isRequired
-    };
 
-    static defaultProps = {
-        address: '',
-        isSelected: false,
-        settingsMenuIsVisible: false,
-        editingUrl: false
-    };
+export default class AddressBar extends Component
+{
+    static propTypes =
+    {
+        address               : PropTypes.string,
+        isSelected            : PropTypes.bool,
+        settingsMenuIsVisible : PropTypes.bool,
+        activeTab             : PropTypes.shape( { url: PropTypes.string } ),
+        windowId              : PropTypes.number.isRequired,
+        isBookmarked          : PropTypes.bool.isRequired,
+        addTab                : PropTypes.func.isRequired,
+        addBookmark           : PropTypes.func.isRequired,
+        removeBookmark        : PropTypes.func.isRequired,
+        onBlur                : PropTypes.func.isRequired,
+        onSelect              : PropTypes.func.isRequired,
+        onFocus               : PropTypes.func.isRequired,
+        reloadPage            : PropTypes.func.isRequired,
+        updateActiveTab       : PropTypes.func.isRequired,
+        tabBackwards          : PropTypes.func.isRequired,
+        tabForwards           : PropTypes.func.isRequired,
+        showSettingsMenu      : PropTypes.func.isRequired,
+        hideSettingsMenu      : PropTypes.func.isRequired,
+        focusWebview          : PropTypes.func.isRequired
+    }
 
-    handleBack = () => {
-        const { activeTabBackwards, windowId } = this.props;
-        activeTabBackwards(windowId);
-    };
+    static defaultProps =
+    {
+        address               : '',
+        isSelected            : false,
+        settingsMenuIsVisible : false,
+        editingUrl            : false
+    }
 
-    handleForward = () => {
-        const { activeTabForwards, windowId } = this.props;
-        activeTabForwards(windowId);
-    };
+    handleBack = ( ) =>
+    {
+        const { tabBackwards, windowId } = this.props;
+        tabBackwards( { windowId } );
+    }
+
+    handleForward = ( ) =>
+    {
+        const { tabForwards, windowId } = this.props;
+        tabForwards( { windowId } );
+    }
 
     handleRefresh = event => {
         // TODO: if cmd or so clicked, hard.
