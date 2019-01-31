@@ -338,13 +338,7 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
-        const body = document.querySelector( 'body' );
-        const div = document.createElement( 'div' );
-        div.setAttribute( 'class', 'no_display' );
-        div.setAttribute( 'id', 'link_revealer' );
-        body.appendChild( div );
-        window.addEventListener( 'focus', () =>
-        {
+        window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) =>
             {
                 webview.focus();

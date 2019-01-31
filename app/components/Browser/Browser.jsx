@@ -129,6 +129,11 @@ class Browser extends Component
                     console.info( 'unhandled command: ', type );
             }
         } );
+        const body = document.querySelector( 'body' );
+        const div = document.createElement( 'div' );
+        div.setAttribute( 'class', 'no_display' );
+        div.setAttribute( 'id', 'link_revealer' );
+        body.appendChild( div );
     }
 
     shouldComponentUpdate = nextProps =>
