@@ -3,11 +3,8 @@
  *
  * Running in the background process
  */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-unresolved, import/extensions */
 import ffi from 'ffi';
 import ref from 'ref';
-/* eslint-enable import/no-unresolved, import/extensions */
 import crypto from 'crypto';
 import lodash from 'lodash';
 import logger from 'logger';
@@ -19,10 +16,8 @@ import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
-
 import { isRunningNodeEnvTest } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
-// private variables
+
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
 const _appListUpdateListener = Symbol( 'appListUpdate' );
@@ -110,7 +105,7 @@ class Authenticator extends SafeLib
         return this.isLibLoaded;
     }
 
-
+    /* eslint-disable class-methods-use-this */
     fnsToRegister()
     {
         return {
@@ -132,7 +127,7 @@ class Authenticator extends SafeLib
             auth_account_info                : [types.Void, [types.voidPointer, 'pointer', 'pointer']]
         };
     }
-
+    /* eslint-enable class-methods-use-this */
     setListener( type, cb )
     {
     // FIXME check .key required
