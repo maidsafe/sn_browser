@@ -1,7 +1,6 @@
 import React from 'react';
-import { mount, render, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import Tab from 'components/Tab';
-import { CLASSES } from 'appConstants';
 
 describe( 'Tab', () =>
 {

@@ -1,5 +1,4 @@
 import { parse as urlParse } from 'url';
-import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
     bookmarkActiveTabPage,
     delay,
@@ -10,13 +9,9 @@ import {
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from './lib/constants';
 import {
     setupSpectronApp
-    , isCI
-    , travisOS
     , afterAllTests
     , beforeAllTests
     , windowLoaded
-    , nodeEnv
-    , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
@@ -198,7 +193,7 @@ describe( 'main window', () =>
         await delay( 4500 );
 
         await setClientToMainBrowserWindow( app );
-        const tabIndex = await newTab( app );
+        await newTab( app );
 
         await navigateTo( app, 'bbc.com' );
         await client.waitForExist( BROWSER_UI.CLOSE_TAB, WAIT_FOR_EXIST_TIMEOUT );
@@ -345,7 +340,7 @@ describe( 'main window', () =>
     } );
 
     // TODO: Setup spectron spoofer for these menu interactions.
-    xtest( 'closes the window', async () =>
+    /* xtest( 'closes the window', async () =>
     {
         const { client } = app;
         await setClientToMainBrowserWindow( app );
@@ -357,5 +352,5 @@ describe( 'main window', () =>
         await client.keys( ['\ue03d', '\ue008', 'w'] ); // shift + cmd + w
         // rest - to test on ci...
         await client.keys( ['\ue008', '\ue009', 'w'] ); // shift + ctrl + w
-    } );
+    } ); */
 } );

@@ -1,22 +1,12 @@
-import { parse as urlParse } from 'url';
-import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
-    bookmarkActiveTabPage,
     delay,
-    navigateTo,
-    newTab,
-    setClientToMainBrowserWindow
+    newTab
 } from 'spectron-lib/browser-driver';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
 import {
     setupSpectronApp
-    , isCI
-    , travisOS
     , afterAllTests
     , beforeAllTests
-    , windowLoaded
-    , nodeEnv
-    , isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
