@@ -104,7 +104,7 @@ class SystemUriLoader
             }
         } );
     }
-
+    /* eslint-disable class-methods-use-this */
     _handleError( resolve, reject )
     {
         return ffi.Callback( type.Void, [type.voidPointer, type.FfiResultPointer],
@@ -120,6 +120,7 @@ class SystemUriLoader
         );
     }
 }
+/* eslint-enable class-methods-use-this */
 
 const loader = new SystemUriLoader();
 loader.load();

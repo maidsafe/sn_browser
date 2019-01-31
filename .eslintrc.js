@@ -23,6 +23,7 @@ module.exports = {
     "max-len": "off",
     "no-plusplus": "off",
     "brace-style": ["error", "allman"],
+    "no-param-reassign": ["error", { "props": false }],
     "compat/compat": "error",
     "consistent-return": "warn",
     "no-undef": "warn",
@@ -57,6 +58,7 @@ module.exports = {
     "no-multi-assign": "off",
     "promise/param-names": "error",
     "promise/always-return": "warn",
+    "no-prototype-builtins":"off",
     "promise/catch-or-return": "warn",
     "promise/no-native": "off",
     "react/sort-comp": ["error", {
