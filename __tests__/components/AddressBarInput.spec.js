@@ -40,7 +40,8 @@ describe( 'AddressBarInput', () =>
             onBlur          : jest.fn(),
             onSelect        : jest.fn(),
             onFocus         : jest.fn(),
-            activeTab       : { isLoading: false }
+            activeTab       : { isLoading: false },
+            updateTab       : jest.fn()
         };
     } );
 
@@ -126,18 +127,18 @@ describe( 'AddressBarInput', () =>
             expect( props.onFocus ).toHaveBeenCalled();
         } );
 
-        it( 'check on onKeyPress if updateActiveTab is called', () =>
+        it( 'check on onKeyPress if updateTab is called', () =>
         {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateActiveTab ).toHaveBeenCalled();
+            expect( props.updateTab ).toHaveBeenCalled();
         } );
 
-        it( 'check on onKeyPress if updateActiveTab is called with params', () =>
+        it( 'check on onKeyPress if updateTab is called with params', () =>
         {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateActiveTab ).toHaveBeenCalledWith( { url: 'about:blank', windowId: 1 } );
+            expect( props.updateTab ).toHaveBeenCalledWith( { url: 'about:blank', windowId: 1 } );
         } );
 
         it( 'check on onChange, if onSelect() is called', () =>

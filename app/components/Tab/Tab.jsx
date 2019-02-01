@@ -250,7 +250,7 @@ export default class Tab extends Component
 
         if ( !shouldReload && nextProps.shouldReload )
         {
-            logger.info('should reload, should reload');
+            logger.verbose('Should reload URL: ', nextProps.url);
             this.reload();
             const tabUpdate = {
                 index,

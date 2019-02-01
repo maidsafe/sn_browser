@@ -271,23 +271,22 @@ describe( 'tabs reducer', () =>
                 isClosed    : true
             } );
         } );
-    } );
 
-    describe( 'CLOSE_ACTIVE_TAB', () =>
-    {
-        const activeTab = { ...basicTab, isActiveTab: true, index: 2 };
-        const otherTab = { ...basicTab, index: 1 };
-        it( 'should set the active tab as closed and inactive', () =>
+        it( 'should set the active tab, in the current window, as closed and inactive, if no tab index passed', () =>
         {
-            const newState = tabs( [ basicTab, otherTab, activeTab ], {
-                type : TYPES.CLOSE_ACTIVE_TAB
+            const otherTab = { ...basicTab, index: 1 };
+            const newState = tabs( [basicTab, otherTab, { ...activeTab, index: 2 }], {
+                type : TYPES.CLOSE_TAB
             } );
 
-            expect( newState[2] ).toMatchObject( {
-                ...activeTab,
-                isActiveTab : false,
-                isClosed    : true
-            } );
+            expect( newState[2] ).toMatchObject(
+                {
+                    ...activeTab,
+                    isActiveTab : false,
+                    isClosed    : true,
+                    index       : 2
+                }
+            );
 
             expect( newState[2] ).toHaveProperty( 'closedTime' );
         } );
@@ -336,23 +335,25 @@ describe( 'tabs reducer', () =>
         } );
     } );
 
-    describe( 'UPDATE_ACTIVE_TAB', () =>
+    describe( 'UPDATE_TAB', () =>
     {
         let activeTab;
         let anotherWindowActiveTab;
+        let secondTab;
 
         beforeEach( () =>
         {
-            activeTab = { ...basicTab, isActiveTab: true };
+            activeTab = { ...basicTab, isActiveTab: true, index: 2 };
             anotherWindowActiveTab = { ...activeTab, windowId: 2 };
+            secondTab = { ...basicTab, index: 1 };
         } );
 
         it( 'should throw if no windowId passed', () =>
         {
             try
             {
-                const newState = tabs( [ basicTab, basicTab, activeTab ], {
-                    type    : TYPES.UPDATE_ACTIVE_TAB,
+                const newState = tabs( [basicTab, basicTab, activeTab], {
+                    type    : TYPES.UPDATE_TAB,
                     payload : { url: 'changed!', title: 'hi' }
                 } );
             }
@@ -364,8 +365,8 @@ describe( 'tabs reducer', () =>
 
         it( "should update the active tab's properties", () =>
         {
-            const newState = tabs( [ basicTab, basicTab, activeTab ], {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
@@ -383,13 +384,10 @@ describe( 'tabs reducer', () =>
 
         it( 'should only update the active tab in the same window properties', () =>
         {
-            const newState = tabs(
-                [ basicTab, basicTab, anotherWindowActiveTab, activeTab ],
-                {
-                    type    : TYPES.UPDATE_ACTIVE_TAB,
-                    payload : { url: 'changed!', title: 'hi', windowId: 1 }
-                }
-            );
+            const newState = tabs( [basicTab, basicTab, anotherWindowActiveTab, activeTab], {
+                type    : TYPES.UPDATE_TAB,
+                payload : { url: 'changed!', title: 'hi', windowId: 1 }
+            } );
 
             expect( newState[3] ).toMatchObject( {
                 ...activeTab,
@@ -409,8 +407,8 @@ describe( 'tabs reducer', () =>
 
         it( "should update the active tab's with a  url when no protocol is given", () =>
         {
-            const newState = tabs( [ basicTab, basicTab, activeTab ], {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
@@ -428,8 +426,8 @@ describe( 'tabs reducer', () =>
 
         it( 'should return a new history array when URL is changed', () =>
         {
-            const newState = tabs( [ basicTab, basicTab, activeTab ], {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
@@ -438,22 +436,22 @@ describe( 'tabs reducer', () =>
 
         it( 'should not add to history index when same url is given', () =>
         {
-            const newState = tabs( [ basicTab, basicTab, activeTab ], {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+            const newState = tabs( [basicTab, basicTab, activeTab], {
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
 
             const secondState = tabs( newState, {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed!', title: 'hi', windowId: 1 }
             } );
             const thirdState = tabs( secondState, {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed#woooo', title: 'hi', windowId: 1 }
             } );
 
             const fourthState = tabs( thirdState, {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
+                type    : TYPES.UPDATE_TAB,
                 payload : { url: 'changed#woooo', title: 'hi', windowId: 1 }
             } );
 
@@ -475,12 +473,6 @@ describe( 'tabs reducer', () =>
 
             expect( fourthState[2].history.length ).toBe( 3 );
         } );
-    } );
-
-    describe( 'UPDATE_TAB', () =>
-    {
-        const activeTab = { ...basicTab, isActiveTab: true, index: 2 };
-        const secondTab = { ...basicTab, index: 1 };
 
         it( 'should update the tab specified in the payload', () =>
         {
@@ -528,10 +520,9 @@ describe( 'tabs reducer', () =>
         } );
     } );
 
-
     describe( 'TAB_FORWARDS', () =>
     {
-        it( 'should move the active tab forwards, if no tab index specified', () =>
+        it( 'should move the active tab, in the current window, forwards, if no tab index specified', () =>
         {
             const activeTab = {
                 ...basicTab,
@@ -905,11 +896,8 @@ describe( 'tabs reducer', () =>
             expect( updatedTabAgain.history ).toHaveLength( 5 );
 
             const thirdUpdate = tabs( secondUpdate, {
-                type    : TYPES.UPDATE_ACTIVE_TAB,
-                payload : {
-                    url      : 'new url overwriting previous history array',
-                    windowId : 1
-                }
+                type    : TYPES.UPDATE_TAB,
+                payload : { url: 'new url overwriting previous history array', windowId: 1 }
             } );
 
             const updatedTabThree = thirdUpdate[2];

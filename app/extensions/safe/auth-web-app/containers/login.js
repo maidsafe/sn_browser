@@ -6,8 +6,7 @@ import Login from '../components/login';
 import {
     login,
     clearAuthLoader,
-    clearError,
-    hideLibErrPopup
+    clearError
 } from '../actions/auth';
 
 const mapStateToProps = state => ( {
@@ -24,8 +23,7 @@ const mapDispatchToProps = dispatch => ( {
         {
             login,
             clearAuthLoader,
-            clearError,
-            hideLibErrPopup
+            clearError
         },
         dispatch
     )

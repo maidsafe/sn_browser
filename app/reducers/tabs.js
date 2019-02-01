@@ -113,18 +113,16 @@ const addTab = ( state, tab ) =>
  */
 const closeTab = ( state, payload ) =>
 {
-    if ( payload && payload.index || payload.index === 0 )
+    try
     {
-        var { index } = payload;
-        var tabToMerge = { ...state[index] };
+        var { index, tabToMerge } = handleTabPayload( state, payload );
     }
-    else
+    catch ( err )
     {
-        const windowId = payload && payload.windowId ? payload.windowId : undefined;
-        const tab = getActiveTab( state, windowId );
-        var index = getActiveTabIndex( state, windowId );
-        var tabToMerge = { ...tab };
+        logger.error( err );
+        return state;
     }
+
     const currentWindowId = getCurrentWindowId();
     const targetWindowId = tabToMerge.windowId ? tabToMerge.windowId : currentWindowId;
     const openTabs = state.filter( tab => !tab.isClosed && tab.windowId === targetWindowId );
@@ -211,19 +209,17 @@ export function getLastClosedTab( state )
 
 const moveTabForwards = ( state, payload ) =>
 {
-    if ( payload && payload.index || payload.index === 0 )
+    try
     {
-        var { index } = payload;
-        var updatedTab = { ...state[index] };
+        var { index, tabToMerge } = handleTabPayload( state, payload );
     }
-    else
+    catch ( err )
     {
-        const windowId = payload && payload.windowId ? payload.windowId : undefined;
-        const tab = getActiveTab( state, windowId );
-        var index = getActiveTabIndex( state, windowId );
-        var updatedTab = { ...tab };
+        logger.error( err );
+        return state;
     }
 
+    const updatedTab = tabToMerge;
     const history = updatedTab.history;
     const nextHistoryIndex = updatedTab.historyIndex + 1 || 1;
 
@@ -247,19 +243,17 @@ const moveTabForwards = ( state, payload ) =>
 
 const moveTabBackwards = ( state, payload ) =>
 {
-    if ( payload && payload.index || payload.index === 0)
+    try
     {
-        var { index } = payload;
-        var updatedTab = { ...state[index] };
+        var { index, tabToMerge } = handleTabPayload( state, payload );
     }
-    else
+    catch ( err )
     {
-        const windowId = payload && payload.windowId ? payload.windowId : undefined;
-        const tab = getActiveTab( state, windowId );
-        var index = getActiveTabIndex( state, windowId );
-        var updatedTab = { ...tab };
+        logger.error( err );
+        return state;
     }
 
+    const updatedTab = tabToMerge;
     const history = updatedTab.history;
     const nextHistoryIndex = updatedTab.historyIndex - 1;
 
@@ -359,31 +353,69 @@ const updateTabHistory = ( tabToMerge, payload ) =>
     return updatedTab;
 };
 
-const updateTab = ( state, payload ) =>
+const handleTabPayload = ( state, payload ) =>
 {
-    if ( payload && payload.index || payload.index === 0 )
+    if ( payload )
     {
-        var { index } = payload;
-        if ( index < 0 )
+        if ( payload.constructor !== Object )
         {
-            return state;
+            throw new Error( "Payload must be an Object." );
         }
-        var updatedTab = { ...state[index] };
+
+        if ( payload.index || payload.index === 0 )
+        {
+            const  { index } = payload;
+            const  tabToMerge = { ...state[index] };
+            return { index, tabToMerge };
+        }
+        else if ( payload.windowId )
+        {
+            const windowId = payload.windowId;
+            const tab = getActiveTab( state, windowId );
+            const index = getActiveTabIndex( state, windowId );
+            const tabToMerge = { ...tab };
+            return { index, tabToMerge };
+        }
+        else
+        {
+            const tab = getActiveTab( state );
+            const index = getActiveTabIndex( state );
+            const tabToMerge = { ...tab };
+            return { index, tabToMerge };
+        }
     }
     else
     {
-        const windowId = payload && payload.windowId ? payload.windowId : undefined;
-        const tab = getActiveTab( state, windowId );
-        var index = getActiveTabIndex( state, windowId );
-        var updatedTab = { ...tab };
+        const tab = getActiveTab( state );
+        const index = getActiveTabIndex( state );
+        const tabToMerge = { ...tab };
+        return { index, tabToMerge };
     }
 
-    updatedTab = { ...updatedTab, ...payload };
+}
+
+const updateTab = ( state, payload ) =>
+{
+    try
+    {
+        var { index, tabToMerge } = handleTabPayload( state, payload );
+    }
+    catch ( err )
+    {
+        logger.error( err );
+        return state;
+    }
+
+    if ( index < 0 )
+    {
+        return state;
+    }
+
+    let updatedTab = { ...tabToMerge, ...payload };
 
     if ( payload.url )
     {
-        const url = makeValidAddressBarUrl( payload.url );
-        updatedTab = updateTabHistory( updatedTab, payload );
+        updatedTab = updateTabHistory( tabToMerge, payload );
     }
 
     const updatedState = [ ...state ];
