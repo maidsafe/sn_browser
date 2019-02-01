@@ -212,10 +212,10 @@ export function getLastClosedTab( state )
 
 const moveTabForwards = ( state, payload ) =>
 {
-    if ( payload && payload.index )
+    if ( payload && payload.index || payload.index === 0 )
     {
         var { index } = payload;
-        var updatedTab = state[index];
+        var updatedTab = { ...state[index] };
     }
     else
     {
@@ -248,10 +248,10 @@ const moveTabForwards = ( state, payload ) =>
 
 const moveTabBackwards = ( state, payload ) =>
 {
-    if ( payload && payload.index )
+    if ( payload && payload.index || payload.index === 0)
     {
         var { index } = payload;
-        var updatedTab = state[index];
+        var updatedTab = { ...state[index] };
     }
     else
     {
@@ -360,58 +360,31 @@ const updateTabHistory = ( tabToMerge, payload ) =>
     return updatedTab;
 };
 
-const updateActiveTab = ( state, payload ) =>
-{
-    const { windowId } = payload;
-
-    const index = state.findIndex(
-        tab => tab.isActiveTab && tab.windowId === windowId
-    );
-
-    if ( !windowId )
-    {
-        throw new Error(
-            'Updating Active Tab requires the relevant windowId to be passed.'
-        );
-    }
-
-    if ( index < 0 ) return state;
-
-    const tabToMerge = state[index];
-
-    let updatedTab = { ...tabToMerge };
-
-    updatedTab = { ...updatedTab, ...payload };
-
-    if ( payload.url )
-    {
-        updatedTab = updateTabHistory( tabToMerge, payload );
-    }
-
-    const updatedState = [ ...state ];
-
-    updatedState[index] = updatedTab;
-    return updatedState;
-};
-
 const updateTab = ( state, payload ) =>
 {
-    const index = payload.index;
-
-    if ( index < 0 )
+    if ( payload && payload.index || payload.index === 0 )
     {
-        return state;
+        var { index } = payload;
+        if ( index < 0 )
+        {
+            return state;
+        }
+        var updatedTab = { ...state[index] };
+    }
+    else
+    {
+        const windowId = payload && payload.windowId ? payload.windowId : undefined;
+        const tab = getActiveTab( state, windowId );
+        var index = getActiveTabIndex( state, windowId );
+        var updatedTab = { ...tab };
     }
 
-    const tabToMerge = state[index];
-
-    let updatedTab = { ...tabToMerge };
     updatedTab = { ...updatedTab, ...payload };
 
     if ( payload.url )
     {
         const url = makeValidAddressBarUrl( payload.url );
-        updatedTab = updateTabHistory( tabToMerge, payload );
+        updatedTab = updateTabHistory( updatedTab, payload );
     }
 
     const updatedState = [ ...state ];
@@ -456,10 +429,8 @@ export default function tabs( state: array = initialState, action )
         case TYPES.REOPEN_TAB: {
             return reopenTab( state );
         }
-        case TYPES.UPDATE_ACTIVE_TAB: {
-            return updateActiveTab( state, payload );
-        }
-        case TYPES.UPDATE_TAB: {
+        case TYPES.UPDATE_TAB :
+        {
             return updateTab( state, payload );
         }
         case TYPES.TAB_FORWARDS :

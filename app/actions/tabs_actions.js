@@ -8,7 +8,6 @@ export const TYPES = {
     CLOSE_ACTIVE_TAB  : 'CLOSE_ACTIVE_TAB',
     UPDATE_TAB        : 'UPDATE_TAB',
     UPDATE_TABS       : 'UPDATE_TABS',
-    UPDATE_ACTIVE_TAB : 'UPDATE_ACTIVE_TAB',
     SET_ACTIVE_TAB    : 'SET_ACTIVE_TAB',
     REOPEN_TAB        : 'REOPEN_TAB'
 };
@@ -21,7 +20,6 @@ export const {
     , reopenTab
     , updateTab
     , updateTabs
-    , updateActiveTab
     , tabForwards
     , tabBackwards
 } = createActions(
@@ -32,7 +30,6 @@ export const {
     , TYPES.REOPEN_TAB
     , TYPES.UPDATE_TAB
     , TYPES.UPDATE_TABS
-    , TYPES.UPDATE_ACTIVE_TAB
     , TYPES.TAB_FORWARDS
     , TYPES.TAB_BACKWARDS
 );

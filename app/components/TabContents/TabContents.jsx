@@ -15,9 +15,6 @@ export default class TabContents extends Component {
         super(props);
         this.allTabComponents = [];
     }
-    getActiveTab() {
-        return this.activeTab;
-    }
 
     render() {
         const {
@@ -27,10 +24,7 @@ export default class TabContents extends Component {
             bookmarks,
             allTabs,
             tabs,
-            updateActiveTab,
             updateTab,
-            isActiveTabReloading,
-            pageLoaded,
             windowId,
             safeExperimentsEnabled,
             focusWebview,
@@ -86,12 +80,9 @@ export default class TabContents extends Component {
                     webId={ tab.webId }
                     url={ tab.url }
                     isActiveTab={ isActiveTab }
-                    isActiveTabReloading={ isActiveTabReloading }
                     addTab={ addTab }
                     closeTab={ closeTab }
                     updateTab={ updateTab }
-                    updateActiveTab={ updateActiveTab }
-                    pageLoaded={ pageLoaded }
                     key={ tab.index }
                     index={ tab.index }
                     windowId={ windowId }
@@ -99,6 +90,8 @@ export default class TabContents extends Component {
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ shouldFocusWebview }
                     tabBackwards={ tabBackwards }
+                    shouldReload={ tab.shouldReload }
+                    shouldToggleDevTools={ tab.shouldToggleDevTools }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )

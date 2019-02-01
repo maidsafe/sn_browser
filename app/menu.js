@@ -8,7 +8,8 @@ import {
     tabBackwards,
     closeActiveTab,
     reopenTab,
-    setActiveTab
+    setActiveTab,
+    updateTab
 } from '@Actions/tabs_actions';
 
 import { selectAddressBar } from '@Actions/ui_actions';
@@ -322,41 +323,33 @@ export default class MenuBuilder
                     }
                 },
                 { type: 'separator' },
-                {
-                    label       : 'Reload',
+                { label       : 'Reload',
                     accelerator : 'CommandOrControl+R',
                     click       : ( item, win ) =>
                     {
-                        if ( win ) win.webContents.send( 'command', 'view:reload' );
-                    }
-                },
-                {
-                    label       : 'Toggle Full Screen',
-                    accelerator :
-                        process.platform === 'darwin'
-                            ? 'CommandOrControl+Shift+F'
-                            : 'F11',
-                    click : () =>
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+                            store.dispatch( updateTab( { windowId, shouldReload: true } ) );
+                        }
+;
+                    } },
+                { label       : 'Toggle Full Screen',
+                    accelerator :  process.platform === 'darwin' ? 'CommandOrControl+Shift+F' : 'F11',
+                    click       : () =>
                     {
-                        this.mainWindow.setFullScreen(
-                            !this.mainWindow.isFullScreen()
-                        );
-                    }
-                },
-                {
-                    label       : 'Toggle Developer Tools',
+                        this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
+                    } },
+                { label       : 'Toggle Developer Tools',
                     accelerator : 'Alt+CommandOrControl+I',
                     click       : ( item, win ) =>
                     {
                         if ( win )
                         {
-                            win.webContents.send(
-                                'command',
-                                'view:toggle-dev-tools'
-                            );
+                            const windowId = win.webContents.id;
+                            store.dispatch( updateTab( { windowId, shouldToggleDevTools: true } ) );
                         }
-                    }
-                }
+                    } }
             ]
         };
         const subMenuHistory = {

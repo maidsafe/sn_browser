@@ -66,14 +66,4 @@ describe( 'tab actions', () =>
         };
         expect( actions.updateTab( payload ) ).toEqual( expectedAction );
     } );
-
-    it( 'should create an action to updateActiveTab', () =>
-    {
-        const payload = { url: 'hi' };
-        const expectedAction = {
-            type : actions.TYPES.UPDATE_ACTIVE_TAB,
-            payload
-        };
-        expect( actions.updateActiveTab( payload ) ).toEqual( expectedAction );
-    } );
 } );

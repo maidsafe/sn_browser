@@ -30,11 +30,9 @@ export default class Tab extends Component
         url                  : PropTypes.string.isRequired,
         index                : PropTypes.number.isRequired,
         windowId             : PropTypes.number.isRequired,
-        isActiveTabReloading : PropTypes.bool.isRequired,
         closeTab             : PropTypes.func.isRequired,
         updateTab            : PropTypes.func.isRequired,
         addTab               : PropTypes.func.isRequired,
-        pageLoaded           : PropTypes.func.isRequired,
         addNotification      : PropTypes.func.isRequired,
         focusWebview         : PropTypes.func.isRequired,
         shouldFocusWebview   : PropTypes.bool.isRequired,
@@ -70,7 +68,6 @@ export default class Tab extends Component
         this.stop = ::this.stop;
         this.openDevTools = ::this.openDevTools;
         this.loadURL = ::this.loadURL;
-        this.reloadIfActive = ::this.reloadIfActive;
 
         this.debouncedWebIdUpdateFunc = _.debounce(
             this.updateTheIdInWebview,
@@ -87,18 +84,6 @@ export default class Tab extends Component
             return webview.isDevToolsOpened();
         }
     };
-
-    reloadIfActive()
-    {
-        const { isActiveTab, pageLoaded } = this.props;
-        if ( !isActiveTab )
-        {
-            return;
-        }
-
-        this.reload();
-        pageLoaded();
-    }
 
     buildMenu = webview => {
 
@@ -213,7 +198,7 @@ export default class Tab extends Component
 
         if ( !this.state.browserState.mountedAndReady ) return;
 
-        const { focusWebview, isActiveTab, url } = this.props;
+        const { focusWebview, isActiveTab, url, updateTab, index, shouldToggleDevTools, shouldReload } = this.props;
         const { webview } = this;
 
         logger.info( 'Tab: did receive updated props' );
@@ -263,9 +248,24 @@ export default class Tab extends Component
             }
         }
 
-        if ( nextProps.isActiveTabReloading )
+        if ( !shouldReload && nextProps.shouldReload )
         {
-            this.reloadIfActive();
+            this.reload();
+            const tabUpdate = {
+                index,
+                shouldReload : false
+            };
+            updateTab( tabUpdate );
+        }
+
+        if ( !shouldToggleDevTools && nextProps.shouldToggleDevTools )
+        {
+            ( this.isDevToolsOpened() ) ? this.closeDevTools() : this.openDevTools();
+            const tabUpdate = {
+                index,
+                shouldToggleDevTools : false
+            };
+            updateTab( tabUpdate );
         }
     }
 
@@ -604,7 +604,7 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            this.props.updateActiveTab( { url, windowId } );
+            this.props.updateTab( { windowId, url } );
         }
 
     }

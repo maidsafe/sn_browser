@@ -39,11 +39,9 @@ describe( 'AddressBarButtonsRHS', () =>
             removeBookmark  : jest.fn(),
             tabBackwards    : jest.fn(),
             tabForwards     : jest.fn(),
-            updateActiveTab : jest.fn(),
             onBlur          : jest.fn(),
             onSelect        : jest.fn(),
             onFocus         : jest.fn(),
-            reloadPage      : jest.fn(),
             activeTab       : { isLoading: false }
         };
     } );
