@@ -113,15 +113,21 @@ const addTab = ( state, tab ) =>
  */
 const closeTab = ( state, payload ) =>
 {
-    const index = payload.index;
+    if ( payload && payload.index || payload.index === 0 )
+    {
+        var { index } = payload;
+        var tabToMerge = { ...state[index] };
+    }
+    else
+    {
+        const windowId = payload && payload.windowId ? payload.windowId : undefined;
+        const tab = getActiveTab( state, windowId );
+        var index = getActiveTabIndex( state, windowId );
+        var tabToMerge = { ...tab };
+    }
     const currentWindowId = getCurrentWindowId();
-    const tabToMerge = state[index];
-    const targetWindowId = tabToMerge
-        ? tabToMerge.windowId || currentWindowId
-        : currentWindowId;
-    const openTabs = state.filter(
-        tab => !tab.isClosed && tab.windowId === targetWindowId
-    );
+    const targetWindowId = tabToMerge.windowId ? tabToMerge.windowId : currentWindowId;
+    const openTabs = state.filter( tab => !tab.isClosed && tab.windowId === targetWindowId );
 
     const updatedTab = {
         ...tabToMerge,
@@ -136,7 +142,7 @@ const closeTab = ( state, payload ) =>
 
     if ( tabToMerge.isActiveTab )
     {
-        const ourTabIndex = openTabs.findIndex( tab => tab === tabToMerge );
+        const ourTabIndex = openTabs.findIndex( tab => JSON.stringify( tab ) === JSON.stringify( tabToMerge ) );
 
         const nextTab = ourTabIndex + 1;
         const prevTab = ourTabIndex - 1;
@@ -154,13 +160,6 @@ const closeTab = ( state, payload ) =>
     }
 
     return updatedState;
-};
-
-const closeActiveTab = ( state, windowId ) =>
-{
-    const activeTabIndex = getActiveTabIndex( state, windowId );
-
-    return closeTab( state, { index: activeTabIndex } );
 };
 
 const deactivateOldActiveTab = ( state, windowId ) =>
@@ -423,10 +422,8 @@ export default function tabs( state: array = initialState, action )
         case TYPES.CLOSE_TAB: {
             return closeTab( state, payload );
         }
-        case TYPES.CLOSE_ACTIVE_TAB: {
-            return closeActiveTab( state, payload );
-        }
-        case TYPES.REOPEN_TAB: {
+        case TYPES.REOPEN_TAB :
+        {
             return reopenTab( state );
         }
         case TYPES.UPDATE_TAB :

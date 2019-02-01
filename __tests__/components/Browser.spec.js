@@ -20,7 +20,6 @@ const initialState = {
     updateTab            : jest.fn(),
     closeTab             : jest.fn(),
     setActiveTab         : jest.fn(),
-    closeActiveTab       : jest.fn(),
     reopenTab            : jest.fn(),
     addBookmark          : jest.fn(),
     removeBookmark       : jest.fn(),

@@ -26,7 +26,6 @@ class Browser extends Component
         blurAddressBar     : PropTypes.func.isRequired,
         addTab             : PropTypes.func.isRequired,
         closeTab           : PropTypes.func.isRequired,
-        closeActiveTab     : PropTypes.func.isRequired,
         reopenTab          : PropTypes.func.isRequired,
         updateNotification : PropTypes.func.isRequired,
         clearNotification  : PropTypes.func.isRequired,
@@ -73,7 +72,6 @@ class Browser extends Component
         const {
             addTab,
             closeTab,
-            closeActiveTab,
             reopenTab,
             clearNotification,
             tabForwards,

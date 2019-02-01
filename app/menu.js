@@ -6,7 +6,7 @@ import {
     addTab,
     tabForwards,
     tabBackwards,
-    closeActiveTab,
+    closeTab,
     reopenTab,
     setActiveTab,
     updateTab
@@ -219,7 +219,7 @@ export default class MenuBuilder
                             }
                             else
                             {
-                                this.store.dispatch( closeActiveTab( windowId ) );
+                                this.store.dispatch( closeTab( { windowId } ) );
                             }
                         }
                     }
@@ -330,9 +330,8 @@ export default class MenuBuilder
                         if ( win )
                         {
                             const windowId = win.webContents.id;
-                            store.dispatch( updateTab( { windowId, shouldReload: true } ) );
+                            this.store.dispatch( updateTab( { windowId, shouldReload: true } ) );
                         }
-;
                     } },
                 { label       : 'Toggle Full Screen',
                     accelerator :  process.platform === 'darwin' ? 'CommandOrControl+Shift+F' : 'F11',
