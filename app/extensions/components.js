@@ -1,17 +1,14 @@
 import logger from 'logger';
 
-import {
-    default as safeWrapBrowser
-} from 'extensions/safe/components/wrapBrowser';
-import safeWrapAddressBarButtonsLHS from 'extensions/safe/components/wrapAddressBarButtonsLHS';
-import safeWrapAddressBarButtonsRHS from 'extensions/safe/components/wrapAddressBarButtonsRHS';
-import safeWrapAddressBarInput from 'extensions/safe/components/wrapAddressBarInput';
+import { default as safeWrapBrowser } from '@Extensions/safe/components/wrapBrowser';
+import safeWrapAddressBarButtonsLHS from '@Extensions/safe/components/wrapAddressBarButtonsLHS';
+import safeWrapAddressBarButtonsRHS from '@Extensions/safe/components/wrapAddressBarButtonsRHS';
+import safeWrapAddressBarInput from '@Extensions/safe/components/wrapAddressBarInput';
 
-
-const allBrowserExtensions = [safeWrapBrowser];
-const allAddressBarButtonLHSExtensions = [safeWrapAddressBarButtonsLHS];
-const allAddressBarButtonRHSExtensions = [safeWrapAddressBarButtonsRHS];
-const allAddressBarInputExtensions = [safeWrapAddressBarInput];
+const allBrowserExtensions = [ safeWrapBrowser ];
+const allAddressBarButtonLHSExtensions = [ safeWrapAddressBarButtonsLHS ];
+const allAddressBarButtonRHSExtensions = [ safeWrapAddressBarButtonsRHS ];
+const allAddressBarInputExtensions = [ safeWrapAddressBarInput ];
 
 /**
  * Wrap the browser with a HOC or replace it entirely.
@@ -25,7 +22,7 @@ export const wrapBrowserComponent = Browser =>
 {
     try
     {
-        logger.verbose( 'Wrapping browser' );
+        logger.log( 'Wrapping browser' );
 
         let WrappedBrowser = Browser;
 
@@ -38,7 +35,9 @@ export const wrapBrowserComponent = Browser =>
     }
     catch ( e )
     {
-        console.error( 'Problem with extension wrapping of the Browser component' );
+        console.error(
+            'Problem with extension wrapping of the Browser component'
+        );
         throw new Error( e );
     }
 };
@@ -55,7 +54,7 @@ export const wrapAddressBarButtonsLHS = Buttons =>
 {
     try
     {
-        logger.verbose( 'Wrapping Address bar buttons LHS' );
+        logger.log( 'Wrapping Address bar buttons LHS' );
         let WrappedAddressBarButtonsLHS = Buttons;
 
         allAddressBarButtonLHSExtensions.forEach( wrapper =>
@@ -67,7 +66,9 @@ export const wrapAddressBarButtonsLHS = Buttons =>
     }
     catch ( e )
     {
-        console.error( 'Problem with extension wrapping of Addressbar Buttons component' );
+        console.error(
+            'Problem with extension wrapping of Addressbar Buttons component'
+        );
         throw new Error( e );
     }
 };
@@ -83,7 +84,7 @@ export const wrapAddressBarButtonsRHS = Buttons =>
 {
     try
     {
-        logger.verbose( 'Wrapping Address bar buttons RHS' );
+        logger.log( 'Wrapping Address bar buttons RHS' );
         let WrappedAddressBarButtonsRHS = Buttons;
 
         allAddressBarButtonRHSExtensions.forEach( wrapper =>
@@ -95,7 +96,9 @@ export const wrapAddressBarButtonsRHS = Buttons =>
     }
     catch ( e )
     {
-        console.error( 'Problem with extension wrapping of Addressbar Buttons RHS component' );
+        console.error(
+            'Problem with extension wrapping of Addressbar Buttons RHS component'
+        );
         throw new Error( e );
     }
 };
@@ -111,7 +114,7 @@ export const wrapAddressBarInput = AddressBarInput =>
 {
     try
     {
-        logger.verbose( 'Wrapping Address bar input' );
+        logger.log( 'Wrapping Address bar input' );
         let WrappedAddressBarInput = AddressBarInput;
 
         allAddressBarInputExtensions.forEach( wrapper =>
@@ -123,7 +126,9 @@ export const wrapAddressBarInput = AddressBarInput =>
     }
     catch ( e )
     {
-        console.error( 'Problem with extension wrapping of Addressbar input component' );
+        console.error(
+            'Problem with extension wrapping of Addressbar input component'
+        );
         throw new Error( e );
     }
 };

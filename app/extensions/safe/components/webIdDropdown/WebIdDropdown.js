@@ -1,214 +1,206 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
+import {
+    CLASSES,
+    isRunningSpectronTestProcess,
+    startedRunningMock
+} from '@Constants';
+import { SAFE } from '@Extensions/safe/constants';
 import { Column, IconButton, Grid } from 'nessie-ui';
 import _ from 'lodash';
 import logger from 'logger';
 import styles from './webIdButtons.css';
 
 const hideDropdownTimeout = 0.15; // seconds
-const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidmgr.dapp';
+const webIdManagerUri = startedRunningMock
+    ? 'http://localhost:1234'
+    : 'safe://webidmgr.dapp';
 const authHomeUri = 'safe-auth://home';
 
-export default class WebIdDropdown extends Component
-{
-    static defaultProps =
-    {
-        safeBrowserApp : {
-            webIds : []
+export default class WebIdDropdown extends Component {
+    static defaultProps = {
+        safeBrowserApp: {
+            webIds: []
         }
-    }
+    };
 
-    constructor( props )
-    {
-        super( props );
+    constructor(props) {
+        super(props);
 
         const { getAvailableWebIds } = props;
 
-        if ( !getAvailableWebIds ) return;
+        if (!getAvailableWebIds) return;
 
-        this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
+        this.debouncedGetWebIds = _.debounce(getAvailableWebIds, 2000);
     }
 
-    handleIdClick = ( webId ) =>
-    {
+    handleIdClick = webId => {
         const { updateActiveTab, windowId, showWebIdDropdown } = this.props;
         // also if only 1 webID? mark as defualt?
-        updateActiveTab( { windowId, webId } );
-    }
+        updateActiveTab({ windowId, webId });
+    };
 
-    handleIdButtonClick = ( ) =>
-    {
+    handleIdButtonClick = () => {
         const { showWebIdDropdown } = this.props;
         this.hoverTime = new Date();
-        showWebIdDropdown( true );
-    }
+        showWebIdDropdown(true);
+    };
 
-
-    handleMouseEnter = ( ) =>
-    {
+    handleMouseEnter = () => {
         this.hoverTime = new Date().getTime();
         this.isMouseOverIdButton = true;
 
         const { getAvailableWebIds, safeBrowserApp } = this.props;
         const { isFetchingWebIds } = safeBrowserApp;
 
-        if ( safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISED && !isFetchingWebIds )
-        {
+        if (
+            safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISED &&
+            !isFetchingWebIds
+        ) {
             this.debouncedGetWebIds();
         }
-    }
+    };
 
-    launchWebIdManager = () =>
-    {
+    launchWebIdManager = () => {
         const { addTab } = this.props;
 
-        addTab( { url: webIdManagerUri, isActiveTab: true } );
-    }
+        addTab({ url: webIdManagerUri, isActiveTab: true });
+    };
 
-    launchAuthenticator = () =>
-    {
+    launchAuthenticator = () => {
         const { addTab } = this.props;
 
-        addTab( { url: authHomeUri, isActiveTab: true } );
-    }
+        addTab({ url: authHomeUri, isActiveTab: true });
+    };
 
-
-    authorisePeruse = () =>
-    {
+    authorisePeruse = () => {
         const { setAppStatus } = this.props;
 
-        setAppStatus( SAFE.APP_STATUS.TO_AUTH );
-    }
+        setAppStatus(SAFE.APP_STATUS.TO_AUTH);
+    };
 
-    handleMouseLeave = ( ) =>
-    {
+    handleMouseLeave = () => {
         this.isMouseOverIdButton = false;
 
-        setTimeout( this.closeIfNotOver, hideDropdownTimeout * 1000 );
-    }
+        setTimeout(this.closeIfNotOver, hideDropdownTimeout * 1000);
+    };
 
-    closeIfNotOver = () =>
-    {
+    closeIfNotOver = () => {
         const { showWebIdDropdown } = this.props;
 
         const now = new Date().getTime();
-        const diff = ( now - this.hoverTime ) / 1000;
+        const diff = (now - this.hoverTime) / 1000;
 
-        if ( diff > hideDropdownTimeout )
-        {
-            showWebIdDropdown( false );
+        if (diff > hideDropdownTimeout) {
+            showWebIdDropdown(false);
         }
-    }
+    };
 
-
-    render()
-    {
+    render() {
         const { safeBrowserApp, activeTab } = this.props;
         const {
-            showingWebIdDropdown
-            , webIds
-            , experimentsEnabled
-            , appStatus
-            , networkStatus
-            , isFetchingWebIds
+            showingWebIdDropdown,
+            webIds,
+            experimentsEnabled,
+            appStatus,
+            networkStatus,
+            isFetchingWebIds
         } = safeBrowserApp;
 
         const activeWebId = activeTab.webId || {};
 
         const handleIdClick = this.handleIdClick;
-        const webIdsList = webIds.map( webId =>
-        {
+        const webIdsList = webIds.map(webId => {
             const nickname = webId['#me'].nick || webId['#me'].name;
 
             const isSelected = webId['@id'] === activeWebId['@id'];
 
-            if ( isSelected )
-            {
+            if (isSelected) {
                 return (
                     <li
-                        onClick={ handleIdClick.bind( this, webId ) }
-                        key={ webId['@id'] }
-                        className={ styles.selectedWebId }
-                    >{ nickname }
+                        onClick={handleIdClick.bind(this, webId)}
+                        key={webId['@id']}
+                        className={styles.selectedWebId}
+                    >
+                        {nickname}
                     </li>
                 );
             }
 
-            return ( <li
-                onClick={ handleIdClick.bind( this, webId ) }
-                key={ webId['@id'] }
-                className={ styles.webId }
-            >
-                { nickname }
-            </li> );
-        } );
+            return (
+                <li
+                    onClick={handleIdClick.bind(this, webId)}
+                    key={webId['@id']}
+                    className={styles.webId}
+                >
+                    {nickname}
+                </li>
+            );
+        });
 
         let webIdDropdownContents = [];
 
-        if ( appStatus !== SAFE.APP_STATUS.AUTHORISED )
-        {
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                onClick={ this.authorisePeruse }
-                className={ styles.openAuth }
-                key="noAuth"
-            ><a href="#">Authorise to display your WebIds.</a></li> );
-        }
-        else if ( webIdsList.length > 0 )
-        {
+        if (appStatus !== SAFE.APP_STATUS.AUTHORISED) {
+            webIdDropdownContents.push(
+                <li
+                    className={styles.webIdInfo}
+                    onClick={this.authorisePeruse}
+                    className={styles.openAuth}
+                    key="noAuth"
+                >
+                    <a href="#">Authorise to display your WebIds.</a>
+                </li>
+            );
+        } else if (webIdsList.length > 0) {
             webIdDropdownContents = webIdsList;
+        } else {
+            webIdDropdownContents.push(
+                <li className={styles.webIdInfo} key="noId">
+                    No WebIds Found.
+                </li>
+            );
         }
-        else
-        {
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                key="noId"
-            >No WebIds Found.</li> );
-        }
-
 
         // This will be quite fast on mock.
         // TODO: Add transition.
-        if ( isFetchingWebIds )
-        {
+        if (isFetchingWebIds) {
             webIdDropdownContents = webIdDropdownContents || [];
 
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                className={ styles.openAuth }
-                key="fetching"
-            >Updating webIds.</li> );
+            webIdDropdownContents.push(
+                <li
+                    className={styles.webIdInfo}
+                    className={styles.openAuth}
+                    key="fetching"
+                >
+                    Updating webIds.
+                </li>
+            );
         }
-
 
         return (
             <div
-                onMouseEnter={ this.handleMouseEnter }
-                onMouseLeave={ this.handleMouseLeave }
+                onMouseEnter={this.handleMouseEnter}
+                onMouseLeave={this.handleMouseLeave}
             >
                 <IconButton
-                    onClick={ this.handleIdButtonClick }
+                    onClick={this.handleIdButtonClick}
                     iconTheme="navigation"
                     iconType="account"
                     size="S"
-                    style={ { cursor: 'pointer' } }
+                    style={{ cursor: 'pointer' }}
                 />
-                {
-                    showingWebIdDropdown &&
-                    <ul className={ styles.webIdList }>
-
+                {showingWebIdDropdown && (
+                    <ul className={styles.webIdList}>
                         {webIdDropdownContents}
                         <li
-                            onClick={ this.launchWebIdManager }
-                            className={ styles.webIdManager }
+                            onClick={this.launchWebIdManager}
+                            className={styles.webIdManager}
                         >
                             <a href="#">Launch WebIdManager</a>
                         </li>
                     </ul>
-                }
+                )}
             </div>
         );
     }
-};
+}

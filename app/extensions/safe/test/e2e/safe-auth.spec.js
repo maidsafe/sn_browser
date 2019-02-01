@@ -12,19 +12,19 @@ import {
     createAccount,
     login,
     logout
-} from 'extensions/safe/test/e2e/lib/authenticator-drivers';
+} from '@Extensions/safe/test/e2e/lib/authenticator-drivers';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
-import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
+import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
 
 import {
-    setupSpectronApp
-    , travisOS
-    , afterAllTests
-    , beforeAllTests
-    , windowLoaded,
+    setupSpectronApp,
+    travisOS,
+    afterAllTests,
+    beforeAllTests,
+    windowLoaded,
     isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
-import { CLASSES } from 'appConstants';
+import { CLASSES } from '@Constants';
 
 const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 50000;
 
@@ -53,11 +53,10 @@ describe( 'safe authenticator protocol', () =>
         expect( await windowLoaded( app ) ).toBeTruthy();
     } );
 
-
     // if( travisOS !== 'linux' )
     if ( process.platform !== 'linux' )
     {
-        it( 'is registered to handle safe-auth/home js requests:', async ( ) =>
+        it( 'is registered to handle safe-auth/home js requests:', async () =>
         {
             expect.assertions( 2 );
             const { client } = app;
@@ -67,14 +66,16 @@ describe( 'safe authenticator protocol', () =>
 
             setClientToMainBrowserWindow( app );
             // await client.pause(1500)
-            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFIER_TEXT,
+                NOTIFICATION_WAIT
+            );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
-            // console.log('THE NOTE', note)
+
             expect( note ).not.toBeNull();
             expect( note.length ).toBeGreaterThan( 5 );
         } );
     }
-
 
     if ( isTestingPackagedApp )
     {
@@ -84,7 +85,7 @@ describe( 'safe authenticator protocol', () =>
 
     const { secret, password } = createAccountDetails();
 
-    it( 'can create an account', async ( ) =>
+    it( 'can create an account', async () =>
     {
         expect.assertions( 1 );
         const { client } = app;
@@ -92,7 +93,10 @@ describe( 'safe authenticator protocol', () =>
 
         const tabIndex = await newTab( app );
         await navigateTo( app, 'safe-auth://home' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+        await client.waitForExist(
+            BROWSER_UI.ADDRESS_INPUT,
+            WAIT_FOR_EXIST_TIMEOUT
+        );
 
         await delay( 2500 );
         await setClientToMainBrowserWindow( app );
@@ -101,13 +105,16 @@ describe( 'safe authenticator protocol', () =>
 
         await createAccount( app, secret, password );
 
-        await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_APP_LIST }`, WAIT_FOR_EXIST_TIMEOUT );
+        await client.waitForExist(
+            `.${ AUTH_UI_CLASSES.AUTH_APP_LIST }`,
+            WAIT_FOR_EXIST_TIMEOUT
+        );
 
         // we wait... if this isn't reached then expect.assertions fails
         expect( 'this to be reached' ).toBe( 'this to be reached' );
     } );
 
-    it( 'can login, log history, logout, and clean up history', async ( ) =>
+    it( 'can login, log history, logout, and clean up history', async () =>
     {
         expect.assertions( 4 );
         const { client } = app;
@@ -115,12 +122,18 @@ describe( 'safe authenticator protocol', () =>
         let tabIndex = await newTab( app );
 
         await navigateTo( app, 'safe-auth://home' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+        await client.waitForExist(
+            BROWSER_UI.ADDRESS_INPUT,
+            WAIT_FOR_EXIST_TIMEOUT
+        );
         await delay( 2500 );
 
         await client.windowByIndex( tabIndex );
         await login( app, secret, password );
-        await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_APP_LIST }`, WAIT_FOR_EXIST_TIMEOUT );
+        await client.waitForExist(
+            `.${ AUTH_UI_CLASSES.AUTH_APP_LIST }`,
+            WAIT_FOR_EXIST_TIMEOUT
+        );
 
         await newTab( app );
         await navigateTo( app, 'shouldappearinhistory.com' );
@@ -139,7 +152,10 @@ describe( 'safe authenticator protocol', () =>
         await client.windowByIndex( tabIndex );
         await delay( 2500 );
         await navigateTo( app, 'safe-browser:history' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
+        await client.waitForExist(
+            BROWSER_UI.ADDRESS_INPUT,
+            WAIT_FOR_EXIST_TIMEOUT
+        );
         await delay( 2500 );
 
         header = await client.getText( 'h1' );
@@ -148,7 +164,7 @@ describe( 'safe authenticator protocol', () =>
         expect( history ).toMatch( 'Nothing to see here yet' );
     } );
 
-    it( 'renders different messages between first authorisation and reauthorisations', async ( ) =>
+    it( 'renders different messages between first authorisation and reauthorisations', async () =>
     {
         expect.assertions( 2 );
         const { client } = app;
@@ -161,7 +177,10 @@ describe( 'safe authenticator protocol', () =>
         await login( app, secret, password, tabIndex );
         await delay( 2500 );
         await setClientToMainBrowserWindow( app );
-        await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+        await client.waitForExist(
+            BROWSER_UI.NOTIFICATION__ACCEPT,
+            NOTIFICATION_WAIT
+        );
         await setClientToMainBrowserWindow( app );
         await delay( 2500 );
         let notifierText = await client.getText( `.${ CLASSES.NOTIFIER_TEXT }` );
@@ -176,20 +195,24 @@ describe( 'safe authenticator protocol', () =>
         await login( app, secret, password );
         await delay( 2500 );
         await setClientToMainBrowserWindow( app );
-        await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+        await client.waitForExist(
+            BROWSER_UI.NOTIFICATION__ACCEPT,
+            NOTIFICATION_WAIT
+        );
         await setClientToMainBrowserWindow( app );
         await delay( 2500 );
 
         notifierText = await client.getText( `.${ CLASSES.NOTIFIER_TEXT }` );
-        expect( notifierText ).toMatch( 'SAFE Browser is asking to be reauthorised, since you previously granted authorisation.' );
+        expect( notifierText ).toMatch(
+            'SAFE Browser is asking to be reauthorised, since you previously granted authorisation.'
+        );
     } );
-
 
     if ( travisOS !== 'linux' )
     {
         // linux failing with xdg-open
 
-        it( 'peruse app authenticates pops up after creating an account', async ( ) =>
+        it( 'peruse app authenticates pops up after creating an account', async () =>
         {
             expect.assertions( 1 );
             const { client } = app;
@@ -200,16 +223,20 @@ describe( 'safe authenticator protocol', () =>
 
             await createAccount( app, null, null, tabIndex );
 
-            await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_APP_LIST }`, WAIT_FOR_EXIST_TIMEOUT );
+            await client.waitForExist(
+                `.${ AUTH_UI_CLASSES.AUTH_APP_LIST }`,
+                WAIT_FOR_EXIST_TIMEOUT
+            );
 
             await setClientToMainBrowserWindow( app );
             await delay( 1500 );
 
-
-            await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFIER_TEXT,
+                WAIT_FOR_EXIST_TIMEOUT
+            );
             const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
-            console.log( 'note', note );
             expect( note ).toMatch( 'SAFE Browser requests authorisation' );
         } );
     }

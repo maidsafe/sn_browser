@@ -1,4 +1,3 @@
-
 // Only functions that we'll be constructing with remoteCalls
 export const manifest = [
     'logout',
@@ -7,5 +6,5 @@ export const manifest = [
     'getAuthorisedApps',
     'getAccountInfo',
     'revokeApp',
-    'reconnect',
+    'reconnect'
 ];

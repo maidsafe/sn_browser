@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 
 import Bookmarks from 'components/PerusePages/Bookmarks';
 import UrlList from 'components/UrlList';
-import { CLASSES } from 'appConstants';
+import { CLASSES } from '@Constants';
 
 describe( 'Bookmarks', () =>
 {
@@ -34,13 +34,18 @@ describe( 'Bookmarks', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, bookmarks: [{ url: 'hello', isActiveTab: true }] };
+            props = {
+                ...props,
+                bookmarks : [ { url: 'hello', isActiveTab: true } ]
+            };
             wrapper = shallow( <Bookmarks { ...props } /> );
         } );
 
         it( 'should have a safeBrowser__page class', () =>
         {
-            expect( wrapper.find( `.${ CLASSES.SAFE_BROWSER_PAGE }` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${ CLASSES.SAFE_BROWSER_PAGE }` ).length ).toBe(
+                1
+            );
         } );
 
         it( 'should have one url list', () =>
@@ -54,7 +59,6 @@ describe( 'Bookmarks', () =>
             expect( wrapper.find( 'a' ).length ).toBe( 1 );
         } );
     } );
-
 
     describe( 'props', () =>
     {

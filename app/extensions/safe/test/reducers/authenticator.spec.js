@@ -1,21 +1,21 @@
 /* eslint-disable func-names */
-import authenticator from 'extensions/safe/reducers/authenticator';
-import { TYPES } from 'extensions/safe/actions/authenticator_actions';
-import initialState from 'extensions/safe/reducers/initialAppState';
+import authenticator from '@Extensions/safe/reducers/authenticator';
+import { TYPES } from '@Extensions/safe/actions/authenticator_actions';
+import initialState from '@Extensions/safe/reducers/initialAppState';
 
 jest.mock( 'extensions/safe/ffi/ipc' );
 
-jest.mock( 'electron-redux', () =>
-    ( {
-        createAliasedAction : () =>
-        {}
-    } ) );
+jest.mock( 'electron-redux', () => ( {
+    createAliasedAction : () => {}
+} ) );
 
 describe( 'authenticator reducer', () =>
 {
     it( 'should return the initial state', () =>
     {
-        expect( authenticator( undefined, {} ) ).toEqual( initialState.authenticator );
+        expect( authenticator( undefined, {} ) ).toEqual(
+            initialState.authenticator
+        );
     } );
 
     describe( 'SET_AUTH_NETWORK_STATUS', () =>
@@ -60,7 +60,6 @@ describe( 'authenticator reducer', () =>
         } );
     } );
 
-
     describe( 'ADD_AUTH_REQUEST', () =>
     {
         it( 'should add an authenticator request to the queue', () =>
@@ -70,7 +69,7 @@ describe( 'authenticator reducer', () =>
                 type    : TYPES.ADD_AUTH_REQUEST,
                 payload : url
             } ).authenticationQueue;
-            expect( authQueue ).toMatchObject( [url] );
+            expect( authQueue ).toMatchObject( [ url ] );
             expect( authQueue.length ).toBe( 1 );
         } );
     } );
@@ -80,10 +79,13 @@ describe( 'authenticator reducer', () =>
         it( 'should remove an authenticator request from the queue', () =>
         {
             const url = 'safe-auth://111111';
-            const authQueue = authenticator( { authenticationQueue: [url] }, {
-                type    : TYPES.REMOVE_AUTH_REQUEST,
-                payload : url
-            } ).authenticationQueue;
+            const authQueue = authenticator(
+                { authenticationQueue: [ url ] },
+                {
+                    type    : TYPES.REMOVE_AUTH_REQUEST,
+                    payload : url
+                }
+            ).authenticationQueue;
             expect( authQueue ).toMatchObject( [] );
             expect( authQueue.length ).toBe( 0 );
         } );

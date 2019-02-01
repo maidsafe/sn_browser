@@ -19,32 +19,24 @@ export const LOGOUT = 'LOGOUT';
 export const SHOW_LIB_ERR_POPUP = 'SHOW_LIB_ERR_POPUP';
 export const SET_IS_AUTHORISED = 'SET_IS_AUTHORISED';
 
-export const setCreateAccNavPos = pos => (
-    {
-        type     : SET_CREATE_ACC_NAV_POS,
-        position : pos
-    }
-);
+export const setCreateAccNavPos = pos => ( {
+    type     : SET_CREATE_ACC_NAV_POS,
+    position : pos
+} );
 
-export const resetCreateAccNavPos = () => (
-    {
-        type : RESET_CREATE_ACC_NAV_POS
-    }
-);
+export const resetCreateAccNavPos = () => ( {
+    type : RESET_CREATE_ACC_NAV_POS
+} );
 
-export const setSecretStrength = val => (
-    {
-        type     : SET_SECRET_STRENGTH,
-        strength : val
-    }
-);
+export const setSecretStrength = val => ( {
+    type     : SET_SECRET_STRENGTH,
+    strength : val
+} );
 
-export const setPasswordStrength = val => (
-    {
-        type     : SET_PASSWORD_STRENGTH,
-        strength : val
-    }
-);
+export const setPasswordStrength = val => ( {
+    type     : SET_PASSWORD_STRENGTH,
+    strength : val
+} );
 
 export const setError = err => ( {
     type  : SET_AUTH_ERROR,
@@ -96,7 +88,11 @@ export const clearAuthLoader = () => ( {
 
 export const createAccount = ( secret, password, invitation ) => ( {
     type    : CREATE_ACC,
-    payload : window.safeAuthenticator.createAccount( secret, password, invitation )
+    payload : window.safeAuthenticator.createAccount(
+        secret,
+        password,
+        invitation
+    )
 } );
 
 export const login = ( secret, password ) => ( {
@@ -108,7 +104,6 @@ export const logout = () => ( {
     type    : LOGOUT,
     payload : Promise.resolve( window.safeAuthenticator.logout() )
 } );
-
 
 export const showLibErrPopup = () => ( {
     type : SHOW_LIB_ERR_POPUP

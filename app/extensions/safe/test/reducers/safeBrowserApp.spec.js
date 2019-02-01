@@ -1,25 +1,25 @@
 /* eslint-disable func-names */
-import safeBrowserApp from 'extensions/safe/reducers/safeBrowserApp';
-import { TYPES } from 'extensions/safe/actions/safeBrowserApplication_actions';
-import initialState from 'extensions/safe/reducers/initialAppState';
-import { CONFIG } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
+import safeBrowserApp from '@Extensions/safe/reducers/safeBrowserApp';
+import { TYPES } from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import initialState from '@Extensions/safe/reducers/initialAppState';
+import { CONFIG } from '@Constants';
+import { SAFE } from '@Extensions/safe/constants';
 
 const safeInitialState = initialState.safeBrowserApp;
 
 // https://github.com/facebook/jest/issues/3552
-jest.mock( 'extensions/safe/safeBrowserApplication', () =>
-    ( {
-        getWebIds : () => []
-    } ) );
+jest.mock( 'extensions/safe/safeBrowserApplication', () => ( {
+    getWebIds : () => []
+} ) );
 
 describe( 'SafeBrowserApp App reducer', () =>
 {
     it( 'should return the initial state', () =>
     {
-        expect( safeBrowserApp( undefined, {} ) ).toEqual( initialState.safeBrowserApp );
+        expect( safeBrowserApp( undefined, {} ) ).toEqual(
+            initialState.safeBrowserApp
+        );
     } );
-
 
     describe( 'SET_APP_STATUS', () =>
     {
@@ -33,11 +33,10 @@ describe( 'SafeBrowserApp App reducer', () =>
                     payload
                 } )
             ).toMatchObject( {
-                appStatus : SAFE.APP_STATUS.AUTHORISING,
+                appStatus : SAFE.APP_STATUS.AUTHORISING
             } );
         } );
     } );
-
 
     describe( 'ENABLE_EXPERIMENTS', () =>
     {
@@ -53,7 +52,6 @@ describe( 'SafeBrowserApp App reducer', () =>
         } );
     } );
 
-
     describe( 'DISABLE_EXPERIMENTS', () =>
     {
         it( 'should handle disabling experiments', () =>
@@ -67,7 +65,6 @@ describe( 'SafeBrowserApp App reducer', () =>
             } );
         } );
     } );
-
 
     describe( 'SET_NETWORK_STATUS', () =>
     {
@@ -101,7 +98,6 @@ describe( 'SafeBrowserApp App reducer', () =>
         } );
     } );
 
-
     describe( 'RECEIVED_AUTH_RESPONSE', () =>
     {
         it( 'should handle saving browser', () =>
@@ -116,7 +112,6 @@ describe( 'SafeBrowserApp App reducer', () =>
             ).toMatchObject( { authResponseUri: payload } );
         } );
     } );
-
 
     describe( 'SHOW_WEB_ID_DROPDOWN', () =>
     {

@@ -16,16 +16,16 @@
 .page
 {
     background-color: #fff;
-    min-height: auto; /*override nessie 100vh*/
+    min-height: auto; /* override nessie 100vh */
 }
 
 .tab
 {
-    composes: tab from 'components/Tab/tab.css';
+    composes: tab from '../../Tab/tab.css';
 
 }
 
 .activeTab
 {
-    composes: activeTab from 'components/Tab/tab.css';
+    composes: activeTab from '../../Tab/tab.css';
 }

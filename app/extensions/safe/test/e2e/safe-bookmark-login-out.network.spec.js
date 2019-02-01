@@ -10,21 +10,27 @@ import {
     createAccount,
     login,
     logout
-} from 'extensions/safe/test/e2e/lib/authenticator-drivers';
-import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+} from '@Extensions/safe/test/e2e/lib/authenticator-drivers';
 import {
-    setupSpectronApp
-    , travisOS
-    , afterAllTests
-    , beforeAllTests
-    , windowLoaded
+    BROWSER_UI,
+    WAIT_FOR_EXIST_TIMEOUT,
+    DEFAULT_TIMEOUT_INTERVAL
+} from 'spectron-lib/constants';
+import {
+    setupSpectronApp,
+    travisOS,
+    afterAllTests,
+    beforeAllTests,
+    windowLoaded
 } from 'spectron-lib/setupSpectronApp';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 320000;
 
 const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
 
-console.warn( 'This test runs against a packaged version of the DEV browser. If not built, this will FAIL' );
+console.warn(
+    'This test runs against a packaged version of the DEV browser. If not built, this will FAIL'
+);
 describe( 'SAFE network log in and out', async () =>
 {
     /* const appInfo = {
@@ -37,7 +43,7 @@ describe( 'SAFE network log in and out', async () =>
 
     beforeEach( async () =>
     {
-        app = setupSpectronApp( ['--mock'] );
+        app = setupSpectronApp( [ '--mock' ] );
 
         await beforeAllTests( app );
     } );
@@ -45,14 +51,8 @@ describe( 'SAFE network log in and out', async () =>
     afterEach( async () =>
     {
         await afterAllTests( app );
+        await delay( 1500 );
     } );
-
-
-    test( 'window loaded', async () =>
-    {
-        expect( await windowLoaded( app ) ).toBeTruthy();
-    } );
-
 
     if ( travisOS === 'linux' )
     {
@@ -60,11 +60,11 @@ describe( 'SAFE network log in and out', async () =>
         return;
     }
 
-    describe( 'account data access', async ( ) =>
+    describe( 'account data access', async () =>
     {
         const { secret, password } = createAccountDetails();
         console.log( 'Creating authed app with deets: ', secret, password );
-        it( 'can save and reaccess browser bookmark data.', async ( ) =>
+        it( 'can save and reaccess browser bookmark data.', async () =>
         {
             const { client } = app;
 
@@ -91,14 +91,19 @@ describe( 'SAFE network log in and out', async () =>
             await createAccount( app, secret, password, authTab );
             await delay( 1500 );
 
-
             await setClientToMainBrowserWindow( app );
 
             // click save.
-            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.SPECTRON_AREA,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
 
-            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFICATION__ACCEPT,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
             await delay( 1500 );
             await logout( app, authTab );
@@ -111,17 +116,22 @@ describe( 'SAFE network log in and out', async () =>
 
             await setClientToMainBrowserWindow( app );
 
-            console.log( 'THIS ONE WE GO**********************************' );
             await navigateTo( app, 'safe-browser:bookmarks' );
+            await delay( 10000 );
+
             // fetch browser config
-            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.SPECTRON_AREA,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_LOAD );
 
-            console.log( 'clicked loaaaaaaaddddddd' );
-            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFICATION__ACCEPT,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
 
-            console.log( 'clicked loaaaaaaaddddddd and now waitinggggg' );
             await delay( 8000 );
             // await delay( 1500 );
             const bookmarks = await client.getText( '.urlList__table' );
@@ -134,32 +144,43 @@ describe( 'SAFE network log in and out', async () =>
         {
             const { client } = app;
 
-            await delay( 3500 );
+            // await delay( 3500 );
 
             await createAccount( app );
 
             await delay( 1500 );
             await setClientToMainBrowserWindow( app );
 
-            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+            console.log( 'Before note' );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFICATION__ACCEPT,
+                NOTIFICATION_WAIT
+            );
+            console.log( 'AFTERNOTE' );
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
             await delay( 1500 );
 
+            console.log( 'BEFORE ANOTHER' );
             // again the bookmarks
             // fetch browser config
-            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.SPECTRON_AREA,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_LOAD );
-            await delay( 6000 );
+            await delay( 10000 );
+            console.log( 'load clicked ANOTHER' );
 
             await navigateTo( app, 'safe-browser:bookmarks' );
 
-            await delay( 1500 );
+            await delay( 10000 );
+
+            console.log( 'pre url list' );
             const bookmarksFinalCheck = await client.getText( '.urlList__table' );
 
             // bookmarksFinalCheck is an array
             expect( bookmarksFinalCheck ).not.toMatch( 'shouldsavetobookmarks' );
         } );
-
 
         it( 'login with a new account cannot after logout of old, cannot access prev account data.', async () =>
         {
@@ -175,17 +196,23 @@ describe( 'SAFE network log in and out', async () =>
 
             await setClientToMainBrowserWindow( app );
 
-            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFICATION__ACCEPT,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
 
             // fetch browser config
-            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.SPECTRON_AREA,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_LOAD );
             await delay( 7000 );
 
             await navigateTo( app, 'safe-browser:bookmarks' );
 
-            await delay( 1500 );
+            await delay( 10000 );
             const bookmarks = await client.getText( '.urlList__table' );
 
             // bookmarks is an array
@@ -193,26 +220,30 @@ describe( 'SAFE network log in and out', async () =>
 
             await logout( app );
 
-
             await delay( 6500 );
 
             await createAccount( app );
             await setClientToMainBrowserWindow( app );
 
-            await client.waitForExist( BROWSER_UI.NOTIFICATION__ACCEPT, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.NOTIFICATION__ACCEPT,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.NOTIFICATION__ACCEPT );
             await delay( 1500 );
 
-
             // again the bookmarks
             // fetch browser config
-            await client.waitForExist( BROWSER_UI.SPECTRON_AREA, NOTIFICATION_WAIT );
+            await client.waitForExist(
+                BROWSER_UI.SPECTRON_AREA,
+                NOTIFICATION_WAIT
+            );
             await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_LOAD );
             await delay( 3000 );
 
             await navigateTo( app, 'safe-browser:bookmarks' );
 
-            await delay( 2500 );
+            await delay( 10000 );
             const bookmarksFinalCheck = await client.getText( '.urlList__table' );
 
             // bookmarksFinalCheck is an array

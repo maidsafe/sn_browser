@@ -1,4 +1,4 @@
-import * as CONSTANTS from 'appConstants';
+import * as CONSTANTS from '@Constants';
 
 describe( 'CONSTANTS', async () =>
 {

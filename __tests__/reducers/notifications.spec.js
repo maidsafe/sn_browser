@@ -7,7 +7,9 @@ describe( 'notification reducer', () =>
 {
     it( 'should return the initial state', () =>
     {
-        expect( notifications( undefined, {} ) ).toEqual( initialState.notifications );
+        expect( notifications( undefined, {} ) ).toEqual(
+            initialState.notifications
+        );
     } );
 
     describe( 'ADD_NOTIFICATION', () =>
@@ -43,14 +45,13 @@ describe( 'notification reducer', () =>
         } );
     } );
 
-
     describe( 'UPDATE_NOTIFICATION', () =>
     {
         it( 'should handle updating the notification', () =>
         {
             const note = { id: '1', text: 'hiwhat' };
             expect(
-                notifications( [note], {
+                notifications( [ note ], {
                     type    : TYPES.UPDATE_NOTIFICATION,
                     payload : { ...note, text: 'new!' }
                 } )[0].text
@@ -61,11 +62,10 @@ describe( 'notification reducer', () =>
         {
             const note = { id: '1', text: 'hiwhat' };
             expect( () =>
-                notifications( [note], {
+                notifications( [ note ], {
                     type    : TYPES.UPDATE_NOTIFICATION,
                     payload : { text: 'new!' }
-                } )
-            ).toThrowError( '"id"' );
+                } ) ).toThrowError( '"id"' );
         } );
     } );
 
@@ -74,7 +74,7 @@ describe( 'notification reducer', () =>
         it( 'should handle clearing the first notification', () =>
         {
             expect(
-                notifications( [{ text: 'i should not  exist', id: 'ciao' }], {
+                notifications( [ { text: 'i should not  exist', id: 'ciao' } ], {
                     type : TYPES.CLEAR_NOTIFICATION,
                     id   : 'ciao'
                 } )

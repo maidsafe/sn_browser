@@ -1,5 +1,9 @@
 import logger from 'logger';
-import { isRunningPackaged, isRunningSpectronTestProcess, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
+import {
+    isRunningPackaged,
+    isRunningSpectronTestProcess,
+    isRunningSpectronTestProcessingPackagedApp
+} from '@Constants';
 import url from 'url';
 import path from 'path';
 
@@ -12,10 +16,17 @@ const authRoute = {
         {
             const link = request.url.split( '/auth/' )[1];
             const linkUrl = url.parse( link );
-            let authDistLocale = isRunningPackaged ? '../extensions/safe/' : './extensions/safe/';
-            authDistLocale = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp ) ? 'extensions/safe/' : authDistLocale;
+            let authDistLocale = isRunningPackaged
+                ? '../../extensions/safe/'
+                : './extensions/safe/';
+            authDistLocale = isRunningSpectronTestProcess
+                && !isRunningSpectronTestProcessingPackagedApp
+                ? './extensions/safe/'
+                : authDistLocale;
 
-            const authDist = path.resolve( __dirname, authDistLocale, 'auth-web-app/dist/' );
+            const authDist = path.normalize(
+                path.resolve( __dirname, authDistLocale, 'auth-web-app/dist/' )
+            );
 
             switch ( linkUrl.path )
             {
@@ -44,6 +55,5 @@ const authRoute = {
         }
     }
 };
-
 
 export default authRoute;

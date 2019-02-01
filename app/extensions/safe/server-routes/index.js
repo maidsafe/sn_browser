@@ -1,5 +1,9 @@
 import logger from 'logger';
-import { isRunningPackaged, isRunningSpectronTestProcess, isRunningSpectronTestProcessingPackagedApp } from 'appConstants';
+import {
+    isRunningPackaged,
+    isRunningSpectronTestProcess,
+    isRunningSpectronTestProcessingPackagedApp
+} from '@Constants';
 import path from 'path';
 import url from 'url';
 
@@ -8,10 +12,7 @@ import authRoute from './auth';
 
 const setupRoutes = ( server, store ) =>
 {
-    const routes = [
-        safeRoute( store ),
-        authRoute
-    ];
+    const routes = [ safeRoute( store ), authRoute ];
 
     // TODO: Remove serving onf antd files when we can package
     // webId manager properly.
@@ -20,13 +21,20 @@ const setupRoutes = ( server, store ) =>
         const link = request.params.link;
         const linkUrl = url.parse( link );
 
-        let safeFolder = isRunningPackaged ? '../extensions/safe/' : './extensions/safe/';
-        safeFolder = ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp ) ? 'extensions/safe/' : safeFolder;
+        let safeFolder = isRunningPackaged
+            ? '../extensions/safe/'
+            : './extensions/safe/';
+        safeFolder = isRunningSpectronTestProcess
+            && !isRunningSpectronTestProcessingPackagedApp
+            ? 'extensions/safe/'
+            : safeFolder;
 
         const antdIcons = path.resolve( __dirname, safeFolder, 'iconfont/' );
         const finalPath = path.resolve( antdIcons, link );
-        res.sendFile( finalPath, { confine: false } )
-            .header( 'Access-Control-Allow-Origin', '*' );
+        res.sendFile( finalPath, { confine: false } ).header(
+            'Access-Control-Allow-Origin',
+            '*'
+        );
     } );
 
     routes.forEach( route =>
@@ -41,6 +49,5 @@ const setupRoutes = ( server, store ) =>
         }
     } );
 };
-
 
 export default setupRoutes;

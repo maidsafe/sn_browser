@@ -3,12 +3,16 @@
  *
  * Running in the background process
  */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/no-unresolved, import/extensions */
 import ffi from 'ffi';
 import ref from 'ref';
+/* eslint-enable import/no-unresolved, import/extensions */
 import crypto from 'crypto';
 import lodash from 'lodash';
 import logger from 'logger';
 import i18n from 'i18n';
+import { SAFE } from '@Extensions/safe/constants';
 import SafeLib from './safe_lib';
 import Listener from './listeners';
 import * as types from './refs/types';
@@ -16,8 +20,9 @@ import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
 import CONSTANTS from '../auth-constants';
 import errConst from '../err-constants';
-import { isRunningNodeEnvTest } from 'appConstants';
 
+import { isRunningNodeEnvTest } from '@Constants';
+// private variables
 const _registeredClientHandle = Symbol( 'registeredClientHandle' );
 const _nwState = Symbol( 'nwState' );
 const _appListUpdateListener = Symbol( 'appListUpdate' );
@@ -32,14 +37,14 @@ const _netDisconnectCb = Symbol( 'netDisconnectCb' );
 const _decodeReqPool = Symbol( 'decodeReqPool' );
 
 /**
-* @private
-* Generates the app's URI converting the string into a base64 format, removing
-* characters or symbols which are not valid for a URL like '=' sign,
-* and making it lower case.
-*/
+ * @private
+ * Generates the app's URI converting the string into a base64 format, removing
+ * characters or symbols which are not valid for a URL like '=' sign,
+ * and making it lower case.
+ */
 const genAppUri = str =>
 {
-    const urlSafeBase64 = ( new Buffer( str ) )
+    const urlSafeBase64 = new Buffer( str )
         .toString( 'base64' )
         .replace( /\+/g, '-' ) // Convert '+' to '-'
         .replace( /\//g, '_' ) // Convert '/' to '_'
@@ -64,11 +69,14 @@ class Authenticator extends SafeLib
         this[_isAuthorisedListener] = new Listener();
         this[_cbRegistry] = {};
         this[_decodeReqPool] = {};
-        this[_netDisconnectCb] = ffi.Callback( types.Void,
-            [types.voidPointer, types.int32, types.int32], () =>
+        this[_netDisconnectCb] = ffi.Callback(
+            types.Void,
+            [ types.voidPointer, types.int32, types.int32 ],
+            () =>
             {
                 this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
-            } );
+            }
+        );
     }
 
     get registeredClientHandle()
@@ -105,32 +113,119 @@ class Authenticator extends SafeLib
         return this.isLibLoaded;
     }
 
-    /* eslint-disable class-methods-use-this */
     fnsToRegister()
     {
         return {
-            create_acc                       : [types.Void, [types.CString, types.CString, types.CString, types.voidPointer, 'pointer', 'pointer']],
-            login                            : [types.Void, [types.CString, types.CString, types.voidPointer, 'pointer', 'pointer']],
-            auth_decode_ipc_msg              : [types.Void, [types.voidPointer, types.CString, types.voidPointer, 'pointer', 'pointer', 'pointer', 'pointer', 'pointer']],
-            encode_auth_resp                 : [types.Void, [types.voidPointer, types.AuthReqPointer, types.u32, types.bool, types.voidPointer, 'pointer']],
-            encode_containers_resp           : [types.Void, [types.voidPointer, types.ContainersReqPointer, types.u32, types.bool, types.voidPointer, 'pointer']],
-            auth_unregistered_decode_ipc_msg : [types.Void, [types.CString, types.voidPointer, 'pointer', 'pointer']],
-            encode_share_mdata_resp          : [types.Void, [types.voidPointer, types.ShareMDataReqPointer, types.u32, types.bool, 'pointer', 'pointer']],
-            encode_unregistered_resp         : [types.Void, [types.u32, types.bool, types.voidPointer, 'pointer']],
-            auth_registered_apps             : [types.Void, [types.voidPointer, types.voidPointer, 'pointer']],
-            auth_revoke_app                  : [types.Void, [types.voidPointer, types.CString, types.voidPointer, 'pointer']],
-            auth_apps_accessing_mutable_data : [types.Void, [types.voidPointer, 'pointer', types.u64, 'pointer', 'pointer']],
-            auth_free                        : [types.Void, [types.voidPointer]],
-            auth_init_logging                : [types.Void, [types.CString, types.voidPointer, 'pointer']],
-            auth_set_additional_search_path  : [types.Void, [types.CString, types.voidPointer, 'pointer']],
-            auth_reconnect                   : [types.Void, [types.voidPointer, types.voidPointer, 'pointer']],
-            auth_account_info                : [types.Void, [types.voidPointer, 'pointer', 'pointer']]
+            create_acc : [
+                types.Void,
+                [
+                    types.CString,
+                    types.CString,
+                    types.CString,
+                    types.voidPointer,
+                    'pointer',
+                    'pointer'
+                ]
+            ],
+            login : [
+                types.Void,
+                [
+                    types.CString,
+                    types.CString,
+                    types.voidPointer,
+                    'pointer',
+                    'pointer'
+                ]
+            ],
+            auth_decode_ipc_msg : [
+                types.Void,
+                [
+                    types.voidPointer,
+                    types.CString,
+                    types.voidPointer,
+                    'pointer',
+                    'pointer',
+                    'pointer',
+                    'pointer',
+                    'pointer'
+                ]
+            ],
+            encode_auth_resp : [
+                types.Void,
+                [
+                    types.voidPointer,
+                    types.AuthReqPointer,
+                    types.u32,
+                    types.bool,
+                    types.voidPointer,
+                    'pointer'
+                ]
+            ],
+            encode_containers_resp : [
+                types.Void,
+                [
+                    types.voidPointer,
+                    types.ContainersReqPointer,
+                    types.u32,
+                    types.bool,
+                    types.voidPointer,
+                    'pointer'
+                ]
+            ],
+            auth_unregistered_decode_ipc_msg : [
+                types.Void,
+                [ types.CString, types.voidPointer, 'pointer', 'pointer' ]
+            ],
+            encode_share_mdata_resp : [
+                types.Void,
+                [
+                    types.voidPointer,
+                    types.ShareMDataReqPointer,
+                    types.u32,
+                    types.bool,
+                    'pointer',
+                    'pointer'
+                ]
+            ],
+            encode_unregistered_resp : [
+                types.Void,
+                [ types.u32, types.bool, types.voidPointer, 'pointer' ]
+            ],
+            auth_registered_apps : [
+                types.Void,
+                [ types.voidPointer, types.voidPointer, 'pointer' ]
+            ],
+            auth_revoke_app : [
+                types.Void,
+                [ types.voidPointer, types.CString, types.voidPointer, 'pointer' ]
+            ],
+            auth_apps_accessing_mutable_data : [
+                types.Void,
+                [ types.voidPointer, 'pointer', types.u64, 'pointer', 'pointer' ]
+            ],
+            auth_free         : [ types.Void, [ types.voidPointer ] ],
+            auth_init_logging : [
+                types.Void,
+                [ types.CString, types.voidPointer, 'pointer' ]
+            ],
+            auth_set_additional_search_path : [
+                types.Void,
+                [ types.CString, types.voidPointer, 'pointer' ]
+            ],
+            auth_reconnect : [
+                types.Void,
+                [ types.voidPointer, types.voidPointer, 'pointer' ]
+            ],
+            auth_account_info : [
+                types.Void,
+                [ types.voidPointer, 'pointer', 'pointer' ]
+            ]
         };
     }
-    /* eslint-enable class-methods-use-this */
+
     setListener( type, cb )
     {
-    // FIXME check .key required
+        // FIXME check .key required
         switch ( type.key )
         {
             case CONSTANTS.LISTENER_TYPES.APP_LIST_UPDATE.key: {
@@ -198,18 +293,24 @@ class Authenticator extends SafeLib
             }
             try
             {
-                const cb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer],
-                    ( userData, resultPtr ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 )
+                const cb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [ types.voidPointer, types.FfiResultPointer ],
+                        ( userData, resultPtr ) =>
                         {
-                            return reject( JSON.stringify( result ) );
+                            const result = resultPtr.deref();
+                            if ( result.error_code !== 0 )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
+                            this._pushNetworkState(
+                                CONSTANTS.NETWORK_STATUS.CONNECTED
+                            );
+                            resolve();
                         }
-                        this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
-                        resolve();
-                    } ) );
+                    )
+                );
 
                 this.safeLib.auth_reconnect(
                     this.registeredClientHandle,
@@ -234,26 +335,47 @@ class Authenticator extends SafeLib
                 return reject( validationErr );
             }
 
-            if ( !( invitation && ( typeof invitation === 'string' ) && invitation.trim() ) )
+            if (
+                !(
+                    invitation
+                    && typeof invitation === 'string'
+                    && invitation.trim()
+                )
+            )
             {
-                return Promise.reject( new Error( i18n.__( 'messages.invalid_invite_code' ) ) );
+                return Promise.reject(
+                    new Error( i18n.__( 'messages.invalid_invite_code' ) )
+                );
             }
 
             try
             {
-                const createAccCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.ClientHandlePointer],
-                    ( userData, resultPtr, clientHandle ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && clientHandle.length === 0 )
+                const createAccCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.ClientHandlePointer
+                        ],
+                        ( userData, resultPtr, clientHandle ) =>
                         {
-                            return reject( JSON.stringify( result ) );
+                            const result = resultPtr.deref();
+                            if (
+                                result.error_code !== 0
+                                && clientHandle.length === 0
+                            )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
+                            this.registeredClientHandle = clientHandle;
+                            this._pushNetworkState(
+                                CONSTANTS.NETWORK_STATUS.CONNECTED
+                            );
+                            resolve();
                         }
-                        this.registeredClientHandle = clientHandle;
-                        this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
-                        resolve();
-                    } ) );
+                    )
+                );
 
                 const onResult = ( err, res ) =>
                 {
@@ -270,7 +392,8 @@ class Authenticator extends SafeLib
                     types.Null,
                     this.networkDisconnectCb,
                     this._getCb( createAccCb ),
-                    onResult );
+                    onResult
+                );
             }
             catch ( e )
             {
@@ -291,22 +414,35 @@ class Authenticator extends SafeLib
 
             try
             {
-                const loginCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.ClientHandlePointer],
-                    ( userData, resultPtr, clientHandle ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && clientHandle.length === 0 )
+                const loginCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.ClientHandlePointer
+                        ],
+                        ( userData, resultPtr, clientHandle ) =>
                         {
-                            this[_isAuthorisedListener].broadcast( result );
-                            return reject( JSON.stringify( result ) );
-                        }
-                        this.registeredClientHandle = clientHandle;
-                        this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
-                        this[_isAuthorisedListener].broadcast( null, true );
+                            const result = resultPtr.deref();
+                            if (
+                                result.error_code !== 0
+                                && clientHandle.length === 0
+                            )
+                            {
+                                this[_isAuthorisedListener].broadcast( result );
+                                return reject( JSON.stringify( result ) );
+                            }
+                            this.registeredClientHandle = clientHandle;
+                            this._pushNetworkState(
+                                CONSTANTS.NETWORK_STATUS.CONNECTED
+                            );
+                            this[_isAuthorisedListener].broadcast( null, true );
 
-                        resolve();
-                    } ) );
+                            resolve();
+                        }
+                    )
+                );
 
                 const onResult = ( err, res ) =>
                 {
@@ -323,11 +459,12 @@ class Authenticator extends SafeLib
                     types.Null,
                     this.networkDisconnectCb,
                     this._getCb( loginCb ),
-                    onResult );
+                    onResult
+                );
             }
             catch ( e )
             {
-                logger.info( 'Login error', e );
+                logger.log( 'Login error', e );
                 this[_isAuthorisedListener].broadcast( e );
                 reject( e );
             }
@@ -362,7 +499,7 @@ class Authenticator extends SafeLib
 
     decodeRequest( uri )
     {
-        logger.verbose( 'Authenticator.js decoding request', uri );
+        logger.log( 'Authenticator.js decoding request', uri );
 
         return new Promise( ( resolve, reject ) =>
         {
@@ -370,119 +507,192 @@ class Authenticator extends SafeLib
             {
                 return reject( new Error( errConst.INVALID_URI.msg ) );
             }
-            const parsedURI = uri.replace( 'safe-auth://', '' ).replace( 'safe-auth:', '' ).replace( '/', '' );
+            const parsedURI = uri
+                .replace( 'safe-auth://', '' )
+                .replace( 'safe-auth:', '' )
+                .replace( '/', '' );
 
             if ( !this.registeredClientHandle )
             {
-                return this._decodeUnRegisteredRequest( parsedURI, resolve, reject );
+                return this._decodeUnRegisteredRequest(
+                    parsedURI,
+                    resolve,
+                    reject
+                );
             }
 
-            const decodeReqAuthCb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.u32, types.AuthReqPointer], ( userData, reqId, req ) =>
-                {
-                    if ( !( this[_authReqListener] && this[_authReqListener].len() !== 0 ) )
+            const decodeReqAuthCb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [ types.voidPointer, types.u32, types.AuthReqPointer ],
+                    ( userData, reqId, req ) =>
                     {
-                        return;
-                    }
-                    const authReq = typeParser.parseAuthReq( req.deref() );
-                    this[_decodeReqPool][reqId] = authReq;
-                    const result = {
-                        reqId,
-                        authReq
-                    };
-                    logger.verbose( 'Authenticator.js decoded authReq result: ', result );
-                    return this._isAlreadyAuthorised( authReq )
-                        .then( resolved =>
+                        if (
+                            !(
+                                this[_authReqListener]
+                                && this[_authReqListener].len() !== 0
+                            )
+                        )
                         {
-                            if ( resolved.isAuthorised )
+                            return;
+                        }
+                        const authReq = typeParser.parseAuthReq( req.deref() );
+                        this[_decodeReqPool][reqId] = authReq;
+                        const result = {
+                            reqId,
+                            authReq
+                        };
+                        logger.log(
+                            'Authenticator.js decoded authReq result: ',
+                            result
+                        );
+                        return this._isAlreadyAuthorised( authReq ).then(
+                            resolved =>
                             {
-                                result.isAuthorised = true;
-                                if ( resolved.previouslyAuthorisedContainers )
+                                if ( resolved.isAuthorised )
                                 {
-                                    result.previouslyAuthorisedContainers = resolved.previouslyAuthorisedContainers;
+                                    result.isAuthorised = true;
+                                    if (
+                                        resolved.previouslyAuthorisedContainers
+                                    )
+                                    {
+                                        result.previouslyAuthorisedContainers = resolved.previouslyAuthorisedContainers;
+                                    }
                                 }
+                                return resolve( result );
                             }
-                            return resolve( result );
-                        } );
-                } ) );
-
-            const decodeReqContainerCb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.u32, types.ContainersReqPointer], ( userData, reqId, req ) =>
-                {
-                    if ( !( this[_containerReqListener] && this[_containerReqListener].len() !== 0 ) )
-                    {
-                        return;
+                        );
                     }
-                    const contReq = typeParser.parseContainerReq( req.deref() );
-                    this[_decodeReqPool][reqId] = contReq;
-                    const result = {
-                        reqId,
-                        contReq
-                    };
+                )
+            );
 
-                    logger.verbose( 'Authenticator.js decoded contReq result: ', result );
-
-                    return this._isAlreadyAuthorisedContainer( contReq )
-                        .then( isAuthorised =>
+            const decodeReqContainerCb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [ types.voidPointer, types.u32, types.ContainersReqPointer ],
+                    ( userData, reqId, req ) =>
+                    {
+                        if (
+                            !(
+                                this[_containerReqListener]
+                                && this[_containerReqListener].len() !== 0
+                            )
+                        )
                         {
-                            if ( isAuthorised )
+                            return;
+                        }
+                        const contReq = typeParser.parseContainerReq(
+                            req.deref()
+                        );
+                        this[_decodeReqPool][reqId] = contReq;
+                        const result = {
+                            reqId,
+                            contReq
+                        };
+
+                        logger.log(
+                            'Authenticator.js decoded contReq result: ',
+                            result
+                        );
+
+                        return this._isAlreadyAuthorisedContainer( contReq ).then(
+                            isAuthorised =>
                             {
-                                result.isAuthorised = true;
+                                if ( isAuthorised )
+                                {
+                                    result.isAuthorised = true;
+                                }
+                                return resolve( result );
                             }
-                            return resolve( result );
-                        } );
-                } ) );
-
-            const shareMdataCb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.u32, types.ShareMDataReqPointer, 'pointer'],
-                async ( userData, reqId, req, meta ) =>
-                {
-                    const mDataReq = typeParser.parseShareMDataReq( req.deref() );
-                    const metaData = typeParser.parseUserMetaDataArray( meta, mDataReq.mdata_len );
-                    this[_decodeReqPool][reqId] = mDataReq;
-                    const result = {
-                        reqId,
-                        mDataReq,
-                        metaData
-                    };
-
-                    logger.verbose( 'Authenticator.js decoded MDataReq result: ', result );
-
-                    const appAccess = [];
-                    const tempArr = [];
-                    for ( let i = 0; i < mDataReq.mdata_len; i++ )
-                    {
-                        tempArr[i] = i;
+                        );
                     }
+                )
+            );
 
-                    await Promise.all( tempArr.map( i =>
+            const shareMdataCb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [
+                        types.voidPointer,
+                        types.u32,
+                        types.ShareMDataReqPointer,
+                        'pointer'
+                    ],
+                    async ( userData, reqId, req, meta ) =>
                     {
-                        const mdata = mDataReq.mdata[i];
-                        return this._appsAccessingMData( mdata.name, mdata.type_tag )
-                            .then( res =>
+                        const mDataReq = typeParser.parseShareMDataReq(
+                            req.deref()
+                        );
+                        const metaData = typeParser.parseUserMetaDataArray(
+                            meta,
+                            mDataReq.mdata_len
+                        );
+                        this[_decodeReqPool][reqId] = mDataReq;
+                        const result = {
+                            reqId,
+                            mDataReq,
+                            metaData
+                        };
+
+                        logger.log(
+                            'Authenticator.js decoded MDataReq result: ',
+                            result
+                        );
+
+                        const appAccess = [];
+                        const tempArr = [];
+                        for ( let i = 0; i < mDataReq.mdata_len; i++ )
+                        {
+                            tempArr[i] = i;
+                        }
+
+                        await Promise.all(
+                            tempArr.map( i =>
                             {
-                                appAccess[i] = res;
-                            } );
-                    } ) );
-                    result.appAccess = appAccess;
-                    return resolve( result );
-                } ) );
-
-            const unregisteredCb = this._getUnregisteredClientCb( resolve, reject );
-
-            const decodeReqErrorCb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.FfiResultPointer, types.CString], ( userData, resultPtr ) =>
-                {
-                    const result = resultPtr.deref();
-                    if ( !( this[_reqErrListener] && this[_reqErrListener].len() !== 0 ) )
-                    {
-                        return;
+                                const mdata = mDataReq.mdata[i];
+                                return this._appsAccessingMData(
+                                    mdata.name,
+                                    mdata.type_tag
+                                ).then( res =>
+                                {
+                                    appAccess[i] = res;
+                                } );
+                            } )
+                        );
+                        result.appAccess = appAccess;
+                        return resolve( result );
                     }
+                )
+            );
 
-                    logger.verbose( 'Error in auth callback.', result );
-                    this[_reqErrListener].broadcast( JSON.stringify( result ) );
-                    reject( result );
-                } ) );
+            const unregisteredCb = this._getUnregisteredClientCb(
+                resolve,
+                reject
+            );
+
+            const decodeReqErrorCb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [ types.voidPointer, types.FfiResultPointer, types.CString ],
+                    ( userData, resultPtr ) =>
+                    {
+                        const result = resultPtr.deref();
+                        if (
+                            !(
+                                this[_reqErrListener]
+                                && this[_reqErrListener].len() !== 0
+                            )
+                        )
+                        {
+                            return;
+                        }
+
+                        logger.log( 'Error in auth callback.', result );
+                        this[_reqErrListener].broadcast( JSON.stringify( result ) );
+                        reject( result );
+                    }
+                )
+            );
             try
             {
                 this.safeLib.auth_decode_ipc_msg(
@@ -493,7 +703,8 @@ class Authenticator extends SafeLib
                     this._getCb( decodeReqContainerCb ),
                     this._getCb( unregisteredCb ),
                     this._getCb( shareMdataCb ),
-                    this._getCb( decodeReqErrorCb ) );
+                    this._getCb( decodeReqErrorCb )
+                );
             }
             catch ( e )
             {
@@ -506,7 +717,11 @@ class Authenticator extends SafeLib
     {
         return new Promise( ( resolve, reject ) =>
         {
-            logger.verbose( 'authenticator.js: encoding auth response', req, isAllowed );
+            logger.log(
+                'authenticator.js: encoding auth response',
+                req,
+                isAllowed
+            );
 
             if ( !this.registeredClientHandle )
             {
@@ -523,32 +738,47 @@ class Authenticator extends SafeLib
                 return reject( new Error( i18n.__( 'messages.invalid_req' ) ) );
             }
 
-            const authReq = types.allocAuthReq( typeConstructor.constructAuthReq(
-                this[_decodeReqPool][req.reqId] ) );
+            const authReq = types.allocAuthReq(
+                typeConstructor.constructAuthReq(
+                    this[_decodeReqPool][req.reqId]
+                )
+            );
 
             delete this[_decodeReqPool][req.reqId];
 
             try
             {
-                const authDecisionCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.CString],
-                    ( userData, resultPtr, res ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 )
+                const authDecisionCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.CString
+                        ],
+                        ( userData, resultPtr, res ) =>
                         {
-                            return reject( JSON.stringify( result ) );
-                        }
+                            const result = resultPtr.deref();
+                            if ( result.error_code !== 0 )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
 
-                        logger.verbose( 'authenticator.js: auth decision CB', result, isAllowed );
+                            logger.log(
+                                'authenticator.js: auth decision CB',
+                                result,
+                                isAllowed
+                            );
 
-                        if ( isAllowed )
-                        {
-                            this._updateAppList();
+                            if ( isAllowed )
+                            {
+                                this._updateAppList();
+                            }
+                            const appUri = genAppUri( req.authReq.app.id );
+                            resolve( `${ appUri }:${ res }` );
                         }
-                        const appUri = genAppUri( req.authReq.app.id );
-                        resolve( `${ appUri }:${ res }` );
-                    } ) );
+                    )
+                );
                 this.safeLib.encode_auth_resp(
                     this.registeredClientHandle,
                     authReq,
@@ -583,29 +813,40 @@ class Authenticator extends SafeLib
             {
                 return reject( new Error( i18n.__( 'messages.invalid_req' ) ) );
             }
-            const contReq = types.allocContainerReq( typeConstructor.constructContainerReq(
-                this[_decodeReqPool][req.reqId] ) );
+            const contReq = types.allocContainerReq(
+                typeConstructor.constructContainerReq(
+                    this[_decodeReqPool][req.reqId]
+                )
+            );
 
             delete this[_decodeReqPool][req.reqId];
 
             try
             {
-                const contDecisionCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.CString],
-                    ( userData, resultPtr, res ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 )
+                const contDecisionCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.CString
+                        ],
+                        ( userData, resultPtr, res ) =>
                         {
-                            return reject( JSON.stringify( result ) );
+                            const result = resultPtr.deref();
+                            if ( result.error_code !== 0 )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
+                            if ( isAllowed )
+                            {
+                                this._updateAppList();
+                            }
+                            const appUri = genAppUri( req.contReq.app.id );
+                            resolve( `${ appUri }:${ res }` );
                         }
-                        if ( isAllowed )
-                        {
-                            this._updateAppList();
-                        }
-                        const appUri = genAppUri( req.contReq.app.id );
-                        resolve( `${ appUri }:${ res }` );
-                    } ) );
+                    )
+                );
 
                 this.safeLib.encode_containers_resp(
                     this.registeredClientHandle,
@@ -642,29 +883,40 @@ class Authenticator extends SafeLib
                 return reject( new Error( i18n.__( 'messages.invalid_req' ) ) );
             }
 
-            const mDataReq = types.allocSharedMdataReq( typeConstructor.constructSharedMdataReq(
-                this[_decodeReqPool][req.reqId] ) );
+            const mDataReq = types.allocSharedMdataReq(
+                typeConstructor.constructSharedMdataReq(
+                    this[_decodeReqPool][req.reqId]
+                )
+            );
 
             delete this[_decodeReqPool][req.reqId];
 
             try
             {
-                const mDataDecisionCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.CString],
-                    ( userData, resultPtr, res ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 )
+                const mDataDecisionCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.CString
+                        ],
+                        ( userData, resultPtr, res ) =>
                         {
-                            return reject( JSON.stringify( result ) );
+                            const result = resultPtr.deref();
+                            if ( result.error_code !== 0 )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
+                            if ( isAllowed )
+                            {
+                                this._updateAppList();
+                            }
+                            const appUri = genAppUri( req.mDataReq.app.id );
+                            resolve( `${ appUri }:${ res }` );
                         }
-                        if ( isAllowed )
-                        {
-                            this._updateAppList();
-                        }
-                        const appUri = genAppUri( req.mDataReq.app.id );
-                        resolve( `${ appUri }:${ res }` );
-                    } ) );
+                    )
+                );
 
                 this.safeLib.encode_share_mdata_resp(
                     this.registeredClientHandle,
@@ -693,33 +945,59 @@ class Authenticator extends SafeLib
 
             if ( !appId )
             {
-                return reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) ) ) );
+                return reject(
+                    new Error(
+                        i18n.__(
+                            'messages.should_not_be_empty',
+                            i18n.__( 'AppId' )
+                        )
+                    )
+                );
             }
 
             if ( typeof appId !== 'string' )
             {
-                return reject( new Error( i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) ) ) );
+                return reject(
+                    new Error(
+                        i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) )
+                    )
+                );
             }
 
             if ( !appId.trim() )
             {
-                return reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) ) ) );
+                return reject(
+                    new Error(
+                        i18n.__(
+                            'messages.should_not_be_empty',
+                            i18n.__( 'AppId' )
+                        )
+                    )
+                );
             }
 
             try
             {
-                const revokeCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.CString],
-                    ( userData, resultPtr, res ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 )
+                const revokeCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.CString
+                        ],
+                        ( userData, resultPtr, res ) =>
                         {
-                            return reject( JSON.stringify( result ) );
+                            const result = resultPtr.deref();
+                            if ( result.error_code !== 0 )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
+                            this._updateAppList();
+                            resolve( res );
                         }
-                        this._updateAppList();
-                        resolve( res );
-                    } ) );
+                    )
+                );
 
                 this.safeLib.auth_revoke_app(
                     this.registeredClientHandle,
@@ -744,19 +1022,31 @@ class Authenticator extends SafeLib
                 return reject( new Error( i18n.__( 'messages.unauthorised' ) ) );
             }
             let cb = null;
-            cb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.FfiResultPointer, types.RegisteredAppPointer, types.usize],
-                ( userData, resultPtr, appList, len ) =>
-                {
-                    const result = resultPtr.deref();
-                    this._deleteFromCb( cb );
-                    if ( result.error_code !== 0 )
+            cb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [
+                        types.voidPointer,
+                        types.FfiResultPointer,
+                        types.RegisteredAppPointer,
+                        types.usize
+                    ],
+                    ( userData, resultPtr, appList, len ) =>
                     {
-                        return reject( JSON.stringify( result ) );
+                        const result = resultPtr.deref();
+                        this._deleteFromCb( cb );
+                        if ( result.error_code !== 0 )
+                        {
+                            return reject( JSON.stringify( result ) );
+                        }
+                        const apps = typeParser.parseRegisteredAppArray(
+                            appList,
+                            len
+                        );
+                        resolve( apps );
                     }
-                    const apps = typeParser.parseRegisteredAppArray( appList, len );
-                    resolve( apps );
-                } ) );
+                )
+            );
 
             try
             {
@@ -781,21 +1071,29 @@ class Authenticator extends SafeLib
             {
                 return reject( new Error( i18n.__( 'messages.unauthorised' ) ) );
             }
-            const cb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.FfiResultPointer, types.AccountInfoPointer],
-                ( userData, resultPtr, accInfo ) =>
-                {
-                    const result = resultPtr.deref();
-                    if ( result.error_code !== 0 )
+            const cb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [
+                        types.voidPointer,
+                        types.FfiResultPointer,
+                        types.AccountInfoPointer
+                    ],
+                    ( userData, resultPtr, accInfo ) =>
                     {
-                        return reject( JSON.stringify( result ) );
+                        const result = resultPtr.deref();
+                        if ( result.error_code !== 0 )
+                        {
+                            return reject( JSON.stringify( result ) );
+                        }
+                        const info = accInfo.deref();
+                        resolve( {
+                            done      : info.mutations_done,
+                            available : info.mutations_available
+                        } );
                     }
-                    const info = accInfo.deref();
-                    resolve( {
-                        done      : info.mutations_done,
-                        available : info.mutations_available
-                    } );
-                } ) );
+                )
+            );
 
             try
             {
@@ -821,18 +1119,30 @@ class Authenticator extends SafeLib
             {
                 return reject( new Error( i18n.__( 'messages.unauthorised' ) ) );
             }
-            const cb = this._pushCb( ffi.Callback( types.Void,
-                [types.voidPointer, types.FfiResultPointer, types.AppAccessPointer, types.usize],
-                ( userData, resultPtr, appAccess, len ) =>
-                {
-                    const result = resultPtr.deref();
-                    if ( result.error_code !== 0 )
+            const cb = this._pushCb(
+                ffi.Callback(
+                    types.Void,
+                    [
+                        types.voidPointer,
+                        types.FfiResultPointer,
+                        types.AppAccessPointer,
+                        types.usize
+                    ],
+                    ( userData, resultPtr, appAccess, len ) =>
                     {
-                        return reject( JSON.stringify( result ) );
+                        const result = resultPtr.deref();
+                        if ( result.error_code !== 0 )
+                        {
+                            return reject( JSON.stringify( result ) );
+                        }
+                        const appAccessInfo = typeParser.parseAppAccess(
+                            appAccess,
+                            len
+                        );
+                        return resolve( appAccessInfo );
                     }
-                    const appAccessInfo = typeParser.parseAppAccess( appAccess, len );
-                    return resolve( appAccessInfo );
-                } ) );
+                )
+            );
 
             try
             {
@@ -874,14 +1184,16 @@ class Authenticator extends SafeLib
 
     _updateAppList()
     {
-        this.getRegisteredApps()
-            .then( apps =>
+        this.getRegisteredApps().then( apps =>
+        {
+            if (
+                this[_appListUpdateListener]
+                && this[_appListUpdateListener].len() !== 0
+            )
             {
-                if ( ( this[_appListUpdateListener] && this[_appListUpdateListener].len() !== 0 ) )
-                {
-                    this[_appListUpdateListener].broadcast( null, apps );
-                }
-            } );
+                this[_appListUpdateListener].broadcast( null, apps );
+            }
+        } );
     }
 
     _decodeUnRegisteredRequest( parsedUri, resolve, reject )
@@ -893,11 +1205,16 @@ class Authenticator extends SafeLib
 
         const unregisteredCb = this._getUnregisteredClientCb( resolve, reject );
 
-        const decodeReqErrorCb = this._pushCb( ffi.Callback( types.Void,
-            [types.voidPointer, types.FfiResultPointer, types.CString], () =>
-            {
-                reject( new Error( errConst.UNAUTHORISED.msg ) );
-            } ) );
+        const decodeReqErrorCb = this._pushCb(
+            ffi.Callback(
+                types.Void,
+                [ types.voidPointer, types.FfiResultPointer, types.CString ],
+                () =>
+                {
+                    reject( new Error( errConst.UNAUTHORISED.msg ) );
+                }
+            )
+        );
 
         try
         {
@@ -920,18 +1237,26 @@ class Authenticator extends SafeLib
         {
             try
             {
-                const encodeCb = this._pushCb( ffi.Callback( types.Void,
-                    [types.voidPointer, types.FfiResultPointer, types.CString],
-                    ( userData, resultPtr, res ) =>
-                    {
-                        const result = resultPtr.deref();
-                        if ( result.error_code !== 0 && !res )
+                const encodeCb = this._pushCb(
+                    ffi.Callback(
+                        types.Void,
+                        [
+                            types.voidPointer,
+                            types.FfiResultPointer,
+                            types.CString
+                        ],
+                        ( userData, resultPtr, res ) =>
                         {
-                            return reject( JSON.stringify( result ) );
+                            const result = resultPtr.deref();
+                            if ( result.error_code !== 0 && !res )
+                            {
+                                return reject( JSON.stringify( result ) );
+                            }
+                            const appUri = genAppUri( appId );
+                            resolve( `${ appUri }:${ res }` );
                         }
-                        const appUri = genAppUri( appId );
-                        resolve( `${ appUri }:${ res }` );
-                    } ) );
+                    )
+                );
                 this.safeLib.encode_unregistered_resp(
                     reqId,
                     true,
@@ -948,19 +1273,26 @@ class Authenticator extends SafeLib
 
     _getUnregisteredClientCb( resolve, reject )
     {
-        return this._pushCb( ffi.Callback( types.Void,
-            [types.voidPointer, types.u32, types.u8Pointer, types.usize],
-            ( userData, reqId, appIdPtr, appIdLen ) =>
-            {
-                if ( !reqId || appIdLen <= 0 )
+        return this._pushCb(
+            ffi.Callback(
+                types.Void,
+                [ types.voidPointer, types.u32, types.u8Pointer, types.usize ],
+                ( userData, reqId, appIdPtr, appIdLen ) =>
                 {
-                    return reject( new Error( errConst, INVALID_RESPONSE.msg ) );
-                }
+                    if ( !reqId || appIdLen <= 0 )
+                    {
+                        return reject(
+                            new Error( errConst, INVALID_RESPONSE.msg )
+                        );
+                    }
 
-                const appId = ref.reinterpret( appIdPtr, appIdLen );
-                return this._encodeUnRegisteredResp( reqId, appId )
-                    .then( res => resolve( res ) );
-            } ) );
+                    const appId = ref.reinterpret( appIdPtr, appIdLen );
+                    return this._encodeUnRegisteredResp( reqId, appId ).then(
+                        res => resolve( res )
+                    );
+                }
+            )
+        );
     }
 
     _isAlreadyAuthorised( request )
@@ -970,23 +1302,28 @@ class Authenticator extends SafeLib
         {
             try
             {
-                this.getRegisteredApps().then( authorisedApps =>
-                {
-                    let previouslyAuthorisedContainers;
-                    const isAuthorised = authorisedApps.some( app =>
+                this.getRegisteredApps()
+                    .then( authorisedApps =>
                     {
-                        const appIsPresent = lodash.isEqual( app.app_info, req.app );
-                        if ( appIsPresent && app.containers )
+                        let previouslyAuthorisedContainers;
+                        const isAuthorised = authorisedApps.some( app =>
                         {
-                            previouslyAuthorisedContainers = app.containers;
-                        }
-                        return appIsPresent;
-                    } );
-                    return {
-                        isAuthorised,
-                        previouslyAuthorisedContainers
-                    };
-                } ).then( resolve );
+                            const appIsPresent = lodash.isEqual(
+                                app.app_info,
+                                req.app
+                            );
+                            if ( appIsPresent && app.containers )
+                            {
+                                previouslyAuthorisedContainers = app.containers;
+                            }
+                            return appIsPresent;
+                        } );
+                        return {
+                            isAuthorised,
+                            previouslyAuthorisedContainers
+                        };
+                    } )
+                    .then( resolve );
             }
             catch ( err )
             {
@@ -1005,7 +1342,8 @@ class Authenticator extends SafeLib
             {
                 this.getRegisteredApps().then( authorisedApps =>
                 {
-                    app = authorisedApps.filter( apps => lodash.isEqual( apps.app_info, req.app ) );
+                    app = authorisedApps.filter( apps =>
+                        lodash.isEqual( apps.app_info, req.app ) );
                     // Return false if no apps found match with requested app
                     if ( app.length === 0 )
                     {
@@ -1015,7 +1353,12 @@ class Authenticator extends SafeLib
                     let i;
                     for ( i = 0; i < req.containers.length; i++ )
                     {
-                        if ( lodash.findIndex( app.containers, req.containers[i] ) === -1 )
+                        if (
+                            lodash.findIndex(
+                                app.containers,
+                                req.containers[i]
+                            ) === -1
+                        )
                         {
                             resolve( false );
                             break;
@@ -1032,10 +1375,10 @@ class Authenticator extends SafeLib
     }
 
     /**
-   * Push network state to registered listeners
-   * @param state
-   * @private
-   */
+     * Push network state to registered listeners
+     * @param state
+     * @private
+     */
     _pushNetworkState( state )
     {
         let networkState = state;
@@ -1046,50 +1389,65 @@ class Authenticator extends SafeLib
 
         this.networkState = networkState;
 
-        if ( this[_nwStateChangeListener] && this[_nwStateChangeListener].len() !== 0 )
+        if (
+            this[_nwStateChangeListener]
+            && this[_nwStateChangeListener].len() !== 0
+        )
         {
             this[_nwStateChangeListener].broadcast( null, this.networkState );
         }
     }
 
     /**
-   * Validate user credential - locator and secret
-   * @param locator
-   * @param secret
-   * @returns {Error}
-   * @private
-   */
+     * Validate user credential - locator and secret
+     * @param locator
+     * @param secret
+     * @returns {Error}
+     * @private
+     */
     /* eslint-disable class-methods-use-this */
     _isUserCredentialsValid( locator, secret )
     {
-    /* eslint-enable class-methods-use-this */
+        /* eslint-enable class-methods-use-this */
         if ( !locator )
         {
-            return new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
+            return new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) )
+            );
         }
 
         if ( !secret )
         {
-            return new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
+            return new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) )
+            );
         }
 
         if ( typeof locator !== 'string' )
         {
-            return new Error( i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) ) );
+            return new Error(
+                i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) )
+            );
         }
 
         if ( typeof secret !== 'string' )
         {
-            return new Error( i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) ) );
+            return new Error(
+                i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) )
+            );
         }
         if ( !locator.trim() )
         {
-            return new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
+            return new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) )
+            );
         }
 
         if ( !secret.trim() )
         {
-            return new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
+            return new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) )
+            );
         }
     }
 }

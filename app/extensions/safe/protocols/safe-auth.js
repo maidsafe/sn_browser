@@ -1,30 +1,40 @@
 import logger from 'logger';
-import { CONFIG, PROTOCOLS } from 'appConstants';
+import { CONFIG, PROTOCOLS } from '@Constants';
 
 import { remote } from 'electron';
 /* eslint-enable import/extensions */
 
 export const registerSafeAuthProtocol = () =>
 {
-    logger.verbose( 'Registering safe-auth scheme' );
+    logger.log( 'Registering safe-auth scheme' );
     const partition = CONFIG.SAFE_PARTITION;
     const ses = remote.session.fromPartition( partition );
 
-    ses.protocol.registerHttpProtocol( PROTOCOLS.SAFE_AUTH, ( req, cb ) =>
-    {
-        logger.verbose( `Procotol:: safe-auth:// url being parsed: ${ req.url }` );
-
-        // TODO. Sort out when/where with slash
-        const newUrl = `http://localhost:${ CONFIG.PORT }/auth/${ req.url }`;
-
-        cb( { url: newUrl } );
-    }, err =>
-    {
-        if ( err )
+    ses.protocol.registerHttpProtocol(
+        PROTOCOLS.SAFE_AUTH,
+        ( req, cb ) =>
         {
-            logger.error( 'Problem registering safe-auth', err );
+            logger.log( `Procotol:: safe-auth:// url being parsed: ${ req.url }` );
+
+            // TODO. Sort out when/where with slash
+            const newUrl = `http://localhost:${ CONFIG.PORT }/auth/${ req.url }`;
+
+            cb( { url: newUrl } );
+        },
+        err =>
+        {
+            if ( !err ) return;
+
+            if ( err.message === 'The scheme has been registered' )
+            {
+                logger.log( 'SAFE-AUTH protocol already registered, so dont worry' );
+            }
+            else
+            {
+                throw err;
+            }
         }
-    } );
+    );
 };
 
 export default registerSafeAuthProtocol;

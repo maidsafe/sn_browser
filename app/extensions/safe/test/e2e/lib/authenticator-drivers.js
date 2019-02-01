@@ -1,14 +1,11 @@
-import AUTH_UI_CLASSES from 'extensions/safe/auth-web-app/classes';
-import {
-    BROWSER_UI,
-    WAIT_FOR_EXIST_TIMEOUT,
-} from 'spectron-lib/constants';
+import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
 
 import {
     delay,
     navigateTo,
     newTab,
-    setClientToMainBrowserWindow,
+    setClientToMainBrowserWindow
 } from 'spectron-lib/browser-driver';
 
 /**
@@ -22,7 +19,9 @@ export const createAccountDetails = () => ( {
 
 export const createAccount = async ( app, secret, password, authTabIndex ) =>
 {
-    console.warn( 'FYI, Dear Tester. New accounts allow apps to reauth without notification by default. So don\'t wait everytime...' );
+    console.warn(
+        "FYI, Dear Tester. New accounts allow apps to reauth without notification by default. So don't wait everytime..."
+    );
     const { client } = app;
     let ourSecret = secret;
     let ourPassword = password;
@@ -94,7 +93,6 @@ export const logout = async ( app, authTabIndex ) =>
     await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON }` );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON }` );
 };
-
 
 export const login = async ( app, secret, password, authTabIndex ) =>
 {

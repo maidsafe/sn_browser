@@ -1,78 +1,126 @@
-sudo: required
-dist: trusty
-os:
-- osx
-- linux
-env:
-- NODE_ENV=dev
-- NODE_ENV=prod
-language: node_js
-node_js:
-- 8
+matrix:
+  allow_failures:
+    - os: windows
+  include:
+    - os: osx
+      language: node_js
+      node_js:
+          # Must use node 8 while on electron 2.x (for safe.spec tests.)
+        - 8
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - NODE_ENV=dev
+
+    - os: linux
+      language: node_js
+      node_js:
+        - 8
+      env:
+        - NODE_ENV=dev
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-multilib
+            - g++-8
+            - g++-multilib
+            - icnsutils
+            - graphicsmagick
+            - xz-utils
+            - xorriso
+            - rpm
+
+    # - os: windows
+    #   language: node_js
+    #   node_js:
+    #     - 8
+    #   env:
+    #     - ELECTRON_CACHE=$HOME/.cache/electron
+    #     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+    #     - NODE_ENV=dev
+
+
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
+
 cache:
   yarn: true
   directories:
-  - node_modules
-  - app/node_modules
-  - "$HOME/.electron"
-  - "$HOME/.cache"
-
-addons:
-  # chrome: stable
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
-    - icnsutils
-    - graphicsmagick
-    - xz-utils
-    - xorriso
-    - desktop-file-utils
-
+    - node_modules
+    - $(npm config get prefix)/lib/node_modules
+    - flow-typed
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX="g++-8"; fi
+
+install:
+  - yarn --ignore-engines
+  # On Linux, initialize "virtual display". See before_script
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      /sbin/start-stop-daemon \
+      --start \
+      --quiet \
+      --pidfile /tmp/custom_xvfb_99.pid \
+      --make-pidfile \
+      --background \
+      --exec /usr/bin/Xvfb \
+      -- :99 -ac -screen 0 1280x1024x16
+    else
+      :
+    fi
+  - yarn package
+
 
 before_script:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
-  fi
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start &
-- sleep 5
+  # On Linux, create a "virtual display". This allows browsers to work properly
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
 
 script:
 # update the xdg implementation on the machine. older version is buggy
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/opn/xdg-open ~/bin/;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
-  fi
-- yarn run build
-- yarn run rebuild
-- yarn run test-peruse
-# - travis_retry yarn run test-exts # super occasionally times out in tests.
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/opn/xdg-open ~/bin/;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
+    fi
+  - yarn run test-peruse
+  # Split into smaller test subsets to facilitate retries only on smaller portions of the tests
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/peruse.spec.js"
+  - sleep 5
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/settingsMenu.spec.js"
+  - sleep 5
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/navigation.spec.js"
+  - sleep 5
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-auth"
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-mock"
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe.spec"
+  - sleep 5
+  - if [[ "$TRAVIS_OS_NAME" != "linux" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e network";
+    fi
 
-# separate tests for safe + auth as together throws error due to native libs
-- export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
-- sleep 15
-- yarn run package-only
-# travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
-  fi
-- travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod"
-- sleep 5
-- travis_retry eval " pkill -f electron || pkill -f SAFE Browser || yarn run test-exts-e2e-prod"
 
 after_success:
+    # need to build prod and zip em both....
+- NODE_ENV=prod yarn package
+- for d in ./release/*/;
+  do
+    ls $d
+    export RELEASE="$(ls release)";
+    echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ditto -c -k --sequesterRsrc --keepParent ${RELEASE} ${RELEASE}.zip;
+    fi
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
+    fi
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\*;
+    fi
+  done
 - ls release
-- export RELEASE="$(ls release)";
-- echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - cd release
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ditto -c -k --sequesterRsrc --keepParent ${RELEASE} ${RELEASE}.zip;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\*;
-  fi
 - cd ..
 - ls release
 

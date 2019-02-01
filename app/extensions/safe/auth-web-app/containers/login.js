@@ -7,27 +7,33 @@ import {
     login,
     clearAuthLoader,
     clearError,
-    hideLibErrPopup } from '../actions/auth';
+    hideLibErrPopup
+} from '../actions/auth';
 
-const mapStateToProps = state => (
-    {
-        networkState : state.networkState.state,
-        error        : state.auth.error,
-        loading      : state.auth.loading,
-        isAuthorised : state.auth.isAuthorised,
-        libErrPopup  : state.auth.libErrPopup
-    }
-);
+const mapStateToProps = state => ( {
+    networkState : state.networkState.state,
+    error        : state.auth.error,
+    loading      : state.auth.loading,
+    isAuthorised : state.auth.isAuthorised,
+    libErrPopup  : state.auth.libErrPopup
+} );
 
-const mapDispatchToProps = dispatch => (
-    {
-        push : path => dispatch( push( path ) ),
-        ...bindActionCreators( {
+const mapDispatchToProps = dispatch => ( {
+    push : path => dispatch( push( path ) ),
+    ...bindActionCreators(
+        {
             login,
             clearAuthLoader,
             clearError,
-            hideLibErrPopup }, dispatch )
-    }
-);
+            hideLibErrPopup
+        },
+        dispatch
+    )
+} );
 
-export default withRouter( connect( mapStateToProps, mapDispatchToProps )( Login ) );
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )( Login )
+);

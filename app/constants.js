@@ -1,8 +1,7 @@
-
 import path from 'path';
 import fs from 'fs-extra';
 import { remote } from 'electron';
-import pkg from 'appPackage';
+import pkg from '@Package';
 import getPort from 'get-port';
 
 const platform = process.platform;
@@ -12,18 +11,25 @@ const WINDOWS = 'win32';
 
 const allPassedArgs = process.argv;
 
-let shouldRunMockNetwork = fs.existsSync( path.resolve( __dirname, '..', 'startAsMock' ) );
+let shouldRunMockNetwork = fs.existsSync(
+    path.resolve( __dirname, '..', 'startAsMock' )
+);
 
 let hasDebugFlag = false;
 
-export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
+export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST || false;
 export const isRunningUnpacked = process.env.IS_UNPACKED;
 export const isRunningPackaged = !isRunningUnpacked;
-export const isRunningSpectronTestProcessingPackagedApp = ( isRunningSpectronTestProcess && isRunningPackaged );
+export const isRunningSpectronTestProcessingPackagedApp = isRunningSpectronTestProcess && isRunningPackaged;
 
-
+export const inBgProcess = !!(
+    typeof document !== 'undefined' && document.title.startsWith( 'Background' )
+);
 // override for spectron dev mode
-if ( isRunningSpectronTestProcess && !isRunningSpectronTestProcessingPackagedApp )
+if (
+    isRunningSpectronTestProcess
+    && !isRunningSpectronTestProcessingPackagedApp
+)
 {
     shouldRunMockNetwork = true;
 }
@@ -54,20 +60,24 @@ if ( allPassedArgs.includes( '--port' ) )
 export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
 
 
-export const TESTENV = process.env.NODE_ENV;
+export const env = shouldStartAsMockFromFlagsOrPackage
+    ? 'development'
+    : process.env.NODE_ENV || 'production';
 
-export const env = shouldStartAsMockFromFlagsOrPackage ? 'development' : process.env.NODE_ENV || 'production';
-export const isCI = ( remote && remote.getGlobal ) ? remote.getGlobal( 'isCI' ) : process.env.CI;
+export const isRunningDevelopment = /^dev/.test( env );
+
+export const isCI = remote && remote.getGlobal ? remote.getGlobal( 'isCI' ) : process.env.CI;
 export const travisOS = process.env.TRAVIS_OS_NAME || '';
 // other considerations?
 export const isHot = process.env.HOT || 0;
-
 
 // const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage;
 const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage;
 
 // only to be used for inital store setting in main process. Not guaranteed correct for renderers.
-export const startedRunningMock = ( remote && remote.getGlobal ) ? remote.getGlobal( 'startedRunningMock' ) : startAsMockNetwork || /^dev/.test( env );
+export const startedRunningMock = remote && remote.getGlobal
+    ? remote.getGlobal( 'startedRunningMock' )
+    : startAsMockNetwork || /^dev/.test( env );
 export const startedRunningProduction = !startedRunningMock;
 export const isRunningNodeEnvTest = /^test/.test( env );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
@@ -78,13 +88,19 @@ export const inMainProcess = typeof remote === 'undefined';
 // Adds app folder for asar packaging (space before app is important).
 const preloadLocation = isRunningUnpacked ? '' : '../';
 
+let safeNodeAppPathModifier = '..';
+
+if ( isRunningPackaged && !isRunningNodeEnvTest )
+{
+    safeNodeAppPathModifier = '../../app.asar.unpacked/';
+}
 
 /**
  * retrieve the safe node lib path, either as a relative path in the main process,
  * or from the main process global
  * @return {[type]} [description]
  */
-const safeNodeLibPath = ( ) =>
+const safeNodeLibPath = () =>
 {
     // only exists in render processes
     if ( remote && remote.getGlobal && !isRunningNodeEnvTest )
@@ -92,30 +108,29 @@ const safeNodeLibPath = ( ) =>
         return remote.getGlobal( 'SAFE_NODE_LIB_PATH' );
     }
 
-    return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
+    return path.resolve(
+        __dirname,
+        safeNodeAppPathModifier,
+        'node_modules/@maidsafe/safe-node-app/src/native'
+    );
 };
 
 // HACK: Prevent jest dying due to no electron globals
-const safeNodeAppPath = ( ) =>
+const safeNodeAppPath = () =>
 {
     if ( !remote || !remote.app )
     {
         return '';
     }
 
-    return isRunningUnpacked ? [remote.process.execPath, `${ remote.getGlobal( 'appDir' ) }/main.js`] : [remote.app.getPath( 'exe' )];
+    return isRunningUnpacked
+        ? [ remote.process.execPath, `${ remote.getGlobal( 'appDir' ) }/main.prod.js` ]
+        : [ remote.app.getPath( 'exe' ) ];
 };
-
-let safeNodeAppPathModifier = '';
-
-if ( isRunningPackaged && !isRunningNodeEnvTest )
-{
-    safeNodeAppPathModifier = '../app.asar.unpacked/';
-}
 
 
 export const I18N_CONFIG = {
-    locales        : ['en'],
+    locales        : [ 'en' ],
     directory      : path.resolve( __dirname, 'locales' ),
     objectNotation : true
 };
@@ -159,7 +174,9 @@ export const CONFIG = {
 
 if ( inMainProcess )
 {
-    global.preloadFile = `file://${ __dirname }/webPreload.js`;
+    const devPort = process.env.PORT || 1212;
+
+    global.preloadFile = `file://${ __dirname }/webPreload.prod.js`;
     global.appDir = __dirname;
     global.isCI = isCI;
     global.startedRunningMock = startedRunningMock;
@@ -169,12 +186,10 @@ if ( inMainProcess )
     global.SPECTRON_TEST = isRunningSpectronTestProcess;
 }
 
-
 // if( isRunningUnpacked )
 // {
 //     CONFIG.CONFIG_PATH = path.resolve( __dirname, '../resources' );
 // }
-
 
 const appInfo = {
     info : {
@@ -185,12 +200,12 @@ const appInfo = {
         customExecPath : safeNodeAppPath()
     },
     opts : {
-        own_container : true,
+        own_container : true
     },
     permissions : {
-        _public : ['Read', 'Insert', 'Update', 'Delete'],
-    // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
-    },
+        _public : [ 'Read', 'Insert', 'Update', 'Delete' ]
+        // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
+    }
 };
 
 // OSX: Add bundle for electron in dev mode
@@ -242,7 +257,9 @@ const getDomClasses = () =>
 {
     const domClasses = {};
 
-    Object.keys( CLASSES ).forEach( theClass => domClasses[theClass] = `.${ CLASSES[theClass] }` );
+    Object.keys( CLASSES ).forEach(
+        theClass => ( domClasses[theClass] = `.${ CLASSES[theClass] }` )
+    );
 
     return domClasses;
 };
