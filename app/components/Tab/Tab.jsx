@@ -527,7 +527,7 @@ export default class Tab extends Component
     {
         logger.silly( 'webview will navigate', e );
 
-        if (!this.isFrozen() )
+        if ( this.isFrozen() )
         {
             logger.verbose('frozen checkkkkk in will nav')
             return;
@@ -558,15 +558,6 @@ export default class Tab extends Component
         {
             this.props.updateActiveTab( { url, windowId } );
         }
-
-
-        // our own little preventDefault
-        // cf. https://github.com/electron/electron/issues/1378
-        this.with( ( wv ) =>
-        {
-            webview.stop();
-            this.loadURL( url );
-        } );
     }
 
     // TODO Move this functinoality to extensions
