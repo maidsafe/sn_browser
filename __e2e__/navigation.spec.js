@@ -142,6 +142,55 @@ describe( 'navigation', () =>
         expect( parsedUrl.host ).toBe( 'example.com' );
     } );
 
+    it( 'can go backwards to about:blank', async () =>
+    {
+        const { client } = app;
+        await setClientToMainBrowserWindow( app );
+        await client.pause( 500 );
+        const tabIndex = await newTab( app );
+        await client.pause( 500 );
+        await navigateTo( app, 'example.com' );
+        await client.pause( 4500 );
+
+        await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
+        await client.click( BROWSER_UI.BACKWARDS );
+        await client.pause( 4500 );
+        await client.windowByIndex( tabIndex );
+        await delay( 4500 );
+
+        const clientUrl = await client.getUrl();
+        await client.pause( 4500 );
+        const parsedUrl = urlParse( clientUrl );
+
+        expect( `${ parsedUrl.protocol }${ parsedUrl.hostname }` ).toBe( 'about:blank' );
+        const text = await client.getText( 'body' );
+        expect( text ).toBe( '' );
+    } );
+
+    it( 'can load about:blank', async () =>
+    {
+        const { client } = app;
+        await setClientToMainBrowserWindow( app );
+        await client.pause( 500 );
+        const tabIndex = await newTab( app );
+        await client.pause( 500 );
+        await navigateTo( app, 'example.com' );
+        await client.pause( 4500 );
+        await navigateTo( app, 'about:blank' );
+        await client.pause( 4500 );
+
+        await client.windowByIndex( tabIndex );
+        await delay( 4500 );
+
+        const clientUrl = await client.getUrl();
+        await client.pause( 4500 );
+        const parsedUrl = urlParse( clientUrl );
+
+        expect( `${ parsedUrl.protocol }${ parsedUrl.hostname }` ).toBe( 'about:blank' );
+        const text = await client.getText( 'body' );
+        expect( text ).toBe( '' );
+    } );
+
     it( 'can go forwards', async () =>
     {
         const { client } = app;
