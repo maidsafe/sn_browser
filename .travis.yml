@@ -25,7 +25,7 @@ addons:
     - desktop-file-utils
 
 install:
-- travis_retry npm i 
+- npm i 
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
