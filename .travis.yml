@@ -25,7 +25,7 @@ addons:
     - desktop-file-utils
 
 install:
-- travis_wait 30 yarn
+- travis_retry npm i 
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
@@ -40,22 +40,22 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
   fi
-- yarn build --verbose
-- yarn run rebuild
-- yarn run test-peruse
-# - travis_retry yarn run test-exts # super occasionally times out in tests.
+- npm run build --verbose
+- npm run rebuild
+- npm run test-peruse
+# - travis_retry npm run test-exts # super occasionally times out in tests.
 
 # separate tests for safe + auth as together throws error due to native libs
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
 
-- yarn run package-only
+- npm run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-- if [[ "$NODE_ENV" != "prod" &&  "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
+- if [[ "$NODE_ENV" != "prod" &&  "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  npm run test-exts-e2e-network";
   fi
-- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
+- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  npm run test-e2e-prod";
   fi
-- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
+- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  npm run test-exts-e2e-prod";
   fi   
 - sleep 5
 
