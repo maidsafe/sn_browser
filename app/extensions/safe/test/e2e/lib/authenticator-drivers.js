@@ -42,9 +42,11 @@ export const createAccount = async ( app, secret, password, authTabIndex ) =>
         ourPassword = newAccount.password;
     }
 
+    console.log( 'Creating an account.' );
+
     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
-    await delay( 2500 );
+    await delay( 4500 );
 
     await client.windowByIndex( tabIndex );
 

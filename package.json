@@ -50,10 +50,8 @@
     "test-all": "yarn lint && yarn flow && yarn build && yarn test && yarn build-e2e && yarn test-e2e",
     "test-exts": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node_modules/.bin/electron node_modules/jest/bin/jest.js extensions --testPathIgnorePatterns=e2e --notify",
     "test-e2e": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 jest --runInBand --bail",
-    "test-exts-e2e-network": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node runE2ETests.js exts-e2e-network",
     "test-e2e-prod": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node runE2ETests.js e2e",
     "test-exts-e2e-prod": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node runE2ETests.js exts-e2e",
-    "test-e2e-all": "yarn test-e2e && yarn test-exts-e2e",
     "test-watch": "yarn test --watch"
   },
   "standard-version": {
