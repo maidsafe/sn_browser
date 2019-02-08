@@ -1,5 +1,4 @@
-const AUTH_UI_CLASSES =
-{
+const AUTH_UI_CLASSES = {
     ALLOW_BUTTON                 : 'js-specton__safe-auth-allow',
     CREATE_ACCOUNT_BUTTON        : 'js-spectron__auth__create-account',
     BROWSER_PLUGIN_TEST_FAILURES : 'failures',

@@ -1,7 +1,8 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
+import getWebIdsFromSafe from '@Extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
+import { inBgProcess } from '@Constants';
 
 export const TYPES = {
     SET_APP_STATUS     : 'SET_APP_STATUS',
@@ -73,12 +74,11 @@ export const {
     TYPES.SHOW_WEB_ID_DROPDOWN
 );
 
-
-const triggerGetWebIds = async ( ) =>
+const triggerGetWebIds = async () =>
 {
-    if ( !window || !window.thisIsTheBackgroundProcess ) return;
+    if ( !inBgProcess ) return;
 
-    logger.verbose( 'Retrieving webIds...' );
+    logger.log( 'BG Process: Retrieving webIds...' );
 
     await getWebIdsFromSafe();
 };
@@ -86,10 +86,9 @@ const triggerGetWebIds = async ( ) =>
 export const getAvailableWebIds = createAliasedAction(
     TYPES.GET_AVAILABLE_WEB_IDS,
     // TODO: there is a complaint about not having middleware, despite redux-promise.
-    () => (
-        {
+    () => ( {
         // the real action
-            type    : TYPES.GET_AVAILABLE_WEB_IDS,
-            payload : triggerGetWebIds(),
-        } ),
+        type    : TYPES.GET_AVAILABLE_WEB_IDS,
+        payload : triggerGetWebIds()
+    } )
 );

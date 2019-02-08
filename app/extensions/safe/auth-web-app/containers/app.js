@@ -7,21 +7,25 @@ import { logout } from '../actions/auth';
 import { getAccountInfo } from '../actions/app';
 import { setNetworkConnecting } from '../actions/network_state';
 
-const mapStateToProps = state => (
-    {
-        networkState        : state.networkState.state,
-        isAuthorised        : state.auth.isAuthorised,
-        loading             : state.app.loading,
-        accountInfo         : state.app.accountInfo,
-        fetchingAccountInfo : state.app.fetchingAccountInfo
-    }
-);
+const mapStateToProps = state => ( {
+    networkState        : state.networkState.state,
+    isAuthorised        : state.auth.isAuthorised,
+    loading             : state.app.loading,
+    accountInfo         : state.app.accountInfo,
+    fetchingAccountInfo : state.app.fetchingAccountInfo
+} );
 
-const mapDispatchToProps = dispatch => (
-    {
-        push : path => dispatch( push( path ) ),
-        ...bindActionCreators( { logout, setNetworkConnecting, getAccountInfo }, dispatch )
-    }
-);
+const mapDispatchToProps = dispatch => ( {
+    push : path => dispatch( push( path ) ),
+    ...bindActionCreators(
+        { logout, setNetworkConnecting, getAccountInfo },
+        dispatch
+    )
+} );
 
-export default withRouter( connect( mapStateToProps, mapDispatchToProps )( App ) );
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )( App )
+);

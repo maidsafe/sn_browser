@@ -112,12 +112,12 @@ export const AppAccess = StructType( {
 
 export const AppAccessPointer = ref.refType( AppAccess );
 
-export const allocAppHandlePointer = () => ( ref.alloc( ClientHandlePointer ) );
+export const allocAppHandlePointer = () => ref.alloc( ClientHandlePointer );
 
-export const allocCString = str => ( ref.allocCString( str ) );
+export const allocCString = str => ref.allocCString( str );
 
-export const allocAuthReq = req => ( ref.alloc( AuthReq, req ) );
+export const allocAuthReq = req => ref.alloc( AuthReq, req );
 
-export const allocContainerReq = req => ( ref.alloc( ContainersReq, req ) );
+export const allocContainerReq = req => ref.alloc( ContainersReq, req );
 
-export const allocSharedMdataReq = req => ( ref.alloc( ShareMDataReq, req ) );
+export const allocSharedMdataReq = req => ref.alloc( ShareMDataReq, req );

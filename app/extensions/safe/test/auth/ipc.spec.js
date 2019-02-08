@@ -1,7 +1,4 @@
-import {
-    onSharedMDataDecision
-} from '../../ffi/ipc';
-
+import { onSharedMDataDecision } from '../../ffi/ipc';
 
 // Some mocks to negate FFI and native libs we dont care about
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
@@ -14,7 +11,6 @@ jest.mock( 'ffi', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
-
 jest.mock( 'i18n', () =>
 {
     const fakei18nMessage = 'hello Fake message';
@@ -23,21 +19,19 @@ jest.mock( 'i18n', () =>
     };
 } );
 
-jest.mock( 'extensions/safe/ffi/authenticator', () =>
-    ( {
-        encodeMDataResp : jest.fn( ( data, isallowed ) =>
+jest.mock( 'extensions/safe/ffi/authenticator', () => ( {
+    encodeMDataResp : jest.fn( ( data, isallowed ) =>
+    {
+        if ( isallowed )
         {
-            if ( isallowed )
-            {
-                return Promise.resolve( 'Resolving encodeMDataResp' );
-            }
-            if ( !isallowed )
-            {
-                return Promise.reject( 'Rejecting encodeMDataResp' );
-            }
-        } )
-    } ) );
-
+            return Promise.resolve( 'Resolving encodeMDataResp' );
+        }
+        if ( !isallowed )
+        {
+            return Promise.reject( 'Rejecting encodeMDataResp' );
+        }
+    } )
+} ) );
 
 describe( 'shared MD auth decision', () =>
 {
@@ -67,7 +61,6 @@ describe( 'shared MD auth decision', () =>
         const queue = {
             req  : {},
             next : jest.fn()
-
         };
 
         await onSharedMDataDecision( {}, true, queue, authCallBack );
@@ -84,12 +77,10 @@ describe( 'shared MD auth decision', () =>
         const queue = {
             req  : request,
             next : jest.fn()
-
         };
         const key = queue.req.id;
 
-        const authCallback = jest.fn( () =>
-            Promise.resolve() );
+        const authCallback = jest.fn( () => Promise.resolve() );
 
         const authCallBacks = {};
 
@@ -113,7 +104,6 @@ describe( 'shared MD auth decision', () =>
             req          : {},
             next         : jest.fn(),
             openExternal : jest.fn()
-
         };
         const authCallBack = {};
 
@@ -130,7 +120,6 @@ describe( 'shared MD auth decision', () =>
         const queue = {
             req  : {},
             next : jest.fn()
-
         };
         await onSharedMDataDecision( {}, false, queue, authCallBack );
 
@@ -148,11 +137,9 @@ describe( 'shared MD auth decision', () =>
         const queue = {
             req  : request,
             next : jest.fn()
-
         };
         const key = queue.req.id;
-        const authCallback = jest.fn( () =>
-            Promise.reject() );
+        const authCallback = jest.fn( () => Promise.reject() );
 
         const authCallBacks = {};
 

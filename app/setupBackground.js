@@ -1,68 +1,83 @@
 import { BrowserWindow } from 'electron';
 import logger from 'logger';
-import path from 'path';
+// import path from 'path';
 import {
     isRunningUnpacked,
     isRunningDebug,
     isRunningSpectronTestProcess,
     isRunningDevelopment,
     isCI
-} from 'appConstants';
+} from '@Constants';
 
 const BACKGROUND_PROCESS = `file://${ __dirname }/bg.html`;
-let backgroundProcess = null;
-const setupBackground = async ( ) => new Promise( ( resolve, reject ) =>
-{
-    logger.info( 'Setting up Background Process' );
 
-    if ( backgroundProcess === null )
+let backgroundProcessWindow = null;
+const setupBackground = async () =>
+    new Promise( ( resolve, reject ) =>
     {
-        logger.info( 'loading bg:', BACKGROUND_PROCESS );
+        logger.log( 'Setting up Background Process' );
 
-        backgroundProcess = new BrowserWindow( {
-            width          : 300,
-            height         : 450,
-            show           : false,
-            frame          : false,
-            fullscreenable : false,
-            resizable      : false,
-            transparent    : true,
-            webPreferences : {
-                // partition               : 'persist:safe-tab', // TODO make safe?
-                nodeIntegration      : true,
-                // Prevents renderer process code from not running when window is hidden
-                backgroundThrottling : false
-            }
-        } );
-
-        // Hide the window when it loses focus
-        //   backgroundProcess.on('blur', () => {
-        //     if (!backgroundProcess.webContents.isDevToolsOpened()) {
-        //       backgroundProcess.hide()
-        //     }
-        // });
-
-        backgroundProcess.webContents.on( 'did-finish-load', () =>
+        if ( backgroundProcessWindow === null )
         {
-            logger.verbose( 'Background process renderer loaded.' );
+            logger.log( 'loading bg:', BACKGROUND_PROCESS );
 
-            if ( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcess );
+            backgroundProcessWindow = new BrowserWindow( {
+                width          : 300,
+                height         : 450,
+                show           : false,
+                frame          : false,
+                fullscreenable : false,
+                resizable      : false,
+                transparent    : true,
+                webPreferences : {
+                    // partition               : 'persist:safe-tab', // TODO make safe?
+                    nodeIntegration      : true,
+                    // Prevents renderer process code from not running when window is hidden
+                    backgroundThrottling : false
+                }
+            } );
 
-            if ( isRunningDebug || isRunningUnpacked || isRunningDevelopment )
+            // Hide the window when it loses focus
+            //   backgroundProcessWindow.on('blur', () => {
+            //     if (!backgroundProcessWindow.webContents.isDevToolsOpened()) {
+            //       backgroundProcessWindow.hide()
+            //     }
+            // });
+
+            backgroundProcessWindow.webContents.on( 'did-finish-load', () =>
             {
-                backgroundProcess.webContents.openDevTools( { mode: 'detach' } );
-            }
-            resolve( backgroundProcess );
-        } );
+                logger.log( 'Background process renderer loaded.' );
 
-        backgroundProcess.webContents.on( 'did-fail-load', ( event, code, message ) =>
-        {
-            logger.error( '>>>>>>>>>>>>>>>>>>>>>>>> Bg process failed to load <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<' );
-            reject( message );
-        } );
+                if ( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcessWindow );
 
-        backgroundProcess.loadURL( BACKGROUND_PROCESS );
-    }
-} );
+                if (
+                    isRunningDebug
+                    || isRunningUnpacked
+                    || isRunningDevelopment
+                )
+                {
+                    backgroundProcessWindow.webContents.openDevTools( {
+                        mode : 'undocked'
+                    } );
+                }
+                resolve( backgroundProcessWindow );
+            } );
+
+            backgroundProcessWindow.webContents.on(
+                'did-fail-load',
+                ( event, code, message ) =>
+                {
+                    logger.error(
+                        '>>>>>>>>>>>>>>>>>>>>>>>> Bg process failed to load <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+                    );
+                    reject( message );
+                }
+            );
+
+            backgroundProcessWindow.loadURL( BACKGROUND_PROCESS );
+
+            return backgroundProcessWindow;
+        }
+    } );
 
 export default setupBackground;

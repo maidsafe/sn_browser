@@ -8,7 +8,6 @@ import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();
 
-
 // Some mocks to negate FFI and native libs we dont care about
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
@@ -28,7 +27,6 @@ describe( 'AddressBarInput', () =>
     let instance;
     let props;
     let store;
-
 
     beforeEach( () =>
     {
@@ -57,9 +55,10 @@ describe( 'AddressBarInput', () =>
             store = mockStore( props );
 
             wrapper = shallow(
-                <Provider store={ store } >
+                <Provider store={ store }>
                     <AddressBarInput { ...props } />
-                </Provider > ).dive();
+                </Provider>
+            ).dive();
             instance = wrapper.instance();
         } );
 

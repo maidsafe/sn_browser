@@ -1,6 +1,5 @@
-import { BROWSER_UI } from './constants';
 import { parse as urlParse } from 'url';
-
+import { BROWSER_UI } from './constants';
 
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
@@ -56,7 +55,6 @@ export const setClientToBackgroundProcessWindow = async app =>
     await client.windowByIndex( peruseBgWindowIndex );
 };
 
-
 export const setAddress = async ( app, url ) =>
 {
     const { client } = app;
@@ -73,6 +71,7 @@ export const setAddress = async ( app, url ) =>
 
 export const navigateTo = async ( app, url ) =>
 {
+    console.log( '>>> Navigating to: ', url );
     const { client } = app;
 
     // TODO set tab + then...
@@ -101,7 +100,6 @@ export const newTab = async app =>
     const length2 = await client.getWindowCount();
     return length2 - 1;
 };
-
 
 export const bookmarkActiveTabPage = async app =>
 {

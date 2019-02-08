@@ -13,13 +13,15 @@ export const setIsAuthorisedListener = cb =>
 
 export const getNetworkState = () => ( { state: authenticator.networkState } );
 
-export const getAuthenticatorHandle = () => ( authenticator.registeredClientHandle );
+export const getAuthenticatorHandle = () =>
+    authenticator.registeredClientHandle;
 
 export const reconnect = () => authenticator.reconnect();
 
 export const logout = () => authenticator.logout();
 
-export const login = ( secret, password ) => authenticator.login( secret, password );
+export const login = ( secret, password ) =>
+    authenticator.login( secret, password );
 
 export const createAccount = ( secret, password, invitation ) =>
     authenticator.createAccount( secret, password, invitation );
@@ -36,6 +38,8 @@ export const revokeApp = appId => authenticator.revokeApp( appId );
 export const containerDecision = ( contData, isAllowed ) =>
     authenticator.encodeContainersResp( contData, isAllowed );
 
-export const setReAuthoriseState = state => authenticator.setReAuthoriseState( state );
+export const setReAuthoriseState = state =>
+    authenticator.setReAuthoriseState( state );
 
-export const getLibStatus = () => ( ( authenticator.getLibStatus() && sysUri.isLibLoaded ) );
+export const getLibStatus = () =>
+    authenticator.getLibStatus() && sysUri.isLibLoaded;

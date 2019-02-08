@@ -3,15 +3,11 @@ import { shallow, mount } from 'enzyme';
 
 import History from 'components/PerusePages/History';
 import UrlList from 'components/UrlList';
-import { CLASSES } from 'appConstants';
+import { CLASSES } from '@Constants';
 
-
-jest.mock( 'extensions', () => (
-    {
-        urlIsValid : () =>
-            true
-    }
-) );
+jest.mock( 'extensions', () => ( {
+    urlIsValid : () => true
+} ) );
 
 describe( 'History Component', () =>
 {
@@ -42,13 +38,25 @@ describe( 'History Component', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, history: [{ url: 'safe://hello', isActiveTab: true, windowId: 1, history: ['safe://hello'] }] };
+            props = {
+                ...props,
+                history : [
+                    {
+                        url         : 'safe://hello',
+                        isActiveTab : true,
+                        windowId    : 1,
+                        history     : [ 'safe://hello' ]
+                    }
+                ]
+            };
             wrapper = shallow( <History { ...props } /> );
         } );
 
         it( 'should have a safeBrowser__page class', () =>
         {
-            expect( wrapper.find( `.${ CLASSES.SAFE_BROWSER_PAGE }` ).length ).toBe( 1 );
+            expect( wrapper.find( `.${ CLASSES.SAFE_BROWSER_PAGE }` ).length ).toBe(
+                1
+            );
         } );
 
         it( 'should have one url list', () =>
@@ -63,15 +71,15 @@ describe( 'History Component', () =>
         } );
     } );
 
-
     describe( 'History should filter excluded protocols', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props,
-                history :
-                [
-                    { url         : 'safe-auth://lalala',
+            props = {
+                ...props,
+                history : [
+                    {
+                        url         : 'safe-auth://lalala',
                         isActiveTab : true,
                         windowId    : 1,
                         history     : [
@@ -80,8 +88,10 @@ describe( 'History Component', () =>
                             'about:blank',
                             'safe-browser://history',
                             'safe-browser://bookmarks'
-                        ] }
-                ] };
+                        ]
+                    }
+                ]
+            };
             wrapper = shallow( <History { ...props } /> );
         } );
 
@@ -102,7 +112,6 @@ describe( 'History Component', () =>
             expect( wrapper.find( 'a' ).text() ).toBe( 'safe://somethingreal' );
         } );
     } );
-
 
     describe( 'props', () =>
     {

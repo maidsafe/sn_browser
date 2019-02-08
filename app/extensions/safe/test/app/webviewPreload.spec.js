@@ -1,6 +1,5 @@
-import * as webviewPreload from 'extensions/safe/webviewPreload';
-import { APP_INFO, startedRunningProduction } from 'appConstants';
-
+import * as webviewPreload from '@Extensions/safe/webviewPreload';
+import { APP_INFO, startedRunningProduction } from '@Constants';
 
 // avoid appveyour for its weak.ref issues right now.
 const APPVEYOR = process.env.APPVEYOR;
@@ -9,7 +8,6 @@ const APPVEYOR = process.env.APPVEYOR;
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
-
 
 jest.mock( 'ref-array', () => jest.fn() );
 //
@@ -26,7 +24,9 @@ describe( 'SAFE manageWebIdUpdates', () =>
     // need to mock store. should be called once.
     const store = {
         subscribe : jest.fn(),
-        getState  : jest.fn( () => ( { safeBrowserApp: { experimentsEnabled: true } } ) )
+        getState  : jest.fn( () => ( {
+            safeBrowserApp : { experimentsEnabled: true }
+        } ) )
     };
 
     beforeEach( () =>
@@ -38,7 +38,9 @@ describe( 'SAFE manageWebIdUpdates', () =>
     {
         const noExpStore = {
             subscribe : jest.fn(),
-            getState  : jest.fn( () => ( { safeBrowserApp: { experimentsEnabled: false } } ) )
+            getState  : jest.fn( () => ( {
+                safeBrowserApp : { experimentsEnabled: false }
+            } ) )
         };
 
         webviewPreload.onPreload( noExpStore, win );
@@ -73,24 +75,32 @@ describe( 'SAFE Webview Preload APIs', () =>
         return;
     }
 
-    const win = {};
-    const store = jest.fn(); // need to mock store. should be called once.
+    let win;
+    let store;
+
     beforeEach( () =>
     {
+        win = {};
+        store = {
+            subscribe : jest.fn(),
+            getState  : jest.fn( () => ( {
+                safeBrowserApp : { experimentsEnabled: true }
+            } ) )
+        };
         webviewPreload.onPreload( store, win );
     } );
 
     test( 'setupSafeAPIs populates the window object', async () =>
     {
-        expect.assertions( 5 );
+        expect.assertions( 4 );
 
+        console.log( 'winsafe', win.safe );
         expect( win ).toHaveProperty( 'safe' );
-        expect( win.safe ).toHaveProperty( 'CONSTANTS' );
+        // expect( win.safe ).toHaveProperty( 'CONSTANTS' );
         expect( win.safe ).toHaveProperty( 'initialiseApp' );
         expect( win.safe ).toHaveProperty( 'fromAuthUri' );
         expect( win.safe ).toHaveProperty( 'authorise' );
     } );
-
 
     test( 'window.safe.authorise exists', async () =>
     {
@@ -110,7 +120,7 @@ describe( 'SAFE Webview Preload APIs', () =>
     // skip final tests in a production environment as libs dont exist
     if ( startedRunningProduction ) return;
 
-    test( 'setupSafeApis\s safe.initialiseApp', async () =>
+    test( 'setupSafeApiss safe.initialiseApp', async () =>
     {
         expect.assertions( 5 );
 
@@ -121,7 +131,7 @@ describe( 'SAFE Webview Preload APIs', () =>
         catch ( e )
         {
             expect( e.message ).not.toBeNull();
-            expect( e.message ).toBe( 'Cannot read property \'id\' of undefined' );
+            expect( e.message ).toBe( "Cannot read property 'id' of undefined" );
         }
 
         const app = await win.safe.initialiseApp( APP_INFO.info );
@@ -131,8 +141,7 @@ describe( 'SAFE Webview Preload APIs', () =>
         expect( app.auth.openUri() ).toBeUndefined();
     } );
 
-
-    test( 'setupSafeAPIs\s safe.fromAuthUri, gets initialiseApp errors', async () =>
+    test( 'setupSafeAPIss safe.fromAuthUri, gets initialiseApp errors', async () =>
     {
         expect.assertions( 3 );
 
@@ -144,11 +153,10 @@ describe( 'SAFE Webview Preload APIs', () =>
         {
             // error from initApp.
             expect( e.message ).not.toBeNull();
-            expect( e.message ).toBe( 'Cannot read property \'id\' of undefined' );
+            expect( e.message ).toBe( "Cannot read property 'id' of undefined" );
         }
 
-        win.safe.initialiseApp = jest.fn()
-            .mockName( 'mockInitApp' );
+        win.safe.initialiseApp = jest.fn().mockName( 'mockInitApp' );
 
         try
         {

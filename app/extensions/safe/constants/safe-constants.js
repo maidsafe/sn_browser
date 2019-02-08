@@ -14,32 +14,29 @@ export const SAFE = {
     },
     ACCESS_CONTAINERS : {
         PUBLIC       : '_public',
-        PUBLIC_NAMES : '_publicNames',
+        PUBLIC_NAMES : '_publicNames'
     },
     NETWORK_STATE : {
         INIT         : 'Init',
         CONNECTED    : 'Connected',
         UNKNOWN      : 'Unknown',
         DISCONNECTED : 'Disconnected',
-        LOGGED_IN    : 'LOGGED_IN',
+        LOGGED_IN    : 'LOGGED_IN'
     },
-    READ_STATUS :
-    {
+    READ_STATUS : {
         READING              : 'READING',
         READ_SUCCESSFULLY    : 'READ_SUCCESSFULLY',
         READ_BUT_NONEXISTANT : 'READ_BUT_NONEXISTANT',
         FAILED_TO_READ       : 'FAILED_TO_READ',
         TO_READ              : 'TO_READ'
     },
-    SAVE_STATUS :
-    {
+    SAVE_STATUS : {
         SAVING             : 'SAVING',
         SAVED_SUCCESSFULLY : 'SAVED_SUCCESSFULLY',
         FAILED_TO_SAVE     : 'FAILED_TO_SAVE',
         TO_SAVE            : 'TO_SAVE'
     }
 };
-
 
 export const SAFE_APP_ERROR_CODES = {
     ERR_AUTH_DENIED       : -200,

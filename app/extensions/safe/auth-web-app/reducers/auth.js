@@ -53,20 +53,35 @@ const auth = ( state = initialState, action ) =>
                 nextState.passwordStrength = 0;
             }
 
-            if ( !state.inviteCode && action.position === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM )
+            if (
+                !state.inviteCode
+                && action.position === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
+            )
             {
                 return nextState;
             }
 
-            if ( !state.userSecret && action.position === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM )
+            if (
+                !state.userSecret
+                && action.position === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM
+            )
             {
-                if ( state.createAccNavPos === CONSTANTS.CREATE_ACC_NAV.WELCOME )
+                if (
+                    state.createAccNavPos === CONSTANTS.CREATE_ACC_NAV.WELCOME
+                )
                 {
-                    return { ...nextState, createAccNavPos: CONSTANTS.CREATE_ACC_NAV.SECRET_FORM };
+                    return {
+                        ...nextState,
+                        createAccNavPos : CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
+                    };
                 }
                 return nextState;
             }
-            return { ...nextState, createAccNavPos: action.position, error: null };
+            return {
+                ...nextState,
+                createAccNavPos : action.position,
+                error           : null
+            };
         }
 
         case RESET_CREATE_ACC_NAV_POS: {
@@ -164,7 +179,11 @@ const auth = ( state = initialState, action ) =>
             {
                 return state;
             }
-            return { ...state, loading: false, error: parseErrCode( action.payload.message ) };
+            return {
+                ...state,
+                loading : false,
+                error   : parseErrCode( action.payload.message )
+            };
         }
 
         case `${ LOGOUT }_FULFILLED`: {
