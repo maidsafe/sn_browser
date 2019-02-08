@@ -2,32 +2,36 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { I18n } from 'react-redux-i18n';
 
-export default class AuthLoader extends Component {
+export default class AuthLoader extends Component
+{
     static propTypes = {
-        cancelAuthReq: PropTypes.func.isRequired
+        cancelAuthReq : PropTypes.func.isRequired
     };
 
-    render() {
+    render()
+    {
         const { cancelAuthReq } = this.props;
         return (
             <div className="auth-loader">
                 <h3 className="title">
-                    {window.location.hash.slice(1) === '/create-account'
-                        ? I18n.t('registering')
-                        : I18n.t('authorising')}{' '}
+                    {window.location.hash.slice( 1 ) === '/create-account'
+                        ? I18n.t( 'registering' )
+                        : I18n.t( 'authorising' )}
+                    {' '}
                     SAFE Network!
                 </h3>
-                <span className="loader"> </span>
+                <span className="loader" />
                 <div className="opt">
                     <div className="opt-i">
                         <button
                             type="button"
                             className="btn primary"
-                            onClick={() => {
+                            onClick={ () =>
+                            {
                                 cancelAuthReq();
-                            }}
+                            } }
                         >
-                            {I18n.t('buttons.cancel')}
+                            {I18n.t( 'buttons.cancel' )}
                         </button>
                     </div>
                 </div>
