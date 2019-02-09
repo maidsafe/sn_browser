@@ -50,7 +50,7 @@ export const createAccount = async ( app, secret, password, authTabIndex ) =>
 
     await client.windowByIndex( tabIndex );
 
-    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_FORM }` );
+    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_FORM }`, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( `.${ AUTH_UI_CLASSES.CREATE_ACCOUNT_BUTTON }` );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE }` );
 
@@ -59,7 +59,7 @@ export const createAccount = async ( app, secret, password, authTabIndex ) =>
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE }` );
 
     // auth ourSecret
-    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }` );
+    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }`, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }` );
     await client.keys( ourSecret );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_CONFIRM_SECRET_INPUT }` );
@@ -69,7 +69,7 @@ export const createAccount = async ( app, secret, password, authTabIndex ) =>
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE }` );
 
     // auth pass
-    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }` );
+    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }`, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }` );
     await client.keys( ourPassword );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_CONFIRM_PASSWORD_INPUT }` );
@@ -92,7 +92,7 @@ export const logout = async ( app, authTabIndex ) =>
     await client.windowByIndex( tabIndex );
     await delay( 2500 );
 
-    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON }` );
+    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON }`, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_LOGOUT_BUTTON }` );
 };
 
@@ -115,7 +115,7 @@ export const login = async ( app, secret, password, authTabIndex ) =>
     await client.windowByIndex( tabIndex );
 
     // await setAppToAuthTab( app );
-    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_FORM }` );
+    await client.waitForExist( `.${ AUTH_UI_CLASSES.AUTH_FORM }`, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_SECRET_INPUT }` );
     await client.keys( secret );
     await client.click( `.${ AUTH_UI_CLASSES.AUTH_PASSWORD_INPUT }` );

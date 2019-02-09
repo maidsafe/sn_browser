@@ -1,5 +1,5 @@
 import { parse as urlParse } from 'url';
-import { BROWSER_UI } from './constants';
+import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from './constants';
 
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
@@ -62,7 +62,7 @@ export const setAddress = async ( app, url ) =>
     await client.pause( 800 );
     await setClientToMainBrowserWindow( app );
     await client.waitUntilWindowLoaded();
-    await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+    await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( BROWSER_UI.ADDRESS_INPUT );
     await client.keys( '\uE003' ); // backspace
     await client.setValue( BROWSER_UI.ADDRESS_INPUT, url );
@@ -104,7 +104,7 @@ export const newTab = async app =>
 export const bookmarkActiveTabPage = async app =>
 {
     const { client } = app;
-    await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE );
+    await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( BROWSER_UI.BOOKMARK_PAGE );
     await delay( 500 );
 };
