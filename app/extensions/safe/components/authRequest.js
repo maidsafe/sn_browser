@@ -75,7 +75,7 @@ export const createAuthRequestElement = authReqData =>
             && authReqData[reqType].containers.length
         )
         {
-            logger.log(
+            logger.info(
                 'auth req containers: ',
                 authReqData[reqType].containers
             );

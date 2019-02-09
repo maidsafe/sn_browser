@@ -48,7 +48,7 @@ switch ( arg )
         // These tests involve actual log in/out of the netowrk and saving data.
         // eventually to be rolled against the live net (if that makes sense).
         // Separated out for now to avoid runnin in prod against prod (only against mock in a packaged app version)
-        console.log(
+        console.info(
             'Running network specific tests (those that must be on mock)'
         );
         pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.network\\.spec\\.js$`;
@@ -75,7 +75,7 @@ switch ( arg )
 // should be first
 argsArray.unshift( pattern );
 
-console.log( 'Running tests via: ', testCommand, argsArray );
+console.info( 'Running tests via: ', testCommand, argsArray );
 
 const result = spawn.sync( testCommand, argsArray, { stdio: 'inherit' } );
 

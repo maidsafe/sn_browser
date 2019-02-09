@@ -29,7 +29,7 @@ export const initAnon = async ( passedStore, options ) =>
         enableExperimentalApis : options.enableExperimentalApis
     };
 
-    logger.log( 'Initing anon connection with options:', appOptions );
+    logger.info( 'Initing anon connection with options:', appOptions );
     try
     {
         // does it matter if we override?
@@ -49,7 +49,7 @@ export const initAnon = async ( passedStore, options ) =>
             handleAuthentication( passedStore, authReq );
         }
 
-        console.log( 'The application has returned!', safeBrowserAppObject );
+        console.info( 'The application has returned!', safeBrowserAppObject );
 
         return safeBrowserAppObject;
     }

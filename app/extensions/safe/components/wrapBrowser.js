@@ -66,17 +66,15 @@ const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
         {
             const { setSaveConfigStatus } = this.props;
 
-            logger.log( 'ATTEMPTING MENU SPOOF SAVE', setSaveConfigStatus );
+            logger.info( 'ATTEMPTING MENU SPOOF SAVE', setSaveConfigStatus );
 
             setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE );
-
-            logger.log( 'read status update donnneee' );
         };
 
         handleSpectronTestReadState = () =>
         {
             const { setReadConfigStatus } = this.props;
-            logger.log( 'ATTEMPTING MENU SPOOF READ', setReadConfigStatus );
+            logger.info( 'ATTEMPTING MENU SPOOF READ', setReadConfigStatus );
 
             setReadConfigStatus( SAFE.READ_STATUS.TO_READ );
         };

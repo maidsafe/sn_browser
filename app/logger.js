@@ -1,11 +1,14 @@
 import path from 'path';
 import os from 'os';
+import util from 'util';
+
 import {
+    currentWindowId,
     env,
     isRunningUnpacked,
     isRunningPackaged,
     isRunningDebug,
-    // inBgProcess,
+    inBgProcess,
     startedRunningProduction,
     startedRunningMock,
     isRunningSpectronTestProcess,
@@ -13,139 +16,120 @@ import {
     inMainProcess,
     isCI
 } from '@Constants';
-import fileLogger from 'electron-log';
-// import log from 'electron-timber';
+import logger from 'electron-log';
 
-// const log = require( 'electron-timber' );
-
-const processLog = fileLogger;
-
-if ( fileLogger.transports )
+if ( logger.transports )
 {
     // Log level
     // error, warn, log, log, debug, silly
-    // fileLogger.transports.console.level = 'silly';
-    fileLogger.transports.file.level = 'silly';
+    // logger.transports.console.level = 'silly';
+    logger.transports.file.level = 'silly';
 
     if ( !isRunningDebug && isRunningPackaged )
     {
-        // fileLogger.transports.console.level = 'warn';
-        fileLogger.transports.file.level = 'warn';
+        // logger.transports.console.level = 'warn';
+        logger.transports.file.level = 'warn';
     }
 
-    fileLogger.transports.file.file = path.resolve(
+    logger.transports.file.file = path.resolve(
         os.tmpdir(),
         'safe-browser.log'
     );
 
-    // Set a function which formats output
-    fileLogger.transports.console.level = false;
-    // fileLogger.transports.console.format = ( msg ) => util.format( ...msg.data );
+    logger.transports.console.format = '[{label} {h}:{i}:{s}.{ms}] › {text}';
+    if ( currentWindowId )
+    {
+        logger.variables.label = `window ${ currentWindowId }`;
+    }
+    if ( inMainProcess )
+    {
+        logger.variables.label = 'main';
+        logger.transports.console.format = '%c[{label} {h}:{i}:{s}.{ms}]%c › {text}';
+    }
 
-    fileLogger.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
+    if ( inBgProcess )
+    {
+        logger.variables.label = 'background';
+    }
 
-    // Set approximate maximum fileLogger size in bytes. When it exceeds,
-    // the archived fileLogger will be saved as the fileLogger.old.fileLogger file
-    fileLogger.transports.file.maxSize = 5 * 1024 * 1024;
+    logger.transports.file.maxSize = 5 * 1024 * 1024;
 }
 
-const combinedLogger = {
-    info : ( ...args ) =>
-    {
-        // processLog.log( ...args );
-        fileLogger.info( ...args );
-    },
-    log : ( ...args ) =>
-    {
-        // processLog.log( ...args );
-        fileLogger.info( ...args );
-    },
-    error : ( ...args ) =>
-    {
-        fileLogger.error( ...args );
-        // processLog.error( ...args );
-    },
-    warn : ( ...args ) =>
-    {
-        fileLogger.warn( ...args );
-        // processLog.warn( ...args );
-    }
-};
 
-export default combinedLogger;
+export default logger;
 
 // HACK: for jest
 if ( inMainProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
-    combinedLogger.log( '' );
-    combinedLogger.log( '' );
-    combinedLogger.log( '' );
-    combinedLogger.log( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    combinedLogger.log( `      Started with node env: ${ env }` );
-    // combinedLogger.log( '       Log location:', combinedLogger.transports.file.file );
-    combinedLogger.log( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    combinedLogger.log( 'Running with derived constants:' );
-    combinedLogger.log( '' );
-    combinedLogger.log( 'isCI?: ', isCI );
-    combinedLogger.log( 'process.env.NODE_ENV: ', process.env.NODE_ENV );
-    combinedLogger.log( 'isRunningDebug?', isRunningDebug );
-    combinedLogger.log( 'isRunningUnpacked?', isRunningUnpacked );
-    combinedLogger.log( 'isRunningPackaged?', isRunningPackaged );
-    combinedLogger.log( 'inMainProcess?', inMainProcess );
-    combinedLogger.log( 'startedRunningProduction?', startedRunningProduction );
-    combinedLogger.log( 'startedRunningMock?', startedRunningMock );
-    combinedLogger.log(
+    logger.info( '' );
+    logger.info( '' );
+    logger.info( '' );
+    logger.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    logger.info( `      Started with node env: ${ env }` );
+    // logger.info( '       Log location:', logger.transports.file.file );
+    logger.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    logger.info( 'Running with derived constants:' );
+    logger.info( '' );
+    logger.info( 'isCI?: ', isCI );
+    logger.info( 'process.env.NODE_ENV: ', process.env.NODE_ENV );
+    logger.info( 'isRunningDebug?', isRunningDebug );
+    logger.info( 'isRunningUnpacked?', isRunningUnpacked );
+    logger.info( 'isRunningPackaged?', isRunningPackaged );
+    logger.info( 'inMainProcess?', inMainProcess );
+    logger.info( 'startedRunningProduction?', startedRunningProduction );
+    logger.info( 'startedRunningMock?', startedRunningMock );
+    logger.info(
         'isRunningSpectronTestProcess?',
         isRunningSpectronTestProcess
     );
-    combinedLogger.log(
+    logger.info(
         'isRunningSpectronTestProcessingPackagedApp?',
         isRunningSpectronTestProcessingPackagedApp
     );
-    combinedLogger.log( '' );
-    combinedLogger.log( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    combinedLogger.log( '' );
+    logger.info( '' );
+    logger.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    logger.info( '' );
 
     process.on( 'uncaughtTypeError', err =>
     {
-        combinedLogger.error(
+        logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         );
-        combinedLogger.error( 'whoops! there was an uncaught type error:' );
-        combinedLogger.error( err );
-        combinedLogger.error( err.file );
-        combinedLogger.error( err.line );
-        combinedLogger.error(
+        logger.error( 'whoops! there was an uncaught type error:' );
+        logger.error( err );
+        logger.error( err.file );
+        logger.error( err.line );
+        logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         );
     } );
 
     process.on( 'uncaughtException', err =>
     {
-        combinedLogger.error(
+        logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         );
-        combinedLogger.error( 'whoops! there was an uncaught error:' );
-        combinedLogger.error( err );
-        combinedLogger.error( err.file );
-        combinedLogger.error( err.line );
-        combinedLogger.error(
+        logger.error( 'whoops! there was an uncaught error:' );
+        logger.error( err );
+        logger.error( err.file );
+        logger.error( err.line );
+        logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         );
     } );
 
     process.on( 'unhandledRejection', ( reason, p ) =>
     {
-        combinedLogger.error(
+        logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         );
-        combinedLogger.error(
+        logger.error(
             'Unhandled Rejection. Reason:',
             reason.message || reason
         );
-        combinedLogger.error( 'At:', p );
-        combinedLogger.error(
+        logger.error( 'At:', p );
+        logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         );
     } );

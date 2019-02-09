@@ -73,7 +73,7 @@ export const initSafeBrowserApp = async ( passedStore, authorise = false ) =>
     };
 
     // TODO: here check store and what is desired from a connection!
-    logger.log( 'Initialising Safe Browser App with options:', options );
+    logger.info( 'Initialising Safe Browser App with options:', options );
     try
     {
         if ( authorise )
@@ -104,7 +104,7 @@ const urisUnderAuth = [];
 
 const authFromStoreResponse = async ( res, store ) =>
 {
-    logger.log( 'Authing from a store-passed response.', Date.now(), res );
+    logger.info( 'Authing from a store-passed response.', Date.now(), res );
 
     if ( !res.startsWith( 'safe' ) )
     {

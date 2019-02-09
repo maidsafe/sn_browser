@@ -71,7 +71,7 @@ export const setAddress = async ( app, url ) =>
 
 export const navigateTo = async ( app, url ) =>
 {
-    console.log( '>>> Navigating to: ', url );
+    console.info( '>>> Navigating to: ', url );
     const { client } = app;
 
     // TODO set tab + then...

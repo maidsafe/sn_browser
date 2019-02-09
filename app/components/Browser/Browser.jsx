@@ -7,48 +7,50 @@ import AddressBar from '@Components/AddressBar';
 import TabBar from '@Components/TabBar';
 import Notifier from '@Components/Notifier';
 import TabContents from '@Components/TabContents';
-import styles from './browser.css';
 import logger from 'logger';
 
 import extendComponent from '@Utils/extendComponent';
 import { wrapBrowserComponent } from '@Extensions/components';
+import styles from './browser.css';
 
-class Browser extends Component {
+class Browser extends Component
+{
     static propTypes = {
-        bookmarks: PropTypes.array,
-        notifications: PropTypes.array,
-        tabs: PropTypes.array,
-        addBookmark: PropTypes.func.isRequired,
-        removeBookmark: PropTypes.func.isRequired,
-        selectAddressBar: PropTypes.func.isRequired,
-        deselectAddressBar: PropTypes.func.isRequired,
-        blurAddressBar: PropTypes.func.isRequired,
-        reloadPage: PropTypes.func.isRequired,
-        pageLoaded: PropTypes.func.isRequired,
-        addTab: PropTypes.func.isRequired,
-        closeTab: PropTypes.func.isRequired,
-        closeActiveTab: PropTypes.func.isRequired,
-        reopenTab: PropTypes.func.isRequired,
-        updateNotification: PropTypes.func.isRequired,
-        clearNotification: PropTypes.func.isRequired,
-        ui: PropTypes.object.isRequired,
-        showSettingsMenu: PropTypes.func.isRequired,
-        hideSettingsMenu: PropTypes.func.isRequired,
-        focusWebview: PropTypes.func.isRequired
+        bookmarks          : PropTypes.array,
+        notifications      : PropTypes.array,
+        tabs               : PropTypes.array,
+        addBookmark        : PropTypes.func.isRequired,
+        removeBookmark     : PropTypes.func.isRequired,
+        selectAddressBar   : PropTypes.func.isRequired,
+        deselectAddressBar : PropTypes.func.isRequired,
+        blurAddressBar     : PropTypes.func.isRequired,
+        reloadPage         : PropTypes.func.isRequired,
+        pageLoaded         : PropTypes.func.isRequired,
+        addTab             : PropTypes.func.isRequired,
+        closeTab           : PropTypes.func.isRequired,
+        closeActiveTab     : PropTypes.func.isRequired,
+        reopenTab          : PropTypes.func.isRequired,
+        updateNotification : PropTypes.func.isRequired,
+        clearNotification  : PropTypes.func.isRequired,
+        ui                 : PropTypes.object.isRequired,
+        showSettingsMenu   : PropTypes.func.isRequired,
+        hideSettingsMenu   : PropTypes.func.isRequired,
+        focusWebview       : PropTypes.func.isRequired
     };
 
     static defaultProps = {
-        addressBarIsSelected: false,
-        tabs: [],
-        bookmarks: [],
-        notifications: []
+        addressBarIsSelected : false,
+        tabs                 : [],
+        bookmarks            : [],
+        notifications        : []
     };
 
-    constructor(props) {
-        super(props);
+    constructor( props )
+    {
+        super( props );
         this.state = {};
 
-        //jest/electron workaround as no remote in non-render process
+        // jest/electron workaround as no remote in non-render process
         const currentWebContentsId = remote
             ? remote.getCurrentWebContents().id
             : 1;
@@ -57,17 +59,19 @@ class Browser extends Component {
         this.state.windowId = currentWebContentsId;
     }
 
-    componentWillMount() {
-        //jest/electron workaround as no remote in non-render process
+    componentWillMount()
+    {
+        // jest/electron workaround as no remote in non-render process
         const currentWebContentsId = remote
             ? remote.getCurrentWebContents().id
             : 1;
 
         // this is mounted but its not show?
-        this.setState({ windowId: currentWebContentsId });
+        this.setState( { windowId: currentWebContentsId } );
     }
 
-    componentDidMount() {
+    componentDidMount()
+    {
         const {
             addTab,
             closeTab,
@@ -79,18 +83,20 @@ class Browser extends Component {
 
         const theBrowser = this;
 
-        if (!ipcRenderer) return; //avoid for jest/Electron where we're not in renderer process
+        if ( !ipcRenderer ) return; // avoid for jest/Electron where we're not in renderer process
 
-        ipcRenderer.on('command', (...args) => {
+        ipcRenderer.on( 'command', ( ...args ) =>
+        {
             const event = args[0];
             const type = args[1];
             const { tabContents } = this;
 
             const activeTab = tabContents.getActiveTab();
 
-            const extraArgs = args.slice(2);
+            const extraArgs = args.slice( 2 );
 
-            switch (type) {
+            switch ( type )
+            {
                 case 'file:close-active-tab': {
                     closeActiveTab();
                     return;
@@ -120,12 +126,13 @@ class Browser extends Component {
                 // case 'load-pinned-tabs':       return pages.loadPinnedFromDB()
                 // case 'perms:prompt':           return permsPrompt(arg1, arg2, arg3)
                 default:
-                    console.log('unhandled command: ', type);
+                    console.info( 'unhandled command: ', type );
             }
-        });
+        } );
     }
 
-    shouldComponentUpdate = nextProps => {
+    shouldComponentUpdate = nextProps =>
+    {
         const { tabs } = nextProps;
         const currentTabs = this.props.tabs;
 
@@ -139,30 +146,35 @@ class Browser extends Component {
         return newWindowTabs !== currentWindowTabs;
     };
 
-    handleCloseBrowserTab = tab => {
+    handleCloseBrowserTab = tab =>
+    {
         const { closeTab, tabs } = this.props;
 
         const openTabs = tabs.filter(
             tab => !tab.isClosed && tab.windowId === this.state.windowId
         );
 
-        if (openTabs.length === 1) {
-            ipcRenderer.send('command:close-window');
-        } else {
-            closeTab(tab);
+        if ( openTabs.length === 1 )
+        {
+            ipcRenderer.send( 'command:close-window' );
+        }
+        else
+        {
+            closeTab( tab );
         }
     };
 
-    render() {
+    render()
+    {
         const props = this.props;
 
         const {
-            //bookmarks
+            // bookmarks
             bookmarks,
             addBookmark,
             removeBookmark,
 
-            //ui / addressbar
+            // ui / addressbar
             ui,
             selectAddressBar,
             deselectAddressBar,
@@ -171,7 +183,7 @@ class Browser extends Component {
             pageLoaded,
             focusWebview,
 
-            //tabs
+            // tabs
             tabs,
             addTab,
             closeTab,
@@ -198,19 +210,19 @@ class Browser extends Component {
             ? safeBrowserApp.experimentsEnabled
             : false;
         // only show the first notification without a response.
-        const notification = notifications.filter(n => !n.response)[0];
+        const notification = notifications.filter( n => !n.response )[0];
 
         const windowId = this.state.windowId;
         // TODO: Move windowId from state to store.
-        const windowTabs = tabs.filter(tab => {
-            return tab.windowId === windowId;
-        });
+        const windowTabs = tabs.filter( tab =>
+            tab.windowId === windowId );
 
-        const openTabs = windowTabs.filter(tab => !tab.isClosed);
-        const activeTab = openTabs.find(tab => tab.isActiveTab);
+        const openTabs = windowTabs.filter( tab => !tab.isClosed );
+        const activeTab = openTabs.find( tab => tab.isActiveTab );
 
         // TODO: if not, lets trigger close?
-        if (!activeTab) {
+        if ( !activeTab )
+        {
             return <div className="noTabsToShow" />;
         }
 
@@ -221,74 +233,76 @@ class Browser extends Component {
         );
 
         return (
-            <div className={styles.container}>
+            <div className={ styles.container }>
                 <TabBar
-                    key={1}
-                    updateActiveTab={updateActiveTab}
-                    updateTab={updateTab}
-                    setActiveTab={setActiveTab}
-                    selectAddressBar={selectAddressBar}
-                    addTab={addTab}
-                    closeTab={this.handleCloseBrowserTab}
-                    tabs={openTabs}
+                    key={ 1 }
+                    updateActiveTab={ updateActiveTab }
+                    updateTab={ updateTab }
+                    setActiveTab={ setActiveTab }
+                    selectAddressBar={ selectAddressBar }
+                    addTab={ addTab }
+                    closeTab={ this.handleCloseBrowserTab }
+                    tabs={ openTabs }
                 />
                 <AddressBar
-                    key={2}
-                    address={activeTabAddress}
-                    addTab={addTab}
-                    activeTab={activeTab}
-                    onSelect={deselectAddressBar}
-                    onFocus={selectAddressBar}
-                    onBlur={blurAddressBar}
-                    addBookmark={addBookmark}
-                    isBookmarked={isBookmarked}
-                    removeBookmark={removeBookmark}
-                    reloadPage={reloadPage}
-                    hideSettingsMenu={hideSettingsMenu}
-                    showSettingsMenu={showSettingsMenu}
-                    settingsMenuIsVisible={ui.settingsMenuIsVisible}
-                    isSelected={ui.addressBarIsSelected}
-                    updateActiveTab={updateActiveTab}
-                    activeTabBackwards={activeTabBackwards}
-                    activeTabForwards={activeTabForwards}
-                    activeTab={activeTab}
-                    windowId={windowId}
-                    focusWebview={focusWebview}
-                    ref={c => {
+                    key={ 2 }
+                    address={ activeTabAddress }
+                    addTab={ addTab }
+                    activeTab={ activeTab }
+                    onSelect={ deselectAddressBar }
+                    onFocus={ selectAddressBar }
+                    onBlur={ blurAddressBar }
+                    addBookmark={ addBookmark }
+                    isBookmarked={ isBookmarked }
+                    removeBookmark={ removeBookmark }
+                    reloadPage={ reloadPage }
+                    hideSettingsMenu={ hideSettingsMenu }
+                    showSettingsMenu={ showSettingsMenu }
+                    settingsMenuIsVisible={ ui.settingsMenuIsVisible }
+                    isSelected={ ui.addressBarIsSelected }
+                    updateActiveTab={ updateActiveTab }
+                    activeTabBackwards={ activeTabBackwards }
+                    activeTabForwards={ activeTabForwards }
+                    activeTab={ activeTab }
+                    windowId={ windowId }
+                    focusWebview={ focusWebview }
+                    ref={ c =>
+                    {
                         this.address = c;
-                    }}
+                    } }
                 />
                 <Notifier
-                    key={3}
-                    updateNotification={updateNotification}
-                    {...notification}
-                    clearNotification={clearNotification}
+                    key={ 3 }
+                    updateNotification={ updateNotification }
+                    { ...notification }
+                    clearNotification={ clearNotification }
                 />
                 <TabContents
-                    isActiveTabReloading={ui.isActiveTabReloading}
-                    activeTabBackwards={activeTabBackwards}
-                    focusWebview={focusWebview}
-                    shouldFocusWebview={ui.shouldFocusWebview}
-                    closeTab={closeTab}
-                    key={4}
-                    addTab={addTab}
-                    addNotification={addNotification}
-                    updateActiveTab={updateActiveTab}
-                    updateTab={updateTab}
-                    setActiveTab={setActiveTab}
-                    pageLoaded={pageLoaded}
-                    tabs={openTabs}
-                    allTabs={tabs}
-                    bookmarks={bookmarks}
-                    windowId={windowId}
-                    safeExperimentsEnabled={experimentsEnabled}
-                    ref={c => {
+                    isActiveTabReloading={ ui.isActiveTabReloading }
+                    activeTabBackwards={ activeTabBackwards }
+                    focusWebview={ focusWebview }
+                    shouldFocusWebview={ ui.shouldFocusWebview }
+                    closeTab={ closeTab }
+                    key={ 4 }
+                    addTab={ addTab }
+                    addNotification={ addNotification }
+                    updateActiveTab={ updateActiveTab }
+                    updateTab={ updateTab }
+                    setActiveTab={ setActiveTab }
+                    pageLoaded={ pageLoaded }
+                    tabs={ openTabs }
+                    allTabs={ tabs }
+                    bookmarks={ bookmarks }
+                    windowId={ windowId }
+                    safeExperimentsEnabled={ experimentsEnabled }
+                    ref={ c =>
+                    {
                         this.tabContents = c;
-                    }}
+                    } }
                 />
             </div>
         );
     }
 }
 
-export default extendComponent(Browser, wrapBrowserComponent);
+export default extendComponent( Browser, wrapBrowserComponent );

@@ -12,7 +12,7 @@ import {
  */
 const getWebIds = async () =>
 {
-    logger.log( 'getWebIds' );
+    logger.info( 'getWebIds' );
     const currentStore = getCurrentStore();
 
     const safeBrowserApp = getSafeBrowserAppObject();

@@ -67,7 +67,7 @@ export const afterAllTests = async app =>
     if ( app && app.isRunning() )
     {
         await app.stop();
-        console.log( 'Spectron stopped the app.' );
+        console.info( 'Spectron stopped the app.' );
     }
 };
 

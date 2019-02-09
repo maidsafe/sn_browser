@@ -94,7 +94,7 @@ describe( 'SAFE Webview Preload APIs', () =>
     {
         expect.assertions( 4 );
 
-        console.log( 'winsafe', win.safe );
+        console.info( 'winsafe', win.safe );
         expect( win ).toHaveProperty( 'safe' );
         // expect( win.safe ).toHaveProperty( 'CONSTANTS' );
         expect( win.safe ).toHaveProperty( 'initialiseApp' );

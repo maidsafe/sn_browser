@@ -36,7 +36,7 @@ const safeRoute = store => ( {
             let end;
             let rangeArray;
 
-            logger.log( `Handling SAFE req: ${ link }` );
+            logger.info( `Handling SAFE req: ${ link }` );
 
             if ( !app )
             {
@@ -93,7 +93,7 @@ const safeRoute = store => ( {
                     {
                         store.getState().tabs.forEach( tab =>
                         {
-                            logger.log( tab.url, link, link.includes( tab.url ) );
+                            logger.info( tab.url, link, link.includes( tab.url ) );
                             if ( link.includes( tab.url ) && !tab.isActive )
                             {
                                 store.dispatch( closeTab( { index: tab.index } ) );

@@ -82,7 +82,7 @@ const triggerGetWebIds = async () =>
 {
     if ( !inBgProcess ) return;
 
-    logger.log( 'BGBG Retrieving webIds' );
+    logger.info( 'BGBG Retrieving webIds' );
     const ids = await getWebIds();
 };
 
@@ -111,7 +111,7 @@ const getWebIds = async () =>
     const currentStore = getCurrentStore();
 
     const safeBrowserApp = getSafeBrowserAppObject();
-    logger.log( 'getWebIds' );
+    logger.info( 'getWebIds' );
 
     if ( !safeBrowserApp ) throw new Error( 'SafeBrowserApp should be initiated.' );
 

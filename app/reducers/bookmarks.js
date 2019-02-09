@@ -105,7 +105,7 @@ export default function bookmarks( state: array = initialState, action )
 
     if ( action.error )
     {
-        console.log( 'ERROR IN ACTION', action.error );
+        console.info( 'ERROR IN ACTION', action.error );
         return state;
     }
 

@@ -29,7 +29,7 @@ export const createRandomAccount = async () =>
     }
     catch ( e )
     {
-        console.log( 'helper/createRandom error:', e );
+        console.info( 'helper/createRandom error:', e );
     }
 };
 

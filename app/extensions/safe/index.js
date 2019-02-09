@@ -45,8 +45,8 @@ const preAppLoad = () =>
     app.setAsDefaultProtocolClient( 'safe' );
     const isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
     const isDefaultSafe = app.isDefaultProtocolClient( 'safe' );
-    logger.log( 'Registered to handle safe: urls ? ', isDefaultSafe );
-    logger.log( 'registered to handle safe-auth: urls ?', isDefaultAuth );
+    logger.info( 'Registered to handle safe: urls ? ', isDefaultSafe );
+    logger.info( 'registered to handle safe-auth: urls ?', isDefaultAuth );
 };
 
 /**
@@ -56,7 +56,7 @@ const preAppLoad = () =>
  */
 const addExtensionMenuItems = ( store, menusArray ) =>
 {
-    logger.log( 'Adding SAFE menus to browser' );
+    logger.info( 'Adding SAFE menus to browser' );
 
     const newMenuArray = [];
 
@@ -100,7 +100,7 @@ const actionsForBrowser = {
 
 const onInitBgProcess = async store =>
 {
-    logger.log( 'Registering SAFE Network Protocols' );
+    logger.info( 'Registering SAFE Network Protocols' );
     try
     {
         setSafeBgProcessStore( store );
@@ -126,7 +126,7 @@ const onInitBgProcess = async store =>
 
         if ( authLibStatus && authLibStatus !== prevAuthLibStatus )
         {
-            logger.log( 'Authenticator lib status: ', authLibStatus );
+            logger.info( 'Authenticator lib status: ', authLibStatus );
             prevAuthLibStatus = authLibStatus;
             store.dispatch(
                 setAuthLibStatus( authLibStatus )
@@ -146,7 +146,7 @@ const onInitBgProcess = async store =>
         icon : 'iconPath'
     };
 
-    logger.log( 'Auth application info', authAppInfo );
+    logger.info( 'Auth application info', authAppInfo );
     sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
 };
 
@@ -158,7 +158,7 @@ const onInitBgProcess = async store =>
 const onOpen = store =>
     new Promise( ( resolve, reject ) =>
     {
-        logger.log( 'OnOpen: Setting mock in store. ', startedRunningMock );
+        logger.info( 'OnOpen: Setting mock in store. ', startedRunningMock );
         store.dispatch( setIsMock( startedRunningMock ) );
 
         resolve();
@@ -170,7 +170,7 @@ const onOpen = store =>
  */
 const onAppReady = store =>
 {
-    logger.log( 'OnAppReady: Setting mock in store. ', startedRunningMock );
+    logger.info( 'OnAppReady: Setting mock in store. ', startedRunningMock );
     store.dispatch( setIsMock( startedRunningMock ) );
 };
 
@@ -182,7 +182,7 @@ const middleware = store => next => action =>
 {
     if ( isRunningSpectronTestProcess )
     {
-        logger.log( 'ACTION:', action );
+        logger.info( 'ACTION:', action );
     }
 
     return next( action );
@@ -190,7 +190,7 @@ const middleware = store => next => action =>
 
 const parseSafeUri = function ( uri )
 {
-    logger.log( 'Parsing safe uri', uri );
+    logger.info( 'Parsing safe uri', uri );
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 
@@ -202,7 +202,7 @@ const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
         {
             timeLeft -= 500;
             const netState = theStore.getState().safeBrowserApp.networkStatus;
-            logger.log( 'Waiting for basic connection...', netState );
+            logger.info( 'Waiting for basic connection...', netState );
 
             if ( netState !== null )
             {
@@ -233,15 +233,15 @@ const onReceiveUrl = async ( store, url ) =>
     const preParseUrl = parseSafeUri( url );
     const parsedUrl = parseURL( preParseUrl );
 
-    logger.log( 'Did get a parsed url on the go', parsedUrl );
+    logger.info( 'Did get a parsed url on the go', parsedUrl );
 
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
-        logger.log( 'this is a parsed url for auth', url, getSafeBrowserUnauthedReqUri() );
+        logger.info( 'this is a parsed url for auth', url, getSafeBrowserUnauthedReqUri() );
         // if ( url !== getSafeBrowserUnauthedReqUri() )
         // {
         //
-        //     logger.log('Waiting on basic connection....')
+        //     logger.info('Waiting on basic connection....')
         // otherwise EVERYTHING waits for basic connection...
         // so we know the libs are ready/ loaded
         // (and we assume, _that_ happens at the correc time due to browser hooks)
@@ -255,7 +255,7 @@ const onReceiveUrl = async ( store, url ) =>
     {
         await waitForBasicConnection( store );
 
-        logger.log( 'Handling safe: url', url );
+        logger.info( 'Handling safe: url', url );
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...
@@ -265,7 +265,7 @@ const onReceiveUrl = async ( store, url ) =>
         && parsedUrl.protocol.length > 20
     )
     {
-        logger.log( 'Handling safe-???? url' );
+        logger.info( 'Handling safe-???? url' );
         store.dispatch( safeBrowserAppActions.receivedAuthResponse( url ) );
     }
 

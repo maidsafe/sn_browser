@@ -78,7 +78,7 @@ const triggerGetWebIds = async () =>
 {
     if ( !inBgProcess ) return;
 
-    logger.log( 'BG Process: Retrieving webIds...' );
+    logger.info( 'BG Process: Retrieving webIds...' );
 
     await getWebIdsFromSafe();
 };
