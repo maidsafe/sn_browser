@@ -1,43 +1,47 @@
 // @flow
 import { createActions } from 'redux-actions';
-import initialAppState from './initialAppState';
 import logger from 'logger';
 import { TYPES } from '@Actions/remoteCall_actions';
+import initialAppState from './initialAppState';
 
 const initialState = initialAppState.remoteCalls;
 
-const findCallIndexById = (theState, theCall) => {
-    if (!theCall.id) {
-        logger.error('Remote calls cannot be removed without an ID property');
+const findCallIndexById = ( theState, theCall ) =>
+{
+    if ( !theCall.id )
+    {
+        logger.error( 'Remote calls cannot be removed without an ID property' );
     }
 
-    return theState.findIndex(c => c.id === theCall.id);
+    return theState.findIndex( c => c.id === theCall.id );
 };
 
-export default function remoteCalls(state: array = initialState, action) {
+export default function remoteCalls( state: array = initialState, action )
+{
     const theCall = action.payload;
 
-    switch (action.type) {
+    switch ( action.type )
+    {
         case TYPES.ADD_REMOTE_CALL: {
-            const updatedState = [...state];
-            updatedState.push(theCall);
+            const updatedState = [ ...state ];
+            updatedState.push( theCall );
             // TODO: Do we need to add an ID here?
             // DO we fail if no windowIdProvided?
             // Do we need to remove calls after X time?
             return updatedState;
         }
         case TYPES.REMOVE_REMOTE_CALL: {
-            const updatedState = [...state];
+            const updatedState = [ ...state ];
 
-            const removalIndex = findCallIndexById(updatedState, theCall);
-            updatedState.splice(removalIndex, 1);
+            const removalIndex = findCallIndexById( updatedState, theCall );
+            updatedState.splice( removalIndex, 1 );
 
             return updatedState;
         }
         case TYPES.UPDATE_REMOTE_CALL: {
-            const updatedState = [...state];
+            const updatedState = [ ...state ];
 
-            const callIndex = findCallIndexById(updatedState, theCall);
+            const callIndex = findCallIndexById( updatedState, theCall );
             const callToUpdate = updatedState[callIndex];
 
             updatedState[callIndex] = {

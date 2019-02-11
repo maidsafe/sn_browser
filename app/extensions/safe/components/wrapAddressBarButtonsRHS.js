@@ -12,48 +12,53 @@ import * as SafeBrowserAppActions from '@Extensions/safe/actions/safeBrowserAppl
 
 import styles from './wrapAddressBarButtons.css';
 
-function mapStateToProps(state) {
+function mapStateToProps( state )
+{
     return {
-        safeBrowserApp: state.safeBrowserApp
+        safeBrowserApp : state.safeBrowserApp
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps( dispatch )
+{
     const actions = {
         ...SafeBrowserAppActions
     };
 
-    return bindActionCreators(actions, dispatch);
+    return bindActionCreators( actions, dispatch );
 }
 
 const wrapAddressBarButtonsRHS = (
     AddressBarButtons,
     extensionFunctionality = {}
-) => {
-    class WrappedAddressBarButtonsRHS extends Component {
+) =>
+{
+    class WrappedAddressBarButtonsRHS extends Component
+    {
         static propTypes = {
-            safeBrowserApp: PropTypes.shape({
-                isMock: PropTypes.bool,
-                experimentsEnabled: PropTypes.bool.isRequired,
-                webIds: PropTypes.arrayOf(
-                    PropTypes.shape({
-                        name: PropTypes.string
-                    })
+            safeBrowserApp : PropTypes.shape( {
+                isMock             : PropTypes.bool,
+                experimentsEnabled : PropTypes.bool.isRequired,
+                webIds             : PropTypes.arrayOf(
+                    PropTypes.shape( {
+                        name : PropTypes.string
+                    } )
                 )
-            }).isRequired,
-            menuItems: PropTypes.arrayOf(PropTypes.node).isRequired,
-            enableExperiments: PropTypes.func.isRequired,
-            disableExperiments: PropTypes.func.isRequired
+            } ).isRequired,
+            menuItems          : PropTypes.arrayOf( PropTypes.node ).isRequired,
+            enableExperiments  : PropTypes.func.isRequired,
+            disableExperiments : PropTypes.func.isRequired
         };
 
         static defaultProps = {
-            safeBrowserApp: {
-                isMock: false,
-                experimentsEnabled: false
+            safeBrowserApp : {
+                isMock             : false,
+                experimentsEnabled : false
             }
         };
 
-        handleExperimentalToggleClick = () => {
+        handleExperimentalToggleClick = () =>
+        {
             const {
                 enableExperiments,
                 disableExperiments,
@@ -62,7 +67,8 @@ const wrapAddressBarButtonsRHS = (
 
             const { experimentsEnabled } = safeBrowserApp;
 
-            if (experimentsEnabled) {
+            if ( experimentsEnabled )
+            {
                 disableExperiments();
                 return;
             }
@@ -70,52 +76,54 @@ const wrapAddressBarButtonsRHS = (
             enableExperiments();
         };
 
-        getNewMenuItems = () => {
+        getNewMenuItems = () =>
+        {
             const { menuItems } = this.props;
             const { safeBrowserApp } = this.props;
             const { experimentsEnabled } = safeBrowserApp;
 
             const itemsToAdd = [
                 <Row
-                    key={'menuItem-experimental-toggle'}
+                    key="menuItem-experimental-toggle"
                     type="flex"
                     justify="space-between"
                     align="middle"
-                    className={`${styles.toggleRow} ${
+                    className={ `${ styles.toggleRow } ${
                         CLASSES.SETTINGS_MENU__TOGGLE
-                    }`}
+                    }` }
                 >
-                    <Col span={6}>
+                    <Col span={ 6 }>
                         <span
-                            className={`${styles.toggleText} ${
+                            className={ `${ styles.toggleText } ${
                                 CLASSES.SETTINGS_MENU__TOGGLE_TEXT
-                            }`}
+                            }` }
                         >
                             Toggle Experiments
                         </span>
                     </Col>
-                    <Col span={6} offset={6}>
+                    <Col span={ 6 } offset={ 6 }>
                         <Switch
-                            className={CLASSES.SETTINGS_MENU__TOGGLE_BUTTON}
+                            className={ CLASSES.SETTINGS_MENU__TOGGLE_BUTTON }
                             size="small"
-                            aria-label='settings-menu'
-                            tabIndex={0}
-                            style={{ float: 'right' }}
-                            checked={experimentsEnabled}
-                            onChange={this.handleExperimentalToggleClick}
+                            aria-label="settings-menu"
+                            tabIndex={ 0 }
+                            style={ { float: 'right' } }
+                            checked={ experimentsEnabled }
+                            onChange={ this.handleExperimentalToggleClick }
                         />
                     </Col>
                 </Row>
             ];
 
-            return [].concat(menuItems, itemsToAdd);
+            return [].concat( menuItems, itemsToAdd );
         };
 
-        render() {
+        render()
+        {
             return (
                 <AddressBarButtons
-                    {...this.props}
-                    menuItems={this.getNewMenuItems()}
+                    { ...this.props }
+                    menuItems={ this.getNewMenuItems() }
                 />
             );
         }
@@ -124,7 +132,7 @@ const wrapAddressBarButtonsRHS = (
     const hookedUpInput = connect(
         mapStateToProps,
         mapDispatchToProps
-    )(WrappedAddressBarButtonsRHS);
+    )( WrappedAddressBarButtonsRHS );
 
     return hookedUpInput;
 };

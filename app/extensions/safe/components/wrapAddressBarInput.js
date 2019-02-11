@@ -11,29 +11,33 @@ import 'antd/lib/icon/style';
 import './wrapAddressBarInput.less';
 import { CLASSES } from '@Constants';
 
-function mapStateToProps(state) {
+function mapStateToProps( state )
+{
     return {
-        safeBrowserApp: state.safeBrowserApp
+        safeBrowserApp : state.safeBrowserApp
     };
 }
 
-const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
-    class WrappedAddressBarInput extends Component {
+const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
+{
+    class WrappedAddressBarInput extends Component
+    {
         static propTypes = {
-            safeBrowserApp: PropTypes.shape({
-                isMock: PropTypes.bool,
-                experimentsEnabled: PropTypes.bool
-            }).isRequired
+            safeBrowserApp : PropTypes.shape( {
+                isMock             : PropTypes.bool,
+                experimentsEnabled : PropTypes.bool
+            } ).isRequired
         };
 
         static defaultProps = {
-            safeBrowserApp: {
-                isMock: false,
-                experimentsEnabled: false
+            safeBrowserApp : {
+                isMock             : false,
+                experimentsEnabled : false
             }
         };
 
-        render() {
+        render()
+        {
             const { safeBrowserApp } = this.props;
 
             const { isMock, experimentsEnabled } = safeBrowserApp;
@@ -41,31 +45,35 @@ const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
             const addOnsBefore = [];
             const addOnsAfter = [];
 
-            if (isMock)
+            if ( isMock )
+            {
                 addOnsBefore.push(
                     <Tag
                         key="F5222D"
-                        className={CLASSES.MOCK_TAG}
+                        className={ CLASSES.MOCK_TAG }
                         color="#F5222D"
                     >
                         Mock Network
                     </Tag>
                 );
-            if (experimentsEnabled)
+            }
+            if ( experimentsEnabled )
+            {
                 addOnsAfter.push(
                     <Tag key="42566E" color="#42566E">
                         <Icon type="experiment" />
                     </Tag>
                 );
+            }
 
             return (
                 <Grid gutters="M">
                     <Column align="center" verticalAlign="middle">
                         <AddressBarInput
                             // className={ styles.addressBar }
-                            {...this.props}
-                            addonBefore={addOnsBefore}
-                            addonAfter={addOnsAfter}
+                            { ...this.props }
+                            addonBefore={ addOnsBefore }
+                            addonAfter={ addOnsAfter }
                         />
                     </Column>
                 </Grid>
@@ -73,7 +81,7 @@ const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
         }
     }
 
-    const hookedUpInput = connect(mapStateToProps)(WrappedAddressBarInput);
+    const hookedUpInput = connect( mapStateToProps )( WrappedAddressBarInput );
 
     return hookedUpInput;
 };

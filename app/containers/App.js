@@ -9,10 +9,12 @@ type Props = {
     children: React.Node
 };
 
-export default class App extends React.Component<Props> {
+export default class App extends React.Component<Props>
+{
     props: Props;
 
-    render() {
+    render()
+    {
         const { children } = this.props;
         return (
             <React.Fragment>

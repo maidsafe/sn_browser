@@ -8,47 +8,49 @@ import { getStrengthMsg } from '../utils';
 import CONSTANTS from '../constants';
 import CardLoaderFull from './card_loader_full';
 
-export default class CreateAccount extends Component {
+export default class CreateAccount extends Component
+{
     static propTypes = {
-        isAuthorised: PropTypes.bool,
-        loading: PropTypes.bool,
-        navPos: PropTypes.number,
-        secretStrength: PropTypes.number,
-        passwordStrength: PropTypes.number,
-        userSecret: PropTypes.string,
-        inviteCode: PropTypes.string,
-        userPassword: PropTypes.string,
-        setCreateAccNavPos: PropTypes.func,
-        clearError: PropTypes.func,
-        clearAccSecret: PropTypes.func,
-        clearAccPassword: PropTypes.func,
-        resetCreateAccNavPos: PropTypes.func,
-        setAccSecret: PropTypes.func,
-        setInviteCode: PropTypes.func,
-        setError: PropTypes.func,
-        setAccPassword: PropTypes.func,
-        createAccount: PropTypes.func,
-        clearInviteCode: PropTypes.func,
-        setPasswordStrength: PropTypes.func,
-        setSecretStrength: PropTypes.func,
-        error: PropTypes.shape({
-            code: PropTypes.number,
-            description: PropTypes.string
-        })
+        isAuthorised         : PropTypes.bool,
+        loading              : PropTypes.bool,
+        navPos               : PropTypes.number,
+        secretStrength       : PropTypes.number,
+        passwordStrength     : PropTypes.number,
+        userSecret           : PropTypes.string,
+        inviteCode           : PropTypes.string,
+        userPassword         : PropTypes.string,
+        setCreateAccNavPos   : PropTypes.func,
+        clearError           : PropTypes.func,
+        clearAccSecret       : PropTypes.func,
+        clearAccPassword     : PropTypes.func,
+        resetCreateAccNavPos : PropTypes.func,
+        setAccSecret         : PropTypes.func,
+        setInviteCode        : PropTypes.func,
+        setError             : PropTypes.func,
+        setAccPassword       : PropTypes.func,
+        createAccount        : PropTypes.func,
+        clearInviteCode      : PropTypes.func,
+        setPasswordStrength  : PropTypes.func,
+        setSecretStrength    : PropTypes.func,
+        error                : PropTypes.shape( {
+            code        : PropTypes.number,
+            description : PropTypes.string
+        } )
     };
 
     static contextTypes = {
-        router: PropTypes.object.isRequired
+        router : PropTypes.object.isRequired
     };
 
-    constructor() {
+    constructor()
+    {
         super();
         this.state = {
-            inviteError: null,
-            accSecError: null,
-            confirmAccSecError: null,
-            accPassErr: null,
-            confirmAccPassErr: null
+            inviteError        : null,
+            accSecError        : null,
+            confirmAccSecError : null,
+            accPassErr         : null,
+            confirmAccPassErr  : null
         };
         this.lastNavPos = 0;
         this.secretEle = null;
@@ -56,73 +58,89 @@ export default class CreateAccount extends Component {
         this.passwordEle = null;
         this.confirmPasswordEle = null;
         this.inviteCode = null;
-        this.getContainer = this.getContainer.bind(this);
-        this.getWelcomeContainer = this.getWelcomeContainer.bind(this);
-        this.getInvitationContainer = this.getInvitationContainer.bind(this);
+        this.getContainer = this.getContainer.bind( this );
+        this.getWelcomeContainer = this.getWelcomeContainer.bind( this );
+        this.getInvitationContainer = this.getInvitationContainer.bind( this );
         this.getAccountSecretContainer = this.getAccountSecretContainer.bind(
             this
         );
         this.getAccountPasswordContainer = this.getAccountPasswordContainer.bind(
             this
         );
-        this.togglePassword = this.togglePassword.bind(this);
-        this.handlePassword = this.handlePassword.bind(this);
-        this.handleSecret = this.handleSecret.bind(this);
-        this.handleInvitation = this.handleInvitation.bind(this);
-        this.getStrength = this.getStrength.bind(this);
-        this.getTitle = this.getTitle.bind(this);
-        this.clearFieldMsg = this.clearFieldMsg.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.getNav = this.getNav.bind(this);
-        this.reset = this.reset.bind(this);
+        this.togglePassword = this.togglePassword.bind( this );
+        this.handlePassword = this.handlePassword.bind( this );
+        this.handleSecret = this.handleSecret.bind( this );
+        this.handleInvitation = this.handleInvitation.bind( this );
+        this.getStrength = this.getStrength.bind( this );
+        this.getTitle = this.getTitle.bind( this );
+        this.clearFieldMsg = this.clearFieldMsg.bind( this );
+        this.handleInputChange = this.handleInputChange.bind( this );
+        this.getNav = this.getNav.bind( this );
+        this.reset = this.reset.bind( this );
     }
 
-    componentWillMount() {
-        if (this.props.isAuthorised) {
-            return this.props.push('/');
+    componentWillMount()
+    {
+        if ( this.props.isAuthorised )
+        {
+            return this.props.push( '/' );
         }
         this.reset();
     }
 
-    componentWillUpdate(nextProps) {
-        if (nextProps.isAuthorised) {
-            return this.props.push('/');
+    componentWillUpdate( nextProps )
+    {
+        if ( nextProps.isAuthorised )
+        {
+            return this.props.push( '/' );
         }
     }
 
-    componentDidUpdate() {
-        if (this.lastNavPos === this.props.navPos) {
+    componentDidUpdate()
+    {
+        if ( this.lastNavPos === this.props.navPos )
+        {
             return;
         }
         this.lastNavPos = this.props.navPos;
-        if (this.props.navPos === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM) {
-            if (this.props.userPassword) {
+        if ( this.props.navPos === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM )
+        {
+            if ( this.props.userPassword )
+            {
                 this.passwordEle.value = this.props.userPassword;
                 this.confirmPasswordEle.value = this.props.userPassword;
                 this.passwordEle.dispatchEvent(
-                    new Event('keyup', { bubbles: true })
+                    new Event( 'keyup', { bubbles: true } )
                 );
             }
             this.passwordEle.focus();
-        } else if (this.props.navPos === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM) {
-            if (this.props.userSecret) {
+        }
+        else if ( this.props.navPos === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM )
+        {
+            if ( this.props.userSecret )
+            {
                 this.secretEle.value = this.props.userSecret;
                 this.confirmSecretEle.value = this.props.userSecret;
                 this.secretEle.dispatchEvent(
-                    new Event('keyup', { bubbles: true })
+                    new Event( 'keyup', { bubbles: true } )
                 );
             }
             this.secretEle.focus();
-        } else if (this.props.navPos === CONSTANTS.CREATE_ACC_NAV.INVITE_CODE) {
-            if (this.props.inviteCode) {
+        }
+        else if ( this.props.navPos === CONSTANTS.CREATE_ACC_NAV.INVITE_CODE )
+        {
+            if ( this.props.inviteCode )
+            {
                 this.inviteCode.value = this.props.inviteCode;
             }
             this.inviteCode.focus();
         }
     }
 
-    getContainer() {
-        switch (this.props.navPos) {
+    getContainer()
+    {
+        switch ( this.props.navPos )
+        {
             case CONSTANTS.CREATE_ACC_NAV.WELCOME:
                 return this.getWelcomeContainer();
             case CONSTANTS.CREATE_ACC_NAV.INVITE_CODE:
@@ -136,30 +154,32 @@ export default class CreateAccount extends Component {
         }
     }
 
-    getWelcomeContainer() {
+    getWelcomeContainer()
+    {
         const { navPos, setCreateAccNavPos } = this.props;
         return (
             <div className="card-main-cntr">
                 <div className="auth">
                     <div className="auth-b">
                         <p className="auth-cont-1">
-                            {I18n.t('auth_intro.desc.welcome')}
+                            {I18n.t( 'auth_intro.desc.welcome' )}
                         </p>
-                        <div className="auth-welcome">{''}</div>
+                        <div className="auth-welcome" />
                         <div className="auth-f">
                             <div className="auth-f-b">
                                 {this.getNav()}
                                 <button
                                     type="button"
-                                    className={`rgt flat btn primary ${
+                                    className={ `rgt flat btn primary ${
                                         AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE
-                                    }`}
+                                    }` }
                                     tabIndex="0"
-                                    onClick={() => {
-                                        setCreateAccNavPos(navPos + 1);
-                                    }}
+                                    onClick={ () =>
+                                    {
+                                        setCreateAccNavPos( navPos + 1 );
+                                    } }
                                 >
-                                    {I18n.t('buttons.continue')}
+                                    {I18n.t( 'buttons.continue' )}
                                 </button>
                             </div>
                         </div>
@@ -169,25 +189,27 @@ export default class CreateAccount extends Component {
         );
     }
 
-    getInvitationContainer() {
+    getInvitationContainer()
+    {
         const { navPos, error, setCreateAccNavPos } = this.props;
-        const msgClassNames = classNames('msg', {
-            error: error ? error.description : false || this.state.inviteError
-        });
+        const msgClassNames = classNames( 'msg', {
+            error : error ? error.description : false || this.state.inviteError
+        } );
 
         return (
             <div className="card-main-cntr">
                 <div className="auth">
                     <div className="auth-b">
                         <p className="auth-cont-1">
-                            {I18n.t('auth_intro.desc.invite_code')}
+                            {I18n.t( 'auth_intro.desc.invite_code' )}
                         </p>
                         <div className="auth-form">
                             <form
                                 id="invitationForm"
-                                onSubmit={e => {
+                                onSubmit={ e =>
+                                {
                                     e.preventDefault();
-                                }}
+                                } }
                             >
                                 <div className="inp-grp">
                                     <input
@@ -199,15 +221,16 @@ export default class CreateAccount extends Component {
                                         id="invitation-code"
                                         name="invitation-code"
                                         key="invitation-code"
-                                        ref={c => {
+                                        ref={ c =>
+                                        {
                                             this.inviteCode = c;
-                                        }}
+                                        } }
                                         required
                                     />
                                     <label htmlFor="invitation-code">
-                                        {I18n.t('invite_token')}
+                                        {I18n.t( 'invite_token' )}
                                     </label>
-                                    <span className={msgClassNames}>
+                                    <span className={ msgClassNames }>
                                         {error
                                             ? error.description
                                             : false || this.state.inviteError}
@@ -218,13 +241,14 @@ export default class CreateAccount extends Component {
                                     <button
                                         type="button"
                                         className="btn primary long"
-                                        onClick={() => {
+                                        onClick={ () =>
+                                        {
                                             window.open(
                                                 'https://invite.maidsafe.net/'
                                             );
-                                        }}
+                                        } }
                                     >
-                                        {I18n.t('buttons.claim_invitation')}
+                                        {I18n.t( 'buttons.claim_invitation' )}
                                     </button>
                                 </div>
                             </form>
@@ -235,24 +259,26 @@ export default class CreateAccount extends Component {
                                     type="button"
                                     tabIndex="0"
                                     className="lft flat btn"
-                                    onClick={() => {
-                                        setCreateAccNavPos(navPos - 1);
-                                    }}
+                                    onClick={ () =>
+                                    {
+                                        setCreateAccNavPos( navPos - 1 );
+                                    } }
                                 >
-                                    {I18n.t('buttons.back')}
+                                    {I18n.t( 'buttons.back' )}
                                 </button>
                                 {this.getNav()}
                                 <button
                                     type="button"
                                     tabIndex="0"
-                                    className={`rgt flat btn primary ${
+                                    className={ `rgt flat btn primary ${
                                         AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE
-                                    }`}
-                                    onClick={e => {
-                                        this.handleInvitation(e);
-                                    }}
+                                    }` }
+                                    onClick={ e =>
+                                    {
+                                        this.handleInvitation( e );
+                                    } }
                                 >
-                                    {I18n.t('buttons.continue')}
+                                    {I18n.t( 'buttons.continue' )}
                                 </button>
                             </div>
                         </div>
@@ -262,22 +288,23 @@ export default class CreateAccount extends Component {
         );
     }
 
-    getAccountSecretContainer() {
+    getAccountSecretContainer()
+    {
         const {
             navPos,
             error,
             secretStrength,
             setCreateAccNavPos
         } = this.props;
-        const msgClassNames = classNames('msg', {
-            error: error ? error.description : false || this.state.accSecError
-        });
+        const msgClassNames = classNames( 'msg', {
+            error : error ? error.description : false || this.state.accSecError
+        } );
         return (
             <div className="card-main-cntr">
                 <div className="auth">
                     <div className="auth-b">
                         <p className="auth-cont-1">
-                            {I18n.t('auth_intro.desc.secret')}
+                            {I18n.t( 'auth_intro.desc.secret' )}
                         </p>
                         <div className="auth-form bottom-pad">
                             <form id="secretForm">
@@ -291,29 +318,30 @@ export default class CreateAccount extends Component {
                                         id="acc-secret"
                                         name="acc-secret"
                                         key="acc-secret"
-                                        ref={c => {
+                                        ref={ c =>
+                                        {
                                             this.secretEle = c;
-                                        }}
-                                        onChange={this.handleInputChange}
+                                        } }
+                                        onChange={ this.handleInputChange }
                                         required
                                     />
                                     <label htmlFor="acc-secret">
-                                        {I18n.t('account_secret')}
+                                        {I18n.t( 'account_secret' )}
                                     </label>
-                                    {this.getStrength(secretStrength)}
-                                    <span className="limit short">{''}</span>
-                                    <span className={msgClassNames}>
+                                    {this.getStrength( secretStrength )}
+                                    <span className="limit short" />
+                                    <span className={ msgClassNames }>
                                         {error
                                             ? error.description
-                                            : false ||
-                                              getStrengthMsg(secretStrength) ||
-                                              this.state.accSecError}
+                                            : false
+                                              || getStrengthMsg( secretStrength )
+                                              || this.state.accSecError}
                                     </span>
                                     <button
                                         type="button"
                                         tabIndex="0"
                                         className="eye-btn"
-                                        onClick={this.togglePassword}
+                                        onClick={ this.togglePassword }
                                     >
                                         {' '}
                                     </button>
@@ -328,13 +356,14 @@ export default class CreateAccount extends Component {
                                         id="cacc-secret"
                                         name="cacc-secret"
                                         key="cacc-secret"
-                                        ref={c => {
+                                        ref={ c =>
+                                        {
                                             this.confirmSecretEle = c;
-                                        }}
+                                        } }
                                         required
                                     />
                                     <label htmlFor="cacc-secret">
-                                        {I18n.t('confirm_secret')}
+                                        {I18n.t( 'confirm_secret' )}
                                     </label>
                                     <span className="msg error">
                                         {this.state.confirmAccSecError}
@@ -343,7 +372,7 @@ export default class CreateAccount extends Component {
                                         type="button"
                                         tabIndex="0"
                                         className="eye-btn"
-                                        onClick={this.togglePassword}
+                                        onClick={ this.togglePassword }
                                     >
                                         {' '}
                                     </button>
@@ -356,25 +385,27 @@ export default class CreateAccount extends Component {
                                     type="button"
                                     tabIndex="0"
                                     className="lft flat btn"
-                                    onClick={() => {
-                                        setCreateAccNavPos(navPos - 1);
-                                    }}
+                                    onClick={ () =>
+                                    {
+                                        setCreateAccNavPos( navPos - 1 );
+                                    } }
                                 >
-                                    {I18n.t('buttons.back')}
+                                    {I18n.t( 'buttons.back' )}
                                 </button>
                                 {this.getNav()}
                                 <button
                                     type="button"
                                     tabIndex="0"
                                     form="secretForm"
-                                    className={`rgt flat btn primary ${
+                                    className={ `rgt flat btn primary ${
                                         AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE
-                                    }`}
-                                    onClick={e => {
-                                        this.handleSecret(e);
-                                    }}
+                                    }` }
+                                    onClick={ e =>
+                                    {
+                                        this.handleSecret( e );
+                                    } }
                                 >
-                                    {I18n.t('buttons.continue')}
+                                    {I18n.t( 'buttons.continue' )}
                                 </button>
                             </div>
                         </div>
@@ -384,22 +415,23 @@ export default class CreateAccount extends Component {
         );
     }
 
-    getAccountPasswordContainer() {
+    getAccountPasswordContainer()
+    {
         const {
             navPos,
             error,
             passwordStrength,
             setCreateAccNavPos
         } = this.props;
-        const msgClassNames = classNames('msg', {
-            error: error ? error.description : false || this.state.accPassErr
-        });
+        const msgClassNames = classNames( 'msg', {
+            error : error ? error.description : false || this.state.accPassErr
+        } );
         return (
             <div className="card-main-cntr">
                 <div className="auth">
                     <div className="auth-b">
                         <p className="auth-cont-1">
-                            {I18n.t('auth_intro.desc.password')}
+                            {I18n.t( 'auth_intro.desc.password' )}
                         </p>
                         <div className="auth-form bottom-pad">
                             <form id="passwordForm">
@@ -413,31 +445,32 @@ export default class CreateAccount extends Component {
                                         id="acc-password"
                                         name="acc-password"
                                         key="acc-password"
-                                        ref={c => {
+                                        ref={ c =>
+                                        {
                                             this.passwordEle = c;
-                                        }}
-                                        onChange={this.handleInputChange}
+                                        } }
+                                        onChange={ this.handleInputChange }
                                         required
                                     />
                                     <label htmlFor="acc-password">
-                                        {I18n.t('account_password')}
+                                        {I18n.t( 'account_password' )}
                                     </label>
-                                    {this.getStrength(passwordStrength)}
-                                    <span className="limit long">{''}</span>
-                                    <span className={msgClassNames}>
+                                    {this.getStrength( passwordStrength )}
+                                    <span className="limit long" />
+                                    <span className={ msgClassNames }>
                                         {error
                                             ? error.description
-                                            : false ||
-                                              getStrengthMsg(
+                                            : false
+                                              || getStrengthMsg(
                                                   passwordStrength
-                                              ) ||
-                                              this.state.accPassErr}
+                                              )
+                                              || this.state.accPassErr}
                                     </span>
                                     <button
                                         type="button"
                                         tabIndex="0"
                                         className="eye-btn"
-                                        onClick={this.togglePassword}
+                                        onClick={ this.togglePassword }
                                     >
                                         {' '}
                                     </button>
@@ -452,13 +485,14 @@ export default class CreateAccount extends Component {
                                         id="cacc-password"
                                         name="cacc-password"
                                         key="cacc-password"
-                                        ref={c => {
+                                        ref={ c =>
+                                        {
                                             this.confirmPasswordEle = c;
-                                        }}
+                                        } }
                                         required
                                     />
                                     <label htmlFor="cacc-password">
-                                        {I18n.t('confirm_password')}
+                                        {I18n.t( 'confirm_password' )}
                                     </label>
                                     <span className="msg error">
                                         {this.state.confirmAccPassErr}
@@ -467,7 +501,7 @@ export default class CreateAccount extends Component {
                                         type="button"
                                         tabIndex="0"
                                         className="eye-btn"
-                                        onClick={this.togglePassword}
+                                        onClick={ this.togglePassword }
                                     >
                                         {' '}
                                     </button>
@@ -480,25 +514,27 @@ export default class CreateAccount extends Component {
                                     type="button"
                                     tabIndex="0"
                                     className="lft flat btn"
-                                    onClick={() => {
-                                        setCreateAccNavPos(navPos - 1);
-                                    }}
+                                    onClick={ () =>
+                                    {
+                                        setCreateAccNavPos( navPos - 1 );
+                                    } }
                                 >
-                                    {I18n.t('buttons.back')}
+                                    {I18n.t( 'buttons.back' )}
                                 </button>
                                 {this.getNav()}
                                 <button
                                     type="button"
                                     tabIndex="0"
                                     form="passwordForm"
-                                    className={`rgt flat btn primary ${
+                                    className={ `rgt flat btn primary ${
                                         AUTH_UI_CLASSES.AUTH_CREATE_ACCOUNT_CONTINUE
-                                    }`}
-                                    onClick={e => {
-                                        this.handlePassword(e);
-                                    }}
+                                    }` }
+                                    onClick={ e =>
+                                    {
+                                        this.handlePassword( e );
+                                    } }
                                 >
-                                    {I18n.t('buttons.continue')}
+                                    {I18n.t( 'buttons.continue' )}
                                 </button>
                             </div>
                         </div>
@@ -508,71 +544,80 @@ export default class CreateAccount extends Component {
         );
     }
 
-    getTitle() {
-        switch (this.props.navPos) {
+    getTitle()
+    {
+        switch ( this.props.navPos )
+        {
             case CONSTANTS.CREATE_ACC_NAV.WELCOME:
                 return (
                     <span>
-                        <b>SAFE</b> Authenticator
+                        <b>SAFE</b>
+                        {' '}
+Authenticator
                     </span>
                 );
             case CONSTANTS.CREATE_ACC_NAV.INVITE_CODE:
-                return I18n.t('invite_token');
+                return I18n.t( 'invite_token' );
             case CONSTANTS.CREATE_ACC_NAV.SECRET_FORM:
-                return I18n.t('account_secret');
+                return I18n.t( 'account_secret' );
             case CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM:
-                return I18n.t('account_password');
+                return I18n.t( 'account_password' );
             default:
                 return <span>Oops!!</span>;
         }
     }
 
-    getNav() {
+    getNav()
+    {
         const { navPos, setCreateAccNavPos } = this.props;
         const getNavPositionClassName = pos =>
-            classNames({
-                active: navPos === pos
-            });
+            classNames( {
+                active : navPos === pos
+            } );
 
         return (
             <div className="auth-f-nav">
                 <span
-                    className={getNavPositionClassName(
+                    className={ getNavPositionClassName(
                         CONSTANTS.CREATE_ACC_NAV.WELCOME
-                    )}
-                    onClick={() => {
-                        setCreateAccNavPos(1);
-                    }}
+                    ) }
+                    onClick={ () =>
+                    {
+                        setCreateAccNavPos( 1 );
+                    } }
                 >
                     {''}
                 </span>
                 <span
-                    className={getNavPositionClassName(
+                    className={ getNavPositionClassName(
                         CONSTANTS.CREATE_ACC_NAV.INVITE_CODE
-                    )}
-                    onClick={() => {
-                        setCreateAccNavPos(2);
-                    }}
+                    ) }
+                    onClick={ () =>
+                    {
+                        setCreateAccNavPos( 2 );
+                    } }
                 >
                     {''}
                 </span>
                 <span
-                    className={getNavPositionClassName(
+                    className={ getNavPositionClassName(
                         CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
-                    )}
-                    onClick={() => {
-                        setCreateAccNavPos(3);
-                    }}
+                    ) }
+                    onClick={ () =>
+                    {
+                        setCreateAccNavPos( 3 );
+                    } }
                 >
                     {''}
                 </span>
                 <span
-                    className={getNavPositionClassName(
+                    className={ getNavPositionClassName(
                         CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM
-                    )}
-                    onClick={() => {
-                        setCreateAccNavPos(4);
-                    }}
+                    ) }
+                    onClick={ () =>
+                    {
+                        setCreateAccNavPos( 4 );
+                    } }
                 >
                     {''}
                 </span>
@@ -580,119 +625,139 @@ export default class CreateAccount extends Component {
         );
     }
 
-    getStrength(val) {
+    getStrength( val )
+    {
         return (
             <span
                 className="strength"
-                style={{ width: `${Math.min((val / 16) * 100, 100)}%` }}
+                style={ { width: `${ Math.min( ( val / 16 ) * 100, 100 ) }%` } }
             >
                 {''}
             </span>
         );
     }
 
-    handleInvitation(e) {
+    handleInvitation( e )
+    {
         e.preventDefault();
         this.props.clearError();
 
         const inviteCode = this.inviteCode.value.trim();
-        if (!inviteCode) {
-            this.setState({ inviteError: 'Invite token required' });
+        if ( !inviteCode )
+        {
+            this.setState( { inviteError: 'Invite token required' } );
             return;
         }
-        if (this.state.inviteError) {
-            this.setState({ inviteError: null });
+        if ( this.state.inviteError )
+        {
+            this.setState( { inviteError: null } );
         }
-        this.props.setInviteCode(inviteCode);
-        this.props.setCreateAccNavPos(this.props.navPos + 1);
+        this.props.setInviteCode( inviteCode );
+        this.props.setCreateAccNavPos( this.props.navPos + 1 );
     }
 
-    handleSecret(e) {
+    handleSecret( e )
+    {
         e.preventDefault();
         this.clearFieldMsg();
 
         const secret = this.secretEle.value.trim();
         const confirmSecret = this.confirmSecretEle.value.trim();
-        if (!secret) {
-            this.setState({ accSecError: 'Account Secret required' });
+        if ( !secret )
+        {
+            this.setState( { accSecError: 'Account Secret required' } );
             return;
         }
-        if (this.state.accSecError) {
-            this.setState({ accSecError: null });
+        if ( this.state.accSecError )
+        {
+            this.setState( { accSecError: null } );
         }
-        if (!confirmSecret) {
-            this.setState({
-                confirmAccSecError: I18n.t('messages.entries_mismatch')
-            });
+        if ( !confirmSecret )
+        {
+            this.setState( {
+                confirmAccSecError : I18n.t( 'messages.entries_mismatch' )
+            } );
             return;
         }
-        if (this.state.confirmAccSecError) {
-            this.setState({ confirmAccSecError: null });
+        if ( this.state.confirmAccSecError )
+        {
+            this.setState( { confirmAccSecError: null } );
         }
-        if (this.props.secretStrength < CONSTANTS.PASSPHRASE_STRENGTH.WEAK) {
+        if ( this.props.secretStrength < CONSTANTS.PASSPHRASE_STRENGTH.WEAK )
+        {
             this.props.setError(
-                I18n.t('messages.need_to_be_stronger', {
-                    name: I18n.t('account_secret')
-                })
+                I18n.t( 'messages.need_to_be_stronger', {
+                    name : I18n.t( 'account_secret' )
+                } )
             );
             return;
         }
-        if (secret !== confirmSecret) {
-            this.setState({
-                confirmAccSecError: I18n.t('messages.entries_mismatch')
-            });
+        if ( secret !== confirmSecret )
+        {
+            this.setState( {
+                confirmAccSecError : I18n.t( 'messages.entries_mismatch' )
+            } );
             return;
         }
-        if (this.state.confirmAccSecError) {
-            this.setState({ confirmAccSecError: null });
+        if ( this.state.confirmAccSecError )
+        {
+            this.setState( { confirmAccSecError: null } );
         }
-        this.props.setAccSecret(secret);
-        this.props.setCreateAccNavPos(this.props.navPos + 1);
+        this.props.setAccSecret( secret );
+        this.props.setCreateAccNavPos( this.props.navPos + 1 );
     }
 
-    handlePassword(e) {
+    handlePassword( e )
+    {
         e.preventDefault();
         this.clearFieldMsg();
 
         const password = this.passwordEle.value.trim();
         const confirmPassword = this.confirmPasswordEle.value.trim();
-        if (!password) {
-            this.setState({ accPassErr: 'Account Password required' });
+        if ( !password )
+        {
+            this.setState( { accPassErr: 'Account Password required' } );
             return;
         }
-        if (this.state.accPassErr) {
-            this.setState({ accPassErr: null });
+        if ( this.state.accPassErr )
+        {
+            this.setState( { accPassErr: null } );
         }
-        if (!confirmPassword) {
-            this.setState({
-                confirmAccPassErr: I18n.t('messages.entries_mismatch')
-            });
+        if ( !confirmPassword )
+        {
+            this.setState( {
+                confirmAccPassErr : I18n.t( 'messages.entries_mismatch' )
+            } );
             return;
         }
-        if (this.state.confirmAccPassErr) {
-            this.setState({ confirmAccPassErr: null });
+        if ( this.state.confirmAccPassErr )
+        {
+            this.setState( { confirmAccPassErr: null } );
         }
         if (
-            this.props.passwordStrength <
-            CONSTANTS.PASSPHRASE_STRENGTH.SOMEWHAT_SECURE
-        ) {
+            this.props.passwordStrength
+            < CONSTANTS.PASSPHRASE_STRENGTH.SOMEWHAT_SECURE
+        )
+        {
             this.props.setError(
-                I18n.t('messages.need_to_be_stronger', {
-                    name: I18n.t('account_password')
-                })
+                I18n.t( 'messages.need_to_be_stronger', {
+                    name : I18n.t( 'account_password' )
+                } )
             );
             return;
         }
-        if (password !== confirmPassword) {
-            this.setState({
-                confirmAccPassErr: I18n.t('messages.entries_mismatch')
-            });
+        if ( password !== confirmPassword )
+        {
+            this.setState( {
+                confirmAccPassErr : I18n.t( 'messages.entries_mismatch' )
+            } );
             return;
         }
-        if (this.state.confirmAccPassErr) {
-            this.setState({ confirmAccPassErr: null });
+        if ( this.state.confirmAccPassErr )
+        {
+            this.setState( { confirmAccPassErr: null } );
         }
-        this.props.setAccPassword(password);
+        this.props.setAccPassword( password );
 
         this.props.createAccount(
             this.props.userSecret,
@@ -701,51 +766,65 @@ export default class CreateAccount extends Component {
         );
     }
 
-    togglePassword(e) {
-        const input = e.target.parentElement.childNodes.item('input');
-        if (!(input && input.value)) {
+    togglePassword( e )
+    {
+        const input = e.target.parentElement.childNodes.item( 'input' );
+        if ( !( input && input.value ) )
+        {
             return;
         }
         input.type = input.type === 'text' ? 'password' : 'text';
     }
 
-    handleInputChange(e) {
-        if (e.keyCode === 13) {
+    handleInputChange( e )
+    {
+        if ( e.keyCode === 13 )
+        {
             return;
         }
 
         this.clearFieldMsg();
 
-        if (this.props.navPos === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM) {
+        if ( this.props.navPos === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM )
+        {
             const value = this.secretEle.value.trim();
-            this.props.setSecretStrength(zxcvbn(value).guesses_log10);
-        } else if (
+            this.props.setSecretStrength( zxcvbn( value ).guesses_log10 );
+        }
+        else if (
             this.props.navPos === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM
-        ) {
+        )
+        {
             const value = this.passwordEle.value.trim();
-            this.props.setPasswordStrength(zxcvbn(value).guesses_log10);
+            this.props.setPasswordStrength( zxcvbn( value ).guesses_log10 );
         }
     }
 
-    clearFieldMsg() {
-        if (this.state.confirmAccSecError) {
-            this.setState({ confirmAccSecError: null });
+    clearFieldMsg()
+    {
+        if ( this.state.confirmAccSecError )
+        {
+            this.setState( { confirmAccSecError: null } );
         }
-        if (this.state.accSecError) {
-            this.setState({ accSecError: null });
+        if ( this.state.accSecError )
+        {
+            this.setState( { accSecError: null } );
         }
-        if (this.state.confirmAccPassErr) {
-            this.setState({ confirmAccPassErr: null });
+        if ( this.state.confirmAccPassErr )
+        {
+            this.setState( { confirmAccPassErr: null } );
         }
-        if (this.state.accPassErr) {
-            this.setState({ accPassErr: null });
+        if ( this.state.accPassErr )
+        {
+            this.setState( { accPassErr: null } );
         }
-        if (this.props.error) {
+        if ( this.props.error )
+        {
             this.props.clearError();
         }
     }
 
-    reset() {
+    reset()
+    {
         this.props.clearError();
         this.props.clearAccSecret();
         this.props.clearAccPassword();
@@ -753,15 +832,18 @@ export default class CreateAccount extends Component {
         this.props.resetCreateAccNavPos();
     }
 
-    login(e) {
+    login( e )
+    {
         e.preventDefault();
-        if (this.props.loading) {
+        if ( this.props.loading )
+        {
             return;
         }
-        return this.props.push('/');
+        return this.props.push( '/' );
     }
 
-    render() {
+    render()
+    {
         return (
             <div>
                 <div className="card-main-b">
@@ -774,17 +856,20 @@ export default class CreateAccount extends Component {
                     {this.getContainer()}
                 </div>
                 <div className="card-f">
-                    {I18n.t('have_account_question')}&nbsp;
+                    {I18n.t( 'have_account_question' )}
+&nbsp;
                     <a
-                        className={classNames({ disabled: this.props.loading })}
+                        className={ classNames( { disabled: this.props.loading } ) }
                         tabIndex="0"
                         role="button"
-                        onClick={e => this.login(e)}
-                        onKeyDown={e => {
-                            if (e.keyCode === 13) {
-                                this.login(e);
+                        onClick={ e => this.login( e ) }
+                        onKeyDown={ e =>
+                        {
+                            if ( e.keyCode === 13 )
+                            {
+                                this.login( e );
                             }
-                        }}
+                        } }
                     >
                         LOG IN
                     </a>
