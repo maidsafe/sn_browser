@@ -1,19 +1,19 @@
 import logger from 'logger';
-import { handleAuthUrl } from 'extensions/safe/actions/authenticator_actions';
-import { updateRemoteCall } from 'actions/remoteCall_actions';
-import { parseSafeAuthUrl } from 'extensions/safe/utils/safeHelpers';
-import { getCurrentStore } from 'extensions/safe/safeBrowserApplication';
-import {
-    PROTOCOLS
-} from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
+import { handleAuthUrl } from '@Extensions/safe/actions/authenticator_actions';
+import { updateRemoteCall } from '@Actions/remoteCall_actions';
+import { parseSafeAuthUrl } from '@Extensions/safe/utils/safeHelpers';
+import { getCurrentStore } from '@Extensions/safe/safeBrowserApplication/theApplication';
+import { PROTOCOLS } from '@Constants';
+import { SAFE } from '@Extensions/safe/constants';
 
 import { parse as parseURL } from 'url';
 
-
 export const handleAuthentication = ( passedStore, uriOrReqObject ) =>
 {
-    if ( typeof uriOrReqObject !== 'string' && typeof uriOrReqObject.uri !== 'string' )
+    if (
+        typeof uriOrReqObject !== 'string'
+        && typeof uriOrReqObject.uri !== 'string'
+    )
     {
         throw new Error( 'Auth URI should be provided as a string' );
     }
@@ -25,16 +25,18 @@ export const attemptReconnect = ( passedStore, appObj ) =>
 {
     setTimeout( () =>
     {
-        logger.info( 'Attempting reconnect...' );
+        logger.log( 'Attempting reconnect...' );
         appObj.reconnect();
 
-        if ( passedStore.getState().safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.DISCONNECTED )
+        if (
+            passedStore.getState().safeBrowserApp.networkStatus
+            === SAFE.NETWORK_STATE.DISCONNECTED
+        )
         {
             attemptReconnect( passedStore );
         }
     }, 5000 );
 };
-
 
 export const handleSafeAuthUrlReception = async res =>
 {
@@ -44,7 +46,7 @@ export const handleSafeAuthUrlReception = async res =>
     }
 
     let authUrl = null;
-    logger.info( 'Received URL response', res );
+    logger.log( 'Received URL response', res );
 
     if ( parseURL( res ).protocol === `${ PROTOCOLS.SAFE_AUTH }:` )
     {
@@ -56,7 +58,6 @@ export const handleSafeAuthUrlReception = async res =>
         }
     }
 };
-
 
 /**
  * Reconnect the application with SAFE Network when disconnected
@@ -77,7 +78,7 @@ export const reconnect = app =>
  */
 export const replyToRemoteCallFromAuth = request =>
 {
-    logger.verbose( 'Replying to RemoteCall From Auth' );
+    logger.log( 'Replying to RemoteCall From Auth' );
     const store = getCurrentStore();
     const state = store.getState();
     const remoteCalls = state.remoteCalls;
@@ -96,6 +97,7 @@ export const replyToRemoteCallFromAuth = request =>
             ...remoteCallToReply,
             done       : true,
             inProgress : true,
-            response   : request.res }
-        ) );
+            response   : request.res
+        } )
+    );
 };

@@ -1,20 +1,28 @@
 /* eslint-disable no-underscore-dangle */
 import { shell } from 'electron';
-import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
-import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
+import { receivedAuthResponse } from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import {
+    setReAuthoriseState as setReAuthoriseStateAction,
+    setIsAuthorisedState as setIsAuthorisedStateAction
+} from '@Extensions/safe/actions/authenticator_actions';
 import i18n from 'i18n';
+import logger from 'logger';
+// import { getSafeBackgroundProcessStore } from '@Extensions/safe/index';
+import { replyToRemoteCallFromAuth } from '@Extensions/safe/network';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
-import logger from 'logger';
 import { addAuthNotification } from '../manageAuthNotifications';
 import errConst from '../err-constants';
 
 // TODO unify this with calls for safeBrowserApp store...
-import { getSafeBackgroundProcessStore } from 'extensions/safe/index';
-import { replyToRemoteCallFromAuth } from 'extensions/safe/network';
+let theSafeBgProcessStore;
+
+export const setSafeBgProcessStore = passedStore =>
+{
+    theSafeBgProcessStore = passedStore;
+};
 
 const ipcEvent = null;
-
 
 export const CLIENT_TYPES = {
     DESKTOP : 'DESKTOP',
@@ -37,9 +45,10 @@ const allAuthCallBacks = {};
  */
 export const setAuthCallbacks = ( req, resolve, reject ) =>
 {
-    logger.verbose( 'IPC.js Setting authCallbacks' );
+    logger.log( 'IPC.js Setting authCallbacks' );
     allAuthCallBacks[req.id] = {
-        resolve, reject
+        resolve,
+        reject
     };
 };
 
@@ -50,10 +59,9 @@ const parseResUrl = url =>
     return split.join( ':' );
 };
 
-
 async function sendAuthDecision( isAllowed, authReqData, reqType )
 {
-    logger.verbose( 'IPC.js: Sending auth response', isAllowed, authReqData );
+    logger.log( 'IPC.js: Sending auth response', isAllowed, authReqData );
     if ( reqType === REQ_TYPES.AUTH )
     {
         onAuthDecision( authReqData, isAllowed );
@@ -67,7 +75,6 @@ async function sendAuthDecision( isAllowed, authReqData, reqType )
         onSharedMDataDecision( authReqData, isAllowed );
     }
 }
-
 
 class Request
 {
@@ -95,7 +102,11 @@ class ReqQueue
 
     openExternal( uri )
     {
-        if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || this.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
+        if (
+            !uri
+            || uri.indexOf( 'safe' ) !== 0
+            || this.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP
+        )
         {
             return;
         }
@@ -111,14 +122,14 @@ class ReqQueue
 
     add( req )
     {
-        logger.verbose( 'IPC.js adding req' );
+        logger.log( 'IPC.js adding req' );
         if ( !( req instanceof Request ) )
         {
             logger.error( 'IPC.js not a Request instance, so ignoring' );
             this.next();
             return;
         }
-        logger.verbose( 'IPC.js pushing req' );
+        logger.log( 'IPC.js pushing req' );
         this.q.push( req );
         this.processTheReq();
     }
@@ -145,114 +156,136 @@ class ReqQueue
         this.processing = true;
         this.req = this.q[0];
 
-        authenticator.decodeRequest( this.req.uri ).then( res =>
-        {
-            if ( !res )
+        authenticator
+            .decodeRequest( this.req.uri )
+            .then( res =>
             {
-                return;
-            }
+                if ( !res )
+                {
+                    return;
+                }
 
-            this.req.res = res;
+                this.req.res = res;
 
-            logger.info( 'IPC.js: another response being parsed.:', this.req );
-            if ( res.authReq || res.contReq || res.mDataReq )
+                logger.log( 'IPC.js: another response being parsed.:', this.req );
+                if ( res.authReq || res.contReq || res.mDataReq )
+                {
+                    let reqType = REQ_TYPES.AUTH;
+                    let app;
+                    if ( res.authReq )
+                    {
+                        app = res.authReq.app;
+                    }
+                    if ( res.contReq )
+                    {
+                        reqType = REQ_TYPES.CONTAINER;
+                        app = res.contReq.app;
+                    }
+                    if ( res.mDataReq )
+                    {
+                        reqType = REQ_TYPES.MDATA;
+                        app = res.mDataReq.app;
+                    }
+
+                    if (
+                        res.isAuthorised
+                        && theSafeBgProcessStore.getState().authenticator
+                            .reAuthoriseState
+                    )
+                    {
+                        sendAuthDecision( true, res, reqType );
+                    }
+                    else
+                    {
+                        addAuthNotification(
+                            res,
+                            app,
+                            sendAuthDecision,
+                            theSafeBgProcessStore
+                        );
+                    }
+
+                    // each of the above func trigger self.next()
+                    return;
+                }
+
+                // if (res.isAuthorised && theSafeBgProcessStore.getState().authenticator.reAuthoriseState)
+                // {
+                //     sendAuthDecision( true, res, reqType );
+                // }
+
+                // WEB && not an auth req (that's handled above)
+                if ( this.req.type === CLIENT_TYPES.WEB )
+                {
+                    logger.log(
+                        'IPC.js About to open send remoteCall response for auth req',
+                        res
+                    );
+
+                    replyToRemoteCallFromAuth( this.req );
+
+                    self.next();
+
+                    return;
+                }
+
+                self.openExternal( res );
+
+                self.next();
+            } )
+            .catch( err =>
             {
-                let reqType = REQ_TYPES.AUTH;
-                let app;
-                if ( res.authReq )
+                // FIXME: if error occurs for unregistered client process next
+                self.req.error = err.message;
+
+                // TODO/BOOKMARK: leaving off here. share MData req URI is causing error when used to call auth_decode_ipc_msg in authenticator.js
+
+                const bgStore = theSafeBgProcessStore;
+
+                // TODO: Setup proper rejection from when unauthed.
+                if ( bgStore )
                 {
-                    app = res.authReq.app;
-                }
-                if ( res.contReq )
-                {
-                    reqType = REQ_TYPES.CONTAINER;
-                    app = res.contReq.app;
-                }
-                if ( res.mDataReq )
-                {
-                    reqType = REQ_TYPES.MDATA;
-                    app = res.mDataReq.app;
+                    bgStore.dispatch( receivedAuthResponse( err.message ) );
                 }
 
-                if ( res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState )
+                if ( ipcEvent )
                 {
-                    sendAuthDecision( true, res, reqType );
+                    ipcEvent.sender.send( self.errChannelName, self.req );
                 }
                 else
                 {
-                    addAuthNotification( res, app, sendAuthDecision, getSafeBackgroundProcessStore() );
+                    // TODO: Currently there is no message sent when unauthorised.
+                    // We need to send one for the app to know...
+                    // authenticator.encodeAuthResp( this.req, false )
                 }
-
-                // each of the above func trigger self.next()
-                return;
-            }
-
-            // if (res.isAuthorised && getSafeBackgroundProcessStore().getState().authenticator.reAuthoriseState)
-            // {
-            //     sendAuthDecision( true, res, reqType );
-            // }
-
-            // WEB && not an auth req (that's handled above)
-            if ( this.req.type === CLIENT_TYPES.WEB )
-            {
-                logger.info( 'IPC.js About to open send remoteCall response for auth req', res );
-
-                replyToRemoteCallFromAuth( this.req );
-
                 self.next();
-
-                return;
-            }
-
-            self.openExternal( res );
-
-            self.next();
-        } ).catch( err =>
-        {
-            // FIXME: if error occurs for unregistered client process next
-            self.req.error = err.message;
-
-            // TODO/BOOKMARK: leaving off here. share MData req URI is causing error when used to call auth_decode_ipc_msg in authenticator.js
-
-            const bgStore = getSafeBackgroundProcessStore();
-
-            // TODO: Setup proper rejection from when unauthed.
-            if ( bgStore )
-            {
-                bgStore.dispatch( safeBrowserAppActions.receivedAuthResponse( err.message ) );
-            }
-
-            if ( ipcEvent )
-            {
-                ipcEvent.sender.send( self.errChannelName, self.req );
-            }
-
-            else
-            {
-                // TODO: Currently there is no message sent when unauthorised.
-                // We need to send one for the app to know...
-                // authenticator.encodeAuthResp( this.req, false )
-            }
-            self.next();
-        } );
+            } );
     }
 }
 
 const reqQ = new ReqQueue( 'onAuthDecisionRes', 'onAuthResError' );
-const unregisteredReqQ = new ReqQueue( 'onUnAuthDecisionRes', 'onUnAuthResError' );
+const unregisteredReqQ = new ReqQueue(
+    'onUnAuthDecisionRes',
+    'onUnAuthResError'
+);
 
 const registerNetworkListener = e =>
 {
-    authenticator.setListener( CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, ( err, state ) =>
-    {
-        if ( state === CONSTANTS.NETWORK_STATUS.CONNECTED ||
-            state === CONSTANTS.NETWORK_STATUS.LOGGED_IN )
+    authenticator.setListener(
+        CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE,
+        ( err, state ) =>
         {
-            reqQ.processing = false;
-            reqQ.processTheReq();
+            if (
+                state === CONSTANTS.NETWORK_STATUS.CONNECTED
+                || state === CONSTANTS.NETWORK_STATUS.LOGGED_IN
+            )
+            {
+                reqQ.processing = false;
+                reqQ.processTheReq();
+            }
+            e.sender.send( 'onNetworkStatus', state );
         }
-        e.sender.send( 'onNetworkStatus', state );
-    } );
+    );
 };
 
 const enqueueRequest = ( req, type ) =>
@@ -267,14 +300,13 @@ const enqueueRequest = ( req, type ) =>
         isUnRegistered
     } );
 
-
     if ( isUnRegistered )
     {
         unregisteredReqQ.add( request );
     }
     else
     {
-        logger.verbose( 'IPC.js enqueue authQ req...' );
+        logger.log( 'IPC.js enqueue authQ req...' );
         reqQ.add( request );
     }
 };
@@ -289,38 +321,53 @@ const onAuthReq = e =>
 
 const onContainerReq = e =>
 {
-    authenticator.setListener( CONSTANTS.LISTENER_TYPES.CONTAINER_REQ, ( err, req ) =>
-    {
-        e.sender.send( 'onContainerReq', req );
-    } );
+    authenticator.setListener(
+        CONSTANTS.LISTENER_TYPES.CONTAINER_REQ,
+        ( err, req ) =>
+        {
+            e.sender.send( 'onContainerReq', req );
+        }
+    );
 };
 
 const onSharedMDataReq = e =>
 {
-    authenticator.setListener( CONSTANTS.LISTENER_TYPES.MDATA_REQ, ( err, req ) =>
-    {
-        e.sender.send( 'onSharedMDataReq', req );
-    } );
+    authenticator.setListener(
+        CONSTANTS.LISTENER_TYPES.MDATA_REQ,
+        ( err, req ) =>
+        {
+            e.sender.send( 'onSharedMDataReq', req );
+        }
+    );
 };
 
 const onAuthDecision = ( authData, isAllowed ) =>
 {
-    logger.verbose( 'IPC.js: onAuthDecision running...', authData, isAllowed );
+    logger.log( 'IPC.js: onAuthDecision running...', authData, isAllowed );
     if ( !authData )
     {
-        return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) ) );
+        return Promise.reject(
+            new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) )
+        );
     }
 
     if ( typeof isAllowed !== 'boolean' )
     {
-        return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
+        return Promise.reject(
+            new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) )
+            )
+        );
     }
 
-
-    authenticator.encodeAuthResp( authData, isAllowed )
+    authenticator
+        .encodeAuthResp( authData, isAllowed )
         .then( res =>
         {
-            logger.info( 'IPC.js: Successfully encoded auth response. Here is the res:', res );
+            logger.log(
+                'IPC.js: Successfully encoded auth response. Here is the res:',
+                res
+            );
 
             if ( allAuthCallBacks[reqQ.req.id] )
             {
@@ -353,15 +400,22 @@ const onContainerDecision = ( contData, isAllowed ) =>
 {
     if ( !contData )
     {
-        return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) ) );
+        return Promise.reject(
+            new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) )
+        );
     }
 
     if ( typeof isAllowed !== 'boolean' )
     {
-        return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
+        return Promise.reject(
+            new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) )
+            )
+        );
     }
 
-    authenticator.encodeContainersResp( contData, isAllowed )
+    authenticator
+        .encodeContainersResp( contData, isAllowed )
         .then( res =>
         {
             reqQ.req.res = res;
@@ -392,19 +446,31 @@ const onContainerDecision = ( contData, isAllowed ) =>
         } );
 };
 
-export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBacks = allAuthCallBacks ) =>
+export const onSharedMDataDecision = (
+    data,
+    isAllowed,
+    queue = reqQ,
+    authCallBacks = allAuthCallBacks
+) =>
 {
     if ( !data )
     {
-        return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) ) );
+        return Promise.reject(
+            new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'URL' ) ) )
+        );
     }
 
     if ( typeof isAllowed !== 'boolean' )
     {
-        return Promise.reject( new Error( i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) ) ) );
+        return Promise.reject(
+            new Error(
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'IsAllowed' ) )
+            )
+        );
     }
 
-    authenticator.encodeMDataResp( data, isAllowed )
+    authenticator
+        .encodeMDataResp( data, isAllowed )
         .then( res =>
         {
             queue.req.res = res;
@@ -426,7 +492,6 @@ export const onSharedMDataDecision = ( data, isAllowed, queue = reqQ, authCallBa
             console.log( err, 'this is an error log' );
             queue.req.error = err;
             logger.error( errConst.SHAREMD_DECISION_RESP.msg( err ) );
-
 
             if ( authCallBacks[queue.req.id] )
             {
@@ -455,14 +520,13 @@ const skipAuthReq = () =>
 
 const setReAuthoriseState = ( state, store ) =>
 {
-    store.dispatch( authenticatorActions.setReAuthoriseState( state ) );
+    store.dispatch( setReAuthoriseStateAction( state ) );
 };
 
 const setIsAuthorisedState = ( store, isAuthorised ) =>
 {
-    store.dispatch( authenticatorActions.setIsAuthorisedState( isAuthorised ) );
+    store.dispatch( setIsAuthorisedStateAction( isAuthorised ) );
 };
-
 
 export const callIPC = {
     registerSafeNetworkListener : registerNetworkListener,

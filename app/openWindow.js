@@ -3,14 +3,11 @@ import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import os from 'os';
 import windowStateKeeper from 'electron-window-state';
+import logger from 'logger';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
-import { isRunningSpectronTestProcess, isRunningDebug } from 'appConstants';
-import logger from 'logger';
-import {
-    addTab,
-    updateTab
-} from './actions/tabs_actions';
+import { isRunningSpectronTestProcess, isRunningDebug } from '@Constants';
+import { addTab, updateTab } from './actions/tabs_actions';
 import { selectAddressBar } from './actions/ui_actions';
 
 const browserWindowArray = [];
@@ -31,9 +28,11 @@ function getNewWindowPosition( mainWindowState )
     }
     else
     {
-        newWindowPosition =
-        { x : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows ),
-            y : defaultWindowPosition + ( windowCascadeSpacing * noOfBrowserWindows )
+        newWindowPosition = {
+            x :
+                defaultWindowPosition
+                + windowCascadeSpacing * noOfBrowserWindows,
+            y : defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows
         };
     }
 
@@ -55,8 +54,7 @@ const openWindow = store =>
     }
 
     const newWindowPosition = getNewWindowPosition( mainWindowState );
-    const browserWindowConfig =
-    {
+    const browserWindowConfig = {
         show           : false,
         x              : newWindowPosition.x,
         y              : newWindowPosition.y,
@@ -64,12 +62,12 @@ const openWindow = store =>
         height         : mainWindowState.height,
         titleBarStyle  : 'hiddenInset',
         icon           : appIcon,
-        webPreferences :
-        {
+        webPreferences : {
             partition : 'persist:safe-tab'
             // preload : path.join( __dirname, 'browserPreload.js' )
+            //  isRunningUnpacked ?
+            // `http://localhost:${devPort}/webPreload.js` : `file://${ __dirname }/browserPreload.js`;
         }
-
     };
 
     let mainWindow = new BrowserWindow( browserWindowConfig );
@@ -81,14 +79,14 @@ const openWindow = store =>
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
 
-    mainWindow.webContents.on( 'did-finish-load', () =>
+    mainWindow.webContents.on( 'did-finish-load', async () =>
     {
         if ( !mainWindow )
         {
             throw new Error( '"mainWindow" is not defined' );
         }
 
-        onOpenLoadExtensions( store );
+        await onOpenLoadExtensions( store );
 
         // before show lets load state
         mainWindow.show();
@@ -103,16 +101,23 @@ const openWindow = store =>
         if ( browserWindowArray.length === 1 )
         {
             const allTabs = store.getState().tabs;
-            const orphanedTabs = allTabs.filter( tab =>
-                !tab.windowId );
+            const orphanedTabs = allTabs.filter( tab => !tab.windowId );
             orphanedTabs.forEach( orphan =>
             {
-                store.dispatch( updateTab( { index: orphan.index, windowId: webContentsId } ) );
+                store.dispatch(
+                    updateTab( { index: orphan.index, windowId: webContentsId } )
+                );
             } );
         }
         else
         {
-            store.dispatch( addTab( { url: 'about:blank', windowId: webContentsId, isActiveTab: true } ) );
+            store.dispatch(
+                addTab( {
+                    url         : 'about:blank',
+                    windowId    : webContentsId,
+                    isActiveTab : true
+                } )
+            );
             store.dispatch( selectAddressBar() );
         }
     } );
@@ -139,11 +144,9 @@ const openWindow = store =>
     return mainWindow;
 };
 
-
 export default openWindow;
 
-
-ipcMain.on( 'command:close-window', ( ) =>
+ipcMain.on( 'command:close-window', () =>
 {
     const win = BrowserWindow.getFocusedWindow();
 

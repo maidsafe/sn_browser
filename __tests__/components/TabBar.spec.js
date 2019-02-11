@@ -3,7 +3,7 @@ import { mount, shallow } from 'enzyme';
 import TabBar from 'components/TabBar';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
-import { CLASSES } from 'appConstants';
+import { CLASSES } from '@Constants';
 import { Spinner } from 'nessie-ui';
 
 describe( 'TabBar', () =>
@@ -37,7 +37,17 @@ describe( 'TabBar', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, favicon: '../../resources/favicon.ico' }] };
+            props = {
+                ...props,
+                tabs : [
+                    {
+                        url         : 'hello',
+                        isActiveTab : true,
+                        windowId    : 1,
+                        favicon     : '../../resources/favicon.ico'
+                    }
+                ]
+            };
             wrapper = shallow( <TabBar { ...props } /> );
         } );
 
@@ -67,7 +77,17 @@ describe( 'TabBar', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, tabs: [{ url: 'hello', isActiveTab: true, windowId: 1, isLoading: true }] };
+            props = {
+                ...props,
+                tabs : [
+                    {
+                        url         : 'hello',
+                        isActiveTab : true,
+                        windowId    : 1,
+                        isLoading   : true
+                    }
+                ]
+            };
             wrapper = shallow( <TabBar { ...props } /> );
         } );
 

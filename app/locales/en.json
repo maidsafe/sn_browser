@@ -1,13 +1,1 @@
-{
-  "aria": {
-      "address_bar": "Address Bar",
-      "navigate_back": "Back",
-      "navigate_forward": "Forward",
-      "reload_page": "Reload",
-      "launch_webid": "Launch Web I.D. Manager",
-      "choose_webid": "Choose Web I.D.",
-      "not_bookmarked": "Bookmark button. Page is not bookmarked",
-      "is_bookmarked": "Bookmark button. Page is bookmarked",
-      "settings_menu": "Settings menu"
-  }
-}
+{}

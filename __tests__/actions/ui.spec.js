@@ -12,7 +12,7 @@ describe( 'ui actions', () =>
         const expectedAction = {
             type : ui.TYPES.SHOW_SETTINGS_MENU
         };
-        expect( ui.showSettingsMenu( ) ).toEqual( expectedAction );
+        expect( ui.showSettingsMenu() ).toEqual( expectedAction );
     } );
 
     it( 'should hide settings menu', () =>
@@ -20,7 +20,7 @@ describe( 'ui actions', () =>
         const expectedAction = {
             type : ui.TYPES.HIDE_SETTINGS_MENU
         };
-        expect( ui.hideSettingsMenu( ) ).toEqual( expectedAction );
+        expect( ui.hideSettingsMenu() ).toEqual( expectedAction );
     } );
 
     it( 'should set addressbar selected', () =>
@@ -28,7 +28,7 @@ describe( 'ui actions', () =>
         const expectedAction = {
             type : ui.TYPES.SELECT_ADDRESS_BAR
         };
-        expect( ui.selectAddressBar( ) ).toEqual( expectedAction );
+        expect( ui.selectAddressBar() ).toEqual( expectedAction );
     } );
 
     it( 'should set addressbar deselected', () =>
@@ -36,7 +36,7 @@ describe( 'ui actions', () =>
         const expectedAction = {
             type : ui.TYPES.DESELECT_ADDRESS_BAR
         };
-        expect( ui.deselectAddressBar( ) ).toEqual( expectedAction );
+        expect( ui.deselectAddressBar() ).toEqual( expectedAction );
     } );
 
     it( 'should clear a notification', () =>
@@ -44,7 +44,7 @@ describe( 'ui actions', () =>
         const expectedAction = {
             type : ui.TYPES.BLUR_ADDRESS_BAR
         };
-        expect( ui.blurAddressBar( ) ).toEqual( expectedAction );
+        expect( ui.blurAddressBar() ).toEqual( expectedAction );
     } );
 
     it( 'should resetStore', () =>
@@ -52,6 +52,6 @@ describe( 'ui actions', () =>
         const expectedAction = {
             type : ui.TYPES.RESET_STORE
         };
-        expect( ui.resetStore( ) ).toEqual( expectedAction );
+        expect( ui.resetStore() ).toEqual( expectedAction );
     } );
 } );

@@ -14,25 +14,25 @@ export const TYPES = {
 };
 
 export const {
-    addTab
-    , setActiveTab
-    , closeTab
-    , closeActiveTab
-    , reopenTab
-    , updateTab
-    , updateTabs
-    , updateActiveTab
-    , activeTabForwards
-    , activeTabBackwards
+    addTab,
+    setActiveTab,
+    closeTab,
+    closeActiveTab,
+    reopenTab,
+    updateTab,
+    updateTabs,
+    updateActiveTab,
+    activeTabForwards,
+    activeTabBackwards
 } = createActions(
-    TYPES.ADD_TAB
-    , TYPES.SET_ACTIVE_TAB
-    , TYPES.CLOSE_TAB
-    , TYPES.CLOSE_ACTIVE_TAB
-    , TYPES.REOPEN_TAB
-    , TYPES.UPDATE_TAB
-    , TYPES.UPDATE_TABS
-    , TYPES.UPDATE_ACTIVE_TAB
-    , TYPES.ACTIVE_TAB_FORWARDS
-    , TYPES.ACTIVE_TAB_BACKWARDS
+    TYPES.ADD_TAB,
+    TYPES.SET_ACTIVE_TAB,
+    TYPES.CLOSE_TAB,
+    TYPES.CLOSE_ACTIVE_TAB,
+    TYPES.REOPEN_TAB,
+    TYPES.UPDATE_TAB,
+    TYPES.UPDATE_TABS,
+    TYPES.UPDATE_ACTIVE_TAB,
+    TYPES.ACTIVE_TAB_FORWARDS,
+    TYPES.ACTIVE_TAB_BACKWARDS
 );

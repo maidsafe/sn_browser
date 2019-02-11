@@ -1,70 +1,40 @@
 import _ from 'lodash';
 
 import {
+    setCurrentStore,
+    setSafeBrowserAppObject,
+    getSafeBrowserAppObject,
+    getIsAuthing,
+    setIsAuthing,
+    safeBrowserAppIsAuthed
+} from '@Extensions/safe/safeBrowserApplication/theApplication';
+
+import {
     manageReadStateActions,
     manageSaveStateActions
-} from 'extensions/safe/safeBrowserApplication/manageBrowserConfig';
+} from '@Extensions/safe/safeBrowserApplication/manageBrowserConfig';
 
 import {
     isCI,
     startedRunningMock,
     isRunningSpectronTestProcessingPackagedApp
-} from 'appConstants';
+} from '@Constants';
 
-import { SAFE } from 'extensions/safe/constants';
-import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
-import * as notificationActions from 'actions/notification_actions';
+import { SAFE } from '@Extensions/safe/constants';
+import {
+    setAppStatus,
+    receivedAuthResponse
+} from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import {
+    addNotification,
+    clearNotification
+} from '@Actions/notification_actions';
 import logger from 'logger';
-import { initAnon } from 'extensions/safe/safeBrowserApplication/init/initAnon';
-import initAuthedApplication from 'extensions/safe/safeBrowserApplication/init/initAuthed';
+import { initAnon } from '@Extensions/safe/safeBrowserApplication/init/initAnon';
+import initAuthedApplication from '@Extensions/safe/safeBrowserApplication/init/initAuthed';
 
-let safeBrowserAppObject;
+// let safeBrowserAppObject;
 let tempSafeBrowserObjectUntilAuthed;
-
-// TODO: HACK for store for now... dont resave store on each change...
-let currentStore;
-
-// TODO: Refactor away this and use aliased actions for less... sloppy
-// flow and make this more reasonable.
-let isAuthing = false;
-
-export const getSafeBrowserAppObject = () =>
-    safeBrowserAppObject;
-export const getCurrentStore = () =>
-    currentStore;
-
-export const clearAppObj = () =>
-{
-    logger.verbose( 'Clearing safeBrowserApp object cache.' );
-    safeBrowserAppObject.clearObjectCache();
-};
-
-
-export const safeBrowserAppIsAuthing = ( ) =>
-{
-    const safeBrowserAppAuthStates = [
-        SAFE.APP_STATUS.TO_AUTH,
-        SAFE.APP_STATUS.AUTHORISING
-    ];
-
-    return isAuthing ||
-        safeBrowserAppAuthStates.includes( currentStore.getState().safeBrowserApp.appStatus );
-};
-
-export const safeBrowserAppIsAuthed = ( ) =>
-    currentStore.getState().safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISED;
-
-export const safeBrowserAppIsConnected = ( ) =>
-{
-    const netState = currentStore.getState().safeBrowserApp.networkStatus;
-    // Q: why do we have a loggedin state?
-    return netState === SAFE.NETWORK_STATE.CONNECTED ||
-                netState === SAFE.NETWORK_STATE.LOGGED_IN;
-};
-
-export const safeBrowserAppAuthFailed = ( ) =>
-    currentStore.getState().safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISATION_FAILED;
-
 
 /**
  * Setup actions to be triggered in response to store state changes.
@@ -73,80 +43,81 @@ export const safeBrowserAppAuthFailed = ( ) =>
 export const handleSafeBrowserStoreChanges = store =>
 {
     // TODO check why we need this vs passing it around
-    currentStore = store;
+    setCurrentStore( store );
+
     // lets set state for all funcs to have the same reference.
     manageSaveStateActions( store );
     manageReadStateActions( store );
     manageAuthorisationActions( store );
 };
 
-
 /**
  * Everything we need to do to start the SafeBrowser App for fetching at least.
  * @param  {object} passedStore redux store
  */
-export const initSafeBrowserApp =
-    async ( passedStore, authorise = false ) =>
-    {
-        const defaultOptions = {
-            enableExperimentalApis : false,
-            forceUseMock           : startedRunningMock
-        };
-
-        const safeBrowserAppState = passedStore.getState().safeBrowserApp;
-        const isMock = safeBrowserAppState.isMock;
-        const experimentsEnabled = safeBrowserAppState.experimentsEnabled;
-
-        const options = {
-            ...defaultOptions,
-            forceUseMock           : isMock,
-            enableExperimentalApis : experimentsEnabled
-        };
-
-        // TODO: here check store and what is desired from a connection!
-        logger.info( 'Initialising Safe Browser App with options:', options );
-        try
-        {
-            if ( authorise )
-            {
-                tempSafeBrowserObjectUntilAuthed =
-                    await initAuthedApplication( passedStore, options );
-            }
-            else
-            {
-                tempSafeBrowserObjectUntilAuthed = await initAnon( passedStore, options );
-            }
-        }
-        catch ( e )
-        {
-            // denied authentication is handled in `authFromStoreResponse`
-
-            console.error( e );
-            throw new Error( 'Safe Browser init failed' );
-        }
+export const initSafeBrowserApp = async ( passedStore, authorise = false ) =>
+{
+    const defaultOptions = {
+        enableExperimentalApis : false,
+        forceUseMock           : startedRunningMock
     };
 
+    const safeBrowserAppState = passedStore.getState().safeBrowserApp;
+    const isMock = safeBrowserAppState.isMock;
+    const experimentsEnabled = safeBrowserAppState.experimentsEnabled;
+
+    const options = {
+        ...defaultOptions,
+        forceUseMock           : isMock,
+        enableExperimentalApis : experimentsEnabled
+    };
+
+    // TODO: here check store and what is desired from a connection!
+    logger.log( 'Initialising Safe Browser App with options:', options );
+    try
+    {
+        if ( authorise )
+        {
+            tempSafeBrowserObjectUntilAuthed = await initAuthedApplication(
+                passedStore,
+                options
+            );
+        }
+        else
+        {
+            tempSafeBrowserObjectUntilAuthed = await initAnon(
+                passedStore,
+                options
+            );
+        }
+    }
+    catch ( e )
+    {
+        // denied authentication is handled in `authFromStoreResponse`
+
+        console.error( e );
+        throw new Error( 'Safe Browser init failed' );
+    }
+};
 
 const urisUnderAuth = [];
 
-
 const authFromStoreResponse = async ( res, store ) =>
 {
-    logger.verbose( 'Authing from a store-passed response.', Date.now(), res );
+    logger.log( 'Authing from a store-passed response.', Date.now(), res );
 
     if ( !res.startsWith( 'safe' ) )
     {
         // it's an error!
         logger.error( res );
-        store.dispatch( notificationActions.addNotification(
-            {
+        store.dispatch(
+            addNotification( {
                 text : `Unable to connect to the network. ${ res }`,
                 type : 'error'
-            } ) );
-
-        store.dispatch(
-            safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISATION_FAILED )
+            } )
         );
+
+        store.dispatch( setAppStatus( SAFE.APP_STATUS.AUTHORISATION_FAILED ) );
 
         return;
     }
@@ -163,18 +134,26 @@ const authFromStoreResponse = async ( res, store ) =>
 
         if ( tempSafeBrowserObjectUntilAuthed )
         {
-            safeBrowserAppObject = tempSafeBrowserObjectUntilAuthed;
+            const app = tempSafeBrowserObjectUntilAuthed;
+            setSafeBrowserAppObject( app );
             tempSafeBrowserObjectUntilAuthed = null;
         }
-        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
 
-        if ( safeBrowserAppObject.auth.registered )
+        const safeBrowserAppObject = getSafeBrowserAppObject();
+
+        const newApp = await safeBrowserAppObject.auth.loginFromUri( res );
+
+        setSafeBrowserAppObject( newApp );
+
+        if ( newApp.auth.registered )
         {
-            store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
+            store.dispatch( setAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
         }
     }
     catch ( err )
     {
+        logger.error( 'Error in authFromStoreResponse' );
+
         if ( store )
         {
             let message = err.message;
@@ -193,16 +172,17 @@ const authFromStoreResponse = async ( res, store ) =>
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
             store.dispatch(
-                notificationActions.addNotification(
-                    { text: message, onDismiss: notificationActions.clearNotification }
-                ) );
+                addNotification( {
+                    text      : message,
+                    onDismiss : clearNotification
+                } )
+            );
         }
 
         logger.error( err.message || err );
         logger.error( 'authFromStoreResponse error >>>>>>>>>>>>>' );
     }
 };
-
 
 let debouncedPassAuthUriToStore;
 let prevSafeBrowserAppAuthState;
@@ -215,23 +195,28 @@ let prevSafeBrowserAppExperimentalState;
 const manageAuthorisationActions = async store =>
 {
     // TODO: Do this via aliased action.
+
+    // const
     const safeBrowserState = store.getState().safeBrowserApp;
 
-    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore || _.debounce( responseUri =>
-    {
-        store.dispatch( safeBrowserAppActions.receivedAuthResponse( '' ) );
-        authFromStoreResponse( responseUri, store );
-        isAuthing = false;
-    }, 500 );
+    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore
+        || _.debounce( responseUri =>
+        {
+            store.dispatch( receivedAuthResponse( '' ) );
+            authFromStoreResponse( responseUri, store );
+            setIsAuthing( false );
+        }, 500 );
 
-
-    if ( safeBrowserState.appStatus === SAFE.APP_STATUS.TO_AUTH && !isAuthing )
+    if (
+        safeBrowserState.appStatus === SAFE.APP_STATUS.TO_AUTH
+        && !getIsAuthing()
+    )
     {
         // cannot rely solely on store as can change in other ways
         // before this is updated properly. This prevents that.
-        isAuthing = true;
+        setIsAuthing( true );
 
-        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
+        store.dispatch( setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
 
         const authorise = true;
         initSafeBrowserApp( store, authorise );
@@ -254,7 +239,10 @@ const manageAuthorisationActions = async store =>
         return;
     }
 
-    if ( safeBrowserState.authResponseUri && safeBrowserState.authResponseUri.length )
+    if (
+        safeBrowserState.authResponseUri
+        && safeBrowserState.authResponseUri.length
+    )
     {
         // TODO: This should 'clear' or somesuch....
         // OR: Only run if not authed?

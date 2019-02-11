@@ -1,26 +1,29 @@
-import pkg from 'appPackage';
-import { CONFIG } from 'appConstants';
+import pkg from '@Package';
+import { CONFIG } from '@Constants';
 import url from 'url';
 import logger from 'logger';
 
 export const isForSafeServer = parsedUrlObject =>
     parsedUrlObject.host === `localhost:${ CONFIG.PORT }`;
 
-
 export const urlIsAllowedBySafe = testUrl =>
 {
-    logger.verbose( 'Checking urlIsAllowedBySafe', testUrl );
+    logger.log( 'Checking urlIsAllowedBySafe', testUrl );
     const urlObj = url.parse( testUrl );
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = pkg.build.protocols.schemes || [ 'http' ];
     const adaptedProtocols = validProtocols.map( proto => `${ proto }:` );
 
-
     // TODO: locally server appspot files to avoid reqs thereto.
-    if ( adaptedProtocols.includes( urlObj.protocol ) || isForSafeServer( urlObj ) ||
-        urlObj.protocol === 'chrome-devtools:' || urlObj.protocol === 'file:' ||
-        urlObj.protocol === 'blob:' || urlObj.protocol === 'chrome-extension:' ||
-        urlObj.host === 'chrome-devtools-frontend.appspot.com' )
+    if (
+        adaptedProtocols.includes( urlObj.protocol )
+        || isForSafeServer( urlObj )
+        || urlObj.protocol === 'chrome-devtools:'
+        || urlObj.protocol === 'file:'
+        || urlObj.protocol === 'blob:'
+        || urlObj.protocol === 'chrome-extension:'
+        || urlObj.host === 'chrome-devtools-frontend.appspot.com'
+    )
     {
         return true;
     }
@@ -49,37 +52,37 @@ export const generateBoundaryStr = () =>
 export const rangeStringToArray = rangeString =>
 {
     const BYTES = 'bytes=';
-    return rangeString.substring( BYTES.length, rangeString.length )
+    return rangeString
+        .substring( BYTES.length, rangeString.length )
         .split( ',' )
         .map( part =>
         {
             const partObj = {};
-            part.split( '-' )
-                .forEach( ( int, i ) =>
+            part.split( '-' ).forEach( ( int, i ) =>
+            {
+                if ( i === 0 )
                 {
-                    if ( i === 0 )
+                    if ( Number.isInteger( parseInt( int, 10 ) ) )
                     {
-                        if ( Number.isInteger( parseInt( int, 10 ) ) )
-                        {
-                            partObj.start = parseInt( int, 10 );
-                        }
-                        else
-                        {
-                            partObj.start = null;
-                        }
+                        partObj.start = parseInt( int, 10 );
                     }
-                    else if ( i === 1 )
+                    else
                     {
-                        if ( Number.isInteger( parseInt( int, 10 ) ) )
-                        {
-                            partObj.end = parseInt( int, 10 );
-                        }
-                        else
-                        {
-                            partObj.end = null;
-                        }
+                        partObj.start = null;
                     }
-                } );
+                }
+                else if ( i === 1 )
+                {
+                    if ( Number.isInteger( parseInt( int, 10 ) ) )
+                    {
+                        partObj.end = parseInt( int, 10 );
+                    }
+                    else
+                    {
+                        partObj.end = null;
+                    }
+                }
+            } );
             return partObj;
         } );
 };
@@ -102,7 +105,6 @@ export const generateResponseStr = data =>
     return responseStr;
 };
 
-
 export function parseSafeAuthUrl( safeUrl, isClient )
 {
     if ( typeof safeUrl !== 'string' )
@@ -113,7 +115,9 @@ export function parseSafeAuthUrl( safeUrl, isClient )
     const safeAuthUrl = {};
     const parsedUrl = url.parse( safeUrl );
 
-    if ( !( /^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test( parsedUrl.hostname ) ) )
+    if (
+        !/^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test( parsedUrl.hostname )
+    )
     {
         return { action: 'auth' };
     }

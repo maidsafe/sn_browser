@@ -8,13 +8,13 @@ export const TYPES = {
 };
 
 export const {
-    addBookmark
-    , removeBookmark
-    , updateBookmark
-    , updateBookmarks
+    addBookmark,
+    removeBookmark,
+    updateBookmark,
+    updateBookmarks
 } = createActions(
-    TYPES.ADD_BOOKMARK
-    , TYPES.REMOVE_BOOKMARK
-    , TYPES.UPDATE_BOOKMARK
-    , TYPES.UPDATE_BOOKMARKS
+    TYPES.ADD_BOOKMARK,
+    TYPES.REMOVE_BOOKMARK,
+    TYPES.UPDATE_BOOKMARK,
+    TYPES.UPDATE_BOOKMARKS
 );
