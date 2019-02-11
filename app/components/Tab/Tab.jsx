@@ -94,6 +94,7 @@ export default class Tab extends Component {
     buildMenu = webview => {
 
         if (!webview.getWebContents) return; // 'not now, as you're running jest;
+        const { addTab } = this.props;
 
         // require here to avoid jest/electron remote issues
         const contextMenu = require('electron-context-menu');
@@ -102,7 +103,11 @@ export default class Tab extends Component {
             append: params => [
                 {
                     label: 'Open Link in New Tab.',
-                    visible: params.linkURL.length > 0
+                    visible: params.linkURL.length > 0,
+                    click()
+                    {
+                        addTab( { url: params.linkURL, isActiveTab: true } );
+                    }
                 }
             ],
             showCopyImageAddress: true,
