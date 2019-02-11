@@ -8,7 +8,7 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
     if ( typeof extensionWrapperApi !== 'function' ) throw new Error( 'extensionWrapperApi must be an executable function.' );
 
     const componentClassName = WrappedComponent.name;
-    logger.verbose( `Extending ${ componentClassName } via the extensions Api` );
+    logger.log( `Extending ${ componentClassName } via the extensions Api` );
 
     class Extended extends Component
     {
@@ -30,7 +30,9 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
             if ( this.state.hasError )
             {
                 // You can render any custom fallback UI
-                return <span>Something went wrong extending this component.</span>;
+                return (
+                    <span>Something went wrong extending this component.</span>
+                );
             }
 
             const { EnWrappedComponent } = this;
@@ -39,7 +41,9 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
     }
 
     // set our wrapped class name to be the standard class name.
-    Object.defineProperty( Extended, 'name', { value: `Extended${ componentClassName }` } );
+    Object.defineProperty( Extended, 'name', {
+        value : `Extended${ componentClassName }`
+    } );
 
     return Extended;
 };

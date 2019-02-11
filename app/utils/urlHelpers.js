@@ -1,8 +1,8 @@
 import { parse } from 'url';
 import path from 'path';
-import pkg from 'appPackage';
+import pkg from '@Package';
 import logger from 'logger';
-import { PROTOCOLS } from 'appConstants';
+import { PROTOCOLS } from '@Constants';
 
 export const isInternalPage = tab =>
 {
@@ -38,7 +38,6 @@ export const trimSlashes = url =>
     return newUrl;
 };
 
-
 export const addTrailingSlashIfNeeded = url =>
 {
     const urlObj = parse( url );
@@ -60,8 +59,7 @@ export const addTrailingSlashIfNeeded = url =>
     return slashedUrl;
 };
 
-export const removeTrailingHash = url =>
-    url.replace( /\#$/, '' );
+export const removeTrailingHash = url => url.replace( /\#$/, '' );
 
 export const removeTrailingRedundancies = url =>
 {
@@ -93,16 +91,23 @@ export const urlHasChanged = ( src, newUrl ) =>
         return false;
     }
 
-    if ( parsedSrc.protocol !== parsedNew.protocol ||
-        parsedSrc.host !== parsedNew.host ||
-        removeTrailingSlash( parsedSrc.path ) !== removeTrailingSlash( parsedNew.path ) )
+    if (
+        parsedSrc.protocol !== parsedNew.protocol
+        || parsedSrc.host !== parsedNew.host
+        || removeTrailingSlash( parsedSrc.path )
+            !== removeTrailingSlash( parsedNew.path )
+    )
     {
         return true;
     }
 
     // here we leave the slashes on hashes up to the app/user
-    const srcHash = parsedSrc.hash ? trimSlashes( parsedSrc.hash.replace( '#', '' ) ) : '';
-    const newHash = parsedNew.hash ? trimSlashes( parsedNew.hash.replace( '#', '' ) ) : '';
+    const srcHash = parsedSrc.hash
+        ? trimSlashes( parsedSrc.hash.replace( '#', '' ) )
+        : '';
+    const newHash = parsedNew.hash
+        ? trimSlashes( parsedNew.hash.replace( '#', '' ) )
+        : '';
 
     if ( srcHash !== newHash )
     {
@@ -146,9 +151,11 @@ export const makeValidAddressBarUrl = input =>
         logger.warn( 'url must be a string' );
     }
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = pkg.build.protocols.schemes || [ 'http' ];
     const parsedURL = parse( input );
-    const inputProtocol = parsedURL.protocol ? parsedURL.protocol.replace( ':', '' ) : '';
+    const inputProtocol = parsedURL.protocol
+        ? parsedURL.protocol.replace( ':', '' )
+        : '';
 
     let finalProtocol;
     let everythingAfterProtocol = '';
@@ -158,9 +165,7 @@ export const makeValidAddressBarUrl = input =>
     {
         finalProtocol = inputProtocol;
 
-        everythingAfterProtocol = input.substring(
-            protocolPos,
-            input.length );
+        everythingAfterProtocol = input.substring( protocolPos, input.length );
     }
     else if ( !inputProtocol )
     {
@@ -176,9 +181,12 @@ export const makeValidAddressBarUrl = input =>
 
         everythingAfterProtocol = input.substring(
             protocolPos + port.length + lengthOfSemiColon,
-            input.length );
+            input.length
+        );
 
-        everythingAfterProtocol = `localhost:${ parsedURL.hostname }/${ everythingAfterProtocol }`;
+        everythingAfterProtocol = `localhost:${
+            parsedURL.hostname
+        }/${ everythingAfterProtocol }`;
     }
     else if ( inputProtocol )
     {

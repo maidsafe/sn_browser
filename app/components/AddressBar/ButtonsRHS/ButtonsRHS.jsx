@@ -8,59 +8,54 @@ import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import 'antd/lib/icon/style';
 
-import extendComponent from 'utils/extendComponent';
-import { wrapAddressBarButtonsRHS } from 'extensions/components';
+import extendComponent from '@Utils/extendComponent';
+import { wrapAddressBarButtonsRHS } from '@Extensions/components';
 import styles from './buttonsRHS.css';
 
-import CustomMenu from 'components/CustomMenu';
+import CustomMenu from '@Components/CustomMenu';
 
-import { CLASSES } from 'appConstants';
-
+import { CLASSES } from '@Constants';
 
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class ButtonsRHS extends Component
-{
-    static propTypes =
-    {
-        addTab                : PropTypes.func.isRequired,
-        address               : PropTypes.string,
-        isBookmarked          : PropTypes.bool.isRequired,
-        addBookmark           : PropTypes.func.isRequired,
-        removeBookmark        : PropTypes.func.isRequired,
-        showSettingsMenu      : PropTypes.func.isRequired,
-        hideSettingsMenu      : PropTypes.func.isRequired,
-        settingsMenuIsVisible : PropTypes.bool.isRequired,
-        menuItems             : PropTypes.arrayOf( PropTypes.node ).isRequired,
-        focusWebview          : PropTypes.func.isRequired
-    }
+class ButtonsRHS extends Component {
+    static propTypes = {
+        addTab: PropTypes.func.isRequired,
+        address: PropTypes.string,
+        isBookmarked: PropTypes.bool.isRequired,
+        addBookmark: PropTypes.func.isRequired,
+        removeBookmark: PropTypes.func.isRequired,
+        showSettingsMenu: PropTypes.func.isRequired,
+        hideSettingsMenu: PropTypes.func.isRequired,
+        settingsMenuIsVisible: PropTypes.bool.isRequired,
+        menuItems: PropTypes.arrayOf(PropTypes.node).isRequired,
+        focusWebview: PropTypes.func.isRequired
+    };
 
-    static defaultProps =
-    {
-        address    : '',
-        isSelected : false,
-        editingUrl : false
-    }
+    static defaultProps = {
+        address: '',
+        isSelected: false,
+        editingUrl: false
+    };
 
-    handleBookmarking = ( ) =>
-    {
-        const { address, addBookmark, removeBookmark, isBookmarked } = this.props;
+    handleBookmarking = () => {
+        const {
+            address,
+            addBookmark,
+            removeBookmark,
+            isBookmarked
+        } = this.props;
 
-        if ( isBookmarked )
-        {
-            removeBookmark( { url: address } );
+        if (isBookmarked) {
+            removeBookmark({ url: address });
+        } else {
+            addBookmark({ url: address });
         }
-        else
-        {
-            addBookmark( { url: address } );
-        }
-    }
+    };
 
-
-    render()
-    {
+    render() {
         const {
             isBookmarked,
             settingsMenuIsVisible,
@@ -71,44 +66,45 @@ class ButtonsRHS extends Component
             focusWebview
         } = this.props;
 
-
         return (
             <Row
                 type="flex"
                 justify="end"
                 align="middle"
-                gutter={ { xs: 2, sm: 4, md: 6 } }
+                gutter={{ xs: 2, sm: 4, md: 6 }}
             >
                 <Col>
                     <Button
-                        className={ `${CLASSES.BOOKMARK_PAGE}` }
+                        className={`${CLASSES.BOOKMARK_PAGE}`}
                         shape="circle"
-                        onClick={ this.handleBookmarking }
+                        onClick={this.handleBookmarking}
                         tabIndex="0"
-                        aria-label={ isBookmarked ? I18n.t( 'aria.is_bookmarked' ) : I18n.t( 'aria.not_bookmarked' ) }
-                        onKeyDown={ ( e ) =>
-                        {
-                            if ( e.keyCode === 13 )
-                            {
-                                this.handleBookmarking( );
+                        aria-label={
+                            isBookmarked
+                                ? I18n.t('aria.is_bookmarked')
+                                : I18n.t('aria.not_bookmarked')
+                        }
+                        onKeyDown={e => {
+                            if (e.keyCode === 13) {
+                                this.handleBookmarking();
                             }
-                        } }
+                        }}
                     >
                         <Icon
                             type="star"
-                            theme={ isBookmarked ? 'filled' : 'outlined' }
+                            theme={isBookmarked ? 'filled' : 'outlined'}
                         />
                     </Button>
                 </Col>
                 <Col>
                     <CustomMenu
-                        isVisible={ settingsMenuIsVisible }
-                        menuItems={ menuItems }
-                        showMenu={ showSettingsMenu }
-                        hideMenu={ hideSettingsMenu }
+                        isVisible={settingsMenuIsVisible}
+                        menuItems={menuItems}
+                        showMenu={showSettingsMenu}
+                        hideMenu={hideSettingsMenu}
                         tabIndex="0"
-                        aria-label={ I18n.t( 'aria.settings_menu' ) }
-                        onBlur={ () => focusWebview( true ) }
+                        aria-label={I18n.t('aria.settings_menu')}
+                        onBlur={() => focusWebview(true)}
                         // todo add icon option
                     />
                 </Col>
@@ -117,4 +113,4 @@ class ButtonsRHS extends Component
     }
 }
 
-export default extendComponent( ButtonsRHS, wrapAddressBarButtonsRHS );
+export default extendComponent(ButtonsRHS, wrapAddressBarButtonsRHS);

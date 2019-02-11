@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <title>SAFE Browser</title>
     <script>
-      (() => {
+      (function() {
           const nessie = document.createElement('link');
-          nessie.rel = 'stylesheet';
-          nessie.href = '../node_modules/nessie-ui/dist/styles.css';
+         nessie.rel = 'stylesheet';
+         nessie.href = '../node_modules/nessie-ui/dist/styles.css';
 
-          if (!process.env.IS_UNPACKED ) {
-              nessie.href = '../nessie-styles.css';
-          }
+         if (!process.env.IS_UNPACKED ) {
+             nessie.href = '../../nessie-styles.css';
+         }
 
+         document.getElementsByTagName('head')[0].appendChild(nessie);
 
-          document.getElementsByTagName('head')[0].appendChild(nessie);
         if (!process.env.HOT) {
           const link = document.createElement('link');
           link.rel = 'stylesheet';
@@ -22,31 +22,34 @@
           // HACK: Writing the script path should be done with webpack
           document.getElementsByTagName('head')[0].appendChild(link);
         }
-      })();
+      }());
     </script>
   </head>
   <body>
     <div id="root"></div>
     <script>
       {
-        // Dynamically include DLL if in development/live-dev
-        if (process.env.IS_UNPACKED === 'true') {
-          const dllScript = document.createElement('script');
-          dllScript.src = '../dll/vendor.dll.js';
-          document.body.appendChild(dllScript);
+        const scripts = [];
+
+        // Dynamically insert the DLL script in development env in the
+        // renderer process
+        if (process.env.NODE_ENV === 'development') {
+          scripts.push('../dll/renderer.dev.dll.js');
         }
 
-        // Dynamically insert the renderer process
-        const script = document.createElement('script');
-        const port = process.env.PORT || 1214;
+        // Dynamically insert the bundled app script in the renderer process
+        const port = process.env.PORT || 1212;
+        scripts.push(
+          (process.env.HOT)
+            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+            : './dist/renderer.prod.js'
+        );
 
-        script.src = (process.env.HOT)
-          ? 'http://localhost:' + port + '/dist/bundle.js'
-          : './dist/bundle.js';
-
-        // @HACK: Writing the script path should be done
-        //        with HtmlWebpackPlugin
-        document.body.appendChild(script);
+        document.write(
+          scripts
+            .map(script => `<script defer src="${script}"><\/script>`)
+            .join('')
+        );
       }
     </script>
   </body>

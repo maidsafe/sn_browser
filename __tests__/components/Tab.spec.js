@@ -20,8 +20,7 @@ describe( 'Tab', () =>
             closeTab             : jest.fn(),
             addTab               : jest.fn(),
             pageLoaded           : false,
-            isActiveTabReloading : false,
-
+            isActiveTabReloading : false
         };
 
         wrapper = mount( <Tab { ...props } /> );
@@ -79,8 +78,7 @@ describe( 'Tab', () =>
                 closeTab             : jest.fn(),
                 addTab               : jest.fn(),
                 pageLoaded           : false,
-                isActiveTabReloading : false,
-
+                isActiveTabReloading : false
             };
 
             wrapper = mount( <Tab { ...props } /> );

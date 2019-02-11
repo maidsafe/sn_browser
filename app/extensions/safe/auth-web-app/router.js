@@ -7,7 +7,6 @@ import CreateAccount from './containers/create_account';
 import Home from './containers/app_list';
 
 export default (
-
     <App>
         <Switch>
             <Route exact path="/" component={ Home } />

@@ -2,15 +2,15 @@ import Enum from 'enum';
 import path from 'path';
 import logger from 'logger';
 
-import { isHot,
+import {
+    isHot,
     isRunningPackaged,
     inRendererProcess,
     startedRunningProduction,
     startedRunningMock,
     isRunningNodeEnvTest,
     isRunningSpectronTestProcess
-} from 'appConstants';
-
+} from '@Constants';
 
 // let libLocaleModifier = '';
 let libLocaleModifier = 'extensions/safe/';
@@ -28,9 +28,8 @@ if ( isRunningNodeEnvTest )
 }
 else if ( isRunningPackaged )
 {
-    libLocaleModifier = '../extensions/safe/';
+    libLocaleModifier = '../../extensions/safe/';
 }
-
 
 export default {
     NETWORK_STATUS : {
@@ -39,29 +38,113 @@ export default {
         DISCONNECTED : -1
     },
     LIB_PATH : {
-        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libwinpthread-1.dll' ),
+        PTHREAD : path.resolve(
+            __dirname,
+            libLocaleModifier,
+            'dist',
+            libEnvModifier,
+            'libwinpthread-1.dll'
+        ),
         SAFE_AUTH : {
-            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'safe_authenticator.dll' ),
-            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsafe_authenticator.dylib' ),
-            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsafe_authenticator.so' )
+            win32 : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                libEnvModifier,
+                'safe_authenticator.dll'
+            ),
+            darwin : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                libEnvModifier,
+                'libsafe_authenticator.dylib'
+            ),
+            linux : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                libEnvModifier,
+                'libsafe_authenticator.so'
+            )
         },
         SYSTEM_URI : {
-            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'system_uri.dll' ),
-            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsystem_uri.dylib' ),
-            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', libEnvModifier, 'libsystem_uri.so' )
+            win32 : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                libEnvModifier,
+                'system_uri.dll'
+            ),
+            darwin : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                libEnvModifier,
+                'libsystem_uri.dylib'
+            ),
+            linux : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                libEnvModifier,
+                'libsystem_uri.so'
+            )
         }
     },
     LIB_PATH_MOCK : {
-        PTHREAD   : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libwinpthread-1.dll' ),
+        PTHREAD : path.resolve(
+            __dirname,
+            libLocaleModifier,
+            'dist',
+            'mock',
+            'libwinpthread-1.dll'
+        ),
         SAFE_AUTH : {
-            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'safe_authenticator.dll' ),
-            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsafe_authenticator.dylib' ),
-            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsafe_authenticator.so' )
+            win32 : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                'mock',
+                'safe_authenticator.dll'
+            ),
+            darwin : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                'mock',
+                'libsafe_authenticator.dylib'
+            ),
+            linux : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                'mock',
+                'libsafe_authenticator.so'
+            )
         },
         SYSTEM_URI : {
-            win32  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'system_uri.dll' ),
-            darwin : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsystem_uri.dylib' ),
-            linux  : path.resolve( __dirname, libLocaleModifier, 'dist', 'mock', 'libsystem_uri.so' )
+            win32 : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                'mock',
+                'system_uri.dll'
+            ),
+            darwin : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                'mock',
+                'libsystem_uri.dylib'
+            ),
+            linux : path.resolve(
+                __dirname,
+                libLocaleModifier,
+                'dist',
+                'mock',
+                'libsystem_uri.so'
+            )
         }
     },
     LISTENER_TYPES : new Enum( [

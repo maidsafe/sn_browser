@@ -8,7 +8,6 @@ import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();
 
-
 // Some mocks to negate FFI and native libs we dont care about
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
@@ -22,7 +21,6 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
-
 
 describe( 'AddressBarButtonsLHS', () =>
 {
@@ -58,10 +56,12 @@ describe( 'AddressBarButtonsLHS', () =>
             store = mockStore( props );
 
             wrapper = shallow(
-                <Provider store={ store } >
+                <Provider store={ store }>
                     <AddressBarButtonsLHS { ...props } />
-                </Provider> ).dive();
-            instance = wrapper.instance(); instance = wrapper.instance();
+                </Provider>
+            ).dive();
+            instance = wrapper.instance();
+            instance = wrapper.instance();
         } );
 
         it( 'should have name AddressBarButtonsLHS', () =>

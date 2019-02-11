@@ -1,18 +1,17 @@
 import { remote, shell } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
-import { CONFIG } from 'appConstants';
-import { urlIsAllowedBySafe } from './utils/safeHelpers';
+import { CONFIG } from '@Constants';
 import logger from 'logger';
+import { urlIsAllowedBySafe } from './utils/safeHelpers';
 
 // const isForLocalServer = ( parsedUrlObject ) =>
 //     parsedUrlObject.protocol === 'localhost:' || parsedUrlObject.hostname === '127.0.0.1';
 
-
 const blockNonSAFERequests = () =>
 {
     const filter = {
-        urls : ['*://*']
+        urls : [ '*://*' ]
     };
     const httpRegExp = new RegExp( '^http' );
 
@@ -22,11 +21,10 @@ const blockNonSAFERequests = () =>
     {
         if ( urlIsAllowedBySafe( details.url ) )
         {
-            logger.debug( `Allowing url ${ details.url }` );
+            logger.log( `Allowing url ${ details.url }` );
             callback( {} );
             return;
         }
-
 
         // HACK for idMgr and Patter. until:
         // https://github.com/parcel-bundler/parcel/issues/1663
@@ -35,7 +33,9 @@ const blockNonSAFERequests = () =>
             const thePath = parseURL( details.url ).path;
             const ext = path.extname( thePath );
 
-            const newUrl = `http://localhost:${ CONFIG.PORT }/dummy/iconfont${ ext }`;
+            const newUrl = `http://localhost:${
+                CONFIG.PORT
+            }/dummy/iconfont${ ext }`;
             callback( { redirectURL: newUrl } );
             return;
         }
@@ -44,7 +44,10 @@ const blockNonSAFERequests = () =>
         {
             try
             {
-                logger.info( 'about to call shell.openExternal in blockNonSafeReqs?', details.url );
+                logger.log(
+                    'about to call shell.openExternal in blockNonSafeReqs?',
+                    details.url
+                );
                 shell.openExternal( details.url );
             }
             catch ( e )
@@ -53,7 +56,7 @@ const blockNonSAFERequests = () =>
             }
         }
 
-        logger.info( 'Blocked req:', details.url );
+        logger.log( 'Blocked req:', details.url );
         callback( { cancel: true } );
     } );
 };

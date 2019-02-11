@@ -1,31 +1,29 @@
 import logger from 'logger';
-import { getSafeBrowserAppObject } from './index.js';
 import {
     setSaveConfigStatus,
     setReadConfigStatus
-} from 'extensions/safe/actions/safeBrowserApplication_actions';
+} from '@Extensions/safe/actions/safeBrowserApplication_actions';
 
 import {
     safeBrowserAppIsAuthing,
     safeBrowserAppIsAuthed,
     safeBrowserAppIsConnected,
     safeBrowserAppAuthFailed
-} from 'extensions/safe/safeBrowserApplication';
+} from '@Extensions/safe/safeBrowserApplication/theApplication';
 
-import { addNotification } from 'actions/notification_actions';
-import { CONFIG } from 'appConstants';
-import { SAFE, SAFE_APP_ERROR_CODES } from 'extensions/safe/constants';
+import { addNotification } from '@Actions/notification_actions';
+import { CONFIG } from '@Constants';
+import { SAFE, SAFE_APP_ERROR_CODES } from '@Extensions/safe/constants';
 
-import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
-import * as bookmarksActions from 'actions/bookmarks_actions';
-import * as tabsActions from 'actions/tabs_actions';
-
+import * as safeBrowserAppActions from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import * as bookmarksActions from '@Actions/bookmarks_actions';
+import * as tabsActions from '@Actions/tabs_actions';
+import { getSafeBrowserAppObject } from './theApplication';
 
 // TODO: Refactor away this and use aliased actions for less... sloppy
 // flow and make this more reasonable.
 let isReading = false;
 let isSaving = false;
-
 
 /**
  * Handle triggering actions and related functionality for saving to SAFE netowrk
@@ -43,23 +41,26 @@ export const manageReadStateActions = async store =>
 
     const safeBrowserAppState = store.getState().safeBrowserApp;
 
-
     // if its not to save, or isnt authed yet...
-    if ( safeBrowserAppState.readStatus !== SAFE.READ_STATUS.TO_READ ||
-       safeBrowserAppIsAuthing( ) || safeBrowserAppAuthFailed( ) )
+    if (
+        safeBrowserAppState.readStatus !== SAFE.READ_STATUS.TO_READ
+        || safeBrowserAppIsAuthing()
+        || safeBrowserAppAuthFailed()
+    )
     {
         // do nothing
         return;
     }
 
-
-    if ( !safeBrowserAppIsAuthed( ) )
+    if ( !safeBrowserAppIsAuthed() )
     {
         // come back when authed.
-        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+        store.dispatch(
+            safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH )
+        );
         return;
     }
-    logger.info( 'Managing a READ action' );
+    logger.log( 'Managing a READ action' );
 
     if ( !safeBrowserAppIsConnected() )
     {
@@ -68,8 +69,10 @@ export const manageReadStateActions = async store =>
 
     isReading = true;
 
-    logger.verbose( 'Attempting to READ SafeBrowserApp state from network' );
-    store.dispatch( safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
+    logger.log( 'Attempting to READ SafeBrowserApp state from network' );
+    store.dispatch(
+        safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING )
+    );
 
     readConfigFromSafe( store )
         .then( savedState =>
@@ -78,7 +81,9 @@ export const manageReadStateActions = async store =>
             store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
             store.dispatch( tabsActions.updateTabs( savedState ) );
             store.dispatch(
-                safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
+                safeBrowserAppActions.setReadConfigStatus(
+                    SAFE.READ_STATUS.READ_SUCCESSFULLY
+                )
             );
 
             isReading = false;
@@ -89,12 +94,13 @@ export const manageReadStateActions = async store =>
             isReading = false;
             logger.error( e );
             store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_READ )
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.FAILED_TO_READ
+                )
             );
             throw new Error( e );
         } );
 };
-
 
 /**
  * Handle triggering actions and related functionality for saving to SAFE netowrk
@@ -113,8 +119,11 @@ export const manageSaveStateActions = async store =>
     const safeBrowserApp = store.getState().safeBrowserApp;
 
     // if its not to save, or isnt authed yet...
-    if ( safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE ||
-       safeBrowserAppIsAuthing( ) || safeBrowserAppAuthFailed( ) )
+    if (
+        safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE
+        || safeBrowserAppIsAuthing()
+        || safeBrowserAppAuthFailed()
+    )
     {
         // do nothing
         return;
@@ -122,10 +131,12 @@ export const manageSaveStateActions = async store =>
 
     // if it auth didnt happen, and hasnt failed...
     // previously... we can try again (we're in TO SAVE, not SAVING.)
-    if ( !safeBrowserAppIsAuthed( ) )
+    if ( !safeBrowserAppIsAuthed() )
     {
         // come back when authed.
-        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+        store.dispatch(
+            safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH )
+        );
         return;
     }
 
@@ -134,29 +145,36 @@ export const manageSaveStateActions = async store =>
         return;
     }
 
-
     // lets scrap read for now.
-    if ( safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
-        safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT &&
-        safeBrowserApp.readStatus !== SAFE.READ_STATUS.TO_READ &&
-        safeBrowserApp.readStatus !== SAFE.READ_STATUS.READING )
+    if (
+        safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY
+        && safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT
+        && safeBrowserApp.readStatus !== SAFE.READ_STATUS.TO_READ
+        && safeBrowserApp.readStatus !== SAFE.READ_STATUS.READING
+    )
     {
-        logger.verbose( 'Can\'t save state, not read yet... Triggering a read.' );
-        store.dispatch( safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
+        logger.log( "Can't save state, not read yet... Triggering a read." );
+        store.dispatch(
+            safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ )
+        );
 
         return;
     }
 
     isSaving = true;
 
-    logger.verbose( 'Attempting to SAVE SafeBrowserApp state to network' );
-    store.dispatch( safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
+    logger.log( 'Attempting to SAVE SafeBrowserApp state to network' );
+    store.dispatch(
+        safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING )
+    );
     saveConfigToSafe( store )
         .then( () =>
         {
             isSaving = false;
             store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY )
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY
+                )
             );
 
             return null;
@@ -168,12 +186,13 @@ export const manageSaveStateActions = async store =>
 
             // TODO: Handle errors across the store in a separate error watcher?
             store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE )
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.FAILED_TO_SAVE
+                )
             );
             throw new Error( e );
         } );
 };
-
 
 /**
  * Parses the browser state to json (removes safeBrowserApp) and saves to an MD on the app Homecontainer,
@@ -204,7 +223,9 @@ export const saveConfigToSafe = ( store, quit ) =>
 
         if ( !safeBrowserAppObject )
         {
-            store.dispatch( setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
+            store.dispatch(
+                setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE )
+            );
             logger.error( 'Not authorised to save to the network.' );
             return reject( 'Not authorised to save data' );
         }
@@ -220,14 +241,13 @@ export const saveConfigToSafe = ( store, quit ) =>
             let previousEntry;
             let version;
 
-
             try
             {
                 mdEntries = await container.getEntries();
             }
             catch ( e )
             {
-                logger.verbose( 'Saved Data not found. Creating.' );
+                logger.log( 'Saved Data not found. Creating.' );
 
                 if ( e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND )
                 {
@@ -243,14 +263,14 @@ export const saveConfigToSafe = ( store, quit ) =>
 
             try
             {
-                logger.verbose( 'checking prev entry.' );
+                logger.log( 'checking prev entry.' );
                 previousEntry = await container.get( encryptedKey );
             }
             catch ( e )
             {
                 if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY )
                 {
-                    logger.verbose( 'Previous didnt exist, creating...' );
+                    logger.log( 'Previous didnt exist, creating...' );
                     mut.insert( encryptedKey, encryptedData );
                     createdNewEntry = true;
                     container.applyEntriesMutation( mut );
@@ -261,17 +281,20 @@ export const saveConfigToSafe = ( store, quit ) =>
                 }
             }
 
-            if ( !createdNewEntry && previousEntry &&
-                typeof previousEntry.version !== 'undefined' )
+            if (
+                !createdNewEntry
+                && previousEntry
+                && typeof previousEntry.version !== 'undefined'
+            )
             {
-                logger.verbose( 'Previous entry exists, updating...' );
+                logger.log( 'Previous entry exists, updating...' );
 
                 version = previousEntry.version + 1;
                 await mut.update( encryptedKey, encryptedData, version );
                 container.applyEntriesMutation( mut );
             }
 
-            logger.info( 'Data saved successfully' );
+            logger.log( 'Data saved successfully' );
             resolve();
         }
         catch ( e )
@@ -287,10 +310,10 @@ export const saveConfigToSafe = ( store, quit ) =>
 
 function delay( t )
 {
-    return new Promise( ( resolve =>
+    return new Promise( resolve =>
     {
         setTimeout( resolve, t );
-    } ) );
+    } );
 }
 
 /**
@@ -319,26 +342,34 @@ export const readConfigFromSafe = store =>
             const decryptedValue = await container.decrypt( encryptedValue.buf );
             const browserState = await JSON.parse( decryptedValue.toString() );
 
-            logger.info( 'State retrieved: ', browserState );
+            logger.log( 'State retrieved: ', browserState );
             resolve( browserState );
         }
         catch ( e )
         {
-            if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY ||
-                e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND )
+            if (
+                e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY
+                || e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND
+            )
             {
                 const state = store.getState();
 
                 // only error if we're only reading
-                if ( state.safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE )
+                if (
+                    state.safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE
+                )
                 {
-                    store.dispatch( addNotification( {
-                        text : 'No browser data found on the network.',
-                        type : 'error'
-                    } ) );
+                    store.dispatch(
+                        addNotification( {
+                            text : 'No browser data found on the network.',
+                            type : 'error'
+                        } )
+                    );
                 }
 
-                store.dispatch( setReadConfigStatus( SAFE.READ_STATUS.READ_BUT_NONEXISTANT ) );
+                store.dispatch(
+                    setReadConfigStatus( SAFE.READ_STATUS.READ_BUT_NONEXISTANT )
+                );
             }
             else
             {
