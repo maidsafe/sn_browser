@@ -23,13 +23,42 @@ export const {
     pageLoaded,
     focusWebview
 } = createActions(
-    TYPES.SHOW_SETTINGS_MENU,
-    TYPES.HIDE_SETTINGS_MENU,
-    TYPES.BLUR_ADDRESS_BAR,
-    TYPES.DESELECT_ADDRESS_BAR,
-    TYPES.SELECT_ADDRESS_BAR,
-    TYPES.RESET_STORE,
-    TYPES.RELOAD_PAGE,
-    TYPES.PAGE_LOADED,
-    TYPES.FOCUS_WEBVIEW
+    {
+        SHOW_SETTINGS_MENU : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        HIDE_SETTINGS_MENU : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        BLUR_ADDRESS_BAR : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        DESELECT_ADDRESS_BAR : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        SELECT_ADDRESS_BAR : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        RESET_STORE : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        RELOAD_PAGE : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        PAGE_LOADED : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ],
+        FOCUS_WEBVIEW : [
+            undefined,
+            () => ( { scope: 'local' } ) // meta
+        ]
+    }
 );
