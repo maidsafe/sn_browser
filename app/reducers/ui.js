@@ -1,14 +1,16 @@
 // @flow
 import { createActions } from 'redux-actions';
-import initialAppState from './initialAppState';
 import { TYPES } from '@Actions/ui_actions';
+import initialAppState from './initialAppState';
 
 const initialState = initialAppState.ui;
 
-export default function ui(state: array = initialState, action) {
+export default function ui( state: array = initialState, action )
+{
     const payload = action.payload;
 
-    switch (action.type) {
+    switch ( action.type )
+    {
         case TYPES.SHOW_SETTINGS_MENU: {
             return { ...state, settingsMenuIsVisible: true };
         }

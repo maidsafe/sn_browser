@@ -14,14 +14,15 @@ import { getExtensionReducers } from '@Extensions';
 
 const additionalReducers = getExtensionReducers();
 
-export default function createRootReducer(history: History) {
-    return combineReducers({
-        router: history ? connectRouter(history) : null,
+export default function createRootReducer( history: History )
+{
+    return combineReducers( {
+        router : history ? connectRouter( history ) : null,
         bookmarks,
         notifications,
         remoteCalls,
         tabs,
         ui,
         ...additionalReducers
-    });
+    } );
 }
