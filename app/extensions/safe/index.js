@@ -1,48 +1,52 @@
 import logger from 'logger';
-import * as authenticatorActions from 'extensions/safe/actions/authenticator_actions';
+import { handleAuthUrl, setAuthLibStatus } from '@Extensions/safe/actions/authenticator_actions';
 import { app } from 'electron';
-import * as safeBrowserAppActions from 'extensions/safe/actions/safeBrowserApplication_actions';
-import { initSafeBrowserApp } from 'extensions/safe/safeBrowserApplication';
-import { getLibStatus } from 'extensions/safe/auth-api/authFuncs';
+import * as safeBrowserAppActions from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import { initSafeBrowserApp } from '@Extensions/safe/safeBrowserApplication';
+import { getLibStatus } from '@Extensions/safe/auth-api/authFuncs';
+import { parse as parseURL } from 'url';
+import { setSafeBgProcessStore } from '@Extensions/safe/ffi/ipc';
+import { setIsMock } from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import {
+    startedRunningMock,
+    isRunningSpectronTestProcess,
+    isRunningUnpacked
+} from '@Constants';
+import { getSafeBrowserUnauthedReqUri } from '@Extensions/safe/safeBrowserApplication/init/initAnon';
+import path from 'path';
+import sysUri from '@Extensions/safe/ffi/sys_uri';
+import { APP_INFO, PROTOCOLS } from '@Constants';
+import { addTab } from '@Actions/tabs_actions';
 
+import safeReducers from '@Extensions/safe/reducers';
+import webviewPreload from '@Extensions/safe/webviewPreload';
+import {
+    handleRemoteCalls,
+    remoteCallApis
+} from '@Extensions/safe/handleRemoteCalls';
+
+import { addFileMenus } from '@Extensions/safe/menus';
+import { urlIsAllowedBySafe as urlIsValid } from '@Extensions/safe/utils/safeHelpers';
+import * as SafeBrowserActions from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
+import blockNonSAFERequests from './blockNonSafeReqs';
+import registerSafeAuthProtocol from './protocols/safe-auth';
+import registerSafeProtocol from './protocols/safe';
+import setupRoutes from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
-import { parse as parseURL } from 'url';
-import setupRoutes from './server-routes';
-import registerSafeProtocol from './protocols/safe';
-import registerSafeAuthProtocol from './protocols/safe-auth';
-import blockNonSAFERequests from './blockNonSafeReqs';
-
-import { setIsMock } from 'extensions/safe/actions/safeBrowserApplication_actions';
-import { startedRunningMock, isRunningSpectronTestProcess, isRunningUnpacked } from 'appConstants';
-import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
-import { getSafeBrowserUnauthedReqUri } from 'extensions/safe/safeBrowserApplication/init/initAnon';
-
-import sysUri from 'extensions/safe/ffi/sys_uri';
-import { APP_INFO, PROTOCOLS } from 'appConstants';
-import { addTab } from 'actions/tabs_actions';
-
-import safeReducers from 'extensions/safe/reducers';
-import webviewPreload from 'extensions/safe/webviewPreload';
-import { handleRemoteCalls, remoteCallApis } from 'extensions/safe/handleRemoteCalls';
-import * as SafeBrowserActions from 'extensions/safe/actions/safeBrowserApplication_actions';
-
-import { addFileMenus } from 'extensions/safe/menus';
-import { urlIsAllowedBySafe as urlIsValid } from 'extensions/safe/utils/safeHelpers';
-
-const onWebviewPreload = store =>
-    webviewPreload( store );
-
+const onWebviewPreload = store => webviewPreload( store );
 
 const preAppLoad = () =>
 {
+    // app.setPath( 'userData', path.resolve( app.getPath( 'temp' ), 'safe-browser' ) );
     if ( isRunningUnpacked && process.platform === 'win32' ) return;
     app.setAsDefaultProtocolClient( 'safe-auth' );
     app.setAsDefaultProtocolClient( 'safe' );
     const isDefaultAuth = app.isDefaultProtocolClient( 'safe-auth' );
     const isDefaultSafe = app.isDefaultProtocolClient( 'safe' );
-    logger.info( 'Registered to handle safe: urls ? ', isDefaultSafe );
-    logger.info( 'registered to handle safe-auth: urls ?', isDefaultAuth );
+    logger.log( 'Registered to handle safe: urls ? ', isDefaultSafe );
+    logger.log( 'registered to handle safe-auth: urls ?', isDefaultAuth );
 };
 
 /**
@@ -52,7 +56,7 @@ const preAppLoad = () =>
  */
 const addExtensionMenuItems = ( store, menusArray ) =>
 {
-    logger.verbose( 'Adding SAFE menus to browser' );
+    logger.log( 'Adding SAFE menus to browser' );
 
     const newMenuArray = [];
 
@@ -72,8 +76,7 @@ const addExtensionMenuItems = ( store, menusArray ) =>
     return newMenuArray;
 };
 
-const addReducersToPeruse = ( ) =>
-    safeReducers;
+const addReducersToPeruse = () => safeReducers;
 
 /**
  * Triggered when a remote call is received in the main process
@@ -81,7 +84,8 @@ const addReducersToPeruse = ( ) =>
  * @param  {Object} allAPICalls object containing all api calls available in main (for use via store remoteCalls)
  * @param  {[type]} theCall     call object with id, and info
  */
-const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => handleRemoteCalls( store, allAPICalls, theCall );
+const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) =>
+    handleRemoteCalls( store, allAPICalls, theCall );
 
 const getRemoteCallApis = () => remoteCallApis;
 
@@ -93,21 +97,14 @@ const actionsForBrowser = {
     ...SafeBrowserActions
 };
 
-let theSafeBgProcessStore;
-
-export const getSafeBackgroundProcessStore = () =>
-{
-    if ( !theSafeBgProcessStore ) throw new Error( `No background process store defined. ${ process.mainModule.filename }'` );
-
-    return theSafeBgProcessStore;
-};
 
 const onInitBgProcess = async store =>
 {
-    logger.info( 'Registering SAFE Network Protocols' );
+    logger.log( 'Registering SAFE Network Protocols' );
     try
     {
-        theSafeBgProcessStore = store;
+        setSafeBgProcessStore( store );
+        // theSafeBgProcessStore = store;
 
         registerSafeProtocol( store );
         registerSafeAuthProtocol( store );
@@ -129,9 +126,11 @@ const onInitBgProcess = async store =>
 
         if ( authLibStatus && authLibStatus !== prevAuthLibStatus )
         {
-            logger.verbose( 'Authenticator lib status: ', authLibStatus );
+            logger.log( 'Authenticator lib status: ', authLibStatus );
             prevAuthLibStatus = authLibStatus;
-            store.dispatch( authenticatorActions.setAuthLibStatus( authLibStatus ) );
+            store.dispatch(
+                setAuthLibStatus( authLibStatus )
+            );
 
             initSafeBrowserApp( store );
         }
@@ -147,19 +146,23 @@ const onInitBgProcess = async store =>
         icon : 'iconPath'
     };
 
-    logger.verbose( 'Auth application info', authAppInfo );
+    logger.log( 'Auth application info', authAppInfo );
     sysUri.registerUriScheme( authAppInfo, PROTOCOLS.SAFE_AUTH );
 };
 
 /**
+ * onOpenLoadExtensions
  * on open of peruse application
  * @param  {Object} store redux store
  */
 const onOpen = store =>
-{
-    logger.verbose( 'OnOpen: Setting mock in store. ', startedRunningMock );
-    store.dispatch( setIsMock( startedRunningMock ) );
-};
+    new Promise( ( resolve, reject ) =>
+    {
+        logger.log( 'OnOpen: Setting mock in store. ', startedRunningMock );
+        store.dispatch( setIsMock( startedRunningMock ) );
+
+        resolve();
+    } );
 
 /**
  * on open of peruse application
@@ -167,7 +170,7 @@ const onOpen = store =>
  */
 const onAppReady = store =>
 {
-    logger.verbose( 'OnAppReady: Setting mock in store. ', startedRunningMock );
+    logger.log( 'OnAppReady: Setting mock in store. ', startedRunningMock );
     store.dispatch( setIsMock( startedRunningMock ) );
 };
 
@@ -179,44 +182,44 @@ const middleware = store => next => action =>
 {
     if ( isRunningSpectronTestProcess )
     {
-        logger.info( 'ACTION:', action );
+        logger.log( 'ACTION:', action );
     }
 
     return next( action );
 };
 
-
 const parseSafeUri = function ( uri )
 {
-    logger.verbose( 'Parsing safe uri', uri );
+    logger.log( 'Parsing safe uri', uri );
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
 
-const waitForBasicConnection = ( theStore, timeout = 15000 ) => new Promise( resolve =>
-{
-    let timeLeft = timeout;
-    const check = () =>
+const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
+    new Promise( resolve =>
     {
-        timeLeft -= 500;
-        const netState = theStore.getState().safeBrowserApp.networkStatus;
-        logger.verbose( 'Waiting for basic connection...', netState );
+        let timeLeft = timeout;
+        const check = () =>
+        {
+            timeLeft -= 500;
+            const netState = theStore.getState().safeBrowserApp.networkStatus;
+            logger.log( 'Waiting for basic connection...', netState );
 
-        if ( netState !== null )
-        {
-            resolve();
-        }
-        else if ( timeLeft < 0 )
-        {
-            resolve();
-        }
-        else
-        {
-            setTimeout( check, 500 );
-        }
-    };
+            if ( netState !== null )
+            {
+                resolve();
+            }
+            else if ( timeLeft < 0 )
+            {
+                resolve();
+            }
+            else
+            {
+                setTimeout( check, 500 );
+            }
+        };
 
-    setTimeout( check, 500 );
-} );
+        setTimeout( check, 500 );
+    } );
 
 /**
  * Trigger when receiving a URL param in the browser.
@@ -230,36 +233,41 @@ const onReceiveUrl = async ( store, url ) =>
     const preParseUrl = parseSafeUri( url );
     const parsedUrl = parseURL( preParseUrl );
 
-    logger.info( 'Did get a parsed url on the go', parsedUrl );
+    logger.log( 'Did get a parsed url on the go', parsedUrl );
 
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
-        logger.info( 'this is a parsed url for auth', url );
-        if ( url !== getSafeBrowserUnauthedReqUri() )
-        {
-            // otherwise EVERYTHING waits for basic connection...
-            // so we know the libs are ready/ loaded
-            // (and we assume, _that_ happens at the correc time due to browser hooks)
-            await waitForBasicConnection( store );
+        logger.log( 'this is a parsed url for auth', url, getSafeBrowserUnauthedReqUri() );
+        // if ( url !== getSafeBrowserUnauthedReqUri() )
+        // {
+        //
+        //     logger.log('Waiting on basic connection....')
+        // otherwise EVERYTHING waits for basic connection...
+        // so we know the libs are ready/ loaded
+        // (and we assume, _that_ happens at the correc time due to browser hooks)
+        await waitForBasicConnection( store );
+        // }
 
-            logger.info( 'DONE WAITING', url );
-        }
-        store.dispatch( authenticatorActions.handleAuthUrl( url ) );
+        logger.error( 'about !!!!!!!!!!!! to handleAuthURL', url );
+        store.dispatch( handleAuthUrl( url ) );
     }
     if ( parsedUrl.protocol === 'safe:' )
     {
         await waitForBasicConnection( store );
 
-        logger.verbose( 'Handling safe: url', url );
+        logger.log( 'Handling safe: url', url );
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...
-    else if ( parsedUrl.protocol && parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
+    else if (
+        parsedUrl.protocol
+        && parsedUrl.protocol.startsWith( 'safe-' )
+        && parsedUrl.protocol.length > 20
+    )
     {
-        logger.verbose( 'Handling safe-???? url' );
+        logger.log( 'Handling safe-???? url' );
         store.dispatch( safeBrowserAppActions.receivedAuthResponse( url ) );
     }
-
 
     if ( process.platform === 'darwin' && global.macAllWindowsClosed )
     {
@@ -269,7 +277,6 @@ const onReceiveUrl = async ( store, url ) =>
         }
     }
 };
-
 
 export default {
     addExtensionMenuItems,

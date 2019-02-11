@@ -1,9 +1,9 @@
 import logger from 'logger';
+import { isCI, isRunningSpectronTestProcessingPackagedApp } from '@Constants';
 import {
-    isCI,
-    isRunningSpectronTestProcessingPackagedApp
-} from 'appConstants';
-import { addNotification, clearNotification } from 'actions/notification_actions';
+    addNotification,
+    clearNotification
+} from '@Actions/notification_actions';
 
 const tryConnect = async res =>
 {
@@ -11,7 +11,9 @@ const tryConnect = async res =>
 
     try
     {
-        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
+        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri(
+            res
+        );
         store.dispatch( clearNotification() );
 
         return safeBrowserAppObject;
@@ -32,7 +34,9 @@ const authFromInternalResponse = async ( res, store ) =>
     try
     {
         // for webFetch app only
-        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
+        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri(
+            res
+        );
     }
     catch ( err )
     {
@@ -48,7 +52,9 @@ const authFromInternalResponse = async ( res, store ) =>
             // TODO: Remove check when network is opened up
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
-            store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
+            store.dispatch(
+                addNotification( { text: message, onDismiss: clearNotification } )
+            );
             safeBrowserAppObject = tryConnect( res );
         }
 

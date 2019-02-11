@@ -32,7 +32,7 @@ describe( 'UrlList', () =>
     {
         beforeEach( () =>
         {
-            props = { ...props, list: ['hello'] };
+            props = { ...props, list: [ 'hello' ] };
             wrapper = shallow( <UrlList { ...props } /> );
         } );
 
@@ -51,7 +51,6 @@ describe( 'UrlList', () =>
             expect( wrapper.find( TableRow ).length ).toBe( 1 );
         } );
     } );
-
 
     describe( 'props', () =>
     {

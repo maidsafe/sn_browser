@@ -16,7 +16,6 @@ const initialState = {
         // createAccNavPos: 1,
         // showPopupWindow: false,
         // libErrPopup: false
-
     },
     safeBrowserApp : {
         appStatus            : null,

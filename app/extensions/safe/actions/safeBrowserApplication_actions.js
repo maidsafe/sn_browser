@@ -1,7 +1,12 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import getWebIdsFromSafe from 'extensions/safe/safeBrowserApplication/webIds';
 import logger from 'logger';
+import { inBgProcess } from '@Constants';
+import {
+    getCurrentStore,
+    getSafeBrowserAppObject,
+    safeBrowserAppIsAuthed
+} from '@Extensions/safe/safeBrowserApplication/theApplication';
 
 export const TYPES = {
     SET_APP_STATUS     : 'SET_APP_STATUS',
@@ -73,22 +78,51 @@ export const {
     TYPES.SHOW_WEB_ID_DROPDOWN
 );
 
-
-const triggerGetWebIds = async ( ) =>
+const triggerGetWebIds = async () =>
 {
-    if ( !window || !window.thisIsTheBackgroundProcess ) return;
+    if ( !inBgProcess ) return;
 
-    logger.verbose( 'Retrieving webIds' );
-    const ids = await getWebIdsFromSafe();
+    logger.log( 'BGBG Retrieving webIds' );
+    const ids = await getWebIds();
 };
 
 export const getAvailableWebIds = createAliasedAction(
     TYPES.GET_AVAILABLE_WEB_IDS,
     // TODO: there is a complaint about not having middleware, despite redux-promise.
-    () => (
-        {
+    () => ( {
         // the real action
-            type    : TYPES.GET_AVAILABLE_WEB_IDS,
-            payload : triggerGetWebIds(),
-        } ),
+        type    : TYPES.GET_AVAILABLE_WEB_IDS,
+        payload : triggerGetWebIds()
+    } )
 );
+
+/**
+ * Get WebIds for the current user
+ * @return {Promise} Resolves to Array of webIds
+ */
+const getWebIds = async () =>
+{
+    if ( !inBgProcess )
+    {
+        logger.error( 'Cannot getWebIds unless in BG process' );
+        return;
+    }
+
+    const currentStore = getCurrentStore();
+
+    const safeBrowserApp = getSafeBrowserAppObject();
+    logger.log( 'getWebIds' );
+
+    if ( !safeBrowserApp ) throw new Error( 'SafeBrowserApp should be initiated.' );
+
+    if ( !safeBrowserAppIsAuthed() ) throw new Error( 'SafeBrowserApp is not authorised' );
+
+    let webIds = [];
+
+    currentStore.dispatch( safeBrowserAppActions.fetchingWebIds() );
+    webIds = await safeBrowserApp.web.getWebIds();
+
+    currentStore.dispatch( safeBrowserAppActions.setAvailableWebIds( webIds ) );
+
+    return webIds;
+};

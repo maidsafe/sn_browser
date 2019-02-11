@@ -1,8 +1,9 @@
-import { urlIsAllowedBySafe,
+import {
+    urlIsAllowedBySafe,
     generateBoundaryStr,
     generateResponseStr,
     rangeStringToArray
-} from 'extensions/safe/utils/safeHelpers';
+} from '@Extensions/safe/utils/safeHelpers';
 
 describe( 'Safe Extension', () =>
 {
@@ -64,9 +65,10 @@ describe( 'Safe Extension', () =>
 
         test( 'returns response string', () =>
         {
-            const fileData = Buffer.from( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit' );
-            const parts =
-            [
+            const fileData = Buffer.from(
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            );
+            const parts = [
                 {
                     body    : fileData.slice( 3, 9 ),
                     headers : {
@@ -89,13 +91,11 @@ describe( 'Safe Extension', () =>
                     }
                 }
             ];
-            const data =
-            {
-                headers :
-              {
-                  'Content-Type'   : 'multipart/byteranges',
-                  'Content-Length' : JSON.stringify( parts ).length
-              },
+            const data = {
+                headers : {
+                    'Content-Type'   : 'multipart/byteranges',
+                    'Content-Length' : JSON.stringify( parts ).length
+                },
                 parts
             };
             const testValue = generateResponseStr( data );
@@ -114,8 +114,7 @@ describe( 'Safe Extension', () =>
         {
             const rangeString = 'bytes=4-6,14-20,40-53';
             const testValue = rangeStringToArray( rangeString );
-            const expectedValue =
-            [
+            const expectedValue = [
                 { start: 4, end: 6 },
                 { start: 14, end: 20 },
                 { start: 40, end: 53 }

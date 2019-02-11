@@ -1,10 +1,9 @@
-
 // @flow
 import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
-import { TYPES } from 'actions/bookmarks_actions';
-import { TYPES as UI_TYPES } from 'actions/ui_actions';
-import { makeValidAddressBarUrl } from 'utils/urlHelpers';
+import { TYPES } from '@Actions/bookmarks_actions';
+import { TYPES as UI_TYPES } from '@Actions/ui_actions';
+import { makeValidAddressBarUrl } from '@Utils/urlHelpers';
 import initialAppState from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
@@ -13,7 +12,7 @@ const initialState = initialAppState.bookmarks;
  * Get the current window's webcontents Id. Defaults to `1` if none found.
  * @return { Integer } WebContents Id of the curremt BrowserWindow webcontents.
  */
-const getCurrentWindowId = ( ) =>
+const getCurrentWindowId = () =>
 {
     let currentWindowId;
 
@@ -41,14 +40,12 @@ const addBookmark = ( state, bookmark ) =>
     const bookmarkUrl = makeValidAddressBarUrl( bookmark.url || '' );
     const newBookmark = { ...bookmark };
 
-    const newState = [...state];
-
+    const newState = [ ...state ];
 
     newState.push( newBookmark );
 
     return newState;
 };
-
 
 /**
  * Set a bookmark as closed. If it is active, deactivate and and set a new active bookmark
@@ -57,14 +54,15 @@ const addBookmark = ( state, bookmark ) =>
  */
 const removeBookmark = ( state, payload ) =>
 {
-    const removalIndex = state.findIndex( bookmark => bookmark.url === payload.url );
-    let updatedState = [...state];
+    const removalIndex = state.findIndex(
+        bookmark => bookmark.url === payload.url
+    );
+    const updatedState = [ ...state ];
 
     updatedState.splice( removalIndex, 1 );
 
     return updatedState;
 };
-
 
 const updateBookmark = ( state, payload ) =>
 {
@@ -88,13 +86,12 @@ const updateBookmark = ( state, payload ) =>
         updatedBookmark = { ...updatedBookmark, url };
     }
 
-    const updatedState = [...state];
+    const updatedState = [ ...state ];
 
     updatedState[index] = updatedBookmark;
 
     return updatedState;
 };
-
 
 /**
  * Bookmarks reducer. Should handle all bookmark actions
@@ -114,29 +111,24 @@ export default function bookmarks( state: array = initialState, action )
 
     switch ( action.type )
     {
-        case TYPES.ADD_BOOKMARK :
-        {
+        case TYPES.ADD_BOOKMARK: {
             return addBookmark( state, payload );
         }
-        case TYPES.REMOVE_BOOKMARK :
-        {
+        case TYPES.REMOVE_BOOKMARK: {
             return removeBookmark( state, payload );
         }
-        case TYPES.UPDATE_BOOKMARK :
-        {
+        case TYPES.UPDATE_BOOKMARK: {
             return updateBookmark( state, payload );
         }
-        case TYPES.UPDATE_BOOKMARKS :
-        {
+        case TYPES.UPDATE_BOOKMARKS: {
             const payloadBookmarks = payload.bookmarks;
-            const newBookmarks = [...state, ...payloadBookmarks];
+            const newBookmarks = [ ...state, ...payloadBookmarks ];
 
             return _.uniqBy( newBookmarks, 'url' );
         }
-        case UI_TYPES.RESET_STORE :
-        {
+        case UI_TYPES.RESET_STORE: {
             const initial = initialState;
-            return [...initial];
+            return [ ...initial ];
         }
         default:
             return state;

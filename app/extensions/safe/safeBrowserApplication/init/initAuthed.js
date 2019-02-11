@@ -1,10 +1,7 @@
 import { initialiseApp } from '@maidsafe/safe-node-app';
-import onNetworkStateChange from 'extensions/safe/safeBrowserApplication/init/networkStateChange';
+import onNetworkStateChange from '@Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
-import {
-    APP_INFO,
-    CONFIG,
-} from 'appConstants';
+import { APP_INFO, CONFIG } from '@Constants';
 
 import logger from 'logger';
 import { ipcRenderer } from 'electron';
@@ -16,27 +13,31 @@ import { ipcRenderer } from 'electron';
  */
 const initAuthedApplication = async ( passedStore, options ) =>
 {
-    logger.verbose( 'Requesting safeBrowserApp auth.', process.mainModule.filename );
+    logger.log( 'Requesting safeBrowserApp auth.', process.mainModule.filename );
     let safeBrowserAppObject;
 
     try
     {
-        safeBrowserAppObject =
-            await initialiseApp( APP_INFO.info, onNetworkStateChange( passedStore ), {
+        safeBrowserAppObject = await initialiseApp(
+            APP_INFO.info,
+            onNetworkStateChange( passedStore ),
+            {
                 ...APP_INFO.opts,
                 libPath                : CONFIG.SAFE_NODE_LIB_PATH,
                 forceUseMock           : options.forceUseMock,
                 enableExperimentalApis : options.enableExperimentalApis
-            } );
+            }
+        );
 
-        const authReq =
-            await safeBrowserAppObject.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
+        const authReq = await safeBrowserAppObject.auth.genAuthUri(
+            APP_INFO.permissions,
+            APP_INFO.opts
+        );
 
-        logger.verbose( 'generated auth uri:', authReq );
+        logger.log( 'generated auth uri:', authReq );
 
         // this global is only global to the bg process...
         global.browserAuthReqUri = authReq.uri;
-
 
         if ( process.platform === 'win32' )
         {

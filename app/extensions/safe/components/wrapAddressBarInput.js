@@ -9,12 +9,11 @@ import { Tag, Icon } from 'antd';
 import 'antd/lib/tag/style';
 import 'antd/lib/icon/style';
 import './wrapAddressBarInput.less';
-import { CLASSES } from 'appConstants';
+import { CLASSES } from '@Constants';
 
 function mapStateToProps( state )
 {
     return {
-
         safeBrowserApp : state.safeBrowserApp
     };
 }
@@ -23,21 +22,19 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
 {
     class WrappedAddressBarInput extends Component
     {
-        static propTypes =
-        {
+        static propTypes = {
             safeBrowserApp : PropTypes.shape( {
                 isMock             : PropTypes.bool,
                 experimentsEnabled : PropTypes.bool
             } ).isRequired
-        }
+        };
 
-        static defaultProps =
-        {
+        static defaultProps = {
             safeBrowserApp : {
                 isMock             : false,
                 experimentsEnabled : false
             }
-        }
+        };
 
         render()
         {
@@ -48,13 +45,30 @@ const wrapAddressBarInput = ( AddressBarInput, extensionFunctionality = {} ) =>
             const addOnsBefore = [];
             const addOnsAfter = [];
 
-            if ( isMock ) addOnsBefore.push( <Tag key="F5222D" className={ CLASSES.MOCK_TAG } color="#F5222D">Mock Network</Tag> );
-            if ( experimentsEnabled ) addOnsAfter.push( <Tag key="42566E" color="#42566E"><Icon type="experiment" /></Tag> );
+            if ( isMock )
+            {
+                addOnsBefore.push(
+                    <Tag
+                        key="F5222D"
+                        className={ CLASSES.MOCK_TAG }
+                        color="#F5222D"
+                    >
+                        Mock Network
+                    </Tag>
+                );
+            }
+            if ( experimentsEnabled )
+            {
+                addOnsAfter.push(
+                    <Tag key="42566E" color="#42566E">
+                        <Icon type="experiment" />
+                    </Tag>
+                );
+            }
 
             return (
                 <Grid gutters="M">
                     <Column align="center" verticalAlign="middle">
-
                         <AddressBarInput
                             // className={ styles.addressBar }
                             { ...this.props }

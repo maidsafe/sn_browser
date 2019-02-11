@@ -10,6 +10,7 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
+jest.autoMockOff();
 
 // create any initial state needed
 const initialState = {
@@ -37,7 +38,6 @@ const initialState = {
     addLocalNotification : jest.fn()
 };
 
-
 // here it is possible to pass in any middleware if needed into //configureStore
 const mockStore = configureStore();
 let store;
@@ -53,9 +53,10 @@ describe( 'Browser', () =>
         store = mockStore( initialState );
 
         wrapper = shallow(
-            <Provider store={ store } >
+            <Provider store={ store }>
                 <Browser { ...initialState } />
-            </Provider> ).dive();
+            </Provider>
+        ).dive();
         instance = wrapper.instance();
 
         it( 'should have name Browser', () =>
@@ -66,7 +67,8 @@ describe( 'Browser', () =>
 
     describe( 'mount() with one tab', () =>
     {
-        newState = { ...initialState,
+        newState = {
+            ...initialState,
             tabs : [
                 {
                     url          : 'hello',
@@ -75,16 +77,19 @@ describe( 'Browser', () =>
                     index        : 1,
                     isClosed     : false,
                     historyIndex : 1,
-                    history      : ['a', 'hello']
-                }] };
+                    history      : [ 'a', 'hello' ]
+                }
+            ]
+        };
 
         store = mockStore( newState );
 
         // must be mount for component did mount
         wrapper = mount(
-            <Provider store={ store } >
+            <Provider store={ store }>
                 <Browser { ...newState } />
-            </Provider> );
+            </Provider>
+        );
 
         it( 'should have exactly 1 AddressBar component', () =>
         {
@@ -115,9 +120,10 @@ describe( 'Browser', () =>
             store = mockStore( newState );
 
             wrapper = shallow(
-                <Provider store={ store } >
+                <Provider store={ store }>
                     <Browser { ...newState } />
-                </Provider> ).dive();
+                </Provider>
+            ).dive();
             instance = wrapper.instance();
         } );
 
@@ -133,7 +139,7 @@ describe( 'Browser', () =>
         {
             it( 'should exist', () =>
             {
-                expect( instance.props ).not.toBeUndefined( );
+                expect( instance.props ).not.toBeUndefined();
             } );
             it( 'should be empty by default', () =>
             {
@@ -142,7 +148,7 @@ describe( 'Browser', () =>
 
             it( 'should be an array', () =>
             {
-                expect( Array.isArray( instance.props.tabs ) ).toBeTruthy( );
+                expect( Array.isArray( instance.props.tabs ) ).toBeTruthy();
             } );
         } );
     } );

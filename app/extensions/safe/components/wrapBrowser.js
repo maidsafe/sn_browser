@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { CLASSES, isRunningSpectronTestProcess } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
+import { CLASSES, isRunningSpectronTestProcess } from '@Constants';
+import { SAFE } from '@Extensions/safe/constants';
 import logger from 'logger';
-import * as SafeBrowserActions from 'extensions/safe/actions/safeBrowserApplication_actions';
+import * as SafeBrowserActions from '@Extensions/safe/actions/safeBrowserApplication_actions';
 
 function mapStateToProps( state )
 {
@@ -15,13 +15,11 @@ function mapStateToProps( state )
     };
 }
 
-
 function mapDispatchToProps( dispatch )
 {
-    const actions =
-        {
-            ...SafeBrowserActions
-        };
+    const actions = {
+        ...SafeBrowserActions
+    };
     return bindActionCreators( actions, dispatch );
 }
 
@@ -29,7 +27,7 @@ function mapDispatchToProps( dispatch )
 const spectronAreaButton = {
     width   : '10px',
     height  : '10px',
-    display : 'inline-block',
+    display : 'inline-block'
 };
 
 const spectronArea = {
@@ -51,73 +49,76 @@ const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) =>
 {
     class WrappedSafeBrowser extends Component
     {
-        static propTypes =
-        {
+        static propTypes = {
             addressBarIsSelected : PropTypes.bool,
             setSaveConfigStatus  : PropTypes.func.isRequired,
             setReadConfigStatus  : PropTypes.func.isRequired
-        }
+        };
 
-        static defaultProps =
-        {
+        static defaultProps = {
             addressBarIsSelected : false,
             tabs                 : [],
             bookmarks            : [],
             notifications        : []
-        }
+        };
 
-
-        handleSpectronTestSaveState = ( ) =>
+        handleSpectronTestSaveState = () =>
         {
             const { setSaveConfigStatus } = this.props;
 
-            logger.info( 'ATTEMPTING MENU SPOOF SAVE', setSaveConfigStatus );
+            logger.log( 'ATTEMPTING MENU SPOOF SAVE', setSaveConfigStatus );
 
             setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE );
 
-            logger.info( 'read status update donnneee' );
-        }
+            logger.log( 'read status update donnneee' );
+        };
 
-        handleSpectronTestReadState = ( ) =>
+        handleSpectronTestReadState = () =>
         {
             const { setReadConfigStatus } = this.props;
-            logger.info( 'ATTEMPTING MENU SPOOF READ', setReadConfigStatus );
+            logger.log( 'ATTEMPTING MENU SPOOF READ', setReadConfigStatus );
 
             setReadConfigStatus( SAFE.READ_STATUS.TO_READ );
-        }
+        };
 
         render()
         {
             return (
                 <div style={ browserContainer }>
-                    {
-                        isRunningSpectronTestProcess &&
+                    {isRunningSpectronTestProcess && (
                         <div
-                            className={ `${CLASSES.SPECTRON_AREA}` }
+                            className={ `${ CLASSES.SPECTRON_AREA }` }
                             // hard setting style just now, as babel is not parsing css
                             style={ spectronArea }
                         >
                             <button
                                 style={ spectronAreaButton }
-                                className={ `${CLASSES.SPECTRON_AREA__SPOOF_SAVE}` }
+                                aria-label="spoofSave"
+                                className={ `${
+                                    CLASSES.SPECTRON_AREA__SPOOF_SAVE
+                                }` }
                                 onClick={ this.handleSpectronTestSaveState }
                             />
                             <button
                                 style={ spectronAreaButton }
-                                className={ `${CLASSES.SPECTRON_AREA__SPOOF_LOAD}` }
+                                aria-label="spoofRead"
+                                className={ `${
+                                    CLASSES.SPECTRON_AREA__SPOOF_LOAD
+                                }` }
                                 onClick={ this.handleSpectronTestReadState }
                             />
                         </div>
-
-                    }
+                    )}
                     <BrowserComponent { ...this.props } />
                 </div>
             );
         }
     }
 
-
-    const hookedUpInput = connect( mapStateToProps, mapDispatchToProps )( WrappedSafeBrowser );
+    const hookedUpInput = connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )( WrappedSafeBrowser );
 
     return hookedUpInput;
 };

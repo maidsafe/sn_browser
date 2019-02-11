@@ -20,7 +20,7 @@
     width: 100%;
 }
 
-/* let it grow*/
+/* let it grow */
 .addressBarCol
 {
     flex: 1;
@@ -89,12 +89,13 @@
 }
 
 /* buttons themselves */
-/*.back,
+
+/* .back,
 .forward,
 .reload
 {
     composes: button;
-}*/
+} */
 
 
 

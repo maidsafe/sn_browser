@@ -1,24 +1,29 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
-import { SAFE } from 'extensions/safe/constants';
+import {
+    CLASSES,
+    isRunningSpectronTestProcess,
+    startedRunningMock
+} from '@Constants';
+import { SAFE } from '@Extensions/safe/constants';
 import { Column, IconButton, Grid } from 'nessie-ui';
 import _ from 'lodash';
 import logger from 'logger';
 import styles from './webIdButtons.css';
 
 const hideDropdownTimeout = 0.15; // seconds
-const webIdManagerUri = startedRunningMock ? 'http://localhost:1234' : 'safe://webidmgr.dapp';
+const webIdManagerUri = startedRunningMock
+    ? 'http://localhost:1234'
+    : 'safe://webidmgr.dapp';
 const authHomeUri = 'safe-auth://home';
 
 export default class WebIdDropdown extends Component
 {
-    static defaultProps =
-    {
+    static defaultProps = {
         safeBrowserApp : {
             webIds : []
         }
-    }
+    };
 
     constructor( props )
     {
@@ -31,22 +36,21 @@ export default class WebIdDropdown extends Component
         this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
     }
 
-    handleIdClick = ( webId ) =>
+    handleIdClick = webId =>
     {
         const { updateActiveTab, windowId, showWebIdDropdown } = this.props;
         // also if only 1 webID? mark as defualt?
         updateActiveTab( { windowId, webId } );
-    }
+    };
 
-    handleIdButtonClick = ( ) =>
+    handleIdButtonClick = () =>
     {
         const { showWebIdDropdown } = this.props;
         this.hoverTime = new Date();
         showWebIdDropdown( true );
-    }
+    };
 
-
-    handleMouseEnter = ( ) =>
+    handleMouseEnter = () =>
     {
         this.hoverTime = new Date().getTime();
         this.isMouseOverIdButton = true;
@@ -54,40 +58,42 @@ export default class WebIdDropdown extends Component
         const { getAvailableWebIds, safeBrowserApp } = this.props;
         const { isFetchingWebIds } = safeBrowserApp;
 
-        if ( safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISED && !isFetchingWebIds )
+        if (
+            safeBrowserApp.appStatus === SAFE.APP_STATUS.AUTHORISED
+            && !isFetchingWebIds
+        )
         {
             this.debouncedGetWebIds();
         }
-    }
+    };
 
     launchWebIdManager = () =>
     {
         const { addTab } = this.props;
 
         addTab( { url: webIdManagerUri, isActiveTab: true } );
-    }
+    };
 
     launchAuthenticator = () =>
     {
         const { addTab } = this.props;
 
         addTab( { url: authHomeUri, isActiveTab: true } );
-    }
-
+    };
 
     authorisePeruse = () =>
     {
         const { setAppStatus } = this.props;
 
         setAppStatus( SAFE.APP_STATUS.TO_AUTH );
-    }
+    };
 
-    handleMouseLeave = ( ) =>
+    handleMouseLeave = () =>
     {
         this.isMouseOverIdButton = false;
 
         setTimeout( this.closeIfNotOver, hideDropdownTimeout * 1000 );
-    }
+    };
 
     closeIfNotOver = () =>
     {
@@ -100,19 +106,18 @@ export default class WebIdDropdown extends Component
         {
             showWebIdDropdown( false );
         }
-    }
-
+    };
 
     render()
     {
         const { safeBrowserApp, activeTab } = this.props;
         const {
-            showingWebIdDropdown
-            , webIds
-            , experimentsEnabled
-            , appStatus
-            , networkStatus
-            , isFetchingWebIds
+            showingWebIdDropdown,
+            webIds,
+            experimentsEnabled,
+            appStatus,
+            networkStatus,
+            isFetchingWebIds
         } = safeBrowserApp;
 
         const activeWebId = activeTab.webId || {};
@@ -131,30 +136,37 @@ export default class WebIdDropdown extends Component
                         onClick={ handleIdClick.bind( this, webId ) }
                         key={ webId['@id'] }
                         className={ styles.selectedWebId }
-                    >{ nickname }
+                    >
+                        {nickname}
                     </li>
                 );
             }
 
-            return ( <li
-                onClick={ handleIdClick.bind( this, webId ) }
-                key={ webId['@id'] }
-                className={ styles.webId }
-            >
-                { nickname }
-            </li> );
+            return (
+                <li
+                    onClick={ handleIdClick.bind( this, webId ) }
+                    key={ webId['@id'] }
+                    className={ styles.webId }
+                >
+                    {nickname}
+                </li>
+            );
         } );
 
         let webIdDropdownContents = [];
 
         if ( appStatus !== SAFE.APP_STATUS.AUTHORISED )
         {
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                onClick={ this.authorisePeruse }
-                className={ styles.openAuth }
-                key="noAuth"
-            ><a href="#">Authorise to display your WebIds.</a></li> );
+            webIdDropdownContents.push(
+                <li
+                    className={ styles.webIdInfo }
+                    onClick={ this.authorisePeruse }
+                    className={ styles.openAuth }
+                    key="noAuth"
+                >
+                    <a href="#">Authorise to display your WebIds.</a>
+                </li>
+            );
         }
         else if ( webIdsList.length > 0 )
         {
@@ -162,12 +174,12 @@ export default class WebIdDropdown extends Component
         }
         else
         {
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                key="noId"
-            >No WebIds Found.</li> );
+            webIdDropdownContents.push(
+                <li className={ styles.webIdInfo } key="noId">
+                    No WebIds Found.
+                </li>
+            );
         }
-
 
         // This will be quite fast on mock.
         // TODO: Add transition.
@@ -175,13 +187,16 @@ export default class WebIdDropdown extends Component
         {
             webIdDropdownContents = webIdDropdownContents || [];
 
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                className={ styles.openAuth }
-                key="fetching"
-            >Updating webIds.</li> );
+            webIdDropdownContents.push(
+                <li
+                    className={ styles.webIdInfo }
+                    className={ styles.openAuth }
+                    key="fetching"
+                >
+                    Updating webIds.
+                </li>
+            );
         }
-
 
         return (
             <div
@@ -195,10 +210,8 @@ export default class WebIdDropdown extends Component
                     size="S"
                     style={ { cursor: 'pointer' } }
                 />
-                {
-                    showingWebIdDropdown &&
+                {showingWebIdDropdown && (
                     <ul className={ styles.webIdList }>
-
                         {webIdDropdownContents}
                         <li
                             onClick={ this.launchWebIdManager }
@@ -207,8 +220,8 @@ export default class WebIdDropdown extends Component
                             <a href="#">Launch WebIdManager</a>
                         </li>
                     </ul>
-                }
+                )}
             </div>
         );
     }
-};
+}

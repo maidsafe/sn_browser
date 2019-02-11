@@ -46,7 +46,7 @@ describe( 'AddressBar', () =>
             activeTab          : {
                 isLoading    : false,
                 historyIndex : 1,
-                history      : ['a', 'b']
+                history      : [ 'a', 'b' ]
             }
         };
     } );
@@ -58,9 +58,10 @@ describe( 'AddressBar', () =>
             store = mockStore( props );
 
             wrapper = shallow(
-                <Provider store={ store } >
+                <Provider store={ store }>
                     <AddressBar { ...props } />
-                </Provider > ).dive();
+                </Provider>
+            ).dive();
 
             instance = wrapper.instance();
         } );

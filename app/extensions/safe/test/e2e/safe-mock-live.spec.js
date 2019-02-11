@@ -1,12 +1,13 @@
+import { delay, newTab } from 'spectron-lib/browser-driver';
 import {
-    delay,
-    newTab
-} from 'spectron-lib/browser-driver';
-import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT, DEFAULT_TIMEOUT_INTERVAL } from 'spectron-lib/constants';
+    BROWSER_UI,
+    WAIT_FOR_EXIST_TIMEOUT,
+    DEFAULT_TIMEOUT_INTERVAL
+} from 'spectron-lib/constants';
 import {
-    setupSpectronApp
-    , afterAllTests
-    , beforeAllTests
+    setupSpectronApp,
+    afterAllTests,
+    beforeAllTests
 } from 'spectron-lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
@@ -33,7 +34,12 @@ describe( 'mock tests', () =>
         await delay( 4500 );
         await newTab( app );
         await delay( 2500 );
-        expect( await client.waitForExist( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT ) ).toBeTruthy();
+        expect(
+            await client.waitForExist(
+                BROWSER_UI.MOCK_TAG,
+                WAIT_FOR_EXIST_TIMEOUT
+            )
+        ).toBeTruthy();
     } );
 
     it( 'checks if text inside  Mock Tag matches "Mock Network"', async () =>
@@ -70,6 +76,12 @@ describe( 'live tests', () =>
         await delay( 4500 );
         await newTab( app );
         await delay( 2500 );
-        expect( await client.waitForExist( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT, true ) ).toBeTruthy();
+        expect(
+            await client.waitForExist(
+                BROWSER_UI.MOCK_TAG,
+                WAIT_FOR_EXIST_TIMEOUT,
+                true
+            )
+        ).toBeTruthy();
     } );
 } );
