@@ -134,7 +134,8 @@ before_deploy:
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
   fi
   done
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\*;
+# don't fail if nothing to do.
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\* || true;
   fi
 - cd ..
 - ls release
@@ -142,12 +143,13 @@ before_deploy:
 - export RELEASE_DEV_ZIP="$(ls release/*-dev.zip)";
 - echo "deploying ${RELEASE_PROD_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - echo "deploying ${RELEASE_DEV_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*-x64.zip >> release/$RELEASE_PROD.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*-dev.zip >> release/$RELEASE_DEV.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*-x64.zip >> release/$RELEASE_PROD.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*-dev.zip >> release/$RELEASE_DEV.txt; fi
-- export SHA_256_SUM_PROD="$(ls release/*-x64.txt)";
-- export SHA_256_SUM_DEV="$(ls release/*-dev.txt)";
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*-x64.zip >> $RELEASE_PROD_ZIP.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*-dev.zip >> $RELEASE_DEV_ZIP.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*-x64.zip >> $RELEASE_PROD_ZIP.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*-dev.zip >> $RELEASE_DEV_ZIP.txt; fi
+- ls release
+- export SHA_256_SUM_PROD="$(ls release/*-x64.zip.txt)";
+- export SHA_256_SUM_DEV="$(ls release/*-dev.zip.txt)";
 
 
 deploy:
