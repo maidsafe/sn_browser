@@ -1,7 +1,8 @@
 module.exports = {
     ERR_ROUTING_INTERFACE_ERROR : {
         code : -11,
-        msg  : 'Unable to navigate to site. Will automatically reload when network is connected...'
+        msg  :
+            'Unable to navigate to site. Will automatically reload when network is connected...'
     },
     ERR_OPERATION_ABORTED : {
         code : -14
@@ -56,11 +57,13 @@ module.exports = {
 
     CONTAINER_DECISION_RESP : {
         code : 9,
-        msg  : e => `Encoded response after container authorisation decision was made: ${ e }`
+        msg  : e =>
+            `Encoded response after container authorisation decision was made: ${ e }`
     },
 
     SHAREMD_DECISION_RESP : {
         code : 10,
-        msg  : e => `Encoded response after share MD authorisation decision was made: ${ e }`
+        msg  : e =>
+            `Encoded response after share MD authorisation decision was made: ${ e }`
     }
 };

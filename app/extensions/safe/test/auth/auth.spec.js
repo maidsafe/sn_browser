@@ -1,49 +1,45 @@
 /* eslint-disable func-names */
 import path from 'path';
 import i18n from 'i18n';
-import ffiLoader from 'extensions/safe/ffi/lib';
-import client from 'extensions/safe/ffi/authenticator';
-import * as helper from './helper';
+import ffiLoader from '@Extensions/safe/ffi/lib';
+import client from '@Extensions/safe/ffi/authenticator';
 
 import crypto from 'crypto';
 
-import CONST from 'extensions/safe/auth-constants';
+import CONST from '@Extensions/safe/auth-constants';
 import toBeType from 'jest-tobetype';
+import * as helper from './helper';
 
 expect.extend( toBeType );
 
 jest.mock( 'logger' );
 
 let randomCredentials = null;
-const encodedAuthUri = 'safe-auth:bAAAAAAFBMHKYWAAAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM' +
-'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG' +
-'KICMORSC4AACAAAAAAAAAAAAUAAAAAAAAAAAL5SG6Y3VNVSW45DTAEAAAAAAAAAAAAIAAAAAOAAAAAAAAAA' +
-'AL5YHKYTMNFRQCAAAAAAAAAAAAAAAAAAB';
+const encodedAuthUri = 'safe-auth:bAAAAAAFBMHKYWAAAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM'
+    + 'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG'
+    + 'KICMORSC4AACAAAAAAAAAAAAUAAAAAAAAAAAL5SG6Y3VNVSW45DTAEAAAAAAAAAAAAIAAAAAOAAAAAAAAAA'
+    + 'AL5YHKYTMNFRQCAAAAAAAAAAAAAAAAAAB';
 /* const encodedUnRegisterAuthUri = 'safe-auth:bAAAAAADKLNT46AQAAAABWAAAAAAAAAAANZSXILT' +
 'NMFUWI43BMZSS45DFON2C453FMJQXA4BONFSAC'; */
-const encodedContUri = 'safe-auth:bAAAAAAHQQQ2XQAIAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM' +
-'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG' +
-'KICMORSC4AIAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMAQAAAAAAAAAAABAAAAAAI';
+const encodedContUri = 'safe-auth:bAAAAAAHQQQ2XQAIAAAABWAAAAAAAAAAANZSXILTNMFUWI43BM'
+    + 'ZSS45DFON2C453FMJQXA4BONFSAACYAAAAAAAAAABLWKYSBOBYCAVDFON2A2AAAAAAAAAAAJVQWSZCTMFTG'
+    + 'KICMORSC4AIAAAAAAAAAAADQAAAAAAAAAAC7OB2WE3DJMMAQAAAAAAAAAAABAAAAAAI';
 
-
-const decodedReqForRandomClient = uri => helper.createRandomAccount()
-    .then( () => client.decodeRequest( uri ) );
-
+const decodedReqForRandomClient = uri =>
+    helper.createRandomAccount().then( () => client.decodeRequest( uri ) );
 
 const init = async () =>
 {
     i18n.configure( {
-        locales        : ['en'],
+        locales        : [ 'en' ],
         directory      : path.resolve( __dirname, '../', 'locales' ),
         objectNotation : true
     } );
 
     i18n.setLocale( 'en' );
 
-    await ffiLoader.load()
-        .catch( console.error );
+    await ffiLoader.load().catch( console.error );
 };
-
 
 describe( 'Authenticator functions', () =>
 {
@@ -68,12 +64,10 @@ describe( 'Authenticator functions', () =>
         ) ); */
     } );
 
-
     it( 'should return the initial state', () =>
     {
         expect( 1 ).toEqual( 1 );
     } );
-
 
     describe( 'create Account', () =>
     {
@@ -89,7 +83,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) )
+                );
             }
         } );
 
@@ -105,7 +101,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).not.toBeUndefined();
                 expect( e ).toBeInstanceOf( Error );
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -123,7 +121,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) )
+                );
             }
             await helper.clearAccount();
         } );
@@ -140,7 +140,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -158,7 +160,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -176,7 +180,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -189,8 +195,11 @@ describe( 'Authenticator functions', () =>
             randomCredentials = helper.getRandomCredentials();
 
             await expect(
-                client.createAccount( randomCredentials.locator,
-                    randomCredentials.secret, randomCredentials.invite )
+                client.createAccount(
+                    randomCredentials.locator,
+                    randomCredentials.secret,
+                    randomCredentials.invite
+                )
             ).resolves.toBeUndefined();
 
             expect( client.registeredClientHandle ).not.toBe( '' );
@@ -201,37 +210,39 @@ describe( 'Authenticator functions', () =>
             await helper.clearAccount();
         } );
 
-        it( 'emits network state as connected when account creation is successful', () => (
+        it( 'emits network state as connected when account creation is successful', () =>
             new Promise( resolve =>
             {
                 expect.assertions( 3 );
-                const nwListener = client.setListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE,
+                const nwListener = client.setListener(
+                    CONST.LISTENER_TYPES.NW_STATE_CHANGE,
                     async ( err, state ) =>
                     {
                         expect( err ).toBeNull();
                         expect( state ).not.toBeUndefined();
                         expect( state ).toEqual( CONST.NETWORK_STATUS.CONNECTED );
-                        client.removeListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE, nwListener );
+                        client.removeListener(
+                            CONST.LISTENER_TYPES.NW_STATE_CHANGE,
+                            nwListener
+                        );
 
                         await helper.clearAccount();
 
                         return resolve();
-                    } );
+                    }
+                );
                 helper.createRandomAccount();
-            } ) )
-        );
+            } ) );
     } );
-
 
     // Login
     describe( 'Login', () =>
     {
-        beforeAll( () => helper.createRandomAccount()
-            .then( credential =>
+        beforeAll( () =>
+            helper.createRandomAccount().then( credential =>
             {
                 randomCredentials = credential;
-            } )
-        );
+            } ) );
 
         it( 'should throw an error when account locator is empty', async () =>
         {
@@ -245,7 +256,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -263,7 +276,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).not.toBeUndefined();
                 expect( e ).toBeInstanceOf( Error );
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -281,7 +296,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.must_be_string', i18n.__( 'Locator' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -299,7 +316,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.must_be_string', i18n.__( 'Secret' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -317,7 +336,9 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Locator' ) )
+                );
             }
 
             await helper.clearAccount();
@@ -335,19 +356,23 @@ describe( 'Authenticator functions', () =>
             {
                 expect( e ).toBeInstanceOf( Error );
                 expect( e ).not.toBeUndefined();
-                expect( e.message ).toEqual( i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) ) );
+                expect( e.message ).toEqual(
+                    i18n.__( 'messages.should_not_be_empty', i18n.__( 'Secret' ) )
+                );
             }
 
             await helper.clearAccount();
         } );
 
-
         it( 'should set authenticator handle when account login is successful', async () =>
         {
             expect.assertions( 5 );
 
-            await expect( client.login( randomCredentials.locator,
-                randomCredentials.secret )
+            await expect(
+                client.login(
+                    randomCredentials.locator,
+                    randomCredentials.secret
+                )
             ).resolves.toBeUndefined();
             expect( client.registeredClientHandle ).not.toBe( '' );
             expect( client.registeredClientHandle ).not.toBeNull();
@@ -357,26 +382,29 @@ describe( 'Authenticator functions', () =>
             await helper.clearAccount();
         } );
 
-
-        it( 'emits network state as connected when account login is successful', () => (
+        it( 'emits network state as connected when account login is successful', () =>
             new Promise( resolve =>
             {
                 expect.assertions( 3 );
-                const nwListener = client.setListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE,
+                const nwListener = client.setListener(
+                    CONST.LISTENER_TYPES.NW_STATE_CHANGE,
                     async ( err, state ) =>
                     {
                         expect( err ).toBeNull();
                         expect( state ).not.toBeUndefined();
                         expect( state ).toEqual( CONST.NETWORK_STATUS.CONNECTED );
-                        client.removeListener( CONST.LISTENER_TYPES.NW_STATE_CHANGE, nwListener );
+                        client.removeListener(
+                            CONST.LISTENER_TYPES.NW_STATE_CHANGE,
+                            nwListener
+                        );
 
                         await helper.clearAccount();
 
                         return resolve();
-                    } );
+                    }
+                );
                 helper.createRandomAccount();
-            } ) )
-        );
+            } ) );
     } );
 
     // DECRYPT
@@ -415,7 +443,9 @@ describe( 'Authenticator functions', () =>
 
             try
             {
-                await client.decodeRequest( `safe-auth:${ crypto.randomBytes( 32 ).toString( 'base64' ) }` );
+                await client.decodeRequest(
+                    `safe-auth:${ crypto.randomBytes( 32 ).toString( 'base64' ) }`
+                );
             }
             catch ( e )
             {
@@ -423,7 +453,6 @@ describe( 'Authenticator functions', () =>
                 await helper.clearAccount();
             }
         } );
-
 
         it( 'returns a decoded request for encoded Auth request', async () =>
         {
@@ -443,21 +472,21 @@ describe( 'Authenticator functions', () =>
             expect( response.authReq ).toHaveProperty( 'containers_len' );
             expect( response.authReq ).toHaveProperty( 'containers_cap' );
 
-            expect( response.authReq.app_container ).toBeDefined( );
+            expect( response.authReq.app_container ).toBeDefined();
             expect( response.authReq.app_container ).toBeType( 'boolean' );
 
-            expect( response.authReq.containers ).toBeDefined( );
+            expect( response.authReq.containers ).toBeDefined();
             expect( response.authReq.containers ).toBeType( 'array' );
 
-            expect( response.authReq.containers_len ).toBeDefined( );
+            expect( response.authReq.containers_len ).toBeDefined();
             expect( response.authReq.containers_len ).toBeType( 'number' );
 
-            expect( response.authReq.containers_cap ).toBeDefined( );
+            expect( response.authReq.containers_cap ).toBeDefined();
             expect( response.authReq.containers_cap ).toBeType( 'number' );
 
             const container0 = response.authReq.containers[0];
 
-            expect( container0 ).toBeDefined( );
+            expect( container0 ).toBeDefined();
             expect( container0 ).toBeType( 'object' );
             expect( container0 ).toHaveProperty( 'cont_name' );
             expect( container0 ).toHaveProperty( 'access' );
@@ -468,7 +497,6 @@ describe( 'Authenticator functions', () =>
             // https://github.com/facebook/jest/pull/5673
             await helper.clearAccount();
         } );
-
 
         it( 'returns a decoded request for encoded Auth request, with app Object', async () =>
         {
@@ -494,7 +522,7 @@ describe( 'Authenticator functions', () =>
             expect( response.authReq.app.vendor ).toBeType( 'string' );
             expect( response.authReq.app.vendor.length ).toBeGreaterThan( 0 );
 
-            expect( response.authReq.app_container ).toBeDefined( );
+            expect( response.authReq.app_container ).toBeDefined();
             expect( response.authReq.app_container ).toBeType( 'boolean' );
 
             // lifecycle async not valid in jest yet.
@@ -506,17 +534,17 @@ describe( 'Authenticator functions', () =>
         {
             await helper.createRandomAccount().catch( console.log );
 
-            const response = await client.decodeRequest( encodedAuthUri.replace( 'safe-auth:', '' ) );
+            const response = await client.decodeRequest(
+                encodedAuthUri.replace( 'safe-auth:', '' )
+            );
             expect( response ).not.toBeNull();
             expect( response ).toBeDefined();
             expect( response ).toBeType( 'object' );
-
 
             // lifecycle async not valid in jest yet.
             // https://github.com/facebook/jest/pull/5673
             await helper.clearAccount();
         } );
-
 
         it( 'returns a decoded request for encoded Container request', async () =>
         {
@@ -524,7 +552,9 @@ describe( 'Authenticator functions', () =>
             await helper.createRandomAccount().catch( console.log );
             const response = await client.decodeRequest( encodedAuthUri );
             await client.encodeAuthResp( response, true );
-            const containerResponse = await client.decodeRequest( encodedContUri );
+            const containerResponse = await client.decodeRequest(
+                encodedContUri
+            );
 
             expect( containerResponse ).toBeDefined();
             expect( containerResponse.reqId ).toBeDefined();
@@ -540,13 +570,16 @@ describe( 'Authenticator functions', () =>
             expect( containerResponse.contReq.app ).toHaveProperty( 'name' );
             expect( containerResponse.contReq.app.name ).toBeDefined();
             expect( containerResponse.contReq.app.name ).toBeType( 'string' );
-            expect( containerResponse.contReq.app.name.length ).toBeGreaterThan( 0 );
+            expect( containerResponse.contReq.app.name.length ).toBeGreaterThan(
+                0
+            );
 
             expect( containerResponse.contReq.app ).toHaveProperty( 'vendor' );
             expect( containerResponse.contReq.app.vendor ).toBeDefined();
             expect( containerResponse.contReq.app.vendor ).toBeType( 'string' );
-            expect( containerResponse.contReq.app.vendor.length ).toBeGreaterThan( 0 );
-
+            expect( containerResponse.contReq.app.vendor.length ).toBeGreaterThan(
+                0
+            );
 
             expect( containerResponse.contReq ).toBeType( 'object' );
             expect( containerResponse.contReq ).toHaveProperty( 'app' );
@@ -554,18 +587,18 @@ describe( 'Authenticator functions', () =>
             expect( containerResponse.contReq ).toHaveProperty( 'containers_len' );
             expect( containerResponse.contReq ).toHaveProperty( 'containers_cap' );
 
-            expect( containerResponse.contReq.containers ).toBeDefined( );
+            expect( containerResponse.contReq.containers ).toBeDefined();
             expect( containerResponse.contReq.containers ).toBeType( 'array' );
 
-            expect( containerResponse.contReq.containers_len ).toBeDefined( );
+            expect( containerResponse.contReq.containers_len ).toBeDefined();
             expect( containerResponse.contReq.containers_len ).toBeType( 'number' );
 
-            expect( containerResponse.contReq.containers_cap ).toBeDefined( );
+            expect( containerResponse.contReq.containers_cap ).toBeDefined();
             expect( containerResponse.contReq.containers_cap ).toBeType( 'number' );
 
             const container0 = containerResponse.contReq.containers[0];
 
-            expect( container0 ).toBeDefined( );
+            expect( container0 ).toBeDefined();
             expect( container0 ).toBeType( 'object' );
             expect( container0 ).toHaveProperty( 'cont_name' );
             expect( container0 ).toHaveProperty( 'access' );
@@ -575,13 +608,14 @@ describe( 'Authenticator functions', () =>
             await helper.clearAccount();
         } );
 
-
         it( 'returns a decoded request for encoded Container request without safe-auth: scheme', async () =>
         {
             await helper.createRandomAccount().catch( console.log );
             const req = await client.decodeRequest( encodedAuthUri );
             await client.encodeAuthResp( req, true );
-            const response = await client.decodeRequest( encodedContUri.replace( 'safe-auth:', '' ) );
+            const response = await client.decodeRequest(
+                encodedContUri.replace( 'safe-auth:', '' )
+            );
 
             expect( response ).not.toBeNull();
             expect( response ).toBeDefined();
@@ -590,7 +624,6 @@ describe( 'Authenticator functions', () =>
             await helper.clearAccount();
         } );
     } );
-
 
     describe( 'Encode auth response', async () =>
     {
@@ -617,23 +650,49 @@ describe( 'Authenticator functions', () =>
             expect.assertions( 5 );
             await decodedReqForRandomClient( encodedAuthUri );
 
-            await expect( client.encodeAuthResp( {}, 123 ) ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeAuthResp( {}, 123 ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
-            await expect( client.encodeAuthResp( {}, 'string' ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
-            await expect( client.encodeAuthResp( {}, { a: 1 } ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
-            await expect( client.encodeAuthResp( {}, [1, 2, 3] ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
+            await expect( client.encodeAuthResp( {}, 123 ) ).rejects.toBeInstanceOf(
+                Error
+            );
+            await expect( client.encodeAuthResp( {}, 123 ) ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
+            await expect(
+                client.encodeAuthResp( {}, 'string' )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
+            await expect(
+                client.encodeAuthResp( {}, { a: 1 } )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
+            await expect(
+                client.encodeAuthResp( {}, [ 1, 2, 3 ] )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
 
             await helper.clearAccount();
         } );
 
-
-        it( 'throws an error if request doesn\'t have request ID(reqId)', async () =>
+        it( "throws an error if request doesn't have request ID(reqId)", async () =>
         {
             expect.assertions( 2 );
             await decodedReqForRandomClient( encodedAuthUri );
 
-            await expect( client.encodeAuthResp( {}, true ) ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeAuthResp( {}, true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_req' ) );
+            await expect(
+                client.encodeAuthResp( {}, true )
+            ).rejects.toBeInstanceOf( Error );
+            await expect(
+                client.encodeAuthResp( {}, true )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_req' )
+            );
 
             await helper.clearAccount();
         } );
@@ -643,8 +702,21 @@ describe( 'Authenticator functions', () =>
             expect.assertions( 2 );
             const decodedReq = await decodedReqForRandomClient( encodedAuthUri );
 
-            await expect( client.encodeAuthResp( Object.assign( {}, decodedReq, { reqId: 123 } ), true ) ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeAuthResp( Object.assign( {}, decodedReq, { reqId: 123 } ), true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_req' ) );
+            await expect(
+                client.encodeAuthResp(
+                    Object.assign( {}, decodedReq, { reqId: 123 } ),
+                    true
+                )
+            ).rejects.toBeInstanceOf( Error );
+            await expect(
+                client.encodeAuthResp(
+                    Object.assign( {}, decodedReq, { reqId: 123 } ),
+                    true
+                )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_req' )
+            );
 
             await helper.clearAccount();
         } );
@@ -676,10 +748,9 @@ describe( 'Authenticator functions', () =>
         } );
     } );
 
-
     describe( 'Encode container response', () =>
     {
-        const getDecodedReq = async ( ) =>
+        const getDecodedReq = async () =>
         {
             const req = await decodedReqForRandomClient( encodedAuthUri );
             await client.encodeAuthResp( req, true );
@@ -692,35 +763,67 @@ describe( 'Authenticator functions', () =>
             expect.assertions( 2 );
             await getDecodedReq();
 
-            await expect( client.encodeContainersResp() ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeContainersResp() ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
+            await expect( client.encodeContainersResp() ).rejects.toBeInstanceOf(
+                Error
+            );
+            await expect( client.encodeContainersResp() ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
 
             await helper.clearAccount();
         } );
-
 
         it( 'throws an error if decision is not boolean type', async () =>
         {
             expect.assertions( 5 );
             await getDecodedReq();
 
-            await expect( client.encodeContainersResp( {}, 123 ) ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeContainersResp( {}, 123 ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
-            await expect( client.encodeContainersResp( {}, 'string' ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
-            await expect( client.encodeContainersResp( {}, { a: 1 } ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
-            await expect( client.encodeContainersResp( {}, [1, 2, 3] ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_params' ) );
+            await expect(
+                client.encodeContainersResp( {}, 123 )
+            ).rejects.toBeInstanceOf( Error );
+            await expect(
+                client.encodeContainersResp( {}, 123 )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
+            await expect(
+                client.encodeContainersResp( {}, 'string' )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
+            await expect(
+                client.encodeContainersResp( {}, { a: 1 } )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
+            await expect(
+                client.encodeContainersResp( {}, [ 1, 2, 3 ] )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_params' )
+            );
 
             await helper.clearAccount();
         } );
 
-
-        it( 'throws an error if request doesn\'t have request ID(reqId)', async () =>
+        it( "throws an error if request doesn't have request ID(reqId)", async () =>
         {
             expect.assertions( 2 );
             await getDecodedReq();
 
-            await expect( client.encodeContainersResp( {}, true ) ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeContainersResp( {}, true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_req' ) );
+            await expect(
+                client.encodeContainersResp( {}, true )
+            ).rejects.toBeInstanceOf( Error );
+            await expect(
+                client.encodeContainersResp( {}, true )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_req' )
+            );
 
             await helper.clearAccount();
         } );
@@ -730,8 +833,21 @@ describe( 'Authenticator functions', () =>
             expect.assertions( 2 );
             const decodedReq = await getDecodedReq();
 
-            await expect( client.encodeContainersResp( Object.assign( {}, decodedReq, { reqId: 123 } ), true ) ).rejects.toBeInstanceOf( Error );
-            await expect( client.encodeContainersResp( Object.assign( {}, decodedReq, { reqId: 123 } ), true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.invalid_req' ) );
+            await expect(
+                client.encodeContainersResp(
+                    Object.assign( {}, decodedReq, { reqId: 123 } ),
+                    true
+                )
+            ).rejects.toBeInstanceOf( Error );
+            await expect(
+                client.encodeContainersResp(
+                    Object.assign( {}, decodedReq, { reqId: 123 } ),
+                    true
+                )
+            ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.invalid_req' )
+            );
 
             await helper.clearAccount();
         } );
@@ -744,7 +860,10 @@ describe( 'Authenticator functions', () =>
             // await client.encodeAuthResp( req, true );
             const decodedReq = await getDecodedReq();
 
-            const response = await client.encodeContainersResp( decodedReq, false );
+            const response = await client.encodeContainersResp(
+                decodedReq,
+                false
+            );
 
             await expect( response ).toBeType( 'string' );
             await expect( response ).toBeDefined();
@@ -765,8 +884,7 @@ describe( 'Authenticator functions', () =>
             expect( apps ).toHaveLength( 0 );
 
             await helper.clearAccount();
-        }
-        );
+        } );
 
         it( 'return apps list after registering apps', async () =>
         {
@@ -782,7 +900,6 @@ describe( 'Authenticator functions', () =>
         } );
     } );
 
-
     describe( 'Revoke app', () =>
     {
         let appId = null;
@@ -797,7 +914,10 @@ describe( 'Authenticator functions', () =>
         {
             expect.assertions( 1 );
             await setup();
-            await expect( client.revokeApp() ).rejects.toHaveProperty( 'message', i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) ) );
+            await expect( client.revokeApp() ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) )
+            );
             helper.clearAccount();
         } );
 
@@ -806,20 +926,34 @@ describe( 'Authenticator functions', () =>
             expect.assertions( 4 );
             await setup();
 
-            await expect( client.revokeApp( 123 ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) ) );
-            await expect( client.revokeApp( true ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) ) );
-            await expect( client.revokeApp( { a: 1 } ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) ) );
-            await expect( client.revokeApp( [1, 2, 3] ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) ) );
+            await expect( client.revokeApp( 123 ) ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) )
+            );
+            await expect( client.revokeApp( true ) ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) )
+            );
+            await expect( client.revokeApp( { a: 1 } ) ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) )
+            );
+            await expect( client.revokeApp( [ 1, 2, 3 ] ) ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.must_be_string', i18n.__( 'AppId' ) )
+            );
             await helper.clearAccount();
-        }
-        );
+        } );
 
         it( 'throws an error when appId is empty string', async () =>
         {
             expect.assertions( 1 );
 
             await setup();
-            expect( client.revokeApp( ' ' ) ).rejects.toHaveProperty( 'message', i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) ) );
+            expect( client.revokeApp( ' ' ) ).rejects.toHaveProperty(
+                'message',
+                i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) )
+            );
 
             await helper.clearAccount();
         } );
@@ -856,10 +990,9 @@ describe( 'Authenticator functions', () =>
         } );
     } );
 
-
     describe( 'Re-authorising', () =>
     {
-        it( 'doesn\'t throw error', async () =>
+        it( "doesn't throw error", async () =>
         {
             const req = await decodedReqForRandomClient( encodedAuthUri );
             await client.encodeAuthResp( req, true );

@@ -37,10 +37,9 @@ export default class SafeLib
     // Abstract methods
     /* eslint-disable class-methods-use-this */
     /* eslint-disable no-unused-vars */
-    drop( safeLib )
-    {}
+    drop( safeLib ) {}
+
     /* eslint-enable no-unused-vars */
-    fnsToRegister()
-    {}
+    fnsToRegister() {}
     /* eslint-enable class-methods-use-this */
 }

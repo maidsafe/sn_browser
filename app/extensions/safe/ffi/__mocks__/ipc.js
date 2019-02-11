@@ -1,8 +1,6 @@
 const ipc = {
-    callIPC :
-    {
-        enqueueRequest : jest.fn(),
-
+    callIPC : {
+        enqueueRequest : jest.fn()
     }
 };
 

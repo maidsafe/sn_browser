@@ -21,7 +21,7 @@ describe( 'notification reducer', () =>
                     type    : TYPES.ADD_BOOKMARK,
                     payload : { text: 'hellohello' }
                 } )
-            ).toEqual( [{ text: 'hellohello' }] );
+            ).toEqual( [ { text: 'hellohello' } ] );
         } );
     } );
 
@@ -30,12 +30,21 @@ describe( 'notification reducer', () =>
         it( 'should handle removing a bookmark', () =>
         {
             expect(
-                bookmarks( [{ url: 'i also should exist' }, { url: 'i should not exist' }, { url: 'i should exist' }],
+                bookmarks(
+                    [
+                        { url: 'i also should exist' },
+                        { url: 'i should not exist' },
+                        { url: 'i should exist' }
+                    ],
                     {
                         type    : TYPES.REMOVE_BOOKMARK,
                         payload : { url: 'i should not exist' }
-                    } )
-            ).toEqual( [{ url: 'i also should exist' }, { url: 'i should exist' }] );
+                    }
+                )
+            ).toEqual( [
+                { url: 'i also should exist' },
+                { url: 'i should exist' }
+            ] );
         } );
     } );
 
@@ -44,7 +53,7 @@ describe( 'notification reducer', () =>
         it( 'should handle updating a bookmark', () =>
         {
             expect(
-                bookmarks( [{ url: 'i should not exist' }], {
+                bookmarks( [ { url: 'i should not exist' } ], {
                     type    : TYPES.UPDATE_BOOKMARK,
                     payload : { url: 'changed', index: 0 }
                 } )[0]
@@ -57,19 +66,22 @@ describe( 'notification reducer', () =>
         it( 'should handle receiving the new config', () =>
         {
             expect(
-                bookmarks( [{ url: 'i should not exist' }], {
+                bookmarks( [ { url: 'i should not exist' } ], {
                     type    : TYPES.UPDATE_BOOKMARKS,
-                    payload : { bookmarks: [{ url: 'updated', index: 0 }] }
+                    payload : { bookmarks: [ { url: 'updated', index: 0 } ] }
                 } )[1]
             ).toMatchObject( { url: 'updated', index: 0 } );
         } );
 
         it( 'should merge the new bookmarks with any current, w/o duplicates', () =>
         {
-            const newBookmarks = bookmarks( [{ url: 'i should exist' }, { url: 'updated', index: 0 }], {
-                type    : TYPES.UPDATE_BOOKMARKS,
-                payload : { bookmarks: [{ url: 'updated', index: 0 }] }
-            } );
+            const newBookmarks = bookmarks(
+                [ { url: 'i should exist' }, { url: 'updated', index: 0 } ],
+                {
+                    type    : TYPES.UPDATE_BOOKMARKS,
+                    payload : { bookmarks: [ { url: 'updated', index: 0 } ] }
+                }
+            );
             expect( newBookmarks[0] ).toMatchObject( { url: 'i should exist' } );
             expect( newBookmarks[1] ).toMatchObject( { url: 'updated', index: 0 } );
             expect( newBookmarks[2] ).toBeUndefined();
@@ -78,8 +90,8 @@ describe( 'notification reducer', () =>
 
     describe( 'UI_RESET_STORE', () =>
     {
-        const bookmarksPostLogout = bookmarks( [{ url: 'i should not exist' }], {
-            type : UI_TYPES.RESET_STORE,
+        const bookmarksPostLogout = bookmarks( [ { url: 'i should not exist' } ], {
+            type : UI_TYPES.RESET_STORE
         } );
 
         it( 'should reset bookmarks to inital state', () =>

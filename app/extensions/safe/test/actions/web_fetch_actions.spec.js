@@ -1,11 +1,9 @@
-import * as webFetch from 'extensions/safe/actions/web_fetch_actions';
+import * as webFetch from '@Extensions/safe/actions/web_fetch_actions';
 
 jest.mock( 'extensions/safe/ffi/ipc' );
-jest.mock( 'electron-redux', () =>
-    ( {
-        createAliasedAction : () =>
-        {}
-    } ) );
+jest.mock( 'electron-redux', () => ( {
+    createAliasedAction : () => {}
+} ) );
 
 describe( 'webFetch actions', () =>
 {

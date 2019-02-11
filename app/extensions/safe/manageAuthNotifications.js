@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import * as notificationActions from 'actions/notification_actions';
-import CONSTANTS from './auth-constants';
+import * as notificationActions from '@Actions/notification_actions';
 import logger from 'logger';
+import CONSTANTS from './auth-constants';
 import { createAuthRequestElement } from './components/authRequest';
 
 export const CLIENT_TYPES = {
@@ -15,16 +15,21 @@ export const REQ_TYPES = {
     MDATA     : 'MDATA'
 };
 
-
-export const addAuthNotification = ( authReqData, app, sendAuthDecision, store ) =>
+export const addAuthNotification = (
+    authReqData,
+    app,
+    sendAuthDecision,
+    store
+) =>
 {
     if ( !store )
     {
         throw new Error( 'Store not defined in authenticator IPC yet.' );
     }
-    const addNotification = payload => store.dispatch( notificationActions.addNotification( payload ) );
-    const clearNotification = () => store.dispatch( notificationActions.clearNotification( ) );
-
+    const addNotification = payload =>
+        store.dispatch( notificationActions.addNotification( payload ) );
+    const clearNotification = () =>
+        store.dispatch( notificationActions.clearNotification() );
 
     let text = `${ app.name } Requests Auth Permission`;
     let reqType = REQ_TYPES.AUTH;
@@ -41,23 +46,23 @@ export const addAuthNotification = ( authReqData, app, sendAuthDecision, store )
         reqType = REQ_TYPES.MDATA;
     }
 
-    const ignoreRequest = ( ) =>
+    const ignoreRequest = () =>
     {
-        logger.info( 'replace these ipcRenderer.send calls' );
+        logger.log( 'replace these ipcRenderer.send calls' );
         sendAuthDecision( false, authReqData, reqType );
         clearNotification();
     };
 
     const success = () =>
     {
-        logger.info( 'success happeninng' );
+        logger.log( 'success happeninng' );
         sendAuthDecision( true, authReqData, reqType );
         clearNotification();
     };
 
     const denial = () =>
     {
-        logger.info( 'deny happeninng' );
+        logger.log( 'deny happeninng' );
         sendAuthDecision( false, authReqData, reqType );
         clearNotification();
     };
@@ -82,7 +87,7 @@ export const addAuthNotification = ( authReqData, app, sendAuthDecision, store )
     // now we listen....
     const stopListening = store.subscribe( () =>
     {
-        logger.verbose( 'Listener for addAuthNotification' );
+        logger.log( 'Listener for addAuthNotification' );
 
         const state = store.getState();
         const notifications = state.notifications;
@@ -92,7 +97,9 @@ export const addAuthNotification = ( authReqData, app, sendAuthDecision, store )
             return;
         }
 
-        const ourNotification = notifications.find( n => n.id === notificationId );
+        const ourNotification = notifications.find(
+            n => n.id === notificationId
+        );
 
         if ( !ourNotification || ourNotification === theNotification )
         {

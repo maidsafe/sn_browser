@@ -1,11 +1,9 @@
-import * as authenticator from 'extensions/safe/actions/authenticator_actions';
+import * as authenticator from '@Extensions/safe/actions/authenticator_actions';
 
 jest.mock( 'extensions/safe/ffi/ipc' );
-jest.mock( 'electron-redux', () =>
-    ( {
-        createAliasedAction : () =>
-        {}
-    } ) );
+jest.mock( 'electron-redux', () => ( {
+    createAliasedAction : () => {}
+} ) );
 
 describe( 'authenticator actions', () =>
 {
@@ -24,7 +22,6 @@ describe( 'authenticator actions', () =>
         expect( authenticator.setAuthLibStatus( payload ) ).toEqual( expectedAction );
     } );
 
-
     it( 'should set auth network status', () =>
     {
         const payload = 0;
@@ -32,7 +29,9 @@ describe( 'authenticator actions', () =>
             type : authenticator.TYPES.SET_AUTH_NETWORK_STATUS,
             payload
         };
-        expect( authenticator.setAuthNetworkStatus( payload ) ).toEqual( expectedAction );
+        expect( authenticator.setAuthNetworkStatus( payload ) ).toEqual(
+            expectedAction
+        );
     } );
 
     it( 'should set auth handle', () =>
@@ -62,6 +61,8 @@ describe( 'authenticator actions', () =>
             type : authenticator.TYPES.REMOVE_AUTH_REQUEST,
             payload
         };
-        expect( authenticator.removeAuthRequest( payload ) ).toEqual( expectedAction );
+        expect( authenticator.removeAuthRequest( payload ) ).toEqual(
+            expectedAction
+        );
     } );
 } );

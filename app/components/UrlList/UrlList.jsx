@@ -2,24 +2,24 @@
 import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import PropTypes from 'prop-types';
-import logger from 'logger';
-import { PageContent, Text, TableRow, TableCell, Table } from 'nessie-ui';
+// import logger from 'logger';
+import {
+    PageContent, Text, TableRow, TableCell, Table
+} from 'nessie-ui';
 
 import styles from './urlList.css';
 
 export default class UrlList extends Component
 {
-    static propTypes =
-    {
+    static propTypes = {
         list     : PropTypes.array.isRequired,
         onRemove : PropTypes.func,
         addTab   : PropTypes.func
-    }
+    };
 
-    static defaultProps =
-    {
+    static defaultProps = {
         list : []
-    }
+    };
 
     render = () =>
     {
@@ -28,7 +28,7 @@ export default class UrlList extends Component
 
         list.forEach( ( item, i ) =>
         {
-            const handleClick = ( e ) =>
+            const handleClick = e =>
             {
                 // required to prevent the app navigating by default.
                 e.preventDefault();
@@ -45,12 +45,11 @@ export default class UrlList extends Component
                     gutters="S"
                     key={ i }
                 >
-                    <a
-                        onClick={ handleClick }
-                        href={ item }
-                    >
-                        { item }
-                    </a>
+                    <TableCell>
+                        <a onClick={ handleClick } href={ item }>
+                            {item}
+                        </a>
+                    </TableCell>
                 </TableRow>
             );
 
@@ -58,17 +57,14 @@ export default class UrlList extends Component
         } );
 
         return (
-                <Table
-                    className={ styles.table }
-                    >
-                        { parsedList }
-                        {
-                            !parsedList.length &&
-                            <TableRow >
-                                <TableCell>Nothing to see here yet.</TableCell>
-                            </TableRow>
-                    }
-                </Table>
+            <Table className={ styles.table }>
+                {parsedList}
+                {!parsedList.length && (
+                    <TableRow>
+                        <TableCell>Nothing to see here yet.</TableCell>
+                    </TableRow>
+                )}
+            </Table>
         );
-    }
+    };
 }

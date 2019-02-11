@@ -15,9 +15,12 @@ describe( 'notification reducer', () =>
         it( 'should handle showing the settings menu', () =>
         {
             expect(
-                ui( {}, {
-                    type : TYPES.SHOW_SETTINGS_MENU
-                } )
+                ui(
+                    {},
+                    {
+                        type : TYPES.SHOW_SETTINGS_MENU
+                    }
+                )
             ).toEqual( { settingsMenuIsVisible: true } );
         } );
     } );
@@ -27,9 +30,12 @@ describe( 'notification reducer', () =>
         it( 'should handle showing the settings menu', () =>
         {
             expect(
-                ui( {}, {
-                    type : TYPES.HIDE_SETTINGS_MENU
-                } )
+                ui(
+                    {},
+                    {
+                        type : TYPES.HIDE_SETTINGS_MENU
+                    }
+                )
             ).toEqual( { settingsMenuIsVisible: false } );
         } );
     } );
@@ -39,9 +45,12 @@ describe( 'notification reducer', () =>
         it( 'should handle setting address bar focus', () =>
         {
             expect(
-                ui( {}, {
-                    type : TYPES.SELECT_ADDRESS_BAR
-                } )
+                ui(
+                    {},
+                    {
+                        type : TYPES.SELECT_ADDRESS_BAR
+                    }
+                )
             ).toEqual( { addressBarIsSelected: true } );
         } );
     } );
@@ -51,9 +60,12 @@ describe( 'notification reducer', () =>
         it( 'should handle blurring address bar focus', () =>
         {
             expect(
-                ui( {}, {
-                    type : TYPES.BLUR_ADDRESS_BAR
-                } )
+                ui(
+                    {},
+                    {
+                        type : TYPES.BLUR_ADDRESS_BAR
+                    }
+                )
             ).toEqual( { addressBarIsSelected: false } );
         } );
     } );

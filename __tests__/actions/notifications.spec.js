@@ -24,7 +24,9 @@ describe( 'notification actions', () =>
             type : notifications.TYPES.UPDATE_NOTIFICATION,
             payload
         };
-        expect( notifications.updateNotification( payload ) ).toEqual( expectedAction );
+        expect( notifications.updateNotification( payload ) ).toEqual(
+            expectedAction
+        );
     } );
 
     it( 'should clear a notification', () =>
@@ -32,6 +34,6 @@ describe( 'notification actions', () =>
         const expectedAction = {
             type : notifications.TYPES.CLEAR_NOTIFICATION
         };
-        expect( notifications.clearNotification( ) ).toEqual( expectedAction );
+        expect( notifications.clearNotification() ).toEqual( expectedAction );
     } );
 } );
