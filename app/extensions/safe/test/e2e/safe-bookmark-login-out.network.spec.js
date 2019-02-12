@@ -63,7 +63,7 @@ describe( 'SAFE network log in and out', async () =>
     describe( 'account data access', async () =>
     {
         const { secret, password } = createAccountDetails();
-        console.log( 'Creating authed app with deets: ', secret, password );
+        console.info( 'Creating authed app with deets: ', secret, password );
         it( 'can save and reaccess browser bookmark data.', async () =>
         {
             const { client } = app;

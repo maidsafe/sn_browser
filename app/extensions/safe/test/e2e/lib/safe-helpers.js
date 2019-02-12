@@ -19,7 +19,7 @@ export const createRandomDomain = async ( content, path, service, authedApp ) =>
         .then( serviceMdata =>
             serviceMdata.quickSetup().then( () =>
             {
-                console.log( 'GET NAME AND TAG?', serviceMdata );
+                console.info( 'GET NAME AND TAG?', serviceMdata );
                 const nfs = serviceMdata.emulateAs( 'NFS' );
                 // let's write the file
                 return nfs

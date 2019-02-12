@@ -13,7 +13,7 @@ import { ipcRenderer } from 'electron';
  */
 const initAuthedApplication = async ( passedStore, options ) =>
 {
-    logger.log( 'Requesting safeBrowserApp auth.', process.mainModule.filename );
+    logger.info( 'Requesting safeBrowserApp auth.', process.mainModule.filename );
     let safeBrowserAppObject;
 
     try
@@ -34,7 +34,7 @@ const initAuthedApplication = async ( passedStore, options ) =>
             APP_INFO.opts
         );
 
-        logger.log( 'generated auth uri:', authReq );
+        logger.info( 'generated auth uri:', authReq );
 
         // this global is only global to the bg process...
         global.browserAuthReqUri = authReq.uri;

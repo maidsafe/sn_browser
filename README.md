@@ -45,31 +45,32 @@ As an example, if a webapp is trying to make use of the [initialiseApp](https://
 You will find some example code snippets in the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) as well, that you can use to learn, and also look at the [Debugging section](#debugging) below for the interactive tool to try out the API.
 
 As mentioned above, there are only a few functions related to the initialisation and app authorisation request process that are exposed by SAFE Browser and which slightly differ from the `safe-app-node` API:
-* There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/global.html#InitOptions) supported by the [initialiseApp](https://docs.maidsafe.net/safe_app_nodejs/global.html#initialiseApp) function exposed in the DOM API
-* There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/global.html#InitOptions) supported by the [fromAuthUri](https://docs.maidsafe.net/safe_app_nodejs/global.html#fromAuthUri) function exposed in the DOM API
-* [openUri](https://docs.maidsafe.net/safe_app_nodejs/AuthInterface.html#openUri) is not available in the DOM API. A webapp shall instead call the `window.safe.authorise` function to send an authorisation request to the Authenticator. E.g.:
-    ```js
-    const appInfo = {
-        name: 'Hello SAFE World',
-        id: 'net.maidsafe.tutorials.web-app',
-        version: '1.0.0',
-        vendor: 'MaidSafe.net Ltd.'
-    };
 
-    async function authoriseAndConnect() {
-        console.log('Initialising a SAFE app client instance...');
-        const safeApp = await window.safe.initialiseApp(appInfo);
+- There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/global.html#InitOptions) supported by the [initialiseApp](https://docs.maidsafe.net/safe_app_nodejs/global.html#initialiseApp) function exposed in the DOM API
+- There are no [initialisation options](https://docs.maidsafe.net/safe_app_nodejs/global.html#InitOptions) supported by the [fromAuthUri](https://docs.maidsafe.net/safe_app_nodejs/global.html#fromAuthUri) function exposed in the DOM API
+- [openUri](https://docs.maidsafe.net/safe_app_nodejs/AuthInterface.html#openUri) is not available in the DOM API. A webapp shall instead call the `window.safe.authorise` function to send an authorisation request to the Authenticator. E.g.:
 
-        console.log('Authorising the application...');
-        const authReqUri = await safeApp.auth.genAuthUri();
-        const authUri = await window.safe.authorise(authReqUri);
-        console.log('SAFE application authorised by user');
+  ```js
+  const appInfo = {
+    name: 'Hello SAFE World',
+    id: 'net.maidsafe.tutorials.web-app',
+    version: '1.0.0',
+    vendor: 'MaidSafe.net Ltd.'
+  };
 
-        await safeApp.auth.loginFromUri(authUri);
-        console.log("Application connected to the network");
-    };
+  async function authoriseAndConnect() {
+    console.info('Initialising a SAFE app client instance...');
+    const safeApp = await window.safe.initialiseApp(appInfo);
 
-    ```
+    console.info('Authorising the application...');
+    const authReqUri = await safeApp.auth.genAuthUri();
+    const authUri = await window.safe.authorise(authReqUri);
+    console.info('SAFE application authorised by user');
+
+    await safeApp.auth.loginFromUri(authUri);
+    console.info('Application connected to the network');
+  }
+  ```
 
 ### Experimental APIs and features
 
@@ -98,8 +99,8 @@ Any webapp can retrieve the currently selected WebID via `window.currentWebId` f
 Additionally, it can listen for changes via the event emitter, `window.webIdEventEmitter`, eg:
 
 ```js
-webIdEventEmitter.on('update', ( webId ) => {
-  console.log('An update to current WebID occurred!', webId);
+webIdEventEmitter.on('update', webId => {
+  console.info('An update to current WebID occurred!', webId);
 });
 ```
 
@@ -119,6 +120,7 @@ const md = await safeapp.mutableData.newRandomPublic( 15001 );
 await md.quickSetup();
 const rdfEmulation = await md.emulateAs( 'RDF' );
 ```
+
 Again, please refer to the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) for details of these utilities.
 
 #### Support for XOR-URLs:
@@ -140,6 +142,7 @@ For more details/information about the XOR-URLs, you can read the proposed [RFC]
 #### Example applications using experimental APIs
 
 If you want to learn more about how applications can make use of these experimental APIs and features exposed by the SAFE Browser, you can refer to:
+
 - [Patter (safe://patter.dapp)](safe://patter.dapp), which is a proof-of-concept decentralised Twitter clone ([source code](https://github.com/maidsafe/safe-patter-js))
 - The [WebID Mgr. proof-of-concept webapp (safe://webidmgr.dapp)](safe://webidmgr.dapp)([source code](https://github.com/maidsafe/safe-web-id-manager-js))
 
@@ -160,7 +163,6 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 
 `open SAFE Browser.app --args --mock --preload`
 
-
 ## Browser Development
 
 ### Compiling
@@ -171,8 +173,8 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 - [Git](https://git-scm.com/)
 - [Yarn](https://yarnpkg.com) (as a replacement for `npm`).
 - Windows-specific:
-     - Yarn attempts to build modules concurrently with multiple child processes, which causes intermittent timing issues on Windows. Users need to run `yarn config set child-concurrency 1` just once to effect local yarn settings.
-     - In order to be able to build native Node modules for this library, run `npm install --global --production windows-build-tools` which installs Python 2.x, Visual Studio 2015 build tools, and Visual C++ build tools.
+  - Yarn attempts to build modules concurrently with multiple child processes, which causes intermittent timing issues on Windows. Users need to run `yarn config set child-concurrency 1` just once to effect local yarn settings.
+  - In order to be able to build native Node modules for this library, run `npm install --global --production windows-build-tools` which installs Python 2.x, Visual Studio 2015 build tools, and Visual C++ build tools.
 - If you are using Ubuntu, Mint, or Debian 9 as OS, `libgconf-2-4` and/or `build-essential` dependencies might be missing. Please install them as needed with Synaptic Package Mgr., or with `apt` from a shell console: `$ sudo apt-get install libgconf-2-4 build-essential`
 
 #### Building the Browser
@@ -183,15 +185,18 @@ Additionally, the `--preload` flag can be passed in order to get the following f
 - `yarn rebuild`
 
 And to run dev mode:
+
 - `yarn mock-dev`
 
 Want to run 'production' variables, but with hot reloading?
+
 - `yarn put-live-net-files-for-<windows|osx|linux>`
 - `yarn prod-dev`
 
 Note, you'll need a crust.config set for the application. [Helper commands for osx/linux/windows](https://github.com/maidsafe/safe_browser/blob/master/package.json#L55-L58)
 
 And to package:
+
 - `yarn package`
 
 The resulting packages are contained within the `releases` folder.
@@ -211,7 +216,6 @@ There are a few build commands for various situations:
 
 `yarn bump` is available for automatically updating versions and generating a changelog update based upon conventional-commits.
 
-
 ### Redux
 
 The core is built around redux for simple state management allowing for easy
@@ -220,7 +224,6 @@ extensibility.
 ### React
 
 The interface is built in react for simple data flow and clear componentisation.
-
 
 ### Webpack
 
@@ -246,7 +249,6 @@ Via electron-log: `import logger from 'logger'`, and you can `logger.info('thing
 Logs are printed to both render console and stdout. Logs are also written to a log file per system.
 
 `yarn log-osx` will tail the file. Similar commands (as yet untested) exist for linux/windows.
-
 
 ## SAFE Network
 

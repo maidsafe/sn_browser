@@ -25,7 +25,7 @@ export const setSafeBrowserAppObject = passedApp =>
 
 export const clearAppObj = () =>
 {
-    logger.log( 'Clearing safeBrowserApp object cache.' );
+    logger.info( 'Clearing safeBrowserApp object cache.' );
     safeBrowserAppObject.clearObjectCache();
 };
 

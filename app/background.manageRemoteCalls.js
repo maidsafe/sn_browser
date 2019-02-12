@@ -37,7 +37,7 @@ const manageRemoteCalls = async store =>
 
                 if ( allApiCalls[theCall.name] )
                 {
-                    logger.log( 'Remote Calling: ', theCall.name );
+                    logger.info( 'Remote Calling: ', theCall.name );
                     store.dispatch(
                         remoteCallActions.updateRemoteCall( {
                             ...theCall,
@@ -82,7 +82,7 @@ const manageRemoteCalls = async store =>
                 }
                 else
                 {
-                    console.log( theCall.name, ' does not exist' );
+                    console.info( theCall.name, ' does not exist' );
                 }
             }
         } );

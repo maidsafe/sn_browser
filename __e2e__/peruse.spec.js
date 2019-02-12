@@ -114,7 +114,7 @@ describe( 'main window', () =>
         await setClientToMainBrowserWindow( app );
 
         const audit = await client.auditAccessibility( { ignoreWarnings: true } );
-        console.log( audit );
+        console.info( audit );
         expect( audit.failed ).toBe( false );
     } );
 

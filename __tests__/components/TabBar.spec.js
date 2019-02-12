@@ -133,7 +133,7 @@ describe( 'TabBar', () =>
     //     it( 'should call addTab when clicking addTab', () =>
     //     {
     //         let x = wrapper.find( `.${ CLASSES.ADD_TAB}` );
-    //         console.log('x', x);
+    //         console.info('x', x);
     //         expect( props.addTab ).toBeCalled();
     //     })
     // })
