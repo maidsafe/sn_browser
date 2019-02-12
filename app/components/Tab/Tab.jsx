@@ -211,7 +211,7 @@ export default class Tab extends Component
 
         if ( !this.state.browserState.mountedAndReady ) return;
 
-        const { focusWebview, isActiveTab } = this.props;
+        const { focusWebview, isActiveTab, url } = this.props;
         const { webview } = this;
 
         logger.info( 'Tab: did receive updated props' );
@@ -245,7 +245,7 @@ export default class Tab extends Component
             this.setCurrentWebId( nextProps.webId );
         }
 
-        if ( nextProps.url )
+        if ( nextProps.url && nextProps.url !== url )
         {
             if ( !webview ) return;
             const webviewSrc = parseURL( webview.src );
@@ -447,15 +447,21 @@ export default class Tab extends Component
         this.setCurrentWebId( null );
     }
 
-    didFinishLoading()
+    didFinishLoading( )
     {
-        const { updateTab, index } = this.props;
+        const { updateTab, index, url } = this.props;
 
         logger.info( 'Tab did finish loading' );
         const tabUpdate = {
             index,
             isLoading : false
         };
+
+
+        if ( url === 'about:blank' )
+        {
+            tabUpdate.title = '';
+        }
 
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
@@ -767,7 +773,8 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         this.setState( { browserState } );
 
         // prevent looping over attempted url loading
-        if ( webview && url !== 'about:blank' )
+
+        if ( webview )
         {
             webview.loadURL( url );
         }
