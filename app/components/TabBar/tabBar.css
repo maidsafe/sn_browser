@@ -3,13 +3,21 @@
 {
     flex: 0;
     height: 100%;
-    padding-left:     10px;
-    padding-right:     10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
     background: rgba( 207, 208, 209, 1);
     z-index: 4;
     font-size: 1.4rem;
     -webkit-app-region: drag;
 }
+
+.containerMac
+{
+    padding-top: 10px;
+    padding-left: 100px;
+}
+
 
 
 .tabBar
