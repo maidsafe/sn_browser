@@ -30,7 +30,7 @@ class LibLoader
             this[_libPath] = CONSTANTS.LIB_PATH_MOCK.SAFE_AUTH[os.platform()];
         }
 
-        logger.log( 'Auth lib location loading: ', this[_libPath] );
+        logger.info( 'Auth lib location loading: ', this[_libPath] );
 
         const safeLib = {};
         const RTLD_NOW = ffi.DynamicLibrary.FLAGS.RTLD_NOW;

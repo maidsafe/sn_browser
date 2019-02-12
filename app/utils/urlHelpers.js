@@ -83,8 +83,8 @@ export const urlHasChanged = ( src, newUrl ) =>
     const parsedSrc = parse( src );
     const parsedNew = parse( newUrl );
 
-    // console.log('parsedSrc', parsedSrc)
-    // console.log('parsedNew', parsedNew)
+    // console.info('parsedSrc', parsedSrc)
+    // console.info('parsedNew', parsedNew)
 
     if ( strippedNewUrl === strippedSrcUrl )
     {

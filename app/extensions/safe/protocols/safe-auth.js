@@ -6,7 +6,7 @@ import { remote } from 'electron';
 
 export const registerSafeAuthProtocol = () =>
 {
-    logger.log( 'Registering safe-auth scheme' );
+    logger.info( 'Registering safe-auth scheme' );
     const partition = CONFIG.SAFE_PARTITION;
     const ses = remote.session.fromPartition( partition );
 
@@ -14,7 +14,7 @@ export const registerSafeAuthProtocol = () =>
         PROTOCOLS.SAFE_AUTH,
         ( req, cb ) =>
         {
-            logger.log( `Procotol:: safe-auth:// url being parsed: ${ req.url }` );
+            logger.info( `Procotol:: safe-auth:// url being parsed: ${ req.url }` );
 
             // TODO. Sort out when/where with slash
             const newUrl = `http://localhost:${ CONFIG.PORT }/auth/${ req.url }`;
@@ -27,7 +27,7 @@ export const registerSafeAuthProtocol = () =>
 
             if ( err.message === 'The scheme has been registered' )
             {
-                logger.log( 'SAFE-AUTH protocol already registered, so dont worry' );
+                logger.info( 'SAFE-AUTH protocol already registered, so dont worry' );
             }
             else
             {

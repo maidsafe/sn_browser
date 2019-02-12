@@ -120,7 +120,7 @@
         }
         catch ( e )
         {
-            console && console.log( e );
+            console && console.info( e );
         }
     }
     ready( appendSvg );

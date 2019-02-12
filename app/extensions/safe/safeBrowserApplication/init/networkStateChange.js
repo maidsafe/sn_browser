@@ -18,11 +18,11 @@ import { getSafeBrowserAppObject } from '@Extensions/safe/safeBrowserApplication
 
 const onNetworkStateChange = ( store, mockAttemptReconnect ) => state =>
 {
-    logger.log( 'onNetworkStateChange' );
+    logger.info( 'onNetworkStateChange' );
     const safeBrowserAppObject = getSafeBrowserAppObject();
 
     const previousState = store.getState().safeBrowserApp.networkStatus;
-    logger.log( 'previousState: ', previousState );
+    logger.info( 'previousState: ', previousState );
     store.dispatch( setNetworkStatus( state ) );
     const isDisconnected = state === SAFE.NETWORK_STATE.DISCONNECTED;
 

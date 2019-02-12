@@ -8,7 +8,7 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
     if ( typeof extensionWrapperApi !== 'function' ) throw new Error( 'extensionWrapperApi must be an executable function.' );
 
     const componentClassName = WrappedComponent.name;
-    logger.log( `Extending ${ componentClassName } via the extensions Api` );
+    logger.info( `Extending ${ componentClassName } via the extensions Api` );
 
     class Extended extends Component
     {

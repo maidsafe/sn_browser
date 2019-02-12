@@ -33,7 +33,7 @@ const requiredByDLLConfig = module.parent.filename.includes(
  */
 if ( !requiredByDLLConfig && !( fs.existsSync( dll ) && fs.existsSync( manifest ) ) )
 {
-    console.log(
+    console.info(
         chalk.black.bgYellow.bold(
             'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"'
         )
@@ -298,7 +298,7 @@ export default merge.smart( baseConfig, {
         {
             if ( process.env.START_HOT )
             {
-                console.log( 'Starting Main Process... nodeenv', process.env.NODE_ENV );
+                console.info( 'Starting Main Process... nodeenv', process.env.NODE_ENV );
                 spawn( 'npm', [ 'run', 'start-main-dev' ], {
                     shell : true,
                     env   : process.env,

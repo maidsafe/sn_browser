@@ -17,7 +17,7 @@ export const handleRemoteCalls = ( store, allAPICalls, theCall ) =>
 {
     theStore = store;
 
-    logger.log( 'Handling remote call in extension', theCall );
+    logger.info( 'Handling remote call in extension', theCall );
     if ( theCall && theCall.isListener )
     {
         // register listener with auth
@@ -46,7 +46,7 @@ export const remoteCallApis = {
     ...theAuthApi,
     createAccount : async ( secret, password, invitation ) =>
     {
-        logger.log( 'Handling create account call from webview.' );
+        logger.info( 'Handling create account call from webview.' );
         await theAuthApi.createAccount( secret, password, invitation );
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.LOGGED_IN )
@@ -57,7 +57,7 @@ export const remoteCallApis = {
     },
     login : async ( secret, password ) =>
     {
-        logger.log( 'Handling login call from webview.' );
+        logger.info( 'Handling login call from webview.' );
         await theAuthApi.login( secret, password );
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.LOGGED_IN )
@@ -68,7 +68,7 @@ export const remoteCallApis = {
     },
     logout : async ( secret, password ) =>
     {
-        logger.log( 'Handling logout call from webview.' );
+        logger.info( 'Handling logout call from webview.' );
 
         try
         {
@@ -94,7 +94,7 @@ export const remoteCallApis = {
      */
     authenticateFromUriObject : async authUriObject =>
     {
-        logger.log( 'Authenticating a webapp via remote call.' );
+        logger.info( 'Authenticating a webapp via remote call.' );
 
         return new Promise( ( resolve, reject ) =>
         {

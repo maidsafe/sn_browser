@@ -3,7 +3,7 @@ import { PROTOCOLS } from '@Constants';
 // import setupPreloadAPIs from './setupPreloadAPIs';;
 
 // no logger to avoid duplicate msgs.
-console.log( 'Peruse Browser window preloaded.' );
+console.info( 'Peruse Browser window preloaded.' );
 
 window.peruseNav = location =>
 {

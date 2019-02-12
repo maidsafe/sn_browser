@@ -50,7 +50,7 @@ const loadMiddlewarePackages = [];
 
 const store = configureStore( initialState, loadMiddlewarePackages );
 
-logger.log( 'Main process starting.' );
+logger.info( 'Main process starting.' );
 
 global.mainProcessStore = store;
 
@@ -71,7 +71,7 @@ ipcMain.on( 'errorInRenderWindow', ( event, data ) =>
 // Needed for windows w/ SAFE browser app login
 ipcMain.on( 'opn', ( event, data ) =>
 {
-    logger.log( 'Opening link in system via opn.' );
+    logger.info( 'Opening link in system via opn.' );
     shell.openExternal( data );
 } );
 
@@ -118,7 +118,7 @@ const installExtensions = async () =>
 {
     if ( isCI ) return;
 
-    logger.log( 'Installing devtools extensions' );
+    logger.info( 'Installing devtools extensions' );
     const installer = require( 'electron-devtools-installer' );
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     const extensions = [ 'REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS' ];
@@ -176,12 +176,12 @@ app.on( 'ready', async () =>
 
     if ( shouldQuit )
     {
-        console.log( 'This instance should quit. Ciao!' );
+        console.info( 'This instance should quit. Ciao!' );
         app.exit();
         return;
     }
 
-    logger.log( 'App Ready' );
+    logger.info( 'App Ready' );
 
     onAppReady( store );
     if (
@@ -231,7 +231,7 @@ app.on( 'open-url', ( e, url ) =>
 
 app.on( 'window-all-closed', () =>
 {
-    logger.log( 'All Windows Closed!' );
+    logger.info( 'All Windows Closed!' );
     app.dock.hide(); // hide the icon
 
     global.macAllWindowsClosed = true;

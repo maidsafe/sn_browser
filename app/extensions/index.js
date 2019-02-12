@@ -31,7 +31,7 @@ export const triggerOnWebviewPreload = store =>
 
 export const urlIsValid = url =>
 {
-    logger.log( 'Extensions: Checking urlIsValid via all extensions.' );
+    logger.info( 'Extensions: Checking urlIsValid via all extensions.' );
     let result = true;
 
     allPackages.forEach( extension =>
@@ -64,7 +64,7 @@ export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) =>
 
 export const getRemoteCallApis = () =>
 {
-    logger.log( 'Getting extension remoteCall Apis' );
+    logger.info( 'Getting extension remoteCall Apis' );
     let apisToAdd = {};
     allPackages.forEach( extension =>
     {
@@ -91,7 +91,7 @@ export const getRemoteCallApis = () =>
  */
 export const getActionsForBrowser = () =>
 {
-    logger.log( 'Getting extension browser actions' );
+    logger.info( 'Getting extension browser actions' );
 
     let actionsToAdd = {};
     allPackages.forEach( extension =>
@@ -138,7 +138,7 @@ export const getExtensionReducers = () =>
 
 export const getExtensionMenuItems = ( store, menusArray ) =>
 {
-    logger.log( 'Extending menus array' );
+    logger.info( 'Extending menus array' );
     let newMenuArray = [];
     allPackages.forEach( extension =>
     {

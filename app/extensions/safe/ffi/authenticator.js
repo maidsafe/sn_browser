@@ -464,7 +464,7 @@ class Authenticator extends SafeLib
             }
             catch ( e )
             {
-                logger.log( 'Login error', e );
+                logger.info( 'Login error', e );
                 this[_isAuthorisedListener].broadcast( e );
                 reject( e );
             }
@@ -499,7 +499,7 @@ class Authenticator extends SafeLib
 
     decodeRequest( uri )
     {
-        logger.log( 'Authenticator.js decoding request', uri );
+        logger.info( 'Authenticator.js decoding request', uri );
 
         return new Promise( ( resolve, reject ) =>
         {
@@ -542,7 +542,7 @@ class Authenticator extends SafeLib
                             reqId,
                             authReq
                         };
-                        logger.log(
+                        logger.info(
                             'Authenticator.js decoded authReq result: ',
                             result
                         );
@@ -590,7 +590,7 @@ class Authenticator extends SafeLib
                             contReq
                         };
 
-                        logger.log(
+                        logger.info(
                             'Authenticator.js decoded contReq result: ',
                             result
                         );
@@ -634,7 +634,7 @@ class Authenticator extends SafeLib
                             metaData
                         };
 
-                        logger.log(
+                        logger.info(
                             'Authenticator.js decoded MDataReq result: ',
                             result
                         );
@@ -687,7 +687,7 @@ class Authenticator extends SafeLib
                             return;
                         }
 
-                        logger.log( 'Error in auth callback.', result );
+                        logger.info( 'Error in auth callback.', result );
                         this[_reqErrListener].broadcast( JSON.stringify( result ) );
                         reject( result );
                     }
@@ -717,7 +717,7 @@ class Authenticator extends SafeLib
     {
         return new Promise( ( resolve, reject ) =>
         {
-            logger.log(
+            logger.info(
                 'authenticator.js: encoding auth response',
                 req,
                 isAllowed
@@ -764,7 +764,7 @@ class Authenticator extends SafeLib
                                 return reject( JSON.stringify( result ) );
                             }
 
-                            logger.log(
+                            logger.info(
                                 'authenticator.js: auth decision CB',
                                 result,
                                 isAllowed

@@ -8,7 +8,7 @@ export const isForSafeServer = parsedUrlObject =>
 
 export const urlIsAllowedBySafe = testUrl =>
 {
-    logger.log( 'Checking urlIsAllowedBySafe', testUrl );
+    logger.info( 'Checking urlIsAllowedBySafe', testUrl );
     const urlObj = url.parse( testUrl );
 
     const validProtocols = pkg.build.protocols.schemes || [ 'http' ];

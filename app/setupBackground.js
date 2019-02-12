@@ -15,11 +15,11 @@ let backgroundProcessWindow = null;
 const setupBackground = async () =>
     new Promise( ( resolve, reject ) =>
     {
-        logger.log( 'Setting up Background Process' );
+        logger.info( 'Setting up Background Process' );
 
         if ( backgroundProcessWindow === null )
         {
-            logger.log( 'loading bg:', BACKGROUND_PROCESS );
+            logger.info( 'loading bg:', BACKGROUND_PROCESS );
 
             backgroundProcessWindow = new BrowserWindow( {
                 width          : 300,
@@ -46,7 +46,7 @@ const setupBackground = async () =>
 
             backgroundProcessWindow.webContents.on( 'did-finish-load', () =>
             {
-                logger.log( 'Background process renderer loaded.' );
+                logger.info( 'Background process renderer loaded.' );
 
                 if ( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcessWindow );
 

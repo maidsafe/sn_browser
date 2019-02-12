@@ -84,6 +84,8 @@ export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = typeof remote === 'undefined';
 
+export const currentWindowId = ( remote && remote.getCurrentWindow ) ? remote.getCurrentWindow().id : undefined;
+
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
 const preloadLocation = isRunningUnpacked ? '' : '../';

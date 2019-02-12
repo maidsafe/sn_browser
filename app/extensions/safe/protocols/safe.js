@@ -7,7 +7,7 @@ import {
 
 const registerSafeProtocol = () =>
 {
-    logger.log( `${ PROTOCOLS.SAFE } Registering` );
+    logger.info( `${ PROTOCOLS.SAFE } Registering` );
     // bind to partition.
     const partition = CONFIG.SAFE_PARTITION;
     const ses = remote.session.fromPartition( partition );
@@ -18,7 +18,7 @@ const registerSafeProtocol = () =>
         PROTOCOLS.SAFE,
         ( req, cb ) =>
         {
-            logger.log( `safe:// req url being parsed: ${ req.url }` );
+            logger.info( `safe:// req url being parsed: ${ req.url }` );
             const parsedUrl = url.parse( req.url );
             const host = parsedUrl.host;
 
@@ -48,7 +48,7 @@ const registerSafeProtocol = () =>
 
             if ( err.message === 'The scheme has been registered' )
             {
-                logger.log( 'SAFE protocol already registered, so dont worry' );
+                logger.info( 'SAFE protocol already registered, so dont worry' );
             }
             else
             {

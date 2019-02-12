@@ -123,7 +123,7 @@ removalArray.forEach( file =>
     fs.removeSync( `${ CONTAINING_FOLDER }/${ file }` );
 } );
 
-console.log(
+console.info(
     'Renaming package to:',
     path.resolve( targetDir, `${ RELEASE_FOLDER_NAME }` )
 );

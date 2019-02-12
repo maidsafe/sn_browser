@@ -251,13 +251,13 @@ describe( 'safe authenticator protocol', () =>
     //
     //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
     //
-    //     console.log('newtabbbbb', tabIndex )
+    //     console.info('newtabbbbb', tabIndex )
     //     await client.windowByIndex( tabIndex );
     //     // await client.pause(3500);
     //     //
     //     let html = await client.getText( 'pre' );
     //     // let html = await client.source( );
-    //     // console.log(html.value);
+    //     // console.info(html.value);
     //     expect( html ).not.toBeNull( );
     //     // expect( html.value ).toBe( '1');
     //     expect( html.endsWith('sourceMappingURL=bundle.js.map') ).toBeTruthy;
