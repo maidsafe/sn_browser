@@ -93,7 +93,6 @@ if ( platform === WINDOWS )
         path.resolve( CONTAINING_FOLDER, 'SAFE Browser.crust.config' ),
         { overwrite: true }
     );
-    fs.unlinkSync( path.resolve( CONTAINING_FOLDER, 'safe-browser.crust.config' ) );
     fs.unlinkSync(
         path.resolve( PERUSE_RESOURCES_FOLDER, 'SAFE Browser.crust.config' )
     );
