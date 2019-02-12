@@ -1,7 +1,8 @@
-// @flow
+/* eslint-disable */
 import { remote } from 'electron';
 import url from 'url';
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styles from './tabBar.css';
 import MdClose from 'react-icons/lib/md/close';
@@ -144,10 +145,9 @@ export default class TabBar extends Component {
             );
         });
     };
-
     render() {
         return (
-            <div className={styles.container}>
+            <div className= {[styles.container , (process.platform === 'darwin' ? styles.containerMac : "") ].join(' ')}>
                 <div className={styles.tabBar}>
                     {this.getTabs()}
                     <div

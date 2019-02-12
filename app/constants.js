@@ -4,7 +4,7 @@ import { remote } from 'electron';
 import pkg from '@Package';
 import getPort from 'get-port';
 
-const platform = process.platform;
+export const platform = process.platform;
 const OSX = 'darwin';
 const LINUX = 'linux';
 const WINDOWS = 'win32';
