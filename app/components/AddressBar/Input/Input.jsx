@@ -17,24 +17,28 @@ import 'antd/lib/input/style';
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class AddressBarInput extends Component {
-    static propTypes = {
-        address: PropTypes.string,
-        isSelected: PropTypes.bool,
-        windowId: PropTypes.number.isRequired,
-        onBlur: PropTypes.func.isRequired,
-        onSelect: PropTypes.func.isRequired,
-        onFocus: PropTypes.func.isRequired,
-        updateActiveTab: PropTypes.func.isRequired
-    };
-    static defaultProps = {
-        address: '',
-        isSelected: false,
-        editingUrl: false
-    };
+class AddressBarInput extends Component
+{
+    static propTypes =
+    {
+        address         : PropTypes.string,
+        isSelected      : PropTypes.bool,
+        windowId        : PropTypes.number.isRequired,
+        onBlur          : PropTypes.func.isRequired,
+        onSelect        : PropTypes.func.isRequired,
+        onFocus         : PropTypes.func.isRequired,
+        updateTab : PropTypes.func.isRequired
+    }
+    static defaultProps =
+    {
+        address    : '',
+        isSelected : false,
+        editingUrl : false
+    }
 
-    constructor(props) {
-        super(props);
+    constructor( props )
+    {
+        super( props );
         this.handleChange = ::this.handleChange;
         this.handleKeyPress = ::this.handleKeyPress;
 
@@ -103,7 +107,7 @@ class AddressBarInput extends Component {
 
         const input = event.target.value;
 
-        this.props.updateActiveTab({ url: input, windowId });
+        this.props.updateTab( { url: input, windowId } );
     }
 
     handleClick = () => {

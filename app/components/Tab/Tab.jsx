@@ -30,21 +30,21 @@ export default class Tab extends Component
         url                  : PropTypes.string.isRequired,
         index                : PropTypes.number.isRequired,
         windowId             : PropTypes.number.isRequired,
-        isActiveTabReloading : PropTypes.bool.isRequired,
         closeTab             : PropTypes.func.isRequired,
         updateTab            : PropTypes.func.isRequired,
         addTab               : PropTypes.func.isRequired,
-        pageLoaded           : PropTypes.func.isRequired,
         addNotification      : PropTypes.func.isRequired,
         focusWebview         : PropTypes.func.isRequired,
         shouldFocusWebview   : PropTypes.bool.isRequired,
-        activeTabBackwards   : PropTypes.func.isRequired
-    };
+        tabBackwards         : PropTypes.func.isRequired
+    }
 
-    static defaultProps = {
+    static defaultProps =
+    {
         isActiveTab : false,
-        url         : 'http://nowhere.com'
-    };
+        url         : 'http://nowhere.com',
+    }
+
 
     constructor( props )
     {
@@ -68,7 +68,6 @@ export default class Tab extends Component
         this.stop = ::this.stop;
         this.openDevTools = ::this.openDevTools;
         this.loadURL = ::this.loadURL;
-        this.reloadIfActive = ::this.reloadIfActive;
 
         this.debouncedWebIdUpdateFunc = _.debounce(
             this.updateTheIdInWebview,
@@ -85,18 +84,6 @@ export default class Tab extends Component
             return webview.isDevToolsOpened();
         }
     };
-
-    reloadIfActive()
-    {
-        const { isActiveTab, pageLoaded } = this.props;
-        if ( !isActiveTab )
-        {
-            return;
-        }
-
-        this.reload();
-        pageLoaded();
-    }
 
     buildMenu = webview => {
 
@@ -211,7 +198,7 @@ export default class Tab extends Component
 
         if ( !this.state.browserState.mountedAndReady ) return;
 
-        const { focusWebview, isActiveTab, url } = this.props;
+        const { focusWebview, isActiveTab, url, updateTab, index, shouldToggleDevTools, shouldReload } = this.props;
         const { webview } = this;
 
         logger.info( 'Tab: did receive updated props' );
@@ -261,9 +248,25 @@ export default class Tab extends Component
             }
         }
 
-        if ( nextProps.isActiveTabReloading )
+        if ( !shouldReload && nextProps.shouldReload )
         {
-            this.reloadIfActive();
+            logger.verbose('Should reload URL: ', nextProps.url);
+            this.reload();
+            const tabUpdate = {
+                index,
+                shouldReload : false
+            };
+            updateTab( tabUpdate );
+        }
+
+        if ( !shouldToggleDevTools && nextProps.shouldToggleDevTools )
+        {
+            ( this.isDevToolsOpened() ) ? this.closeDevTools() : this.openDevTools();
+            const tabUpdate = {
+                index,
+                shouldToggleDevTools : false
+            };
+            updateTab( tabUpdate );
         }
     }
 
@@ -336,13 +339,7 @@ export default class Tab extends Component
 
         this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
-        const body = document.querySelector( 'body' );
-        const div = document.createElement( 'div' );
-        div.setAttribute( 'class', 'no_display' );
-        div.setAttribute( 'id', 'link_revealer' );
-        body.appendChild( div );
-        window.addEventListener( 'focus', () =>
-        {
+        window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) =>
             {
                 webview.focus();
@@ -359,7 +356,7 @@ export default class Tab extends Component
             addTab,
             closeTab,
             addNotification,
-            activeTabBackwards,
+            tabBackwards,
             windowId
         } = this.props;
         const { webview } = this;
@@ -417,13 +414,14 @@ export default class Tab extends Component
                 reactNode : Error( { error: { header, subHeader } } )
             };
             addNotification( notification );
-            if ( this.state.browserState.canGoBack )
+            if( this.state.browserState.canGoBack )
             {
-                activeTabBackwards();
+
+                tabBackwards( { index, windowId } );
             }
             else
             {
-                closeTab( { index } );
+                closeTab({ index });
 
                 // add a fresh tab (should be only if no more tabs present)
                 addTab( { url: 'about:blank', windowId, isActiveTab: true } );
@@ -607,7 +605,7 @@ export default class Tab extends Component
 
         if ( this.props.isActiveTab )
         {
-            this.props.updateActiveTab( { url, windowId } );
+            this.props.updateTab( { windowId, url } );
         }
 
     }

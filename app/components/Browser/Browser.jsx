@@ -24,11 +24,8 @@ class Browser extends Component
         selectAddressBar   : PropTypes.func.isRequired,
         deselectAddressBar : PropTypes.func.isRequired,
         blurAddressBar     : PropTypes.func.isRequired,
-        reloadPage         : PropTypes.func.isRequired,
-        pageLoaded         : PropTypes.func.isRequired,
         addTab             : PropTypes.func.isRequired,
         closeTab           : PropTypes.func.isRequired,
-        closeActiveTab     : PropTypes.func.isRequired,
         reopenTab          : PropTypes.func.isRequired,
         updateNotification : PropTypes.func.isRequired,
         clearNotification  : PropTypes.func.isRequired,
@@ -75,60 +72,20 @@ class Browser extends Component
         const {
             addTab,
             closeTab,
-            closeActiveTab,
             reopenTab,
-            clearNotification
+            clearNotification,
+            tabForwards,
+            tabBackwards,
         } = this.props;
         const addressBar = this.address;
 
         const theBrowser = this;
 
-        if ( !ipcRenderer ) return; // avoid for jest/Electron where we're not in renderer process
-
-        ipcRenderer.on( 'command', ( ...args ) =>
-        {
-            const event = args[0];
-            const type = args[1];
-            const { tabContents } = this;
-
-            const activeTab = tabContents.getActiveTab();
-
-            const extraArgs = args.slice( 2 );
-
-            switch ( type )
-            {
-                case 'file:close-active-tab': {
-                    closeActiveTab();
-                    return;
-                }
-                // case 'file:reopen-closed-tab': return pages.reopenLastRemoved()
-                // case 'edit:find':              return navbar.showInpageFind(page)
-                case 'view:reload':
-                    return activeTab.reload();
-                case 'view:hard-reload':
-                    return activeTab.reloadIgnoringCache();
-                // case 'view:zoom-in':           return zoom.zoomIn(page)
-                // case 'view:zoom-out':          return zoom.zoomOut(page)
-                // case 'view:zoom-reset':        return zoom.zoomReset(page)
-                case 'view:toggle-dev-tools':
-                    return activeTab.isDevToolsOpened()
-                        ? activeTab.closeDevTools()
-                        : activeTab.openDevTools();
-                case 'history:back':
-                    return activeTab.goBack();
-                case 'history:forward':
-                    return activeTab.goForward();
-                // case 'window:toggle-safe-mode':  return pages.toggleSafe();
-                // case 'window:disable-web-security':  return pages.toggleWebSecurity();
-                // case 'window:next-tab':        return pages.changeActiveBy(1)
-                // case 'window:prev-tab':        return pages.changeActiveBy(-1)
-                // case 'set-tab':                return pages.changeActiveTo(arg1)
-                // case 'load-pinned-tabs':       return pages.loadPinnedFromDB()
-                // case 'perms:prompt':           return permsPrompt(arg1, arg2, arg3)
-                default:
-                    console.info( 'unhandled command: ', type );
-            }
-        } );
+        const body = document.querySelector( 'body' );
+        const div = document.createElement( 'div' );
+        div.setAttribute( 'class', 'no_display' );
+        div.setAttribute( 'id', 'link_revealer' );
+        body.appendChild( div );
     }
 
     shouldComponentUpdate = nextProps =>
@@ -179,8 +136,6 @@ class Browser extends Component
             selectAddressBar,
             deselectAddressBar,
             blurAddressBar,
-            reloadPage,
-            pageLoaded,
             focusWebview,
 
             // tabs
@@ -188,10 +143,9 @@ class Browser extends Component
             addTab,
             closeTab,
             setActiveTab,
-            updateActiveTab,
             updateTab,
-            activeTabBackwards,
-            activeTabForwards,
+            tabBackwards,
+            tabForwards,
 
             // notifications
             addNotification,
@@ -236,7 +190,6 @@ class Browser extends Component
             <div className={ styles.container }>
                 <TabBar
                     key={ 1 }
-                    updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
                     selectAddressBar={ selectAddressBar }
@@ -255,15 +208,13 @@ class Browser extends Component
                     addBookmark={ addBookmark }
                     isBookmarked={ isBookmarked }
                     removeBookmark={ removeBookmark }
-                    reloadPage={ reloadPage }
                     hideSettingsMenu={ hideSettingsMenu }
                     showSettingsMenu={ showSettingsMenu }
                     settingsMenuIsVisible={ ui.settingsMenuIsVisible }
                     isSelected={ ui.addressBarIsSelected }
-                    updateActiveTab={ updateActiveTab }
-                    activeTabBackwards={ activeTabBackwards }
-                    activeTabForwards={ activeTabForwards }
-                    activeTab={ activeTab }
+                    tabBackwards={ tabBackwards }
+                    tabForwards={ tabForwards }
+                    updateTab={ updateTab }
                     windowId={ windowId }
                     focusWebview={ focusWebview }
                     ref={ c =>
@@ -278,18 +229,15 @@ class Browser extends Component
                     clearNotification={ clearNotification }
                 />
                 <TabContents
-                    isActiveTabReloading={ ui.isActiveTabReloading }
-                    activeTabBackwards={ activeTabBackwards }
+                    tabBackwards={ tabBackwards }
                     focusWebview={ focusWebview }
                     shouldFocusWebview={ ui.shouldFocusWebview }
                     closeTab={ closeTab }
                     key={ 4 }
                     addTab={ addTab }
                     addNotification={ addNotification }
-                    updateActiveTab={ updateActiveTab }
                     updateTab={ updateTab }
                     setActiveTab={ setActiveTab }
-                    pageLoaded={ pageLoaded }
                     tabs={ openTabs }
                     allTabs={ tabs }
                     bookmarks={ bookmarks }

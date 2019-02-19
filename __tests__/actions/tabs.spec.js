@@ -37,16 +37,6 @@ describe( 'tab actions', () =>
         expect( actions.closeTab( payload ) ).toEqual( expectedAction );
     } );
 
-    it( 'should create an action to closeActiveTab', () =>
-    {
-        const payload = { url: 'hi' };
-        const expectedAction = {
-            type : actions.TYPES.CLOSE_ACTIVE_TAB,
-            payload
-        };
-        expect( actions.closeActiveTab( payload ) ).toEqual( expectedAction );
-    } );
-
     it( 'should create an action to reopenTab', () =>
     {
         const payload = { url: 'hi' };
@@ -65,15 +55,5 @@ describe( 'tab actions', () =>
             payload
         };
         expect( actions.updateTab( payload ) ).toEqual( expectedAction );
-    } );
-
-    it( 'should create an action to updateActiveTab', () =>
-    {
-        const payload = { url: 'hi' };
-        const expectedAction = {
-            type : actions.TYPES.UPDATE_ACTIVE_TAB,
-            payload
-        };
-        expect( actions.updateActiveTab( payload ) ).toEqual( expectedAction );
     } );
 } );

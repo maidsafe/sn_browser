@@ -16,11 +16,9 @@ describe( 'Tab', () =>
             updateTab            : jest.fn(),
             setActiveTab         : jest.fn(),
             addNotification      : jest.fn(),
-            activeTabBackwards   : jest.fn(),
+            tabBackwards         : jest.fn(),
             closeTab             : jest.fn(),
             addTab               : jest.fn(),
-            pageLoaded           : false,
-            isActiveTabReloading : false
         };
 
         wrapper = mount( <Tab { ...props } /> );
@@ -74,11 +72,9 @@ describe( 'Tab', () =>
                 updateTab            : jest.fn(),
                 setActiveTab         : jest.fn(),
                 addNotification      : jest.fn(),
-                activeTabBackwards   : jest.fn(),
+                tabBackwards         : jest.fn(),
                 closeTab             : jest.fn(),
                 addTab               : jest.fn(),
-                pageLoaded           : false,
-                isActiveTabReloading : false
             };
 
             wrapper = mount( <Tab { ...props } /> );
@@ -100,11 +96,11 @@ describe( 'Tab', () =>
         {
             instance.didFailLoad( { errorDescription: 'ERR_BLOCKED_BY_CLIENT' } );
             expect( props.addNotification ).toHaveBeenCalled();
-            expect( props.activeTabBackwards ).not.toHaveBeenCalled();
+            expect( props.tabBackwards ).not.toHaveBeenCalled();
             expect( props.closeTab ).toHaveBeenCalled();
         } );
 
-        it( 'trigger activeTabBackwards() if tab canGoBack', () =>
+        it( 'trigger tabBackwards() if tab canGoBack', () =>
         {
             instance.state = {
                 browserState : { canGoBack: true }
@@ -112,7 +108,7 @@ describe( 'Tab', () =>
 
             instance.didFailLoad( { errorDescription: 'ERR_BLOCKED_BY_CLIENT' } );
             expect( props.addNotification ).toHaveBeenCalled();
-            expect( props.activeTabBackwards ).toHaveBeenCalled();
+            expect( props.tabBackwards ).toHaveBeenCalled();
             expect( props.closeTab ).not.toHaveBeenCalled();
         } );
     } );
