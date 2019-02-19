@@ -53,7 +53,7 @@ const setupBackground = async () =>
                 if (
                     isRunningDebug
                     || isRunningUnpacked
-                    || isRunningDevelopment
+                    && !isRunningSpectronTestProcess
                 )
                 {
                     backgroundProcessWindow.webContents.openDevTools( {
