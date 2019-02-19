@@ -36,12 +36,12 @@ export default class WebIdDropdown extends Component
         this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
     }
 
-    handleIdClick = webId =>
+    handleIdClick = ( webId ) =>
     {
-        const { updateActiveTab, windowId, showWebIdDropdown } = this.props;
+        const { updateTab, windowId, showWebIdDropdown } = this.props;
         // also if only 1 webID? mark as defualt?
-        updateActiveTab( { windowId, webId } );
-    };
+        updateTab( { windowId, webId } );
+    }
 
     handleIdButtonClick = () =>
     {

@@ -14,23 +14,18 @@ jest.autoMockOff();
 
 // create any initial state needed
 const initialState = {
-    ui : {
-        isActiveTabReloading : false
-    },
+    ui                   : {},
     tabs                 : [],
     windowId             : 1,
     addTab               : jest.fn(),
     updateTab            : jest.fn(),
     closeTab             : jest.fn(),
     setActiveTab         : jest.fn(),
-    closeActiveTab       : jest.fn(),
     reopenTab            : jest.fn(),
     addBookmark          : jest.fn(),
     removeBookmark       : jest.fn(),
     selectAddressBar     : jest.fn(),
     deselectAddressBar   : jest.fn(),
-    reloadPage           : jest.fn(),
-    pageLoaded           : jest.fn(),
     blurAddressBar       : jest.fn(),
     addNotification      : jest.fn(),
     clearNotification    : jest.fn(),
