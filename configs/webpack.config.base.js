@@ -11,7 +11,7 @@ export default {
     module    : {
         rules : [
             {
-                test    : /\.jsx?$/,
+                test    : /\.[j|t]sx?$/,
                 exclude : /node_modules/,
                 use     : {
                     loader  : 'babel-loader',
@@ -33,7 +33,7 @@ export default {
      * Determine the array of extensions that should be used to resolve modules.
      */
     resolve : {
-        extensions : [ '.js', '.jsx', '.json' ]
+        extensions : [ '.js', '.jsx', '.json', '.ts', '.tsx' ]
     },
 
     plugins : [

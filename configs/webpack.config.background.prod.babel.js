@@ -19,7 +19,7 @@ export default merge.smart( baseConfig, {
 
     target : 'electron-renderer',
 
-    entry : './app/background.js',
+    entry : './app/background',
 
     output : {
         path     : path.join( __dirname, '..' ),

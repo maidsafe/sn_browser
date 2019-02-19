@@ -19,7 +19,7 @@ export default merge.smart( baseConfig, {
 
     target : 'electron-renderer',
 
-    entry : './app/browserPreload.js',
+    entry : './app/browserPreload.ts',
 
     output : {
         path     : path.join( __dirname, '..' ),

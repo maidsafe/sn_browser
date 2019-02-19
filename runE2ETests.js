@@ -24,13 +24,13 @@ if ( process.platform === 'win32' )
 switch ( arg )
 {
     case 'e2e': {
-        pattern = `__e2e__${ s }.+\\.spec\\.js`;
+        pattern = `__e2e__${ s }.+\\.spec\\.ts`;
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
         break;
     }
     case 'exts-e2e': {
-        pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.spec\\.js$`;
+        pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.spec\\.ts$`;
 
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
@@ -39,7 +39,7 @@ switch ( arg )
         // exclude weakref tests for now.
         if ( platform === WINDOWS )
         {
-            pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }(?!safe).+\\auth.spec\\.js$`;
+            pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }(?!safe).+\\auth.spec\\.ts$`;
         }
 
         break;
@@ -51,7 +51,7 @@ switch ( arg )
         console.info(
             'Running network specific tests (those that must be on mock)'
         );
-        pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.network\\.spec\\.js$`;
+        pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.network\\.spec\\.ts$`;
 
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
@@ -59,13 +59,13 @@ switch ( arg )
         // exclude weakref tests for now.
         if ( platform === WINDOWS )
         {
-            pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }(?!safe).+\\auth.spec\\.js$`;
+            pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }(?!safe).+\\auth.spec\\.ts$`;
         }
 
         break;
     }
     default: {
-        pattern = `__e2e__${ s }.+\\.spec\\.js`;
+        pattern = `__e2e__${ s }.+\\.spec\\.ts`;
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
 

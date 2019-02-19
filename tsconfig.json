@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "moduleResolution": "node",
+        "target": "esnext",
+        "allowJs": true,
+        "noEmit": true,
+        "jsx": "react",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "paths": {
+            "test/*": ["test/*"],
+            "@Actions/*": ["app/actions/*"],
+            "@Store/*": ["app/store/*"],
+            "@Extensions/*": ["app/extensions/*"],
+            "@Reducers/*": ["app/reducers/*"],
+            "logger": ["app/logger"],
+            "@Components/*": ["app/components/*"],
+            "@Constants": ["app/constants"],
+            "@Utils/*": ["app/utils/*"],
+            "@Package": ["package.json"]
+        }
+    },
+    "include": ["app"]
+}
