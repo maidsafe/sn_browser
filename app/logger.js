@@ -1,6 +1,5 @@
 import path from 'path';
 import os from 'os';
-import util from 'util';
 
 import {
     currentWindowId,
