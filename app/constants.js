@@ -12,7 +12,7 @@ const WINDOWS = 'win32';
 const allPassedArgs = process.argv;
 
 let shouldRunMockNetwork = fs.existsSync(
-    path.resolve( __dirname, '..', 'startAsMock' )
+    path.resolve( __dirname, '../..', 'startAsMock' )
 );
 
 let hasDebugFlag = false;
