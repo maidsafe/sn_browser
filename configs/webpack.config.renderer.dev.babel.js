@@ -52,8 +52,8 @@ export default merge.smart( baseConfig, {
         patch      : 'react-hot-loader/patch',
         devserver  : `webpack-dev-server/client?http://localhost:${ port }/`,
         only       : 'webpack/hot/only-dev-server',
-        renderer   : require.resolve( '../app/index' ),
-        background : require.resolve( '../app/background' )
+        renderer   : require.resolve( '../app/index.tsx' ),
+        background : require.resolve( '../app/background.ts' )
         // ,
         // browserPreload : require.resolve( '../app/browserPreload' )
     },

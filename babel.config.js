@@ -22,6 +22,7 @@ module.exports = api =>
 
     return {
         presets : [
+            '@babel/preset-typescript',
             [
                 require( '@babel/preset-env' ),
                 {
@@ -32,10 +33,10 @@ module.exports = api =>
                     // modules     : 'umd'
                 }
             ],
-            require( '@babel/preset-flow' ),
             [ require( '@babel/preset-react' ), { development } ]
         ],
         plugins : [
+            require( '@babel/plugin-proposal-object-rest-spread' ),
             'add-module-exports',
             [
                 'import',
