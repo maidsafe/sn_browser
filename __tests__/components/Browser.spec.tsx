@@ -10,7 +10,7 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
-jest.autoMockOff();
+jest.mock('@Utils/extendComponent')
 
 // create any initial state needed
 const initialState = {
@@ -20,7 +20,6 @@ const initialState = {
     addTab               : jest.fn(),
     updateTab            : jest.fn(),
     closeTab             : jest.fn(),
-    experimentsEnabled   : false,
     setActiveTab         : jest.fn(),
     reopenTab            : jest.fn(),
     addBookmark          : jest.fn(),

@@ -22,6 +22,8 @@ jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
+jest.mock('@Utils/extendComponent')
+
 describe( 'AddressBarButtonsLHS', () =>
 {
     let wrapper;
@@ -36,6 +38,7 @@ describe( 'AddressBarButtonsLHS', () =>
             address         : 'about:blank',
             isSelected      : false,
             isBookmarked    : false,
+            experimentsEnabled : false,
             addBookmark     : jest.fn(),
             removeBookmark  : jest.fn(),
             tabBackwards    : jest.fn(),
