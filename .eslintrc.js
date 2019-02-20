@@ -1,14 +1,17 @@
 const aliases = require('./.aliases.js');
 
 module.exports = {
-    "parser": "babel-eslint",
-    extends: 'airbnb',
+    "parser": "@typescript-eslint/parser",
+    "extends": ['airbnb', "plugin:@typescript-eslint/recommended"],
     env: {
         browser: true,
         node: true,
         'jest/globals': true
     },
     parserOptions: {
+        'ecmaFeatures.jsx' : true,
+        project : 'tsconfig.json',
+        tsconfigRootDir: '.',
         sourceType: 'module',
         allowImportExportEverywhere: false,
         codeFrame: true,
@@ -55,6 +58,7 @@ module.exports = {
         'import/first': 'off',
         'no-await-in-loop': 'warn',
         'import/no-duplicates': 'warn',
+       "import/prefer-default-export": "off",
         'import/no-extraneous-dependencies': 'warn',
         'import/no-named-as-default': 'warn',
         'import/extensions': 'warn',
@@ -87,16 +91,28 @@ module.exports = {
         'react/jsx-indent': ['error', 4],
         'react/jsx-filename-extension': [
             'error',
-            { extensions: ['.js', '.jsx'] }
+            { extensions: ['.js', '.jsx', '.ts', '.tsx'] }
         ],
         'react/prefer-stateless-function': 'off',
         'space-in-parens': ['error', 'always'],
         'jest/no-disabled-tests': 'warn',
         'jest/no-focused-tests': 'error',
         'jest/no-identical-title': 'error',
-        'jest/valid-expect': 'error'
+        'jest/valid-expect': 'error',
+        // eg ts linting
+        // "@typescript-eslint/rule-name": "error",
+        //eg tslint plugins
+    //     "@typescript-eslint/tslint/config": ["warn", {
+    //   "lintFile": "", // path to tslint.json of your project
+    //   "rules": {
+    //     // tslint rules (will be used if `lintFile` is not specified)
+    //   },
+    //   "rulesDirectory": [
+    //     // array of paths to directories with rules, e.g. 'node_modules/tslint/lib/rules' (will be used if `lintFile` is not specified)
+    //   ]
+    // }],
     },
-    plugins: ['import', 'promise', 'compat', 'react', 'jest'],
+    plugins: ['import', 'promise', 'compat', 'react', 'jest', "@typescript-eslint"],
     settings: {
         'import/resolver': {
             'babel-module': {
