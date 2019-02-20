@@ -21,6 +21,9 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
+jest.mock('@Utils/extendComponent')
+
+
 describe( 'AddressBarButtonsRHS', () =>
 {
     let wrapper;

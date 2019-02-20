@@ -33,6 +33,7 @@ describe( 'AddressBarInput', () =>
             address         : 'about:blank',
             isSelected      : false,
             isBookmarked    : false,
+            experimentsEnabled : false,
             addBookmark     : jest.fn(),
             removeBookmark  : jest.fn(),
             tabBackwards    : jest.fn(),
