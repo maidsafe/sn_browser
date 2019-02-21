@@ -11,27 +11,27 @@ export default function ui( state: array = initialState, action )
 
     switch ( action.type )
     {
-        case TYPES.SHOW_SETTINGS_MENU :
+        case TYPES.SHOW_SETTINGS_MENU:
         {
-            return { ...state, settingsMenuIsVisible : true };
+            return { ...state, settingsMenuIsVisible: true };
         }
-        case TYPES.HIDE_SETTINGS_MENU :
+        case TYPES.HIDE_SETTINGS_MENU:
         {
-            return { ...state, settingsMenuIsVisible : false };
+            return { ...state, settingsMenuIsVisible: false };
         }
-        case TYPES.SELECT_ADDRESS_BAR :
+        case TYPES.SELECT_ADDRESS_BAR:
         {
-            return { ...state, addressBarIsSelected : true };
+            return { ...state, addressBarIsSelected: true };
         }
-        case TYPES.DESELECT_ADDRESS_BAR :
+        case TYPES.DESELECT_ADDRESS_BAR:
         {
-            return { ...state, addressBarIsSelected : false };
+            return { ...state, addressBarIsSelected: false };
         }
-        case TYPES.BLUR_ADDRESS_BAR :
+        case TYPES.BLUR_ADDRESS_BAR:
         {
-            return { ...state, addressBarIsSelected : false };
+            return { ...state, addressBarIsSelected: false };
         }
-        case TYPES.FOCUS_WEBVIEW :
+        case TYPES.FOCUS_WEBVIEW:
         {
             return { ...state, shouldFocusWebview: payload };
         }

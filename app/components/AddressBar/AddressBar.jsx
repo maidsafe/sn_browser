@@ -67,10 +67,12 @@ export default class AddressBar extends Component
         updateTab( { windowId, shouldReload: true } );
     }
 
-    getSettingsMenuItems = () => {
+    getSettingsMenuItems = () =>
+    {
         const { addTab } = this.props;
         const { windowId } = this.props;
-        const addATab = tab => {
+        const addATab = tab =>
+        {
             addTab( { url: `safe-browser://${tab}`, isActiveTab: true, windowId } );
         };
 
