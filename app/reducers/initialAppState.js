@@ -13,7 +13,8 @@ const initialState = {
             webId        : undefined
         }
     ],
-    ui : {
+    ui :
+    {
         settingsMenuIsVisible : false,
         addressBarIsSelected  : false,
         pageIsLoading         : false,
