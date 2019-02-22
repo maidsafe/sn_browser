@@ -6,7 +6,13 @@ describe( 'ui actions', () =>
     {
         expect( ui.TYPES ).toBeDefined();
     } );
-
+    it( 'should add window to UI store', () =>
+    {
+        const expectedAction = {
+            type : ui.TYPES.UI_ADD_WINDOW
+        };
+        expect( ui.uiAddWindow() ).toEqual( expectedAction );
+    } );
     it( 'should show settings menu', () =>
     {
         const expectedAction = {
@@ -22,7 +28,13 @@ describe( 'ui actions', () =>
         };
         expect( ui.hideSettingsMenu() ).toEqual( expectedAction );
     } );
-
+    it( 'should remove window from UI store', () =>
+    {
+        const expectedAction = {
+            type : ui.TYPES.UI_REMOVE_WINDOW
+        };
+        expect( ui.uiRemoveWindow() ).toEqual( expectedAction );
+    } );
     it( 'should set addressbar selected', () =>
     {
         const expectedAction = {

@@ -34,38 +34,43 @@ const Meatball = () => (
  */
 export default class CustomMenu extends Component {
     static propTypes = {
-        isVisible: PropTypes.bool,
-        menuItems: PropTypes.array,
-        showMenu: PropTypes.func.isRequired,
-        hideMenu: PropTypes.func.isRequired
+        isVisible : PropTypes.bool,
+        menuItems : PropTypes.array,
+        showMenu  : PropTypes.func.isRequired,
+        hideMenu  : PropTypes.func.isRequired,
+        windowId  : PropTypes.number.isRequired,
     };
 
     static defaultProps = {
-        isVisible: false,
-        menuItems: []
+        isVisible : false,
+        menuItems : []
     };
 
-    handleShowingMenu = event => {
+    handleShowingMenu = event =>
+    {
         event.nativeEvent.stopImmediatePropagation();
 
-        const { showMenu, hideMenu, isVisible } = this.props;
+        const { showMenu, hideMenu, isVisible, windowId } = this.props;
 
-        if (isVisible) {
-            hideMenu();
-        } else {
-            showMenu();
-
-            const windowClickListener = event => {
-                hideMenu();
+        if ( isVisible )
+        {
+            hideMenu( { windowId } );
+        }
+        else
+        {
+            showMenu( { windowId } );
+            const windowClickListener = event =>
+            {
+                hideMenu( { windowId } );
             };
-
             window.addEventListener('click', windowClickListener, {
                 once: true
-            });
+            } );
         }
     };
 
-    render() {
+    render()
+    {
         const { isVisible, menuItems } = this.props;
 
         return (

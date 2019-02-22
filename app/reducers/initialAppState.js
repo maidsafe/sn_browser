@@ -15,10 +15,10 @@ const initialState = {
     ],
     ui :
     {
-        settingsMenuIsVisible : false,
-        addressBarIsSelected  : false,
-        pageIsLoading         : false,
-        shouldFocusWebview    : false
+        windows              : [],
+        addressBarIsSelected : false,
+        pageIsLoading        : false,
+        shouldFocusWebview   : false
     }
 };
 

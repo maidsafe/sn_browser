@@ -73,40 +73,40 @@ export default class AddressBar extends Component
         const { windowId } = this.props;
         const addATab = tab =>
         {
-            addTab( { url: `safe-browser://${tab}`, isActiveTab: true, windowId } );
+            addTab( { url: `safe-browser://${ tab }`, isActiveTab: true, windowId } );
         };
 
         return [
             <Row
-                key={'menuItem-bookmarks'}
+                key="menuItem-bookmarks"
                 type="flex"
                 justify="start"
                 align="middle"
             >
                 <div
                     role="menuitem"
-                    tabIndex={0}
-                    className={`${styles.menuItem} ${
+                    tabIndex={ 0 }
+                    className={ `${ styles.menuItem } ${
                         CLASSES.SETTINGS_MENU__BOOKMARKS
-                    }`}
-                    onClick={() => addATab('bookmarks')}
+                    }` }
+                    onClick={ () => addATab( 'bookmarks' ) }
                 >
                     Bookmarks
                 </div>
             </Row>,
             <Row
-                key={'menuItem-history'}
+                key="menuItem-history"
                 type="flex"
                 justify="start"
                 align="middle"
             >
                 <div
                     role="menuitem"
-                    tabIndex={0}
-                    className={`${styles.menuItem} ${
+                    tabIndex={ 0 }
+                    className={ `${ styles.menuItem } ${
                         CLASSES.SETTINGS_MENU__HISTORY
-                    }`}
-                    onClick={() => addATab('history')}
+                    }` }
+                    onClick={ () => addATab( 'history' ) }
                 >
                     History
                 </div>
@@ -114,7 +114,8 @@ export default class AddressBar extends Component
         ];
     };
 
-    render() {
+    render()
+    {
         const props = this.props;
 
         const {
@@ -124,6 +125,7 @@ export default class AddressBar extends Component
             removeBookmark,
             isBookmarked,
             activeTab,
+            windowId,
             updateTab,
             settingsMenuIsVisible,
             showSettingsMenu,
@@ -137,13 +139,13 @@ export default class AddressBar extends Component
             : false;
 
         return (
-            <div className={`${styles.container} js-address`}>
+            <div className={ `${ styles.container } js-address` }>
                 <Row
-                    className={styles.addressBar}
+                    className={ styles.addressBar }
                     type="flex"
                     justify="start"
                     align="middle"
-                    gutter={{ xs: 4, sm: 8, md: 12 }}
+                    gutter={ { xs: 4, sm: 8, md: 12 } }
                 >
                     <Col>
                         <ButtonsLHS
@@ -157,21 +159,22 @@ export default class AddressBar extends Component
                             { ...props }
                         />
                     </Col>
-                    <Col className={styles.addressBarCol}>
-                        <Input {...this.props} />
+                    <Col className={ styles.addressBarCol }>
+                        <Input { ...this.props } />
                     </Col>
                     <Col>
                         <ButtonsRHS
-                            address={address}
-                            addTab={addTab}
-                            isBookmarked={isBookmarked}
-                            addBookmark={addBookmark}
-                            removeBookmark={removeBookmark}
-                            menuItems={this.getSettingsMenuItems()}
-                            showSettingsMenu={showSettingsMenu}
-                            settingsMenuIsVisible={settingsMenuIsVisible}
-                            hideSettingsMenu={hideSettingsMenu}
-                            focusWebview={focusWebview}
+                            address={ address }
+                            addTab={ addTab }
+                            isBookmarked={ isBookmarked }
+                            addBookmark={ addBookmark }
+                            windowId={ windowId }
+                            removeBookmark={ removeBookmark }
+                            menuItems={ this.getSettingsMenuItems() }
+                            showSettingsMenu={ showSettingsMenu }
+                            settingsMenuIsVisible={ settingsMenuIsVisible }
+                            hideSettingsMenu={ hideSettingsMenu }
+                            focusWebview={ focusWebview }
                         />
                     </Col>
                 </Row>

@@ -14,7 +14,7 @@ jest.autoMockOff();
 
 // create any initial state needed
 const initialState = {
-    ui                   : {},
+    ui                   : { windows: [] },
     tabs                 : [],
     windowId             : 1,
     addTab               : jest.fn(),
