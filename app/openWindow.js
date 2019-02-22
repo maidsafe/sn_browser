@@ -8,7 +8,7 @@ import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '@Constants';
 import { addTab, updateTab } from './actions/tabs_actions';
-import { selectAddressBar } from './actions/ui_actions';
+import { selectAddressBar, uiAddWindow, uiRemoveWindow } from './actions/ui_actions';
 
 const browserWindowArray = [];
 
@@ -108,6 +108,11 @@ const openWindow = store =>
                     updateTab( { index: orphan.index, windowId: webContentsId } )
                 );
             } );
+            store.dispatch(
+                uiAddWindow( {
+                    windowId : webContentsId
+                } )
+            );
         }
         else
         {
@@ -118,10 +123,23 @@ const openWindow = store =>
                     isActiveTab : true
                 } )
             );
+            store.dispatch(
+                uiAddWindow( {
+                    windowId : webContentsId
+                } )
+            );
             store.dispatch( selectAddressBar() );
         }
     } );
-
+    mainWindow.on( 'close', () =>
+    {
+        const webContentsId = mainWindow.webContents.id;
+        store.dispatch(
+            uiRemoveWindow( {
+                windowId : webContentsId
+            } )
+        );
+    } );
     mainWindow.on( 'closed', () =>
     {
         const index = browserWindowArray.indexOf( mainWindow );

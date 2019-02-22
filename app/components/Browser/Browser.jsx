@@ -181,11 +181,14 @@ class Browser extends Component
         }
 
         const activeTabAddress = activeTab.url;
-
         const isBookmarked = !!bookmarks.find(
             bookmark => bookmark.url === activeTabAddress
         );
-
+        const uiWindow = ui.windows;
+        const windowObjForCurrentWindow = uiWindow.find( function ( element ) {
+            return element.windowId === windowId;
+          });
+        const settingsMenuIsVisible = windowObjForCurrentWindow ? windowObjForCurrentWindow.settingsMenuIsVisible : false;
         return (
             <div className={ styles.container }>
                 <TabBar
@@ -210,7 +213,7 @@ class Browser extends Component
                     removeBookmark={ removeBookmark }
                     hideSettingsMenu={ hideSettingsMenu }
                     showSettingsMenu={ showSettingsMenu }
-                    settingsMenuIsVisible={ ui.settingsMenuIsVisible }
+                    settingsMenuIsVisible={ settingsMenuIsVisible }
                     isSelected={ ui.addressBarIsSelected }
                     tabBackwards={ tabBackwards }
                     tabForwards={ tabForwards }

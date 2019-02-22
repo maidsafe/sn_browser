@@ -26,10 +26,11 @@ class ButtonsRHS extends Component {
         address: PropTypes.string,
         isBookmarked: PropTypes.bool.isRequired,
         addBookmark: PropTypes.func.isRequired,
-        removeBookmark: PropTypes.func.isRequired,
-        showSettingsMenu: PropTypes.func.isRequired,
-        hideSettingsMenu: PropTypes.func.isRequired,
-        settingsMenuIsVisible: PropTypes.bool.isRequired,
+        removeBookmark        : PropTypes.func.isRequired,
+        showSettingsMenu      : PropTypes.func.isRequired,
+        windowId              : PropTypes.number.isRequired,
+        hideSettingsMenu      : PropTypes.func.isRequired,
+        settingsMenuIsVisible : PropTypes.bool.isRequired,
         menuItems: PropTypes.arrayOf(PropTypes.node).isRequired,
         focusWebview: PropTypes.func.isRequired
     };
@@ -60,6 +61,7 @@ class ButtonsRHS extends Component {
             isBookmarked,
             settingsMenuIsVisible,
             addTab,
+            windowId,
             showSettingsMenu,
             hideSettingsMenu,
             menuItems,
@@ -99,6 +101,7 @@ class ButtonsRHS extends Component {
                 <Col>
                     <CustomMenu
                         isVisible={settingsMenuIsVisible}
+                        windowId={ windowId }
                         menuItems={menuItems}
                         showMenu={showSettingsMenu}
                         hideMenu={hideSettingsMenu}
