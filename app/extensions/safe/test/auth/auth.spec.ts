@@ -31,9 +31,6 @@ const authReqWithoutMockBit = 'safe-auth:bAAAAAAEKDQ7DAAAAAAACOAAAAAAAAAAANZSXIL
 
 const sixtyFourBitReq = 'safe-auth:AAAAAIdLdL0AAAAAJwAAAAAAAABuZXQubWFpZHNhZmUuYXBpX3BsYXlncm91bmQud2ViY2xpZW50LjkAFwAAAAAAAABTQUZFIHdlYiBBUEkgcGxheWdyb3VuZA0AAAAAAAAATWFpZFNhZmUgTHRkLgECAAAAAAAAAAcAAAAAAAAAX3B1YmxpYwQAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAwAAAAAAAAAX3B1YmxpY05hbWVzBAAAAAAAAAAAAAAAAQAAAAIAAAADAAAA';
 
-const decodedReqForRandomClient = uri => helper.createRandomAccount()
-    .then( () => client.decodeRequest( uri ) );
-
 const decodedReqForRandomClient = uri =>
     helper.createRandomAccount().then( () => client.decodeRequest( uri ) );
 
