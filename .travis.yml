@@ -90,13 +90,14 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
     fi
-  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-peruse"
+  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-peruse --forceExit"
+  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-exts --forceExit"
   # Split into smaller test subsets to facilitate retries only on smaller portions of the tests
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/peruse.spec.js"
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/peruse.spec."
   - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/settingsMenu.spec.js"
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/settingsMenu.spec."
   - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/navigation.spec.js"
+  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/navigation.spec."
   - sleep 5
   - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-auth"
   - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-mock"

@@ -59,7 +59,7 @@ if ( logger.transports )
 export default logger;
 
 // HACK: for jest
-if ( inMainProcess )
+if ( inMainProcess && process.env.NODE_ENV !== 'test' )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
     logger.info( '' );
