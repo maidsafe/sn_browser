@@ -54,8 +54,7 @@ export default class AddressBar extends Component<AddressBarProps, {}> {
     updateTab({ windowId, shouldReload: true });
   };
   getSettingsMenuItems = () => {
-    const { addTab } = this.props;
-    const { windowId } = this.props;
+    const { addTab, windowId } = this.props;
     const addATab = tab => {
       addTab({ url: `safe-browser://${tab}`, isActiveTab: true, windowId });
     };
@@ -100,7 +99,8 @@ export default class AddressBar extends Component<AddressBarProps, {}> {
       settingsMenuIsVisible,
       showSettingsMenu,
       hideSettingsMenu,
-      focusWebview
+      focusWebview,
+      windowId
     } = this.props;
     const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
     const canGoForwards = activeTab
