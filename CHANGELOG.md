@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.2](https://github.com/maidsafe/safe_browser/compare/v0.11.1...v0.11.2) (2019-02-26)
+
+
+### Bug Fixes
+
+* **Changelog:** Readd accidentally removed bump command ([cee8e8d](https://github.com/maidsafe/safe_browser/commit/cee8e8d))
+* **CI:** Add missing WAIT for some auth CI drivers ([f506a02](https://github.com/maidsafe/safe_browser/commit/f506a02)), closes [#565](https://github.com/maidsafe/safe_browser/issues/565)
+* **CI:** Travis release sha256 naming fixed ([61a5bb7](https://github.com/maidsafe/safe_browser/commit/61a5bb7))
+* **Deps:** upgrade lodash to >=4.17.11 to remediate security vulnerability ([#580](https://github.com/maidsafe/safe_browser/issues/580)) ([1acc846](https://github.com/maidsafe/safe_browser/commit/1acc846))
+* **Devtools:** BG Process devtools no longer opens when running packaged/mock ([56f3af0](https://github.com/maidsafe/safe_browser/commit/56f3af0))
+* **dom:** creates link_revealer div just once when browser mounts ([dfddafe](https://github.com/maidsafe/safe_browser/commit/dfddafe))
+* **http:** Open blank tab when closing a new tab from http: req ([d214d74](https://github.com/maidsafe/safe_browser/commit/d214d74))
+* **linting:** Fix eslint setup to run properly ([d1d0274](https://github.com/maidsafe/safe_browser/commit/d1d0274))
+* **loading-logic:** able to move backwards to about:blank or reload about:blank ([b1e8a66](https://github.com/maidsafe/safe_browser/commit/b1e8a66))
+* **package:** remove duplicate crust.config file in Windows package ([28b85e2](https://github.com/maidsafe/safe_browser/commit/28b85e2))
+* **packaging:** remove unlinkSync for container folder ([e2737c7](https://github.com/maidsafe/safe_browser/commit/e2737c7))
+* **Packaging:** Update startAsMock file location for dev builds. ([6b00fa5](https://github.com/maidsafe/safe_browser/commit/6b00fa5)), closes [#590](https://github.com/maidsafe/safe_browser/issues/590)
+* **tabs:** reloads tabs independent of window ([df28e09](https://github.com/maidsafe/safe_browser/commit/df28e09))
+* **tabs:** updates tab with URL when navigating via anchor link ([6517d22](https://github.com/maidsafe/safe_browser/commit/6517d22))
+* **tabs:** Working tab context menu option: 'Open Link in New Tab' ([4367b1d](https://github.com/maidsafe/safe_browser/commit/4367b1d))
+* **tests:** TDD - resolves failing tests ([27fe093](https://github.com/maidsafe/safe_browser/commit/27fe093))
+
+
+
 <a name="0.11.1"></a>
 ## [0.11.1](https://github.com/maidsafe/safe_browser/compare/v0.7.0-rc.3...v0.11.1) (2019-01-24)
 
