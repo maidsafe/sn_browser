@@ -49,3 +49,6 @@ dll
 
 .idea
 npm-debug.log.*
+
+
+lib_zips/

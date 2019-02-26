@@ -32,14 +32,16 @@ matrix:
             - xorriso
             - rpm
 
-    # - os: windows
-    #   language: node_js
-    #   node_js:
-    #     - 8
-    #   env:
-    #     - ELECTRON_CACHE=$HOME/.cache/electron
-    #     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-    #     - NODE_ENV=dev
+    - os: windows
+      language: node_js
+      node_js:
+        - 8
+      env:
+        # - ELECTRON_CACHE=$HOME/.cache/electron
+        # - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - NODE_ENV=dev
+        - YARN_GPG=no # otherwise this starts gpg-agent that never exits
+
 
 
 before_cache:
@@ -55,9 +57,12 @@ cache:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX="g++-8"; fi
+  - yarn config delete proxy
+  - npm config rm proxy
+  - npm config rm https-proxy
 
 install:
-  - yarn --ignore-engines
+  - yarn --ignore-engines --network-timeout 700000
   # On Linux, initialize "virtual display". See before_script
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -90,24 +95,31 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
     fi
-  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-peruse --forceExit"
-  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-exts --forceExit"
+  - travis_retry eval "yarn run test-peruse --forceExit"
+  - travis_retry eval "yarn run test-exts --forceExit"
   # Split into smaller test subsets to facilitate retries only on smaller portions of the tests
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/peruse.spec."
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/peruse.spec.";
+    fi
   - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/settingsMenu.spec."
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/settingsMenu.spec.";
+    fi
   - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/navigation.spec."
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/navigation.spec.";
+    fi
   - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-auth"
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-mock"
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe.spec"
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-auth";
+    fi
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-mock";
+    fi
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe.spec";
+    fi
   - sleep 5
-  - if [[ "$TRAVIS_OS_NAME" != "linux" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e network.spec";
+  - if [[ "$TRAVIS_OS_NAME" != "linux" &&  "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e network.spec";
     fi
 
 
 after_failure:
+- cat ~/.yarnrc
 - ls /home/travis/safe-browser/app/node_modules/@maidsafe/safe-node-app/src/native
 # - cat ~/.local/share/applications/mimeapps.list
 # - cat ~/.local/share/applications/maidsafenet-ltd-safe-browser-authenticator.desktop
