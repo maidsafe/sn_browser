@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import { I18n } from 'react-redux-i18n';
 import zxcvbn from 'zxcvbn';
 import classNames from 'classnames';
@@ -8,40 +7,43 @@ import { getStrengthMsg } from '../utils';
 import CONSTANTS from '../constants';
 import CardLoaderFull from './card_loader_full';
 
-export default class CreateAccount extends Component
+interface errorOptions{
+    code: number;
+    description: string;
+}
+
+type propTypes = {
+    isAuthorised         : boolean;
+    loading              : boolean;
+    navPos               : number;
+    secretStrength       : number;
+    passwordStrength     : number;
+    userSecret           : string;
+    inviteCode           : string;
+    userPassword         : string;
+    setCreateAccNavPos   : (...args: any[]) => any;
+    clearError           : (...args: any[]) => any;
+    clearAccSecret       : (...args: any[]) => any;
+    clearAccPassword     : (...args: any[]) => any;
+    resetCreateAccNavPos : (...args: any[]) => any;
+    setAccSecret         : (...args: any[]) => any;
+    setInviteCode        : (...args: any[]) => any;
+    setError             : (...args: any[]) => any;
+    setAccPassword       : (...args: any[]) => any;
+    createAccount        : (...args: any[]) => any;
+    clearInviteCode      : (...args: any[]) => any;
+    setPasswordStrength  : (...args: any[]) => any;
+    setSecretStrength    : (...args: any[]) => any;
+    error                : errorOptions;
+};
+
+type contextTypes = {
+    router : object
+};
+
+
+export default class CreateAccount extends React.Component<propTypes,contextTypes>
 {
-    static propTypes = {
-        isAuthorised         : PropTypes.bool,
-        loading              : PropTypes.bool,
-        navPos               : PropTypes.number,
-        secretStrength       : PropTypes.number,
-        passwordStrength     : PropTypes.number,
-        userSecret           : PropTypes.string,
-        inviteCode           : PropTypes.string,
-        userPassword         : PropTypes.string,
-        setCreateAccNavPos   : PropTypes.func,
-        clearError           : PropTypes.func,
-        clearAccSecret       : PropTypes.func,
-        clearAccPassword     : PropTypes.func,
-        resetCreateAccNavPos : PropTypes.func,
-        setAccSecret         : PropTypes.func,
-        setInviteCode        : PropTypes.func,
-        setError             : PropTypes.func,
-        setAccPassword       : PropTypes.func,
-        createAccount        : PropTypes.func,
-        clearInviteCode      : PropTypes.func,
-        setPasswordStrength  : PropTypes.func,
-        setSecretStrength    : PropTypes.func,
-        error                : PropTypes.shape( {
-            code        : PropTypes.number,
-            description : PropTypes.string
-        } )
-    };
-
-    static contextTypes = {
-        router : PropTypes.object.isRequired
-    };
-
     constructor()
     {
         super();

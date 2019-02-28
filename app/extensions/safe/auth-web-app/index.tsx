@@ -13,14 +13,8 @@ import { configureStore, history } from './store';
 import CONSTANTS from './constants';
 import { fetchReAuthoriseState, isUserAuthorised } from './utils';
 import './sass/main.scss';
-
-import {
-    setNetworkConnected,
-    setNetworkConnecting,
-    setNetworkDisconnected
-} from './actions/network_state';
-
 import { setAppList, setReAuthoriseState } from './actions/app';
+import { setNetworkConnected, setNetworkConnecting, setNetworkDisconnected } from './actions/network_state';
 import {
     setInviteCode,
     toggleInvitePopup,
