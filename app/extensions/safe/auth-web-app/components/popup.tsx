@@ -1,17 +1,17 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import classNames from 'classnames';
 
-export default class Popup extends Component
-{
-    static propTypes = {
-        show     : PropTypes.bool.isRequired,
-        error    : PropTypes.bool,
-        title    : PropTypes.string,
-        desc     : PropTypes.string,
-        callback : PropTypes.func
-    };
+type propTypes = {
+    show: boolean;
+    error?: boolean;
+    title?: string;
+    desc?: string;
+    callback?: (...args: any[]) => any;
+};
 
+
+export default class Popup extends React.Component<propTypes>
+{
     constructor()
     {
         super();

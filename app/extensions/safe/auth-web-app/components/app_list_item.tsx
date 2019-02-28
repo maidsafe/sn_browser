@@ -1,16 +1,15 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import { Translate } from 'react-redux-i18n';
 
-export default class ListItem extends Component
-{
-    static propTypes = {
-        data      : PropTypes.shape( {} ),
-        isDefault : PropTypes.bool,
-        loading   : PropTypes.bool,
-        revokeApp : PropTypes.func
-    };
+type ListItemOptions={
+    data: { object };
+    isDefault: boolean,
+    loading: boolean,
+    revokeApp : (...args: any[]) => any;
+}
 
+export default class ListItem extends React.Component<ListItemOptions>
+{
     constructor()
     {
         super();

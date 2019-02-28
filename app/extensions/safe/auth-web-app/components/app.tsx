@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import classNames from 'classnames';
 import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
 
@@ -8,24 +7,24 @@ import CONSTANTS from '../constants';
 import NetworkStatus from './network_status';
 import AccountInfo from './account_info';
 
-export default class App extends Component
-{
-    static propTypes = {
-        children            : PropTypes.element.isRequired,
-        networkState        : PropTypes.number,
-        isAuthorised        : PropTypes.bool,
-        fetchingAccountInfo : PropTypes.bool,
-        accountInfo         : PropTypes.objectOf(
-            PropTypes.shape( {
-                done      : PropTypes.number.isRequired,
-                available : PropTypes.number.isRequired
-            } )
-        ),
-        logout               : PropTypes.func,
-        getAccountInfo       : PropTypes.func,
-        setNetworkConnecting : PropTypes.func
-    };
+interface AccountInfoOptions{
+        done: number;
+        available: number;
+}
 
+type propTypes = {
+    children: JSX.Element;
+    networkState: number;
+    isAuthorised: boolean;
+    fetchingAccountInfo: boolean,
+    accountInfo         : AccountInfoOptions;
+    logout               : (...args: any[]) => any;
+    getAccountInfo       : (...args: any[]) => any;
+    setNetworkConnecting : (...args: any[]) => any;
+};
+
+export default class App extends React.Component<propTypes>
+{
     constructor()
     {
         super();

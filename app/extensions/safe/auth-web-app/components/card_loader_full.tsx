@@ -1,12 +1,11 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 
-export default class CardLoaderFull extends Component
+type propTypes = {
+    msg: string;
+};
+
+export default class CardLoaderFull extends React.Component<propTypes>
 {
-    static propTypes = {
-        msg : PropTypes.string
-    };
-
     render()
     {
         return (
