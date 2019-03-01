@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { Link } from 'react-router';
+import * as React from "react";
 import classNames from 'classnames';
 import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
 import { I18n } from 'react-redux-i18n';
@@ -9,43 +7,39 @@ import Popup from './popup';
 import CardLoaderFull from './card_loader_full';
 import CONSTANTS from '../constants';
 
-export default class AppList extends Component
-{
-    static propTypes = {
-        fetchingApps   : PropTypes.bool.isRequired,
-        authorisedApps : PropTypes.arrayOf(
-            PropTypes.shape( {
-                app_info : PropTypes.shape( {
-                    id     : PropTypes.string,
-                    name   : PropTypes.string,
-                    vendor : PropTypes.string
-                } )
-            } )
-        ),
-        searchResult : PropTypes.arrayOf(
-            PropTypes.shape( {
-                app_info : PropTypes.shape( {
-                    id     : PropTypes.string,
-                    name   : PropTypes.string,
-                    vendor : PropTypes.string
-                } )
-            } )
-        ),
-        searchApp           : PropTypes.func,
-        clearSearch         : PropTypes.func,
-        clearAppError       : PropTypes.func,
-        getAuthorisedApps   : PropTypes.func,
-        revokeError         : PropTypes.string,
-        appListError        : PropTypes.string,
-        reAuthoriseState    : PropTypes.number,
-        setReAuthoriseState : PropTypes.func,
-        getAccountInfo      : PropTypes.func
-    };
+interface AppInfoOptions {
+    id: string;
+    name: string;
+    vendor: string;
+}
+interface authorisedAppsoptions{
+    [index: number]: { app_info: AppInfoOptions };
+}
+interface searchResultOptions{
+    [index: number]: { app_info: AppInfoOptions };
+}
+type propTypes = {
+    fetchingApps   : boolean;
+    authorisedApps : authorisedAppsoptions;
+    searchResult : searchResultOptions;
+    searchApp           : (...args: any[]) => any;
+    clearSearch         : (...args: any[]) => any;
+    clearAppError       : (...args: any[]) => any;
+    getAuthorisedApps   : (...args: any[]) => any;
+    revokeError         : (...args: any[]) => any;
+    appListError        : (...args: any[]) => any;
+    reAuthoriseState    : (...args: any[]) => any;
+    setReAuthoriseState : (...args: any[]) => any;
+    getAccountInfo      : (...args: any[]) => any;
+};
 
-    static contextTypes = {
-        router : PropTypes.object.isRequired
-    };
+type contextTypes = {
+    router : object;
+};
 
+
+export default class AppList extends React.Component<propTypes, contextTypes>
+{   
     constructor()
     {
         super();

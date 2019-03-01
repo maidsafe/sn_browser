@@ -1,45 +1,47 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import { parseUrl } from 'query-string';
 import { I18n } from 'react-redux-i18n';
 import { parseAppName, getAppIconClassName } from '../utils';
 import CardLoaderFull from './card_loader_full';
 
-export default class AppDetails extends Component
+interface LocationOptions {
+    query: QueryOptions;
+}
+interface QueryOptions {
+    id: string;
+    index: string;
+}
+interface RouterOptions {
+    push: (...args: any[]) => any;
+}
+interface AppInfoOptions {
+    id: string;
+    name: string;
+    vendor: string;
+}
+interface authorisedAppsoptions{
+    [index: number]: { app_info: AppInfoOptions };
+}
+type AppDetailsOptions = {
+    revoked: boolean;
+    loading: boolean;
+    revokeError: string;
+    location: LocationOptions;
+    router: RouterOptions;
+    authorisedApps: authorisedAppsoptions;
+    getAuthorisedApps: (...args: any[]) => any;
+    revokeApp: (...args: any[]) => any;
+};
+type ContextTypes = {
+    router: object;
+};
+
+
+export default class AppDetails extends React.Component<AppDetailsOptions, ContextTypes>
 {
-    static propTypes = {
-        revoked     : PropTypes.bool,
-        loading     : PropTypes.bool,
-        revokeError : PropTypes.string,
-        location    : PropTypes.shape( {
-            query : PropTypes.shape( {
-                id    : PropTypes.string,
-                index : PropTypes.string
-            } )
-        } ),
-        router : PropTypes.shape( {
-            push : PropTypes.func
-        } ),
-        authorisedApps : PropTypes.arrayOf(
-            PropTypes.shape( {
-                app_info : PropTypes.shape( {
-                    id     : PropTypes.string,
-                    name   : PropTypes.string,
-                    vendor : PropTypes.string
-                } )
-            } )
-        ),
-        getAuthorisedApps : PropTypes.func,
-        revokeApp         : PropTypes.func
-    };
-
-    static contextTypes = {
-        router : PropTypes.object.isRequired
-    };
-
-    constructor()
+    constructor(props)
     {
-        super();
+        super(props);
         this.getContainers = this.getContainers.bind( this );
     }
 

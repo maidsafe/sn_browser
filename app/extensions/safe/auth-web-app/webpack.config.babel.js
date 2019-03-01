@@ -3,7 +3,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 export default {
     devtool : 'cheap-module-source-map',
-    entry   : path.resolve( __dirname, 'index.js' ),
+    entry   : path.resolve( './app/extensions/safe/auth-web-app/index.tsx' ),
     output  : {
         path     : path.join( __dirname, 'dist' ),
         filename : 'bundle.js'
@@ -12,7 +12,7 @@ export default {
     module : {
         rules : [
             {
-                test    : /\.jsx?$/,
+                test    : /\.tsx?$/,
                 use     : 'babel-loader',
                 exclude : /node_modules/
             },
@@ -38,6 +38,9 @@ export default {
                 use  : 'url-loader?limit=500000'
             }
         ]
+    },
+    resolve : {
+        extensions : [ '.js', '.jsx', '.json', '.ts', '.tsx' ]
     },
     plugins : [
         new CopyWebpackPlugin( [

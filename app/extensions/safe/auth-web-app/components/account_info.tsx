@@ -1,17 +1,16 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react"
 import classNames from 'classnames';
 import { I18n } from 'react-redux-i18n';
 
-export default class AccountInfo extends Component
-{
-    static propTypes = {
-        isLoading : PropTypes.bool.isRequired,
-        done      : PropTypes.number.isRequired,
-        available : PropTypes.number,
-        refresh   : PropTypes.func.isRequired
-    };
+type AccInfoProps = {
+    isLoading: boolean,
+    done: number,
+    available: number,
+    refresh: (...args: any[]) => any,
+};
 
+export default class AccountInfo extends React.Component<AccInfoProps>
+{
     render()
     {
         const {

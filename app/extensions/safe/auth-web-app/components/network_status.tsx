@@ -1,14 +1,13 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import classNames from 'classnames';
 import CONSTANTS from '../constants';
 
-export default class NetworkStatus extends Component
-{
-    static propTypes = {
-        status : PropTypes.number.isRequired
-    };
+type propTypes = {
+    status : number;
+};
 
+export default class NetworkStatus extends React.Component<propTypes>
+{
     render()
     {
         let message = null;

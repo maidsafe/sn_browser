@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import { I18n } from 'react-redux-i18n';
 import classNames from 'classnames';
 import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
@@ -7,24 +6,26 @@ import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
 import CardLoaderFull from './card_loader_full';
 import Popup from './popup';
 
-export default class Login extends Component
+interface error{
+    code    : number,
+    description : string
+}
+
+type propTypes = {
+    isAuthorised : boolean
+    libErrPopup  : boolean
+    loading      : boolean
+    login        : (...args: any[]) => any;
+    clearError   : (...args: any[]) => any;
+    error        : error;
+};
+
+type contextTypes = {
+    router : object
+};
+
+export default class Login extends React.Component<propTypes,contextTypes>
 {
-    static propTypes = {
-        isAuthorised : PropTypes.bool,
-        libErrPopup  : PropTypes.bool,
-        loading      : PropTypes.bool,
-        login        : PropTypes.func,
-        clearError   : PropTypes.func,
-        error        : PropTypes.shape( {
-            code        : PropTypes.number,
-            description : PropTypes.string
-        } )
-    };
-
-    static contextTypes = {
-        router : PropTypes.object.isRequired
-    };
-
     constructor()
     {
         super();

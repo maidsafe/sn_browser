@@ -1,13 +1,12 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import * as React from "react";
 import { I18n } from 'react-redux-i18n';
 
-export default class AuthLoader extends Component
-{
-    static propTypes = {
-        cancelAuthReq : PropTypes.func.isRequired
-    };
+type propTypes = {
+    cancelAuthReq : (...args: any[]) => any;
+};
 
+export default class AuthLoader extends React.Component<propTypes>
+{
     render()
     {
         const { cancelAuthReq } = this.props;
