@@ -8,20 +8,20 @@ import NetworkStatus from './network_status';
 import AccountInfo from './account_info';
 
 interface AccountInfoOptions{
-        done: number;
-        available: number;
+    done: number;
+    available: number;
 }
 
-type propTypes = {
+interface propTypes {
     children: JSX.Element;
     networkState: number;
     isAuthorised: boolean;
     fetchingAccountInfo: boolean,
     accountInfo         : AccountInfoOptions;
-    logout               : (...args: any[]) => any;
-    getAccountInfo       : (...args: any[]) => any;
-    setNetworkConnecting : (...args: any[]) => any;
-};
+    logout               : ( ...args: any[] ) => any;
+    getAccountInfo       : ( ...args: any[] ) => any;
+    setNetworkConnecting : ( ...args: any[] ) => any;
+}
 
 export default class App extends React.Component<propTypes>
 {
@@ -83,10 +83,10 @@ export default class App extends React.Component<propTypes>
                     {this.getHeaderOptions()}
                     {networkState === CONSTANTS.NETWORK_STATUS.DISCONNECTED
                     && isAuthorised ? (
-                        <div className="nw-state-alert">
+                            <div className="nw-state-alert">
                                 <div className="nw-status-alert-b">
-                                {I18n.t( 'messages.disconnected' )}
-                                <button
+                                    {I18n.t( 'messages.disconnected' )}
+                                    <button
                                         type="button"
                                         aria-label={ I18n.t( 'buttons.reconnect' ) }
                                         onClick={ () =>
@@ -96,7 +96,7 @@ export default class App extends React.Component<propTypes>
                                     >
                                         {I18n.t( 'buttons.reconnect' )}
                                     </button>
-                            </div>
+                                </div>
                             </div>
                         ) : null}
                 </header>

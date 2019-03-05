@@ -5,9 +5,9 @@ import nessieStyles from 'nessie-ui/dist/styles.css';
 import { SpriteMap } from 'nessie-ui';
 import styles from './app.css';
 
-type Props = {
+interface Props {
     children: React.Node
-};
+}
 
 export default class App extends React.Component<Props>
 {

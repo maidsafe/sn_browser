@@ -82,7 +82,7 @@ const manageRemoteCalls = async store =>
                 }
                 else
                 {
-                    console.info( theCall.name, ' does not exist' );
+                    console.info( theCall.name, 'does not exist' );
                 }
             }
         } );

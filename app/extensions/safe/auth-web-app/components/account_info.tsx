@@ -2,12 +2,12 @@ import * as React from "react"
 import classNames from 'classnames';
 import { I18n } from 'react-redux-i18n';
 
-type AccInfoProps = {
+interface AccInfoProps {
     isLoading: boolean,
     done: number,
     available: number,
-    refresh: (...args: any[]) => any,
-};
+    refresh: ( ...args: any[] ) => any,
+}
 
 export default class AccountInfo extends React.Component<AccInfoProps>
 {

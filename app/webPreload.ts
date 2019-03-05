@@ -76,11 +76,11 @@ store.subscribe( async () =>
 triggerOnWebviewPreload( store );
 // setupPreloadedSafeAuthApis( store );
 
-window.onerror = function ( error, url, line )
+window.addEventListener( 'error', function ( error, url, line )
 {
     log.error( error );
     log.error( url );
     log.error( line );
 
     ipcRenderer.send( 'errorInPreload', error, url, line );
-};
+} );

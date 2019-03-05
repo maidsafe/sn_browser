@@ -65,7 +65,7 @@ describe( 'notification reducer', () =>
                 notifications( [ note ], {
                     type    : TYPES.UPDATE_NOTIFICATION,
                     payload : { text: 'new!' }
-                } ) ).toThrowError( '"id"' );
+                } ) ).toThrow( '"id"' );
         } );
     } );
 

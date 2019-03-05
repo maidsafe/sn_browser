@@ -11,18 +11,18 @@ interface error{
     description : string
 }
 
-type propTypes = {
+interface propTypes {
     isAuthorised : boolean
     libErrPopup  : boolean
     loading      : boolean
-    login        : (...args: any[]) => any;
-    clearError   : (...args: any[]) => any;
+    login        : ( ...args: any[] ) => any;
+    clearError   : ( ...args: any[] ) => any;
     error        : error;
-};
+}
 
-type contextTypes = {
+interface contextTypes {
     router : object
-};
+}
 
 export default class Login extends React.Component<propTypes,contextTypes>
 {

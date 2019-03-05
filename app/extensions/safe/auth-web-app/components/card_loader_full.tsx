@@ -1,8 +1,8 @@
 import * as React from "react";
 
-type propTypes = {
+interface propTypes {
     msg: string;
-};
+}
 
 export default class CardLoaderFull extends React.Component<propTypes>
 {

@@ -12,7 +12,7 @@ interface QueryOptions {
     index: string;
 }
 interface RouterOptions {
-    push: (...args: any[]) => any;
+    push: ( ...args: any[] ) => any;
 }
 interface AppInfoOptions {
     id: string;
@@ -22,26 +22,26 @@ interface AppInfoOptions {
 interface authorisedAppsoptions{
     [index: number]: { app_info: AppInfoOptions };
 }
-type AppDetailsOptions = {
+interface AppDetailsOptions {
     revoked: boolean;
     loading: boolean;
     revokeError: string;
     location: LocationOptions;
     router: RouterOptions;
     authorisedApps: authorisedAppsoptions;
-    getAuthorisedApps: (...args: any[]) => any;
-    revokeApp: (...args: any[]) => any;
-};
-type ContextTypes = {
+    getAuthorisedApps: ( ...args: any[] ) => any;
+    revokeApp: ( ...args: any[] ) => any;
+}
+interface ContextTypes {
     router: object;
-};
+}
 
 
 export default class AppDetails extends React.Component<AppDetailsOptions, ContextTypes>
 {
-    constructor(props)
+    constructor( props )
     {
-        super(props);
+        super( props );
         this.getContainers = this.getContainers.bind( this );
     }
 

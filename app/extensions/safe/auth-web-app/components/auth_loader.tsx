@@ -1,9 +1,9 @@
 import * as React from "react";
 import { I18n } from 'react-redux-i18n';
 
-type propTypes = {
-    cancelAuthReq : (...args: any[]) => any;
-};
+interface propTypes {
+    cancelAuthReq : ( ...args: any[] ) => any;
+}
 
 export default class AuthLoader extends React.Component<propTypes>
 {

@@ -9,14 +9,14 @@ const log = require( 'electron-log' );
 
 log.info( 'Starting render process' );
 
-window.onerror = function ( error, url, line )
+window.addEventListener( 'error', function ( error, url, line )
 {
     log.error( error );
     log.error( url );
     log.error( line );
 
     ipcRenderer.send( 'errorInRenderWindow', error, url, line );
-};
+} );
 
 const store = configureStore();
 

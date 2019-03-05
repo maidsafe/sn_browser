@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Translate } from 'react-redux-i18n';
 
-type ListItemOptions={
+interface ListItemOptions {
     data: { object };
     isDefault: boolean,
     loading: boolean,
-    revokeApp : (...args: any[]) => any;
+    revokeApp : ( ...args: any[] ) => any;
 }
 
 export default class ListItem extends React.Component<ListItemOptions>
@@ -88,16 +88,16 @@ export default class ListItem extends React.Component<ListItemOptions>
                                             </span>
                                             {container.access
                                             && container.access.length > 0 ? (
-                                                <div className="permission-i-ls">
+                                                    <div className="permission-i-ls">
                                                         <ul>
-                                                        {container.access.map(
+                                                            {container.access.map(
                                                                 ( item, i ) => (
                                                                     <li key={ i }>
                                                                         {item}
                                                                     </li>
                                                                 )
                                                             )}
-                                                    </ul>
+                                                        </ul>
                                                     </div>
                                                 ) : null}
                                         </li>

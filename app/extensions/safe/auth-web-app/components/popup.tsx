@@ -1,13 +1,13 @@
 import * as React from "react";
 import classNames from 'classnames';
 
-type propTypes = {
+interface propTypes {
     show: boolean;
     error?: boolean;
     title?: string;
     desc?: string;
-    callback?: (...args: any[]) => any;
-};
+    callback?: ( ...args: any[] ) => any;
+}
 
 
 export default class Popup extends React.Component<propTypes>

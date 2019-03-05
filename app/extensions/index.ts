@@ -1,7 +1,7 @@
 import logger from 'logger';
 
 // TODO: This should load all packages either from here or from node_modules etc...
-import safeBrowsing from './safe/index';
+import safeBrowsing from './safe';
 
 // here add your packages for extensibility.
 // const allPackages = [ ];

@@ -7,27 +7,27 @@ import "antd/lib/row/style";
 import "antd/lib/col/style";
 import "antd/lib/button/style";
 import {
-  showWebIdDropdown,
-  getAvailableWebIds
-} from "../actions/safeBrowserApplication_actions";
-// import styles from './wrapAddressBarButtons.css';
-function mapStateToProps(state) {
-  return {
-    safeBrowserApp: state.safeBrowserApp
-  };
-}
-function mapDispatchToProps(dispatch) {
-  const actions = {
     showWebIdDropdown,
     getAvailableWebIds
-  };
-  return bindActionCreators(actions, dispatch);
+} from "../actions/safeBrowserApplication_actions";
+// import styles from './wrapAddressBarButtons.css';
+function mapStateToProps( state ) {
+    return {
+        safeBrowserApp: state.safeBrowserApp
+    };
+}
+function mapDispatchToProps( dispatch ) {
+    const actions = {
+        showWebIdDropdown,
+        getAvailableWebIds
+    };
+    return bindActionCreators( actions, dispatch );
 }
 const wrapAddressBarButtonsLHS = (
-  AddressBarButtons,
-  extensionFunctionality = {}
+    AddressBarButtons,
+    extensionFunctionality = {}
 ) => {
-  class WrappedAddressBarButtonsLHS extends Component {
+    class WrappedAddressBarButtonsLHS extends Component {
     // static propTypes = {
     //   safeBrowserApp: PropTypes.shape({
     //     isMock: PropTypes.bool,
@@ -44,32 +44,32 @@ const wrapAddressBarButtonsLHS = (
     //     webIds: []
     //   }
     // };
-    render() {
-      const { safeBrowserApp } = this.props;
-      const { experimentsEnabled } = safeBrowserApp;
-      return (
-        <Row
-          type="flex"
-          justify="end"
-          align="middle"
-          gutter={{ xs: 2, sm: 4, md: 6 }}
-        >
-          <Col>
-            <AddressBarButtons {...this.props} />
-          </Col>
-          {experimentsEnabled && (
-            <Col>
-              <WebIdDropdown {...this.props} />
-            </Col>
-          )}
-        </Row>
-      );
+        render() {
+            const { safeBrowserApp } = this.props;
+            const { experimentsEnabled } = safeBrowserApp;
+            return (
+                <Row
+                    type="flex"
+                    justify="end"
+                    align="middle"
+                    gutter={{ xs: 2, sm: 4, md: 6 }}
+                >
+                    <Col>
+                        <AddressBarButtons {...this.props} />
+                    </Col>
+                    {experimentsEnabled && (
+                        <Col>
+                            <WebIdDropdown {...this.props} />
+                        </Col>
+                    )}
+                </Row>
+            );
+        }
     }
-  }
-  const hookedUpInput = connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(WrappedAddressBarButtonsLHS);
-  return hookedUpInput;
+    const hookedUpInput = connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )( WrappedAddressBarButtonsLHS );
+    return hookedUpInput;
 };
 export default wrapAddressBarButtonsLHS;
