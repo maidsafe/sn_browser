@@ -1,123 +1,124 @@
-const aliases = require('./.aliases.js');
-
-module.exports = {
+module.exports={
     "parser": "@typescript-eslint/parser",
-    "extends": ['airbnb', "plugin:@typescript-eslint/recommended"],
-    env: {
-        browser: true,
-        node: true,
-        'jest/globals': true
-    },
-    parserOptions: {
-        'ecmaFeatures.jsx' : true,
-        project : 'tsconfig.json',
-        tsconfigRootDir: '.',
+    "extends": [
+        "airbnb-typescript",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/recommended",
+        "plugin:promise/recommended",
+        "plugin:unicorn/recommended",
+        "prettier",
+        "prettier/react",
+        "prettier/@typescript-eslint",
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "useJSXTextNode": false,
+        project : "./tsconfig.json",
+        tsconfigRootDir: ".",
         sourceType: 'module',
         allowImportExportEverywhere: false,
-        codeFrame: true,
-        ecmaFeatures: {
-            jsx: true
+        codeFrame: true
+      },
+    "rules": {
+        "unicorn/catch-error-name": "off",
+        "unicorn/filename-case": "off",
+        "unicorn/prefer-exponentiation-operator": "off",
+        "unicorn/prefer-query-selector": "off",
+        "unicorn/prefer-text-content": "off",
+        "unicorn/no-for-loop": "off",
+        "unicorn/throw-new-error": "off",
+        "unicorn/regex-shorthand": "error",
+        "unicorn/no-new-buffer": "off",
+        "unicorn/no-unsafe-regex": "error",
+        "no-prototype-builtins": "off",
+        "unicorn/prefer-type-error": "off",
+        "unicorn/new-for-builtins": "off",
+        "import/prefer-default-export": "off",
+        "import/no-default-export": "error",
+        "react/prefer-stateless-function": "off",
+        "jest/no-jasmine-globals": "off",
+        "jest/valid-describe": "off",
+        "react/destructuring-assignment": "off",
+        "space-in-parens": ["error", "always"],
+        "react/jsx-filename-extension": "off",
+        "no-shadow": "error",
+        "react/prefer-stateless-function": "error",
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/tslint/config": ["error", {
+            "rules": {
+                "member-access": [true, "no-public"],
+                "file-name-casing": [true, {".tsx": "pascal-case", ".ts": "camel-case"}],
+                "no-parameter-reassignment": true,
+                "await-promise": true,
+                "ban-comma-operator": true,
+                "function-constructor": true,
+                "no-bitwise": true,
+                "no-conditional-assignment": true,
+                "no-debugger": true,
+                "no-duplicate-super": true,
+                "no-duplicate-variable": true,
+                "no-empty": true, 
+                "no-floating-promises": true,
+                "no-implicit-dependencies": [true, "dev"],
+                "no-invalid-template-strings": true,
+                "no-invalid-this": true,
+                "no-return-await": true,
+                "no-sparse-arrays": true,
+                "no-string-literal": true,
+                "no-string-throw": true,
+                "no-switch-case-fall-through": true,
+                "no-this-assignment": [true, {"allow-destructuring": true}],
+                "no-unsafe-any": true,
+                "no-unused-expression": true,
+                "no-use-before-declare": true,
+                "no-var-keyword": true,
+                "prefer-object-spread": true,
+                "restrict-plus-operands": true,
+                "switch-default": true,
+                "unnecessary-constructor": true,
+                "cyclomatic-complexity": true,
+                "deprecation": true,
+                "no-default-export": true,
+                "no-default-import": [true, {"fromModules": "^palantir-|^_internal-*|^\\./|^\\.\\./"}],
+                "no-duplicate-imports": true,
+                "prefer-const": true,
+                "arrow-return-shorthand": true,
+                "no-unnecessary-callback-wrapper": true,
+                "no-unnecessary-initializer": true,
+                "no-unnecessary-qualifier": true,
+                "prefer-method-signature": true,
+                "prefer-template": true,
+                "return-undefined": true,
+                "space-within-parens": false
+            },
+        }],
+        "indent": "off",
+        "@typescript-eslint/indent": ["error", 4]
+    },
+    "overrides": [
+        {
+          "files": ["*.js"],
+          "rules": {
+            "@typescript-eslint/tslint/config": "off",
+            "@typescript-eslint/no-var-requires": "off",
+          }
+        },
+        {
+          "files": ["*.tsx"],
+          "rules": {
+            "member-access": "off",
+            "@typescript-eslint/explicit-function-return-type": "off",
+            "@typescript-eslint/explicit-member-accessibility": "off"
+          }
         }
-    },
-    globals: {
-        peruseStore: true,
-        should: true
-    },
-    rules: {
-        'array-bracket-spacing': ["error", "always"],
-        'arrow-parens': ['error', 'as-needed'],
-        'template-curly-spacing': ['error', 'always'],
-        'max-len': 'off',
-        'no-plusplus': 'off',
-        'brace-style': ['error', 'allman', { allowSingleLine: true }],
-        'no-param-reassign': ['error', { props: false }],
-        'compat/compat': 'error',
-        'consistent-return': 'warn',
-        'no-undef': 'warn',
-        'no-trailing-spaces': ['error', { ignoreComments: true }],
-        'comma-dangle': ['error', 'only-multiline'],
-        'generator-star-spacing': ['error', { before: true, after: false }],
-        'no-underscore-dangle': 'off',
-        'no-useless-escape': 'warn',
-        'key-spacing': [
-            'error',
-            {
-                singleLine: {
-                    beforeColon: false,
-                    afterColon: true
-                },
-                multiLine: {
-                    beforeColon: true,
-                    afterColon: true,
-                    align: 'colon'
-                }
-            }
-        ],
-        'import/no-unresolved': 'off',
-        'implicit-arrow-linebreak': 'off',
-        'import/first': 'off',
-        'no-await-in-loop': 'warn',
-        'import/no-duplicates': 'warn',
-       "import/prefer-default-export": "off",
-        'import/no-extraneous-dependencies': 'warn',
-        'import/no-named-as-default': 'warn',
-        'import/extensions': 'warn',
-        'import/no-named-as-default-member': 'warn',
-        indent: ['error', 4, { SwitchCase: 1 }],
-        'no-console': 'off',
-        'no-use-before-define': 'off',
-        'no-multi-assign': 'off',
-        'object-curly-spacing' : [ 'error', 'always' ],
-        'promise/param-names': 'error',
-        'promise/always-return': 'warn',
-        'no-prototype-builtins': 'off',
-        'promise/catch-or-return': 'warn',
-        'promise/no-native': 'off',
-        'react/sort-comp': [
-            'error',
-            {
-                order: [
-                    'type-annotations',
-                    'static-methods',
-                    'lifecycle',
-                    'everything-else',
-                    'render'
-                ]
-            }
-        ],
-        'react/jsx-no-bind': 'off',
-        'react/jsx-curly-spacing': ['error', 'always'],
-        'react/jsx-indent-props': ['error', 4],
-        'react/jsx-indent': ['error', 4],
-        'react/jsx-filename-extension': [
-            'error',
-            { extensions: ['.js', '.jsx', '.ts', '.tsx'] }
-        ],
-        'react/prefer-stateless-function': 'off',
-        'space-in-parens': ['error', 'always'],
-        'jest/no-disabled-tests': 'warn',
-        'jest/no-focused-tests': 'error',
-        'jest/no-identical-title': 'error',
-        'jest/valid-expect': 'error',
-        // eg ts linting
-        // "@typescript-eslint/rule-name": "error",
-        //eg tslint plugins
-    //     "@typescript-eslint/tslint/config": ["warn", {
-    //   "lintFile": "", // path to tslint.json of your project
-    //   "rules": {
-    //     // tslint rules (will be used if `lintFile` is not specified)
-    //   },
-    //   "rulesDirectory": [
-    //     // array of paths to directories with rules, e.g. 'node_modules/tslint/lib/rules' (will be used if `lintFile` is not specified)
-    //   ]
-    // }],
-    },
-    plugins: ['import', 'promise', 'compat', 'react', 'jest', "@typescript-eslint"],
-    settings: {
-        'import/resolver': {
-            'babel-module': {
-                alias: aliases
-            }
-        }
-    }
-};
+      ],
+    "plugins": [
+        "@typescript-eslint",
+        "jest",
+        "promise",
+        "unicorn",
+        "@typescript-eslint/tslint"
+    ]
+}

@@ -240,7 +240,10 @@ There are 'live-dev' configs for running against NODE_ENV=production but without
 
 - `yarn test` runs jest (you have the optional `yarn test-watch`, too).
 - `yarn test-e2e` runs spectron integration tests (not yet stable).
-- `yarn lint` ...lints...
+
+### Linting
+- `yarn lint` runs the linter and throws all of the lint errors
+- `yarn lint-fix` runs the linter, Automatically fix problems that it can & throws the remaining lint errors
 
 ### Logging
 
