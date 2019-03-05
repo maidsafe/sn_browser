@@ -75,7 +75,7 @@ switch ( arg )
 // should be first
 argsArray.unshift( pattern );
 
-console.info( 'Running tests via: ', testCommand, argsArray );
+console.info( 'Running tests via:', testCommand, argsArray );
 
 const result = spawn.sync( testCommand, argsArray, { stdio: 'inherit' } );
 
