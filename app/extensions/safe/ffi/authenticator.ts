@@ -860,8 +860,8 @@ class Authenticator extends SafeLib
 
     encodeMDataResp( req, isAllowed )
     {
-        console.log('asdadad')
-        logger.info('doing this', req, isAllowed )
+        console.log( 'asdadad' )
+        logger.info( 'doing this', req, isAllowed )
         return new Promise( ( resolve, reject ) =>
         {
             if ( !this.registeredClientHandle )

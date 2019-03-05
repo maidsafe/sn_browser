@@ -12,7 +12,7 @@ interface errorOptions{
     description: string;
 }
 
-type propTypes = {
+interface propTypes {
     isAuthorised         : boolean;
     loading              : boolean;
     navPos               : number;
@@ -21,25 +21,25 @@ type propTypes = {
     userSecret           : string;
     inviteCode           : string;
     userPassword         : string;
-    setCreateAccNavPos   : (...args: any[]) => any;
-    clearError           : (...args: any[]) => any;
-    clearAccSecret       : (...args: any[]) => any;
-    clearAccPassword     : (...args: any[]) => any;
-    resetCreateAccNavPos : (...args: any[]) => any;
-    setAccSecret         : (...args: any[]) => any;
-    setInviteCode        : (...args: any[]) => any;
-    setError             : (...args: any[]) => any;
-    setAccPassword       : (...args: any[]) => any;
-    createAccount        : (...args: any[]) => any;
-    clearInviteCode      : (...args: any[]) => any;
-    setPasswordStrength  : (...args: any[]) => any;
-    setSecretStrength    : (...args: any[]) => any;
+    setCreateAccNavPos   : ( ...args: any[] ) => any;
+    clearError           : ( ...args: any[] ) => any;
+    clearAccSecret       : ( ...args: any[] ) => any;
+    clearAccPassword     : ( ...args: any[] ) => any;
+    resetCreateAccNavPos : ( ...args: any[] ) => any;
+    setAccSecret         : ( ...args: any[] ) => any;
+    setInviteCode        : ( ...args: any[] ) => any;
+    setError             : ( ...args: any[] ) => any;
+    setAccPassword       : ( ...args: any[] ) => any;
+    createAccount        : ( ...args: any[] ) => any;
+    clearInviteCode      : ( ...args: any[] ) => any;
+    setPasswordStrength  : ( ...args: any[] ) => any;
+    setSecretStrength    : ( ...args: any[] ) => any;
     error                : errorOptions;
-};
+}
 
-type contextTypes = {
+interface contextTypes {
     router : object
-};
+}
 
 
 export default class CreateAccount extends React.Component<propTypes,contextTypes>

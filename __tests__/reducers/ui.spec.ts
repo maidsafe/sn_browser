@@ -76,7 +76,7 @@ describe( 'notification reducer', () =>
                         payload : { windowId: 1 }
                     }
                 )
-            ).toEqual(uiInitialState);
+            ).toEqual( uiInitialState );
         } );
     } );
     describe( 'SELECT_ADDRESS_BAR', () =>

@@ -2,9 +2,9 @@ import * as React from "react";
 import classNames from 'classnames';
 import CONSTANTS from '../constants';
 
-type propTypes = {
+interface propTypes {
     status : number;
-};
+}
 
 export default class NetworkStatus extends React.Component<propTypes>
 {

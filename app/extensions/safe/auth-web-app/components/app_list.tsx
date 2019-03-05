@@ -18,24 +18,24 @@ interface authorisedAppsoptions{
 interface searchResultOptions{
     [index: number]: { app_info: AppInfoOptions };
 }
-type propTypes = {
+interface propTypes {
     fetchingApps   : boolean;
     authorisedApps : authorisedAppsoptions;
     searchResult : searchResultOptions;
-    searchApp           : (...args: any[]) => any;
-    clearSearch         : (...args: any[]) => any;
-    clearAppError       : (...args: any[]) => any;
-    getAuthorisedApps   : (...args: any[]) => any;
-    revokeError         : (...args: any[]) => any;
-    appListError        : (...args: any[]) => any;
-    reAuthoriseState    : (...args: any[]) => any;
-    setReAuthoriseState : (...args: any[]) => any;
-    getAccountInfo      : (...args: any[]) => any;
-};
+    searchApp           : ( ...args: any[] ) => any;
+    clearSearch         : ( ...args: any[] ) => any;
+    clearAppError       : ( ...args: any[] ) => any;
+    getAuthorisedApps   : ( ...args: any[] ) => any;
+    revokeError         : ( ...args: any[] ) => any;
+    appListError        : ( ...args: any[] ) => any;
+    reAuthoriseState    : ( ...args: any[] ) => any;
+    setReAuthoriseState : ( ...args: any[] ) => any;
+    getAccountInfo      : ( ...args: any[] ) => any;
+}
 
-type contextTypes = {
+interface contextTypes {
     router : object;
-};
+}
 
 
 export default class AppList extends React.Component<propTypes, contextTypes>

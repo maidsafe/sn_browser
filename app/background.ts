@@ -33,11 +33,11 @@ const initBgProcess = async () =>
 
 initBgProcess();
 
-window.onerror = function ( error, url, line )
+window.addEventListener( 'error', function ( error, url, line )
 {
     log.error( error );
     log.error( url );
     log.error( line );
 
     logger.error( 'errorInBackgroundWindow', error, url, line );
-};
+} );

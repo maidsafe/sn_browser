@@ -22,7 +22,7 @@ jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
-jest.mock('@Utils/extendComponent')
+jest.mock( '@Utils/extendComponent' )
 
 describe( 'AddressBarButtonsLHS', () =>
 {

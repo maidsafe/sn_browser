@@ -10,7 +10,7 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 
-jest.mock('@Utils/extendComponent')
+jest.mock( '@Utils/extendComponent' )
 
 // create any initial state needed
 const initialState = {

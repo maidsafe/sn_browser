@@ -368,7 +368,7 @@ const handleTabPayload = ( state, payload ) =>
             const  tabToMerge = { ...state[index] };
             return { index, tabToMerge };
         }
-        else if ( payload.windowId )
+        if ( payload.windowId )
         {
             const windowId = payload.windowId;
             const tab = getActiveTab( state, windowId );
@@ -376,21 +376,19 @@ const handleTabPayload = ( state, payload ) =>
             const tabToMerge = { ...tab };
             return { index, tabToMerge };
         }
-        else
-        {
-            const tab = getActiveTab( state );
-            const index = getActiveTabIndex( state );
-            const tabToMerge = { ...tab };
-            return { index, tabToMerge };
-        }
-    }
-    else
-    {
+        
         const tab = getActiveTab( state );
         const index = getActiveTabIndex( state );
         const tabToMerge = { ...tab };
         return { index, tabToMerge };
+        
     }
+    
+    const tab = getActiveTab( state );
+    const index = getActiveTabIndex( state );
+    const tabToMerge = { ...tab };
+    return { index, tabToMerge };
+    
 
 }
 

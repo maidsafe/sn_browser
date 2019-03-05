@@ -87,7 +87,7 @@
         }
         else
         {
-            target.appendChild( el );
+            target.append( el );
         }
     };
     function appendSvg()
