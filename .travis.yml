@@ -63,7 +63,7 @@ before_install:
   - npm cache verify
 
 install:
-  - yarn --ignore-engines --network-timeout 700000
+  - yarn --ignore-engines --network-timeout 850000
   # On Linux, initialize "virtual display". See before_script
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
