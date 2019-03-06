@@ -64,7 +64,7 @@ before_install:
   - npm config set cache-lock-retries 500
 
 install:
-  - yarn --ignore-engines --network-timeout 850000
+  - yarn --ignore-engines --network-timeout 700000
   # On Linux, initialize "virtual display". See before_script
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
