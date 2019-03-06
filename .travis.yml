@@ -64,7 +64,7 @@ before_install:
   - npm config rm https-proxy
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then yarn cache clean --force"; fi
   - npm cache verify
-  - npm config set cache-lock-retries 500
+  # - npm config set cache-lock-retries 500
 
 install:
   - yarn --ignore-engines --network-timeout 700000
