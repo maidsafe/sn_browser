@@ -60,6 +60,7 @@ before_install:
   - yarn config delete proxy
   - npm config rm proxy
   - npm config rm https-proxy
+  - npm cache verify
 
 install:
   - yarn --ignore-engines --network-timeout 700000
