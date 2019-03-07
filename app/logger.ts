@@ -24,9 +24,8 @@ if ( logger.transports )
     // logger.transports.console.level = 'silly';
     logger.transports.file.level = 'silly';
 
-    if ( process.env.NODE_ENV === 'test' || ( !isRunningDebug && isRunningPackaged ) )
+    if ( isRunningSpectronTestProcess || process.env.NODE_ENV === 'test' || ( !isRunningDebug && isRunningPackaged ) )
     {
-        // logger.transports.console.level = 'warn';
         logger.transports.file.level = 'warn';
         logger.transports.console.level = 'warn';
     }
@@ -59,7 +58,7 @@ if ( logger.transports )
 export default logger;
 
 // HACK: for jest
-if ( inMainProcess && process.env.NODE_ENV !== 'test' )
+if ( inMainProcess && !isRunningSpectronTestProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
     logger.info( '' );

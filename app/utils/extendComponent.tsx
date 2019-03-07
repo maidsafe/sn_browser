@@ -8,14 +8,13 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
     if ( typeof extensionWrapperApi !== 'function' ) throw new Error( 'extensionWrapperApi must be an executable function.' );
 
     const componentClassName = WrappedComponent.name;
-    logger.info( `Extending ${ componentClassName } via the extensions Api` );
 
     class Extended extends Component
     {
         static getDerivedStateFromError( error )
         {
             // Update state so the next render will show the fallback UI.
-            return { hasError: true };
+            return { hasError: true, theError: error };
         }
 
         constructor( props )
@@ -27,11 +26,16 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
 
         render()
         {
-            if ( this.state.hasError )
+            if ( this.state && this.state.hasError )
             {
+                const err = this.state.theError;
+
                 // You can render any custom fallback UI
                 return (
-                    <span>Something went wrong extending this component.</span>
+                    <div>
+                        <h2>Something went wrong extending {componentClassName}</h2>
+                        <span>{JSON.stringify( err, ["message", "arguments", "type", "name"] )}</span>
+                    </div>
                 );
             }
 

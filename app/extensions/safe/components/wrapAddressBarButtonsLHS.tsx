@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -44,6 +45,15 @@ const wrapAddressBarButtonsLHS = (
     //     webIds: []
     //   }
     // };
+        constructor()
+        {
+            super();
+            const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+            this.state = {
+                windowId: currentWebContentsId
+            }
+        }
+
         render() {
             const { safeBrowserApp } = this.props;
             const { experimentsEnabled } = safeBrowserApp;

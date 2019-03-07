@@ -42,10 +42,11 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
   }
   handleTabClose(tabData, event) {
     event.stopPropagation();
-    const { closeTab } = this.props;
-    closeTab({ index: tabData.tabIndex });
+    const { closeTab, windowId } = this.props;
+    closeTab({ index: tabData.tabIndex, windowId });
   }
   handleAddTabClick(event) {
+    const { windowId } = this.props;
     event.stopPropagation();
     const { addTab, selectAddressBar } = this.props;
     const newTabUrl = "about:blank";
@@ -53,7 +54,7 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
     addTab({
       url: newTabUrl,
       isActiveTab: true,
-      windowId: remote.getCurrentWindow().webContents.id
+      windowId: windowId
     });
     selectAddressBar();
   }

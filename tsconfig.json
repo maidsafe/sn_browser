@@ -17,7 +17,8 @@
             "@Reducers/*": ["app/reducers/*"],
             "logger": ["app/logger"],
             "@Components/*": ["app/components/*"],
-            "@Constants": ["app/constants"],
+            "@Constants": ["app/constants.ts"],
+            "@App": ["app/*"],
             "@Utils/*": ["app/utils/*"],
             "@Package": ["package.json"]
         }

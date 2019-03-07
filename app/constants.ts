@@ -3,11 +3,15 @@ import fs from 'fs-extra';
 import { remote } from 'electron';
 import pkg from '@Package';
 import getPort from 'get-port';
+import { CLASSES, GET_DOM_EL_CLASS } from './constants/classes';
 
 export const platform = process.platform;
 const OSX = 'darwin';
 const LINUX = 'linux';
 const WINDOWS = 'win32';
+
+
+export { CLASSES, GET_DOM_EL_CLASS };
 
 const allPassedArgs = process.argv;
 
@@ -17,10 +21,22 @@ let shouldRunMockNetwork = fs.existsSync(
 
 let hasDebugFlag = false;
 
-export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST || false;
+export const isRunningTestCafeProcess =
+    remote && remote.getGlobal ?
+        remote.getGlobal( 'isRunningTestCafeProcess' ) :
+        process.env.TEST_CAFE || false;
+
+export const isRunningSpectronTestProcess =
+    remote && remote.getGlobal ?
+        remote.getGlobal( 'isRunningSpectronTestProcess' ) :
+        process.env.SPECTRON_TEST || false;
+
 export const isRunningUnpacked = process.env.IS_UNPACKED;
 export const isRunningPackaged = !isRunningUnpacked;
-export const isRunningSpectronTestProcessingPackagedApp = isRunningSpectronTestProcess && isRunningPackaged;
+export const isRunningSpectronTestProcessingPackagedApp =
+    remote && remote.getGlobal ?
+        remote.getGlobal( 'isRunningSpectronTestProcessingPackagedApp' ) :
+        isRunningSpectronTestProcess && isRunningPackaged;
 
 export const inBgProcess = !!(
     typeof document !== 'undefined' && document.title.startsWith( 'Background' )
@@ -185,7 +201,8 @@ if ( inMainProcess )
     global.shouldStartAsMockFromFlagsOrPackage = shouldStartAsMockFromFlagsOrPackage;
     global.SAFE_NODE_LIB_PATH = CONFIG.SAFE_NODE_LIB_PATH;
     global.isRunningSpectronTestProcessingPackagedApp = isRunningSpectronTestProcessingPackagedApp;
-    global.SPECTRON_TEST = isRunningSpectronTestProcess;
+    global.isRunningSpectronTestProcess = isRunningSpectronTestProcess;
+    global.isRunningTestCafeProcess = isRunningTestCafeProcess;
 }
 
 // if( isRunningUnpacked )
@@ -221,49 +238,3 @@ else if ( process.platform === 'darwin' )
 }
 
 export const APP_INFO = appInfo;
-
-// TODO. Unify with test lib/constants browser UI?
-export const CLASSES = {
-    ADDRESS_BAR               : 'js-address',
-    ACTIVE_TAB                : 'js-tabBar__active-tab',
-    TAB                       : 'js-tab',
-    ADD_TAB                   : 'js-tabBar__add-tab',
-    CLOSE_TAB                 : 'js-tabBar__close-tab',
-    SAFE_BROWSER_PAGE         : 'js-safeBrowser__page',
-    SPECTRON_AREA             : 'js-spectron-area',
-    SPECTRON_AREA__SPOOF_SAVE : 'js-spectron-area__spoof-save',
-    SPECTRON_AREA__SPOOF_LOAD : 'js-spectron-area__spoof-read',
-    NOTIFIER_TEXT             : 'js-notifier__text',
-    BOOKMARK_PAGE             : 'js-bookmark-page',
-    FORWARDS                  : 'js-address__forwards',
-    BACKWARDS                 : 'js-address__backwards',
-    REFRESH                   : 'js-address__refresh',
-    ADDRESS_INPUT             : 'js-address__input',
-    MENU                      : 'js-address__menu',
-
-    NOTIFICATION__ACCEPT : 'js-notification__accept',
-    NOTIFICATION__REJECT : 'js-notification__reject',
-    NOTIFICATION__IGNORE : 'js-notification__ignore',
-
-    SETTINGS_MENU                : 'js-settingsMenu',
-    SETTINGS_MENU__BUTTON        : 'js-settingsMenu_button',
-    SETTINGS_MENU__BOOKMARKS     : 'js-settingsMenu_bookmarks',
-    SETTINGS_MENU__HISTORY       : 'js-settingsMenu_history',
-    SETTINGS_MENU__TOGGLE        : 'js-settingsMenu_toggle',
-    SETTINGS_MENU__TOGGLE_BUTTON : 'js-settingsMenu_toggleButton',
-    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText',
-    MOCK_TAG                     : 'js-addressBar_mockTag'
-};
-
-const getDomClasses = () =>
-{
-    const domClasses = {};
-
-    Object.keys( CLASSES ).forEach(
-        theClass => ( domClasses[theClass] = `.${ CLASSES[theClass] }` )
-    );
-
-    return domClasses;
-};
-
-export const GET_DOM_EL_CLASS = getDomClasses();
