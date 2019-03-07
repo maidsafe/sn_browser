@@ -62,7 +62,7 @@ before_install:
   - npm --version
   - npm config rm proxy
   - npm config rm https-proxy
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then yarn cache clean --force"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then "yarn cache clean --force"; fi
   - npm cache verify
   # - npm config set cache-lock-retries 500
 
