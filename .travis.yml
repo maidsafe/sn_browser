@@ -1,6 +1,6 @@
 matrix:
-  allow_failures:
-    - os: windows
+  # allow_failures:
+  #   - os: windows
   include:
     - os: osx
       language: node_js
@@ -72,7 +72,6 @@ install:
     else
       :
     fi
-  - yarn package
 
 
 before_script:
@@ -92,19 +91,11 @@ script:
     fi
   - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-peruse --forceExit"
   - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-exts --forceExit"
-  # Split into smaller test subsets to facilitate retries only on smaller portions of the tests
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/peruse.spec."
-  - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/settingsMenu.spec."
-  - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser ||  yarn test-e2e __e2e__/navigation.spec."
-  - sleep 5
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-auth"
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe-mock"
-  - travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e e2e/safe.spec"
-  - sleep 5
-  - if [[ "$TRAVIS_OS_NAME" != "linux" ]]; then travis_retry eval "pkill -f electron || pkill -f SAFE Browser || yarn run test-e2e network.spec";
-    fi
+  - yarn build-e2e
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/peruse.spec.ts
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/navigation.spec.ts
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/settingsMenu.spec.ts
+
 
 
 after_failure:
@@ -114,7 +105,7 @@ after_failure:
 - which xdg-open
 - xdg-open --version
 # - bash -x ~/bin/xdg-open safe-auth://whaaaaa
-- cat $TMPDIR/safe-browser.log;
+# - cat $TMPDIR/safe-browser.log;
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi
@@ -122,6 +113,7 @@ after_failure:
 
 before_deploy:
 
+- yarn package
 - rm -rf node_modules/@maidsafe/safe-node-app/src/native/mock
 - rm -rf app/extensions/safe/dist/mock/
 - NODE_ENV=prod yarn package

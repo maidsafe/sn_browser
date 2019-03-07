@@ -56,13 +56,13 @@ export default class WebIdDropdown extends Component<{}, {}> {
     };
 
     launchWebIdManager = () => {
-        const { addTab } = this.props;
-        addTab( { url: webIdManagerUri, isActiveTab: true } );
+        const { addTab, windowId } = this.props;
+        addTab( { url: webIdManagerUri, isActiveTab: true, windowId } );
     };
 
     launchAuthenticator = () => {
-        const { addTab } = this.props;
-        addTab( { url: authHomeUri, isActiveTab: true } );
+        const { addTab, windowId } = this.props;
+        addTab( { url: authHomeUri, isActiveTab: true, windowId } );
     };
 
     authorisePeruse = () => {

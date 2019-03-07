@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import url from "url";
 import Tab from "@Components/Tab";
-import { INTERNAL_PAGES } from "@Constants";
+import { INTERNAL_PAGES, isRunningTestCafeProcess } from "@Constants";
 import { isInternalPage } from "@Utils/urlHelpers";
 import History from "@Components/PerusePages/History";
 import Bookmarks from "@Components/PerusePages/Bookmarks";
@@ -10,6 +10,12 @@ import logger from "logger";
 import styles from "./tabContents.css";
 
 export default class TabContents extends Component<{}, {}> {
+    static getDerivedStateFromError( error )
+    {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true, theError: error };
+    }
+
     constructor( props ) {
         super( props );
         this.allTabComponents = [];
@@ -30,6 +36,20 @@ export default class TabContents extends Component<{}, {}> {
             shouldFocusWebview,
             tabBackwards
         } = this.props;
+
+        if ( this.state && this.state.hasError )
+        {
+            const err = this.state.theError;
+
+            // You can render any custom fallback UI
+            return (
+                <div>
+                    <h4>Something went wrong in TabContents.tsx</h4>
+                    <span>{JSON.stringify( err, ["message", "arguments", "type", "name"] )}</span>
+                </div>
+            );
+        }
+
         const tabComponents = tabs.map( ( tab, i ) => {
             if ( !tab.isClosed ) {
                 const isActiveTab = tab.isActiveTab;
@@ -70,6 +90,12 @@ export default class TabContents extends Component<{}, {}> {
                             return <div key="sorry">Sorry what?</div>;
                         }
                     }
+                }
+
+                if( isRunningTestCafeProcess )
+                {
+                    // tab contents cant be parsed atm.
+                    return <div>no tab for testcafe </div>
                 }
                 const TheTab = (
                     <Tab

@@ -58,6 +58,7 @@ const getCurrentWindowId = () =>
         const currentWindow = allWindows.find( win =>
         {
             const cleanedPath = removeTrailingRedundancies( win.history[0] );
+
             return (
                 path.basename( cleanedPath )
                 === path.basename( CONFIG.APP_HTML_PATH )
@@ -72,15 +73,13 @@ const getCurrentWindowId = () =>
 
 const addTab = ( state, tab ) =>
 {
-    logger.info( 'add Tab happening in reducer' );
+    logger.info( 'add Tab happening in reducer', tab );
     if ( !tab )
     {
         throw new Error( 'You must pass a tab object with url' );
     }
 
-    const currentWindowId = getCurrentWindowId();
-
-    const targetWindowId = tab.windowId || currentWindowId;
+    const targetWindowId = tab.windowId || getCurrentWindowId();
     const tabUrl = makeValidAddressBarUrl( tab.url || '' );
     const faviconPath = isRunningUnpacked
         ? '../resources/favicon.ico'
@@ -123,8 +122,7 @@ const closeTab = ( state, payload ) =>
         return state;
     }
 
-    const currentWindowId = getCurrentWindowId();
-    const targetWindowId = tabToMerge.windowId ? tabToMerge.windowId : currentWindowId;
+    const targetWindowId = tabToMerge.windowId ? tabToMerge.windowId : getCurrentWindowId();
     const openTabs = state.filter( tab => !tab.isClosed && tab.windowId === targetWindowId );
 
     const updatedTab = {
@@ -376,19 +374,19 @@ const handleTabPayload = ( state, payload ) =>
             const tabToMerge = { ...tab };
             return { index, tabToMerge };
         }
-        
+
         const tab = getActiveTab( state );
         const index = getActiveTabIndex( state );
         const tabToMerge = { ...tab };
         return { index, tabToMerge };
-        
+
     }
-    
+
     const tab = getActiveTab( state );
     const index = getActiveTabIndex( state );
     const tabToMerge = { ...tab };
     return { index, tabToMerge };
-    
+
 
 }
 
@@ -485,7 +483,8 @@ export default function tabs( state: array = initialState, action )
         case UI_TYPES.RESET_STORE: {
             const initial = initialState;
             const firstTab = { ...initial[0] };
-            const currentWindowId = getCurrentWindowId();
+            const currentWindowId = payload && payload.windowId ?
+                                    payload.windowId : getCurrentWindowId();
 
             firstTab.windowId = currentWindowId;
 

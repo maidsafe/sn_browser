@@ -1,7 +1,7 @@
 import { remote, shell } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
-import { CONFIG } from '@Constants';
+import { CONFIG, isRunningTestCafeProcess } from '@Constants';
 import logger from 'logger';
 import { urlIsAllowedBySafe } from './utils/safeHelpers';
 
@@ -19,6 +19,13 @@ const blockNonSAFERequests = () =>
 
     safeSession.webRequest.onBeforeRequest( filter, ( details, callback ) =>
     {
+        //  testcafe needs access to inject code
+        if( isRunningTestCafeProcess )
+        {
+            callback( {} );
+            return
+        }
+
         if ( urlIsAllowedBySafe( details.url ) )
         {
             logger.info( `Allowing url ${ details.url }` );

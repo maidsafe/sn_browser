@@ -92,6 +92,8 @@ class Browser extends Component<BrowserProps, BrowserState> {
         const openTabs = tabs.filter(
             tab => !tab.isClosed && tab.windowId === this.state.windowId
         );
+
+        logger.info( 'closing tab of form>>>>>>', tab.windowId )
         if ( openTabs.length === 1 ) {
             ipcRenderer.send( "command:close-window" );
         } else {
@@ -135,7 +137,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
             : false;
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
-        const windowId = this.state.windowId;
+        const {windowId} = this.state;
         // TODO: Move windowId from state to store.
         const windowTabs = tabs.filter( tab => tab.windowId === windowId );
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
@@ -166,6 +168,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
                     addTab={addTab}
                     closeTab={this.handleCloseBrowserTab}
                     tabs={openTabs}
+                    windowId={windowId}
                 />
                 <AddressBar
                     key={2}

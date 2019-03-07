@@ -5,17 +5,17 @@ import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 
+import logger from 'logger';
+
 const log = require( 'electron-log' );
 
 log.info( 'Starting render process' );
 
 window.addEventListener( 'error', function ( error, url, line )
 {
-    log.error( error );
-    log.error( url );
-    log.error( line );
-
-    ipcRenderer.send( 'errorInRenderWindow', error, url, line );
+    logger.error( error );
+    logger.error( url );
+    logger.error( line );
 } );
 
 const store = configureStore();
