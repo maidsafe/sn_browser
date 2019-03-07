@@ -12,8 +12,12 @@ import {
     updateTab
 } from '@Actions/tabs_actions';
 
-import { selectAddressBar } from '@Actions/ui_actions';
-import { isHot, isRunningDebug } from '@Constants';
+import { selectAddressBar, resetStore } from '@Actions/ui_actions';
+import {
+    isHot,
+    isRunningDebug,
+    isRunningSpectronTestProcess
+} from '@Constants';
 import { getLastClosedTab } from '@Reducers/tabs';
 import logger from 'logger';
 import pkg from '@Package';
@@ -468,6 +472,27 @@ export default class MenuBuilder
             ]
         };
 
+        const subMenuTest = {
+            label   : '&Tests',
+            submenu : [
+                {
+                    label : 'Reset the store',
+                    click : ( item, win ) =>
+                    {
+                        if ( win )
+                        {
+                            const windowId = win.webContents.id;
+
+                            logger.verbose( 'Triggering store reset from window:', windowId )
+                            // reset
+                            this.store.dispatch( resetStore( { windowId }) );
+
+                        }
+                    }
+                }
+            ]
+        };
+
         const initialMenusArray = [
             ...( process.platform === 'darwin' ? [ subMenuAbout ] : [] ),
             subMenuFile,
@@ -475,7 +500,9 @@ export default class MenuBuilder
             subMenuView,
             subMenuHistory,
             subMenuWindow,
-            subMenuHelp
+            subMenuHelp,
+            subMenuTest
+            // ...( isRunningSpectronTestProcess ? [subMenuTest ] : [] )
         ];
 
         const extendedMenusArray = getExtensionMenuItems(

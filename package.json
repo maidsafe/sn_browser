@@ -38,7 +38,7 @@
     "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
     "install-prod": "cross-env NODE_ENV=prod node node_modules/deps_downloader/cli.js --package package.json",
     "install-mock": "cross-env NODE_ENV=dev node node_modules/deps_downloader/cli.js --package package.json",
-    "postinstall": "electron-builder install-app-deps package.json && yarn build-dll  && yarn build-webPreload && opencollective-postinstall && yarn run install-prod && node app/extensions/safe/install-dev-libs.js",
+    "postinstall": "electron-builder install-app-deps package.json && yarn build-dll  && yarn build-e2e && opencollective-postinstall && yarn run install-prod && node app/extensions/safe/install-dev-libs.js",
     "precommit": "lint-staged",
     "prestart": "yarn build",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.18 --disturl=https://atom.io/download/atom-shell --build-from-source",
@@ -52,7 +52,9 @@
     "test-e2e": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 jest --runInBand --bail",
     "test-e2e-prod": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node runE2ETests.js e2e",
     "test-exts-e2e-prod": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node runE2ETests.js exts-e2e",
-    "test-watch": "yarn test --watch"
+    "test-watch": "yarn test --watch",
+    "cafe-e2e": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/*.spec.ts",
+    "cafe-e2e-live": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe-live electron:. ./__testcafe__/atest.spec.ts"
   },
   "standard-version": {
     "scripts": {
@@ -310,7 +312,10 @@
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-standard": "^18.2.0",
     "terser-webpack-plugin": "^1.1.0",
+    "testcafe": "1.1.0",
+    "testcafe-browser-provider-electron": "https://github.com/joshuef/testcafe-browser-provider-electron.git#OSXFixed",
     "testcafe-live": "^0.1.4",
+    "testcafe-react-selectors": "3.1.0",
     "typescript": "3.3.3",
     "url-loader": "^1.1.2",
     "webpack": "^4.26.0",

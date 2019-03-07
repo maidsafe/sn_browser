@@ -51,6 +51,12 @@ export default class Tab extends Component<TabProps, TabState> {
         url: "http://nowhere.com"
     };
 
+    static getDerivedStateFromError( error )
+    {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true, theError: error };
+    }
+
     constructor( props ) {
         super( props );
         this.state = {
@@ -73,6 +79,7 @@ export default class Tab extends Component<TabProps, TabState> {
         this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
     }
 
+
     isDevToolsOpened = () => {
         const { webview } = this;
         if ( webview ) {
@@ -82,7 +89,7 @@ export default class Tab extends Component<TabProps, TabState> {
 
     buildMenu = webview => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
-        const { addTab } = this.props;
+        const { addTab, windowId } = this.props;
         // require here to avoid jest/electron remote issues
         const contextMenu = require( "electron-context-menu" );
         contextMenu( {
@@ -92,7 +99,11 @@ export default class Tab extends Component<TabProps, TabState> {
                     label: "Open Link in New Tab.",
                     visible: params.linkURL.length > 0,
                     click() {
-                        addTab( { url: params.linkURL, isActiveTab: true } );
+                        addTab( {
+                            url: params.linkURL,
+                            windowId,
+                            isActiveTab: true
+                        } );
                     }
                 }
             ],
@@ -348,7 +359,7 @@ export default class Tab extends Component<TabProps, TabState> {
             if ( this.state.browserState.canGoBack ) {
                 tabBackwards( { index, windowId } );
             } else {
-                closeTab( { index } );
+                closeTab( { index, windowId } );
                 // add a fresh tab (should be only if no more tabs present)
                 addTab( { url: "about:blank", windowId, isActiveTab: true } );
             }
@@ -539,11 +550,11 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     newWindow( e ) {
-        const { addTab } = this.props;
+        const { addTab, windowId } = this.props;
         const { url } = e;
         logger.info( "Tab: NewWindow event triggered for url: ", url );
         const activateTab = e.disposition == "foreground-tab";
-        addTab( { url, isActiveTab: activateTab } );
+        addTab( { url, isActiveTab: activateTab, windowId } );
         this.goForward();
     }
 
@@ -621,6 +632,22 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         if ( isActiveTab ) {
             moddedClass = styles.activeTab;
         }
+
+        if ( this.state && this.state.hasError )
+        {
+            const err = this.state.theError;
+            const stringError =JSON.stringify( err, ["message", "arguments", "type", "name"] );
+            logger.error( 'Error from Tab.jsx', err );
+            logger.error( stringError );
+            // You can render any custom fallback UI
+            return (
+                <div className={moddedClass}>
+                    <h4>Something went wrong with this tab.</h4>
+                    <span>{JSON.stringify( err, ["message", "arguments", "type", "name"] )}</span>
+                </div>
+            );
+        }
+
         return (
             <div className={moddedClass}>
                 <webview

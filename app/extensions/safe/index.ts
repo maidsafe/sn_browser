@@ -238,17 +238,13 @@ const onReceiveUrl = async ( store, url ) =>
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
         logger.info( 'this is a parsed url for auth', url, getSafeBrowserUnauthedReqUri() );
-        // if ( url !== getSafeBrowserUnauthedReqUri() )
-        // {
-        //
-        //     logger.info('Waiting on basic connection....')
+
+        // 'Waiting on basic connection....
         // otherwise EVERYTHING waits for basic connection...
         // so we know the libs are ready/ loaded
         // (and we assume, _that_ happens at the correc time due to browser hooks)
         await waitForBasicConnection( store );
-        // }
 
-        logger.error( 'about !!!!!!!!!!!! to handleAuthURL', url );
         store.dispatch( handleAuthUrl( url ) );
     }
     if ( parsedUrl.protocol === 'safe:' )
@@ -256,6 +252,7 @@ const onReceiveUrl = async ( store, url ) =>
         await waitForBasicConnection( store );
 
         logger.info( 'Handling safe: url', url );
+        // which window is in focus?
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrarily looong right now...
