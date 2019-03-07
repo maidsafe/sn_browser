@@ -69,6 +69,8 @@ before_install:
 install:
   - yarn --ignore-engines --ignore-scripts --network-timeout 700000
   - sleep 3
+    # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell -Command "md C:\\Users\\travis\\AppData\\Local\\electron\\Cache"; fi
+    # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell -Command "icacls C:\\Users\\travis\\AppData\\Local\\electron\\Cache /grant:r Everyone:F"; fi
   - yarn postinstall
   # On Linux, initialize "virtual display". See before_script
   - |
