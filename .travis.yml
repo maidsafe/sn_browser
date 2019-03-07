@@ -62,7 +62,6 @@ before_install:
   - npm --version
   - npm config rm proxy
   - npm config rm https-proxy
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then "yarn cache clean --force"; fi
   - npm cache verify
   # - npm config set cache-lock-retries 500
 
@@ -71,7 +70,7 @@ install:
   - sleep 3
     # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell -Command "md C:\\Users\\travis\\AppData\\Local\\electron\\Cache"; fi
     # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell -Command "icacls C:\\Users\\travis\\AppData\\Local\\electron\\Cache /grant:r Everyone:F"; fi
-  - yarn postinstall
+  - yarn run postinstall
   # On Linux, initialize "virtual display". See before_script
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
