@@ -119,10 +119,10 @@ const getWebIds = async () =>
 
     let webIds = [];
 
-    currentStore.dispatch( safeBrowserAppActions.fetchingWebIds() );
+    currentStore.dispatch( fetchingWebIds() );
     webIds = await safeBrowserApp.web.getWebIds();
 
-    currentStore.dispatch( safeBrowserAppActions.setAvailableWebIds( webIds ) );
+    currentStore.dispatch( setAvailableWebIds( webIds ) );
 
     return webIds;
 };
