@@ -125,7 +125,7 @@ A good resource to learn and understand a bit more about XOR-URLs (as a user) is
 
 Please note that since the XOR-URLs are still in its experimental stage you'll need to switch the toggle form the browser to be able to use them to fetch content.
 
-For more details/information about the XOR-URLs, you can read the proposed [RFC](https://github.com/maidsafe/rfcs/blob/357384147ae005e4061079b27a30f43cf379fda5/text/0000-xor-urls/0000-xor-urls.md), or the [discussions taking place in our DevForum](https://forum.safedev.org/t/xor-address-urls-xor-urls/1952), or by watching this [screencast](https://www.youtube.com/watch?v=BikfxRNARnM).
+For more details/information about the XOR-URLs, you can read the proposed [RFC](https://github.com/maidsafe/rfcs/blob/357384147ae005e4061079b27a30f43cf379fda5/text/0000-xor-urls/0000-xor-urls.md), or the [discussions taking place in our DevForum](https://forum.safedev.org/t/xor-address-urls-xor-urls/1952), or by watching this [screencast](https://www.youtube.com/watch?v=j6cgK6Grm6g).
 
 ### Example applications using experimental APIs
 
