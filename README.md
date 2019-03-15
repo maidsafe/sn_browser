@@ -68,7 +68,6 @@ There are a few build commands for various situations:
 ### Release
 
 `yarn bump` is available for automatically updating versions and generating a changelog update based upon conventional-commits.
-for simple data flow and clear componentisation.
 
 ### Testing
 
