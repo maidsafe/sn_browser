@@ -132,6 +132,10 @@
       {
         "from": "node_modules/nessie-ui/dist/styles.css",
         "to": "nessie-styles.css"
+      },
+      {
+        "from": "resources/libgconf-2.so.4",
+        "to": "libgconf-2.so.4"
       }
     ],
     "protocols": {
