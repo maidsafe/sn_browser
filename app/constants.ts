@@ -222,3 +222,5 @@ if ( isRunningUnpacked && process.platform === 'darwin' ) {
 }
 
 export const APP_INFO = appInfo;
+
+export const allowedHttp = ['https://invite.maidsafe.net/'];

@@ -1,4 +1,4 @@
-import { remote, ipcRenderer } from 'electron';
+import { remote } from 'electron';
 // import contextMenu from 'electron-context-menu';
 import React, { Component } from 'react';
 import Error from '$Components/PerusePages/Error';
@@ -9,10 +9,8 @@ import {
     removeTrailingSlash,
     urlHasChanged
 } from '$Utils/urlHelpers';
-import path from 'path';
 import { parse as parseURL } from 'url';
 import { logger } from '$Logger';
-import { I18n } from 'react-redux-i18n';
 import styles from './tab.css';
 
 const stdUrl = require( 'url' );
@@ -347,10 +345,9 @@ export default class Tab extends Component<TabProps, TabState> {
             return;
         }
         if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' ) {
-            const header = 'Detected HTTP/S protocol.';
-            const subHeader = `Redirecting ${url} to be opened by your default Web browser.`;
             const notification = {
-                reactNode: Error( { error: { header, subHeader } } )
+                title: 'Blocked URL',
+                body: url
             };
             addNotification( notification );
             if ( this.state.browserState.canGoBack ) {

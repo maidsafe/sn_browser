@@ -8,5 +8,6 @@ module.exports = {
     $Components: './app/components',
     $Constants: './app/constants.ts',
     $Package: './package.json',
-    $Utils: './app/utils'
+    $Utils: './app/utils',
+    $TestCafeHelpers: './__testcafe__/helpers.js'
 };

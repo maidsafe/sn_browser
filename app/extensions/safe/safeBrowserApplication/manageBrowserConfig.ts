@@ -310,8 +310,7 @@ export const readConfigFromSafe = store =>
                 if ( state.safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE ) {
                     store.dispatch(
                         addNotification( {
-                            text: 'No browser data found on the network.',
-                            type: 'error'
+                            body: 'No browser data found on the network.'
                         } )
                     );
                 }

@@ -16,5 +16,9 @@
             "language": "typescriptreact",
             "autoFix": true
         }
-    ]
+    ],
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/release": true
+    }
 }

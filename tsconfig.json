@@ -20,7 +20,8 @@
             "$Components/*": ["app/components/*"],
             "$Constants": ["app/constants.ts"],
             "$Utils/*": ["app/utils/*"],
-            "$Package": ["package.json"]
+            "$Package": ["package.json"],
+            "$TestCafeHelpers": ["__testcafe__/helpers.js"]
         }
     },
     "exclude": [

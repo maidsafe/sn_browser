@@ -13,8 +13,8 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,
-                    payload: { text: 'hellohello' }
-                } )[0].text
+                    payload: { title: 'hellohello' }
+                } )[0].title
             ).toEqual( 'hellohello' );
         } );
 
@@ -22,7 +22,7 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,
-                    payload: { text: 'hihi' }
+                    payload: { title: 'hihi' }
                 } )[0]
             ).toHaveProperty( 'id' );
         } );
@@ -31,29 +31,29 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,
-                    payload: { text: 'hellooohello', id: 'boom' }
+                    payload: { title: 'hellooohello', id: 'boom' }
                 } )[0]
-            ).toMatchObject( { text: 'hellooohello', id: 'boom' } );
+            ).toMatchObject( { title: 'hellooohello', id: 'boom' } );
         } );
     } );
 
     describe( 'UPDATE_NOTIFICATION', () => {
         it( 'should handle updating the notification', () => {
-            const note = { id: '1', text: 'hiwhat' };
+            const note = { id: '1', title: 'hiwhat' };
             expect(
                 notifications( [note], {
                     type: TYPES.UPDATE_NOTIFICATION,
-                    payload: { ...note, text: 'new!' }
-                } )[0].text
+                    payload: { ...note, title: 'new!' }
+                } )[0].title
             ).toBe( 'new!' );
         } );
 
         it( 'should throw if no ID passed', () => {
-            const note = { id: '1', text: 'hiwhat' };
+            const note = { id: '1', title: 'hiwhat' };
             expect( () =>
                 notifications( [note], {
                     type: TYPES.UPDATE_NOTIFICATION,
-                    payload: { text: 'new!' }
+                    payload: { title: 'new!' }
                 } )
             ).toThrow( '"id"' );
         } );
@@ -62,11 +62,28 @@ describe( 'notification reducer', () => {
     describe( 'CLEAR_NOTIFICATION', () => {
         it( 'should handle clearing the first notification', () => {
             expect(
-                notifications( [{ text: 'i should not  exist', id: 'ciao' }], {
-                    type: TYPES.CLEAR_NOTIFICATION,
-                    id: 'ciao'
+                notifications( [{ title: 'i should not  exist', id: 'ciao' }], {
+                    type: TYPES.CLEAR_NOTIFICATION
                 } )
             ).toEqual( [] );
+        } );
+        it( 'should use passed ID', () => {
+            expect(
+                notifications(
+                    [
+                        { title: 'hellooohello', id: 'boom' },
+                        { title: 'i should not  exist', id: 'ciao' },
+                        { title: 'lastly', id: 'end' }
+                    ],
+                    {
+                        type: TYPES.CLEAR_NOTIFICATION,
+                        payload: { id: 'ciao' }
+                    }
+                )
+            ).toEqual( [
+                { title: 'hellooohello', id: 'boom' },
+                { title: 'lastly', id: 'end' }
+            ] );
         } );
     } );
 } );

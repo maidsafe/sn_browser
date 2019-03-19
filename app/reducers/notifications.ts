@@ -36,6 +36,12 @@ export default function notifications( state: Array = initialState, action ) {
         }
         case TYPES.CLEAR_NOTIFICATION: {
             const updatedState = [...state];
+            if ( notification && notification.id ) {
+                const newArray = updatedState.filter(
+                    elem => elem.id !== notification.id
+                );
+                return [...newArray];
+            }
             updatedState.shift();
             return updatedState;
         }
