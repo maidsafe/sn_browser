@@ -38,9 +38,7 @@ const authFromInternalResponse = async ( res, store ) => {
             // TODO: Remove check when network is opened up
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
-            store.dispatch(
-                addNotification( { text: message, onDismiss: clearNotification } )
-            );
+            store.dispatch( addNotification( { body: message } ) );
             safeBrowserAppObject = tryConnect( res );
         }
 

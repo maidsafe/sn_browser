@@ -1,19 +1,18 @@
-//
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import AddressBar from '$Components/AddressBar';
 import TabBar from '$Components/TabBar';
-import Notifier from '$Components/Notifier';
 import TabContents from '$Components/TabContents';
 import { logger } from '$Logger';
 import extendComponent from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
 import styles from './browser.css';
+import handleNotifications, { Notification } from '$Utils/handleNotificiations';
 
 interface BrowserProps {
     bookmarks?: Array<any>;
-    notifications?: Array<any>;
-    tabs?: Array<any>;
+    notifications: Array<Notification>;
+    tabs: Array<any>;
     addBookmark: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
     selectAddressBar: ( ...args: Array<any> ) => any;
@@ -74,7 +73,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
         body.append( div );
     }
 
-    shouldComponentUpdate = nextProps => {
+    shouldComponentUpdate = ( nextProps: BrowserProps ) => {
         const { tabs } = nextProps;
         const currentTabs = this.props.tabs;
         const newWindowTabs = tabs.filter(
@@ -84,6 +83,11 @@ class Browser extends Component<BrowserProps, BrowserState> {
             tab => tab.windowId === this.state.windowId
         );
         return newWindowTabs !== currentWindowTabs;
+    };
+
+    componentDidUpdate = ( prevProps: BrowserProps ) => {
+        const currentProps = { ...this.props };
+        handleNotifications( prevProps, currentProps );
     };
 
     handleCloseBrowserTab = tab => {
@@ -120,10 +124,8 @@ class Browser extends Component<BrowserProps, BrowserState> {
             updateTab,
             tabBackwards,
             tabForwards,
-            // notifications
             addNotification,
             updateNotification,
-            notifications,
             clearNotification,
             showSettingsMenu,
             hideSettingsMenu,
@@ -134,7 +136,6 @@ class Browser extends Component<BrowserProps, BrowserState> {
             ? safeBrowserApp.experimentsEnabled
             : false;
         // only show the first notification without a response.
-        const notification = notifications.filter( n => !n.response )[0];
         const { windowId } = this.state;
         // TODO: Move windowId from state to store.
         const windowTabs = tabs.filter( tab => tab.windowId === windowId );
@@ -192,12 +193,6 @@ class Browser extends Component<BrowserProps, BrowserState> {
                     ref={c => {
                         this.address = c;
                     }}
-                />
-                <Notifier
-                    key={3}
-                    updateNotification={updateNotification}
-                    {...notification}
-                    clearNotification={clearNotification}
                 />
                 <TabContents
                     tabBackwards={tabBackwards}

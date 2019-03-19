@@ -24,14 +24,15 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
     logger.info( 'previousState: ', previousState );
     store.dispatch( setNetworkStatus( state ) );
     const isDisconnected = state === SAFE.NETWORK_STATE.DISCONNECTED;
+    const notificationID = Math.random().toString( 36 );
 
     if ( isDisconnected ) {
         if ( store ) {
             store.dispatch(
                 addNotification( {
-                    text: `Network state: ${state}. Reconnecting...`,
-                    type: 'error',
-                    onDismiss: clearNotification
+                    title: `Network state: ${state}`,
+                    body: 'Reconnecting...',
+                    id: notificationID
                 } )
             );
 
@@ -45,7 +46,7 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
         state === SAFE.NETWORK_STATE.CONNECTED &&
     previousState === SAFE.NETWORK_STATE.DISCONNECTED
     ) {
-        store.dispatch( clearNotification() );
+        store.dispatch( clearNotification( { id: notificationID } ) );
     }
 };
 

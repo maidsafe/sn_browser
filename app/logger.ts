@@ -18,54 +18,47 @@ import {
 } from '$Constants';
 import log from 'electron-log';
 
-if ( log.transports )
-{
+if ( log.transports ) {
     // Log level
     // error, warn, log, log, debug, silly
     // log.transports.console.level = 'silly';
     log.transports.file.level = 'silly';
 
-    if ( isRunningSpectronTestProcess || process.env.NODE_ENV === 'test' ||
-        ( !isRunningDebug && isRunningPackaged ) )
-    {
+    if (
+        isRunningSpectronTestProcess ||
+    process.env.NODE_ENV === 'test' ||
+    ( !isRunningDebug && isRunningPackaged )
+    ) {
         log.transports.file.level = 'warn';
         log.transports.console.level = 'warn';
     }
 
-    log.transports.file.file = path.resolve(
-        os.tmpdir(),
-        'safe-browser.log'
-    );
+    log.transports.file.file = path.resolve( os.tmpdir(), 'safe-browser.log' );
 
     log.transports.console.format = '[{label} {h}:{i}:{s}.{ms}] › {text}';
-    if ( currentWindowId )
-    {
-        log.variables.label = `window ${ currentWindowId }`;
+    if ( currentWindowId ) {
+        log.variables.label = `window ${currentWindowId}`;
     }
-    if ( inMainProcess )
-    {
+    if ( inMainProcess ) {
         log.variables.label = 'main';
         log.transports.console.format = '%c[{label} {h}:{i}:{s}.{ms}]%c › {text}';
     }
 
-    if ( inBgProcess )
-    {
+    if ( inBgProcess ) {
         log.variables.label = 'background';
     }
 
     log.transports.file.maxSize = 5 * 1024 * 1024;
 }
 
-
 // HACK: for jest
-if ( inMainProcess && !isRunningSpectronTestProcess )
-{
+if ( inMainProcess && !isRunningSpectronTestProcess ) {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
     log.info( '' );
     log.info( '' );
     log.info( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    log.info( `      Started with node env: ${ env }` );
+    log.info( `      Started with node env: ${env}` );
     log.info( '       Log location:', log.transports.file.file );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( 'Running with derived constants:' );
@@ -78,14 +71,8 @@ if ( inMainProcess && !isRunningSpectronTestProcess )
     log.info( 'inMainProcess?', inMainProcess );
     log.info( 'startedRunningProduction?', startedRunningProduction );
     log.info( 'startedRunningMock?', startedRunningMock );
-    log.info(
-        'isRunningSpectronTestProcess?',
-        isRunningSpectronTestProcess
-    );
-    log.info(
-        'isRunningTestCafeProcess?',
-        isRunningTestCafeProcess
-    );
+    log.info( 'isRunningSpectronTestProcess?', isRunningSpectronTestProcess );
+    log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
     log.info(
         'isRunningSpectronTestProcessingPackagedApp?',
         isRunningSpectronTestProcessingPackagedApp
@@ -107,7 +94,6 @@ if ( inMainProcess && !isRunningSpectronTestProcess )
     //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     //     );
     // } );
-
 
     process.on( 'uncaughtException', ( err: NodeError ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

@@ -24,6 +24,7 @@ import {
 } from 'spectron-lib/setupSpectronApp';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 40000;
+const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
 
 describe( 'SAFE network webFetch operation', async () => {
     console.warn( `
@@ -75,6 +76,21 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
         expect( theSafeClient ).toHaveProperty( 'authorise' );
         expect( theSafeClient ).toHaveProperty( 'initialiseApp' );
         expect( theSafeClient ).toHaveProperty( 'fromAuthUri' );
+    } );
+
+    it( 'shows notification for HTTP requests', async () => {
+        expect.assertions( 1 );
+        await setClientToMainBrowserWindow( app );
+
+        const { client } = app;
+        const tabIndex = await newTab( app );
+
+        await navigateTo( app, 'https://rust-lang.org' );
+
+        await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, NOTIFICATION_WAIT );
+        const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
+
+        expect( note ).toEqual( 'https://rust-lang.org' );
     } );
 
     // it( 'has safe:// protocol', async () =>

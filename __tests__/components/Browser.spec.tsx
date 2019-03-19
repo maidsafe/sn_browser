@@ -7,15 +7,17 @@ import configureStore from 'redux-mock-store';
 import Browser from '$Components/Browser';
 import AddressBar from '$Components/AddressBar';
 import TabBar from '$Components/TabBar';
-import Notifier from '$Components/Notifier';
 import TabContents from '$Components/TabContents';
+import handleNotifications from '$Utils/handleNotificiations';
 
 jest.mock( '$Utils/extendComponent' );
+jest.mock( '$Utils/handleNotificiations' );
 
 // create any initial state needed
 const initialState = {
     ui: { windows: [] },
     tabs: [],
+    notifications: [],
     windowId: 1,
     addTab: jest.fn(),
     updateTab: jest.fn(),
@@ -90,12 +92,13 @@ describe( 'Browser', () => {
             expect( wrapper.find( TabBar ).length ).toBe( 1 );
         } );
 
-        it( 'should have exactly 1 Notifier component', () => {
-            expect( wrapper.find( Notifier ).length ).toBe( 1 );
-        } );
-
         it( 'should have exactly 1 TabContents component', () => {
             expect( wrapper.find( TabContents ).length ).toBe( 1 );
+        } );
+
+        it( 'handles notifications on componentDidUpdate', () => {
+            wrapper.setProps( { notifications: [{ id: '0.j1m6f62qm8' }] } );
+            expect( handleNotifications ).toHaveBeenCalled();
         } );
     } );
 

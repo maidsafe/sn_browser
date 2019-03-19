@@ -26,47 +26,50 @@ export const addAuthNotification = (
     }
     const addNotification = payload =>
         store.dispatch( notificationActions.addNotification( payload ) );
-    const clearNotification = () =>
-        store.dispatch( notificationActions.clearNotification() );
+    const clearNotification = ( payload: { id: string } ) =>
+        store.dispatch( notificationActions.clearNotification( payload ) );
 
-    let text = `${app.name} Requests Auth Permission`;
+    let title = `${app.name} Requests Auth Permission`;
     let reqType = REQ_TYPES.AUTH;
 
     if ( authReqData.contReq ) {
-        text = `${app.name} Requests Container Access`;
+        title = `${app.name} Requests Container Access`;
         reqType = REQ_TYPES.CONTAINER;
     }
 
     if ( authReqData.mDataReq ) {
-        text = `${app.name} Requests mData Access`;
+        title = `${app.name} Requests mData Access`;
         reqType = REQ_TYPES.MDATA;
     }
+
+    const notificationId = Math.random().toString( 36 );
 
     const ignoreRequest = () => {
         logger.info( 'replace these ipcRenderer.send calls' );
         sendAuthDecision( false, authReqData, reqType );
-        clearNotification();
+        clearNotification( { id: notificationId } );
     };
 
     const success = () => {
         logger.info( 'success happeninng' );
         sendAuthDecision( true, authReqData, reqType );
-        clearNotification();
+        clearNotification( { id: notificationId } );
     };
 
     const denial = () => {
         logger.info( 'deny happeninng' );
         sendAuthDecision( false, authReqData, reqType );
-        clearNotification();
+        clearNotification( { id: notificationId } );
     };
     const reactNode = createAuthRequestElement( authReqData );
-    const notificationId = Math.random().toString( 36 );
     const theNotification = {
     // TODO: where should ID actually be applied?
         id: notificationId,
-        text,
+        title,
         isPrompt: true,
-        reactNode
+        reactNode,
+        type: 'warning',
+        duration: 0
     };
     const responseMap = {
         allow: success,

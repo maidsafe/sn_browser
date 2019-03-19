@@ -1,7 +1,7 @@
 import { remote, shell } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
-import { CONFIG, isRunningTestCafeProcess } from '$Constants';
+import { CONFIG, isRunningTestCafeProcess, allowedHttp } from '$Constants';
 import { logger } from '$Logger';
 import { urlIsAllowedBySafe } from './utils/safeHelpers';
 
@@ -41,18 +41,16 @@ const blockNonSAFERequests = () => {
         }
 
         if ( httpRegExp.test( details.url ) ) {
-            try {
-                logger.info(
-                    'about to call shell.openExternal in blockNonSafeReqs?',
-                    details.url
-                );
-                shell.openExternal( details.url );
-            } catch ( e ) {
-                logger.error( e );
+            if ( allowedHttp.includes( details.url ) ) {
+                try {
+                    shell.openExternal( details.url );
+                } catch ( e ) {
+                    logger.error( e );
+                }
             }
         }
 
-        logger.info( 'Blocked req:', details.url );
+        logger.error( 'Blocked URL:', details.url );
         callback( { cancel: true } );
     } );
 };

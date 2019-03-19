@@ -6,7 +6,7 @@ describe( 'notification actions', () => {
     } );
 
     it( 'should add a notification', () => {
-        const payload = { text: 'hi' };
+        const payload = { title: 'hi' };
         const expectedAction = {
             type: notifications.TYPES.ADD_NOTIFICATION,
             payload
@@ -15,7 +15,7 @@ describe( 'notification actions', () => {
     } );
 
     it( 'should update a notification', () => {
-        const payload = { text: 'hi', id: 'A' };
+        const payload = { title: 'hi', id: 'A' };
         const expectedAction = {
             type: notifications.TYPES.UPDATE_NOTIFICATION,
             payload

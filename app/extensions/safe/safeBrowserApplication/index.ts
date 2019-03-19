@@ -99,8 +99,7 @@ const authFromStoreResponse = async ( res, store ) => {
         logger.error( res );
         store.dispatch(
             addNotification( {
-                text: `Unable to connect to the network. ${res}`,
-                type: 'error'
+                body: `Unable to connect to the network. ${res}`
             } )
         );
 
@@ -137,11 +136,15 @@ const authFromStoreResponse = async ( res, store ) => {
 
         if ( store ) {
             let { message } = err;
+            let type = 'error';
+            let title = 'Error';
 
             if ( err.message.includes( 'AuthDenied' ) ) {
                 initSafeBrowserApp( store );
                 message =
           'The Safe Browser Application was denied authentication. You cannot save/read browser data from the network.';
+                type = 'warning';
+                title = 'FYI';
             }
 
             if ( err.message.startsWith( 'Unexpected (probably a logic' ) ) {
@@ -151,12 +154,7 @@ const authFromStoreResponse = async ( res, store ) => {
 
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
-            store.dispatch(
-                addNotification( {
-                    text: message,
-                    onDismiss: clearNotification
-                } )
-            );
+            store.dispatch( addNotification( { body: message, type, title } ) );
         }
 
         logger.error( err.message || err );
