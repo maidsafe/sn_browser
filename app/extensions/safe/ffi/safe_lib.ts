@@ -6,31 +6,25 @@
 const _safeLib = Symbol( 'safeLib' );
 const _isLibraryLoaded = Symbol( 'isLibraryLoaded' );
 
-export default class SafeLib
-{
-    constructor()
-    {
+export default class SafeLib {
+    constructor() {
         this[_safeLib] = null;
         this[_isLibraryLoaded] = false;
     }
 
-    set safeLib( lib )
-    {
+    set safeLib( lib ) {
         this[_safeLib] = lib;
     }
 
-    get safeLib()
-    {
+    get safeLib() {
         return this[_safeLib];
     }
 
-    set isLibLoaded( status )
-    {
+    set isLibLoaded( status ) {
         this[_isLibraryLoaded] = !!status;
     }
 
-    get isLibLoaded()
-    {
+    get isLibLoaded() {
         return this[_isLibraryLoaded];
     }
 

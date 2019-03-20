@@ -15,10 +15,8 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-import {
-    app, protocol, ipcMain, shell
-} from 'electron';
-import logger from 'logger';
+import { app, protocol, ipcMain, shell } from 'electron';
+import { logger } from '$Logger';
 
 import {
     isRunningUnpacked,
@@ -30,15 +28,15 @@ import {
     I18N_CONFIG,
     PROTOCOLS,
     CONFIG
-} from '@Constants';
+} from '$Constants';
 
-import pkg from '@Package';
+import pkg from '$Package';
 
 import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
 import { configureStore } from './store/configureStore';
-import { onReceiveUrl, preAppLoad, onAppReady } from '@Extensions';
+import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions';
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -55,22 +53,18 @@ logger.info( 'Main process starting.' );
 global.mainProcessStore = store;
 
 // renderer error notifications
-ipcMain.on( 'errorInPreload', ( event, data ) =>
-{
+ipcMain.on( 'errorInPreload', ( event, data ) => {
     logger.error( data );
 } );
-ipcMain.on( 'errorInBackgroundWindow', ( event, data ) =>
-{
+ipcMain.on( 'errorInBackgroundWindow', ( event, data ) => {
     logger.error( data );
 } );
-ipcMain.on( 'errorInRenderWindow', ( event, data ) =>
-{
+ipcMain.on( 'errorInRenderWindow', ( event, data ) => {
     logger.error( data );
 } );
 
 // Needed for windows w/ SAFE browser app login
-ipcMain.on( 'opn', ( event, data ) =>
-{
+ipcMain.on( 'opn', ( event, data ) => {
     logger.info( 'Opening link in system via opn.' );
     shell.openExternal( data );
 } );
@@ -81,74 +75,62 @@ let mainWindow = null;
 preAppLoad();
 
 // Apply MockVault if wanted for prealod
-if ( process.argv.includes( '--preload' ) )
-{
-    try
-    {
+if ( process.argv.includes( '--preload' ) ) {
+    try {
         const data = fs.readFileSync( CONFIG.PRELOADED_MOCK_VAULT_PATH );
 
         fs.writeFileSync( path.join( os.tmpdir(), 'MockVault' ), data );
-    }
-    catch ( error )
-    {
+    } catch ( error ) {
         logger.error( 'Error preloading MockVault' );
     }
 }
 
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
-if ( isRunningPackaged )
-{
+if ( isRunningPackaged ) {
     const sourceMapSupport = require( 'source-map-support' );
     sourceMapSupport.install();
 }
 
 if (
-    ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked )
-    || isRunningDebug
-)
-{
+    ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked ) ||
+  isRunningDebug
+) {
     require( 'electron-debug' )();
     const path = require( 'path' );
     const p = path.join( __dirname, '..', 'app', 'node_modules' );
     require( 'module' ).globalPaths.push( p );
 }
 
-const installExtensions = async () =>
-{
+const installExtensions = async () => {
     if ( isCI ) return;
 
     logger.info( 'Installing devtools extensions' );
     const installer = require( 'electron-devtools-installer' );
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-    const extensions = [ 'REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS' ];
+    const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
     return Promise.all(
-        extensions.map( name =>
-            installer.default( installer[name], forceDownload ) )
+        extensions.map( name => installer.default( installer[name], forceDownload ) )
     ).catch( console.log );
 };
 
-const shouldQuit = app.makeSingleInstance( commandLine =>
-{
+const shouldQuit = app.makeSingleInstance( commandLine => {
     // We expect the URI to be the last argument
     const uri = commandLine[commandLine.length - 1];
 
-    if ( commandLine.length >= 2 && uri )
-    {
+    if ( commandLine.length >= 2 && uri ) {
         onReceiveUrl( store, uri );
     }
 
     // Someone tried to run a second instance, we should focus our window
-    if ( mainWindow )
-    {
+    if ( mainWindow ) {
         if ( mainWindow.isMinimized() ) mainWindow.restore();
         mainWindow.focus();
     }
 } );
 
-app.on( 'ready', async () =>
-{
+app.on( 'ready', async () => {
     // For electron upgrade:
     //      const gotTheLock = app.requestSingleInstanceLock()
     //
@@ -174,8 +156,7 @@ app.on( 'ready', async () =>
     //         })
     //     }
 
-    if ( shouldQuit )
-    {
+    if ( shouldQuit ) {
         console.info( 'This instance should quit. Ciao!' );
         app.exit();
         return;
@@ -184,27 +165,16 @@ app.on( 'ready', async () =>
     logger.info( 'App Ready' );
 
     onAppReady( store );
-    if (
-        ( !isRunningSpectronTestProcess && isRunningUnpacked )
-        || isRunningDebug
-    )
-    {
+    if ( ( !isRunningSpectronTestProcess && isRunningUnpacked ) || isRunningDebug ) {
         await installExtensions();
     }
 
-    if ( process.platform === 'linux' || process.platform === 'win32' )
-    {
+    if ( process.platform === 'linux' || process.platform === 'win32' ) {
         const uriArg = process.argv[process.argv.length - 1];
-        if (
-            process.argv.length >= 2
-            && uriArg
-            && uriArg.indexOf( 'safe' ) === 0
-        )
-        {
+        if ( process.argv.length >= 2 && uriArg && uriArg.indexOf( 'safe' ) === 0 ) {
             onReceiveUrl( store, uriArg );
 
-            if ( mainWindow )
-            {
+            if ( mainWindow ) {
                 mainWindow.show();
             }
         }
@@ -215,12 +185,10 @@ app.on( 'ready', async () =>
     mainWindow = openWindow( store );
 } );
 
-app.on( 'open-url', ( e, url ) =>
-{
+app.on( 'open-url', ( e, url ) => {
     onReceiveUrl( store, url );
 
-    if ( mainWindow )
-    {
+    if ( mainWindow ) {
         mainWindow.show();
     }
 } );
@@ -229,8 +197,7 @@ app.on( 'open-url', ( e, url ) =>
  * Add event listeners...
  */
 
-app.on( 'window-all-closed', () =>
-{
+app.on( 'window-all-closed', () => {
     logger.info( 'All Windows Closed!' );
     app.dock.hide(); // hide the icon
 
@@ -239,8 +206,7 @@ app.on( 'window-all-closed', () =>
     // HACK: Fix this so we can have OSX convention for closing windows.
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
-    if ( process.platform !== 'darwin' )
-    {
+    if ( process.platform !== 'darwin' ) {
         app.quit();
     }
 } );

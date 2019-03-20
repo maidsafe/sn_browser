@@ -1,52 +1,38 @@
-import logger from 'logger';
-import { isCI, isRunningSpectronTestProcessingPackagedApp } from '@Constants';
+import { logger } from '$Logger';
+import { isCI, isRunningSpectronTestProcessingPackagedApp } from '$Constants';
 import {
     addNotification,
     clearNotification
-} from '@Actions/notification_actions';
+} from '$Actions/notification_actions';
 
-const tryConnect = async res =>
-{
+const tryConnect = async res => {
     let safeBrowserAppObject;
 
-    try
-    {
-        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri(
-            res
-        );
+    try {
+        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
         store.dispatch( clearNotification() );
 
         return safeBrowserAppObject;
-    }
-    catch ( err )
-    {
-        setTimeout( () =>
-        {
+    } catch ( err ) {
+        setTimeout( () => {
             tryConnect( res );
         }, 5000 );
     }
 };
 
-const authFromInternalResponse = async ( res, store ) =>
-{
+const authFromInternalResponse = async ( res, store ) => {
     let safeBrowserAppObject;
 
-    try
-    {
-        // for webFetch app only
-        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri(
-            res
-        );
-    }
-    catch ( err )
-    {
-        if ( store )
-        {
-            let message = err.message;
+    try {
+    // for webFetch app only
+        safeBrowserAppObject = await safeBrowserAppObject.auth.loginFromUri( res );
+    } catch ( err ) {
+        if ( store ) {
+            let { message } = err;
 
-            if ( err.message.startsWith( 'Unexpected (probably a logic' ) )
-            {
-                message = 'Attempting to connect. Check your network connection, then verify that your current IP address matches your registered address at invite.maidsafe.net';
+            if ( err.message.startsWith( 'Unexpected (probably a logic' ) ) {
+                message =
+          'Attempting to connect. Check your network connection, then verify that your current IP address matches your registered address at invite.maidsafe.net';
             }
 
             // TODO: Remove check when network is opened up

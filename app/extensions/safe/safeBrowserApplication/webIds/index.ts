@@ -1,17 +1,16 @@
-import * as safeBrowserAppActions from '@Extensions/safe/actions/safeBrowserApplication_actions';
-import logger from 'logger';
+import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
+import { logger } from '$Logger';
 import {
     getCurrentStore,
     getSafeBrowserAppObject,
     safeBrowserAppIsAuthed
-} from '@Extensions/safe/safeBrowserApplication/theApplication';
+} from '$Extensions/safe/safeBrowserApplication/theApplication';
 
 /**
  * Get WebIds for the current user
  * @return {Promise} Resolves to Array of webIds
  */
-const getWebIds = async () =>
-{
+const getWebIds = async () => {
     logger.info( 'getWebIds' );
     const currentStore = getCurrentStore();
 
@@ -19,7 +18,8 @@ const getWebIds = async () =>
 
     if ( !safeBrowserApp ) throw new Error( 'SafeBrowserApp should be initiated.' );
 
-    if ( !safeBrowserAppIsAuthed() ) throw new Error( 'SafeBrowserApp is not authorised' );
+    if ( !safeBrowserAppIsAuthed() )
+        throw new Error( 'SafeBrowserApp is not authorised' );
 
     let webIds = [];
 

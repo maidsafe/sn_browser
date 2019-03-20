@@ -1,18 +1,15 @@
-import * as React from "react";
+import * as React from 'react';
 import classNames from 'classnames';
 import CONSTANTS from '../constants';
 
 interface propTypes {
-    status : number;
+    status: number;
 }
 
-export default class NetworkStatus extends React.Component<propTypes>
-{
-    render()
-    {
+export default class NetworkStatus extends React.Component<propTypes> {
+    render() {
         let message = null;
-        switch ( this.props.status )
-        {
+        switch ( this.props.status ) {
             case CONSTANTS.NETWORK_STATUS.CONNECTED: {
                 message = 'Connected';
                 break;
@@ -33,17 +30,13 @@ export default class NetworkStatus extends React.Component<propTypes>
         return (
             <div className="nw-status">
                 <span
-                    className={ classNames( 'nw-status-i', {
-                        connecting :
-                            this.props.status
-                            === CONSTANTS.NETWORK_STATUS.CONNECTING,
-                        terminated :
-                            this.props.status
-                            === CONSTANTS.NETWORK_STATUS.DISCONNECTED,
-                        connected :
-                            this.props.status
-                            === CONSTANTS.NETWORK_STATUS.CONNECTED
-                    } ) }
+                    className={classNames( 'nw-status-i', {
+                        connecting:
+              this.props.status === CONSTANTS.NETWORK_STATUS.CONNECTING,
+                        terminated:
+              this.props.status === CONSTANTS.NETWORK_STATUS.DISCONNECTED,
+                        connected: this.props.status === CONSTANTS.NETWORK_STATUS.CONNECTED
+                    } )}
                 >
                     {' '}
                 </span>

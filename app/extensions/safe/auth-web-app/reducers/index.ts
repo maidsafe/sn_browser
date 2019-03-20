@@ -10,10 +10,10 @@ import networkState from './network_state';
 
 export default history =>
     combineReducers( {
-        router : connectRouter( history ),
+        router: connectRouter( history ),
         app,
         auth,
         networkState,
         routing,
-        i18n   : i18nReducer
+        i18n: i18nReducer
     } );

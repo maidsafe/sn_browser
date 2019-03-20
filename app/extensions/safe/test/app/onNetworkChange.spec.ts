@@ -1,8 +1,7 @@
-import onNetworkStateChange from '@Extensions/safe/safeBrowserApplication/init/networkStateChange';
-import { TYPES as PERUSE_TYPES } from '@Extensions/safe/actions/safeBrowserApplication_actions';
-import { TYPES } from '@Actions/notification_actions';
-import { SAFE } from '@Extensions/safe/constants';
-
+import onNetworkStateChange from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
+import { TYPES as PERUSE_TYPES } from '$Extensions/safe/actions/safeBrowserApplication_actions';
+import { TYPES } from '$Actions/notification_actions';
+import { SAFE } from '$Extensions/safe/constants';
 
 // Some mocks to negate FFI and native libs we dont care about
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
@@ -16,18 +15,16 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
-describe( 'Network callback', () =>
-{
-    it( 'network callback dispatches action on Connected', () =>
-    {
+describe( 'Network callback', () => {
+    it( 'network callback dispatches action on Connected', () => {
         const initialState = {
-            safeBrowserApp : {
-                networkStatus : null
+            safeBrowserApp: {
+                networkStatus: null
             }
         };
         const mockStore = {
-            getState : () => initialState,
-            dispatch : jest.fn()
+            getState: () => initialState,
+            dispatch: jest.fn()
         };
         const networkCb = onNetworkStateChange( mockStore );
         networkCb( 'Connected' );
@@ -38,16 +35,15 @@ describe( 'Network callback', () =>
         expect( dispatchArg.payload ).toBe( SAFE.NETWORK_STATE.CONNECTED );
     } );
 
-    it( 'network callback dispatches actions on Disconnected', () =>
-    {
+    it( 'network callback dispatches actions on Disconnected', () => {
         const initialState = {
-            safeBrowserApp : {
-                networkStatus : null
+            safeBrowserApp: {
+                networkStatus: null
             }
         };
         const mockStore = {
-            getState : () => initialState,
-            dispatch : jest.fn()
+            getState: () => initialState,
+            dispatch: jest.fn()
         };
         const networkCb = onNetworkStateChange( mockStore );
         networkCb( 'Disconnected' );
@@ -65,16 +61,15 @@ describe( 'Network callback', () =>
         );
     } );
 
-    it( 'network callback invokes operation to begin reconnection attempts upon Disconnect event', () =>
-    {
+    it( 'network callback invokes operation to begin reconnection attempts upon Disconnect event', () => {
         const initialState = {
-            safeBrowserApp : {
-                networkStatus : null
+            safeBrowserApp: {
+                networkStatus: null
             }
         };
         const mockStore = {
-            getState : () => initialState,
-            dispatch : jest.fn()
+            getState: () => initialState,
+            dispatch: jest.fn()
         };
         const mockAttemptReconnect = jest.fn();
         const networkCb = onNetworkStateChange( mockStore, mockAttemptReconnect );

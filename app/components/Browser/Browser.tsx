@@ -1,37 +1,36 @@
-
 //
-import { ipcRenderer, remote } from "electron";
-import React, { Component } from "react";
-import AddressBar from "@Components/AddressBar";
-import TabBar from "@Components/TabBar";
-import Notifier from "@Components/Notifier";
-import TabContents from "@Components/TabContents";
-import logger from "logger";
-import extendComponent from "@Utils/extendComponent";
-import { wrapBrowserComponent } from "@Extensions/components";
-import styles from "./browser.css";
+import { ipcRenderer, remote } from 'electron';
+import React, { Component } from 'react';
+import AddressBar from '$Components/AddressBar';
+import TabBar from '$Components/TabBar';
+import Notifier from '$Components/Notifier';
+import TabContents from '$Components/TabContents';
+import { logger } from '$Logger';
+import extendComponent from '$Utils/extendComponent';
+import { wrapBrowserComponent } from '$Extensions/components';
+import styles from './browser.css';
 
 interface BrowserProps {
-    bookmarks?: any[],
-    notifications?: any[],
-    tabs?: any[],
-    addBookmark: ( ...args: any[] ) => any,
-    removeBookmark: ( ...args: any[] ) => any,
-    selectAddressBar: ( ...args: any[] ) => any,
-    deselectAddressBar: ( ...args: any[] ) => any,
-    blurAddressBar: ( ...args: any[] ) => any,
-    addTab: ( ...args: any[] ) => any,
-    closeTab: ( ...args: any[] ) => any,
-    reopenTab: ( ...args: any[] ) => any,
-    updateNotification: ( ...args: any[] ) => any,
-    clearNotification: ( ...args: any[] ) => any,
-    ui: object,
-    showSettingsMenu: ( ...args: any[] ) => any,
-    hideSettingsMenu: ( ...args: any[] ) => any,
-    focusWebview: ( ...args: any[] ) => any
+    bookmarks?: Array<any>;
+    notifications?: Array<any>;
+    tabs?: Array<any>;
+    addBookmark: ( ...args: Array<any> ) => any;
+    removeBookmark: ( ...args: Array<any> ) => any;
+    selectAddressBar: ( ...args: Array<any> ) => any;
+    deselectAddressBar: ( ...args: Array<any> ) => any;
+    blurAddressBar: ( ...args: Array<any> ) => any;
+    addTab: ( ...args: Array<any> ) => any;
+    closeTab: ( ...args: Array<any> ) => any;
+    reopenTab: ( ...args: Array<any> ) => any;
+    updateNotification: ( ...args: Array<any> ) => any;
+    clearNotification: ( ...args: Array<any> ) => any;
+    ui: object;
+    showSettingsMenu: ( ...args: Array<any> ) => any;
+    hideSettingsMenu: ( ...args: Array<any> ) => any;
+    focusWebview: ( ...args: Array<any> ) => any;
 }
 interface BrowserState {
-    windowId: any
+    windowId: any;
 }
 class Browser extends Component<BrowserProps, BrowserState> {
     static defaultProps = {
@@ -68,10 +67,10 @@ class Browser extends Component<BrowserProps, BrowserState> {
         } = this.props;
         const addressBar = this.address;
         const theBrowser = this;
-        const body = document.querySelector( "body" );
-        const div = document.createElement( "div" );
-        div.setAttribute( "class", "no_display" );
-        div.setAttribute( "id", "link_revealer" );
+        const body = document.querySelector( 'body' );
+        const div = document.createElement( 'div' );
+        div.setAttribute( 'class', 'no_display' );
+        div.setAttribute( 'id', 'link_revealer' );
         body.append( div );
     }
 
@@ -93,16 +92,15 @@ class Browser extends Component<BrowserProps, BrowserState> {
             tab => !tab.isClosed && tab.windowId === this.state.windowId
         );
 
-        logger.info( 'closing tab of form>>>>>>', tab.windowId )
         if ( openTabs.length === 1 ) {
-            ipcRenderer.send( "command:close-window" );
+            ipcRenderer.send( 'command:close-window' );
         } else {
             closeTab( tab );
         }
     };
 
     render() {
-        const props = this.props;
+        const { props } = this;
         const {
             // bookmarks
             bookmarks,
@@ -137,7 +135,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
             : false;
         // only show the first notification without a response.
         const notification = notifications.filter( n => !n.response )[0];
-        const {windowId} = this.state;
+        const { windowId } = this.state;
         // TODO: Move windowId from state to store.
         const windowTabs = tabs.filter( tab => tab.windowId === windowId );
         const openTabs = windowTabs.filter( tab => !tab.isClosed );
@@ -152,11 +150,12 @@ class Browser extends Component<BrowserProps, BrowserState> {
         );
 
         const uiWindow = ui.windows;
-        const windowObjForCurrentWindow = uiWindow.find( function ( element ) {
+        const windowObjForCurrentWindow = uiWindow.find( function( element ) {
             return element.windowId === windowId;
         } );
-        const settingsMenuIsVisible = windowObjForCurrentWindow ? windowObjForCurrentWindow.settingsMenuIsVisible : false;
-
+        const settingsMenuIsVisible = windowObjForCurrentWindow
+            ? windowObjForCurrentWindow.settingsMenuIsVisible
+            : false;
 
         return (
             <div className={styles.container}>

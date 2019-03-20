@@ -1,34 +1,34 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import getWebIdsFromSafe from '@Extensions/safe/safeBrowserApplication/webIds';
-import logger from 'logger';
-import { inBgProcess } from '@Constants';
+import getWebIdsFromSafe from '$Extensions/safe/safeBrowserApplication/webIds';
+import { logger } from '$Logger';
+import { inBgProcess } from '$Constants';
 
 export const TYPES = {
-    SET_APP_STATUS     : 'SET_APP_STATUS',
-    SET_NETWORK_STATUS : 'SET_NETWORK_STATUS',
-    SET_IS_MOCK        : 'SET_IS_MOCK',
+    SET_APP_STATUS: 'SET_APP_STATUS',
+    SET_NETWORK_STATUS: 'SET_NETWORK_STATUS',
+    SET_IS_MOCK: 'SET_IS_MOCK',
 
     // webId
-    ENABLE_EXPERIMENTS  : 'ENABLE_EXPERIMENTS',
-    DISABLE_EXPERIMENTS : 'DISABLE_EXPERIMENTS',
+    ENABLE_EXPERIMENTS: 'ENABLE_EXPERIMENTS',
+    DISABLE_EXPERIMENTS: 'DISABLE_EXPERIMENTS',
 
     // webId
-    GET_AVAILABLE_WEB_IDS : 'GET_AVAILABLE_WEB_IDS',
-    SET_AVAILABLE_WEB_IDS : 'SET_AVAILABLE_WEB_IDS',
-    FETCHING_WEB_IDS      : 'FETCHING_WEB_IDS',
+    GET_AVAILABLE_WEB_IDS: 'GET_AVAILABLE_WEB_IDS',
+    SET_AVAILABLE_WEB_IDS: 'SET_AVAILABLE_WEB_IDS',
+    FETCHING_WEB_IDS: 'FETCHING_WEB_IDS',
 
-    SET_READ_CONFIG_STATUS : 'SET_READ_CONFIG_STATUS',
-    SET_SAVE_CONFIG_STATUS : 'SET_SAVE_CONFIG_STATUS',
+    SET_READ_CONFIG_STATUS: 'SET_READ_CONFIG_STATUS',
+    SET_SAVE_CONFIG_STATUS: 'SET_SAVE_CONFIG_STATUS',
 
     // read status from network
-    RECEIVED_AUTH_RESPONSE : 'RECEIVED_AUTH_RESPONSE',
+    RECEIVED_AUTH_RESPONSE: 'RECEIVED_AUTH_RESPONSE',
 
-    RECONNECT_SAFE_APP : 'RECONNECT_SAFE_APP',
-    RESET_STORE        : 'RESET_STORE',
+    RECONNECT_SAFE_APP: 'RECONNECT_SAFE_APP',
+    RESET_STORE: 'RESET_STORE',
 
     // UI actions.
-    SHOW_WEB_ID_DROPDOWN : 'SHOW_WEB_ID_DROPDOWN'
+    SHOW_WEB_ID_DROPDOWN: 'SHOW_WEB_ID_DROPDOWN'
 };
 
 export const {
@@ -74,8 +74,7 @@ export const {
     TYPES.SHOW_WEB_ID_DROPDOWN
 );
 
-const triggerGetWebIds = async () =>
-{
+const triggerGetWebIds = async () => {
     if ( !inBgProcess ) return;
 
     logger.info( 'BG Process: Retrieving webIds...' );
@@ -87,8 +86,8 @@ export const getAvailableWebIds = createAliasedAction(
     TYPES.GET_AVAILABLE_WEB_IDS,
     // TODO: there is a complaint about not having middleware, despite redux-promise.
     () => ( {
-        // the real action
-        type    : TYPES.GET_AVAILABLE_WEB_IDS,
-        payload : triggerGetWebIds()
+    // the real action
+        type: TYPES.GET_AVAILABLE_WEB_IDS,
+        payload: triggerGetWebIds()
     } )
 );

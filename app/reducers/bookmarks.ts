@@ -1,9 +1,8 @@
-
 import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
-import { TYPES } from '@Actions/bookmarks_actions';
-import { TYPES as UI_TYPES } from '@Actions/ui_actions';
-import { makeValidAddressBarUrl } from '@Utils/urlHelpers';
+import { TYPES } from '$Actions/bookmarks_actions';
+import { TYPES as UI_TYPES } from '$Actions/ui_actions';
+import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
 import initialAppState from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
@@ -12,26 +11,20 @@ const initialState = initialAppState.bookmarks;
  * Get the current window's webcontents Id. Defaults to `1` if none found.
  * @return { Integer } WebContents Id of the curremt BrowserWindow webcontents.
  */
-const getCurrentWindowId = () =>
-{
+const getCurrentWindowId = () => {
     let currentWindowId;
 
-    if ( typeof currentWindowId === 'undefined' && remote )
-    {
+    if ( typeof currentWindowId === 'undefined' && remote ) {
         currentWindowId = remote.getCurrentWindow().webContents.id;
-    }
-    else if ( typeof currentWindowId === 'undefined' )
-    {
+    } else if ( typeof currentWindowId === 'undefined' ) {
         currentWindowId = 1;
     }
 
     return currentWindowId;
 };
 
-const addBookmark = ( state, bookmark ) =>
-{
-    if ( !bookmark )
-    {
+const addBookmark = ( state, bookmark ) => {
+    if ( !bookmark ) {
         throw new Error( 'You must pass a bookmark object with url' );
     }
 
@@ -40,7 +33,7 @@ const addBookmark = ( state, bookmark ) =>
     const bookmarkUrl = makeValidAddressBarUrl( bookmark.url || '' );
     const newBookmark = { ...bookmark };
 
-    const newState = [ ...state ];
+    const newState = [...state];
 
     newState.push( newBookmark );
 
@@ -52,25 +45,22 @@ const addBookmark = ( state, bookmark ) =>
  * @param { array } state
  * @param { object } payload
  */
-const removeBookmark = ( state, payload ) =>
-{
+const removeBookmark = ( state, payload ) => {
     const removalIndex = state.findIndex(
         bookmark => bookmark.url === payload.url
     );
-    const updatedState = [ ...state ];
+    const updatedState = [...state];
 
     updatedState.splice( removalIndex, 1 );
 
     return updatedState;
 };
 
-const updateBookmark = ( state, payload ) =>
-{
-    const index = payload.index;
+const updateBookmark = ( state, payload ) => {
+    const { index } = payload;
 
-    if ( index < 0 )
-    {
-        // TODO : Should we actually be adding here?
+    if ( index < 0 ) {
+    // TODO : Should we actually be adding here?
         return state;
     }
 
@@ -80,13 +70,12 @@ const updateBookmark = ( state, payload ) =>
 
     updatedBookmark = { ...updatedBookmark, ...payload };
 
-    if ( payload.url )
-    {
+    if ( payload.url ) {
         const url = makeValidAddressBarUrl( payload.url );
         updatedBookmark = { ...updatedBookmark, url };
     }
 
-    const updatedState = [ ...state ];
+    const updatedState = [...state];
 
     updatedState[index] = updatedBookmark;
 
@@ -99,18 +88,18 @@ const updateBookmark = ( state, payload ) =>
  * @param  { object } action action Object
  * @return { array }        updatd state object
  */
-export default function bookmarks( state: array = initialState, action )
-{
-    const payload = action.payload;
+export default function bookmarks(
+    state: Array<{}> = initialState,
+    action
+): Array<{}> {
+    const { payload } = action;
 
-    if ( action.error )
-    {
+    if ( action.error ) {
         console.info( 'ERROR IN ACTION', action.error );
         return state;
     }
 
-    switch ( action.type )
-    {
+    switch ( action.type ) {
         case TYPES.ADD_BOOKMARK: {
             return addBookmark( state, payload );
         }
@@ -122,13 +111,13 @@ export default function bookmarks( state: array = initialState, action )
         }
         case TYPES.UPDATE_BOOKMARKS: {
             const payloadBookmarks = payload.bookmarks;
-            const newBookmarks = [ ...state, ...payloadBookmarks ];
+            const newBookmarks = [...state, ...payloadBookmarks];
 
             return _.uniqBy( newBookmarks, 'url' );
         }
         case UI_TYPES.RESET_STORE: {
             const initial = initialState;
-            return [ ...initial ];
+            return [...initial];
         }
         default:
             return state;

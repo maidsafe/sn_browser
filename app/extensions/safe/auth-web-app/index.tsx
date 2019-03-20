@@ -14,7 +14,11 @@ import CONSTANTS from './constants';
 import { fetchReAuthoriseState, isUserAuthorised } from './utils';
 import './sass/main.scss';
 import { setAppList, setReAuthoriseState } from './actions/app';
-import { setNetworkConnected, setNetworkConnecting, setNetworkDisconnected } from './actions/network_state';
+import {
+    setNetworkConnected,
+    setNetworkConnecting,
+    setNetworkDisconnected
+} from './actions/network_state';
 import {
     setInviteCode,
     toggleInvitePopup,
@@ -24,32 +28,23 @@ import {
 
 const store = configureStore();
 
-if ( !window.safeAuthenticator.getLibStatus() )
-{
+if ( !window.safeAuthenticator.getLibStatus() ) {
     store.dispatch( showLibErrPopup() );
 }
 
-const registerNetworkStateListener = cb =>
-{
+const registerNetworkStateListener = cb => {
     // set network listener
-    if (
-        window.safeAuthenticator
-        && window.safeAuthenticator.setNetworkListener
-    )
-    {
+    if ( window.safeAuthenticator && window.safeAuthenticator.setNetworkListener ) {
         window.safeAuthenticator.setNetworkListener( cb );
     }
 };
 
-const networkStateListenerCb = ( err, state ) =>
-{
-    if ( err )
-    {
+const networkStateListenerCb = ( err, state ) => {
+    if ( err ) {
         throw new Error( err );
     }
     registerNetworkStateListener( networkStateListenerCb );
-    switch ( state )
-    {
+    switch ( state ) {
         case CONSTANTS.NETWORK_STATUS.CONNECTING: {
             return store.dispatch( setNetworkConnecting() );
         }
@@ -65,42 +60,34 @@ const networkStateListenerCb = ( err, state ) =>
     }
 };
 
-const registerIsAuthorisedListener = cb =>
-{
+const registerIsAuthorisedListener = cb => {
     if (
-        window.safeAuthenticator
-        && window.safeAuthenticator.setIsAuthorisedListener
-    )
-    {
+        window.safeAuthenticator &&
+    window.safeAuthenticator.setIsAuthorisedListener
+    ) {
         window.safeAuthenticator.setIsAuthorisedListener( cb );
     }
 };
 
-const isAuthorisedListenerCb = ( err, state ) =>
-{
-    if ( err )
-    {
+const isAuthorisedListenerCb = ( err, state ) => {
+    if ( err ) {
         throw new Error( err );
     }
     registerIsAuthorisedListener( isAuthorisedListenerCb );
     return store.dispatch( setIsAuthorised( state ) );
 };
 
-const registerAppListUpdateListener = cb =>
-{
+const registerAppListUpdateListener = cb => {
     if (
-        window.safeAuthenticator
-        && window.safeAuthenticator.setAppListUpdateListener
-    )
-    {
+        window.safeAuthenticator &&
+    window.safeAuthenticator.setAppListUpdateListener
+    ) {
         window.safeAuthenticator.setAppListUpdateListener( cb );
     }
 };
 
-const appListUpdateListenerCb = ( err, apps ) =>
-{
-    if ( err )
-    {
+const appListUpdateListenerCb = ( err, apps ) => {
+    if ( err ) {
         throw new Error( err );
     }
     registerAppListUpdateListener( appListUpdateListenerCb );
@@ -126,8 +113,7 @@ window.safeAuthenticator.setReAuthoriseState( reAuthoriseState );
 
 window.addEventListener(
     'message',
-    evt =>
-    {
+    evt => {
         console.warn( 'Invitation code ::', evt.data );
         store.dispatch( setInviteCode( evt.data ) );
         store.dispatch( toggleInvitePopup() );
@@ -136,14 +122,14 @@ window.addEventListener(
 );
 
 render(
-    <Provider store={ store }>
-        <ConnectedRouter history={ history }>
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
             <App>
                 <Switch>
-                    <Route exact path="/" component={ Home } />
-                    <Route path="/app_details" component={ AppDetails } />
-                    <Route path="/login" component={ Login } />
-                    <Route path="/create-account" component={ CreateAccount } />
+                    <Route exact path="/" component={Home} />
+                    <Route path="/app_details" component={AppDetails} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/create-account" component={CreateAccount} />
                 </Switch>
             </App>
         </ConnectedRouter>

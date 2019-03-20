@@ -7,31 +7,31 @@ import {
     getIsAuthing,
     setIsAuthing,
     safeBrowserAppIsAuthed
-} from '@Extensions/safe/safeBrowserApplication/theApplication';
+} from '$Extensions/safe/safeBrowserApplication/theApplication';
 
 import {
     manageReadStateActions,
     manageSaveStateActions
-} from '@Extensions/safe/safeBrowserApplication/manageBrowserConfig';
+} from '$Extensions/safe/safeBrowserApplication/manageBrowserConfig';
 
 import {
     isCI,
     startedRunningMock,
     isRunningSpectronTestProcessingPackagedApp
-} from '@Constants';
+} from '$Constants';
 
-import { SAFE } from '@Extensions/safe/constants';
+import { SAFE } from '$Extensions/safe/constants';
 import {
     setAppStatus,
     receivedAuthResponse
-} from '@Extensions/safe/actions/safeBrowserApplication_actions';
+} from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
     addNotification,
     clearNotification
-} from '@Actions/notification_actions';
-import logger from 'logger';
-import { initAnon } from '@Extensions/safe/safeBrowserApplication/init/initAnon';
-import initAuthedApplication from '@Extensions/safe/safeBrowserApplication/init/initAuthed';
+} from '$Actions/notification_actions';
+import { logger } from '$Logger';
+import { initAnon } from '$Extensions/safe/safeBrowserApplication/init/initAnon';
+import initAuthedApplication from '$Extensions/safe/safeBrowserApplication/init/initAuthed';
 
 // let safeBrowserAppObject;
 let tempSafeBrowserObjectUntilAuthed;
@@ -40,8 +40,7 @@ let tempSafeBrowserObjectUntilAuthed;
  * Setup actions to be triggered in response to store state changes.
  * @param  { ReduxStore } store [description]
  */
-export const handleSafeBrowserStoreChanges = store =>
-{
+export const handleSafeBrowserStoreChanges = store => {
     // TODO check why we need this vs passing it around
     setCurrentStore( store );
 
@@ -55,45 +54,35 @@ export const handleSafeBrowserStoreChanges = store =>
  * Everything we need to do to start the SafeBrowser App for fetching at least.
  * @param  {object} passedStore redux store
  */
-export const initSafeBrowserApp = async ( passedStore, authorise = false ) =>
-{
+export const initSafeBrowserApp = async ( passedStore, authorise = false ) => {
     const defaultOptions = {
-        enableExperimentalApis : false,
-        forceUseMock           : startedRunningMock
+        enableExperimentalApis: false,
+        forceUseMock: startedRunningMock
     };
 
     const safeBrowserAppState = passedStore.getState().safeBrowserApp;
-    const isMock = safeBrowserAppState.isMock;
-    const experimentsEnabled = safeBrowserAppState.experimentsEnabled;
+    const { isMock } = safeBrowserAppState;
+    const { experimentsEnabled } = safeBrowserAppState;
 
     const options = {
         ...defaultOptions,
-        forceUseMock           : isMock,
-        enableExperimentalApis : experimentsEnabled
+        forceUseMock: isMock,
+        enableExperimentalApis: experimentsEnabled
     };
 
     // TODO: here check store and what is desired from a connection!
     logger.info( 'Initialising Safe Browser App with options:', options );
-    try
-    {
-        if ( authorise )
-        {
+    try {
+        if ( authorise ) {
             tempSafeBrowserObjectUntilAuthed = await initAuthedApplication(
                 passedStore,
                 options
             );
+        } else {
+            tempSafeBrowserObjectUntilAuthed = await initAnon( passedStore, options );
         }
-        else
-        {
-            tempSafeBrowserObjectUntilAuthed = await initAnon(
-                passedStore,
-                options
-            );
-        }
-    }
-    catch ( e )
-    {
-        // denied authentication is handled in `authFromStoreResponse`
+    } catch ( e ) {
+    // denied authentication is handled in `authFromStoreResponse`
 
         console.error( e );
         throw new Error( 'Safe Browser init failed' );
@@ -102,18 +91,16 @@ export const initSafeBrowserApp = async ( passedStore, authorise = false ) =>
 
 const urisUnderAuth = [];
 
-const authFromStoreResponse = async ( res, store ) =>
-{
+const authFromStoreResponse = async ( res, store ) => {
     logger.info( 'Authing from a store-passed response.', Date.now(), res );
 
-    if ( !res.startsWith( 'safe' ) )
-    {
-        // it's an error!
+    if ( !res.startsWith( 'safe' ) ) {
+    // it's an error!
         logger.error( res );
         store.dispatch(
             addNotification( {
-                text : `Unable to connect to the network. ${ res }`,
-                type : 'error'
+                text: `Unable to connect to the network. ${res}`,
+                type: 'error'
             } )
         );
 
@@ -122,18 +109,15 @@ const authFromStoreResponse = async ( res, store ) =>
         return;
     }
 
-    if ( urisUnderAuth.includes( res ) )
-    {
+    if ( urisUnderAuth.includes( res ) ) {
         return;
     }
 
     // TODO: This logic shuld be in BG process for safeBrowserState.
-    try
-    {
+    try {
         urisUnderAuth.push( res );
 
-        if ( tempSafeBrowserObjectUntilAuthed )
-        {
+        if ( tempSafeBrowserObjectUntilAuthed ) {
             const app = tempSafeBrowserObjectUntilAuthed;
             setSafeBrowserAppObject( app );
             tempSafeBrowserObjectUntilAuthed = null;
@@ -145,36 +129,32 @@ const authFromStoreResponse = async ( res, store ) =>
 
         setSafeBrowserAppObject( newApp );
 
-        if ( newApp.auth.registered )
-        {
+        if ( newApp.auth.registered ) {
             store.dispatch( setAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
         }
-    }
-    catch ( err )
-    {
+    } catch ( err ) {
         logger.error( 'Error in authFromStoreResponse' );
 
-        if ( store )
-        {
-            let message = err.message;
+        if ( store ) {
+            let { message } = err;
 
-            if ( err.message.includes( 'AuthDenied' ) )
-            {
+            if ( err.message.includes( 'AuthDenied' ) ) {
                 initSafeBrowserApp( store );
-                message = 'The Safe Browser Application was denied authentication. You cannot save/read browser data from the network.';
+                message =
+          'The Safe Browser Application was denied authentication. You cannot save/read browser data from the network.';
             }
 
-            if ( err.message.startsWith( 'Unexpected (probably a logic' ) )
-            {
-                message = 'Check your current IP address matches your registered address at invite.maidsafe.net';
+            if ( err.message.startsWith( 'Unexpected (probably a logic' ) ) {
+                message =
+          'Check your current IP address matches your registered address at invite.maidsafe.net';
             }
 
             if ( isRunningSpectronTestProcessingPackagedApp || isCI ) return;
 
             store.dispatch(
                 addNotification( {
-                    text      : message,
-                    onDismiss : clearNotification
+                    text: message,
+                    onDismiss: clearNotification
                 } )
             );
         }
@@ -192,28 +172,26 @@ let prevSafeBrowserAppExperimentalState;
  * based upon the application auth state
  * @param  {Object} state Application state (from redux)
  */
-const manageAuthorisationActions = async store =>
-{
+const manageAuthorisationActions = async store => {
     // TODO: Do this via aliased action.
 
     // const
     const safeBrowserState = store.getState().safeBrowserApp;
 
-    debouncedPassAuthUriToStore = debouncedPassAuthUriToStore
-        || _.debounce( responseUri =>
-        {
-            store.dispatch( receivedAuthResponse( '' ) );
-            authFromStoreResponse( responseUri, store );
-            setIsAuthing( false );
-        }, 500 );
+    debouncedPassAuthUriToStore =
+    debouncedPassAuthUriToStore ||
+    _.debounce( responseUri => {
+        store.dispatch( receivedAuthResponse( '' ) );
+        authFromStoreResponse( responseUri, store );
+        setIsAuthing( false );
+    }, 500 );
 
     if (
-        safeBrowserState.appStatus === SAFE.APP_STATUS.TO_AUTH
-        && !getIsAuthing()
-    )
-    {
-        // cannot rely solely on store as can change in other ways
-        // before this is updated properly. This prevents that.
+        safeBrowserState.appStatus === SAFE.APP_STATUS.TO_AUTH &&
+    !getIsAuthing()
+    ) {
+    // cannot rely solely on store as can change in other ways
+    // before this is updated properly. This prevents that.
         setIsAuthing( true );
 
         store.dispatch( setAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
@@ -225,11 +203,9 @@ const manageAuthorisationActions = async store =>
     }
 
     // update check for auth state.
-    if ( prevSafeBrowserAppAuthState !== safeBrowserAppIsAuthed() )
-    {
-        // if it was authed...
-        if ( prevSafeBrowserAppAuthState )
-        {
+    if ( prevSafeBrowserAppAuthState !== safeBrowserAppIsAuthed() ) {
+    // if it was authed...
+        if ( prevSafeBrowserAppAuthState ) {
             // start an anonymous app
             initSafeBrowserApp( store );
         }
@@ -240,19 +216,17 @@ const manageAuthorisationActions = async store =>
     }
 
     if (
-        safeBrowserState.authResponseUri
-        && safeBrowserState.authResponseUri.length
-    )
-    {
-        // TODO: This should 'clear' or somesuch....
-        // OR: Only run if not authed?
+        safeBrowserState.authResponseUri &&
+    safeBrowserState.authResponseUri.length
+    ) {
+    // TODO: This should 'clear' or somesuch....
+    // OR: Only run if not authed?
         debouncedPassAuthUriToStore( safeBrowserState.authResponseUri );
     }
 
-    const experimentsEnabled = safeBrowserState.experimentsEnabled;
+    const { experimentsEnabled } = safeBrowserState;
 
-    if ( experimentsEnabled !== prevSafeBrowserAppExperimentalState )
-    {
+    if ( experimentsEnabled !== prevSafeBrowserAppExperimentalState ) {
         prevSafeBrowserAppExperimentalState = experimentsEnabled;
         initSafeBrowserApp( store, safeBrowserAppIsAuthed() );
     }

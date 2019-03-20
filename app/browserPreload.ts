@@ -1,18 +1,14 @@
 import { push } from 'react-router-redux';
-import { PROTOCOLS } from '@Constants';
+import { PROTOCOLS } from '$Constants';
 // import setupPreloadAPIs from './setupPreloadAPIs';;
 
 // no logger to avoid duplicate msgs.
 console.info( 'Peruse Browser window preloaded.' );
 
-window.peruseNav = location =>
-{
-    if ( peruseStore )
-    {
+window.peruseNav = location => {
+    if ( peruseStore ) {
         peruseStore.dispatch( push( location ) );
-    }
-    else
-    {
+    } else {
         window.perusePendingNavigation = location;
     }
 };

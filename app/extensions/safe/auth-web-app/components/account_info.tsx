@@ -1,34 +1,30 @@
-import * as React from "react"
+import * as React from 'react';
 import classNames from 'classnames';
 import { I18n } from 'react-redux-i18n';
 
 interface AccInfoProps {
-    isLoading: boolean,
-    done: number,
-    available: number,
-    refresh: ( ...args: any[] ) => any,
+    isLoading: boolean;
+    done: number;
+    available: number;
+    refresh: ( ...args: Array<any> ) => any;
 }
 
-export default class AccountInfo extends React.Component<AccInfoProps>
-{
-    render()
-    {
-        const {
-            done, available, isLoading, refresh
-        } = this.props;
+export default class AccountInfo extends React.Component<AccInfoProps> {
+    render() {
+        const { done, available, isLoading, refresh } = this.props;
         const total = done + available;
-        const totalStr = typeof available === 'string' ? '' : `/${ total }`;
+        const totalStr = typeof available === 'string' ? '' : `/${total}`;
         const safePercentage = total / 2;
         const warnPercentage = Math.floor( total / 1.1 );
         const statusClassName = classNames( 'acc-info-status', {
-            safer  : done > 0 && done < safePercentage,
-            okay   : done > safePercentage && done < warnPercentage,
-            danger : done > warnPercentage
+            safer: done > 0 && done < safePercentage,
+            okay: done > safePercentage && done < warnPercentage,
+            danger: done > warnPercentage
         } );
         return (
             <div className="acc-info">
                 <div className="acc-info-b">
-                    <div className={ statusClassName }>
+                    <div className={statusClassName}>
                         <span className="label">Account Status:</span>
                         <span className="val">
                             {done || 0}
@@ -37,12 +33,11 @@ export default class AccountInfo extends React.Component<AccInfoProps>
                         <button
                             type="button"
                             className="refresh"
-                            aria-label={ I18n.t( 'aria.refresh_account' ) }
-                            disabled={ isLoading }
-                            onClick={ () =>
-                            {
+                            aria-label={I18n.t( 'aria.refresh_account' )}
+                            disabled={isLoading}
+                            onClick={() => {
                                 refresh();
-                            } }
+                            }}
                         >
                             {''}
                         </button>

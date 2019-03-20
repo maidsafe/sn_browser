@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { Provider } from 'react-redux';
 
-import AddressBar from 'components/AddressBar';
+import AddressBar from '$Components/AddressBar';
 import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();
@@ -20,52 +20,47 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
-describe( 'AddressBar', () =>
-{
+describe( 'AddressBar', () => {
     let wrapper;
     let instance;
     let props;
     let store;
 
-    beforeEach( () =>
-    {
+    beforeEach( () => {
         props = {
-            windowId           : 1,
-            address            : 'about:blank',
-            isSelected         : false,
-            isBookmarked       : false,
-            experimentsEnabled : false,
-            addBookmark        : jest.fn(),
-            removeBookmark     : jest.fn(),
-            tabBackwards       : jest.fn(),
-            tabForwards        : jest.fn(),
-            onBlur             : jest.fn(),
-            onSelect           : jest.fn(),
-            onFocus            : jest.fn(),
-            activeTab          : {
-                isLoading    : false,
-                historyIndex : 1,
-                history      : [ 'a', 'b' ]
+            windowId: 1,
+            address: 'about:blank',
+            isSelected: false,
+            isBookmarked: false,
+            experimentsEnabled: false,
+            addBookmark: jest.fn(),
+            removeBookmark: jest.fn(),
+            tabBackwards: jest.fn(),
+            tabForwards: jest.fn(),
+            onBlur: jest.fn(),
+            onSelect: jest.fn(),
+            onFocus: jest.fn(),
+            activeTab: {
+                isLoading: false,
+                historyIndex: 1,
+                history: ['a', 'b']
             }
         };
     } );
 
-    describe( 'constructor( props )', () =>
-    {
-        beforeEach( () =>
-        {
+    describe( 'constructor( props )', () => {
+        beforeEach( () => {
             store = mockStore( props );
 
             wrapper = shallow(
-                <Provider store={ store }>
-                    <AddressBar { ...props } />
+                <Provider store={store}>
+                    <AddressBar {...props} />
                 </Provider>
             ).dive();
 
             instance = wrapper.instance();
         } );
-        it( 'should have name AddressBar', () =>
-        {
+        it( 'should have name AddressBar', () => {
             expect( instance.constructor.name ).toBe( 'AddressBar' );
         } );
     } );

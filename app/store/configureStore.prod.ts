@@ -1,61 +1,52 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-import { createHashHistory } from 'history';
+import {
+    createStore,
+    applyMiddleware,
+    compose,
+    Store,
+    Reducer,
+    StoreEnhancer
+} from 'redux';
+import { createHashHistory, History } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
-import {
-    loadTranslations,
-    setLocale,
-    syncTranslationWithStore
-} from 'react-redux-i18n';
-// import en from '../locales/en.json';
 
-import {
-    inRendererProcess,
-    // isRunningUnpacked,
-    isRunningSpectronTestProcess
-} from '@Constants';
+import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
 
-import addMiddlewares from '@Store/addMiddlewares';
+import { addMiddlewares } from '$Store/addMiddlewares';
 
 import {
     getInitialStateRenderer,
     replayActionMain,
     replayActionRenderer
 } from 'electron-redux';
-
-import createRootReducer from '../reducers';
 import * as bookmarkActions from '../actions/bookmarks_actions';
-// import type { counterStateType } from '../reducers/types';
 
-const initialStateFromMain = inRendererProcess ? getInitialStateRenderer() : {};
+import { createRootReducer } from '../reducers';
 
-// const translationsObject = {
-//     en
-// };
+const initialStateFromMain: {} = inRendererProcess
+    ? getInitialStateRenderer()
+    : {};
 
-let history;
+let ourHistory: History;
 
-if ( inRendererProcess )
-{
-    history = createHashHistory();
+if ( inRendererProcess ) {
+    ourHistory = createHashHistory();
 }
 
-const rootReducer = createRootReducer( history );
+const rootReducer: Reducer = createRootReducer( ourHistory );
 
-// const configureStore = (initialState?: counterStateType) => {
-const configureStore = (
-    initialState = initialStateFromMain
-) =>
-{
+declare namespace window {
+    function __REDUX_DEVTOOLS_EXTENSION_COMPOSE__( actionCreators: {} );
+}
+
+export const configureStore = ( initialState: {} = initialStateFromMain ) => {
     // Redux Configuration
-    const middleware = [];
-    const enhancers = [];
+    const middleware: Array<any> = [];
+    const enhancers: Array<StoreEnhancer> = [];
 
     // Router Middleware
-    if ( history )
-    {
-        const router = routerMiddleware( history );
+    if ( ourHistory ) {
+        const router = routerMiddleware( ourHistory );
         middleware.push( router );
     }
 
@@ -63,13 +54,12 @@ const configureStore = (
 
     // Logging Middleware
     // const logger = createLogger( {
-    //     level     : 'info',
-    //     collapsed : true
+    //     level: 'info',
+    //     collapsed: true
     // } );
-
-    // Skip redux logs in console during the tests
-    // if ( process.env.NODE_ENV !== 'test' )
-    // {
+    //
+    // // Skip redux logs in console during the tests
+    // if ( process.env.NODE_ENV !== 'test' ) {
     //     middleware.push( logger );
     // }
 
@@ -81,32 +71,28 @@ const configureStore = (
 
     let composeEnhancers;
 
-    if ( !isRunningSpectronTestProcess && inRendererProcess )
-    {
-        // If Redux DevTools Extension is installed use it, otherwise use Redux compose
-        /* eslint-disable no-underscore-dangle */
+    if ( !isRunningSpectronTestProcess && inRendererProcess ) {
+    // If Redux DevTools Extension is installed use it, otherwise use Redux compose
+    /* eslint-disable no-underscore-dangle */
         composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
             ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {
                 // Options: http://extension.remotedev.io/docs/API/Arguments.html
                 actionCreators
             } )
             : compose;
-        /* eslint-enable no-underscore-dangle */
-    }
-    else
-    {
+    /* eslint-enable no-underscore-dangle */
+    } else {
         composeEnhancers = compose;
     }
 
     // Apply Middleware & Compose Enhancers
     enhancers.push( applyMiddleware( ...middleware ) );
-    const enhancer = composeEnhancers( ...enhancers );
+    const enhancer: StoreEnhancer = composeEnhancers( ...enhancers );
 
     // Create Store
-    const store = createStore( rootReducer, initialState, enhancer );
+    const store: Store = createStore( rootReducer, initialState, enhancer );
 
-    if ( module.hot )
-    {
+    if ( module.hot ) {
         module.hot.accept(
             '../reducers',
             // eslint-disable-next-line global-require
@@ -114,20 +100,13 @@ const configureStore = (
         );
     }
 
-    if ( inRendererProcess )
-    {
+    if ( inRendererProcess ) {
         replayActionRenderer( store );
-    }
-    else
-    {
+    } else {
         replayActionMain( store );
     }
 
-    // TODO: remove this lark?
-    // syncTranslationWithStore( store );
-    // store.dispatch( loadTranslations( translationsObject ) );
-    // store.dispatch( setLocale( 'en' ) );
     return store;
 };
 
-export default { configureStore, history };
+export const history = ourHistory;

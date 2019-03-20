@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 import classNames from 'classnames';
-import AUTH_UI_CLASSES from '@Extensions/safe/auth-web-app/classes';
+import AUTH_UI_CLASSES from '$Extensions/safe/auth-web-app/classes';
 import { I18n } from 'react-redux-i18n';
 import { parseAppName, getAppIconClassName } from '../utils';
 import Popup from './popup';
@@ -12,36 +12,33 @@ interface AppInfoOptions {
     name: string;
     vendor: string;
 }
-interface authorisedAppsoptions{
+interface authorisedAppsoptions {
     [index: number]: { app_info: AppInfoOptions };
 }
-interface searchResultOptions{
+interface searchResultOptions {
     [index: number]: { app_info: AppInfoOptions };
 }
 interface propTypes {
-    fetchingApps   : boolean;
-    authorisedApps : authorisedAppsoptions;
-    searchResult : searchResultOptions;
-    searchApp           : ( ...args: any[] ) => any;
-    clearSearch         : ( ...args: any[] ) => any;
-    clearAppError       : ( ...args: any[] ) => any;
-    getAuthorisedApps   : ( ...args: any[] ) => any;
-    revokeError         : ( ...args: any[] ) => any;
-    appListError        : ( ...args: any[] ) => any;
-    reAuthoriseState    : ( ...args: any[] ) => any;
-    setReAuthoriseState : ( ...args: any[] ) => any;
-    getAccountInfo      : ( ...args: any[] ) => any;
+    fetchingApps: boolean;
+    authorisedApps: authorisedAppsoptions;
+    searchResult: searchResultOptions;
+    searchApp: ( ...args: Array<any> ) => any;
+    clearSearch: ( ...args: Array<any> ) => any;
+    clearAppError: ( ...args: Array<any> ) => any;
+    getAuthorisedApps: ( ...args: Array<any> ) => any;
+    revokeError: ( ...args: Array<any> ) => any;
+    appListError: ( ...args: Array<any> ) => any;
+    reAuthoriseState: ( ...args: Array<any> ) => any;
+    setReAuthoriseState: ( ...args: Array<any> ) => any;
+    getAccountInfo: ( ...args: Array<any> ) => any;
 }
 
 interface contextTypes {
-    router : object;
+    router: object;
 }
 
-
-export default class AppList extends React.Component<propTypes, contextTypes>
-{   
-    constructor()
-    {
+export default class AppList extends React.Component<propTypes, contextTypes> {
+    constructor() {
         super();
         this.title = I18n.t( 'authorised_apps_title' );
         this.getSearchContainer = this.getSearchContainer.bind( this );
@@ -50,65 +47,54 @@ export default class AppList extends React.Component<propTypes, contextTypes>
         this.getApps = this.getApps.bind( this );
         this.resetPopup = this.resetPopup.bind( this );
         this.state = {
-            searchActive : false,
-            showPopup    : false,
-            popupTitle   : null,
-            popupDesc    : null,
-            isError      : false
+            searchActive: false,
+            showPopup: false,
+            popupTitle: null,
+            popupDesc: null,
+            isError: false
         };
     }
 
-    componentDidMount()
-    {
-        if ( !this.props.isAuthorised )
-        {
+    componentDidMount() {
+        if ( !this.props.isAuthorised ) {
             return this.props.push( '/login' );
         }
         this.props.getAuthorisedApps();
         this.props.getAccountInfo();
     }
 
-    componentWillUpdate( nextProps )
-    {
-        if ( !nextProps.isAuthorised )
-        {
+    componentWillUpdate( nextProps ) {
+        if ( !nextProps.isAuthorised ) {
             return this.props.push( '/login' );
         }
-        if ( this.state.showPopup )
-        {
+        if ( this.state.showPopup ) {
             return;
         }
-        if ( this.props.revokeError )
-        {
+        if ( this.props.revokeError ) {
             this.setState( {
-                showPopup  : true,
-                popupTitle : I18n.t( 'messages.err_revoke_app' ),
-                popupDesc  : this.props.revokeError,
-                isError    : true
+                showPopup: true,
+                popupTitle: I18n.t( 'messages.err_revoke_app' ),
+                popupDesc: this.props.revokeError,
+                isError: true
             } );
-        }
-        else if ( this.props.appListError )
-        {
+        } else if ( this.props.appListError ) {
             this.setState( {
-                showPopup  : true,
-                popupTitle : I18n.t( 'messages.err_fetch_apps' ),
-                popupDesc  : this.props.appListError,
-                isError    : true
+                showPopup: true,
+                popupTitle: I18n.t( 'messages.err_fetch_apps' ),
+                popupDesc: this.props.appListError,
+                isError: true
             } );
         }
     }
 
-    componentDidUpdate()
-    {
-        // focus search
-        if ( this.state.searchActive && !this.searchInput.value )
-        {
+    componentDidUpdate() {
+    // focus search
+        if ( this.state.searchActive && !this.searchInput.value ) {
             this.searchInput.focus();
         }
     }
 
-    getNoAppsContainer()
-    {
+    getNoAppsContainer() {
         return (
             <div className="no-apps">
                 <h3 className="no-apps-h">{I18n.t( 'messages.no_apps_yet' )}</h3>
@@ -119,7 +105,7 @@ export default class AppList extends React.Component<propTypes, contextTypes>
                     </h3>
                     <a
                         rel="noopener noreferrer"
-                        href={ I18n.t( 'urls.safe_examples' ) }
+                        href={I18n.t( 'urls.safe_examples' )}
                         target="_blank"
                         className="no-apps-down-lnk"
                     >
@@ -130,47 +116,42 @@ export default class AppList extends React.Component<propTypes, contextTypes>
         );
     }
 
-    getSearchContainer()
-    {
+    getSearchContainer() {
         const searchClassNames = classNames( 'app-list-search', {
-            active : this.state.searchActive
+            active: this.state.searchActive
         } );
         return (
-            <div className={ searchClassNames }>
+            <div className={searchClassNames}>
                 <button
                     type="button"
                     className="app-list-search-icn"
-                    aria-label={ I18n.t( 'aria.search_app_list' ) }
-                    onClick={ () =>
-                    {
+                    aria-label={I18n.t( 'aria.search_app_list' )}
+                    onClick={() => {
                         this.setState( { searchActive: true } );
-                    } }
+                    }}
                 >
                     {''}
                 </button>
                 <div className="app-list-search-ipt">
                     <input
                         type="text"
-                        aria-label={ I18n.t( 'aria.search_app_list_input' ) }
-                        ref={ c =>
-                        {
+                        aria-label={I18n.t( 'aria.search_app_list_input' )}
+                        ref={c => {
                             this.searchInput = c;
-                        } }
-                        onChange={ e =>
-                        {
+                        }}
+                        onChange={e => {
                             this.props.searchApp( e.target.value );
-                        } }
+                        }}
                     />
                     <button
                         type="button"
                         className="app-list-search-cancel"
-                        aria-label={ I18n.t( 'aria.search_app_list_cancel' ) }
-                        onClick={ () =>
-                        {
+                        aria-label={I18n.t( 'aria.search_app_list_cancel' )}
+                        onClick={() => {
                             this.setState( { searchActive: false } );
                             this.searchInput.value = '';
                             this.props.clearSearch();
-                        } }
+                        }}
                     >
                         {''}
                     </button>
@@ -179,53 +160,45 @@ export default class AppList extends React.Component<propTypes, contextTypes>
         );
     }
 
-    getNoMatchingAppsContainer()
-    {
+    getNoMatchingAppsContainer() {
         return (
-            <div className="no-apps">
-                {I18n.t( 'messages.empty_search_result' )}
-            </div>
+            <div className="no-apps">{I18n.t( 'messages.empty_search_result' )}</div>
         );
     }
 
-    getApps()
-    {
+    getApps() {
         const { authorisedApps, searchResult } = this.props;
         let apps = [];
 
-        if ( authorisedApps.length === 0 )
-        {
+        if ( authorisedApps.length === 0 ) {
             return this.getNoAppsContainer();
         }
-        const appList = this.state.searchActive && this.searchInput.value
-            ? searchResult
-            : authorisedApps;
-        if ( appList.length === 0 )
-        {
+        const appList =
+      this.state.searchActive && this.searchInput.value
+          ? searchResult
+          : authorisedApps;
+        if ( appList.length === 0 ) {
             return this.getNoMatchingAppsContainer();
         }
         apps = appList
-            .sort( ( a, b ) =>
-            {
+            .sort( ( a, b ) => {
                 if ( a.app_info.name < b.app_info.name ) return -1;
                 if ( a.app_info.name > b.app_info.name ) return 1;
                 return 0;
             } )
-            .map( ( app, i ) =>
-            {
-                const path = `/app_details?id=${ app.app_info.id }&index=${ i }`;
+            .map( ( app, i ) => {
+                const path = `/app_details?id=${app.app_info.id}&index=${i}`;
                 return (
-                    <div key={ i }>
+                    <div key={i}>
                         <a
                             tabIndex="0"
-                            onClick={ () =>
-                            {
+                            onClick={() => {
                                 this.props.push( path );
-                            } }
+                            }}
                         >
                             <div className="app-list-i">
                                 <div className="app-list-i-b">
-                                    <div className={ getAppIconClassName( i ) }>
+                                    <div className={getAppIconClassName( i )}>
                                         {app.app_info.name.slice( 0, 2 )}
                                     </div>
                                     <div className="app-list-i-name">
@@ -240,34 +213,33 @@ export default class AppList extends React.Component<propTypes, contextTypes>
         return apps;
     }
 
-    getReAuthoriseState()
-    {
+    getReAuthoriseState() {
         const { reAuthoriseState, setReAuthoriseState } = this.props;
         const iconClassName = classNames( 'icn', {
-            lock   : reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.LOCK,
-            unlock : reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.UNLOCK
+            lock: reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.LOCK,
+            unlock: reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.UNLOCK
         } );
-        const message = reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.LOCK
-            ? CONSTANTS.RE_AUTHORISE.LOCK_MSG
-            : CONSTANTS.RE_AUTHORISE.UNLOCK_MSG;
+        const message =
+      reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.LOCK
+          ? CONSTANTS.RE_AUTHORISE.LOCK_MSG
+          : CONSTANTS.RE_AUTHORISE.UNLOCK_MSG;
 
         return (
             <div className="reauthorise-state">
                 <button
-                    className={ iconClassName }
+                    className={iconClassName}
                     aria-label={
                         reAuthoriseState
                             ? I18n.t( 'aria.reauth_unlock' )
                             : I18n.t( 'aria.reauth_lock' )
                     }
-                    onClick={ () =>
-                    {
-                        const state = reAuthoriseState
-                            === CONSTANTS.RE_AUTHORISE.STATE.LOCK
-                            ? CONSTANTS.RE_AUTHORISE.STATE.UNLOCK
-                            : CONSTANTS.RE_AUTHORISE.STATE.LOCK;
+                    onClick={() => {
+                        const state =
+              reAuthoriseState === CONSTANTS.RE_AUTHORISE.STATE.LOCK
+                  ? CONSTANTS.RE_AUTHORISE.STATE.UNLOCK
+                  : CONSTANTS.RE_AUTHORISE.STATE.LOCK;
                         setReAuthoriseState( state );
-                    } }
+                    }}
                 >
                     {''}
                 </button>
@@ -276,21 +248,17 @@ export default class AppList extends React.Component<propTypes, contextTypes>
         );
     }
 
-    resetPopup()
-    {
+    resetPopup() {
         this.setState( {
-            showPopup  : false,
-            popupTitle : null,
-            popupDesc  : null
+            showPopup: false,
+            popupTitle: null,
+            popupDesc: null
         } );
     }
 
-    render()
-    {
+    render() {
         const { fetchingApps, authorisedApps, clearAppError } = this.props;
-        const {
-            showPopup, isError, popupDesc, popupTitle
-        } = this.state;
+        const { showPopup, isError, popupDesc, popupTitle } = this.state;
 
         return (
             <div className="card-main-b">
@@ -298,27 +266,22 @@ export default class AppList extends React.Component<propTypes, contextTypes>
                 <div className="card-main-cntr">
                     {this.getReAuthoriseState()}
                     {fetchingApps ? (
-                        <CardLoaderFull msg={ I18n.t( 'messages.fetching_apps' ) }>
+                        <CardLoaderFull msg={I18n.t( 'messages.fetching_apps' )}>
                             {''}
                         </CardLoaderFull>
                     ) : null}
                     <Popup
-                        show={ showPopup }
-                        error={ isError }
-                        callback={ () =>
-                        {
+                        show={showPopup}
+                        error={isError}
+                        callback={() => {
                             clearAppError();
                             this.resetPopup();
-                        } }
-                        title={ popupTitle }
-                        desc={ popupDesc }
+                        }}
+                        title={popupTitle}
+                        desc={popupDesc}
                     />
-                    <div
-                        className={ `app-list ${ AUTH_UI_CLASSES.AUTH_APP_LIST }` }
-                    >
-                        {authorisedApps.length === 0
-                            ? null
-                            : this.getSearchContainer()}
+                    <div className={`app-list ${AUTH_UI_CLASSES.AUTH_APP_LIST}`}>
+                        {authorisedApps.length === 0 ? null : this.getSearchContainer()}
                         {this.getApps()}
                     </div>
                 </div>

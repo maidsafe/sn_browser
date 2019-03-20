@@ -1,35 +1,33 @@
-import logger from 'logger';
+import { logger } from '$Logger';
 import {
     isRunningPackaged,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp
-} from '@Constants';
+} from '$Constants';
 import url from 'url';
 import path from 'path';
 
 const authRoute = {
-    method  : 'GET',
-    path    : /auth:\//,
-    handler : async ( request, res ) =>
-    {
-        try
-        {
+    method: 'GET',
+    path: /auth:\//,
+    handler: async ( request, res ) => {
+        try {
             const link = request.url.split( '/auth/' )[1];
             const linkUrl = url.parse( link );
             let authDistLocale = isRunningPackaged
                 ? '../../extensions/safe/'
                 : './extensions/safe/';
-            authDistLocale = isRunningSpectronTestProcess
-                && !isRunningSpectronTestProcessingPackagedApp
-                ? './extensions/safe/'
-                : authDistLocale;
+            authDistLocale =
+        isRunningSpectronTestProcess &&
+        !isRunningSpectronTestProcessingPackagedApp
+            ? './extensions/safe/'
+            : authDistLocale;
 
             const authDist = path.normalize(
                 path.resolve( __dirname, authDistLocale, 'auth-web-app/dist/' )
             );
 
-            switch ( linkUrl.path )
-            {
+            switch ( linkUrl.path ) {
                 case '/bundle.js':
                     res.sendFile( path.resolve( authDist, 'bundle.js' ) );
                     break;
@@ -47,9 +45,7 @@ const authRoute = {
                     res.sendFile( path.resolve( authDist, 'app.html' ) );
                     break;
             }
-        }
-        catch ( e )
-        {
+        } catch ( e ) {
             logger.error( e );
             return res.send( e.message || e );
         }

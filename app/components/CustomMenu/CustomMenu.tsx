@@ -1,13 +1,12 @@
-
-import React, { Component } from "react";
-// import logger from 'logger';
-import { CLASSES } from "@Constants";
-import { Row, Icon, Button } from "antd";
-import "antd/lib/row/style";
-import "antd/lib/col/style";
-import "antd/lib/button/style";
-import "antd/lib/icon/style";
-import styles from "./customMenu.css";
+import React, { Component } from 'react';
+// import { logger } from '$Logger';
+import { CLASSES } from '$Constants';
+import { Row, Icon, Button } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
+import 'antd/lib/icon/style';
+import styles from './customMenu.css';
 
 const Meatball = () => (
     <svg
@@ -24,11 +23,11 @@ const Meatball = () => (
     </svg>
 );
 interface CustomMenuProps {
-    isVisible?: boolean,
-    menuItems?: any[],
-    showMenu: ( ...args: any[] ) => any,
-    hideMenu: ( ...args: any[] ) => any,
-    windowId: number
+    isVisible?: boolean;
+    menuItems?: Array<any>;
+    showMenu: ( ...args: Array<any> ) => any;
+    hideMenu: ( ...args: Array<any> ) => any;
+    windowId: number;
 }
 /**
  * A menu which will be displayed / hidden based upon isVisisble prop.
@@ -50,7 +49,7 @@ export default class CustomMenu extends Component<CustomMenuProps, {}> {
             const windowClickListener = event => {
                 hideMenu( { windowId } );
             };
-            window.addEventListener( "click", windowClickListener, {
+            window.addEventListener( 'click', windowClickListener, {
                 once: true
             } );
         }

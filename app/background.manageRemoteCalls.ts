@@ -1,7 +1,7 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-import logger from 'logger';
-import { onRemoteCallInBgProcess, getRemoteCallApis } from '@Extensions';
-import * as remoteCallActions from '@Actions/remoteCall_actions';
+import { logger } from '$Logger';
+import { onRemoteCallInBgProcess, getRemoteCallApis } from '$Extensions';
+import * as remoteCallActions from '$Actions/remoteCall_actions';
 
 let cachedRemoteCallArray = [];
 const pendingCallIds = {};
@@ -17,71 +17,58 @@ const allApiCalls = {
  * updating the remoteCall.
  * @param  {[type]}  store Redux store
  */
-const manageRemoteCalls = async store =>
-{
+const manageRemoteCalls = async store => {
     const state = store.getState();
-    const remoteCalls = state.remoteCalls;
-    if ( cachedRemoteCallArray !== remoteCalls )
-    {
+    const { remoteCalls } = state;
+    if ( cachedRemoteCallArray !== remoteCalls ) {
         cachedRemoteCallArray = remoteCalls;
 
         if ( !remoteCalls.length ) return;
 
-        remoteCalls.forEach( async theCall =>
-        {
-            if ( !theCall.inProgress && !pendingCallIds[theCall.id] )
-            {
+        remoteCalls.forEach( async theCall => {
+            if ( !theCall.inProgress && !pendingCallIds[theCall.id] ) {
                 // hack to prevent multi store triggering.
                 // not needed for auth via redux.
                 pendingCallIds[theCall.id] = 'pending';
 
-                if ( allApiCalls[theCall.name] )
-                {
+                if ( allApiCalls[theCall.name] ) {
                     logger.info( 'Remote Calling: ', theCall.name );
                     store.dispatch(
                         remoteCallActions.updateRemoteCall( {
                             ...theCall,
-                            inProgress : true
+                            inProgress: true
                         } )
                     );
                     const theArgs = theCall.args;
 
                     onRemoteCallInBgProcess( store, allApiCalls, theCall );
 
-                    if ( theCall.isListener )
-                    {
+                    if ( theCall.isListener ) {
                         return;
                     }
 
-                    try
-                    {
+                    try {
                         // call the API.
                         const argsForCalling = theArgs || [];
 
                         // TODO: Refactor APIs to expect store as first arg?
-                        const response = await allApiCalls[theCall.name](
-                            ...argsForCalling
-                        );
+                        const response = await allApiCalls[theCall.name]( ...argsForCalling );
                         store.dispatch(
                             remoteCallActions.updateRemoteCall( {
                                 ...theCall,
-                                done : true,
+                                done: true,
                                 response
                             } )
                         );
-                    }
-                    catch ( e )
-                    {
+                    } catch ( e ) {
                         store.dispatch(
                             remoteCallActions.updateRemoteCall( {
                                 ...theCall,
-                                error : e.message || e
+                                error: e.message || e
                             } )
                         );
                     }
-                }
-                else
-                {
+                } else {
                     console.info( theCall.name, 'does not exist' );
                 }
             }

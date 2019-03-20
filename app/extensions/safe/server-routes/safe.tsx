@@ -1,34 +1,32 @@
-import logger from 'logger';
+import { logger } from '$Logger';
 import React from 'react';
-import Error from '@Components/PerusePages/Error';
+import Error from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
-import { getSafeBrowserAppObject } from '@Extensions/safe/safeBrowserApplication/theApplication';
+import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
-import { setWebFetchStatus } from '@Extensions/safe/actions/web_fetch_actions';
-import { addTab, closeTab } from '@Actions/tabs_actions';
-import errConsts from '@Extensions/safe/err-constants';
+import { setWebFetchStatus } from '$Extensions/safe/actions/web_fetch_actions';
+import { addTab, closeTab } from '$Actions/tabs_actions';
+import errConsts from '$Extensions/safe/err-constants';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import { SAFE } from '../constants';
 
 const safeRoute = store => ( {
-    method  : 'GET',
-    path    : /safe:\//,
-    handler : async ( request, res ) =>
-    {
+    method: 'GET',
+    path: /safe:\//,
+    handler: async ( request, res ) => {
         const link = request.url.substr( 1 ); // remove initial /
         const sendErrResponse = ( error, errSubHeader ) =>
             res.send(
                 ReactDOMServer.renderToStaticMarkup(
-                    <Error error={ { header: error, subHeader: errSubHeader } } />
+                    <Error error={{ header: error, subHeader: errSubHeader }} />
                 )
             );
 
-        try
-        {
+        try {
             const link = request.url.substr( 1 ); // remove initial /
 
             const app = getSafeBrowserAppObject() || {};
-            const headers = request.headers;
+            const { headers } = request;
             let isRangeReq = false;
             let multipartReq = false;
 
@@ -36,20 +34,17 @@ const safeRoute = store => ( {
             let end;
             let rangeArray;
 
-            logger.info( `Handling SAFE req: ${ link }` );
+            logger.info( `Handling SAFE req: ${link}` );
 
-            if ( !app )
-            {
+            if ( !app ) {
                 return res.send( 'SAFE not connected yet' );
             }
 
-            if ( headers.range )
-            {
+            if ( headers.range ) {
                 isRangeReq = true;
                 rangeArray = rangeStringToArray( headers.range );
 
-                if ( rangeArray.length > 1 )
-                {
+                if ( rangeArray.length > 1 ) {
                     multipartReq = true;
                 }
             }
@@ -57,51 +52,39 @@ const safeRoute = store => ( {
             // setup opts object
             const options = { headers };
 
-            if ( isRangeReq )
-            {
+            if ( isRangeReq ) {
                 options.range = rangeArray;
             }
             store.dispatch(
                 setWebFetchStatus( {
-                    fetching : true,
+                    fetching: true,
                     link,
-                    options  : JSON.stringify( options )
+                    options: JSON.stringify( options )
                 } )
             );
 
             let data = null;
-            try
-            {
+            try {
                 data = await app.webFetch( link, options );
-            }
-            catch ( error )
-            {
+            } catch ( error ) {
                 logger.error( 'SAFE Fetch error:', error.code, error.message );
                 store.dispatch(
                     setWebFetchStatus( { fetching: false, error, options: '' } )
                 );
-                const shouldTryAgain = error.code === errConsts.ERR_OPERATION_ABORTED.code
-                    || error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code
-                    || error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
-                if ( shouldTryAgain )
-                {
-                    const safeBrowserApp = store.getState().safeBrowserApp;
-                    if (
-                        safeBrowserApp.networkStatus
-                        === SAFE.NETWORK_STATE.CONNECTED
-                    )
-                    {
-                        store.getState().tabs.forEach( tab =>
-                        {
+                const shouldTryAgain =
+          error.code === errConsts.ERR_OPERATION_ABORTED.code ||
+          error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
+          error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
+                if ( shouldTryAgain ) {
+                    const { safeBrowserApp } = store.getState();
+                    if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED ) {
+                        store.getState().tabs.forEach( tab => {
                             logger.info( tab.url, link, link.includes( tab.url ) );
-                            if ( link.includes( tab.url ) && !tab.isActive )
-                            {
+                            if ( link.includes( tab.url ) && !tab.isActive ) {
                                 store.dispatch( closeTab( { index: tab.index } ) );
                             }
                         } );
-                        store.dispatch(
-                            addTab( { url: link, isActiveTab: true } )
-                        );
+                        store.dispatch( addTab( { url: link, isActiveTab: true } ) );
                     }
 
                     error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
@@ -111,38 +94,33 @@ const safeRoute = store => ( {
             }
             store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
-            if ( isRangeReq && multipartReq )
-            {
+            if ( isRangeReq && multipartReq ) {
                 const responseStr = generateResponseStr( data );
                 return res.send( responseStr );
             }
-            if ( isRangeReq )
-            {
+            if ( isRangeReq ) {
                 return res
                     .status( 206 )
                     .set( {
-                        'Content-Type'   : data.headers['Content-Type'],
-                        'Content-Range'  : data.headers['Content-Range'],
-                        'Content-Length' : data.headers['Content-Length']
+                        'Content-Type': data.headers['Content-Type'],
+                        'Content-Range': data.headers['Content-Range'],
+                        'Content-Length': data.headers['Content-Length']
                     } )
                     .send( data.body );
             }
 
             return res
                 .set( {
-                    'Content-Type'      : data.headers['Content-Type'],
-                    'Content-Range'     : data.headers['Content-Range'],
-                    'Transfer-Encoding' : 'chunked',
-                    'Accept-Ranges'     : 'bytes'
+                    'Content-Type': data.headers['Content-Type'],
+                    'Content-Range': data.headers['Content-Range'],
+                    'Transfer-Encoding': 'chunked',
+                    'Accept-Ranges': 'bytes'
                 } )
                 .send( data.body );
-        }
-        catch ( e )
-        {
+        } catch ( e ) {
             logger.error( e );
 
-            if ( e.code && e.code === -302 )
-            {
+            if ( e.code && e.code === -302 ) {
                 return res.status( 416 ).send( 'Requested Range Not Satisfiable' );
             }
             return sendErrResponse( e.message || e );

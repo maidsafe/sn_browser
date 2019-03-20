@@ -1,108 +1,94 @@
 /* eslint-disable func-names */
-import ui from 'reducers/ui';
-import { TYPES } from 'actions/ui_actions';
-import initialState from 'reducers/initialAppState';
+import ui from '$Reducers/ui';
+import { TYPES } from '$Actions/ui_actions';
+import initialState from '$Reducers/initialAppState';
 
-describe( 'notification reducer', () =>
-{
+describe( 'notification reducer', () => {
     const uiInitialState = {
-        windows : []
+        windows: []
     };
     const uiStateShow = {
-        windows : [ { windowId: 1, settingsMenuIsVisible: true } ]
+        windows: [{ windowId: 1, settingsMenuIsVisible: true }]
     };
     const uiStateHide = {
-        windows : [ { windowId: 1, settingsMenuIsVisible: false } ]
+        windows: [{ windowId: 1, settingsMenuIsVisible: false }]
     };
-    it( 'should return the initial state', () =>
-    {
+    it( 'should return the initial state', () => {
         expect( ui( undefined, {} ) ).toEqual( initialState.ui );
     } );
-    describe( 'UI_ADD_WINDOW', () =>
-    {
-        it( 'should handle add window to ui store', () =>
-        {
+    describe( 'UI_ADD_WINDOW', () => {
+        it( 'should handle add window to ui store', () => {
             expect(
                 ui(
                     { windows: [] },
                     {
-                        type    : TYPES.UI_ADD_WINDOW,
-                        payload : { windowId: 1 }
+                        type: TYPES.UI_ADD_WINDOW,
+                        payload: { windowId: 1 }
                     }
                 )
             ).toEqual( uiStateHide );
         } );
     } );
-    describe( 'SHOW_SETTINGS_MENU', () =>
-    {
-        it( 'should handle showing the settings menu', () =>
-        {
+    describe( 'SHOW_SETTINGS_MENU', () => {
+        it( 'should handle showing the settings menu', () => {
             expect(
                 ui(
-                    { windows: [ { windowId: 1, settingsMenuIsVisible: false } ] },
+                    { windows: [{ windowId: 1, settingsMenuIsVisible: false }] },
                     {
-                        type    : TYPES.SHOW_SETTINGS_MENU,
-                        payload : { windowId: 1 }
+                        type: TYPES.SHOW_SETTINGS_MENU,
+                        payload: { windowId: 1 }
                     }
                 )
             ).toEqual( uiStateShow );
         } );
     } );
 
-    describe( 'HIDE_SETTINGS_MENU', () =>
-    {
-        it( 'should handle showing the settings menu', () =>
-        {
+    describe( 'HIDE_SETTINGS_MENU', () => {
+        it( 'should handle showing the settings menu', () => {
             expect(
                 ui(
-                    { windows: [ { windowId: 1, settingsMenuIsVisible: true } ] },
+                    { windows: [{ windowId: 1, settingsMenuIsVisible: true }] },
                     {
-                        type    : TYPES.HIDE_SETTINGS_MENU,
-                        payload : { windowId: 1 }
+                        type: TYPES.HIDE_SETTINGS_MENU,
+                        payload: { windowId: 1 }
                     }
                 )
             ).toEqual( uiStateHide );
         } );
     } );
-    describe( 'UI_REMOVE_WINDOW', () =>
-    {
-        it( 'should handle remove window from ui store', () =>
-        {
+    describe( 'UI_REMOVE_WINDOW', () => {
+        it( 'should handle remove window from ui store', () => {
             expect(
                 ui(
-                    { windows: [ { windowId: 1, settingsMenuIsVisible: false } ] },
+                    { windows: [{ windowId: 1, settingsMenuIsVisible: false }] },
                     {
-                        type    : TYPES.UI_REMOVE_WINDOW,
-                        payload : { windowId: 1 }
+                        type: TYPES.UI_REMOVE_WINDOW,
+                        payload: { windowId: 1 }
                     }
                 )
             ).toEqual( uiInitialState );
         } );
     } );
-    describe( 'SELECT_ADDRESS_BAR', () =>
-    {
-        it( 'should handle setting address bar focus', () =>
-        {
+    describe( 'SELECT_ADDRESS_BAR', () => {
+        it( 'should handle setting address bar focus', () => {
             expect(
                 ui(
                     {},
                     {
-                        type : TYPES.SELECT_ADDRESS_BAR
+                        type: TYPES.SELECT_ADDRESS_BAR
                     }
                 )
             ).toEqual( { addressBarIsSelected: true } );
         } );
     } );
 
-    describe( 'BLUR_ADDRESS_BAR', () =>
-    {
-        it( 'should handle blurring address bar focus', () =>
-        {
+    describe( 'BLUR_ADDRESS_BAR', () => {
+        it( 'should handle blurring address bar focus', () => {
             expect(
                 ui(
                     {},
                     {
-                        type : TYPES.BLUR_ADDRESS_BAR
+                        type: TYPES.BLUR_ADDRESS_BAR
                     }
                 )
             ).toEqual( { addressBarIsSelected: false } );

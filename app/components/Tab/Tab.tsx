@@ -1,59 +1,57 @@
-
-import { remote, ipcRenderer } from "electron";
+import { remote, ipcRenderer } from 'electron';
 // import contextMenu from 'electron-context-menu';
-import React, { Component } from "react";
-import Error from "@Components/PerusePages/Error";
-import ReactDOMServer from "react-dom/server";
-import _ from "lodash";
+import React, { Component } from 'react';
+import Error from '$Components/PerusePages/Error';
+import ReactDOMServer from 'react-dom/server';
+import _ from 'lodash';
 import {
     addTrailingSlashIfNeeded,
     removeTrailingSlash,
     urlHasChanged
-} from "@Utils/urlHelpers";
-import path from "path";
-import { parse as parseURL } from "url";
-import logger from "logger";
-import { I18n } from "react-redux-i18n";
-import styles from "./tab.css";
+} from '$Utils/urlHelpers';
+import path from 'path';
+import { parse as parseURL } from 'url';
+import { logger } from '$Logger';
+import { I18n } from 'react-redux-i18n';
+import styles from './tab.css';
 
-const stdUrl = require( "url" );
+const stdUrl = require( 'url' );
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
 interface TabProps {
-    isActiveTab: boolean,
-    url: string,
-    index: number,
-    windowId: number,
-    closeTab: ( ...args: any[] ) => any,
-    updateTab: ( ...args: any[] ) => any,
-    addTab: ( ...args: any[] ) => any,
-    addNotification: ( ...args: any[] ) => any,
-    focusWebview: ( ...args: any[] ) => any,
-    shouldFocusWebview: boolean,
-    tabBackwards: ( ...args: any[] ) => any
+    isActiveTab: boolean;
+    url: string;
+    index: number;
+    windowId: number;
+    closeTab: ( ...args: Array<any> ) => any;
+    updateTab: ( ...args: Array<any> ) => any;
+    addTab: ( ...args: Array<any> ) => any;
+    addNotification: ( ...args: Array<any> ) => any;
+    focusWebview: ( ...args: Array<any> ) => any;
+    shouldFocusWebview: boolean;
+    tabBackwards: ( ...args: Array<any> ) => any;
 }
 interface TabState {
     browserState:
     | any
     | {
-        canGoBack: boolean,
-        canGoForward: boolean,
-        loading: boolean,
-        mountedAndReady: boolean,
-        url: string,
-        redirects: undefined[]
-    }
+        canGoBack: boolean;
+        canGoForward: boolean;
+        loading: boolean;
+        mountedAndReady: boolean;
+        url: string;
+        redirects: Array<undefined>;
+    };
 }
 export default class Tab extends Component<TabProps, TabState> {
     static defaultProps = {
         isActiveTab: false,
-        url: "http://nowhere.com"
+        url: 'http://nowhere.com'
     };
 
-    static getDerivedStateFromError( error )
-    {
-        // Update state so the next render will show the fallback UI.
+    static getDerivedStateFromError( error ) {
+    // Update state so the next render will show the fallback UI.
         return { hasError: true, theError: error };
     }
 
@@ -65,7 +63,7 @@ export default class Tab extends Component<TabProps, TabState> {
                 canGoForward: false,
                 loading: true,
                 mountedAndReady: false,
-                url: "",
+                url: '',
                 redirects: []
             }
         };
@@ -79,7 +77,6 @@ export default class Tab extends Component<TabProps, TabState> {
         this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
     }
 
-
     isDevToolsOpened = () => {
         const { webview } = this;
         if ( webview ) {
@@ -91,12 +88,12 @@ export default class Tab extends Component<TabProps, TabState> {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
         const { addTab, windowId } = this.props;
         // require here to avoid jest/electron remote issues
-        const contextMenu = require( "electron-context-menu" );
+        const contextMenu = require( 'electron-context-menu' );
         contextMenu( {
             window: webview,
             append: params => [
                 {
-                    label: "Open Link in New Tab.",
+                    label: 'Open Link in New Tab.',
                     visible: params.linkURL.length > 0,
                     click() {
                         addTab( {
@@ -113,8 +110,8 @@ export default class Tab extends Component<TabProps, TabState> {
     };
 
     webviewFocussed( event ) {
-        logger.info( "Webview focussed: Triggering click event on browser window" );
-        const fakeClick = new MouseEvent( "click", {
+        logger.info( 'Webview focussed: Triggering click event on browser window' );
+        const fakeClick = new MouseEvent( 'click', {
             view: window,
             bubbles: true,
             cancelable: true
@@ -127,56 +124,56 @@ export default class Tab extends Component<TabProps, TabState> {
         const callbackSetup = () => {
             if ( !webview ) {
                 logger.info(
-                    "No webview found so not doing: callback setup on window webview"
+                    'No webview found so not doing: callback setup on window webview'
                 );
                 return;
             }
             webview.addEventListener(
-                "did-start-loading",
+                'did-start-loading',
                 this.didStartLoading.bind( this )
             );
             webview.addEventListener(
-                "did-stop-loading",
+                'did-stop-loading',
                 this.didStopLoading.bind( this )
             );
             webview.addEventListener(
-                "did-finish-load",
+                'did-finish-load',
                 this.didFinishLoading.bind( this )
             );
-            webview.addEventListener( "crashed", this.onCrash.bind( this ) );
-            webview.addEventListener( "gpu-crashed", this.onGpuCrash.bind( this ) );
-            webview.addEventListener( "will-navigate", this.willNavigate.bind( this ) );
-            webview.addEventListener( "did-navigate", this.didNavigate.bind( this ) );
+            webview.addEventListener( 'crashed', this.onCrash.bind( this ) );
+            webview.addEventListener( 'gpu-crashed', this.onGpuCrash.bind( this ) );
+            webview.addEventListener( 'will-navigate', this.willNavigate.bind( this ) );
+            webview.addEventListener( 'did-navigate', this.didNavigate.bind( this ) );
             webview.addEventListener(
-                "did-navigate-in-page",
+                'did-navigate-in-page',
                 this.didNavigateInPage.bind( this )
             );
             webview.addEventListener(
-                "did-get-redirect-request",
+                'did-get-redirect-request',
                 this.didGetRedirectRequest.bind( this )
             );
             webview.addEventListener(
-                "page-title-updated",
+                'page-title-updated',
                 this.pageTitleUpdated.bind( this )
             );
             webview.addEventListener(
-                "page-favicon-updated",
+                'page-favicon-updated',
                 this.pageFaviconUpdated.bind( this )
             );
-            webview.addEventListener( "new-window", this.newWindow.bind( this ) );
-            webview.addEventListener( "did-fail-load", this.didFailLoad.bind( this ) );
+            webview.addEventListener( 'new-window', this.newWindow.bind( this ) );
+            webview.addEventListener( 'did-fail-load', this.didFailLoad.bind( this ) );
             webview.addEventListener(
-                "update-target-url",
+                'update-target-url',
                 this.updateTargetUrl.bind( this )
             );
-            webview.addEventListener( "focus", this.webviewFocussed.bind( this ) );
+            webview.addEventListener( 'focus', this.webviewFocussed.bind( this ) );
             this.domReady();
-            webview.removeEventListener( "dom-ready", callbackSetup );
+            webview.removeEventListener( 'dom-ready', callbackSetup );
         };
         this.buildMenu( webview );
-        webview.src = "about:blank";
-        webview.addEventListener( "dom-ready", callbackSetup );
-        webview.addEventListener( "dom-ready", () => {
+        webview.src = 'about:blank';
+        webview.addEventListener( 'dom-ready', callbackSetup );
+        webview.addEventListener( 'dom-ready', () => {
             this.didStopLoading();
         } );
     }
@@ -194,7 +191,7 @@ export default class Tab extends Component<TabProps, TabState> {
             shouldReload
         } = this.props;
         const { webview } = this;
-        logger.info( "Tab: did receive updated props" );
+        logger.info( 'Tab: did receive updated props' );
         if ( nextProps.shouldFocusWebview && isActiveTab ) {
             this.with( ( webview, webContents ) => {
                 webview.focus();
@@ -211,24 +208,24 @@ export default class Tab extends Component<TabProps, TabState> {
         }
         const nextId = nextProps.webId || {};
         const currentId = this.props.webId || {};
-        if ( nextId["@id"] !== currentId["@id"] ) {
+        if ( nextId['@id'] !== currentId['@id'] ) {
             if ( !webview ) return;
-            logger.info( "New WebID set for ", nextProps.url );
+            logger.info( 'New WebID set for ', nextProps.url );
             this.setCurrentWebId( nextProps.webId );
         }
         if ( nextProps.url && nextProps.url !== url ) {
             if ( !webview ) return;
             const webviewSrc = parseURL( webview.src );
             if (
-                webviewSrc.href === "" ||
-        `${webviewSrc.protocol}${webviewSrc.hostname}` === "about:blank" ||
+                webviewSrc.href === '' ||
+        `${webviewSrc.protocol}${webviewSrc.hostname}` === 'about:blank' ||
         urlHasChanged( webview.src, nextProps.url )
             ) {
                 this.loadURL( nextProps.url );
             }
         }
         if ( !shouldReload && nextProps.shouldReload ) {
-            logger.verbose( "Should reload URL: ", nextProps.url );
+            logger.verbose( 'Should reload URL: ', nextProps.url );
             this.reload();
             const tabUpdate = {
                 index,
@@ -251,7 +248,7 @@ export default class Tab extends Component<TabProps, TabState> {
         if ( !webview ) {
             return;
         }
-        if ( !webview.partition || webview.partition === "" ) {
+        if ( !webview.partition || webview.partition === '' ) {
             console.warn( `${this.props.index}: webview has empty partition` );
         }
         const browserState = {
@@ -269,27 +266,27 @@ export default class Tab extends Component<TabProps, TabState> {
         const webContents = webview.getWebContents();
         if ( !webContents || webContents.isDestroyed() ) return;
         if ( SHOW_DEVTOOLS ) {
-            webContents.openDevTools( { mode: "detach" } );
+            webContents.openDevTools( { mode: 'detach' } );
         }
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
-        if ( url && url !== "about:blank" ) {
-            this.loadURL( url ).catch( err => console.info( "err in loadurl", err ) );
+        if ( url && url !== 'about:blank' ) {
+            this.loadURL( url ).catch( err => console.info( 'err in loadurl', err ) );
             this.setCurrentWebId( null );
         }
     }
 
     onCrash = e => {
         console.error( e );
-        logger.error( "The webview crashed", e );
+        logger.error( 'The webview crashed', e );
     };
 
     onGpuCrash = e => {
         console.error( e );
-        logger.error( "The webview GPU crashed", e );
+        logger.error( 'The webview GPU crashed', e );
     };
 
     didStartLoading() {
-        logger.info( "webview started loading" );
+        logger.info( 'webview started loading' );
         const { updateTab, index } = this.props;
         const tabUpdate = {
             index,
@@ -297,7 +294,7 @@ export default class Tab extends Component<TabProps, TabState> {
         };
         this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
-        window.addEventListener( "focus", () => {
+        window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) => {
                 webview.focus();
                 webContents.focus();
@@ -333,15 +330,15 @@ export default class Tab extends Component<TabProps, TabState> {
                 }
             ` );
         };
-        if ( urlObj.hostname === "127.0.0.1" || urlObj.hostname === "localhost" ) {
+        if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' ) {
             try {
-                renderError( "Page Load Failed" );
+                renderError( 'Page Load Failed' );
             } catch ( scriptError ) {
                 logger.error( scriptError );
             }
             return;
         }
-        if ( err && err.errorDescription === "ERR_INVALID_URL" ) {
+        if ( err && err.errorDescription === 'ERR_INVALID_URL' ) {
             try {
                 renderError( `Invalid URL: ${url}` );
             } catch ( scriptError ) {
@@ -349,8 +346,8 @@ export default class Tab extends Component<TabProps, TabState> {
             }
             return;
         }
-        if ( err && err.errorDescription === "ERR_BLOCKED_BY_CLIENT" ) {
-            const header = "Detected HTTP/S protocol.";
+        if ( err && err.errorDescription === 'ERR_BLOCKED_BY_CLIENT' ) {
+            const header = 'Detected HTTP/S protocol.';
             const subHeader = `Redirecting ${url} to be opened by your default Web browser.`;
             const notification = {
                 reactNode: Error( { error: { header, subHeader } } )
@@ -361,13 +358,13 @@ export default class Tab extends Component<TabProps, TabState> {
             } else {
                 closeTab( { index, windowId } );
                 // add a fresh tab (should be only if no more tabs present)
-                addTab( { url: "about:blank", windowId, isActiveTab: true } );
+                addTab( { url: 'about:blank', windowId, isActiveTab: true } );
             }
         }
     }
 
     didStopLoading() {
-        logger.info( "Tab did stop loading" );
+        logger.info( 'Tab did stop loading' );
         const { updateTab, index, isActiveTab } = this.props;
         const tabUpdate = {
             index,
@@ -380,13 +377,13 @@ export default class Tab extends Component<TabProps, TabState> {
 
     didFinishLoading() {
         const { updateTab, index, url } = this.props;
-        logger.info( "Tab did finish loading" );
+        logger.info( 'Tab did finish loading' );
         const tabUpdate = {
             index,
             isLoading: false
         };
-        if ( url === "about:blank" ) {
-            tabUpdate.title = "";
+        if ( url === 'about:blank' ) {
+            tabUpdate.title = '';
         }
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
@@ -394,19 +391,19 @@ export default class Tab extends Component<TabProps, TabState> {
     }
 
     updateTargetUrl( url ) {
-        const linkRevealer = document.getElementById( "link_revealer" );
+        const linkRevealer = document.getElementById( 'link_revealer' );
         if ( url.url ) {
-            linkRevealer.setAttribute( "class", "reveal_link" );
+            linkRevealer.setAttribute( 'class', 'reveal_link' );
             linkRevealer.innerText = url.url;
         } else {
-            linkRevealer.setAttribute( "class", "no_display" );
-            linkRevealer.innerText = "";
+            linkRevealer.setAttribute( 'class', 'no_display' );
+            linkRevealer.innerText = '';
         }
     }
 
     pageTitleUpdated( e ) {
-        logger.info( "Webview: page title updated" );
-        const title = e.title;
+        logger.info( 'Webview: page title updated' );
+        const { title } = e;
         const { updateTab, index, isActiveTab } = this.props;
         const tabUpdate = {
             title,
@@ -416,7 +413,7 @@ export default class Tab extends Component<TabProps, TabState> {
     }
 
     pageFaviconUpdated( e ) {
-        logger.info( "Webview: page favicon updated: ", e );
+        logger.info( 'Webview: page favicon updated: ', e );
         const { updateTab, index } = this.props;
         const tabUpdate = {
             index,
@@ -429,7 +426,7 @@ export default class Tab extends Component<TabProps, TabState> {
         const { updateTab, index } = this.props;
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
-        logger.info( "webview did navigate" );
+        logger.info( 'webview did navigate' );
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
             this.updateBrowserState( { url, redirects: [url] } );
@@ -443,7 +440,7 @@ export default class Tab extends Component<TabProps, TabState> {
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
         logger.info(
-            "Webview: did navigate in page",
+            'Webview: did navigate in page',
             url,
             this.state.browserState.url
         );
@@ -461,16 +458,16 @@ export default class Tab extends Component<TabProps, TabState> {
         const { oldURL, newURL } = e;
         const prev = oldURL;
         const next = newURL;
-        logger.info( "Webview: did get redirect request" );
+        logger.info( 'Webview: did get redirect request' );
         if ( prev === this.state.browserState.url ) {
             this.updateBrowserState( { redirects: [next] } );
         }
     }
 
     willNavigate( e ) {
-        logger.info( "webview will navigate", e );
+        logger.info( 'webview will navigate', e );
         if ( this.isFrozen() ) {
-            logger.verbose( "Webview is frozen." );
+            logger.verbose( 'Webview is frozen.' );
             return;
         }
         const { url } = e;
@@ -488,7 +485,7 @@ export default class Tab extends Component<TabProps, TabState> {
         }
         this.lastNavigationUrl = url;
         this.lastNavigationTimeStamp = e.timeStamp;
-        const index = this.props.index;
+        const { index } = this.props;
         this.props.updateTab( { index, url } );
         if ( this.props.isActiveTab ) {
             this.props.updateTab( { windowId, url } );
@@ -500,7 +497,7 @@ export default class Tab extends Component<TabProps, TabState> {
         const { updateTab, index, webId } = this.props;
         const { webview } = this;
         const theWebId = newWebId || webId;
-        logger.info( "Setting currentWebid in tab" );
+        logger.info( 'Setting currentWebid in tab' );
         if ( !webview || !theWebId ) return;
         const setupEventEmitter = `
             webIdUpdater = () =>
@@ -552,14 +549,14 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     newWindow( e ) {
         const { addTab, windowId } = this.props;
         const { url } = e;
-        logger.info( "Tab: NewWindow event triggered for url: ", url );
-        const activateTab = e.disposition == "foreground-tab";
+        logger.info( 'Tab: NewWindow event triggered for url: ', url );
+        const activateTab = e.disposition == 'foreground-tab';
         addTab( { url, isActiveTab: activateTab, windowId } );
         this.goForward();
     }
 
     isFrozen( e ) {
-        logger.info( "Webview is frozen..." );
+        logger.info( 'Webview is frozen...' );
         const { index } = this.props;
         const frozen = !index;
         // const frozen = staticTabData[index] || !index
@@ -578,7 +575,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     openDevTools() {
-        this.with( ( wv, wc ) => wc.openDevTools( { mode: "detach" } ) );
+        this.with( ( wv, wc ) => wc.openDevTools( { mode: 'detach' } ) );
     }
 
     closeDevTools() {
@@ -590,7 +587,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     reload() {
-        logger.info( "webview reloading" );
+        logger.info( 'webview reloading' );
         this.with( wv => {
             wv.reload();
         } );
@@ -602,7 +599,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
 
     goForward() {
         console.warn(
-            "Electron bug preventing goForward: https://github.com/electron/electron/issues/9999"
+            'Electron bug preventing goForward: https://github.com/electron/electron/issues/9999'
         );
         this.with( wv => wv.goForward() );
     }
@@ -610,7 +607,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     loadURL = async input => {
         const { webview } = this;
         const url = addTrailingSlashIfNeeded( input );
-        logger.info( "Webview: loading url:", url );
+        logger.info( 'Webview: loading url:', url );
         // if ( !urlHasChanged( this.state.browserState.url, url) )
         // {
         //     logger.info( 'not loading URL as it has not changed');
@@ -626,24 +623,30 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
 
     render() {
         const { isActiveTab } = this.props;
-        const preloadFile = remote ? remote.getGlobal( "preloadFile" ) : "";
+        const preloadFile = remote ? remote.getGlobal( 'preloadFile' ) : '';
         const injectPath = preloadFile; // js we'll be chucking in
         let moddedClass = styles.tab;
         if ( isActiveTab ) {
             moddedClass = styles.activeTab;
         }
 
-        if ( this.state && this.state.hasError )
-        {
+        if ( this.state && this.state.hasError ) {
             const err = this.state.theError;
-            const stringError =JSON.stringify( err, ["message", "arguments", "type", "name"] );
+            const stringError = JSON.stringify( err, [
+                'message',
+                'arguments',
+                'type',
+                'name'
+            ] );
             logger.error( 'Error from Tab.jsx', err );
             logger.error( stringError );
             // You can render any custom fallback UI
             return (
                 <div className={moddedClass}>
                     <h4>Something went wrong with this tab.</h4>
-                    <span>{JSON.stringify( err, ["message", "arguments", "type", "name"] )}</span>
+                    <span>
+                        {JSON.stringify( err, ['message', 'arguments', 'type', 'name'] )}
+                    </span>
                 </div>
             );
         }
@@ -651,7 +654,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         return (
             <div className={moddedClass}>
                 <webview
-                    style={{ height: "100%", display: "flex", flex: "1 1" }}
+                    style={{ height: '100%', display: 'flex', flex: '1 1' }}
                     tabIndex="0"
                     preload={injectPath}
                     partition="persist:safe-tab"

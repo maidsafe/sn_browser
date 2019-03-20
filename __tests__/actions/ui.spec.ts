@@ -1,68 +1,58 @@
-import * as ui from 'actions/ui_actions';
+import * as ui from '$Actions/ui_actions';
 
-describe( 'ui actions', () =>
-{
-    it( 'should have types', () =>
-    {
+describe( 'ui actions', () => {
+    it( 'should have types', () => {
         expect( ui.TYPES ).toBeDefined();
     } );
-    it( 'should add window to UI store', () =>
-    {
+    it( 'should add window to UI store', () => {
         const expectedAction = {
-            type : ui.TYPES.UI_ADD_WINDOW
+            type: ui.TYPES.UI_ADD_WINDOW
         };
         expect( ui.uiAddWindow() ).toEqual( expectedAction );
     } );
-    it( 'should show settings menu', () =>
-    {
+    it( 'should show settings menu', () => {
         const expectedAction = {
-            type : ui.TYPES.SHOW_SETTINGS_MENU
+            type: ui.TYPES.SHOW_SETTINGS_MENU
         };
         expect( ui.showSettingsMenu() ).toEqual( expectedAction );
     } );
 
-    it( 'should hide settings menu', () =>
-    {
+    it( 'should hide settings menu', () => {
         const expectedAction = {
-            type : ui.TYPES.HIDE_SETTINGS_MENU
+            type: ui.TYPES.HIDE_SETTINGS_MENU
         };
         expect( ui.hideSettingsMenu() ).toEqual( expectedAction );
     } );
-    it( 'should remove window from UI store', () =>
-    {
+    it( 'should remove window from UI store', () => {
         const expectedAction = {
-            type : ui.TYPES.UI_REMOVE_WINDOW
+            type: ui.TYPES.UI_REMOVE_WINDOW
         };
         expect( ui.uiRemoveWindow() ).toEqual( expectedAction );
     } );
-    it( 'should set addressbar selected', () =>
-    {
+    it( 'should set addressbar selected', () => {
         const expectedAction = {
-            type : ui.TYPES.SELECT_ADDRESS_BAR
+            type: ui.TYPES.SELECT_ADDRESS_BAR
         };
         expect( ui.selectAddressBar() ).toEqual( expectedAction );
     } );
 
-    it( 'should set addressbar deselected', () =>
-    {
+    it( 'should set addressbar deselected', () => {
         const expectedAction = {
-            type : ui.TYPES.DESELECT_ADDRESS_BAR
+            type: ui.TYPES.DESELECT_ADDRESS_BAR
         };
         expect( ui.deselectAddressBar() ).toEqual( expectedAction );
     } );
 
-    it( 'should clear a notification', () =>
-    {
+    it( 'should clear a notification', () => {
         const expectedAction = {
-            type : ui.TYPES.BLUR_ADDRESS_BAR
+            type: ui.TYPES.BLUR_ADDRESS_BAR
         };
         expect( ui.blurAddressBar() ).toEqual( expectedAction );
     } );
 
-    it( 'should resetStore', () =>
-    {
+    it( 'should resetStore', () => {
         const expectedAction = {
-            type : ui.TYPES.RESET_STORE
+            type: ui.TYPES.RESET_STORE
         };
         expect( ui.resetStore() ).toEqual( expectedAction );
     } );

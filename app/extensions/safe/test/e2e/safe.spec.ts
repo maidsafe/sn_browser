@@ -8,7 +8,7 @@ import {
 import {
     createSafeApp,
     createRandomDomain
-} from '@Extensions/safe/test/e2e/lib/safe-helpers';
+} from '$Extensions/safe/test/e2e/lib/safe-helpers';
 import {
     BROWSER_UI,
     WAIT_FOR_EXIST_TIMEOUT,
@@ -25,8 +25,7 @@ import {
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 40000;
 
-describe( 'SAFE network webFetch operation', async () =>
-{
+describe( 'SAFE network webFetch operation', async () => {
     console.warn( `
 **************************************
 These tests use native node to manipulate mock.
@@ -35,31 +34,27 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
 **************************************
         ` );
     const appInfo = {
-        id     : 'net.peruse.test',
-        name   : 'SAFE App Test',
-        vendor : 'Peruse'
+        id: 'net.peruse.test',
+        name: 'SAFE App Test',
+        vendor: 'Peruse'
     };
     let app;
 
-    beforeEach( async () =>
-    {
+    beforeEach( async () => {
         app = setupSpectronApp( '--preload' );
 
         await beforeAllTests( app );
     } );
 
-    afterEach( async () =>
-    {
+    afterEach( async () => {
         await afterAllTests( app );
     } );
 
-    test( 'window loaded', async () =>
-    {
+    test( 'window loaded', async () => {
         expect( await windowLoaded( app ) ).toBeTruthy();
     } );
 
-    it( 'populates the DOM api in the tab window:', async () =>
-    {
+    it( 'populates the DOM api in the tab window:', async () => {
         expect.assertions( 5 );
         await setClientToMainBrowserWindow( app );
 
@@ -105,25 +100,21 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
     //     // expect( parsedUrl.protocol ).toBe( 'safe:' );
     // } );
 
-    if ( !isTestingPackagedApp )
-    {
-        it( 'fetches content from mock network', async () =>
-        {
+    if ( !isTestingPackagedApp ) {
+        it( 'fetches content from mock network', async () => {
             const safeApp = await createSafeApp( appInfo );
             await safeApp.auth.loginForTest();
 
             expect.assertions( 4 );
-            const content = `hello world, on ${ Math.round(
-                Math.random() * 100000
-            ) }`;
+            const content = `hello world, on ${Math.round( Math.random() * 100000 )}`;
             const domain = await createRandomDomain( content, '', '', safeApp );
-            const data = await safeApp.webFetch( `safe://${ domain }` );
+            const data = await safeApp.webFetch( `safe://${domain}` );
 
             expect( data.body.toString() ).toBe( content );
 
             const { client } = app;
             const tabIndex = await newTab( app );
-            await navigateTo( app, `safe://${ domain }` );
+            await navigateTo( app, `safe://${domain}` );
             await delay( 3500 );
 
             await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
@@ -158,41 +149,31 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
     // }
 
     // if( travisOS !== 'linux' )
-    if ( process.platform === 'linux' )
-    {
-        // no more as these depend on sysUri registration
+    if ( process.platform === 'linux' ) {
+    // no more as these depend on sysUri registration
         return;
     }
 
-    test( 'triggers a save for the window state', async () =>
-    {
+    test( 'triggers a save for the window state', async () => {
         expect.assertions( 1 );
 
         const { client } = app;
         await setClientToMainBrowserWindow( app );
         await delay( 1500 );
 
-        await client.waitForExist(
-            BROWSER_UI.SPECTRON_AREA,
-            WAIT_FOR_EXIST_TIMEOUT
-        );
+        await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
         await delay( 4500 );
         await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
 
         await delay( 4500 );
-        await client.waitForExist(
-            BROWSER_UI.NOTIFIER_TEXT,
-            WAIT_FOR_EXIST_TIMEOUT
-        );
+        await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
         const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
         expect( note ).toBe( 'Unable to connect to the network. Unauthorised' );
     } );
 
-    if ( nodeEnv === 'dev' )
-    {
-        it( 'shows error in UI if URL resource does not exist', async () =>
-        {
+    if ( nodeEnv === 'dev' ) {
+        it( 'shows error in UI if URL resource does not exist', async () => {
             expect.assertions( 1 );
             const { client } = app;
             await delay( 10000 );
@@ -213,10 +194,8 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
         } );
     }
 
-    if ( isTestingPackagedApp && nodeEnv === 'dev' )
-    {
-        it( 'preloaded with API playground for development', async () =>
-        {
+    if ( isTestingPackagedApp && nodeEnv === 'dev' ) {
+        it( 'preloaded with API playground for development', async () => {
             expect.assertions( 2 );
             const { client } = app;
             await delay( 10000 );

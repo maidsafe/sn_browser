@@ -1,13 +1,13 @@
 import express from 'express';
-import { CONFIG, startedRunningProduction } from '@Constants';
-import logger from 'logger';
+import { CONFIG, startedRunningProduction } from '$Constants';
+import { logger } from '$Logger';
 
 const app = express();
 
-const setupServer = () =>
-{
+const setupServer = () => {
     app.listen( CONFIG.PORT, () =>
-        logger.info( `Peruse internal server listening on port ${ CONFIG.PORT }!` ) );
+        logger.info( `Peruse internal server listening on port ${CONFIG.PORT}!` )
+    );
 
     return app;
 };

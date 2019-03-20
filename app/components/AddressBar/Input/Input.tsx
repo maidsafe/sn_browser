@@ -1,11 +1,10 @@
-
 import React, { Component } from 'react';
 import { remote } from 'electron';
-import { CLASSES } from '@Constants';
+import { CLASSES } from '$Constants';
 import { I18n } from 'react-redux-i18n';
-import logger from 'logger';
-import extendComponent from '@Utils/extendComponent';
-import { wrapAddressBarInput } from '@Extensions/components';
+import { logger } from '$Logger';
+import extendComponent from '$Utils/extendComponent';
+import { wrapAddressBarInput } from '$Extensions/components';
 import { Input } from 'antd';
 import 'antd/lib/input/style';
 
@@ -13,10 +12,10 @@ interface AddressBarInputProps {
     address?: string;
     isSelected?: boolean;
     windowId: number;
-    onBlur: ( ...args: any[] ) => any;
-    onSelect: ( ...args: any[] ) => any;
-    onFocus: ( ...args: any[] ) => any;
-    updateTab: ( ...args: any[] ) => any;
+    onBlur: ( ...args: Array<any> ) => any;
+    onSelect: ( ...args: Array<any> ) => any;
+    onFocus: ( ...args: Array<any> ) => any;
+    updateTab: ( ...args: Array<any> ) => any;
 }
 interface AddressBarInputState {
     address: any;
@@ -30,50 +29,43 @@ interface AddressBarInputState {
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class AddressBarInput extends Component<{}, AddressBarInputState>
-{
+class AddressBarInput extends Component<{}, AddressBarInputState> {
     static defaultProps = {
-        address    : '',
-        isSelected : false,
-        editingUrl : false
+        address: '',
+        isSelected: false,
+        editingUrl: false
     };
 
-    constructor( props )
-    {
+    constructor( props ) {
         super( props );
         this.handleChange = this.handleChange.bind( this );
         this.handleKeyPress = this.handleKeyPress.bind( this );
         this.state = {
-            address : props.address
+            address: props.address
         };
     }
 
-    componentWillReceiveProps( nextProps )
-    {
+    componentWillReceiveProps( nextProps ) {
         if (
-            nextProps.address !== this.props.address
-      && nextProps.address !== this.state.address
-        )
-        {
+            nextProps.address !== this.props.address &&
+      nextProps.address !== this.state.address
+        ) {
             this.setState( { address: nextProps.address, editingUrl: false } );
         }
         if (
-            nextProps.isSelected
-      && !this.props.isSelected
-      && !this.state.editingUrl
-      && this.addressInput
-        )
-        {
+            nextProps.isSelected &&
+      !this.props.isSelected &&
+      !this.state.editingUrl &&
+      this.addressInput
+        ) {
             this.addressInput.select();
         }
     }
 
-    isInFocussedWindow = () =>
-    {
-        const BrowserWindow = remote.BrowserWindow;
+    isInFocussedWindow = () => {
+        const { BrowserWindow } = remote;
         const focusedWindow = BrowserWindow.getFocusedWindow();
-        if ( !focusedWindow )
-        {
+        if ( !focusedWindow ) {
             return false;
         }
         const focussedWindowId = BrowserWindow.getFocusedWindow().id;
@@ -81,80 +73,71 @@ class AddressBarInput extends Component<{}, AddressBarInputState>
         return focussedWindowId === currentWindowId;
     };
 
-    handleChange( event )
-    {
+    handleChange( event ) {
         const { onSelect } = this.props;
         this.setState( { editingUrl: true, address: event.target.value } );
-        if ( onSelect )
-        {
+        if ( onSelect ) {
             onSelect();
         }
     }
 
-    handleFocus = event =>
-    {
+    handleFocus = event => {
         const { onFocus } = this.props;
         onFocus();
         event.target.select();
     };
 
-    handleBlur = () =>
-    {
+    handleBlur = () => {
         const { onBlur } = this.props;
         onBlur();
     };
 
-    handleKeyPress( event )
-    {
+    handleKeyPress( event ) {
         const { windowId } = this.props;
-        if ( event.key !== 'Enter' )
-        {
+        if ( event.key !== 'Enter' ) {
             return;
         }
         const input = event.target.value;
         this.props.updateTab( { url: input, windowId } );
     }
 
-    handleClick = () =>
-    {
+    handleClick = () => {
         const { onSelect, isSelected } = this.props;
-        if ( isSelected )
-        {
+        if ( isSelected ) {
             this.setState( { editingUrl: true } );
             onSelect();
         }
     };
 
-    render()
-    {
+    render() {
         const { isSelected, addonBefore, addonAfter } = this.props;
         const { address } = this.state;
         return (
             <Input
-                className={ CLASSES.ADDRESS_INPUT }
-                aria-label={ I18n.t( 'aria.address_bar' ) }
-                addonBefore={ ( addonBefore && addonBefore.length ) ? addonBefore : undefined }
-                addonAfter={ ( addonAfter && addonAfter.length ) ? addonAfter : undefined }
+                className={CLASSES.ADDRESS_INPUT}
+                aria-label={I18n.t( 'aria.address_bar' )}
+                addonBefore={
+                    addonBefore && addonBefore.length ? addonBefore : undefined
+                }
+                addonAfter={addonAfter && addonAfter.length ? addonAfter : undefined}
                 size="large"
-                value={ address }
+                value={address}
                 type="text"
-                ref={ input =>
-                {
+                ref={input => {
                     this.addressInput = input;
                     if (
-                        isSelected
-            && !this.state.editingUrl
-            && this.isInFocussedWindow()
-            && input
-                    )
-                    {
+                        isSelected &&
+            !this.state.editingUrl &&
+            this.isInFocussedWindow() &&
+            input
+                    ) {
                         input.select();
                     }
-                } }
-                onFocus={ this.handleFocus }
-                onBlur={ this.handleBlur }
-                onChange={ this.handleChange }
-                onKeyPress={ this.handleKeyPress }
+                }}
+                onFocus={this.handleFocus}
+                onBlur={this.handleBlur}
+                onChange={this.handleChange}
+                onKeyPress={this.handleKeyPress}
             />
         );
     }

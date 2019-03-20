@@ -1,25 +1,25 @@
 /* eslint-disable */
-import { remote } from "electron";
-import url from "url";
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import styles from "./tabBar.css";
-import MdClose from "react-icons/lib/md/close";
-import MdAdd from "react-icons/lib/md/add";
-import logger from "logger";
-import { isInternalPage } from "@Utils/urlHelpers";
-import { CLASSES, INTERNAL_PAGES } from "@Constants";
-import { Column, Spinner, Row } from "nessie-ui";
+import { remote } from 'electron';
+import url from 'url';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import styles from './tabBar.css';
+import MdClose from 'react-icons/lib/md/close';
+import MdAdd from 'react-icons/lib/md/add';
+import { logger } from '$Logger';
+import { isInternalPage } from '$Utils/urlHelpers';
+import { CLASSES, INTERNAL_PAGES } from '$Constants';
+import { Column, Spinner, Row } from 'nessie-ui';
 type TabBarProps = {
-  tabInFocus: number,
-  tabs: any[],
-  setActiveTab: (...args: any[]) => any,
-  addTab: (...args: any[]) => any,
-  closeTab: (...args: any[]) => any,
-  selectAddressBar: (...args: any[]) => any
+  tabInFocus: number;
+  tabs: any[];
+  setActiveTab: (...args: any[]) => any;
+  addTab: (...args: any[]) => any;
+  closeTab: (...args: any[]) => any;
+  selectAddressBar: (...args: any[]) => any;
 };
 type TabBarState = {
-  tabInFocus: number
+  tabInFocus: number;
 };
 export default class TabBar extends Component<TabBarProps, TabBarState> {
   static defaultProps = {
@@ -49,7 +49,7 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
     const { windowId } = this.props;
     event.stopPropagation();
     const { addTab, selectAddressBar } = this.props;
-    const newTabUrl = "about:blank";
+    const newTabUrl = 'about:blank';
     event.preventDefault();
     addTab({
       url: newTabUrl,
@@ -67,11 +67,11 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
         const urlObj = url.parse(tab.url);
         switch (urlObj.host) {
           case INTERNAL_PAGES.HISTORY: {
-            title = "History";
+            title = 'History';
             break;
           }
           case INTERNAL_PAGES.BOOKMARKS: {
-            title = "Bookmarks";
+            title = 'Bookmarks';
             break;
           }
           default: {
@@ -107,7 +107,7 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
               )}
             </Column>
             <Column className={styles.tabText} align="left">
-              {title || "New Tab"}
+              {title || 'New Tab'}
             </Column>
             <Column align="right" className={styles.favicon}>
               <MdClose
@@ -126,8 +126,8 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
       <div
         className={[
           styles.container,
-          process.platform === "darwin" ? styles.containerMac : ""
-        ].join(" ")}
+          process.platform === 'darwin' ? styles.containerMac : ''
+        ].join(' ')}
       >
         <div className={styles.tabBar}>
           {this.getTabs()}

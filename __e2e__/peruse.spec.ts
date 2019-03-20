@@ -20,32 +20,24 @@ import {
 jest.unmock( 'electron' );
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 
-
-describe( 'main window', () =>
-{
+describe( 'main window', () => {
     let app;
 
-
-    beforeAll( async () =>
-    {
+    beforeAll( async () => {
         app = setupSpectronApp( '--debug' );
         await beforeAllTests( app );
     } );
 
-    afterEach( async () =>
-    {
+    afterEach( async () => {
         await delay( 2000 );
     } );
 
-    afterAll( async () =>
-    {
+    afterAll( async () => {
         await afterAllTests( app );
     } );
 
-
-    it( 'accessibility audit', async () =>
-    {
-        // expect.assertions( 1 );
+    it( 'accessibility audit', async () => {
+    // expect.assertions( 1 );
         const { client } = app;
 
         await setClientToMainBrowserWindow( app );
@@ -54,5 +46,4 @@ describe( 'main window', () =>
         console.info( audit );
         expect( audit.failed ).toBe( false );
     } );
-
 } );

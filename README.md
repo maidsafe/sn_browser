@@ -81,7 +81,7 @@ There are a few build commands for various situations:
 
 ### Logging
 
-Via electron-log: `import logger from 'logger'`, and you can `logger.info('things')`.
+Via electron-log: `import { logger } from '$Logger'`, and you can `logger.info('things')`.
 
 Logs are printed to both render console and stdout. Logs are also written to a log file per system.
 

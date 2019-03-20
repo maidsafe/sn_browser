@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import AddressBarInput from 'components/AddressBar/Input';
+import AddressBarInput from '$Components/AddressBar/Input';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
@@ -19,131 +19,123 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
-describe( 'AddressBarInput', () =>
-{
+describe( 'AddressBarInput', () => {
     let wrapper;
     let instance;
     let props;
     let store;
 
-    beforeEach( () =>
-    {
+    beforeEach( () => {
         props = {
-            windowId        : 1,
-            address         : 'about:blank',
-            isSelected      : false,
-            isBookmarked    : false,
-            experimentsEnabled : false,
-            addBookmark     : jest.fn(),
-            removeBookmark  : jest.fn(),
-            tabBackwards    : jest.fn(),
-            tabForwards     : jest.fn(),
-            onBlur          : jest.fn(),
-            onSelect        : jest.fn(),
-            onFocus         : jest.fn(),
-            activeTab       : { isLoading: false },
-            updateTab       : jest.fn()
+            windowId: 1,
+            address: 'about:blank',
+            isSelected: false,
+            isBookmarked: false,
+            experimentsEnabled: false,
+            addBookmark: jest.fn(),
+            removeBookmark: jest.fn(),
+            tabBackwards: jest.fn(),
+            tabForwards: jest.fn(),
+            onBlur: jest.fn(),
+            onSelect: jest.fn(),
+            onFocus: jest.fn(),
+            activeTab: { isLoading: false },
+            updateTab: jest.fn()
         };
     } );
 
-    describe( 'constructor( props )', () =>
-    {
-        beforeEach( () =>
-        {
+    describe( 'constructor( props )', () => {
+        beforeEach( () => {
             store = mockStore( props );
 
             wrapper = shallow(
-                <Provider store={ store }>
-                    <AddressBarInput { ...props } />
+                <Provider store={store}>
+                    <AddressBarInput {...props} />
                 </Provider>
             ).dive();
             instance = wrapper.instance();
         } );
 
-        it( 'should have name AddressBarInput', () =>
-        {
+        it( 'should have name AddressBarInput', () => {
             expect( instance.constructor.name ).toMatch( 'Input' );
         } );
     } );
 
-    describe( 'events', () =>
-    {
-        beforeEach( () =>
-        {
+    describe( 'events', () => {
+        beforeEach( () => {
             store = mockStore( props );
 
             wrapper = mount(
-                <Provider store={ store } >
-                    <AddressBarInput { ...props } />
-                </Provider > );
+                <Provider store={store}>
+                    <AddressBarInput {...props} />
+                </Provider>
+            );
             instance = wrapper.instance();
         } );
 
-        afterEach( () =>
-        {
+        afterEach( () => {
             wrapper.unmount();
         } );
 
-        it( 'check on onBlur,handleBlur is called', () =>
-        {
+        it( 'check on onBlur,handleBlur is called', () => {
             const handleBlur = jest.fn();
             wrapper = mount(
-                <Provider store={ store } >
-                    <AddressBarInput { ...props } onBlur={ handleBlur } />
-                </Provider > );
+                <Provider store={store}>
+                    <AddressBarInput {...props} onBlur={handleBlur} />
+                </Provider>
+            );
             const input = wrapper.find( 'Input' );
             input.simulate( 'blur' );
             expect( handleBlur ).toHaveBeenCalled();
         } );
 
-        it( 'check on onBlur,onBlur() is called', () =>
-        {
+        it( 'check on onBlur,onBlur() is called', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'blur' );
             expect( props.onBlur ).toHaveBeenCalled();
         } );
 
-        it( 'check on onFocus,handleFocus is called', () =>
-        {
+        it( 'check on onFocus,handleFocus is called', () => {
             const handleFocus = jest.fn();
             wrapper = mount(
-                <Provider store={ store } >
-                    <AddressBarInput { ...props } onFocus={ handleFocus } />
-                </Provider > );
+                <Provider store={store}>
+                    <AddressBarInput {...props} onFocus={handleFocus} />
+                </Provider>
+            );
             instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
             expect( handleFocus ).toHaveBeenCalled();
         } );
 
-        it( 'check on onFocus,onFocus() is called', () =>
-        {
+        it( 'check on onFocus,onFocus() is called', () => {
             wrapper = mount(
-                <Provider store={ store } >
-                    <AddressBarInput { ...props } />
-                </Provider > );
+                <Provider store={store}>
+                    <AddressBarInput {...props} />
+                </Provider>
+            );
             instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
             expect( props.onFocus ).toHaveBeenCalled();
         } );
 
-        it( 'check on onKeyPress if updateTab is called', () =>
-        {
+        it( 'check on onKeyPress if updateTab is called', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
             expect( props.updateTab ).toHaveBeenCalled();
         } );
 
-        it( 'check on onKeyPress if updateTab is called with params', () =>
-        {
+        it( 'check on onKeyPress if updateTab is called with params', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateTab ).toHaveBeenCalledWith( { url: 'about:blank', windowId: 1 } );
+            expect( props.updateTab ).toHaveBeenCalledWith( {
+                url: 'about:blank',
+                windowId: 1
+            } );
         } );
 
-        it( 'check on onChange, if onSelect() is called', () =>
-        {
+        it( 'check on onChange, if onSelect() is called', () => {
             const input = wrapper.find( 'Input' );
             input.value = '123456';
             input.simulate( 'change' );

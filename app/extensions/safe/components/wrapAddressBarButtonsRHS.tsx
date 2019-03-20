@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { CLASSES } from "@Constants";
-import { Row, Col, Switch } from "antd";
-import "antd/lib/row/style";
-import "antd/lib/col/style";
-import "antd/lib/switch/style";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as SafeBrowserAppActions from "@Extensions/safe/actions/safeBrowserApplication_actions";
-import styles from "./wrapAddressBarButtons.css";
+import React, { Component } from 'react';
+import { CLASSES } from '$Constants';
+import { Row, Col, Switch } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/switch/style';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
+import styles from './wrapAddressBarButtons.css';
 
 function mapStateToProps( state ) {
     return {
@@ -87,7 +87,7 @@ const wrapAddressBarButtonsRHS = (
                             size="small"
                             aria-label="settings-menu"
                             tabIndex={0}
-                            style={{ float: "right" }}
+                            style={{ float: 'right' }}
                             checked={experimentsEnabled}
                             onChange={this.handleExperimentalToggleClick}
                         />

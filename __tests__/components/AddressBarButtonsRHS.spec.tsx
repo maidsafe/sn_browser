@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import AddressBarButtonsRHS from 'components/AddressBar/ButtonsRHS';
+import AddressBarButtonsRHS from '$Components/AddressBar/ButtonsRHS';
 
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
@@ -21,50 +21,44 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
-jest.mock( '@Utils/extendComponent' )
+jest.mock( '$Utils/extendComponent' );
 
-
-describe( 'AddressBarButtonsRHS', () =>
-{
+describe( 'AddressBarButtonsRHS', () => {
     let wrapper;
     let instance;
     let props;
     let store;
 
-    beforeEach( () =>
-    {
+    beforeEach( () => {
         props = {
-            windowId        : 1,
-            address         : 'about:blank',
-            isSelected      : false,
-            isBookmarked    : false,
-            addBookmark     : jest.fn(),
-            removeBookmark  : jest.fn(),
-            tabBackwards    : jest.fn(),
-            tabForwards     : jest.fn(),
-            onBlur          : jest.fn(),
-            onSelect        : jest.fn(),
-            onFocus         : jest.fn(),
-            activeTab       : { isLoading: false }
+            windowId: 1,
+            address: 'about:blank',
+            isSelected: false,
+            isBookmarked: false,
+            addBookmark: jest.fn(),
+            removeBookmark: jest.fn(),
+            tabBackwards: jest.fn(),
+            tabForwards: jest.fn(),
+            onBlur: jest.fn(),
+            onSelect: jest.fn(),
+            onFocus: jest.fn(),
+            activeTab: { isLoading: false }
         };
     } );
 
-    describe( 'constructor( props )', () =>
-    {
-        beforeEach( () =>
-        {
+    describe( 'constructor( props )', () => {
+        beforeEach( () => {
             store = mockStore( props );
 
             wrapper = shallow(
-                <Provider store={ store }>
-                    <AddressBarButtonsRHS { ...props } />
+                <Provider store={store}>
+                    <AddressBarButtonsRHS {...props} />
                 </Provider>
             ).dive();
             instance = wrapper.instance();
         } );
 
-        it( 'should have name AddressBarButtonsRHS', () =>
-        {
+        it( 'should have name AddressBarButtonsRHS', () => {
             expect( instance.constructor.name ).toMatch( 'ButtonsRHS' );
         } );
     } );

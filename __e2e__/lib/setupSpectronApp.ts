@@ -14,12 +14,10 @@ export const isUnpacked = process.env.IS_UNPACKED || false;
 export const isTestingPackagedApp = process.env.IS_PACKED || false;
 export const nodeEnv = process.env.NODE_ENV;
 
-export const setupSpectronApp = extraArgs =>
-{
+export const setupSpectronApp = extraArgs => {
     let bonusArgs = extraArgs;
-    if ( !Array.isArray( bonusArgs ) )
-    {
-        bonusArgs = [ extraArgs ];
+    if ( !Array.isArray( bonusArgs ) ) {
+        bonusArgs = [extraArgs];
     }
 
     const isMac = process.platform === 'darwin';
@@ -38,47 +36,43 @@ export const setupSpectronApp = extraArgs =>
 E2E tests run against a packaged app. If you haven\'t repackaged your app for testing, your changes won\'t show up!
 *****************************************************************************************************************
 
-is testing packaged app: ${ isTestingPackagedApp }
+is testing packaged app: ${isTestingPackagedApp}
         ` );
 
     const app = new Application( {
-        path : isTestingPackagedApp ? packedLocation : electron,
+        path: isTestingPackagedApp ? packedLocation : electron,
         // path : packedLocation,
-        args : [
+        args: [
             isTestingPackagedApp
                 ? ''
                 : path.join( __dirname, '..', '..', 'app', 'main.prod.js' ),
             ...bonusArgs
         ],
-        env : {
-            IS_SPECTRON : true,
-            CI          : isCI
+        env: {
+            IS_SPECTRON: true,
+            CI: isCI
         },
-        additionalChromeOptions : {
-            windowTypes : [ 'app', 'webview' ]
+        additionalChromeOptions: {
+            windowTypes: ['app', 'webview']
         }
     } );
 
     return app;
 };
 
-export const afterAllTests = async app =>
-{
-    if ( app && app.isRunning() )
-    {
+export const afterAllTests = async app => {
+    if ( app && app.isRunning() ) {
         await app.stop();
         console.info( 'Spectron stopped the app.' );
     }
 };
 
-export const beforeAllTests = async app =>
-{
+export const beforeAllTests = async app => {
     await app.start();
     await app.client.waitUntilWindowLoaded();
 };
 
-export const windowLoaded = async app =>
-{
+export const windowLoaded = async app => {
     await delay( 2500 );
 
     await app.browserWindow.show(); // incase now focussed
@@ -87,8 +81,7 @@ export const windowLoaded = async app =>
     return loaded;
 };
 
-process.on( 'uncaughtTypeError', err =>
-{
+process.on( 'uncaughtTypeError', err => {
     console.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     console.error( 'whoops! there was an uncaught type error:' );
     console.error( err );
@@ -97,8 +90,7 @@ process.on( 'uncaughtTypeError', err =>
     console.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
 } );
 
-process.on( 'uncaughtException', err =>
-{
+process.on( 'uncaughtException', err => {
     console.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     console.error( 'whoops! there was an uncaught error:' );
     console.error( err );
@@ -107,8 +99,7 @@ process.on( 'uncaughtException', err =>
     console.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
 } );
 
-process.on( 'unhandledRejection', ( reason, p ) =>
-{
+process.on( 'unhandledRejection', ( reason, p ) => {
     console.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     console.error( 'Unhandled Rejection. Reason:', reason );
     console.error( 'At:', p );
