@@ -1,23 +1,22 @@
-import logger from 'logger';
-import { APP_INFO, CONFIG, PROTOCOLS } from '@Constants';
-import { SAFE } from '@Extensions/safe/constants';
-import { parseSafeAuthUrl } from '@Extensions/safe/utils/safeHelpers';
+import { logger } from '$Logger';
+import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
+import { SAFE } from '$Extensions/safe/constants';
+import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 
 import {
     handleAuthentication,
     attemptReconnect
-} from '@Extensions/safe/network';
+} from '$Extensions/safe/network';
 import { initialiseApp } from '@maidsafe/safe-node-app';
 
-import { setNetworkStatus } from '@Extensions/safe/actions/safeBrowserApplication_actions';
+import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
     addNotification,
     clearNotification
-} from '@Actions/notification_actions';
-import { getSafeBrowserAppObject } from '@Extensions/safe/safeBrowserApplication/theApplication';
+} from '$Actions/notification_actions';
+import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
-const onNetworkStateChange = ( store, mockAttemptReconnect ) => state =>
-{
+const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
     logger.info( 'onNetworkStateChange' );
     const safeBrowserAppObject = getSafeBrowserAppObject();
 
@@ -26,15 +25,13 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => state =>
     store.dispatch( setNetworkStatus( state ) );
     const isDisconnected = state === SAFE.NETWORK_STATE.DISCONNECTED;
 
-    if ( isDisconnected )
-    {
-        if ( store )
-        {
+    if ( isDisconnected ) {
+        if ( store ) {
             store.dispatch(
                 addNotification( {
-                    text      : `Network state: ${ state }. Reconnecting...`,
-                    type      : 'error',
-                    onDismiss : clearNotification
+                    text: `Network state: ${state}. Reconnecting...`,
+                    type: 'error',
+                    onDismiss: clearNotification
                 } )
             );
 
@@ -45,10 +42,9 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => state =>
     }
 
     if (
-        state === SAFE.NETWORK_STATE.CONNECTED
-        && previousState === SAFE.NETWORK_STATE.DISCONNECTED
-    )
-    {
+        state === SAFE.NETWORK_STATE.CONNECTED &&
+    previousState === SAFE.NETWORK_STATE.DISCONNECTED
+    ) {
         store.dispatch( clearNotification() );
     }
 };

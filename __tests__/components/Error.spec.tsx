@@ -1,35 +1,30 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import Error from 'components/PerusePages/Error';
+import Error from '$Components/PerusePages/Error';
 
-describe( 'Error Component', () =>
-{
+describe( 'Error Component', () => {
     let wrapper;
     let props = {
-        error : {
-            header    : '',
-            subHeader : ''
+        error: {
+            header: '',
+            subHeader: ''
         }
     };
 
-    describe( 'render()', () =>
-    {
-        beforeEach( () =>
-        {
+    describe( 'render()', () => {
+        beforeEach( () => {
             props = { ...props, error: { header: 'Error Header' } };
         } );
 
-        it( 'renders a required h3 header', () =>
-        {
-            wrapper = mount( <Error { ...props } /> );
+        it( 'renders a required h3 header', () => {
+            wrapper = mount( <Error {...props} /> );
             expect( wrapper.find( 'h3' ).length ).toBe( 1 );
             expect( wrapper.find( 'h3' ).text() ).toBe( props.error.header );
         } );
 
-        it( 'optionally renders a subheader', () =>
-        {
+        it( 'optionally renders a subheader', () => {
             props = { ...props, error: { subHeader: 'Error subheader' } };
-            wrapper = mount( <Error { ...props } /> );
+            wrapper = mount( <Error {...props} /> );
             expect( wrapper.find( 'h3' ).length ).toBe( 1 );
             expect( wrapper.find( 'h4' ).length ).toBe( 1 );
             expect( wrapper.find( 'h4' ).text() ).toBe( props.error.subHeader );

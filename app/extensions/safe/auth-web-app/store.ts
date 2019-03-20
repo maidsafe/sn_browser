@@ -24,8 +24,8 @@ const actionCreators = {
 };
 
 const logger = createLogger( {
-    level     : 'info',
-    collapsed : true
+    level: 'info',
+    collapsed: true
 } );
 
 export const history = createHashHistory();
@@ -39,8 +39,7 @@ const enhancer = compose(
         : noop => noop
 );
 
-export function configureStore( initialState )
-{
+export function configureStore( initialState ) {
     const store = createStore(
         createRootReducer( history ), // root reducer with router state
         initialState,

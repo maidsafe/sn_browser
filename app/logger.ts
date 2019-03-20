@@ -12,130 +12,117 @@ import {
     startedRunningMock,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp,
+    isRunningTestCafeProcess,
     inMainProcess,
     isCI
-} from '@Constants';
-import logger from 'electron-log';
+} from '$Constants';
+import log from 'electron-log';
 
-if ( logger.transports )
+if ( log.transports )
 {
     // Log level
     // error, warn, log, log, debug, silly
-    // logger.transports.console.level = 'silly';
-    logger.transports.file.level = 'silly';
+    // log.transports.console.level = 'silly';
+    log.transports.file.level = 'silly';
 
-    if ( isRunningSpectronTestProcess || process.env.NODE_ENV === 'test' || ( !isRunningDebug && isRunningPackaged ) )
+    if ( isRunningSpectronTestProcess || process.env.NODE_ENV === 'test' ||
+        ( !isRunningDebug && isRunningPackaged ) )
     {
-        logger.transports.file.level = 'warn';
-        logger.transports.console.level = 'warn';
+        log.transports.file.level = 'warn';
+        log.transports.console.level = 'warn';
     }
 
-    logger.transports.file.file = path.resolve(
+    log.transports.file.file = path.resolve(
         os.tmpdir(),
         'safe-browser.log'
     );
 
-    logger.transports.console.format = '[{label} {h}:{i}:{s}.{ms}] › {text}';
+    log.transports.console.format = '[{label} {h}:{i}:{s}.{ms}] › {text}';
     if ( currentWindowId )
     {
-        logger.variables.label = `window ${ currentWindowId }`;
+        log.variables.label = `window ${ currentWindowId }`;
     }
     if ( inMainProcess )
     {
-        logger.variables.label = 'main';
-        logger.transports.console.format = '%c[{label} {h}:{i}:{s}.{ms}]%c › {text}';
+        log.variables.label = 'main';
+        log.transports.console.format = '%c[{label} {h}:{i}:{s}.{ms}]%c › {text}';
     }
 
     if ( inBgProcess )
     {
-        logger.variables.label = 'background';
+        log.variables.label = 'background';
     }
 
-    logger.transports.file.maxSize = 5 * 1024 * 1024;
+    log.transports.file.maxSize = 5 * 1024 * 1024;
 }
 
-
-export default logger;
 
 // HACK: for jest
 if ( inMainProcess && !isRunningSpectronTestProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
-    logger.info( '' );
-    logger.info( '' );
-    logger.info( '' );
-    logger.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    logger.info( `      Started with node env: ${ env }` );
-    // logger.info( '       Log location:', logger.transports.file.file );
-    logger.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    logger.info( 'Running with derived constants:' );
-    logger.info( '' );
-    logger.info( 'isCI?: ', isCI );
-    logger.info( 'process.env.NODE_ENV: ', process.env.NODE_ENV );
-    logger.info( 'isRunningDebug?', isRunningDebug );
-    logger.info( 'isRunningUnpacked?', isRunningUnpacked );
-    logger.info( 'isRunningPackaged?', isRunningPackaged );
-    logger.info( 'inMainProcess?', inMainProcess );
-    logger.info( 'startedRunningProduction?', startedRunningProduction );
-    logger.info( 'startedRunningMock?', startedRunningMock );
-    logger.info(
+    log.info( '' );
+    log.info( '' );
+    log.info( '' );
+    log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    log.info( `      Started with node env: ${ env }` );
+    log.info( '       Log location:', log.transports.file.file );
+    log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    log.info( 'Running with derived constants:' );
+    log.info( '' );
+    log.info( 'isCI?: ', isCI );
+    log.info( 'process.env.NODE_ENV: ', process.env.NODE_ENV );
+    log.info( 'isRunningDebug?', isRunningDebug );
+    log.info( 'isRunningUnpacked?', isRunningUnpacked );
+    log.info( 'isRunningPackaged?', isRunningPackaged );
+    log.info( 'inMainProcess?', inMainProcess );
+    log.info( 'startedRunningProduction?', startedRunningProduction );
+    log.info( 'startedRunningMock?', startedRunningMock );
+    log.info(
         'isRunningSpectronTestProcess?',
         isRunningSpectronTestProcess
     );
-    logger.info(
+    log.info(
+        'isRunningTestCafeProcess?',
+        isRunningTestCafeProcess
+    );
+    log.info(
         'isRunningSpectronTestProcessingPackagedApp?',
         isRunningSpectronTestProcessingPackagedApp
     );
-    logger.info( '' );
-    logger.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    logger.info( '' );
+    log.info( '' );
+    log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    log.info( '' );
 
-    process.on( 'uncaughtTypeError', err =>
-    {
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        );
-        logger.error( 'whoops! there was an uncaught type error:' );
-        logger.error( err );
-        logger.error( err.file );
-        logger.error( err.line );
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        );
+    // process.on( 'uncaughtTypeError', err =>
+    // {
+    //     log.error(
+    //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    //     );
+    //     log.error( 'whoops! there was an uncaught type error:' );
+    //     log.error( err );
+    //     log.error( err.file );
+    //     log.error( err.line );
+    //     log.error(
+    //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    //     );
+    // } );
+
+
+    process.on( 'uncaughtException', ( err: NodeError ) => {
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+        log.error( 'whoops! there was an uncaught error:' );
+        log.error( err, err.line );
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 
-    process.on( 'uncaughtException', err =>
-    {
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        );
-        logger.error( 'whoops! there was an uncaught error:' );
-        logger.error( err );
-        logger.error( err.file );
-        logger.error( err.line );
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        );
-    } );
-
-    process.on( 'unhandledRejection', err =>
-    {
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        );
-        logger.error(
-            'Unhandled Rejection. Reason:',
-            err
-        );
-
-        if( err && err.file )
-            logger.error( err.file );
-        if( err && err.line )
-            logger.error( err.line );
-
-
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        );
+    process.on( 'unhandledRejection', ( err: NodeError ) => {
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+        log.error( 'Unhandled Rejection. Reason:', err.message || err );
+        log.error( err.line );
+        log.error( err.file );
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 }
+
+export const logger = log;

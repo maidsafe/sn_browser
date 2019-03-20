@@ -1,7 +1,7 @@
 /* eslint global-require: off */
-const developmentEnvironments = [ 'development', 'test' ];
+const developmentEnvironments = ['development', 'test'];
 
-const developmentPlugins = [ require( 'react-hot-loader/babel' ) ];
+const developmentPlugins = [require( 'react-hot-loader/babel' )];
 
 const productionPlugins = [
     require( 'babel-plugin-dev-expression' ),
@@ -12,37 +12,37 @@ const productionPlugins = [
     require( 'babel-plugin-transform-react-remove-prop-types' )
 ];
 
-const aliases = require( './.aliases.js' );
+const aliases = require( './.aliases.config' );
 
-module.exports = api =>
-{
+module.exports = api => {
     // see docs about api at https://babeljs.io/docs/en/config-files#apicache
 
     const development = api.env( developmentEnvironments );
 
     return {
-        presets : [
+        presets: [
             '@babel/preset-typescript',
             [
                 require( '@babel/preset-env' ),
                 {
-                    targets : {
-                        electron : require( 'electron/package.json' ).version
+                    targets: {
+                        electron: require( 'electron/package.json' ).version
                     },
-                    useBuiltIns : 'usage'
+                    useBuiltIns: 'usage',
+                    corejs: 3
                     // modules     : 'umd'
                 }
             ],
-            [ require( '@babel/preset-react' ), { development } ]
+            [require( '@babel/preset-react' ), { development }]
         ],
-        plugins : [
+        plugins: [
             require( '@babel/plugin-proposal-object-rest-spread' ),
             'add-module-exports',
             [
                 'import',
                 {
-                    libraryName : 'antd',
-                    style       : 'css'
+                    libraryName: 'antd',
+                    style: 'css'
                 }
             ],
             // Stage 0
@@ -66,7 +66,7 @@ module.exports = api =>
             require( '@babel/plugin-proposal-do-expressions' ),
 
             // Stage 2
-            [ require( '@babel/plugin-proposal-decorators' ), { legacy: true } ],
+            [require( '@babel/plugin-proposal-decorators' ), { legacy: true }],
             require( '@babel/plugin-proposal-function-sent' ),
             require( '@babel/plugin-proposal-export-namespace-from' ),
             require( '@babel/plugin-proposal-numeric-separator' ),
@@ -84,8 +84,8 @@ module.exports = api =>
             [
                 'module-resolver',
                 {
-                    root  : [ '.' ],
-                    alias : aliases
+                    root: ['.'],
+                    alias: aliases
                 }
             ],
 

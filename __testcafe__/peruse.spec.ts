@@ -1,30 +1,20 @@
 import { ClientFunction, Selector } from 'testcafe';
 import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
-import {
-    getPageUrl,
-    getPageTitle,
-    navigateTo,
-    resetStore
-} from './helpers';
+import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
-
 
 const assertNoConsoleErrors = async t => {
     const { error } = await t.getBrowserConsoleMessages();
 
-    if( error.length )
-    {
+    if ( error.length ) {
         console.log( 'Errors encountered:', error );
     }
 
     await t.expect( error ).eql( [] );
 };
 
-
-fixture`Browser UI`
-    .page( '../app/app.html' )
-    .afterEach( resetStore );
+fixture`Browser UI`.page( '../app/app.html' ).afterEach( resetStore );
 // .afterEach(assertNoConsoleErrors);
 
 test( 'should open window', async t => {
@@ -37,8 +27,7 @@ test( 'should open window', async t => {
 // );
 
 test( 'add tab should exist', async t => {
-    await t
-        .expect( Selector( `.${CLASSES.ADD_TAB}` ).exists ).ok()
+    await t.expect( Selector( `.${CLASSES.ADD_TAB}` ).exists ).ok();
 } );
 
 test( 'can add a tab', async t => {
@@ -56,7 +45,6 @@ test( 'can close a tab', async t => {
         .click( `.${CLASSES.CLOSE_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
         .eql( 1 );
-
 } );
 
 test( 'can type in the address bar and get safe: automatically', async t => {
@@ -67,14 +55,22 @@ test( 'can type in the address bar and get safe: automatically', async t => {
 
     navigateTo( t, 'shouldappearinbookmarks.com' );
 
-    await t.expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
+    await t
+        .expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
         .eql( 'safe://shouldappearinbookmarks.com' )
-        .click( `.${CLASSES.BOOKMARK_PAGE}` )
+        .click( `.${CLASSES.BOOKMARK_PAGE}` );
 
     navigateTo( t, 'safe-browser:bookmarks' );
 
-    await t.expect( Selector( 'h1' ).withText( 'Bookmarks' ) ).ok()
-        .expect( Selector( '.urlList__table' ).exists ).ok()
-        .expect( Selector( '.tableCell__default' ).withText( 'safe://shouldappearinbookmarks.com' ).exists ).ok()
-
+    await t
+        .expect( Selector( 'h1' ).withText( 'Bookmarks' ) )
+        .ok()
+        .expect( Selector( '.urlList__table' ).exists )
+        .ok()
+        .expect(
+            Selector( '.tableCell__default' ).withText(
+                'safe://shouldappearinbookmarks.com'
+            ).exists
+        )
+        .ok();
 } );

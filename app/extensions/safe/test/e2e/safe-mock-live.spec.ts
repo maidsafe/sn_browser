@@ -13,37 +13,29 @@ import {
 jest.unmock( 'electron' );
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 
-describe( 'mock tests', () =>
-{
+describe( 'mock tests', () => {
     let app;
-    beforeEach( async () =>
-    {
+    beforeEach( async () => {
         app = setupSpectronApp( '--mock' );
         await beforeAllTests( app );
     } );
 
-    afterEach( async () =>
-    {
+    afterEach( async () => {
         await afterAllTests( app );
     } );
 
-    it( 'checks for Mock Network Tag to exist', async () =>
-    {
+    it( 'checks for Mock Network Tag to exist', async () => {
         expect.assertions( 1 );
         const { client } = app;
         await delay( 4500 );
         await newTab( app );
         await delay( 2500 );
         expect(
-            await client.waitForExist(
-                BROWSER_UI.MOCK_TAG,
-                WAIT_FOR_EXIST_TIMEOUT
-            )
+            await client.waitForExist( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT )
         ).toBeTruthy();
     } );
 
-    it( 'checks if text inside  Mock Tag matches "Mock Network"', async () =>
-    {
+    it( 'checks if text inside  Mock Tag matches "Mock Network"', async () => {
         expect.assertions( 1 );
         const { client } = app;
         await delay( 4500 );
@@ -55,22 +47,18 @@ describe( 'mock tests', () =>
     } );
 } );
 
-describe( 'live tests', () =>
-{
+describe( 'live tests', () => {
     let app;
-    beforeEach( async () =>
-    {
+    beforeEach( async () => {
         app = setupSpectronApp( '--live' );
         await beforeAllTests( app );
     } );
 
-    afterEach( async () =>
-    {
+    afterEach( async () => {
         await afterAllTests( app );
     } );
 
-    it( 'checks for Mock Network Tag to be absent when --live parameter is passed', async () =>
-    {
+    it( 'checks for Mock Network Tag to be absent when --live parameter is passed', async () => {
         expect.assertions( 1 );
         const { client } = app;
         await delay( 4500 );

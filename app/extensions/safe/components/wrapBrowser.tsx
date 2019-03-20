@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { CLASSES, isRunningSpectronTestProcess } from "@Constants";
-import { SAFE } from "@Extensions/safe/constants";
-import logger from "logger";
-import * as SafeBrowserActions from "@Extensions/safe/actions/safeBrowserApplication_actions";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { CLASSES, isRunningSpectronTestProcess } from '$Constants';
+import { SAFE } from '$Extensions/safe/constants';
+import { logger } from '$Logger';
+import * as SafeBrowserActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 
 function mapStateToProps( state ) {
     return {
@@ -19,22 +19,22 @@ function mapDispatchToProps( dispatch ) {
 }
 // jsx css as babel not currently parsing css files here.
 const spectronAreaButton = {
-    width: "10px",
-    height: "10px",
-    display: "inline-block"
+    width: '10px',
+    height: '10px',
+    display: 'inline-block'
 };
 const spectronArea = {
-    backgroundColor: "blue",
-    display: "block",
-    width: "100%",
-    height: "40px"
+    backgroundColor: 'blue',
+    display: 'block',
+    width: '100%',
+    height: '40px'
 };
 const browserContainer = {
-    textAlign: "center",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    position: "relative"
+    textAlign: 'center',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative'
 };
 const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => {
     class WrappedSafeBrowser extends Component {
@@ -52,13 +52,13 @@ const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => {
 
         handleSpectronTestSaveState = () => {
             const { setSaveConfigStatus } = this.props;
-            logger.info( "ATTEMPTING MENU SPOOF SAVE", setSaveConfigStatus );
+            logger.info( 'ATTEMPTING MENU SPOOF SAVE', setSaveConfigStatus );
             setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE );
         };
 
         handleSpectronTestReadState = () => {
             const { setReadConfigStatus } = this.props;
-            logger.info( "ATTEMPTING MENU SPOOF READ", setReadConfigStatus );
+            logger.info( 'ATTEMPTING MENU SPOOF READ', setReadConfigStatus );
             setReadConfigStatus( SAFE.READ_STATUS.TO_READ );
         };
 

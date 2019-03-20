@@ -1,39 +1,38 @@
+import { ipcRenderer } from 'electron';
+import React, { Component } from 'react';
+import { logger } from '$Logger';
+import { CLASSES } from '$Constants';
+import { Button, Column, IconButton, MessageBox, Row, Text } from 'nessie-ui';
+import styles from './notifier.css';
 
-import { ipcRenderer } from "electron";
-import React, { Component } from "react";
-import logger from "logger";
-import { CLASSES } from "@Constants";
-import { Button, Column, IconButton, MessageBox, Row, Text } from "nessie-ui";
-import styles from "./notifier.css";
-
-const log = require( "electron-log" );
+const log = require( 'electron-log' );
 
 interface NotifierProps {
-    isVisible?: boolean,
-    text?: string,
-    type?: string,
-    acceptText?: string,
-    denyText?: string,
-    dismissText?: string,
-    onDismiss?: string,
-    onAccept?: string,
-    onDeny?: string,
-    reactNode?: object,
-    updateNotification?: ( ...args: any[] ) => any
+    isVisible?: boolean;
+    text?: string;
+    type?: string;
+    acceptText?: string;
+    denyText?: string;
+    dismissText?: string;
+    onDismiss?: string;
+    onAccept?: string;
+    onDeny?: string;
+    reactNode?: object;
+    updateNotification?: ( ...args: Array<any> ) => any;
 }
 export default class Notifier extends Component<NotifierProps, {}> {
     static defaultProps = {
         isVisible: false,
-        acceptText: "Accept",
-        denyText: "Deny",
-        dismissText: "",
-        type: "alert"
+        acceptText: 'Accept',
+        denyText: 'Deny',
+        dismissText: '',
+        type: 'alert'
     };
 
     handleDismiss = () => {
         const { id, updateNotification } = this.props;
         // TODO: Use constants
-        updateNotification( { id, response: "ignore" } );
+        updateNotification( { id, response: 'ignore' } );
     };
 
     render() {
@@ -55,21 +54,21 @@ export default class Notifier extends Component<NotifierProps, {}> {
         let handleOnDeny;
         if ( isPrompt ) {
             handleOnAccept = () => {
-                updateNotification( { id, response: "allow" } );
+                updateNotification( { id, response: 'allow' } );
             };
             handleOnDeny = () => {
-                updateNotification( { id, response: "deny" } );
+                updateNotification( { id, response: 'deny' } );
             };
         }
         const reactNodeToElement = nodeObject => {
             const nodeDescription = {};
             Object.keys( nodeObject ).forEach( key => {
-                if ( key === "type" ) {
+                if ( key === 'type' ) {
                     return ( nodeDescription[key] = nodeObject[key] );
                 }
-                if ( key === "props" ) {
+                if ( key === 'props' ) {
                     Object.keys( nodeObject[key] ).forEach( prop => {
-                        if ( prop === "children" ) {
+                        if ( prop === 'children' ) {
                             return ( nodeDescription.children = nodeObject.props.children );
                         }
                         if ( nodeDescription.props ) {
@@ -83,7 +82,7 @@ export default class Notifier extends Component<NotifierProps, {}> {
                         }
                     } );
                 }
-                if ( key === "key" && nodeObject.key ) {
+                if ( key === 'key' && nodeObject.key ) {
                     if ( !nodeDescription.props ) {
                         nodeDescription.props = {};
                     }

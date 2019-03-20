@@ -1,4 +1,4 @@
-
-const extendComponent = ( WrappedComponent, extensionWrapperApi ) => WrappedComponent;
+const extendComponent = ( WrappedComponent, extensionWrapperApi ) =>
+    WrappedComponent;
 
 export default extendComponent;

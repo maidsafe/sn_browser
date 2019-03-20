@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Column, Grid } from "nessie-ui";
-import _ from "lodash";
-import { Tag, Icon } from "antd";
-import "antd/lib/tag/style";
-import "antd/lib/icon/style";
-import "./wrapAddressBarInput.less";
-import { CLASSES } from "@Constants";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Column, Grid } from 'nessie-ui';
+import _ from 'lodash';
+import { Tag, Icon } from 'antd';
+import 'antd/lib/tag/style';
+import 'antd/lib/icon/style';
+import './wrapAddressBarInput.less';
+import { CLASSES } from '$Constants';
 
 function mapStateToProps( state ) {
     return {

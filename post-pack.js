@@ -20,8 +20,7 @@ const WINDOWS = 'win32';
 let CONTAINING_FOLDER;
 
 const LOGS = 'log.toml';
-if ( platform === OSX )
-{
+if ( platform === OSX ) {
     CONTAINING_FOLDER = path.resolve( targetDir, 'mac' );
     const PERUSE_FOLDER = path.resolve( CONTAINING_FOLDER, 'SAFE Browser.app' );
     const PERUSE_CONTENTS_FOLDER = path.resolve( PERUSE_FOLDER, 'Contents' );
@@ -48,8 +47,7 @@ if ( platform === OSX )
 
     // PLATFORM_NAME = 'osx';
 
-    if ( isBuildingDev )
-    {
+    if ( isBuildingDev ) {
         fs.writeFileSync(
             path.resolve( PERUSE_RESOURCES_FOLDER, 'startAsMock' ),
             'unimportantContents'
@@ -57,8 +55,7 @@ if ( platform === OSX )
     }
 }
 
-if ( platform === LINUX )
-{
+if ( platform === LINUX ) {
     CONTAINING_FOLDER = path.resolve( targetDir, 'linux-unpacked' );
 
     // PLATFORM_NAME = LINUX;
@@ -81,8 +78,7 @@ if ( platform === LINUX )
     );
 }
 
-if ( platform === WINDOWS )
-{
+if ( platform === WINDOWS ) {
     CONTAINING_FOLDER = path.resolve( targetDir, 'win-unpacked' );
     const PERUSE_RESOURCES_FOLDER = path.resolve(
         CONTAINING_FOLDER,
@@ -99,8 +95,7 @@ if ( platform === WINDOWS )
     // PLATFORM_NAME = 'win';
 }
 
-if ( isBuildingDev && ( platform === WINDOWS || platform === LINUX ) )
-{
+if ( isBuildingDev && ( platform === WINDOWS || platform === LINUX ) ) {
     fs.writeFileSync(
         path.resolve( CONTAINING_FOLDER, 'resources', 'startAsMock' ),
         'unimportantContents'
@@ -117,18 +112,17 @@ const removalArray = [
     'LICENSE'
 ];
 
-removalArray.forEach( file =>
-{
-    fs.removeSync( `${ CONTAINING_FOLDER }/${ file }` );
+removalArray.forEach( file => {
+    fs.removeSync( `${CONTAINING_FOLDER}/${file}` );
 } );
 
 console.info(
     'Renaming package to:',
-    path.resolve( targetDir, `${ RELEASE_FOLDER_NAME }` )
+    path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` )
 );
 // rename release folder
 fs.moveSync(
     CONTAINING_FOLDER,
-    path.resolve( targetDir, `${ RELEASE_FOLDER_NAME }` ),
+    path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` ),
     { overwrite: true }
 );

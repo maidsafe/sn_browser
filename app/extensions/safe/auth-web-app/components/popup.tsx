@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import classNames from 'classnames';
 
 interface propTypes {
@@ -6,51 +6,45 @@ interface propTypes {
     error?: boolean;
     title?: string;
     desc?: string;
-    callback?: ( ...args: any[] ) => any;
+    callback?: ( ...args: Array<any> ) => any;
 }
 
-
-export default class Popup extends React.Component<propTypes>
-{
-    constructor()
-    {
+export default class Popup extends React.Component<propTypes> {
+    constructor() {
         super();
         this.state = {
-            showDetail : false
+            showDetail: false
         };
     }
 
-    render()
-    {
-        if ( !this.props.show )
-        {
+    render() {
+        if ( !this.props.show ) {
             return <span />;
         }
         const popupClass = classNames( 'popup-cont', {
-            error : this.props.error
+            error: this.props.error
         } );
 
         const showDetailClass = classNames( 'detailed-desc', {
-            show : this.state.showDetail
+            show: this.state.showDetail
         } );
 
         return (
             <div className="popup">
                 <div className="popup-b">
-                    <div className={ popupClass }>
+                    <div className={popupClass}>
                         <span className="icn" />
                         <span className="desc">{this.props.title}</span>
                         {this.props.desc ? (
-                            <div className={ showDetailClass }>
+                            <div className={showDetailClass}>
                                 <span className="info">{this.props.desc}</span>
                                 <button
                                     className="head"
-                                    onClick={ () =>
-                                    {
+                                    onClick={() => {
                                         this.setState( {
-                                            showDetail : !this.state.showDetail
+                                            showDetail: !this.state.showDetail
                                         } );
-                                    } }
+                                    }}
                                 >
                                     {this.state.showDetail ? 'less' : 'more'}
                                 </button>
@@ -60,12 +54,11 @@ export default class Popup extends React.Component<propTypes>
                             <button
                                 type="button"
                                 className="btn flat primary"
-                                onClick={ () =>
-                                {
+                                onClick={() => {
                                     this.props.callback();
-                                } }
+                                }}
                             >
-                                Ok
+                Ok
                             </button>
                         </div>
                     </div>

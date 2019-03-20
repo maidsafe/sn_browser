@@ -6,16 +6,16 @@ import AppDetails from '../components/app_details';
 import { getAuthorisedApps, revokeApp } from '../actions/app';
 
 const mapStateToProps = state => ( {
-    isAuthorised   : state.auth.isAuthorised,
-    fetchingApps   : state.app.fetchingApps,
-    authorisedApps : state.app.authorisedApps,
-    loading        : state.app.loading,
-    revoked        : state.app.revoked,
-    revokeError    : state.app.revokeError
+    isAuthorised: state.auth.isAuthorised,
+    fetchingApps: state.app.fetchingApps,
+    authorisedApps: state.app.authorisedApps,
+    loading: state.app.loading,
+    revoked: state.app.revoked,
+    revokeError: state.app.revokeError
 } );
 
 const mapDispatchToProps = dispatch => ( {
-    push : path => dispatch( push( path ) ),
+    push: path => dispatch( push( path ) ),
     ...bindActionCreators( { getAuthorisedApps, revokeApp }, dispatch )
 } );
 

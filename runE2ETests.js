@@ -1,45 +1,41 @@
 const spawn = require( 'cross-spawn' );
 const path = require( 'path' );
 
-const platform = process.platform;
+const { platform } = process;
 const WINDOWS = 'win32';
 
-const s = `\\${ path.sep }`;
+const s = `\\${path.sep}`;
 let pattern;
 const arg = process.argv[2];
-const argsArray = [ '--notify' ];
+const argsArray = ['--notify'];
 
-if ( process.argv.includes( '--watch' ) )
-{
+if ( process.argv.includes( '--watch' ) ) {
     argsArray.push( '--watch' );
 }
 
 let testCommand = path.normalize( './node_modules/.bin/jest' );
 
-if ( process.platform === 'win32' )
-{
+if ( process.platform === 'win32' ) {
     testCommand = path.normalize( './node_modules/jest/bin/jest.js' );
 }
 
-switch ( arg )
-{
+switch ( arg ) {
     case 'e2e': {
-        pattern = `__e2e__${ s }.+\\.spec\\.ts`;
+        pattern = `__e2e__${s}.+\\.spec\\.ts`;
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
         break;
     }
     case 'exts-e2e': {
-        pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.spec\\.ts$`;
+        pattern = `app${s}extensions${s}[^${s}].+e2e${s}.+\\.spec\\.ts$`;
 
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
         argsArray.push( '--testPathIgnorePatterns=network' );
 
         // exclude weakref tests for now.
-        if ( platform === WINDOWS )
-        {
-            pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }(?!safe).+\\auth.spec\\.ts$`;
+        if ( platform === WINDOWS ) {
+            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\auth.spec\\.ts$`;
         }
 
         break;
@@ -51,21 +47,20 @@ switch ( arg )
         console.info(
             'Running network specific tests (those that must be on mock)'
         );
-        pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }.+\\.network\\.spec\\.ts$`;
+        pattern = `app${s}extensions${s}[^${s}].+e2e${s}.+\\.network\\.spec\\.ts$`;
 
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
 
         // exclude weakref tests for now.
-        if ( platform === WINDOWS )
-        {
-            pattern = `app${ s }extensions${ s }[^${ s }].+e2e${ s }(?!safe).+\\auth.spec\\.ts$`;
+        if ( platform === WINDOWS ) {
+            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\auth.spec\\.ts$`;
         }
 
         break;
     }
     default: {
-        pattern = `__e2e__${ s }.+\\.spec\\.ts`;
+        pattern = `__e2e__${s}.+\\.spec\\.ts`;
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
 

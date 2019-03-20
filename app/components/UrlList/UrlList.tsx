@@ -1,14 +1,13 @@
-
-import React, { Component } from "react";
-import { ipcRenderer, remote } from "electron";
-// import logger from 'logger';
-import { PageContent, Text, TableRow, TableCell, Table } from "nessie-ui";
-import styles from "./urlList.css";
+import React, { Component } from 'react';
+import { ipcRenderer, remote } from 'electron';
+// import { logger } from '$Logger';
+import { PageContent, Text, TableRow, TableCell, Table } from 'nessie-ui';
+import styles from './urlList.css';
 
 interface UrlListProps {
-    list: any[],
-    onRemove?: ( ...args: any[] ) => any,
-    addTab?: ( ...args: any[] ) => any
+    list: Array<any>;
+    onRemove?: ( ...args: Array<any> ) => any;
+    addTab?: ( ...args: Array<any> ) => any;
 }
 export default class UrlList extends Component<UrlListProps, {}> {
     static defaultProps = {

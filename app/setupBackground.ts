@@ -1,5 +1,5 @@
 import { BrowserWindow } from 'electron';
-import logger from 'logger';
+import { logger } from '$Logger';
 // import path from 'path';
 import {
     isRunningUnpacked,
@@ -7,33 +7,31 @@ import {
     isRunningSpectronTestProcess,
     isRunningDevelopment,
     isCI
-} from '@Constants';
+} from '$Constants';
 
-const BACKGROUND_PROCESS = `file://${ __dirname }/bg.html`;
+const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
 
 let backgroundProcessWindow = null;
 const setupBackground = async () =>
-    new Promise( ( resolve, reject ) =>
-    {
+    new Promise( ( resolve, reject ) => {
         logger.info( 'Setting up Background Process' );
 
-        if ( backgroundProcessWindow === null )
-        {
+        if ( backgroundProcessWindow === null ) {
             logger.info( 'loading bg:', BACKGROUND_PROCESS );
 
             backgroundProcessWindow = new BrowserWindow( {
-                width          : 300,
-                height         : 450,
-                show           : false,
-                frame          : false,
-                fullscreenable : false,
-                resizable      : false,
-                transparent    : true,
-                webPreferences : {
+                width: 300,
+                height: 450,
+                show: false,
+                frame: false,
+                fullscreenable: false,
+                resizable: false,
+                transparent: true,
+                webPreferences: {
                     // partition               : 'persist:safe-tab', // TODO make safe?
-                    nodeIntegration      : true,
+                    nodeIntegration: true,
                     // Prevents renderer process code from not running when window is hidden
-                    backgroundThrottling : false
+                    backgroundThrottling: false
                 }
             } );
 
@@ -44,20 +42,18 @@ const setupBackground = async () =>
             //     }
             // });
 
-            backgroundProcessWindow.webContents.on( 'did-finish-load', () =>
-            {
+            backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
                 logger.info( 'Background process renderer loaded.' );
 
-                if ( isRunningSpectronTestProcess || isCI ) return resolve( backgroundProcessWindow );
+                if ( isRunningSpectronTestProcess || isCI )
+                    return resolve( backgroundProcessWindow );
 
                 if (
-                    isRunningDebug
-                    || isRunningUnpacked
-                    && !isRunningSpectronTestProcess
-                )
-                {
+                    isRunningDebug ||
+          ( isRunningUnpacked && !isRunningSpectronTestProcess )
+                ) {
                     backgroundProcessWindow.webContents.openDevTools( {
-                        mode : 'undocked'
+                        mode: 'undocked'
                     } );
                 }
                 resolve( backgroundProcessWindow );
@@ -65,8 +61,7 @@ const setupBackground = async () =>
 
             backgroundProcessWindow.webContents.on(
                 'did-fail-load',
-                ( event, code, message ) =>
-                {
+                ( event, code, message ) => {
                     logger.error(
                         '>>>>>>>>>>>>>>>>>>>>>>>> Bg process failed to load <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
                     );

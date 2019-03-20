@@ -6,27 +6,23 @@ let peruseBgWindowIndex;
 
 export const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
-export const setClientToMainBrowserWindow = async app =>
-{
+export const setClientToMainBrowserWindow = async app => {
     const { client } = app;
     const windows = await client.getWindowCount();
 
-    if ( peruseBrowserWindowIndex )
-    {
+    if ( peruseBrowserWindowIndex ) {
         await client.windowByIndex( peruseBrowserWindowIndex );
         return;
     }
 
-    for ( let i = 0; i < windows; i++ )
-    {
-        // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
+    for ( let i = 0; i < windows; i++ ) {
+    // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
         await client.windowByIndex( i );
         const url = await client.getUrl();
         const urlObj = urlParse( url );
         // get the PeruseBrowserWindow
         // TODO: If more than one...? (checkFocus)
-        if ( urlObj.path.includes( 'app.html' ) )
-        {
+        if ( urlObj.path.includes( 'app.html' ) ) {
             peruseBrowserWindowIndex = i;
             break;
         }
@@ -35,19 +31,16 @@ export const setClientToMainBrowserWindow = async app =>
     await client.windowByIndex( peruseBrowserWindowIndex );
 };
 
-export const setClientToBackgroundProcessWindow = async app =>
-{
+export const setClientToBackgroundProcessWindow = async app => {
     const { client } = app;
     const windows = await client.getWindowCount();
 
-    for ( let i = 0; i < windows; i++ )
-    {
+    for ( let i = 0; i < windows; i++ ) {
         await client.windowByIndex( i );
         const url = await client.getUrl();
         const urlObj = urlParse( url );
 
-        if ( urlObj.path.includes( 'bg.html' ) )
-        {
+        if ( urlObj.path.includes( 'bg.html' ) ) {
             peruseBgWindowIndex = i;
             break;
         }
@@ -55,8 +48,7 @@ export const setClientToBackgroundProcessWindow = async app =>
     await client.windowByIndex( peruseBgWindowIndex );
 };
 
-export const setAddress = async ( app, url ) =>
-{
+export const setAddress = async ( app, url ) => {
     const { client } = app;
 
     await client.pause( 800 );
@@ -69,8 +61,7 @@ export const setAddress = async ( app, url ) =>
     await client.pause( 500 );
 };
 
-export const navigateTo = async ( app, url ) =>
-{
+export const navigateTo = async ( app, url ) => {
     console.info( '>>> Navigating to:', url );
     const { client } = app;
 
@@ -80,15 +71,13 @@ export const navigateTo = async ( app, url ) =>
     await client.pause( 1500 );
 };
 
-export const newTab = async app =>
-{
+export const newTab = async app => {
     const { client } = app;
 
     const windows = await client.getWindowCount();
 
-    for ( let i = 0; i < windows; i++ )
-    {
-        // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
+    for ( let i = 0; i < windows; i++ ) {
+    // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
         await client.windowByIndex( i );
         await client.getUrl();
     }
@@ -101,8 +90,7 @@ export const newTab = async app =>
     return length2 - 1;
 };
 
-export const bookmarkActiveTabPage = async app =>
-{
+export const bookmarkActiveTabPage = async app => {
     const { client } = app;
     await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( BROWSER_UI.BOOKMARK_PAGE );

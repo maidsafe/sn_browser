@@ -1,16 +1,16 @@
 import { remote } from 'electron';
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import WebIdDropdown from "@Extensions/safe/components/webIdDropdown";
-import { Row, Col } from "antd";
-import "antd/lib/row/style";
-import "antd/lib/col/style";
-import "antd/lib/button/style";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import WebIdDropdown from '$Extensions/safe/components/webIdDropdown';
+import { Row, Col } from 'antd';
+import 'antd/lib/row/style';
+import 'antd/lib/col/style';
+import 'antd/lib/button/style';
 import {
     showWebIdDropdown,
     getAvailableWebIds
-} from "../actions/safeBrowserApplication_actions";
+} from '../actions/safeBrowserApplication_actions';
 // import styles from './wrapAddressBarButtons.css';
 function mapStateToProps( state ) {
     return {
@@ -45,13 +45,14 @@ const wrapAddressBarButtonsLHS = (
     //     webIds: []
     //   }
     // };
-        constructor()
-        {
+        constructor() {
             super();
-            const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+            const currentWebContentsId = remote
+                ? remote.getCurrentWebContents().id
+                : 1;
             this.state = {
                 windowId: currentWebContentsId
-            }
+            };
         }
 
         render() {

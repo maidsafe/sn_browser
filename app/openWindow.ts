@@ -3,17 +3,20 @@ import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import os from 'os';
 import windowStateKeeper from 'electron-window-state';
-import logger from 'logger';
+import { logger } from '$Logger';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
-import { isRunningSpectronTestProcess, isRunningDebug } from '@Constants';
+import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
 import { addTab, updateTab } from './actions/tabs_actions';
-import { selectAddressBar, uiAddWindow, uiRemoveWindow } from './actions/ui_actions';
+import {
+    selectAddressBar,
+    uiAddWindow,
+    uiRemoveWindow
+} from './actions/ui_actions';
 
 const browserWindowArray = [];
 
-function getNewWindowPosition( mainWindowState )
-{
+function getNewWindowPosition( mainWindowState ) {
     // for both x and y, we start at 0
     const defaultWindowPosition = 0;
 
@@ -22,48 +25,41 @@ function getNewWindowPosition( mainWindowState )
 
     let newWindowPosition;
 
-    if ( noOfBrowserWindows === 0 )
-    {
+    if ( noOfBrowserWindows === 0 ) {
         newWindowPosition = { x: mainWindowState.x, y: mainWindowState.y };
-    }
-    else
-    {
+    } else {
         newWindowPosition = {
-            x :
-                defaultWindowPosition
-                + windowCascadeSpacing * noOfBrowserWindows,
-            y : defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows
+            x: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows,
+            y: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows
         };
     }
 
     return newWindowPosition;
 }
 
-const openWindow = store =>
-{
+const openWindow = store => {
     const mainWindowState = windowStateKeeper( {
-        defaultWidth  : 2048,
-        defaultHeight : 1024
+        defaultWidth: 2048,
+        defaultHeight: 1024
     } );
 
     let appIcon = path.join( __dirname, '../resources/safeicon.png' );
 
-    if ( process.platform === 'win32' )
-    {
+    if ( process.platform === 'win32' ) {
         appIcon = path.join( __dirname, '../resources/icon.ico' );
     }
 
     const newWindowPosition = getNewWindowPosition( mainWindowState );
     const browserWindowConfig = {
-        show           : false,
-        x              : newWindowPosition.x,
-        y              : newWindowPosition.y,
-        width          : mainWindowState.width,
-        height         : mainWindowState.height,
-        titleBarStyle  : 'hiddenInset',
-        icon           : appIcon,
-        webPreferences : {
-            partition : 'persist:safe-tab'
+        show: false,
+        x: newWindowPosition.x,
+        y: newWindowPosition.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
+        titleBarStyle: 'hiddenInset',
+        icon: appIcon,
+        webPreferences: {
+            partition: 'persist:safe-tab'
             // preload : path.join( __dirname, 'browserPreload.js' )
             //  isRunningUnpacked ?
             // `http://localhost:${devPort}/webPreload.js` : `file://${ __dirname }/browserPreload.js`;
@@ -74,15 +70,13 @@ const openWindow = store =>
 
     mainWindowState.manage( mainWindow );
 
-    mainWindow.loadURL( `file://${ __dirname }/app.html` );
+    mainWindow.loadURL( `file://${__dirname}/app.html` );
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
 
-    mainWindow.webContents.on( 'did-finish-load', async () =>
-    {
-        if ( !mainWindow )
-        {
+    mainWindow.webContents.on( 'did-finish-load', async () => {
+        if ( !mainWindow ) {
             throw new Error( '"mainWindow" is not defined' );
         }
 
@@ -92,64 +86,55 @@ const openWindow = store =>
         mainWindow.show();
         mainWindow.focus();
 
-        if ( isRunningDebug && !isRunningSpectronTestProcess )
-        {
+        if ( isRunningDebug && !isRunningSpectronTestProcess ) {
             mainWindow.openDevTools( { mode: 'undocked' } );
         }
 
         const webContentsId = mainWindow.webContents.id;
-        if ( browserWindowArray.length === 1 )
-        {
+        if ( browserWindowArray.length === 1 ) {
             const allTabs = store.getState().tabs;
             const orphanedTabs = allTabs.filter( tab => !tab.windowId );
-            orphanedTabs.forEach( orphan =>
-            {
+            orphanedTabs.forEach( orphan => {
                 store.dispatch(
                     updateTab( { index: orphan.index, windowId: webContentsId } )
                 );
             } );
             store.dispatch(
                 uiAddWindow( {
-                    windowId : webContentsId
+                    windowId: webContentsId
                 } )
             );
-        }
-        else
-        {
+        } else {
             store.dispatch(
                 addTab( {
-                    url         : 'about:blank',
-                    windowId    : webContentsId,
-                    isActiveTab : true
+                    url: 'about:blank',
+                    windowId: webContentsId,
+                    isActiveTab: true
                 } )
             );
             store.dispatch(
                 uiAddWindow( {
-                    windowId : webContentsId
+                    windowId: webContentsId
                 } )
             );
             store.dispatch( selectAddressBar() );
         }
     } );
-    mainWindow.on( 'close', () =>
-    {
+    mainWindow.on( 'close', () => {
         const webContentsId = mainWindow.webContents.id;
         store.dispatch(
             uiRemoveWindow( {
-                windowId : webContentsId
+                windowId: webContentsId
             } )
         );
     } );
-    mainWindow.on( 'closed', () =>
-    {
+    mainWindow.on( 'closed', () => {
         const index = browserWindowArray.indexOf( mainWindow );
         mainWindow = null;
-        if ( index > -1 )
-        {
+        if ( index > -1 ) {
             browserWindowArray.splice( index, 1 );
         }
-        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 )
-        {
+        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
             app.quit();
         }
     } );
@@ -164,16 +149,13 @@ const openWindow = store =>
 
 export default openWindow;
 
-ipcMain.on( 'command:close-window', () =>
-{
+ipcMain.on( 'command:close-window', () => {
     const win = BrowserWindow.getFocusedWindow();
 
-    if ( win )
-    {
+    if ( win ) {
         win.close();
     }
-    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 )
-    {
+    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
         app.quit();
     }
 } );

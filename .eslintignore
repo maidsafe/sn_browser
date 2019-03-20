@@ -37,7 +37,7 @@ app/*.prod.js
 app/*.js.map
 app/style.css
 app/style.css.map
-dist/
+dist
 app/extensions/safe/auth-web-app/dist
 dll
 app/extensions/safe/iconfont/iconfont.js

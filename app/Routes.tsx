@@ -7,7 +7,7 @@ import BrowserWindow from './containers/BrowserWindow';
 export default () => (
     <App>
         <Switch>
-            <Route path={ routes.HOME } component={ BrowserWindow } />
+            <Route path={routes.HOME} component={BrowserWindow} />
         </Switch>
     </App>
 );

@@ -1,19 +1,18 @@
+import React, { Component } from 'react';
+import { ipcRenderer, remote } from 'electron';
+import { parse } from 'url';
+import _ from 'lodash';
+import { Column, Page, PageHeader, H1, Row, Text } from 'nessie-ui';
+import UrlList from '$Components/UrlList';
+import styles from './history.css';
+import { CLASSES } from '$Constants';
+import { urlIsValid } from '$Extensions';
 
-import React, { Component } from "react";
-import { ipcRenderer, remote } from "electron";
-import { parse } from "url";
-import _ from "lodash";
-import { Column, Page, PageHeader, H1, Row, Text } from "nessie-ui";
-import UrlList from "@Components/UrlList";
-import styles from "./history.css";
-import { CLASSES } from "@Constants";
-import { urlIsValid } from "@Extensions";
-
-const log = require( "electron-log" );
+const log = require( 'electron-log' );
 
 interface HistoryProps {
-    history: any[],
-    addTab: ( ...args: any[] ) => any
+    history: Array<any>;
+    addTab: ( ...args: Array<any> ) => any;
 }
 export default class History extends Component<HistoryProps, {}> {
     static defaultProps = {
@@ -21,7 +20,7 @@ export default class History extends Component<HistoryProps, {}> {
     };
 
     isInFocussedWindow = () => {
-        const BrowserWindow = remote.BrowserWindow;
+        const { BrowserWindow } = remote;
         const focussedWindowId = BrowserWindow.getFocusedWindow().id;
         const currentWindowId = remote.getCurrentWindow().id;
         return focussedWindowId === currentWindowId;
@@ -38,11 +37,11 @@ export default class History extends Component<HistoryProps, {}> {
                 } );
             }
         } );
-        const ignoreProtocolList = ["safe-auth:"];
+        const ignoreProtocolList = ['safe-auth:'];
         const ignoreList = [
-            "about:blank",
-            "safe-browser://history",
-            "safe-browser://bookmarks"
+            'about:blank',
+            'safe-browser://history',
+            'safe-browser://bookmarks'
         ];
         // TODO: uniq by object props, so will be less harsh once we have title etc.
         historyList = _.uniq( historyList );

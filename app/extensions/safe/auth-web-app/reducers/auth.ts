@@ -24,63 +24,54 @@ import CONSTANTS from '../constants';
 import { isUserAuthorised, parseErrCode } from '../utils';
 
 const initialState = {
-    isAuthorised     : !!isUserAuthorised(),
-    createAccNavPos  : 1,
-    userSecret       : '',
-    userPassword     : '',
-    inviteCode       : '',
-    secretStrength   : 0,
-    passwordStrength : 0,
-    error            : null,
-    loading          : false,
-    showPopupWindow  : false,
-    libErrPopup      : false
+    isAuthorised: !!isUserAuthorised(),
+    createAccNavPos: 1,
+    userSecret: '',
+    userPassword: '',
+    inviteCode: '',
+    secretStrength: 0,
+    passwordStrength: 0,
+    error: null,
+    loading: false,
+    showPopupWindow: false,
+    libErrPopup: false
 };
 
-const auth = ( state = initialState, action ) =>
-{
-    switch ( action.type )
-    {
+const auth = ( state = initialState, action ) => {
+    switch ( action.type ) {
         case SET_CREATE_ACC_NAV_POS: {
             const nextState = { ...state };
-            if ( !state.userSecret )
-            {
+            if ( !state.userSecret ) {
                 nextState.secretStrength = 0;
             }
 
-            if ( !state.userPassword )
-            {
+            if ( !state.userPassword ) {
                 nextState.passwordStrength = 0;
             }
 
             if (
-                !state.inviteCode
-                && action.position === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
-            )
-            {
+                !state.inviteCode &&
+        action.position === CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
+            ) {
                 return nextState;
             }
 
             if (
-                !state.userSecret
-                && action.position === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM
-            )
-            {
-                if (
-                    state.createAccNavPos === CONSTANTS.CREATE_ACC_NAV.WELCOME
-                )
-                {
+                !state.userSecret &&
+        action.position === CONSTANTS.CREATE_ACC_NAV.PASSWORD_FORM
+            ) {
+                if ( state.createAccNavPos === CONSTANTS.CREATE_ACC_NAV.WELCOME ) {
                     return {
                         ...nextState,
-                        createAccNavPos : CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
+                        createAccNavPos: CONSTANTS.CREATE_ACC_NAV.SECRET_FORM
                     };
                 }
                 return nextState;
             }
             return {
                 ...nextState,
-                createAccNavPos : action.position,
-                error           : null
+                createAccNavPos: action.position,
+                error: null
             };
         }
 
@@ -136,57 +127,53 @@ const auth = ( state = initialState, action ) =>
             return { ...state, loading: false };
         }
 
-        case `${ CREATE_ACC }_PENDING`: {
+        case `${CREATE_ACC}_PENDING`: {
             return { ...state, loading: true };
         }
 
-        case `${ CREATE_ACC }_FULFILLED`: {
-            if ( !state.loading )
-            {
+        case `${CREATE_ACC}_FULFILLED`: {
+            if ( !state.loading ) {
                 return state;
             }
             return { ...state, loading: false, isAuthorised: true };
         }
 
-        case `${ CREATE_ACC }_REJECTED`: {
-            if ( !state.loading )
-            {
+        case `${CREATE_ACC}_REJECTED`: {
+            if ( !state.loading ) {
                 return state;
             }
             return {
                 ...state,
-                loading         : false,
-                error           : parseErrCode( action.payload.message ),
-                createAccNavPos : CONSTANTS.CREATE_ACC_NAV.INVITE_CODE
+                loading: false,
+                error: parseErrCode( action.payload.message ),
+                createAccNavPos: CONSTANTS.CREATE_ACC_NAV.INVITE_CODE
             };
         }
 
-        case `${ LOGIN }_PENDING`: {
+        case `${LOGIN}_PENDING`: {
             return { ...state, loading: true };
         }
 
-        case `${ LOGIN }_FULFILLED`: {
+        case `${LOGIN}_FULFILLED`: {
             window.safeAuthenticator.setIsAuthorised( true );
-            if ( !state.loading )
-            {
+            if ( !state.loading ) {
                 return state;
             }
             return { ...state, loading: false, isAuthorised: true };
         }
 
-        case `${ LOGIN }_REJECTED`: {
-            if ( !state.loading )
-            {
+        case `${LOGIN}_REJECTED`: {
+            if ( !state.loading ) {
                 return state;
             }
             return {
                 ...state,
-                loading : false,
-                error   : parseErrCode( action.payload.message )
+                loading: false,
+                error: parseErrCode( action.payload.message )
             };
         }
 
-        case `${ LOGOUT }_FULFILLED`: {
+        case `${LOGOUT}_FULFILLED`: {
             window.safeAuthenticator.setIsAuthorised( false );
             return { ...state, loading: false, isAuthorised: false };
         }

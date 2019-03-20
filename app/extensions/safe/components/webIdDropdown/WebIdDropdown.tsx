@@ -1,21 +1,21 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 // import styles from './browser.css';
 import {
     CLASSES,
     isRunningSpectronTestProcess,
     startedRunningMock
-} from "@Constants";
-import { SAFE } from "@Extensions/safe/constants";
-import { Column, IconButton, Grid } from "nessie-ui";
-import _ from "lodash";
-import logger from "logger";
-import styles from "./webIdButtons.css";
+} from '$Constants';
+import { SAFE } from '$Extensions/safe/constants';
+import { Column, IconButton, Grid } from 'nessie-ui';
+import _ from 'lodash';
+import { logger } from '$Logger';
+import styles from './webIdButtons.css';
 
 const hideDropdownTimeout = 0.15; // seconds
 const webIdManagerUri = startedRunningMock
-    ? "http://localhost:1234"
-    : "safe://webidmgr.dapp";
-const authHomeUri = "safe-auth://home";
+    ? 'http://localhost:1234'
+    : 'safe://webidmgr.dapp';
+const authHomeUri = 'safe-auth://home';
 export default class WebIdDropdown extends Component<{}, {}> {
     static defaultProps = {
         safeBrowserApp: {
@@ -95,15 +95,15 @@ export default class WebIdDropdown extends Component<{}, {}> {
             isFetchingWebIds
         } = safeBrowserApp;
         const activeWebId = activeTab.webId || {};
-        const handleIdClick = this.handleIdClick;
+        const { handleIdClick } = this;
         const webIdsList = webIds.map( webId => {
-            const nickname = webId["#me"].nick || webId["#me"].name;
-            const isSelected = webId["@id"] === activeWebId["@id"];
+            const nickname = webId['#me'].nick || webId['#me'].name;
+            const isSelected = webId['@id'] === activeWebId['@id'];
             if ( isSelected ) {
                 return (
                     <li
                         onClick={handleIdClick.bind( this, webId )}
-                        key={webId["@id"]}
+                        key={webId['@id']}
                         className={styles.selectedWebId}
                     >
                         {nickname}
@@ -113,7 +113,7 @@ export default class WebIdDropdown extends Component<{}, {}> {
             return (
                 <li
                     onClick={handleIdClick.bind( this, webId )}
-                    key={webId["@id"]}
+                    key={webId['@id']}
                     className={styles.webId}
                 >
                     {nickname}
@@ -165,7 +165,7 @@ export default class WebIdDropdown extends Component<{}, {}> {
                     iconTheme="navigation"
                     iconType="account"
                     size="S"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                 />
                 {showingWebIdDropdown && (
                     <ul className={styles.webIdList}>

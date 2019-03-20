@@ -1,5 +1,5 @@
-import { SAFE } from '@Extensions/safe/constants';
-import logger from 'logger';
+import { SAFE } from '$Extensions/safe/constants';
+import { logger } from '$Logger';
 
 let safeBrowserAppObject;
 let currentStore;
@@ -10,54 +10,48 @@ export const getIsAuthing = () => isAuthing;
 //
 export const getSafeBrowserAppObject = () => safeBrowserAppObject;
 export const getCurrentStore = () => currentStore;
-export const setCurrentStore = passedStore =>
-{
+export const setCurrentStore = passedStore => {
     currentStore = passedStore;
 };
-export const setIsAuthing = state =>
-{
+export const setIsAuthing = state => {
     isAuthing = state;
 };
-export const setSafeBrowserAppObject = passedApp =>
-{
+export const setSafeBrowserAppObject = passedApp => {
     safeBrowserAppObject = passedApp;
 };
 
-export const clearAppObj = () =>
-{
+export const clearAppObj = () => {
     logger.info( 'Clearing safeBrowserApp object cache.' );
     safeBrowserAppObject.clearObjectCache();
 };
 
-export const safeBrowserAppIsAuthing = () =>
-{
+export const safeBrowserAppIsAuthing = () => {
     const safeBrowserAppAuthStates = [
         SAFE.APP_STATUS.TO_AUTH,
         SAFE.APP_STATUS.AUTHORISING
     ];
 
     return (
-        isAuthing
-        || safeBrowserAppAuthStates.includes(
-            currentStore.getState().safeBrowserApp.appStatus
-        )
+        isAuthing ||
+    safeBrowserAppAuthStates.includes(
+        currentStore.getState().safeBrowserApp.appStatus
+    )
     );
 };
 
 export const safeBrowserAppIsAuthed = () =>
-    currentStore.getState().safeBrowserApp.appStatus
-    === SAFE.APP_STATUS.AUTHORISED;
+    currentStore.getState().safeBrowserApp.appStatus ===
+  SAFE.APP_STATUS.AUTHORISED;
 
-export const safeBrowserAppIsConnected = () =>
-{
+export const safeBrowserAppIsConnected = () => {
     const netState = currentStore.getState().safeBrowserApp.networkStatus;
     // Q: why do we have a loggedin state?
     return (
-        netState === SAFE.NETWORK_STATE.CONNECTED
-        || netState === SAFE.NETWORK_STATE.LOGGED_IN
+        netState === SAFE.NETWORK_STATE.CONNECTED ||
+    netState === SAFE.NETWORK_STATE.LOGGED_IN
     );
 };
 
 export const safeBrowserAppAuthFailed = () =>
-    currentStore.getState().safeBrowserApp.appStatus
-    === SAFE.APP_STATUS.AUTHORISATION_FAILED;
+    currentStore.getState().safeBrowserApp.appStatus ===
+  SAFE.APP_STATUS.AUTHORISATION_FAILED;

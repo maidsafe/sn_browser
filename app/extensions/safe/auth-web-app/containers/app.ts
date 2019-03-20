@@ -8,15 +8,15 @@ import { getAccountInfo } from '../actions/app';
 import { setNetworkConnecting } from '../actions/network_state';
 
 const mapStateToProps = state => ( {
-    networkState        : state.networkState.state,
-    isAuthorised        : state.auth.isAuthorised,
-    loading             : state.app.loading,
-    accountInfo         : state.app.accountInfo,
-    fetchingAccountInfo : state.app.fetchingAccountInfo
+    networkState: state.networkState.state,
+    isAuthorised: state.auth.isAuthorised,
+    loading: state.app.loading,
+    accountInfo: state.app.accountInfo,
+    fetchingAccountInfo: state.app.fetchingAccountInfo
 } );
 
 const mapDispatchToProps = dispatch => ( {
-    push : path => dispatch( push( path ) ),
+    push: path => dispatch( push( path ) ),
     ...bindActionCreators(
         { logout, setNetworkConnecting, getAccountInfo },
         dispatch

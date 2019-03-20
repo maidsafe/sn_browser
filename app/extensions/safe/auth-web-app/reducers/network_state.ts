@@ -6,35 +6,33 @@ import {
 import CONSTANTS from '../constants';
 
 const initialState = {
-    state : CONSTANTS.NETWORK_STATUS.CONNECTING
+    state: CONSTANTS.NETWORK_STATUS.CONNECTING
 };
 
-const networkState = ( state = initialState, action ) =>
-{
-    switch ( action.type )
-    {
-        case `${ NETWORK_CONNECTING }_PENDING`: {
+const networkState = ( state = initialState, action ) => {
+    switch ( action.type ) {
+        case `${NETWORK_CONNECTING}_PENDING`: {
             return {
                 ...state,
-                state : CONSTANTS.NETWORK_STATUS.CONNECTING
+                state: CONSTANTS.NETWORK_STATUS.CONNECTING
             };
         }
-        case `${ NETWORK_CONNECTING }_REJECTED`: {
+        case `${NETWORK_CONNECTING}_REJECTED`: {
             return {
                 ...state,
-                state : CONSTANTS.NETWORK_STATUS.DISCONNECTED
+                state: CONSTANTS.NETWORK_STATUS.DISCONNECTED
             };
         }
         case NETWORK_CONNECTED: {
             return {
                 ...state,
-                state : CONSTANTS.NETWORK_STATUS.CONNECTED
+                state: CONSTANTS.NETWORK_STATUS.CONNECTED
             };
         }
         case NETWORK_DISCONNECTED: {
             return {
                 ...state,
-                state : CONSTANTS.NETWORK_STATUS.DISCONNECTED
+                state: CONSTANTS.NETWORK_STATUS.DISCONNECTED
             };
         }
         default: {

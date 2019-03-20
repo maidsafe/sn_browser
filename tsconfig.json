@@ -7,21 +7,28 @@
         "noEmit": true,
         "jsx": "react",
         "resolveJsonModule": true,
-        "isolatedModules": true,
         "esModuleInterop": true,
         "paths": {
-            "test/*": ["test/*"],
-            "@Actions/*": ["app/actions/*"],
-            "@Store/*": ["app/store/*"],
-            "@Extensions/*": ["app/extensions/*"],
-            "@Reducers/*": ["app/reducers/*"],
-            "logger": ["app/logger"],
-            "@Components/*": ["app/components/*"],
-            "@Constants": ["app/constants.ts"],
-            "@App": ["app/*"],
-            "@Utils/*": ["app/utils/*"],
-            "@Package": ["package.json"]
+            "*": ["app/definitions"],
+            "$Tests/*": ["__tests__/*"],
+            "spectron-lib/*": ["__e2e__/lib"],
+            "$Actions/*": ["app/actions/*"],
+            "$Store/*": ["app/store/*"],
+            "$Extensions/*": ["app/extensions/*"],
+            "$Reducers/*": ["app/reducers/*"],
+            "$Logger": ["app/logger.ts"],
+            "$Components/*": ["app/components/*"],
+            "$Constants": ["app/constants.ts"],
+            "$Utils/*": ["app/utils/*"],
+            "$Package": ["package.json"]
         }
     },
-    "include": ["app"]
+    "exclude": [
+        "*.config*?js",
+        "app/*.prod.js",
+        "app/dist",
+        "node_modules",
+        "release",
+        "extensions/safe/auth-web-app"
+    ]
 }

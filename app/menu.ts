@@ -1,7 +1,4 @@
-
-import {
-    app, Menu, shell, BrowserWindow
-} from 'electron';
+import { app, Menu, shell, BrowserWindow } from 'electron';
 import {
     addTab,
     tabForwards,
@@ -10,33 +7,29 @@ import {
     reopenTab,
     setActiveTab,
     updateTab
-} from '@Actions/tabs_actions';
+} from '$Actions/tabs_actions';
 
-import { selectAddressBar, resetStore } from '@Actions/ui_actions';
+import { selectAddressBar, resetStore } from '$Actions/ui_actions';
 import {
     isHot,
     isRunningDebug,
     isRunningSpectronTestProcess
-} from '@Constants';
-import { getLastClosedTab } from '@Reducers/tabs';
-import logger from 'logger';
-import pkg from '@Package';
+} from '$Constants';
+import { getLastClosedTab } from '$Reducers/tabs';
+import { logger } from '$Logger';
+import pkg from '$Package';
 
-import { getExtensionMenuItems } from '@Extensions';
+import { getExtensionMenuItems } from '$Extensions';
 
-export default class MenuBuilder
-{
-    constructor( mainWindow: BrowserWindow, openWindow, store )
-    {
+export default class MenuBuilder {
+    constructor( mainWindow: BrowserWindow, openWindow, store ) {
         this.mainWindow = mainWindow;
         this.openWindow = openWindow;
         this.store = store;
     }
 
-    buildMenu()
-    {
-        if ( isHot )
-        {
+    buildMenu() {
+        if ( isHot ) {
             this.setupDevelopmentEnvironment();
         }
 
@@ -48,18 +41,15 @@ export default class MenuBuilder
         return menu;
     }
 
-    setupDevelopmentEnvironment()
-    {
+    setupDevelopmentEnvironment() {
         this.mainWindow.openDevTools();
-        this.mainWindow.webContents.on( 'context-menu', ( e, props ) =>
-        {
+        this.mainWindow.webContents.on( 'context-menu', ( e, props ) => {
             const { x, y } = props;
 
             Menu.buildFromTemplate( [
                 {
-                    label : 'Inspect element',
-                    click : () =>
-                    {
+                    label: 'Inspect element',
+                    click: () => {
                         this.mainWindow.inspectElement( x, y );
                     }
                 }
@@ -67,37 +57,35 @@ export default class MenuBuilder
         } );
     }
 
-    buildMenusTemplate()
-    {
-        const store = this.store;
+    buildMenusTemplate() {
+        const { store } = this;
 
         const subMenuAbout = {
-            label   : 'SAFE &Browser',
-            submenu : [
+            label: 'SAFE &Browser',
+            submenu: [
                 {
-                    label    : 'About SAFE Browser',
-                    selector : 'orderFrontStandardAboutPanel:'
+                    label: 'About SAFE Browser',
+                    selector: 'orderFrontStandardAboutPanel:'
                 },
                 { type: 'separator' },
                 { label: 'Services', submenu: [] },
                 { type: 'separator' },
                 {
-                    label       : `Hide ${ pkg.productName }`,
-                    accelerator : 'Command+H',
-                    selector    : 'hide:'
+                    label: `Hide ${pkg.productName}`,
+                    accelerator: 'Command+H',
+                    selector: 'hide:'
                 },
                 {
-                    label       : 'Hide Others',
-                    accelerator : 'CommandOrControl+Shift+H',
-                    selector    : 'hideOtherApplications:'
+                    label: 'Hide Others',
+                    accelerator: 'CommandOrControl+Shift+H',
+                    selector: 'hideOtherApplications:'
                 },
                 { label: 'Show All', selector: 'unhideAllApplications:' },
                 { type: 'separator' },
                 {
-                    label       : 'Quit',
-                    accelerator : 'Command+Q',
-                    click       : () =>
-                    {
+                    label: 'Quit',
+                    accelerator: 'Command+Q',
+                    click: () => {
                         app.quit();
                     }
                 }
@@ -105,33 +93,29 @@ export default class MenuBuilder
         };
 
         const subMenuFile = {
-            label   : '&File',
-            submenu : [
+            label: '&File',
+            submenu: [
                 {
-                    label       : 'New Window',
-                    accelerator : 'CommandOrControl+N',
-                    click       : ( item, win ) =>
-                    {
-                        if ( this.openWindow && win )
-                        {
+                    label: 'New Window',
+                    accelerator: 'CommandOrControl+N',
+                    click: ( item, win ) => {
+                        if ( this.openWindow && win ) {
                             const windowId = win.webContents.id;
                             this.openWindow( this.store, windowId );
                         }
                     }
                 },
                 {
-                    label       : 'New Tab',
-                    accelerator : 'CommandOrControl+T',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'New Tab',
+                    accelerator: 'CommandOrControl+T',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
                             this.store.dispatch(
                                 addTab( {
-                                    url         : 'about:blank',
+                                    url: 'about:blank',
                                     windowId,
-                                    isActiveTab : true
+                                    isActiveTab: true
                                 } )
                             );
                             this.store.dispatch( selectAddressBar() );
@@ -139,29 +123,21 @@ export default class MenuBuilder
                     }
                 },
                 {
-                    label       : 'Select Next Tab',
-                    accelerator : 'Ctrl+Tab',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Select Next Tab',
+                    accelerator: 'Ctrl+Tab',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
                             const state = store.getState();
                             let index;
                             const openTabs = state.tabs.filter(
-                                tab =>
-                                    !tab.isClosed && tab.windowId === windowId
+                                tab => !tab.isClosed && tab.windowId === windowId
                             );
-                            openTabs.forEach( ( tab, i ) =>
-                            {
-                                if ( tab.isActiveTab )
-                                {
-                                    if ( i === openTabs.length - 1 )
-                                    {
+                            openTabs.forEach( ( tab, i ) => {
+                                if ( tab.isActiveTab ) {
+                                    if ( i === openTabs.length - 1 ) {
                                         index = openTabs[0].index;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         index = openTabs[i + 1].index;
                                     }
                                 }
@@ -171,29 +147,21 @@ export default class MenuBuilder
                     }
                 },
                 {
-                    label       : 'Select Previous Tab',
-                    accelerator : 'Ctrl+Shift+Tab',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Select Previous Tab',
+                    accelerator: 'Ctrl+Shift+Tab',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
                             const state = store.getState();
                             let index;
                             const openTabs = state.tabs.filter(
-                                tab =>
-                                    !tab.isClosed && tab.windowId === windowId
+                                tab => !tab.isClosed && tab.windowId === windowId
                             );
-                            openTabs.forEach( ( tab, i ) =>
-                            {
-                                if ( tab.isActiveTab )
-                                {
-                                    if ( i === 0 )
-                                    {
+                            openTabs.forEach( ( tab, i ) => {
+                                if ( tab.isActiveTab ) {
+                                    if ( i === 0 ) {
                                         index = openTabs[openTabs.length - 1].index;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         index = openTabs[i - 1].index;
                                     }
                                 }
@@ -203,26 +171,20 @@ export default class MenuBuilder
                     }
                 },
                 {
-                    label       : 'Close Tab',
-                    accelerator : 'CommandOrControl+W',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
-                            const tabs = store.getState().tabs;
+                    label: 'Close Tab',
+                    accelerator: 'CommandOrControl+W',
+                    click: ( item, win ) => {
+                        if ( win ) {
+                            const { tabs } = store.getState();
                             const windowId = win.webContents.id;
 
                             const openTabs = tabs.filter(
-                                tab =>
-                                    !tab.isClosed && tab.windowId === windowId
+                                tab => !tab.isClosed && tab.windowId === windowId
                             );
 
-                            if ( openTabs.length === 1 )
-                            {
+                            if ( openTabs.length === 1 ) {
                                 win.close();
-                            }
-                            else
-                            {
+                            } else {
                                 this.store.dispatch( closeTab( { windowId } ) );
                             }
                         }
@@ -230,24 +192,21 @@ export default class MenuBuilder
                 },
 
                 {
-                    label       : 'Close Window',
-                    accelerator : 'CommandOrControl+Shift+W',
-                    click       : ( item, win ) =>
-                    {
+                    label: 'Close Window',
+                    accelerator: 'CommandOrControl+Shift+W',
+                    click: ( item, win ) => {
                         if ( win ) win.close();
                     }
                 },
                 { type: 'separator' },
                 {
-                    label       : 'Reopen Last Tab',
-                    accelerator : 'CommandOrControl+Shift+T',
-                    click       : ( item, win ) =>
-                    {
+                    label: 'Reopen Last Tab',
+                    accelerator: 'CommandOrControl+Shift+T',
+                    click: ( item, win ) => {
                         const lastTab = getLastClosedTab( store.getState().tabs );
                         let windowToFocus = lastTab.windowId;
 
-                        if ( windowToFocus )
-                        {
+                        if ( windowToFocus ) {
                             windowToFocus = BrowserWindow.fromId( windowToFocus );
                             windowToFocus.focus();
                         }
@@ -257,123 +216,118 @@ export default class MenuBuilder
                 },
                 { type: 'separator' },
                 {
-                    label       : 'Open Location',
-                    accelerator : 'CommandOrControl+L',
-                    click       : ( item, win ) =>
-                    {
+                    label: 'Open Location',
+                    accelerator: 'CommandOrControl+L',
+                    click: ( item, win ) => {
                         this.store.dispatch( selectAddressBar() );
                     }
                 }
             ]
         };
         const subMenuEdit = {
-            label   : '&Edit',
-            submenu : [
+            label: '&Edit',
+            submenu: [
                 {
-                    label       : 'Undo',
-                    accelerator : 'CommandOrControl+Z',
-                    selector    : 'undo:'
+                    label: 'Undo',
+                    accelerator: 'CommandOrControl+Z',
+                    selector: 'undo:'
                 },
                 {
-                    label       : 'Redo',
-                    accelerator : 'Shift+CommandOrControl+Z',
-                    selector    : 'redo:'
+                    label: 'Redo',
+                    accelerator: 'Shift+CommandOrControl+Z',
+                    selector: 'redo:'
                 },
                 { type: 'separator' },
                 {
-                    label       : 'Cut',
-                    accelerator : 'CommandOrControl+X',
-                    selector    : 'cut:'
+                    label: 'Cut',
+                    accelerator: 'CommandOrControl+X',
+                    selector: 'cut:'
                 },
                 {
-                    label       : 'Copy',
-                    accelerator : 'CommandOrControl+C',
-                    selector    : 'copy:'
+                    label: 'Copy',
+                    accelerator: 'CommandOrControl+C',
+                    selector: 'copy:'
                 },
                 {
-                    label       : 'Paste',
-                    accelerator : 'CommandOrControl+V',
-                    selector    : 'paste:'
+                    label: 'Paste',
+                    accelerator: 'CommandOrControl+V',
+                    selector: 'paste:'
                 },
                 {
-                    label       : 'Select All',
-                    accelerator : 'CommandOrControl+A',
-                    selector    : 'selectAll:'
+                    label: 'Select All',
+                    accelerator: 'CommandOrControl+A',
+                    selector: 'selectAll:'
                 }
             ]
         };
         const subMenuView = {
-            label   : '&View',
-            submenu : [
+            label: '&View',
+            submenu: [
                 {
-                    label       : 'Bookmarks',
-                    accelerator :
-                        process.platform === 'darwin'
-                            ? 'Alt+Shift+B'
-                            : 'Control+Shift+O',
-                    click : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Bookmarks',
+                    accelerator:
+            process.platform === 'darwin' ? 'Alt+Shift+B' : 'Control+Shift+O',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
                             this.store.dispatch(
                                 addTab( {
-                                    url         : 'safe-browser://bookmarks',
+                                    url: 'safe-browser://bookmarks',
                                     windowId,
-                                    isActiveTab : true
+                                    isActiveTab: true
                                 } )
                             );
                         }
                     }
                 },
                 { type: 'separator' },
-                { label       : 'Reload',
-                    accelerator : 'CommandOrControl+R',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                {
+                    label: 'Reload',
+                    accelerator: 'CommandOrControl+R',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
                             this.store.dispatch( updateTab( { windowId, shouldReload: true } ) );
                         }
-                    } },
-                { label       : 'Toggle Full Screen',
-                    accelerator :  process.platform === 'darwin' ? 'CommandOrControl+Shift+F' : 'F11',
-                    click       : () =>
-                    {
+                    }
+                },
+                {
+                    label: 'Toggle Full Screen',
+                    accelerator:
+            process.platform === 'darwin' ? 'CommandOrControl+Shift+F' : 'F11',
+                    click: () => {
                         this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
-                    } },
-                { label       : 'Toggle Developer Tools',
-                    accelerator : 'Alt+CommandOrControl+I',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    }
+                },
+                {
+                    label: 'Toggle Developer Tools',
+                    accelerator: 'Alt+CommandOrControl+I',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
-                            store.dispatch( updateTab( { windowId, shouldToggleDevTools: true } ) );
+                            store.dispatch(
+                                updateTab( { windowId, shouldToggleDevTools: true } )
+                            );
                         }
-                    } }
+                    }
+                }
             ]
         };
         const subMenuHistory = {
-            label   : 'Hi&story',
-            submenu : [
+            label: 'Hi&story',
+            submenu: [
                 {
-                    label       : 'View All History',
-                    accelerator :
-                        process.platform === 'darwin'
-                            ? 'CommandOrControl+Y'
-                            : 'Control+H',
-                    click : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'View All History',
+                    accelerator:
+            process.platform === 'darwin' ? 'CommandOrControl+Y' : 'Control+H',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
                             this.store.dispatch(
                                 addTab( {
-                                    url         : 'safe-browser://history',
+                                    url: 'safe-browser://history',
                                     windowId,
-                                    isActiveTab : true
+                                    isActiveTab: true
                                 } )
                             );
                         }
@@ -381,23 +335,19 @@ export default class MenuBuilder
                 },
                 { type: 'separator' },
                 {
-                    label       : 'Forward',
-                    accelerator : 'CommandOrControl + ]',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Forward',
+                    accelerator: 'CommandOrControl + ]',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             store.dispatch( tabForwards() );
                         }
                     }
                 },
                 {
-                    label       : 'Backward',
-                    accelerator : 'CommandOrControl + [',
-                    click       : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Backward',
+                    accelerator: 'CommandOrControl + [',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             store.dispatch( tabBackwards() );
                         }
                     }
@@ -406,28 +356,25 @@ export default class MenuBuilder
         };
 
         const subMenuWindow = {
-            label   : '&Window',
-            submenu : [
+            label: '&Window',
+            submenu: [
                 {
-                    label       : 'Minimize',
-                    accelerator : 'CommandOrControl+M',
-                    role        : 'minimize'
+                    label: 'Minimize',
+                    accelerator: 'CommandOrControl+M',
+                    role: 'minimize'
                 },
                 {
-                    label       : 'Close',
-                    accelerator : 'CommandOrControl+Shift+W',
-                    role        : 'close'
+                    label: 'Close',
+                    accelerator: 'CommandOrControl+Shift+W',
+                    role: 'close'
                 },
                 { type: 'separator' },
                 { label: 'Bring All to Front', role: 'front' },
                 { type: 'separator' },
                 {
-                    label :
-                        'Toggle SAFE Browser-shell Devtools (not for web dev debug)',
-                    click : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Toggle SAFE Browser-shell Devtools (not for web dev debug)',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             win.toggleDevTools();
                         }
                     }
@@ -435,35 +382,31 @@ export default class MenuBuilder
             ]
         };
         const subMenuHelp = {
-            label   : '&Help',
-            submenu : [
+            label: '&Help',
+            submenu: [
                 {
-                    label : 'Learn More about the Safe Network',
-                    click()
-                    {
+                    label: 'Learn More about the Safe Network',
+                    click() {
                         shell.openExternal( 'https://safenetwork.tech/' );
                     }
                 },
                 {
-                    label : 'Documentation',
-                    click()
-                    {
+                    label: 'Documentation',
+                    click() {
                         shell.openExternal(
                             'https://github.com/maidsafe/safe_browser/blob/master/README.md'
                         );
                     }
                 },
                 {
-                    label : 'Community Discussions',
-                    click()
-                    {
+                    label: 'Community Discussions',
+                    click() {
                         shell.openExternal( 'https://safenetforum.org' );
                     }
                 },
                 {
-                    label : 'Search Issues',
-                    click()
-                    {
+                    label: 'Search Issues',
+                    click() {
                         shell.openExternal(
                             'https://github.com/maidsafe/safe_browser/issues'
                         );
@@ -473,20 +416,17 @@ export default class MenuBuilder
         };
 
         const subMenuTest = {
-            label   : '&Tests',
-            submenu : [
+            label: '&Tests',
+            submenu: [
                 {
-                    label : 'Reset the store',
-                    click : ( item, win ) =>
-                    {
-                        if ( win )
-                        {
+                    label: 'Reset the store',
+                    click: ( item, win ) => {
+                        if ( win ) {
                             const windowId = win.webContents.id;
 
-                            logger.verbose( 'Triggering store reset from window:', windowId )
+                            logger.verbose( 'Triggering store reset from window:', windowId );
                             // reset
-                            this.store.dispatch( resetStore( { windowId }) );
-
+                            this.store.dispatch( resetStore( { windowId } ) );
                         }
                     }
                 }
@@ -494,9 +434,9 @@ export default class MenuBuilder
         };
 
         const initialMenusArray = [
-            ...( process.platform === 'darwin' ? [ subMenuAbout ] : [] ),
+            ...( process.platform === 'darwin' ? [subMenuAbout] : [] ),
             subMenuFile,
-            ...( process.platform === 'darwin' ? [ subMenuEdit ] : [] ),
+            ...( process.platform === 'darwin' ? [subMenuEdit] : [] ),
             subMenuView,
             subMenuHistory,
             subMenuWindow,
@@ -505,10 +445,7 @@ export default class MenuBuilder
             // ...( isRunningSpectronTestProcess ? [subMenuTest ] : [] )
         ];
 
-        const extendedMenusArray = getExtensionMenuItems(
-            store,
-            initialMenusArray
-        );
+        const extendedMenusArray = getExtensionMenuItems( store, initialMenusArray );
 
         return extendedMenusArray;
     }

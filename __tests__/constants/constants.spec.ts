@@ -1,14 +1,11 @@
-import * as CONSTANTS from '@Constants';
+import * as CONSTANTS from '$Constants';
 
-describe( 'CONSTANTS', async () =>
-{
-    it( 'should exist', async () =>
-    {
+describe( 'CONSTANTS', async () => {
+    it( 'should exist', async () => {
         expect( CONSTANTS ).not.toBeNull();
     } );
 
-    it( 'should contain PROTOCOLS', async () =>
-    {
+    it( 'should contain PROTOCOLS', async () => {
         expect( CONSTANTS.PROTOCOLS ).not.toBeNull();
     } );
 } );

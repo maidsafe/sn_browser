@@ -20,43 +20,34 @@ import {
 jest.unmock( 'electron' );
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;
 
-describe( 'navigation', () =>
-{
+describe( 'navigation', () => {
     let app;
 
-    beforeAll( async () =>
-    {
+    beforeAll( async () => {
         app = setupSpectronApp( '--debug' );
         await beforeAllTests( app );
     } );
 
-    afterEach( async () =>
-    {
+    afterEach( async () => {
         await delay( 2000 );
     } );
 
-    afterAll( async () =>
-    {
+    afterAll( async () => {
         await afterAllTests( app );
     } );
 
-    it( 'window loaded', async () =>
-    {
+    it( 'window loaded', async () => {
         const loaded = await windowLoaded( app );
         expect( loaded ).toBeTruthy();
     } );
 
-    it( 'shows error in UI if invalid URL', async () =>
-    {
+    it( 'shows error in UI if invalid URL', async () => {
         expect.assertions( 1 );
 
         const { client } = await app;
         await delay( 500 );
         const tabIndex = await newTab( app );
-        await client.waitForExist(
-            BROWSER_UI.ADDRESS_INPUT,
-            WAIT_FOR_EXIST_TIMEOUT
-        );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         await navigateTo( app, 'http://:invalid-url' );
 
@@ -66,17 +57,13 @@ describe( 'navigation', () =>
         expect( text ).toBe( 'Invalid URL: http://:invalid-url' );
     } );
 
-    it( 'shows error in UI if localhost resource does not exist', async () =>
-    {
+    it( 'shows error in UI if localhost resource does not exist', async () => {
         expect.assertions( 1 );
         const { client } = app;
         await delay( 2500 );
 
         const tabIndex = await newTab( app );
-        await client.waitForExist(
-            BROWSER_UI.ADDRESS_INPUT,
-            WAIT_FOR_EXIST_TIMEOUT
-        );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
 
         await navigateTo( app, 'localhost:9001' );
 
@@ -87,8 +74,7 @@ describe( 'navigation', () =>
         expect( text ).toBe( 'Page Load Failed' );
     } );
 
-    it( 'can load about:blank', async () =>
-    {
+    it( 'can load about:blank', async () => {
         const { client } = app;
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
@@ -106,9 +92,8 @@ describe( 'navigation', () =>
         await client.pause( 4500 );
         const parsedUrl = urlParse( clientUrl );
 
-        expect( `${ parsedUrl.protocol }${ parsedUrl.hostname }` ).toBe( 'about:blank' );
+        expect( `${parsedUrl.protocol}${parsedUrl.hostname}` ).toBe( 'about:blank' );
         const text = await client.getText( 'body' );
         expect( text ).toBe( '' );
     } );
-
 } );
