@@ -79,12 +79,6 @@ if ( platform === LINUX )
         path.resolve( CONTAINING_FOLDER, LOGS ),
         { overwrite: true }
     );
-
-    fs.moveSync(
-        path.resolve( PERUSE_RESOURCES_FOLDER, 'libgconf-2.so.4' ),
-        path.resolve( CONTAINING_FOLDER, 'libgconf-2.so.4' ),
-        { overwrite: true }
-    );
 }
 
 if ( platform === WINDOWS )
