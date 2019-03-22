@@ -16,7 +16,7 @@ Application developers should use the same link, but choose the `-dev` postfixed
 
 ## Design
 
-To find out more about the structure of Peruse and the SAFE functionality extending it, [read the Browser Application Design Overview](https://github.com/maidsafe/safe_browser/blob/master/docs/browser-development/Application_Design_Overview.md);
+To find out more about the structure of Peruse and the SAFE functionality extending it, [read the Browser Application Design Overview](https://github.com/maidsafe/safe_browser/blob/master/docs/browser-development/Application-Design-Overview.md).
 
 ### Compiling
 
