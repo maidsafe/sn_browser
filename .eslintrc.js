@@ -59,72 +59,6 @@ module.exports = {
         'react/prefer-stateless-function': 'error',
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/array-type': ['error', 'generic'],
-        '@typescript-eslint/tslint/config': [
-            'error',
-            {
-                rules: {
-                    'file-name-casing': [
-                        true,
-                        { '.tsx': 'pascal-case', '.ts': 'camel-case' }
-                    ],
-                    'no-parameter-reassignment': true,
-                    'await-promise': true,
-                    'ban-comma-operator': true,
-                    'function-constructor': true,
-                    'no-bitwise': true,
-                    'no-conditional-assignment': true,
-                    'no-debugger': true,
-                    'no-duplicate-super': true,
-                    'no-duplicate-variable': true,
-                    'no-empty': true,
-                    'no-floating-promises': true,
-                    'no-implicit-any': false,
-                    'no-implicit-dependencies': [
-                        true,
-                        'dev',
-                        [...aliasesArray, 'electron']
-                    ],
-                    'no-invalid-template-strings': true,
-                    'no-invalid-this': true,
-                    'no-return-await': true,
-                    'no-sparse-arrays': true,
-                    'no-string-literal': true,
-                    'no-string-throw': true,
-                    'no-switch-case-fall-through': true,
-                    'no-this-assignment': [
-                        true,
-                        { 'allow-destructuring': true }
-                    ],
-                    'no-unsafe-any': false,
-                    'no-unused-expression': true,
-                    'no-use-before-declare': true,
-                    'no-var-keyword': true,
-                    'prefer-object-spread': true,
-                    'restrict-plus-operands': true,
-                    'switch-default': true,
-                    'unnecessary-constructor': true,
-                    'cyclomatic-complexity': true,
-                    deprecation: true,
-                    'no-default-export': false,
-                    'no-default-import': [
-                        true,
-                        {
-                            fromModules:
-                                '^palantir-|^_internal-*|^\\./|^\\.\\./'
-                        }
-                    ],
-                    'no-duplicate-imports': true,
-                    'prefer-const': true,
-                    'arrow-return-shorthand': true,
-                    'no-unnecessary-callback-wrapper': true,
-                    'no-unnecessary-initializer': true,
-                    'no-unnecessary-qualifier': true,
-                    'prefer-method-signature': true,
-                    'prefer-template': true,
-                    'return-undefined': true
-                }
-            }
-        ],
         indent: 'off',
         '@typescript-eslint/indent': ['error', 4]
     },
@@ -156,14 +90,7 @@ module.exports = {
             }
         }
     ],
-    plugins: [
-        '@typescript-eslint',
-        'jest',
-        'promise',
-        'import',
-        'unicorn',
-        '@typescript-eslint/tslint'
-    ],
+    plugins: ['@typescript-eslint', 'jest', 'promise', 'import', 'unicorn'],
     settings: {
         'import/core-modules': ['electron'],
         'import/resolver': {
