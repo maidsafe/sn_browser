@@ -8,6 +8,19 @@ The browser is in the process of being converted to use type checking in the jav
 
 Read on to get a deeper look into the application structure...
 
+## Table of contents
+
+1. [Processes](#processes)
+   - [The Main Process](#the-main-process)
+   - [The Background Process](#the-background-process)
+   - [The Browser Application](#the-browser-application)
+1. [Data Flow](#data-flow)
+1. [The Codebase Structure](#the-codebase-structure)
+1. [Building with Webpack](#building-with-webpack)
+   - [Aliases](#aliases)
+   - [DLL](#dll)
+1. [SAFE Specifics](#safe-specifics)
+
 ---
 
 Inside the app folder, we have three main processes which run (or more, depending on window count):
@@ -36,7 +49,7 @@ There can be _many_ browser windows, each running it's own application instance.
 
 The application uses Redux for managing the browser state. Thus there are many `actions` which trigger `reducers` which update the `store`. The `store` is kept in sync across the many application processes via some magic and `electron-redux`. This provides helpers to keep stores in sync in a non-blocking fashion. It also provides what we call _aliases_, which are `actions` that trigger a function in only one process (the `background` process! :tada:).
 
-## The Application Structure
+## The Codebase Structure
 
 An overview of the code. Extensions is probably the most interesting part here, as this is how we hook into the Peruse browser base and extend it to provide SAFE functionality.
 
@@ -46,7 +59,25 @@ An overview of the code. Extensions is probably the most interesting part here, 
 
 The browser `actions` and `reducers` etc are in the `app` folder... as is all the application code for main/bg and renderer processes.
 
-#### `./app/extensions`
+#### `webPreload`
+
+Electron provides a `webview` component which is used for the rendering of tabs. This can be given a js file to be executed in a controlled fashion in a tab _before_ the content is loaded. This is how we inject SAFE APIs into the dom, eg. This all happens in `webPreload`.
+
+It also sets up a more generic reducer, `remoteCalls`, which is used by SAFE or other browser APIs to register promises which can be executed in another process (`background`, eg) and then fulfilled via the redux store (responing to `remoteCall` actions!).
+
+#### `background.process`
+
+The background process, which is where the magic (largely) happens!
+
+#### `index`
+
+This is the react application which forms the browser UI.
+
+#### `main.dev`
+
+The main process!
+
+### `./app/extensions`
 
 The browser behaviour can be extended via extensions! Via a variety of hooks throughout the application lifecycle (`onInit`... etc) functionality is triggered in a separate folder within the extensions.
 
@@ -55,49 +86,27 @@ This is designed in such a way as we _should_ be able to easily remove / add dif
 It's important to note that these 'extensions' are not plugins/extensions as we know of in Chrome/Firefox etc. They are simply a way
 to add custom behaviour to [Peruse](https://github.com/joshuef/peruse) at build time. They can not be applied/installed after packaging the application.
 
-#### `./app/components` / `./app/containers`
+### `./app/components` / `./app/containers`
 
 The react components for the browser UI.
 
-#### `./app/actions`
+### `./app/actions`
 
 The standard browser actions.
 
-#### `./app/reducers` / `./app/store`
+### `./app/reducers` / `./app/store`
 
 The redux reducers and store setup for the browser.
 
-#### `./app/server`
+### `./app/server`
 
 An express server is set up to provide proper HTTP header handling for any extension which may wish to hijack this normal behaviour (_cough_ SAFE _cough_).
 
-#### `./app/utils`
+### `./app/utils`
 
 Unspecified helper things.
 
-## Code Specifics
-
-Currently files are marked as `development` for the working code, they are compiled to files _without_ this post-fix.
-
-### `webPreload.development`
-
-Electron provides a `webview` component which is used for the rendering of tabs. This can be given a js file to be executed in a controlled fashion in a tab _before_ the content is loaded. This is how we inject SAFE APIs into the dom, eg. This all happens in `webPreload`.
-
-It also sets up a more generic reducer, `remoteCalls`, which is used by SAFE or other browser APIs to register promises which can be executed in another process (`background`, eg) and then fulfilled via the redux store (responing to `remoteCall` actions!).
-
-### `background.process.development`
-
-The background process, which is where the magic (largely) happens!
-
-### `index`
-
-This is the react application which forms the browser UI.
-
-### `main.development`
-
-The main process!
-
-## Build process
+## Building with Webpack
 
 [Webpack](https://webpack.js.org/) is run to compile each of the various processes. [Babeljs](https://babeljs.io/en/setup) is used to transpile the typescript code to javascript.
 

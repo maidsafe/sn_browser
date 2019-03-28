@@ -1,5 +1,19 @@
 # WebApp Development
 
+## Table of contents
+
+1. [Dev vs Live Builds](#dev-vs-live-builds)
+1. [SAFE Network API](#safe-network-api)
+1. [Experimental APIs and Features](#experimental-apis-and-features)
+   - [SAFE WebId](#safe-webid)
+   - [RDF Utilities](#rdf-utilities)
+   - [XOR-URls](#xor-urls)
+   - [Example Applications Using Experimental APIs](#example-applications-using-experimental-apis)
+   - [The Mutable Data Viewer](#the-mutabledata-viewer)
+1. [Debugging](#debugging)
+
+## Dev vs Live Builds
+
 There are `-dev` postfixed releases of SAFE Browser available. These come with both live network and mock network libs, bundled.
 
 By default, opening the app will open SAFE Browser for the mock network.
@@ -60,7 +74,7 @@ As mentioned above, there are only a few functions related to the initialisation
   }
   ```
 
-## Experimental APIs and features
+## Experimental APIs and Features
 
 You are free to use any of the exposed experimental APIs and features, to explore the features and APIs that are being actively developed.
 
@@ -74,31 +88,31 @@ When the experimental APIs/features are enabled with this toggle, a visual indic
 
 ![Experimental features/APIs toggle](../../resources/readme/experiments-visual-indicator.png)
 
-### SAFE WebID
+### SAFE WebId
 
-SAFE uses the RDF compliant WebID system for easily enabling user identities.
+SAFE uses the RDF compliant WebId system for easily enabling user identities.
 
-The WebID switcher/selector exposed in the browser makes use of some experimental APIs, and it's in itself still in an experimental stage, therefore this feature is only exposed in the browser when the experimental APIs are enabled using the toggle from the options menu as detailed above. This is the only feature currently being exposed as experimental in the browser.
+The WebId switcher/selector exposed in the browser makes use of some experimental APIs, and it's in itself still in an experimental stage, therefore this feature is only exposed in the browser when the experimental APIs are enabled using the toggle from the options menu as detailed above. This is the only feature currently being exposed as experimental in the browser.
 
-![WebID selector](../../resources/readme/webid-selector.png)
+![WebId selector](../../resources/readme/webid-selector.png)
 
-Any webapp can retrieve the currently selected WebID via `window.currentWebId` function.
+Any webapp can retrieve the currently selected WebId via `window.currentWebId` function.
 
 Additionally, it can listen for changes via the event emitter, `window.webIdEventEmitter`, eg:
 
 ```js
 webIdEventEmitter.on('update', webId => {
-  console.info('An update to current WebID occurred!', webId);
+  console.info('An update to current WebId occurred!', webId);
 });
 ```
 
-There is a set of available experimental APIs which are utilities to manipulate WebIDs and public names, please refer to the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) for details.
+There is a set of available experimental APIs which are utilities to manipulate WebIds and public names, please refer to the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) for details.
 
-### RDF utilities
+### RDF Utilities
 
-Another set of utilities in their early stage of development can be found in the RDF and WebID emulations. As you probably know our `MutableData` API supports emulations to be implemented on top of them, e.g. our NFS emulation allows apps to access the MutableData data as if it was a files directory.
+Another set of utilities in their early stage of development can be found in the RDF and WebId emulations. As you probably know our `MutableData` API supports emulations to be implemented on top of them, e.g. our NFS emulation allows apps to access the MutableData data as if it was a files directory.
 
-In an analogous way to the NFS emulation, the RDF and WebID emulations can be applied on top of any `MutableData` object, e.g.:
+In an analogous way to the NFS emulation, the RDF and WebId emulations can be applied on top of any `MutableData` object, e.g.:
 
 ```js
 const safeApp = await window.safe.initialiseApp( appInfo );
@@ -111,7 +125,7 @@ const rdfEmulation = await md.emulateAs( 'RDF' );
 
 Again, please refer to the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) for details of these utilities.
 
-### Support for XOR-URLs:
+### XOR-URLs
 
 Not only does the DOM API allow SAFE applications to link/reference any MutableData/ImmutableData on the network using its XOR-URL (URL based on its XoR name location on the network), but it also enables the SAFE Browser to fetch any website, webapp, or random file from the network using a XOR-URL. Note this is in addition to being able to fetch content using the SAFE DNS (Decentralised Naming System) with publicName-URLs, e.g. `safe://subname.pubname`.
 
@@ -127,14 +141,14 @@ Please note that since the XOR-URLs are still in its experimental stage you'll n
 
 For more details/information about the XOR-URLs, you can read the proposed [RFC](https://github.com/maidsafe/rfcs/blob/357384147ae005e4061079b27a30f43cf379fda5/text/0000-xor-urls/0000-xor-urls.md), or the [discussions taking place in our DevForum](https://forum.safedev.org/t/xor-address-urls-xor-urls/1952), or by watching this [screencast](https://www.youtube.com/watch?v=j6cgK6Grm6g).
 
-### Example applications using experimental APIs
+### Example Applications Using Experimental APIs
 
 If you want to learn more about how applications can make use of these experimental APIs and features exposed by the SAFE Browser, you can refer to:
 
 - [Patter (safe://patter.dapp)](safe://patter.dapp), which is a proof-of-concept decentralised Twitter clone ([source code](https://github.com/maidsafe/safe-patter-js))
-- The [WebID Mgr. proof-of-concept webapp (safe://webidmgr.dapp)](safe://webidmgr.dapp)([source code](https://github.com/maidsafe/safe-web-id-manager-js))
+- The [WebId Mgr. proof-of-concept webapp (safe://webidmgr.dapp)](safe://webidmgr.dapp)([source code](https://github.com/maidsafe/safe-web-id-manager-js))
 
-### The MutableData viewer
+### The MutableData Viewer
 
 When a URL (either publicName-URL or XOR-URL) is targeting a `MutableData`, which happens to not have an "index.html" file, or which is probably not even a files container (a.k.a. an NFS container) but simply a `MutableData` created by any application to store data on the network, a `MutableData` viewer is rendered by the SAFE Browser. This web-based viewer displays the list of `MutableData` entries, showing the key, version and value of each of them, and it also displays the permissions sets defined for such a `MutableData`. This is a very basic first version, which can hopefully evolve into a SAFE data browser in the future.
 
