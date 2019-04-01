@@ -1857,13 +1857,6 @@
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-12.0.10.tgz#17a8ec65cd8e88f51b418ceb271af18d3137df67"
   integrity sha512-WsVzTPshvCSbHThUduGGxbmnwcpkgSctHGHTqzWyFg4lYAuV5qXlyFPOsP3OWqCINfmg/8VXP+zJaa4OxEsBQQ==
 
-"@typescript-eslint/eslint-plugin-tslint@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin-tslint/-/eslint-plugin-tslint-1.4.2.tgz#5777f4aaa7004f7b21925cf050faadd9f078b183"
-  integrity sha512-/kMgZrNPuKCcx19yJTVDzIn0qy4qo4NvC8JDfQmFCmqv7KOUb2MqlDy85fivaBkdbFHFsXJpwGDjRs48hn1O7Q==
-  dependencies:
-    lodash.memoize "^4.1.2"
-
 "@typescript-eslint/eslint-plugin@1.4.2":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-1.4.2.tgz#370bc32022d1cc884a5dcf62624ef2024182769d"
