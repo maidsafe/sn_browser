@@ -5,7 +5,7 @@
 1. [Dev vs Live Builds](#dev-vs-live-builds)
 1. [SAFE Network API](#safe-network-api)
 1. [Experimental APIs and Features](#experimental-apis-and-features)
-   - [SAFE WebId](#safe-webid)
+   - [SAFE WebID](#safe-webid)
    - [RDF Utilities](#rdf-utilities)
    - [XOR-URls](#xor-urls)
    - [Example Applications Using Experimental APIs](#example-applications-using-experimental-apis)
@@ -88,31 +88,31 @@ When the experimental APIs/features are enabled with this toggle, a visual indic
 
 ![Experimental features/APIs toggle](../../resources/readme/experiments-visual-indicator.png)
 
-### SAFE WebId
+### SAFE WebID
 
-SAFE uses the RDF compliant WebId system for easily enabling user identities.
+SAFE uses the RDF compliant WebID system for easily enabling user identities.
 
-The WebId switcher/selector exposed in the browser makes use of some experimental APIs, and it's in itself still in an experimental stage, therefore this feature is only exposed in the browser when the experimental APIs are enabled using the toggle from the options menu as detailed above. This is the only feature currently being exposed as experimental in the browser.
+The WebID switcher/selector exposed in the browser makes use of some experimental APIs, and it's in itself still in an experimental stage, therefore this feature is only exposed in the browser when the experimental APIs are enabled using the toggle from the options menu as detailed above. This is the only feature currently being exposed as experimental in the browser.
 
-![WebId selector](../../resources/readme/webid-selector.png)
+![WebID selector](../../resources/readme/webid-selector.png)
 
-Any webapp can retrieve the currently selected WebId via `window.currentWebId` function.
+Any webapp can retrieve the currently selected WebID via `window.currentWebID` function.
 
 Additionally, it can listen for changes via the event emitter, `window.webIdEventEmitter`, eg:
 
 ```js
 webIdEventEmitter.on('update', webId => {
-  console.info('An update to current WebId occurred!', webId);
+  console.info('An update to current WebID occurred!', webId);
 });
 ```
 
-There is a set of available experimental APIs which are utilities to manipulate WebIds and public names, please refer to the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) for details.
+There is a set of available experimental APIs which are utilities to manipulate WebIDs and public names, please refer to the [API documentation](https://docs.maidsafe.net/safe_app_nodejs) for details.
 
 ### RDF Utilities
 
-Another set of utilities in their early stage of development can be found in the RDF and WebId emulations. As you probably know our `MutableData` API supports emulations to be implemented on top of them, e.g. our NFS emulation allows apps to access the MutableData data as if it was a files directory.
+Another set of utilities in their early stage of development can be found in the RDF and WebID emulations. As you probably know our `MutableData` API supports emulations to be implemented on top of them, e.g. our NFS emulation allows apps to access the MutableData data as if it was a files directory.
 
-In an analogous way to the NFS emulation, the RDF and WebId emulations can be applied on top of any `MutableData` object, e.g.:
+In an analogous way to the NFS emulation, the RDF and WebID emulations can be applied on top of any `MutableData` object, e.g.:
 
 ```js
 const safeApp = await window.safe.initialiseApp( appInfo );
@@ -146,7 +146,7 @@ For more details/information about the XOR-URLs, you can read the proposed [RFC]
 If you want to learn more about how applications can make use of these experimental APIs and features exposed by the SAFE Browser, you can refer to:
 
 - [Patter (safe://patter.dapp)](safe://patter.dapp), which is a proof-of-concept decentralised Twitter clone ([source code](https://github.com/maidsafe/safe-patter-js))
-- The [WebId Mgr. proof-of-concept webapp (safe://webidmgr.dapp)](safe://webidmgr.dapp)([source code](https://github.com/maidsafe/safe-web-id-manager-js))
+- The [WebID Mgr. proof-of-concept webapp (safe://webidmgr.dapp)](safe://webidmgr.dapp)([source code](https://github.com/maidsafe/safe-web-id-manager-js))
 
 ### The MutableData Viewer
 
