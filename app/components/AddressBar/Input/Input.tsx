@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { remote } from 'electron';
+import { remote, ipcRenderer } from 'electron';
+import { urlHasChanged } from '$Utils/urlHelpers';
 import { CLASSES } from '$Constants';
 import { I18n } from 'react-redux-i18n';
 import { logger } from '$Logger';
@@ -9,6 +10,7 @@ import { Input } from 'antd';
 import 'antd/lib/input/style';
 
 interface AddressBarInputProps {
+    activeTab: string;
     address?: string;
     isSelected?: boolean;
     windowId: number;
@@ -46,6 +48,14 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
     }
 
     componentWillReceiveProps( nextProps ) {
+        const { activeTab } = this.props;
+
+        if ( urlHasChanged( activeTab.url, nextProps.activeTab.url ) ) {
+            ipcRenderer.send( 'browserview-load', {
+                id: activeTab.index,
+                url: nextProps.activeTab.url
+            } );
+        }
         if (
             nextProps.address !== this.props.address &&
       nextProps.address !== this.state.address

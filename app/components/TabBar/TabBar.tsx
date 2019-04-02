@@ -1,4 +1,5 @@
-import { remote } from 'electron';
+/* eslint-disable */
+import { remote, ipcRenderer } from 'electron';
 import url from 'url';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -41,6 +42,7 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
 
     handleTabClick( tabData, event ) {
         event.stopPropagation();
+        ipcRenderer.send('browserview-select', tabData.tabIndex);
         this.props.setActiveTab( {
             index: tabData.tabIndex,
             url: event.target.value
@@ -51,6 +53,7 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
         event.stopPropagation();
         const { closeTab, windowId } = this.props;
         closeTab( { index: tabData.tabIndex, windowId } );
+        ipcRenderer.send('browserview-destroy', tabData.tabIndex);
     }
 
     handleAddTabClick( event ) {

@@ -4,7 +4,7 @@ import { logger } from '$Logger';
 import safeBrowsing from './safe';
 
 // here add your packages for extensibility.
-// const allPackages = [ ];
+// const allPackages = [];
 const allPackages = [safeBrowsing];
 
 export const preAppLoad = store => {

@@ -89,7 +89,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
         const optionsToUse = {
             ...options,
             registerScheme: false,
-            joinSchemes: false,
+            // joinSchemes: false,
             libPath: CONFIG.SAFE_NODE_LIB_PATH,
             configPath: null,
             forceUseMock: isMock,
@@ -121,7 +121,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
         const optionsToUse = {
             ...options,
             registerScheme: false,
-            joinSchemes: false,
+            // joinSchemes: false,
             libPath: null,
             configPath: null,
             forceUseMock: isMock,

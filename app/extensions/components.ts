@@ -5,10 +5,10 @@ import safeWrapAddressBarButtonsLHS from '$Extensions/safe/components/wrapAddres
 import safeWrapAddressBarButtonsRHS from '$Extensions/safe/components/wrapAddressBarButtonsRHS';
 import safeWrapAddressBarInput from '$Extensions/safe/components/wrapAddressBarInput';
 
-const allBrowserExtensions = [safeWrapBrowser];
-const allAddressBarButtonLHSExtensions = [safeWrapAddressBarButtonsLHS];
-const allAddressBarButtonRHSExtensions = [safeWrapAddressBarButtonsRHS];
-const allAddressBarInputExtensions = [safeWrapAddressBarInput];
+const allBrowserExtensions = [];
+const allAddressBarButtonLHSExtensions = [];
+const allAddressBarButtonRHSExtensions = [];
+const allAddressBarInputExtensions = [];
 
 /**
  * Wrap the browser with a HOC or replace it entirely.

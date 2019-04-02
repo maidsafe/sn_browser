@@ -1,5 +1,3 @@
-// following @pfrazee's beaker pattern again here.
-// import setModuleImportLocations from 'setModuleImportLocations';
 import { ipcRenderer } from 'electron';
 import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
@@ -18,6 +16,8 @@ if ( !isMock ) {
         throw new Error( 'Sorry, peruse does not support window.eval().' );
     };
 }
+
+console.log( 'AOOOOOOOOIIIIIIIIIIIIIIIIIIIIIIIIIII' );
 
 const pendingCalls = {};
 
