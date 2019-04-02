@@ -31,6 +31,7 @@
     "post-pack": "node ./post-pack.js",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
+    "package-macos": "yarn build && electron-builder --publish always",
     "package-linux": "yarn build && electron-builder build --linux",
     "package-win": "yarn build && electron-builder build --win --x64",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml ./node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
@@ -139,6 +140,20 @@
         "to": "nessie-styles.css"
       }
     ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "protocols": {
       "name": "SAFE Network URL",
       "schemes": [
@@ -147,17 +162,27 @@
       ]
     },
     "win": {
-      "target": "dir"
+      "target": [
+        "nsis"
+      ]
     },
     "linux": {
-      "target": "dir"
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development"
     },
     "mac": {
-      "target": "dir"
+      "target": "dmg"
     },
     "directories": {
       "buildResources": "resources",
       "output": "release"
+    },
+      "publish": {
+      "provider": "github",
+      "owner": "joshuef",
+      "repo": "safe_browser"
     }
   },
   "repository": {
