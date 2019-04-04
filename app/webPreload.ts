@@ -10,9 +10,14 @@ const { configureStore } = require( './store/configureStore' );
 // TODO This handling needs to be imported via extension apis more seemlessly
 const store = configureStore();
 
-window.eval = global.eval = () => {
-    throw new Error( 'Sorry, peruse does not support window.eval().' );
-};
+const safeBrowserAppState = store.getState().safeBrowserApp;
+const { isMock } = safeBrowserAppState;
+
+if ( !isMock ) {
+    window.eval = global.eval = () => {
+        throw new Error( 'Sorry, peruse does not support window.eval().' );
+    };
+}
 
 const pendingCalls = {};
 
