@@ -78,6 +78,20 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
         expect( theSafeClient ).toHaveProperty( 'fromAuthUri' );
     } );
 
+    it( 'eval may be used when browser is run against MockVault', async () => {
+        expect.assertions( 1 );
+        await setClientToMainBrowserWindow( app );
+
+        const { client } = app;
+        await client.pause( 1500 );
+
+        await client.pause( 1500 );
+
+        const theSafeClient = await client.execute( () => eval( 'true' ) );
+
+        expect( theSafeClient.value ).toBeTruthy();
+    } );
+
     it( 'shows notification for HTTP requests', async () => {
         expect.assertions( 1 );
         await setClientToMainBrowserWindow( app );
