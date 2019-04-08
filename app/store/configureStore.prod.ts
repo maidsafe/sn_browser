@@ -6,7 +6,7 @@ import {
     Reducer,
     StoreEnhancer
 } from 'redux';
-import { createHashHistory, History } from 'history';
+import { createBrowserHistory, History } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 
 import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
@@ -29,7 +29,7 @@ const initialStateFromMain: {} = inRendererProcess
 let ourHistory: History;
 
 if ( inRendererProcess ) {
-    ourHistory = createHashHistory();
+    ourHistory = createBrowserHistory();
 }
 
 const rootReducer: Reducer = createRootReducer( ourHistory );

@@ -1,27 +1,21 @@
-
-.container
-{
+.container {
     flex: 0;
     height: 100%;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
-    background: rgba( 207, 208, 209, 1);
+    background: rgba(207, 208, 209, 1);
     z-index: 4;
     font-size: 1.4rem;
     -webkit-app-region: drag;
 }
 
-.containerMac
-{
+.containerMac {
     padding-top: 10px;
     padding-left: 100px;
 }
 
-
-
-.tabBar
-{
+.tabBar {
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -30,93 +24,82 @@
     -webkit-app-region: no-drag;
 }
 
-
-.tabBox
-{
-    padding-right:      7px;
-    padding-left:       7px;
-    min-height:         31px;
-    padding-top:        4px;
-    padding-bottom:     5px;
-    box-sizing:         border-box;
-    border-top:         1px solid rgba( 127, 127, 127, 1);
-    border-right:       1px solid rgba( 127, 127, 127, 1);
+.tabBox {
+    padding-right: 7px;
+    padding-left: 7px;
+    min-height: 31px;
+    padding-top: 4px;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(127, 127, 127, 1);
+    border-right: 1px solid rgba(127, 127, 127, 1);
 }
 
-.tabBox:hover:not(.activeTab)
-{
-    background-color: rgba( 246, 246, 246, 0.5);
+.tabBox:hover:not(.activeTab) {
+    background-color: rgba(246, 246, 246, 0.5);
 }
 
-
-.tab
-{
-    composes: tabBox;
-    flex: 1;
-    overflow:hidden;
+.tab {
+    composes: tabBox; /* stylelint-disable-line */
+    overflow: hidden;
     position: relative;
-    max-width: 200px;
+    max-width: 250px;
     text-align: left;
-    justify-content: space-between;
+    user-select: none;
 }
 
-.tab:first-child
-{
-    border-left: 1px solid rgba( 127, 127, 127, 1);
+.tab:first-child {
+    border-left: 1px solid rgba(127, 127, 127, 1);
 }
 
-
-.addTab
-{
-    composes: tabBox;
+.addTab {
+    margin-left: 10px;
 }
 
-
-
-.tabText
-{
+.tabText {
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
     line-height: 1.2;
     text-overflow: ellipsis;
     user-select: none;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
+.favicon {
+    width: 20px;
+    height: 20px;
+    margin-top: -4px;
+}
 
-.tabAddButton,
-.tabCloseButton
-{
-    padding: 1px;
-    flex: 0 0 14px;
+.faviconContainer {
+    height: 20px;
+    width: 20px;
+}
+
+.loadingIcon {
+    font-size: 20px;
+}
+
+.addTab,
+.closeTab {
+    padding: 4px;
     border-radius: 100%;
 }
 
-.addTab:hover .tabAddButton
-{
+.addTab:hover {
     color: white;
     background-color: rgba(54, 125, 62, 0.9);
+    cursor: default;
 }
 
-.tabCloseButton:hover
-{
+.closeTab:hover {
     color: white;
+    cursor: default;
     background-color: rgba(187, 45, 0, 0.9);
 }
 
-.favicon
-{
-  min-width: 20px;
-  max-width: 20px;
-}
-
-.favicon img
-{
-  max-width: 16px;
-}
-
-.activeTab
-{
-    composes: tab;
-    background-color: rgba( 246, 246, 246, 1);
+.activeTab {
+    composes: tab; /* stylelint-disable-line */
+    background-color: rgba(246, 246, 246, 1);
 }

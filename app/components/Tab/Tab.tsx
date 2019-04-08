@@ -663,6 +663,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
                 <webview
                     style={{ height: '100%', display: 'flex', flex: '1 1' }}
                     tabIndex="0"
+                    webpreferences="nodeIntegration, contextIsolation=false"
                     preload={injectPath}
                     partition="persist:safe-tab"
                     ref={c => {

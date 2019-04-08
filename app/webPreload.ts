@@ -25,7 +25,7 @@ store.subscribe( async () => {
     const state = store.getState();
     const calls = state.remoteCalls;
 
-    calls.forEach( theCall => {
+    calls.forEach( ( theCall ) => {
         if ( theCall === pendingCalls[theCall.id] ) {
             return;
         }
@@ -39,15 +39,15 @@ store.subscribe( async () => {
         if ( theCall.done && callPromises.resolve ) {
             pendingCalls[theCall.id] = theCall;
 
-            let callbackArgs = theCall.response;
+            let callbackArguments = theCall.response;
 
-            callbackArgs = [theCall.response];
+            callbackArguments = [theCall.response];
 
             if ( theCall.isListener ) {
                 // error first
-                callPromises.resolve( null, ...callbackArgs );
+                callPromises.resolve( null, ...callbackArguments );
             }
-            callPromises.resolve( ...callbackArgs );
+            callPromises.resolve( ...callbackArguments );
             store.dispatch( removeRemoteCall( theCall ) );
 
             delete pendingCalls[theCall.id];
