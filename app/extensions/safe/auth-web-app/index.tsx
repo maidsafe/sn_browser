@@ -32,7 +32,7 @@ if ( !window.safeAuthenticator.getLibStatus() ) {
     store.dispatch( showLibErrPopup() );
 }
 
-const registerNetworkStateListener = cb => {
+const registerNetworkStateListener = ( cb ) => {
     // set network listener
     if ( window.safeAuthenticator && window.safeAuthenticator.setNetworkListener ) {
         window.safeAuthenticator.setNetworkListener( cb );
@@ -60,7 +60,7 @@ const networkStateListenerCb = ( err, state ) => {
     }
 };
 
-const registerIsAuthorisedListener = cb => {
+const registerIsAuthorisedListener = ( cb ) => {
     if (
         window.safeAuthenticator &&
     window.safeAuthenticator.setIsAuthorisedListener
@@ -77,7 +77,7 @@ const isAuthorisedListenerCb = ( err, state ) => {
     return store.dispatch( setIsAuthorised( state ) );
 };
 
-const registerAppListUpdateListener = cb => {
+const registerAppListUpdateListener = ( cb ) => {
     if (
         window.safeAuthenticator &&
     window.safeAuthenticator.setAppListUpdateListener
@@ -113,7 +113,7 @@ window.safeAuthenticator.setReAuthoriseState( reAuthoriseState );
 
 window.addEventListener(
     'message',
-    evt => {
+    ( evt ) => {
         console.warn( 'Invitation code ::', evt.data );
         store.dispatch( setInviteCode( evt.data ) );
         store.dispatch( toggleInvitePopup() );

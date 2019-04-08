@@ -1,10 +1,8 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import { TabBar } from '$Components/TabBar';
-import MdClose from 'react-icons/lib/md/close';
-import MdAdd from 'react-icons/lib/md/add';
+import TabBar from '$Components/TabBar';
+import { Icon } from 'antd';
 import { CLASSES } from '$Constants';
-import { Spinner } from 'nessie-ui';
 
 describe( 'TabBar', () => {
     let wrapper;
@@ -54,12 +52,9 @@ describe( 'TabBar', () => {
             expect( wrapper.find( '#favicon-img' ).length ).toBe( 1 );
         } );
 
-        it( 'should have exactly 1 MdAdd component', () => {
-            expect( wrapper.find( MdAdd ).length ).toBe( 1 );
-        } );
-
-        it( 'should have exactly 1 MdClose component', () => {
-            expect( wrapper.find( MdClose ).length ).toBe( 1 );
+        it( 'should have exactly 2 Button components', () => {
+            // add and close
+            expect( wrapper.find( Icon ).length ).toBe( 2 );
         } );
     } );
 
@@ -80,7 +75,7 @@ describe( 'TabBar', () => {
         } );
 
         it( 'should have exactly 1 tab with loading indicator', () => {
-            expect( wrapper.find( Spinner ).length ).toBe( 1 );
+            expect( wrapper.find( Icon ).length ).toBe( 3 );
         } );
     } );
 
