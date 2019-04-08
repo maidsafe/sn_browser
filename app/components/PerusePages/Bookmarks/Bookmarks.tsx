@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router';
 import { ipcRenderer, remote } from 'electron';
 import { Page, H1, PageHeader } from 'nessie-ui';
 import UrlList from '$Components/UrlList';
@@ -19,7 +18,7 @@ export default class Bookmarks extends Component<BookmarksProps, {}> {
 
     render() {
         const { bookmarks, isActiveTab, addTab } = this.props;
-        const bookmarkList = bookmarks.map( bookmark => bookmark.url );
+        const bookmarkList = bookmarks.map( ( bookmark ) => bookmark.url );
         let moddedClass = styles.tab;
         if ( isActiveTab ) {
             moddedClass = styles.activeTab;
