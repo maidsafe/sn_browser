@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { remote } from 'electron';
+import { remote, app } from 'electron';
 import pkg from '$Package';
 import getPort from 'get-port';
 import { CLASSES, GET_DOM_EL_CLASS } from './constants/classes';
@@ -9,7 +9,7 @@ export const { platform } = process;
 
 export { CLASSES, GET_DOM_EL_CLASS };
 
-const allPassedArgs = process.argv;
+const allPassedArguments = process.argv;
 
 let shouldRunMockNetwork = fs.existsSync(
     path.resolve( __dirname, '../..', 'startAsMock' )
@@ -27,8 +27,13 @@ export const isRunningSpectronTestProcess =
       ? remote.getGlobal( 'isRunningSpectronTestProcess' )
       : process.env.SPECTRON_TEST || false;
 
-export const isRunningUnpacked = process.env.IS_UNPACKED;
-export const isRunningPackaged = !isRunningUnpacked;
+export const isRunningPackaged =
+  remote && remote.getGlobal
+      ? remote.getGlobal( 'isRunningPackaged' )
+      : app
+          ? app.isPackaged
+          : false;
+export const isRunningUnpacked = !isRunningPackaged;
 export const isRunningSpectronTestProcessingPackagedApp =
   remote && remote.getGlobal
       ? remote.getGlobal( 'isRunningSpectronTestProcessingPackagedApp' )
@@ -45,23 +50,23 @@ if (
     shouldRunMockNetwork = true;
 }
 
-if ( allPassedArgs.includes( '--mock' ) ) {
+if ( allPassedArguments.includes( '--mock' ) ) {
     shouldRunMockNetwork = true;
 }
 
-if ( allPassedArgs.includes( '--live' ) ) {
+if ( allPassedArguments.includes( '--live' ) ) {
     shouldRunMockNetwork = false;
 }
 
-if ( allPassedArgs.includes( '--debug' ) ) {
+if ( allPassedArguments.includes( '--debug' ) ) {
     hasDebugFlag = true;
 }
 
 let forcedPort;
-if ( allPassedArgs.includes( '--port' ) ) {
-    const index = allPassedArgs.indexOf( '--port' );
+if ( allPassedArguments.includes( '--port' ) ) {
+    const index = allPassedArguments.indexOf( '--port' );
 
-    forcedPort = allPassedArgs[index + 1];
+    forcedPort = allPassedArguments[index + 1];
 }
 
 export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
@@ -91,9 +96,11 @@ export const isRunningNodeEnvTest = /^test/.test( env );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = typeof remote === 'undefined';
+const currentWindow =
+  remote && remote.getCurrentWindow ? remote.getCurrentWindow() : undefined;
+export const currentWindowId = currentWindow ? currentWindow.id : undefined;
 
-export const currentWindowId =
-  remote && remote.getCurrentWindow ? remote.getCurrentWindow().id : undefined;
+export const inTabProcess = inRendererProcess && !currentWindow;
 
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
@@ -110,7 +117,7 @@ if ( isRunningPackaged && !isRunningNodeEnvTest ) {
  * or from the main process global
  * @return {[type]} [description]
  */
-const safeNodeLibPath = () => {
+const safeNodeLibraryPath = () => {
     // only exists in render processes
     if ( remote && remote.getGlobal && !isRunningNodeEnvTest ) {
         return remote.getGlobal( 'SAFE_NODE_LIB_PATH' );
@@ -166,7 +173,7 @@ const getRandomPort = async () => {
 export const CONFIG = {
     PORT: remote ? remote.getGlobal( 'port' ) : getRandomPort(),
     SAFE_PARTITION: 'persist:safe-tab',
-    SAFE_NODE_LIB_PATH: safeNodeLibPath(),
+    SAFE_NODE_LIB_PATH: safeNodeLibraryPath(),
     APP_HTML_PATH: path.resolve( __dirname, './app.html' ),
     DATE_FORMAT: 'h:MM-mmm dd',
     NET_STATUS_CONNECTED: 'Connected',
@@ -176,8 +183,9 @@ export const CONFIG = {
 };
 
 if ( inMainProcess ) {
-    const devPort = process.env.PORT || 1212;
+    const developmentPort = process.env.PORT || 1212;
 
+    global.isRunningPackaged = isRunningPackaged;
     global.preloadFile = `file://${__dirname}/webPreload.prod.js`;
     global.appDir = __dirname;
     global.isCI = isCI;
