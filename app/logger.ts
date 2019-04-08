@@ -4,6 +4,7 @@ import os from 'os';
 import {
     currentWindowId,
     env,
+    inTabProcess,
     isRunningUnpacked,
     isRunningPackaged,
     isRunningDebug,
@@ -36,6 +37,9 @@ if ( log.transports ) {
     log.transports.file.file = path.resolve( os.tmpdir(), 'safe-browser.log' );
 
     log.transports.console.format = '[{label} {h}:{i}:{s}.{ms}] › {text}';
+    if ( inTabProcess ) {
+        log.variables.label = `A Tab: `;
+    }
     if ( currentWindowId ) {
         log.variables.label = `window ${currentWindowId}`;
     }
