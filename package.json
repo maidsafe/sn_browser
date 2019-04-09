@@ -332,7 +332,7 @@
     "zxcvbn": "4.4.2"
   },
   "dependencies": {
-    "@babel/plugin-proposal-object-rest-spread": "7.3.2",
+    "@babel/plugin-proposal-object-rest-spread": "7.4.3",
     "@babel/preset-typescript": "7.1.0",
     "@fortawesome/fontawesome-free": "^5.5.0",
     "@maidsafe/safe-node-app": "0.11.0",
