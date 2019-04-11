@@ -335,7 +335,7 @@
     "@babel/plugin-proposal-object-rest-spread": "7.4.3",
     "@babel/preset-typescript": "7.1.0",
     "@fortawesome/fontawesome-free": "^5.5.0",
-    "@maidsafe/safe-node-app": "0.11.0",
+    "@maidsafe/safe-node-app": "0.11.1",
     "@types/redux": "3.6.0",
     "antd": "3.16.2",
     "archiver": "2.1.0",
