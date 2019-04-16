@@ -37,8 +37,8 @@ interface ContextTypes {
 }
 
 export class AppDetails extends React.Component<
-  AppDetailsOptions,
-  ContextTypes
+AppDetailsOptions,
+ContextTypes
 > {
     constructor( props ) {
         super( props );

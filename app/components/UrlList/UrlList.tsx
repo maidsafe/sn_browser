@@ -6,18 +6,21 @@ import styles from './urlList.css';
 interface UrlListProps {
     list: Array<any>;
     onRemove?: ( ...args: Array<any> ) => any;
-    addTab?: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    windowId: number;
 }
 export const UrlList = ( props: UrlListProps = { list: [] } ) => {
-    const { addTab, list } = props;
+    const { addTabEnd, list, windowId } = props;
     const parsedList = [];
-    list.forEach( ( item ) => {
-        const handleClick = ( event ) => {
+    list.forEach( item => {
+        const handleClick = event => {
             // required to prevent the app navigating by default.
             event.preventDefault();
-            addTab( {
+            const tabId = Math.random().toString( 36 );
+            addTabEnd( {
                 url: item,
-                isActiveTab: true
+                tabId,
+                windowId
             } );
         };
         const listItem = (

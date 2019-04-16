@@ -310,8 +310,8 @@ export default merge.smart( baseConfig, {
                     env: process.env,
                     stdio: 'inherit'
                 } )
-                    .on( 'close', ( code ) => process.exit( code ) )
-                    .on( 'error', ( spawnError ) => console.error( spawnError ) );
+                    .on( 'close', code => process.exit( code ) )
+                    .on( 'error', spawnError => console.error( spawnError ) );
             }
         }
     }

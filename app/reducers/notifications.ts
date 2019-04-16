@@ -1,6 +1,6 @@
 import { logger } from '$Logger';
 import { TYPES } from '$Actions/notification_actions';
-import { initialState as initialAppState } from './initialAppState';
+import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.notifications;
 const findNotificationIndexById = ( theState, theCall ) => {
@@ -10,7 +10,8 @@ const findNotificationIndexById = ( theState, theCall ) => {
 
     return theState.findIndex( c => c.id === theCall.id );
 };
-export function notifications( state: Array = initialState, action ) {
+
+export const notifications = ( state: Array = initialState, action ) => {
     const notification = action.payload;
 
     switch ( action.type ) {
@@ -48,4 +49,4 @@ export function notifications( state: Array = initialState, action ) {
         default:
             return state;
     }
-}
+};

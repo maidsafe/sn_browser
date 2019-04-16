@@ -1,4 +1,4 @@
-export const initialState = {
+export const initialAppState = {
     authenticator: {
         reAuthoriseState: 0,
         isAuthorised: false,

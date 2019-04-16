@@ -36,7 +36,7 @@ export const attemptReconnect = ( passedStore, appObj ) => {
 /**
  * Reconnect the application with SAFE Network when disconnected
  */
-export const reconnect = ( app ) => {
+export const reconnect = app => {
     if ( !app ) {
         return Promise.reject( new Error( 'Application not initialised' ) );
     }
@@ -48,19 +48,21 @@ export const reconnect = ( app ) => {
  * (ClientType === 'WEB' )
  * @param  {Object} request request object from ipc.js
  */
-export const replyToRemoteCallFromAuth = ( request ) => {
+export const replyToRemoteCallFromAuth = request => {
     logger.info( 'Replying to RemoteCall From Auth' );
     const store = getCurrentStore();
     const state = store.getState();
     const { remoteCalls } = state;
 
-    const remoteCallToReply = remoteCalls.find( ( theCall ) : boolean => {
-        if ( theCall.name !== 'authenticateFromUriObject' ) return false;
+    const remoteCallToReply = remoteCalls.find(
+        ( theCall ): boolean => {
+            if ( theCall.name !== 'authenticateFromUriObject' ) return false;
 
-        const theRequestFromCall = theCall.args[0].uri;
+            const theRequestFromCall = theCall.args[0].uri;
 
-        return theRequestFromCall === request.uri;
-    } );
+            return theRequestFromCall === request.uri;
+        }
+    );
 
     store.dispatch(
         updateRemoteCall( {

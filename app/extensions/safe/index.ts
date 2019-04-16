@@ -44,7 +44,7 @@ const addExtensionMenuItems = ( store, menusArray ) => {
 
     const newMenuArray = [];
 
-    menusArray.forEach( ( menu ) => {
+    menusArray.forEach( menu => {
         const { label } = menu;
         let newMenu = menu;
 
@@ -79,7 +79,7 @@ const actionsForBrowser = {
     ...safeBrowserAppActions
 };
 
-const onInitBgProcess = async ( store ) => {
+const onInitBgProcess = async store => {
     logger.info( 'Registering SAFE Network Protocols' );
     try {
         setSafeBgProcessStore( store );
@@ -128,7 +128,7 @@ const onInitBgProcess = async ( store ) => {
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onOpen = ( store ) =>
+const onOpen = store =>
     new Promise( ( resolve, reject ) => {
         logger.info( 'OnOpen: Setting mock in store. ', startedRunningMock );
         store.dispatch( safeBrowserAppActions.setIsMock( startedRunningMock ) );
@@ -140,7 +140,7 @@ const onOpen = ( store ) =>
  * Add middleware to Peruse redux store
  * @param  {Object} store redux store
  */
-const middleware = ( store ) => ( next ) => ( action ) => {
+const middleware = store => next => action => {
     if ( isRunningSpectronTestProcess ) {
         logger.info( 'ACTION:', action );
     }
@@ -148,7 +148,6 @@ const middleware = ( store ) => ( next ) => ( action ) => {
     return next( action );
 };
 
-// eslint-disable-next-line import/no-default-export
 export default {
     addExtensionMenuItems,
     getRemoteCallApis,

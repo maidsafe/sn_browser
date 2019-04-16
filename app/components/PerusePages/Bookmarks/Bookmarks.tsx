@@ -7,11 +7,11 @@ import { CLASSES } from '$Constants';
 interface BookmarksProps {
     isActiveTab?: boolean;
     bookmarks: Array<any>;
-    addTab?: ( ...args: Array<any> ) => any;
+    addTabEnd?: ( ...args: Array<any> ) => any;
 }
 export const Bookmarks = ( props: BookmarksProps = { bookmarks: [] } ) => {
     const { bookmarks, isActiveTab, addTab } = props;
-    const bookmarkList = bookmarks.map( ( bookmark ) => bookmark.url );
+    const bookmarkList = bookmarks.map( bookmark => bookmark.url );
     let moddedClass = styles.tab;
     if ( isActiveTab ) {
         moddedClass = styles.activeTab;

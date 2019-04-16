@@ -4,10 +4,9 @@ import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from './constants';
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
 
-export const delay = ( time ) =>
-    new Promise( ( resolve ) => setTimeout( resolve, time ) );
+export const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
-export const setClientToMainBrowserWindow = async ( app ) => {
+export const setClientToMainBrowserWindow = async app => {
     const { client } = app;
     const windows = await client.getWindowCount();
 
@@ -34,7 +33,7 @@ export const setClientToMainBrowserWindow = async ( app ) => {
     await client.windowByIndex( peruseBrowserWindowIndex );
 };
 
-export const setClientToBackgroundProcessWindow = async ( app ) => {
+export const setClientToBackgroundProcessWindow = async app => {
     const { client } = app;
     const windows = await client.getWindowCount();
 
@@ -76,7 +75,7 @@ export const navigateTo = async ( app, url ) => {
     await client.pause( 1500 );
 };
 
-export const newTab = async ( app ) => {
+export const newTab = async app => {
     const { client } = app;
 
     const windows = await client.getWindowCount();
@@ -97,7 +96,7 @@ export const newTab = async ( app ) => {
     return length2 - 1;
 };
 
-export const bookmarkActiveTabPage = async ( app ) => {
+export const bookmarkActiveTabPage = async app => {
     const { client } = app;
     await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( BROWSER_UI.BOOKMARK_PAGE );

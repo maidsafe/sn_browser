@@ -28,7 +28,7 @@ store.subscribe( async () => {
     const state = store.getState();
     const calls = state.remoteCalls;
 
-    calls.forEach( ( theCall ) => {
+    calls.forEach( theCall => {
         if ( theCall === pendingCalls[theCall.id] ) {
             return;
         }

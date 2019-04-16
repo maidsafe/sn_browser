@@ -53,7 +53,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
     }
 
-    handleIdClick = ( webId ) => {
+    handleIdClick = webId => {
         const { updateTab, windowId, showWebIdDropdown } = this.props;
         // also if only 1 webID? mark as defualt?
         updateTab( { windowId, webId } );
@@ -119,7 +119,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         } = safeBrowserApp;
         const activeWebId = activeTab.webId || {};
         const { handleIdClick } = this;
-        const webIdsList = webIds.map( ( webId ) => {
+        const webIdsList = webIds.map( webId => {
             const nickname = webId['#me'].nick || webId['#me'].name;
             const isSelected = webId['@id'] === activeWebId['@id'];
             if ( isSelected ) {

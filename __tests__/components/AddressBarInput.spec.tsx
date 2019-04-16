@@ -26,12 +26,14 @@ describe( 'AddressBarInput', () => {
     let instance;
     let props;
     let store;
+    let tabId =  Math.random().toString( 36 );
 
     beforeEach( () => {
         props = {
             windowId: 1,
             address: 'about:blank',
             isSelected: false,
+            tabId,
             isBookmarked: false,
             experimentsEnabled: false,
             addBookmark: jest.fn(),
@@ -133,7 +135,7 @@ describe( 'AddressBarInput', () => {
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
             expect( props.updateTab ).toHaveBeenCalledWith( {
                 url: 'about:blank',
-                windowId: 1
+                tabId
             } );
         } );
 

@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import { remoteCalls } from '$Reducers/remoteCalls';
 import { TYPES } from '$Actions/remoteCall_actions';
-import { initialState } from '$Reducers/initialAppState';
+import { initialAppState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     let aCall;
@@ -10,7 +10,7 @@ describe( 'notification reducer', () => {
     } );
 
     it( 'should return the initial state', () => {
-        expect( remoteCalls( undefined, {} ) ).toEqual( initialState.remoteCalls );
+        expect( remoteCalls( undefined, {} ) ).toEqual( initialAppState.remoteCalls );
     } );
 
     describe( 'ADD_REMOTE_CALL', () => {

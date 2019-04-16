@@ -2,8 +2,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as TabActions from '$Actions/tabs_actions';
 import * as NotificationActions from '$Actions/notification_actions';
-import * as UiActions from '$Actions/ui_actions';
 import * as BookmarksActions from '$Actions/bookmarks_actions';
+import * as WindowsActions from '$Actions/windows_actions';
 import { Browser } from '$Components/Browser';
 import { getActionsForBrowser } from '$Extensions';
 
@@ -12,7 +12,7 @@ function mapStateToProps( state ) {
         bookmarks: state.bookmarks,
         notifications: state.notifications,
         tabs: state.tabs,
-        ui: state.ui,
+        windows: state.windows,
         safeBrowserApp: state.safeBrowserApp
     };
 }
@@ -23,7 +23,7 @@ function mapDispatchToProps( dispatch ) {
         ...BookmarksActions,
         ...NotificationActions,
         ...TabActions,
-        ...UiActions,
+        ...WindowsActions,
 
         ...extensionActions
     };

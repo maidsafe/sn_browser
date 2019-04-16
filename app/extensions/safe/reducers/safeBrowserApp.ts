@@ -1,6 +1,6 @@
 import { TYPES } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { logger } from '$Logger';
-import { initialState as initialAppState } from './initialAppState';
+import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.safeBrowserApp;
 
