@@ -1,4 +1,4 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
+/* eslint-disable */
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import os from 'os';
@@ -7,12 +7,8 @@ import { logger } from '$Logger';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
-import { addTab, updateTab } from './actions/tabs_actions';
-import {
-    selectAddressBar,
-    uiAddWindow,
-    uiRemoveWindow
-} from './actions/ui_actions';
+import { addTab, updateTab, selectAddressBar } from './actions/tabs_actions';
+import { windowCloseTab, addTabNext, addTabEnd, setActiveTab, closeWindow } from '$Actions/windows_actions'
 
 const browserWindowArray = [];
 
@@ -89,7 +85,7 @@ const openWindow = store => {
         if ( isRunningDebug && !isRunningSpectronTestProcess ) {
             mainWindow.openDevTools( { mode: 'undocked' } );
         }
-
+        // have to add a tab here now
         const webContentsId = mainWindow.webContents.id;
         if ( browserWindowArray.length === 1 ) {
             const allTabs = store.getState().tabs;
@@ -99,25 +95,19 @@ const openWindow = store => {
                     updateTab( { index: orphan.index, windowId: webContentsId } )
                 );
             } );
-            store.dispatch(
-                uiAddWindow( {
-                    windowId: webContentsId
-                } )
-            );
         } else {
+            const tabId =Math.random().toString( 36 )
             store.dispatch(
                 addTab( {
                     url: 'about:blank',
+                    tabId
+                } )
+                );
+                store.dispatch(addTabNext( {
                     windowId: webContentsId,
-                    isActiveTab: true
-                } )
-            );
-            store.dispatch(
-                uiAddWindow( {
-                    windowId: webContentsId
-                } )
-            );
-            store.dispatch( selectAddressBar() );
+                    tabId
+                } ))
+            store.dispatch( selectAddressBar(tabId) );
         }
     } );
     mainWindow.on( 'close', () => {
