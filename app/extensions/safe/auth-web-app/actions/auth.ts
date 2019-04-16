@@ -19,7 +19,7 @@ export const LOGOUT = 'LOGOUT';
 export const SHOW_LIB_ERR_POPUP = 'SHOW_LIB_ERR_POPUP';
 export const SET_IS_AUTHORISED = 'SET_IS_AUTHORISED';
 
-export const setCreateAccNavPos = pos => ( {
+export const setCreateAccNavPos = ( pos ) => ( {
     type: SET_CREATE_ACC_NAV_POS,
     position: pos
 } );
@@ -28,26 +28,26 @@ export const resetCreateAccNavPos = () => ( {
     type: RESET_CREATE_ACC_NAV_POS
 } );
 
-export const setSecretStrength = val => ( {
+export const setSecretStrength = ( value ) => ( {
     type: SET_SECRET_STRENGTH,
-    strength: val
+    strength: value
 } );
 
-export const setPasswordStrength = val => ( {
+export const setPasswordStrength = ( value ) => ( {
     type: SET_PASSWORD_STRENGTH,
-    strength: val
+    strength: value
 } );
 
-export const setError = err => ( {
+export const setError = ( error ) => ( {
     type: SET_AUTH_ERROR,
-    error: err
+    error
 } );
 
 export const clearError = () => ( {
     type: CLEAR_AUTH_ERROR
 } );
 
-export const setAccSecret = secret => ( {
+export const setAccSecret = ( secret ) => ( {
     type: SET_ACC_SECRET,
     secret
 } );
@@ -56,7 +56,7 @@ export const clearAccSecret = () => ( {
     type: CLEAR_ACC_SECRET
 } );
 
-export const setAccPassword = password => ( {
+export const setAccPassword = ( password ) => ( {
     type: SET_ACC_PASSWORD,
     password
 } );
@@ -65,7 +65,7 @@ export const clearAccPassword = () => ( {
     type: CLEAR_ACC_PASSWORD
 } );
 
-export const setInviteCode = invite => ( {
+export const setInviteCode = ( invite ) => ( {
     type: SET_INVITE_CODE,
     invite
 } );
@@ -96,16 +96,16 @@ export const login = ( secret, password ) => ( {
     payload: window.safeAuthenticator.login( secret, password )
 } );
 
-export const logout = () => ( {
+export const logout = () => ({
     type: LOGOUT,
-    payload: Promise.resolve( window.safeAuthenticator.logout() )
-} );
+    payload: Promise.resolve( window.safeAuthenticator.logout(window.currentWindowId) )
+}); 
 
 export const showLibErrPopup = () => ( {
     type: SHOW_LIB_ERR_POPUP
 } );
 
-export const setIsAuthorised = isAuthorised => ( {
+export const setIsAuthorised = ( isAuthorised ) => ( {
     type: SET_IS_AUTHORISED,
     payload: isAuthorised
 } );

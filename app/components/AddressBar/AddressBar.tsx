@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { CLASSES } from '$Constants';
 // import { Column, Grid } from 'nessie-ui';
@@ -12,25 +13,29 @@ import styles from './addressBar.css';
 
 interface AddressBarProps {
     address?: string;
-    isSelected?: boolean;
-    settingsMenuIsVisible?: boolean;
     activeTab?: {
+        tabId?: string,
         url?: string;
     };
-    windowId: number;
-    isBookmarked: boolean;
-    addTab: ( ...args: Array<any> ) => any;
-    addBookmark: ( ...args: Array<any> ) => any;
-    removeBookmark: ( ...args: Array<any> ) => any;
-    onBlur: ( ...args: Array<any> ) => any;
+    tabId: string;
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
+    onBlur: ( ...args: Array<any> ) => any;
+    windowId: number;
+    addBookmark: ( ...args: Array<any> ) => any;
+    isBookmarked: boolean;
+    addTabNext: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    removeBookmark: ( ...args: Array<any> ) => any;
+    hideSettingsMenu: ( ...args: Array<any> ) => any;
+    showSettingsMenu: ( ...args: Array<any> ) => any;
+    settingsMenuIsVisible: boolean;
+    isSelected: boolean;
     tabBackwards: ( ...args: Array<any> ) => any;
     tabForwards: ( ...args: Array<any> ) => any;
-    showSettingsMenu: ( ...args: Array<any> ) => any;
-    hideSettingsMenu: ( ...args: Array<any> ) => any;
-    focusWebview: ( ...args: Array<any> ) => any;
     updateTab: ( ...args: Array<any> ) => any;
+    focusWebview: ( ...args: Array<any> ) => any;
+    setActiveTab: ( ...args: Array<any> ) => any;
 }
 export class AddressBar extends Component<AddressBarProps, {}> {
     static defaultProps = {
@@ -41,26 +46,33 @@ export class AddressBar extends Component<AddressBarProps, {}> {
     };
 
     handleBack = () => {
-        const { tabBackwards, windowId } = this.props;
-        tabBackwards( { windowId } );
+        const { tabBackwards, tabId } = this.props;
+        tabBackwards( { tabId } );
     };
 
     handleForward = () => {
-        const { tabForwards, windowId } = this.props;
-        tabForwards( { windowId } );
+        const { tabForwards, tabId } = this.props;
+        tabForwards( { tabId } );
     };
 
     handleRefresh = ( event ) => {
     // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
-        const { updateTab, windowId } = this.props;
-        updateTab( { windowId, shouldReload: true } );
+        const { updateTab, tabId } = this.props;
+        updateTab( { tabId, shouldReload: true } );
     };
 
     getSettingsMenuItems = () => {
+<<<<<<< HEAD
         const { addTab, windowId } = this.props;
         const addATab = ( tab ) => {
             addTab( { url: `safe-browser://${tab}`, isActiveTab: true, windowId } );
+=======
+        const { windowId, addTabEnd} = this.props;
+        const tabId = Math.random().toString( 36 );
+        const addATab = tab => {
+            addTabEnd( { url: `safe-browser://${tab}`, windowId, tabId } );
+>>>>>>> d76d4c23... fix(tabs): Generate Unique Ids for individual tabs
         };
         return [
             <Row key="menuItem-bookmarks" type="flex" justify="start" align="middle">
@@ -92,17 +104,20 @@ export class AddressBar extends Component<AddressBarProps, {}> {
         const { props } = this;
         const {
             address,
-            addTab,
+            addTabEnd,
+            addTabNext,
             addBookmark,
             removeBookmark,
             isBookmarked,
             activeTab,
+            tabId,
             updateTab,
             settingsMenuIsVisible,
             showSettingsMenu,
             hideSettingsMenu,
             focusWebview,
-            windowId
+            windowId,
+            setActiveTab
         } = this.props;
         const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
         const canGoForwards = activeTab
@@ -135,7 +150,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                     <Col>
                         <ButtonsRHS
                             address={address}
-                            addTab={addTab}
+                            addTabEnd= {addTabEnd}
                             isBookmarked={isBookmarked}
                             addBookmark={addBookmark}
                             removeBookmark={removeBookmark}
@@ -145,6 +160,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                             hideSettingsMenu={hideSettingsMenu}
                             focusWebview={focusWebview}
                             windowId={windowId}
+                            setActiveTab = {setActiveTab}
                         />
                     </Col>
                 </Row>

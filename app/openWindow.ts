@@ -1,16 +1,14 @@
+/* eslint-disable */
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
+import os, { type } from 'os';
 import windowStateKeeper from 'electron-window-state';
 import { logger } from '$Logger';
 import { MenuBuilder } from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
-import { addTab, updateTab } from './actions/tabs_actions';
-import {
-    selectAddressBar,
-    uiAddWindow,
-    uiRemoveWindow
-} from './actions/ui_actions';
+import { addTab, updateTab, selectAddressBar } from './actions/tabs_actions';
+import { windowCloseTab, addTabEnd, setActiveTab, closeWindow, addWindow } from '$Actions/windows_actions'
 
 const browserWindowArray = [];
 
@@ -70,77 +68,56 @@ export const openWindow = ( store ): BrowserWindow => {
 
     mainWindow.loadURL( `file://${__dirname}/app.html` );
 
-    mainWindow.webContents.on(
-        'did-finish-load',
-        async (): Promise<void> => {
-            if ( !mainWindow ) {
-                throw new Error( '"mainWindow" is not defined' );
-            }
+    // @TODO: Use 'ready-to-show' event
+    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
 
-            await onOpenLoadExtensions( store );
-
-            if ( isRunningDebug && !isRunningSpectronTestProcess ) {
-                mainWindow.openDevTools( { mode: 'undocked' } );
-            }
-
-            const webContentsId = mainWindow.webContents.id;
-            if ( browserWindowArray.length === 1 ) {
-                const allTabs = store.getState().tabs;
-                const orphanedTabs = allTabs.filter( ( tab ): boolean => !tab.windowId );
-                orphanedTabs.forEach(
-                    ( orphan ): void => {
-                        store.dispatch(
-                            updateTab( { index: orphan.index, windowId: webContentsId } )
-                        );
-                    }
-                );
-                store.dispatch(
-                    uiAddWindow( {
-                        windowId: webContentsId
-                    } )
-                );
-            } else {
-                store.dispatch(
-                    addTab( {
-                        url: 'about:blank',
-                        windowId: webContentsId,
-                        isActiveTab: true
-                    } )
-                );
-                store.dispatch(
-                    uiAddWindow( {
-                        windowId: webContentsId
-                    } )
-                );
-                store.dispatch( selectAddressBar() );
-            }
-
-            mainWindow.show();
-            mainWindow.focus();
+    mainWindow.webContents.on( 'did-finish-load', async () => {
+        if ( !mainWindow ) {
+            throw new Error( '"mainWindow" is not defined' );
         }
-    );
-    mainWindow.on(
-        'close',
-        (): void => {
-            const webContentsId = mainWindow.webContents.id;
-            store.dispatch(
-                uiRemoveWindow( {
-                    windowId: webContentsId
-                } )
-            );
+
+        await onOpenLoadExtensions( store );
+
+        // before show lets load state
+        mainWindow.show();
+        mainWindow.focus();
+
+        if ( isRunningDebug && !isRunningSpectronTestProcess ) {
+            mainWindow.openDevTools( { mode: 'undocked' } );
         }
-    );
-    mainWindow.on(
-        'closed',
-        (): void => {
-            const index = browserWindowArray.indexOf( mainWindow );
-            mainWindow = null;
-            if ( index > -1 ) {
-                browserWindowArray.splice( index, 1 );
-            }
-            if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-                app.quit();
-            }
+        // have to add a tab here now
+        //const webContentsId = mainWindow.webContents.id;
+        const mainWindowId = mainWindow.id;
+        logger.info('state-mainWindowId',mainWindowId);
+        if ( browserWindowArray.length === 1 ) 
+        {
+            const tabId = Math.random().toString( 36 );
+            store.dispatch(addWindow({windowId: mainWindowId}));
+            store.dispatch(addTabEnd({windowId: mainWindowId, tabId}));
+            store.dispatch(addTab({url: 'safe-auth://home/' , tabId}))
+            store.dispatch(setActiveTab({windowId: mainWindowId, tabId}))
+        } else {
+            const tabId =Math.random().toString( 36 )
+            store.dispatch(addWindow({windowId: mainWindowId}));
+            store.dispatch(addTabEnd({windowId: mainWindowId, tabId}));
+            store.dispatch(addTab({url: 'about:blank' , tabId}));
+            store.dispatch(setActiveTab({windowId: mainWindowId, tabId}));
+            store.dispatch(selectAddressBar({tabId}));
+        }
+    } );
+    mainWindow.on( 'close', () => {
+        const webContentsId = mainWindow.webContents.id;
+        const mainWindowId = mainWindow.id;
+        store.dispatch(closeWindow({windowId: mainWindowId}));
+    } );
+    mainWindow.on( 'closed', () => {
+        const index = browserWindowArray.indexOf( mainWindow );
+        mainWindow = null;
+        if ( index > -1 ) {
+            browserWindowArray.splice( index, 1 );
+        }
+        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+            app.quit();
         }
     );
 
@@ -164,11 +141,20 @@ ipcMain.on(
     (): void => {
         const win = BrowserWindow.getFocusedWindow();
 
-        if ( win ) {
-            win.close();
-        }
-        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-            app.quit();
-        }
+ipcMain.on( 'command:close-window', () => {
+    const win = BrowserWindow.getFocusedWindow();
+    if ( win ) {
+        win.close();
     }
-);
+    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+        app.quit();
+    }
+} );
+
+ipcMain.on( 'resetStore', ( event, data ) => {
+    data.forEach(element => {
+        const winId = parseInt(element);
+        const win = BrowserWindow.fromId(winId);
+        win.close();
+    });
+} );

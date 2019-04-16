@@ -1,5 +1,6 @@
-import React from 'react';
-// import { logger } from '$Logger';
+/* eslint-disable */
+import React, { Component } from 'react';
+import { logger } from '$Logger';
 import { CLASSES, PROTOCOLS } from '$Constants';
 import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
@@ -13,17 +14,19 @@ import { parse } from 'url';
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-const ButtonsLHS = props => {
-    const {
-        activeTab,
-        handleBack,
-        handleForward,
-        handleRefresh,
-        canGoForwards,
-        canGoBackwards
-    } = props;
-    const activeTabUrl =
-    activeTab && activeTab.url ? parse( activeTab.url ) : undefined;
+class ButtonsLHS extends Component<{}, {}> {
+    render() {
+        const {
+            activeTab,    
+            handleBack,
+            canGoForwards,
+            canGoBackwards,
+            handleForward,
+            handleRefresh,
+        } = this.props
+
+        const activeTabUrl =
+      activeTab && activeTab.url ? parse( activeTab.url ) : undefined;
 
     return (
         <Row

@@ -19,6 +19,7 @@ import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserAppl
 import * as bookmarksActions from '$Actions/bookmarks_actions';
 import * as tabsActions from '$Actions/tabs_actions';
 import { getSafeBrowserAppObject } from './theApplication';
+import * as WindowsActions from '$Actions/windows_actions';
 
 // TODO: Refactor away this and use aliased actions for less... sloppy
 // flow and make this more reasonable.
@@ -71,7 +72,7 @@ export const manageReadStateActions = async store => {
         .then( savedState => {
             // store.dispatch( safeBrowserAppActions.receivedConfig( savedState ) );
             store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
-            store.dispatch( tabsActions.updateTabs( savedState ) );
+            store.dispatch( WindowsActions.windowCloseTab( savedState ) );
             store.dispatch(
                 safeBrowserAppActions.setReadConfigStatus(
                     SAFE.READ_STATUS.READ_SUCCESSFULLY

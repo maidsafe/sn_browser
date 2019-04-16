@@ -1,11 +1,27 @@
-import { remote } from 'electron';
+import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
 import { TYPES } from '$Actions/bookmarks_actions';
-import { TYPES as UI_TYPES } from '$Actions/ui_actions';
+import { TYPES as TABS_TYPES } from '$Actions/tabs_actions'
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
 import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
+
+/**
+ * Get the current window's webcontents Id. Defaults to `1` if none found.
+ * @return { Integer } WebContents Id of the curremt BrowserWindow webcontents.
+ */
+const getCurrentWindowId = () => {
+    let currentWindowId;
+
+    if ( typeof currentWindowId === 'undefined' && remote ) {
+        currentWindowId = remote.getCurrentWindow().id;
+    } else if ( typeof currentWindowId === 'undefined' ) {
+        currentWindowId = 1;
+    }
+
+    return currentWindowId;
+};
 
 const addBookmark = ( state, bookmark ) => {
     if ( !bookmark ) {
@@ -96,7 +112,7 @@ export function bookmarks( state: Array<{}> = initialState, action ): Array<{}> 
 
             return _.uniqBy( newBookmarks, 'url' );
         }
-        case UI_TYPES.RESET_STORE: {
+        case TABS_TYPES.RESET_STORE: {
             const initial = initialState;
             return [...initial];
         }

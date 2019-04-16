@@ -11,23 +11,24 @@ import { CustomMenu } from '$Components/CustomMenu';
 import { CLASSES } from '$Constants';
 
 interface ButtonsRHSProps {
-    addTab: ( ...args: Array<any> ) => any;
     address?: string;
+    addTabEnd: ( ...args: Array<any> ) => any;
     isBookmarked: boolean;
     addBookmark: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
-    showSettingsMenu: ( ...args: Array<any> ) => any;
-    hideSettingsMenu: ( ...args: Array<any> ) => any;
-    settingsMenuIsVisible: boolean;
     menuItems: Array<React.ReactNode>;
+    showSettingsMenu: ( ...args: Array<any> ) => any;
+    settingsMenuIsVisible: boolean;
+    hideSettingsMenu: ( ...args: Array<any> ) => any;
     focusWebview: ( ...args: Array<any> ) => any;
     windowId: number;
+    setActiveTab: ( ...args: Array<any> ) => any;
 }
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class ButtonsRHS extends Component<{}, {}> {
+class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
     static defaultProps = {
         address: '',
         isSelected: false,
@@ -47,7 +48,6 @@ class ButtonsRHS extends Component<{}, {}> {
         const {
             isBookmarked,
             settingsMenuIsVisible,
-            addTab,
             showSettingsMenu,
             hideSettingsMenu,
             menuItems,
