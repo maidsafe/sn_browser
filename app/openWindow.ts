@@ -1,18 +1,14 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
+/* eslint-disable */
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
-import os from 'os';
+import os, { type } from 'os';
 import windowStateKeeper from 'electron-window-state';
 import { logger } from '$Logger';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
-import { addTab, updateTab } from './actions/tabs_actions';
-import {
-    selectAddressBar,
-    uiAddWindow,
-    uiRemoveWindow
-} from './actions/ui_actions';
+import { addTab, updateTab, selectAddressBar } from './actions/tabs_actions';
+import { windowCloseTab, addTabEnd, setActiveTab, closeWindow, addWindow } from '$Actions/windows_actions'
 
 const browserWindowArray = [];
 
@@ -89,44 +85,30 @@ const openWindow = store => {
         if ( isRunningDebug && !isRunningSpectronTestProcess ) {
             mainWindow.openDevTools( { mode: 'undocked' } );
         }
-
-        const webContentsId = mainWindow.webContents.id;
-        if ( browserWindowArray.length === 1 ) {
-            const allTabs = store.getState().tabs;
-            const orphanedTabs = allTabs.filter( tab => !tab.windowId );
-            orphanedTabs.forEach( orphan => {
-                store.dispatch(
-                    updateTab( { index: orphan.index, windowId: webContentsId } )
-                );
-            } );
-            store.dispatch(
-                uiAddWindow( {
-                    windowId: webContentsId
-                } )
-            );
+        // have to add a tab here now
+        //const webContentsId = mainWindow.webContents.id;
+        const mainWindowId = mainWindow.id;
+        logger.info('state-mainWindowId',mainWindowId);
+        if ( browserWindowArray.length === 1 ) 
+        {
+            const tabId = Math.random().toString( 36 );
+            store.dispatch(addWindow({windowId: mainWindowId}));
+            store.dispatch(addTabEnd({windowId: mainWindowId, tabId}));
+            store.dispatch(addTab({url: 'safe-auth://home/' , tabId}))
+            store.dispatch(setActiveTab({windowId: mainWindowId, tabId}))
         } else {
-            store.dispatch(
-                addTab( {
-                    url: 'about:blank',
-                    windowId: webContentsId,
-                    isActiveTab: true
-                } )
-            );
-            store.dispatch(
-                uiAddWindow( {
-                    windowId: webContentsId
-                } )
-            );
-            store.dispatch( selectAddressBar() );
+            const tabId =Math.random().toString( 36 )
+            store.dispatch(addWindow({windowId: mainWindowId}));
+            store.dispatch(addTabEnd({windowId: mainWindowId, tabId}));
+            store.dispatch(addTab({url: 'about:blank' , tabId}));
+            store.dispatch(setActiveTab({windowId: mainWindowId, tabId}));
+            store.dispatch(selectAddressBar({tabId}));
         }
     } );
     mainWindow.on( 'close', () => {
         const webContentsId = mainWindow.webContents.id;
-        store.dispatch(
-            uiRemoveWindow( {
-                windowId: webContentsId
-            } )
-        );
+        const mainWindowId = mainWindow.id;
+        store.dispatch(closeWindow({windowId: mainWindowId}));
     } );
     mainWindow.on( 'closed', () => {
         const index = browserWindowArray.indexOf( mainWindow );
@@ -151,11 +133,18 @@ export default openWindow;
 
 ipcMain.on( 'command:close-window', () => {
     const win = BrowserWindow.getFocusedWindow();
-
     if ( win ) {
         win.close();
     }
     if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
         app.quit();
     }
+} );
+
+ipcMain.on( 'resetStore', ( event, data ) => {
+    data.forEach(element => {
+        const winId = parseInt(element);
+        const win = BrowserWindow.fromId(winId);
+        win.close();
+    });
 } );

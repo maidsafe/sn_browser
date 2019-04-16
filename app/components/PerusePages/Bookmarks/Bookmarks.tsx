@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import { Page, H1, PageHeader } from 'nessie-ui';
@@ -9,7 +10,9 @@ const log = require( 'electron-log' );
 
 interface BookmarksProps {
     bookmarks: Array<any>;
-    addTab: ( ...args: Array<any> ) => any;
+    isActiveTab: boolean;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    windowId: number;
 }
 export default class Bookmarks extends Component<BookmarksProps, {}> {
     static defaultProps = {
@@ -17,7 +20,7 @@ export default class Bookmarks extends Component<BookmarksProps, {}> {
     };
 
     render() {
-        const { bookmarks, isActiveTab, addTab } = this.props;
+        const { bookmarks , isActiveTab, windowId, addTabEnd } = this.props;
         const bookmarkList = bookmarks.map( ( bookmark ) => bookmark.url );
         let moddedClass = styles.tab;
         if ( isActiveTab ) {
@@ -33,7 +36,7 @@ export default class Bookmarks extends Component<BookmarksProps, {}> {
                         <PageHeader>
                             <H1 title="Bookmarks" />
                         </PageHeader>
-                        <UrlList list={bookmarkList} addTab={addTab} />
+                        <UrlList list={bookmarkList} addTabEnd = {addTabEnd} windowId= {windowId} />
                     </Page>
                 </div>
             </div>

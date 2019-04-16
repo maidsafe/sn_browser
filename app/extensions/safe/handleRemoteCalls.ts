@@ -1,7 +1,8 @@
+/* eslint-disable */
 import * as theAuthApi from '$Extensions/safe/auth-api/authFuncs';
 import { callIPC, setAuthCallbacks } from '$Extensions/safe/ffi/ipc';
 import * as authActions from '$Extensions/safe/actions/authenticator_actions';
-import * as uiActions from '$Actions/ui_actions';
+import * as tabActions from '$Actions/tabs_actions';
 import { SAFE } from '$Extensions/safe/constants';
 import CONSTANTS from '$Extensions/safe/auth-constants';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
@@ -10,6 +11,7 @@ import { clearAppObj } from '$Extensions/safe/safeBrowserApplication/theApplicat
 import { setIsAuthorisedState } from '$Extensions/safe/actions/authenticator_actions';
 
 import { logger } from '$Logger';
+import { ipcRenderer } from 'electron';
 
 let theStore;
 
@@ -60,7 +62,7 @@ export const remoteCallApis = {
             safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH )
         );
     },
-    logout: async ( secret, password ) => {
+    logout: async ( windowId ) => {
         logger.info( 'Handling logout call from webview.' );
 
         try {
@@ -69,9 +71,14 @@ export const remoteCallApis = {
             logger.error( 'ERROR AT LOGOUT', e );
             throw e;
         }
-
         clearAppObj();
-        theStore.dispatch( uiActions.resetStore() );
+        const tabId = Math.random().toString( 36 );
+        const state = theStore.getState();
+        const windowState = state.windows.openWindows;
+        const windows = Object.keys(windowState);
+        const windowsToBeClosed =  windows.filter(Id=> parseInt(Id,10) !== windowId );
+        ipcRenderer.send('resetStore', windowsToBeClosed);
+        theStore.dispatch( tabActions.resetStore({windowId, tabId, url: 'safe-auth://home/'}) );
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED )
         );

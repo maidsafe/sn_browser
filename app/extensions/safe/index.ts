@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { logger } from '$Logger';
 import {
     handleAuthUrl,
@@ -232,7 +233,7 @@ const onReceiveUrl = async ( store, url ) => {
 
         logger.info( 'Opening safe: url', url );
 
-        const focusedWindowId = BrowserWindow.getFocusedWindow().webContents.id;
+        const focusedWindowId = BrowserWindow.getFocusedWindow().id;
 
         store.dispatch(
             addTab( { url, isActiveTab: true, windowId: focusedWindowId } )

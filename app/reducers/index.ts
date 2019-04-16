@@ -6,7 +6,7 @@ import bookmarks from './bookmarks';
 import notifications from './notifications';
 import tabs from './tabs';
 import remoteCalls from './remoteCalls';
-import ui from './ui';
+import windows from './windows'
 import { logger } from '$Logger';
 
 import { getExtensionReducers } from '$Extensions';
@@ -20,7 +20,7 @@ export function createRootReducer( history: History ) {
         notifications,
         remoteCalls,
         tabs,
-        ui,
+        windows,
         ...additionalReducers
     } );
 }

@@ -12,6 +12,7 @@ interface AddressBarInputProps {
     address?: string;
     isSelected?: boolean;
     windowId: number;
+    tabId?: string;
     onBlur: ( ...args: Array<any> ) => any;
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
@@ -29,7 +30,7 @@ interface AddressBarInputState {
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class AddressBarInput extends Component<{}, AddressBarInputState> {
+class AddressBarInput extends Component<AddressBarInputProps, AddressBarInputState> {
     static defaultProps = {
         address: '',
         isSelected: false,
@@ -74,35 +75,35 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
     };
 
     handleChange( event ) {
-        const { onSelect } = this.props;
+        const { onSelect, tabId } = this.props;
         this.setState( { editingUrl: true, address: event.target.value } );
         if ( onSelect ) {
-            onSelect();
+            onSelect({tabId});
         }
     }
 
     handleFocus = event => {
-        const { onFocus } = this.props;
-        onFocus();
+        const { onFocus, tabId } = this.props;
+        onFocus({ tabId });
         event.target.select();
     };
 
     handleBlur = () => {
-        const { onBlur } = this.props;
-        onBlur();
+        const { onBlur, tabId } = this.props;
+        onBlur({ tabId });
     };
 
     handleKeyPress( event ) {
-        const { windowId } = this.props;
+        const { tabId } = this.props;
         if ( event.key !== 'Enter' ) {
             return;
         }
         const input = event.target.value;
-        this.props.updateTab( { url: input, windowId } );
+        this.props.updateTab( { tabId, url: input } );
     }
 
     handleClick = () => {
-        const { onSelect, isSelected } = this.props;
+        const { onSelect, isSelected, tabId } = this.props;
         if ( isSelected ) {
             this.setState( { editingUrl: true } );
             onSelect();

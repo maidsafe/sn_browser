@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import url from 'url';
 import Tab from '$Components/Tab';
@@ -21,18 +22,21 @@ export default class TabContents extends Component<{}, {}> {
 
     render() {
         const {
-            addTab,
-            addNotification,
-            closeTab,
-            bookmarks,
-            allTabs,
-            tabs,
-            updateTab,
-            windowId,
-            safeExperimentsEnabled,
+            tabBackwards,
             focusWebview,
             shouldFocusWebview,
-            tabBackwards
+            closeTab,
+            addTabNext,
+            addTabEnd,
+            activeTabId,
+            activeTab,
+            addNotification,
+            updateTab,
+            tabs,
+            allTabs,
+            bookmarks,
+            windowId,
+            safeExperimentsEnabled,
         } = this.props;
 
         if ( this.state && this.state.hasError ) {
@@ -50,18 +54,18 @@ export default class TabContents extends Component<{}, {}> {
         }
 
         const tabComponents = tabs.map( ( tab, i ) => {
-            if ( !tab.isClosed ) {
-                const { isActiveTab } = tab;
+                const isActiveTab = tab.tabId === activeTabId ? true : false;
                 if ( isInternalPage( tab ) ) {
                     const urlObj = url.parse( tab.url );
                     switch ( urlObj.host ) {
                         case INTERNAL_PAGES.HISTORY: {
                             return (
                                 <History
-                                    addTab={addTab}
+                                    addTabEnd ={addTabEnd}
                                     history={allTabs}
-                                    key={tab.index}
+                                    key={tab.tabId}
                                     isActiveTab={isActiveTab}
+                                    windowId = {windowId}
                                     ref={c => {
                                         if ( isActiveTab ) {
                                             this.activeTab = c;
@@ -73,9 +77,10 @@ export default class TabContents extends Component<{}, {}> {
                         case INTERNAL_PAGES.BOOKMARKS: {
                             return (
                                 <Bookmarks
-                                    addTab={addTab}
+                                    addTabEnd ={addTabEnd}
+                                    windowId = {windowId}
                                     bookmarks={bookmarks}
-                                    key={tab.index}
+                                    key={tab.tabId}
                                     isActiveTab={isActiveTab}
                                     ref={c => {
                                         if ( isActiveTab ) {
@@ -101,11 +106,12 @@ export default class TabContents extends Component<{}, {}> {
                         webId={tab.webId}
                         url={tab.url}
                         isActiveTab={isActiveTab}
-                        addTab={addTab}
                         closeTab={closeTab}
                         updateTab={updateTab}
-                        key={tab.index}
-                        index={tab.index}
+                        addTabNext = {addTabNext}
+                        addTabEnd = {addTabEnd}
+                        key={tab.tabId}
+                        tabId = {tab.tabId}
                         windowId={windowId}
                         safeExperimentsEnabled={safeExperimentsEnabled}
                         focusWebview={focusWebview}
@@ -121,7 +127,6 @@ export default class TabContents extends Component<{}, {}> {
                     />
                 );
                 return TheTab;
-            }
         } );
         return <div className={styles.container}>{tabComponents}</div>;
     }
