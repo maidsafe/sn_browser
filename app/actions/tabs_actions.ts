@@ -2,31 +2,34 @@ import { createActions } from 'redux-actions';
 
 export const TYPES = {
     ADD_TAB: 'ADD_TAB',
+    UPDATE_TAB: 'UPDATE_TAB',
     TAB_FORWARDS: 'TAB_FORWARDS',
     TAB_BACKWARDS: 'TAB_BACKWARDS',
-    CLOSE_TAB: 'CLOSE_TAB',
-    UPDATE_TAB: 'UPDATE_TAB',
-    UPDATE_TABS: 'UPDATE_TABS',
-    SET_ACTIVE_TAB: 'SET_ACTIVE_TAB',
-    REOPEN_TAB: 'REOPEN_TAB'
+    FOCUS_WEBVIEW: 'FOCUS_WEBVIEW',
+    BLUR_ADDRESS_BAR: 'BLUR_ADDRESS_BAR',
+    SELECT_ADDRESS_BAR: 'SELECT_ADDRESS_BAR',
+    DESELECT_ADDRESS_BAR: 'DESELECT_ADDRESS_BAR',
+    RESET_STORE: 'RESET_STORE'
 };
 
 export const {
     addTab,
-    setActiveTab,
-    closeTab,
-    reopenTab,
     updateTab,
-    updateTabs,
     tabForwards,
-    tabBackwards
+    tabBackwards,
+    focusWebview,
+    blurAddressBar,
+    selectAddressBar,
+    deselectAddressBar,
+    resetStore
 } = createActions(
     TYPES.ADD_TAB,
-    TYPES.SET_ACTIVE_TAB,
-    TYPES.CLOSE_TAB,
-    TYPES.REOPEN_TAB,
     TYPES.UPDATE_TAB,
-    TYPES.UPDATE_TABS,
     TYPES.TAB_FORWARDS,
-    TYPES.TAB_BACKWARDS
+    TYPES.TAB_BACKWARDS,
+    TYPES.FOCUS_WEBVIEW,
+    TYPES.BLUR_ADDRESS_BAR,
+    TYPES.SELECT_ADDRESS_BAR,
+    TYPES.DESELECT_ADDRESS_BAR,
+    TYPES.RESET_STORE
 );

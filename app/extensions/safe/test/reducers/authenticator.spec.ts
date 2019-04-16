@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import { authenticator } from '$Extensions/safe/reducers/authenticator';
 import { TYPES } from '$Extensions/safe/actions/authenticator_actions';
-import { initialState } from '$Extensions/safe/reducers/initialAppState';
+import { initialAppState } from '$Extensions/safe/reducers/initialAppState';
 
 jest.mock( 'extensions/safe/ffi/ipc' );
 
@@ -11,7 +11,7 @@ jest.mock( 'electron-redux', () => ( {
 
 describe( 'authenticator reducer', () => {
     it( 'should return the initial state', () => {
-        expect( authenticator( undefined, {} ) ).toEqual( initialState.authenticator );
+        expect( authenticator( undefined, {} ) ).toEqual( initialAppState.authenticator );
     } );
 
     describe( 'SET_AUTH_NETWORK_STATUS', () => {

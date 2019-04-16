@@ -1,11 +1,11 @@
 /* eslint-disable func-names */
 import { notifications } from '$Reducers/notifications';
 import { TYPES } from '$Actions/notification_actions';
-import { initialState } from '$Reducers/initialAppState';
+import { initialAppState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     it( 'should return the initial state', () => {
-        expect( notifications( undefined, {} ) ).toEqual( initialState.notifications );
+        expect( notifications( undefined, {} ) ).toEqual( initialAppState.notifications );
     } );
 
     describe( 'ADD_NOTIFICATION', () => {

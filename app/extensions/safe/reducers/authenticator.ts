@@ -1,5 +1,5 @@
 import { TYPES } from '$Extensions/safe/actions/authenticator_actions';
-import { initialState as initialAppState } from './initialAppState';
+import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.authenticator;
 

@@ -1,24 +1,29 @@
 import open from 'open';
 import { Store } from 'redux';
-import { app, Menu, BrowserWindow } from 'electron';
+import { app, Menu, ipcRenderer } from 'electron';
 import {
     addTab,
     tabForwards,
     tabBackwards,
-    closeTab,
-    reopenTab,
-    setActiveTab,
-    updateTab
+    updateTab,
+    selectAddressBar,
+    resetStore
 } from '$Actions/tabs_actions';
-
-import { selectAddressBar, resetStore } from '$Actions/ui_actions';
-import { isHot, isRunningTestCafeProcess } from '$Constants';
-import { getLastClosedTab } from '$Reducers/tabs';
+import { isHot } from '$Constants';
+// import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
 
+import { AppWindow } from '$App/definitions/global.d';
+
 import { getExtensionMenuItems } from '$Extensions';
-// import { AppWindow } from '$App/definitions/globals.d';
+import {
+    addTabEnd,
+    windowCloseTab,
+    setActiveTab,
+    reopenTab,
+    closeWindow
+} from '$Actions/windows_actions';
 
 export class MenuBuilder {
     private mainWindow: AppWindow;
@@ -105,7 +110,7 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+N',
                     click: ( item, win ) => {
                         if ( this.openWindow && win ) {
-                            const windowId = win.webContents.id;
+                            const windowId = win.id;
                             this.openWindow( this.store, windowId );
                         }
                     }
@@ -115,15 +120,27 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+T',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
+                            const windowId = win.id;
+                            const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
                                     url: 'about:blank',
-                                    windowId,
-                                    isActiveTab: true
+                                    tabId
                                 } )
                             );
-                            this.store.dispatch( selectAddressBar() );
+                            this.store.dispatch(
+                                addTabEnd( {
+                                    tabId,
+                                    windowId
+                                } )
+                            );
+                            this.store.dispatch(
+                                setActiveTab( {
+                                    tabId,
+                                    windowId
+                                } )
+                            );
+                            this.store.dispatch( selectAddressBar( { tabId } ) );
                         }
                     }
                 },
@@ -132,24 +149,22 @@ export class MenuBuilder {
                     accelerator: 'Ctrl+Tab',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
-                            const state = store.getState();
-                            let index;
-                            const openTabs = state.tabs.filter(
-                                ( tab ) => !tab.isClosed && tab.windowId === windowId
-                            );
+                            const windowId = win.id;
+                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
+                            const activeTab = store.getState().windows.openWindows[windowId].activeTab;
+                            let tabId;
                             openTabs.forEach( ( tab, i ) => {
-                                if ( tab.isActiveTab ) {
+                                if ( tab === activeTab ) {
                                     if ( i === openTabs.length - 1 ) {
                                         // eslint-disable-next-line prefer-destructuring
-                                        index = openTabs[0].index;
+                                        tabId = openTabs[0];
                                     } else {
                                         // eslint-disable-next-line prefer-destructuring
-                                        index = openTabs[i + 1].index;
+                                        tabId = openTabs[i + 1];
                                     }
                                 }
                             } );
-                            this.store.dispatch( setActiveTab( { index } ) );
+                            this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
                     }
                 },
@@ -158,24 +173,22 @@ export class MenuBuilder {
                     accelerator: 'Ctrl+Shift+Tab',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
-                            const state = store.getState();
-                            let index;
-                            const openTabs = state.tabs.filter(
-                                ( tab ) => !tab.isClosed && tab.windowId === windowId
-                            );
+                            const windowId = win.id;
+                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
+                            const { activeTab } = store.getState().windows.openWindows[windowId];
+                            let tabId;
                             openTabs.forEach( ( tab, i ) => {
-                                if ( tab.isActiveTab ) {
+                                if ( tab === activeTab ) {
                                     if ( i === 0 ) {
                                         // eslint-disable-next-line prefer-destructuring
-                                        index = openTabs[openTabs.length - 1].index;
+                                        tabId = openTabs[openTabs.length - 1];
                                     } else {
                                         // eslint-disable-next-line prefer-destructuring
-                                        index = openTabs[i - 1].index;
+                                        tabId = openTabs[i - 1];
                                     }
                                 }
                             } );
-                            this.store.dispatch( setActiveTab( { index } ) );
+                            this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
                     }
                 },
@@ -184,17 +197,13 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+W',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const { tabs } = store.getState();
-                            const windowId = win.webContents.id;
-
-                            const openTabs = tabs.filter(
-                                ( tab ) => !tab.isClosed && tab.windowId === windowId
-                            );
-
+                            const windowId = win.id;
+                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
+                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
                             if ( openTabs.length === 1 ) {
                                 win.close();
                             } else {
-                                this.store.dispatch( closeTab( { windowId } ) );
+                                this.store.dispatch( windowCloseTab( { windowId, tabId } ) );
                             }
                         }
                     }
@@ -204,7 +213,12 @@ export class MenuBuilder {
                     label: 'Close Window',
                     accelerator: 'CommandOrControl+Shift+W',
                     click: ( item, win ) => {
-                        if ( win ) win.close();
+                        const windowId = win.id;
+                        if ( win )
+                        {
+                            this.store.dispatch( closeWindow( { windowId } ) );
+                            win.close();
+                        }
                     }
                 },
                 { type: 'separator' },
@@ -212,17 +226,9 @@ export class MenuBuilder {
                     label: 'Reopen Last Tab',
                     accelerator: 'CommandOrControl+Shift+T',
                     click: ( item, win ) => {
-                        const lastTab = getLastClosedTab( store.getState().tabs );
-
-                        // TODO properly declare tab type.
-                        let windowToFocus = lastTab.windowId;
-
-                        if ( windowToFocus ) {
-                            windowToFocus = BrowserWindow.fromId( windowToFocus );
-                            windowToFocus.focus();
-                        }
-
-                        store.dispatch( reopenTab() );
+                        const windowId = win.id;
+                        // need to figure this one out
+                        store.dispatch( reopenTab( { windowId } ) );
                     }
                 },
                 { type: 'separator' },
@@ -280,12 +286,24 @@ export class MenuBuilder {
             process.platform === 'darwin' ? 'Alt+Shift+B' : 'Control+Shift+O',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
+                            const windowId = win.id;
+                            const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://bookmarks',
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                addTabEnd( {
                                     windowId,
-                                    isActiveTab: true
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                setActiveTab( {
+                                    windowId,
+                                    tabId
                                 } )
                             );
                         }
@@ -297,8 +315,9 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+R',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
-                            this.store.dispatch( updateTab( { windowId, shouldReload: true } ) );
+                            const windowId = win.id;
+                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
+                            this.store.dispatch( updateTab( { tabId, shouldReload: true } ) );
                         }
                     }
                 },
@@ -315,9 +334,10 @@ export class MenuBuilder {
                     accelerator: 'Alt+CommandOrControl+I',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
+                            const windowId = win.id;
+                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
                             store.dispatch(
-                                updateTab( { windowId, shouldToggleDevTools: true } )
+                                updateTab( { tabId, shouldToggleDevTools: true } )
                             );
                         }
                     }
@@ -333,12 +353,24 @@ export class MenuBuilder {
             process.platform === 'darwin' ? 'CommandOrControl+Y' : 'Control+H',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
+                            const windowId = win.id;
+                            const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://history',
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                addTabEnd( {
                                     windowId,
-                                    isActiveTab: true
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                setActiveTab( {
+                                    windowId,
+                                    tabId
                                 } )
                             );
                         }
@@ -349,8 +381,11 @@ export class MenuBuilder {
                     label: 'Forward',
                     accelerator: 'CommandOrControl + ]',
                     click: ( item, win ) => {
+                        const windowId = win.id;
+                        const tabId = store.getState().windows.openWindows[windowId]
+                            .activeTab;
                         if ( win ) {
-                            store.dispatch( tabForwards() );
+                            store.dispatch( tabForwards( { tabId } ) );
                         }
                     }
                 },
@@ -358,8 +393,11 @@ export class MenuBuilder {
                     label: 'Backward',
                     accelerator: 'CommandOrControl + [',
                     click: ( item, win ) => {
+                        const windowId = win.id;
+                        const tabId = store.getState().windows.openWindows[windowId]
+                            .activeTab;
                         if ( win ) {
-                            store.dispatch( tabBackwards() );
+                            store.dispatch( tabBackwards( { tabId } ) );
                         }
                     }
                 }
@@ -431,11 +469,18 @@ export class MenuBuilder {
                     label: 'Reset the store',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.webContents.id;
-
+                            const windowId = win.id;
+                            const state = store.getState();
+                            const tabId =  Math.random().toString( 36 );
+                            const windowState = state.windows.openWindows;
+                            const windows = Object.keys( windowState );
+                            const windowsToBeClosed = windows.filter(
+                                Id => parseInt( Id, 10 ) !== windowId
+                            );
+                            ipcRenderer.send( 'resetStore', windowsToBeClosed );
                             logger.verbose( 'Triggering store reset from window:', windowId );
                             // reset
-                            this.store.dispatch( resetStore( { windowId } ) );
+                            this.store.dispatch( resetStore({windowId, tabId, url: 'safe-auth://home/' }) );
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { setWebFetchStatus } from '$Extensions/safe/actions/web_fetch_actions';
-import { initialState as initialAppState } from './initialAppState';
+import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.webFetch;
 

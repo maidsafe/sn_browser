@@ -14,7 +14,7 @@ const parseSafeUri = function( uri ) {
 };
 
 const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
-    new Promise( ( resolve ) => {
+    new Promise( resolve => {
         let timeLeft = timeout;
         const check = () => {
             timeLeft -= 500;

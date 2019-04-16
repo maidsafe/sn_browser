@@ -1,13 +1,13 @@
 /* eslint-disable func-names */
 import { bookmarks } from '$Reducers/bookmarks';
 import { TYPES } from '$Actions/bookmarks_actions';
-import { TYPES as UI_TYPES } from '$Actions/ui_actions';
+import { TYPES as TABS_TYPES } from '$Actions/tabs_actions'
 
-import { initialState } from '$Reducers/initialAppState';
+import { initialAppState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     it( 'should return the initial state', () => {
-        expect( bookmarks( undefined, {} ) ).toEqual( initialState.bookmarks );
+        expect( bookmarks( undefined, {} ) ).toEqual( initialAppState.bookmarks );
     } );
 
     describe( 'ADD_BOOKMARK', () => {
@@ -76,12 +76,12 @@ describe( 'notification reducer', () => {
 
     describe( 'UI_RESET_STORE', () => {
         const bookmarksPostLogout = bookmarks( [{ url: 'i should not exist' }], {
-            type: UI_TYPES.RESET_STORE
+            type: TABS_TYPES.RESET_STORE
         } );
 
         it( 'should reset bookmarks to inital state', () => {
             expect( bookmarksPostLogout ).toHaveLength( 1 );
-            expect( bookmarksPostLogout ).toMatchObject( initialState.bookmarks );
+            expect( bookmarksPostLogout ).toMatchObject( initialAppState.bookmarks );
         } );
     } );
 } );

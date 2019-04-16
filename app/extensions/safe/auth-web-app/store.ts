@@ -36,7 +36,7 @@ const enhancer = compose(
     applyMiddleware( thunk, router, logger, promise ),
     window.devToolsExtension
         ? window.devToolsExtension( { actionCreators } )
-        : ( noop ) => noop
+        : noop => noop
 );
 
 export function configureStore( initialState ) {
