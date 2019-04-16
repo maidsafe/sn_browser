@@ -1,5 +1,5 @@
 import { TYPES } from '$Actions/ui_actions';
-import { initialState as initialAppState } from './initialAppState';
+import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.ui;
 

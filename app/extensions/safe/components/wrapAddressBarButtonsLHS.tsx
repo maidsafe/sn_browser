@@ -30,7 +30,7 @@ export const wrapAddressBarButtonsLHS = (
     AddressBarButtons,
     extensionFunctionality = {}
 ) => {
-    const WrappedAddressBarButtonsLHS = ( props ) => {
+    const WrappedAddressBarButtonsLHS = props => {
         const { safeBrowserApp } = props;
         const { experimentsEnabled } = safeBrowserApp;
         return (

@@ -8,6 +8,8 @@ export default {
         path: path.join( __dirname, 'dist' ),
         filename: 'bundle.js'
     },
+    target: 'electron-renderer',
+
     mode: 'development',
     module: {
         rules: [

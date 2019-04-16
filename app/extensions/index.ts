@@ -8,7 +8,7 @@ import safeBrowsing from './safe';
 const allPackages = [safeBrowsing];
 
 export const triggerOnWebviewPreload = ( store: Store ): void => {
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.onWebviewPreload ) {
             extension.onWebviewPreload( store );
         }
@@ -19,7 +19,7 @@ export const urlIsValid = ( url: string ): boolean => {
     logger.info( 'Extensions: Checking urlIsValid via all extensions.' );
     let result = true;
 
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.urlIsValid ) {
             result = extension.urlIsValid( url );
         }
@@ -33,7 +33,7 @@ export const urlIsValid = ( url: string ): boolean => {
  * @param  {object} store redux store
  */
 export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => {
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.onRemoteCallInBgProcess ) {
             extension.onRemoteCallInBgProcess( store, allAPICalls, theCall );
         }
@@ -43,7 +43,7 @@ export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => {
 export const getRemoteCallApis = () => {
     logger.info( 'Getting extension remoteCall Apis' );
     let apisToAdd = {};
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.getRemoteCallApis ) {
             const extApis = extension.getRemoteCallApis();
             if ( typeof extApis !== 'object' ) {
@@ -68,7 +68,7 @@ export const getActionsForBrowser = () => {
     logger.info( 'Getting extension browser actions' );
 
     let actionsToAdd = {};
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.actionsForBrowser ) {
             const extActions = extension.actionsForBrowser;
             if ( typeof extActions !== 'object' ) {
@@ -86,7 +86,7 @@ export const getActionsForBrowser = () => {
 
 export const getExtensionReducers = () => {
     let reducersToAdd = {};
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.addReducersToPeruse ) {
             const extReducers = extension.addReducersToPeruse();
 
@@ -106,7 +106,7 @@ export const getExtensionReducers = () => {
 export const getExtensionMenuItems = ( store, menusArray ) => {
     logger.info( 'Extending menus array' );
     let newMenuArray = [];
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.addExtensionMenuItems ) {
             newMenuArray = extension.addExtensionMenuItems( store, menusArray );
 
@@ -119,7 +119,7 @@ export const getExtensionMenuItems = ( store, menusArray ) => {
 };
 
 export const onInitBgProcess = ( server, store ) => {
-    allPackages.forEach( ( extension ) => {
+    allPackages.forEach( extension => {
         if ( extension.setupRoutes ) {
             extension.setupRoutes( server, store );
         }
@@ -143,8 +143,8 @@ export const onOpenLoadExtensions = async ( store: Store ): Promise<any> => {
     return Promise.all( allExtensionLoading );
 };
 
-export const onAppReady = ( store ) => {
-    allPackages.forEach( ( extension ) => {
+export const onAppReady = store => {
+    allPackages.forEach( extension => {
         if ( extension.onAppReady ) {
             extension.onAppReady( store );
         }
@@ -152,4 +152,4 @@ export const onAppReady = ( store ) => {
 };
 
 export const getExtensionReduxMiddleware = () =>
-    allPackages.map( ( pack ) => pack.middleware );
+    allPackages.map( pack => pack.middleware );

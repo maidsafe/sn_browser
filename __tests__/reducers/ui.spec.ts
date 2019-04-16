@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import { ui } from '$Reducers/ui';
 import { TYPES } from '$Actions/ui_actions';
-import { initialState } from '$Reducers/initialAppState';
+import { initialAppState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     const uiInitialState = {
@@ -14,7 +14,7 @@ describe( 'notification reducer', () => {
         windows: [{ windowId: 1, settingsMenuIsVisible: false }]
     };
     it( 'should return the initial state', () => {
-        expect( ui( undefined, {} ) ).toEqual( initialState.ui );
+        expect( ui( undefined, {} ) ).toEqual( initialAppState.ui );
     } );
     describe( 'UI_ADD_WINDOW', () => {
         it( 'should handle add window to ui store', () => {

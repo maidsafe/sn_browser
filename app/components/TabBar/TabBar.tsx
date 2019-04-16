@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import url from 'url';
 import React, { Component } from 'react';
 import styles from './tabBar.css';
@@ -14,17 +15,22 @@ import { CLASSES, INTERNAL_PAGES } from '$Constants';
 
 interface TabBarProps {
     tabInFocus: number;
-    tabs: Array<any>;
+    activeTab: any;
+    activeTabId: any;
     setActiveTab: ( ...args: Array<any> ) => any;
-    addTab: ( ...args: Array<any> ) => any;
-    closeTab: ( ...args: Array<any> ) => any;
     selectAddressBar: ( ...args: Array<any> ) => any;
-    windowId: number;
+    addTabNext: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    closeTab: ( ...args: Array<any> ) => any;
+    windowId: any;
+    windows: {};
+    tabs: Array<any>;
 }
-// interface TabBarState {
-//     tabInFocus: number;
-// }
-export class TabBar extends Component<TabBarProps> {
+
+interface TabBarState {
+    tabInFocus: number;
+}
+export class TabBar extends Component<TabBarProps, TabBarState> {
     static defaultProps = {
         tabInFocus: 0,
         tabs: []
@@ -39,11 +45,15 @@ export class TabBar extends Component<TabBarProps> {
     }
 
     getTabs = (): Array<React.ReactNode> => {
-        const { tabs } = this.props;
+        const { tabs, activeTabId } = this.props;
+        // const { tabs, windowId, activeTabId } = this.props;
+        // const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {};
 
         return tabs.map(
             ( tab ): React.ReactNode => {
                 let { title } = tab;
+                const { tabId } = tab;
+
                 if ( isInternalPage( tab ) ) {
                     // TODO: DRY this out with TabContents.jsx
                     const urlObj = url.parse( tab.url );
@@ -66,7 +76,6 @@ export class TabBar extends Component<TabBarProps> {
                     return null;
                 }
 
-                const { isActiveTab } = tab;
                 let tabStyleClass = styles.tab;
                 const tabData = {
                     key: tab.index,
@@ -74,7 +83,7 @@ export class TabBar extends Component<TabBarProps> {
                     url: tab.url
                 };
 
-                if ( isActiveTab ) {
+                if ( tabId === activeTabId ) {
                     tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
                 }
 
@@ -85,10 +94,10 @@ export class TabBar extends Component<TabBarProps> {
                         key={tab.index}
                         className={`${tabStyleClass} ${CLASSES.TAB}`}
                         onClick={( event ) => {
-                            this.handleTabClick( tabData, event );
+                            this.handleTabClick( tabId, event );
                         }}
                         onKeyPress={( event ) => {
-                            this.handleTabClick( tabData, event );
+                            this.handleTabClick( tabId, event );
                         }}
                     >
                         <Row
@@ -120,7 +129,7 @@ export class TabBar extends Component<TabBarProps> {
                                     title={I18n.t( 'close-tab' )}
                                     aria-label={I18n.t( 'aria.close-tab' )}
                                     onClick={( event ) => {
-                                        this.handleTabClose( tabData, event );
+                                        this.handleTabClose( tabId, event );
                                     }}
                                 />
                             </Col>
@@ -132,31 +141,32 @@ export class TabBar extends Component<TabBarProps> {
     };
 
     handleAddTabClick( event ) {
-        const { windowId } = this.props;
         event.stopPropagation();
-        const { addTab, selectAddressBar } = this.props;
-        const newTabUrl = 'about:blank';
-        event.preventDefault();
-        addTab( {
-            url: newTabUrl,
-            isActiveTab: true,
+        const { windowId, addTabEnd, selectAddressBar } = this.props;
+        event.stopPropagation();
+        const tabId = Math.random().toString( 36 );
+        addTabEnd( {
+            tabId,
             windowId
         } );
-        selectAddressBar();
-    }
-
-    handleTabClick( tabData, event ) {
-        event.stopPropagation();
-        this.props.setActiveTab( {
-            index: tabData.tabIndex,
-            url: event.target.value
+        selectAddressBar( {
+            tabId
         } );
     }
 
-    handleTabClose( tabData, event ) {
+    handleTabClose( tabId, event ) {
         event.stopPropagation();
         const { closeTab, windowId } = this.props;
-        closeTab( { index: tabData.tabIndex, windowId } );
+        closeTab( { tabId, windowId } );
+    }
+
+    handleTabClick( tabId, event ) {
+        event.stopPropagation();
+        const { setActiveTab, windowId } = this.props;
+        setActiveTab( {
+            tabId,
+            windowId
+        } );
     }
 
     render() {

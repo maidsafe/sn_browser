@@ -16,7 +16,8 @@ describe( 'Tab', () => {
             addNotification: jest.fn(),
             tabBackwards: jest.fn(),
             closeTab: jest.fn(),
-            addTab: jest.fn()
+            addTab: jest.fn(),
+            addTabEnd: jest.fn()
         };
 
         wrapper = mount( <Tab {...props} /> );
@@ -65,7 +66,8 @@ describe( 'Tab', () => {
                 addNotification: jest.fn(),
                 tabBackwards: jest.fn(),
                 closeTab: jest.fn(),
-                addTab: jest.fn()
+                addTab: jest.fn(),
+                addTabEnd: jest.fn()
             };
 
             wrapper = mount( <Tab {...props} /> );

@@ -29,7 +29,7 @@ export const getStrengthMsg = ( strength ): string => {
     }
 };
 
-export const parseErrCode = ( errStr ) => {
+export const parseErrCode = errStr => {
     try {
         const err = JSON.parse( errStr );
         switch ( parseInt( err.error_code, 10 ) ) {
@@ -75,7 +75,7 @@ export const parseErrCode = ( errStr ) => {
     }
 };
 
-export const parseAppName = ( name ) => {
+export const parseAppName = name => {
     const parsedName = name.replace( /-|_/g, ' ' );
     // if the app's name it's just a sequence
     // of '-' and/or '_' chars, then return it as is
@@ -83,16 +83,16 @@ export const parseAppName = ( name ) => {
 
     return parsedName
         .split( ' ' )
-        .map( ( i ) => `${i[0].toUpperCase()}${i.slice( 1 )}` )
+        .map( i => `${i[0].toUpperCase()}${i.slice( 1 )}` )
         .join( ' ' );
 };
 
-export const getAppIconClassName = ( i ) => {
+export const getAppIconClassName = i => {
     const index = ( parseInt( i, 10 ) + 1 ) % 6;
     return classNames( 'app-list-i-h', 'app-icon', `app-icon-clr-${index || 6}` );
 };
 
-export const storeReAuthoriseState = ( state ) =>
+export const storeReAuthoriseState = state =>
     localStorage.setItem( CONSTANTS.RE_AUTHORISE.KEY, JSON.stringify( { state } ) );
 
 export const fetchReAuthoriseState = () => {

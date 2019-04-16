@@ -8,7 +8,7 @@ import { manageRemoteCalls } from './background.manageRemoteCalls';
 import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';
 import { setupServer } from './server';
 
-const initSafeServer = ( store ) => {
+const initSafeServer = store => {
     const server = setupServer();
     onInitBgProcess( server, store );
 };

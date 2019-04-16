@@ -1,5 +1,5 @@
-import React from 'react';
-// import { logger } from '$Logger';
+import React, { Component } from 'react';
+import { logger } from '$Logger';
 import { CLASSES, PROTOCOLS } from '$Constants';
 import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
