@@ -1,5 +1,5 @@
 import open from 'open';
-import { remote, shell } from 'electron';
+import { remote } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
 import { CONFIG, isRunningTestCafeProcess, allowedHttp } from '$Constants';

@@ -1,7 +1,7 @@
 import { remote } from 'electron';
 import url from 'url';
 import { logger } from '$Logger';
-import { CONFIG, PROTOCOLS, APP_INFO, isRunningPackaged } from '$Constants';
+import { CONFIG, PROTOCOLS } from '$Constants';
 
 const registerSafeProtocol = () => {
     logger.info( `${PROTOCOLS.SAFE} Registering` );

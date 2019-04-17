@@ -1,12 +1,10 @@
 /* eslint-disable */
-import { remote } from 'electron';
 import url from 'url';
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import styles from './tabBar.css';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 import { isInternalPage } from '$Utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from '$Constants';
 import { Column, Spinner, Row } from 'nessie-ui';

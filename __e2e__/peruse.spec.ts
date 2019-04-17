@@ -1,19 +1,13 @@
 import {
     setupSpectronApp,
     afterAllTests,
-    beforeAllTests,
-    windowLoaded
+    beforeAllTests
 } from 'spectron-lib/setupSpectronApp';
 import {
-    bookmarkActiveTabPage,
     delay,
-    navigateTo,
-    newTab,
     setClientToMainBrowserWindow
 } from './lib/browser-driver';
 import {
-    BROWSER_UI,
-    WAIT_FOR_EXIST_TIMEOUT,
     DEFAULT_TIMEOUT_INTERVAL
 } from './lib/constants';
 

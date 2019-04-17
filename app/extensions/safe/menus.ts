@@ -4,12 +4,12 @@ import {
 } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { SAFE } from '$Extensions/safe/constants';
 
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 
 const safeSave = store => ( {
     label: 'Save Browser State to SAFE',
     accelerator: 'CommandOrControl+Shift+E',
-    click: ( item, win ) => {
+    click: ( _item, win ) => {
         if ( win ) {
             store.dispatch( setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE ) );
         }

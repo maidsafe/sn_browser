@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import * as notificationActions from '$Actions/notification_actions';
 import { logger } from '$Logger';
-import CONSTANTS from './auth-constants';
 import { createAuthRequestElement } from './components/authRequest';
 
 export const CLIENT_TYPES = {

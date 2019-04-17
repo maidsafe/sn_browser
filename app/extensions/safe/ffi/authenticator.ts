@@ -12,7 +12,6 @@ import crypto from 'crypto';
 import lodash from 'lodash';
 import { logger } from '$Logger';
 import i18n from 'i18n';
-import { SAFE } from '$Extensions/safe/constants';
 import SafeLib from './safe_lib';
 import Listener from './listeners';
 import * as types from './refs/types';

@@ -17,7 +17,6 @@ const setupRoutes = ( server, store ) => {
     // webId manager properly.
     server.get( /dummy/, ( request, res ) => {
         const { link } = request.params;
-        const linkUrl = url.parse( link );
 
         let safeFolder = isRunningPackaged
             ? '../extensions/safe/'

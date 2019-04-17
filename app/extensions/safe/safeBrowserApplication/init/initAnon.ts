@@ -1,6 +1,5 @@
 import { logger } from '$Logger';
 import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
-import { SAFE } from '$Extensions/safe/constants';
 import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 
 import { handleAuthentication } from '$Extensions/safe/network';

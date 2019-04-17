@@ -25,6 +25,7 @@ module.exports = {
         codeFrame: true
     },
     rules: {
+        'unicorn/prevent-abbreviations': 'off',
         'unicorn/catch-error-name': 'off',
         'unicorn/filename-case': 'off',
         'unicorn/prefer-exponentiation-operator': 'off',
