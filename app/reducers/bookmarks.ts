@@ -1,4 +1,4 @@
-import { remote, shell, webContents } from 'electron';
+import { remote } from 'electron';
 import _ from 'lodash';
 import { TYPES } from '$Actions/bookmarks_actions';
 import { TYPES as UI_TYPES } from '$Actions/ui_actions';

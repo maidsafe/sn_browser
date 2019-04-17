@@ -1,4 +1,3 @@
-import { createActions } from 'redux-actions';
 import { TYPES } from '$Actions/ui_actions';
 import initialAppState from './initialAppState';
 

@@ -1,4 +1,3 @@
-import { createActions } from 'redux-actions';
 import { logger } from '$Logger';
 import { TYPES } from '$Actions/remoteCall_actions';
 import initialAppState from './initialAppState';

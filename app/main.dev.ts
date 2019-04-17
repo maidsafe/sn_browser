@@ -15,7 +15,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-import { app, protocol, ipcMain, shell } from 'electron';
+import { app, protocol, ipcMain } from 'electron';
 import { logger } from '$Logger';
 
 import {
@@ -24,9 +24,6 @@ import {
     isRunningSpectronTestProcess,
     isRunningPackaged,
     isCI,
-    travisOS,
-    I18N_CONFIG,
-    PROTOCOLS,
     CONFIG
 } from '$Constants';
 

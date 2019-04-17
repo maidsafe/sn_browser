@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
 import {
-    CLASSES,
-    isRunningSpectronTestProcess,
     startedRunningMock
 } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
-import { Column, IconButton, Grid } from 'nessie-ui';
+import { IconButton } from 'nessie-ui';
 import _ from 'lodash';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 import styles from './webIdButtons.css';
 import { Icon } from 'antd';
 import 'antd/lib/icon/style';

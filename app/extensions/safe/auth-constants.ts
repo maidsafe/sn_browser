@@ -1,15 +1,11 @@
 import Enum from 'enum';
 import path from 'path';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 
 import {
-    isHot,
     isRunningPackaged,
-    inRendererProcess,
-    startedRunningProduction,
     startedRunningMock,
-    isRunningNodeEnvTest,
-    isRunningSpectronTestProcess
+    isRunningNodeEnvTest
 } from '$Constants';
 
 // let libLocaleModifier = '';

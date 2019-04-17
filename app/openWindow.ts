@@ -1,9 +1,8 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
-import os from 'os';
 import windowStateKeeper from 'electron-window-state';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';

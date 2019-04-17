@@ -1,5 +1,5 @@
 import open from 'open';
-import { app, Menu, shell, BrowserWindow } from 'electron';
+import { app, Menu, BrowserWindow } from 'electron';
 import {
     addTab,
     tabForwards,
@@ -11,7 +11,7 @@ import {
 } from '$Actions/tabs_actions';
 
 import { selectAddressBar, resetStore } from '$Actions/ui_actions';
-import { isHot, isRunningDebug, isRunningTestCafeProcess } from '$Constants';
+import { isHot, isRunningTestCafeProcess } from '$Constants';
 import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';

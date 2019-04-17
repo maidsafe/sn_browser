@@ -1,5 +1,4 @@
 import { push } from 'react-router-redux';
-import { PROTOCOLS } from '$Constants';
 // import setupPreloadAPIs from './setupPreloadAPIs';;
 
 // no logger to avoid duplicate msgs.

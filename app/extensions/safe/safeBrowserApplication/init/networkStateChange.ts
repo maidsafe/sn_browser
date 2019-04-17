@@ -1,13 +1,9 @@
 import { logger } from '$Logger';
-import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
-import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 
 import {
-    handleAuthentication,
     attemptReconnect
 } from '$Extensions/safe/network';
-import { initialiseApp } from '@maidsafe/safe-node-app';
 
 import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {

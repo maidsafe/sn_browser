@@ -16,7 +16,6 @@ import {
     isRunningUnpacked
 } from '$Constants';
 import { getSafeBrowserUnauthedReqUri } from '$Extensions/safe/safeBrowserApplication/init/initAnon';
-import path from 'path';
 import sysUri from '$Extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from '$Constants';
 import { addTab } from '$Actions/tabs_actions';

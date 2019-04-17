@@ -5,7 +5,6 @@ import {
     isRunningUnpacked,
     isRunningDebug,
     isRunningSpectronTestProcess,
-    isRunningDevelopment,
     isCI
 } from '$Constants';
 

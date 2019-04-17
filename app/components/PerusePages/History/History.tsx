@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { ipcRenderer, remote } from 'electron';
+import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
-import { Column, Page, PageHeader, H1, Row, Text } from 'nessie-ui';
+import { Page, PageHeader, H1 } from 'nessie-ui';
 import UrlList from '$Components/UrlList';
 import styles from './history.css';
 import { CLASSES } from '$Constants';

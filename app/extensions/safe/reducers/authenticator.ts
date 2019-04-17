@@ -1,4 +1,3 @@
-import { createActions } from 'redux-actions';
 import { TYPES } from '$Extensions/safe/actions/authenticator_actions';
 import initialAppState from './initialAppState';
 
