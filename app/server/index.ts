@@ -1,5 +1,5 @@
 import express from 'express';
-import { CONFIG, startedRunningProduction } from '$Constants';
+import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
 
 const app = express();

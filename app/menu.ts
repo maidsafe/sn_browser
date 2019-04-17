@@ -11,9 +11,7 @@ import {
 
 import { selectAddressBar, resetStore } from '$Actions/ui_actions';
 import {
-    isHot,
-    isRunningDebug,
-    isRunningSpectronTestProcess
+    isHot
 } from '$Constants';
 import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';

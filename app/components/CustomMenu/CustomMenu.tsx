@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { logger } from '$Logger';
 import { CLASSES } from '$Constants';
-import { Row, Icon, Button } from 'antd';
+import { Icon, Button } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';

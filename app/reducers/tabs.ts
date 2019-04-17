@@ -1,4 +1,4 @@
-import { remote, shell, webContents } from 'electron';
+import { remote, webContents } from 'electron';
 import { TYPES } from '$Actions/tabs_actions';
 import { TYPES as UI_TYPES } from '$Actions/ui_actions';
 import {

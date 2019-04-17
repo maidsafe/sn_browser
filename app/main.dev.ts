@@ -10,7 +10,6 @@
  * @flow
  */
 
-import opn from 'opn';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -24,9 +23,6 @@ import {
     isRunningSpectronTestProcess,
     isRunningPackaged,
     isCI,
-    travisOS,
-    I18N_CONFIG,
-    PROTOCOLS,
     CONFIG
 } from '$Constants';
 

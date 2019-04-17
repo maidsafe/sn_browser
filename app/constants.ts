@@ -6,9 +6,6 @@ import getPort from 'get-port';
 import { CLASSES, GET_DOM_EL_CLASS } from './constants/classes';
 
 export const { platform } = process;
-const OSX = 'darwin';
-const LINUX = 'linux';
-const WINDOWS = 'win32';
 
 export { CLASSES, GET_DOM_EL_CLASS };
 

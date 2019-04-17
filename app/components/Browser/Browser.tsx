@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import AddressBar from '$Components/AddressBar';
 import TabBar from '$Components/TabBar';
 import TabContents from '$Components/TabContents';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 import extendComponent from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
 import styles from './browser.css';
