@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import {
-    startedRunningMock
-} from '$Constants';
+import { startedRunningMock } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
 import { IconButton } from 'nessie-ui';
 import _ from 'lodash';

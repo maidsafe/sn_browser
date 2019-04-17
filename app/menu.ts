@@ -10,9 +10,7 @@ import {
 } from '$Actions/tabs_actions';
 
 import { selectAddressBar, resetStore } from '$Actions/ui_actions';
-import {
-    isHot
-} from '$Constants';
+import { isHot } from '$Constants';
 import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
