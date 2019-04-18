@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import open from 'open';
 import { shell } from 'electron';
 import { receivedAuthResponse } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
@@ -96,7 +97,7 @@ class ReqQueue {
             return;
         }
         try {
-            shell.openExternal( parseResUrl( uri ) );
+            open( parseResUrl( uri ) );
         } catch ( err ) {
             logger.error( err.message );
         }

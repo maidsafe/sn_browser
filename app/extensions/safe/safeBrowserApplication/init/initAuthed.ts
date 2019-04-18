@@ -38,7 +38,7 @@ const initAuthedApplication = async ( passedStore, options ) => {
         global.browserAuthReqUri = authReq.uri;
 
         if ( process.platform === 'win32' ) {
-            ipcRenderer.send( 'opn', authReq.uri );
+            ipcRenderer.send( 'open', authReq.uri );
         } else {
             await safeBrowserAppObject.auth.openUri( authReq.uri );
         }

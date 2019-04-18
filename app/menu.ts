@@ -1,3 +1,4 @@
+import open from 'open';
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import {
     addTab,
@@ -387,13 +388,13 @@ export default class MenuBuilder {
                 {
                     label: 'Learn More about the Safe Network',
                     click() {
-                        shell.openExternal( 'https://safenetwork.tech/' );
+                        open( 'https://safenetwork.tech/' );
                     }
                 },
                 {
                     label: 'Documentation',
                     click() {
-                        shell.openExternal(
+                        open(
                             'https://github.com/maidsafe/safe_browser/blob/master/README.md'
                         );
                     }
@@ -401,13 +402,13 @@ export default class MenuBuilder {
                 {
                     label: 'Community Discussions',
                     click() {
-                        shell.openExternal( 'https://safenetforum.org' );
+                        open( 'https://safenetforum.org' );
                     }
                 },
                 {
                     label: 'Search Issues',
                     click() {
-                        shell.openExternal(
+                        open(
                             'https://github.com/maidsafe/safe_browser/issues'
                         );
                     }

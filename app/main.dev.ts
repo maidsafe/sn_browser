@@ -10,7 +10,7 @@
  * @flow
  */
 
-import opn from 'opn';
+import open from 'open';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -64,9 +64,9 @@ ipcMain.on( 'errorInRenderWindow', ( event, data ) => {
 } );
 
 // Needed for windows w/ SAFE browser app login
-ipcMain.on( 'opn', ( event, data ) => {
-    logger.info( 'Opening link in system via opn.' );
-    shell.openExternal( data );
+ipcMain.on( 'open', ( event, data ) => {
+    logger.info( 'Opening link in system via open.' );
+    open( data );
 } );
 
 let mainWindow = null;

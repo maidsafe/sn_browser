@@ -355,7 +355,7 @@
     "jest-tobetype": "git+https://github.com/joshuef/jest-tobetype.git#master",
     "lodash": ">=4.17.11",
     "nessie-ui": "6.1.0",
-    "opn": "^5.3.0",
+    "open": "^6.1.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-hot-loader": "^4.3.12",

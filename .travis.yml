@@ -85,7 +85,7 @@ before_script:
 
 script:
 # update the xdg implementation on the machine. older version is buggy
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/opn/xdg-open ~/bin/;
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/open/xdg-open ~/bin/;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
     fi
