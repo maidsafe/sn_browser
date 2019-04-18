@@ -66,3 +66,7 @@ white-space: nowrap;
     composes: webId;
     font-weight: bold;
 }
+
+.loadingIcon {
+    font-size: 20px;
+}
