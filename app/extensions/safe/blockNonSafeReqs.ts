@@ -1,3 +1,4 @@
+import open from 'open';
 import { remote, shell } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
@@ -43,7 +44,7 @@ const blockNonSAFERequests = () => {
         if ( httpRegExp.test( details.url ) ) {
             if ( allowedHttp.includes( details.url ) ) {
                 try {
-                    shell.openExternal( details.url );
+                    open( details.url );
                 } catch ( e ) {
                     logger.error( e );
                 }

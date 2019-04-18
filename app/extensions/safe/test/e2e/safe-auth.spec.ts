@@ -1,4 +1,4 @@
-import opn from 'opn';
+import open from 'open';
 
 import {
     delay,
@@ -55,7 +55,7 @@ describe( 'safe authenticator protocol', () => {
             expect.assertions( 2 );
             const { client } = app;
             await delay( 2500 );
-            opn( 'safe-auth://blabla' );
+            open( 'safe-auth://blabla' );
             await delay( 2500 );
 
             setClientToMainBrowserWindow( app );
