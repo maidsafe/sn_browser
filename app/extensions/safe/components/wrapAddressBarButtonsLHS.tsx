@@ -9,7 +9,8 @@ import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import {
     showWebIdDropdown,
-    getAvailableWebIds
+    getAvailableWebIds,
+    setAppStatus
 } from '../actions/safeBrowserApplication_actions';
 // import styles from './wrapAddressBarButtons.css';
 function mapStateToProps( state ) {
@@ -20,7 +21,8 @@ function mapStateToProps( state ) {
 function mapDispatchToProps( dispatch ) {
     const actions = {
         showWebIdDropdown,
-        getAvailableWebIds
+        getAvailableWebIds,
+        setAppStatus
     };
     return bindActionCreators( actions, dispatch );
 }
