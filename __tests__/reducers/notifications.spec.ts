@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
-import notifications from '$Reducers/notifications';
+import { notifications } from '$Reducers/notifications';
 import { TYPES } from '$Actions/notification_actions';
-import initialState from '$Reducers/initialAppState';
+import { initialState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     it( 'should return the initial state', () => {

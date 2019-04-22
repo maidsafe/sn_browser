@@ -9,7 +9,7 @@ interface propTypes {
     callback?: ( ...args: Array<any> ) => any;
 }
 
-export default class Popup extends React.Component<propTypes> {
+export class Popup extends React.Component<propTypes> {
     constructor() {
         super();
         this.state = {

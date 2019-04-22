@@ -1,7 +1,7 @@
 import { remote } from 'electron';
 // import contextMenu from 'electron-context-menu';
 import React, { Component } from 'react';
-import Error from '$Components/PerusePages/Error';
+import { Error } from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 import {
@@ -42,7 +42,7 @@ interface TabState {
         redirects: Array<undefined>;
     };
 }
-export default class Tab extends Component<TabProps, TabState> {
+export class Tab extends Component<TabProps, TabState> {
     static defaultProps = {
         isActiveTab: false,
         url: 'http://nowhere.com'

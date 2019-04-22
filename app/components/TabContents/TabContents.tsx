@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import url from 'url';
-import Tab from '$Components/Tab';
+import { Tab } from '$Components/Tab';
 import { INTERNAL_PAGES, isRunningTestCafeProcess } from '$Constants';
 import { isInternalPage } from '$Utils/urlHelpers';
-import History from '$Components/PerusePages/History';
-import Bookmarks from '$Components/PerusePages/Bookmarks';
+import { History } from '$Components/PerusePages/History';
+import { Bookmarks } from '$Components/PerusePages/Bookmarks';
 // import { logger } from '$Logger';
 import styles from './tabContents.css';
 
-export default class TabContents extends Component<{}, {}> {
+export class TabContents extends Component<{}, {}> {
     static getDerivedStateFromError( error ) {
     // Update state so the next render will show the fallback UI.
         return { hasError: true, theError: error };

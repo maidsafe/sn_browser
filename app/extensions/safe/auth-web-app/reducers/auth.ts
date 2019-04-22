@@ -20,7 +20,7 @@ import {
     SHOW_LIB_ERR_POPUP,
     SET_IS_AUTHORISED
 } from '../actions/auth';
-import CONSTANTS from '../constants';
+import { CONSTANTS } from '../constants';
 import { isUserAuthorised, parseErrCode } from '../utils';
 
 const initialState = {
@@ -37,7 +37,7 @@ const initialState = {
     libErrPopup: false
 };
 
-const auth = ( state = initialState, action ) => {
+export const auth = ( state = initialState, action ) => {
     switch ( action.type ) {
         case SET_CREATE_ACC_NAV_POS: {
             const nextState = { ...state };
@@ -195,5 +195,3 @@ const auth = ( state = initialState, action ) => {
         }
     }
 };
-
-export default auth;

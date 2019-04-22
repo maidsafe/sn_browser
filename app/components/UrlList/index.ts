@@ -1,3 +1,1 @@
-import UrlList from './UrlList';
-
-export default UrlList;
+export { UrlList } from './UrlList';

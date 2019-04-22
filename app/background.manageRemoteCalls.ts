@@ -17,7 +17,7 @@ const allApiCalls = {
  * updating the remoteCall.
  * @param  {[type]}  store Redux store
  */
-const manageRemoteCalls = async store => {
+export const manageRemoteCalls = async store => {
     const state = store.getState();
     const { remoteCalls } = state;
     if ( cachedRemoteCallArray !== remoteCalls ) {
@@ -75,5 +75,3 @@ const manageRemoteCalls = async store => {
         } );
     }
 };
-
-export default manageRemoteCalls;

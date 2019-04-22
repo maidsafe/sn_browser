@@ -5,9 +5,9 @@ import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import 'antd/lib/icon/style';
-import extendComponent from '$Utils/extendComponent';
+import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarButtonsRHS } from '$Extensions/components';
-import CustomMenu from '$Components/CustomMenu';
+import { CustomMenu } from '$Components/CustomMenu';
 import { CLASSES } from '$Constants';
 
 interface ButtonsRHSProps {
@@ -97,4 +97,4 @@ class ButtonsRHS extends Component<{}, {}> {
         );
     }
 }
-export default extendComponent( ButtonsRHS, wrapAddressBarButtonsRHS );
+export const ExtendedButtonsRHS = extendComponent( ButtonsRHS, wrapAddressBarButtonsRHS );

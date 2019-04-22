@@ -30,5 +30,3 @@ export const registerSafeAuthProtocol = () => {
         }
     );
 };
-
-export default registerSafeAuthProtocol;

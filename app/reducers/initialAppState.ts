@@ -1,4 +1,4 @@
-const initialState = {
+export const initialState = {
     bookmarks: [{ url: 'safe-auth://home/#/login' }],
     remoteCalls: [],
     notifications: [],
@@ -20,5 +20,3 @@ const initialState = {
         shouldFocusWebview: false
     }
 };
-
-export default initialState;

@@ -1,6 +1,6 @@
 import authenticator from '../ffi/authenticator';
 import sysUri from '../ffi/sys_uri';
-import CONSTANTS from '../auth-constants';
+import { CONSTANTS } from '../auth-constants';
 
 export const setNetworkListener = cb =>
     authenticator.setListener( CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb );

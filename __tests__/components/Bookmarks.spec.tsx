@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import Bookmarks from '$Components/PerusePages/Bookmarks';
-import UrlList from '$Components/UrlList';
+import { Bookmarks } from '$Components/PerusePages/Bookmarks';
+import { UrlList } from '$Components/UrlList';
 import { CLASSES } from '$Constants';
 
 describe( 'Bookmarks', () => {

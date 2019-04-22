@@ -8,7 +8,7 @@ import {
 import { CONFIG, isRunningUnpacked } from '$Constants';
 import path from 'path';
 import { logger } from '$Logger';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.tabs;
 
@@ -375,7 +375,7 @@ const reindexTabs = tabs => tabs.map( ( tab, index ) => ( { ...tab, index } ) );
  * @param  { object } action action Object
  * @return { array }        updatd state object
  */
-export default function tabs( state: Array = initialState, action ) {
+export function tabs( state: Array = initialState, action ) {
     const { payload } = action;
 
     if ( action.error ) {

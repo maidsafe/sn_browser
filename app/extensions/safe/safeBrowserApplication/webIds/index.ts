@@ -10,7 +10,7 @@ import {
  * Get WebIds for the current user
  * @return {Promise} Resolves to Array of webIds
  */
-const getWebIds = async () => {
+export const getWebIds = async () => {
     logger.info( 'getWebIds' );
     const currentStore = getCurrentStore();
 
@@ -30,5 +30,3 @@ const getWebIds = async () => {
 
     return webIds;
 };
-
-export default getWebIds;

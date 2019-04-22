@@ -1,3 +1,1 @@
-import History from './History';
-
-export default History;
+export { History } from './History';

@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { Provider } from 'react-redux';
 
-import AddressBar from '$Components/AddressBar';
+import { AddressBar } from '$Components/AddressBar';
 import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();

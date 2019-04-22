@@ -17,7 +17,7 @@ import Listener from './listeners';
 import * as types from './refs/types';
 import * as typeParser from './refs/parsers';
 import * as typeConstructor from './refs/constructors';
-import CONSTANTS from '../auth-constants';
+import { CONSTANTS } from '../auth-constants';
 import errConst from '../err-constants';
 
 import { isRunningNodeEnvTest } from '$Constants';

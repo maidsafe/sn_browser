@@ -1,6 +1,6 @@
 import { logger } from '$Logger';
 import { TYPES } from '$Actions/notification_actions';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.notifications;
 const findNotificationIndexById = ( theState, theCall ) => {
@@ -10,7 +10,7 @@ const findNotificationIndexById = ( theState, theCall ) => {
 
     return theState.findIndex( c => c.id === theCall.id );
 };
-export default function notifications( state: Array = initialState, action ) {
+export function notifications( state: Array = initialState, action ) {
     const notification = action.payload;
 
     switch ( action.type ) {

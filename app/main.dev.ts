@@ -29,9 +29,9 @@ import {
 
 import pkg from '$Package';
 
-import setupBackground from './setupBackground';
+import { setupBackground } from './setupBackground';
 
-import openWindow from './openWindow';
+import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
 import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions';
 

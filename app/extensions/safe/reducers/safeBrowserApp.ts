@@ -1,10 +1,10 @@
 import { TYPES } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { logger } from '$Logger';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.safeBrowserApp;
 
-export default function safeBrowserApp( state = initialState, action ) {
+export function safeBrowserApp( state = initialState, action ) {
     if ( action.error ) {
         logger.error( 'Error in initializer reducer: ', action, action.error );
         return state;

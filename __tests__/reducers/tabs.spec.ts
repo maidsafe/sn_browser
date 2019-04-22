@@ -1,8 +1,8 @@
 /* eslint-disable func-names */
-import tabs from '$Reducers/tabs';
+import { tabs } from '$Reducers/tabs';
 import { TYPES } from '$Actions/tabs_actions';
 import { TYPES as UI_TYPES } from '$Actions/ui_actions';
-import initialState from '$Reducers/initialAppState';
+import { initialState } from '$Reducers/initialAppState';
 import { isRunningUnpacked } from '$Constants';
 
 const favicon = isRunningUnpacked

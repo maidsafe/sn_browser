@@ -1,6 +1,6 @@
 import { logger } from '$Logger';
 import React from 'react';
-import Error from '$Components/PerusePages/Error';
+import { Error } from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
 import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
@@ -10,7 +10,7 @@ import errConsts from '$Extensions/safe/err-constants';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import { SAFE } from '../constants';
 
-const safeRoute = store => ( {
+export const safeRoute = store => ( {
     method: 'GET',
     path: /safe:\//,
     handler: async ( request, res ) => {
@@ -127,5 +127,3 @@ const safeRoute = store => ( {
         }
     }
 } );
-
-export default safeRoute;

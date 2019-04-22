@@ -1,6 +1,6 @@
 import { logger } from '$Logger';
 import { TYPES } from '$Actions/remoteCall_actions';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.remoteCalls;
 
@@ -12,7 +12,7 @@ const findCallIndexById = ( theState, theCall ) => {
     return theState.findIndex( c => c.id === theCall.id );
 };
 
-export default function remoteCalls( state: Array = initialState, action ) {
+export function remoteCalls( state: Array = initialState, action ) {
     const theCall = action.payload;
 
     switch ( action.type ) {

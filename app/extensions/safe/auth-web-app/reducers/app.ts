@@ -25,7 +25,7 @@ const initialState = {
     fetchingAccountInfo: false,
     searchResult: []
 };
-const app = ( state = initialState, action ) => {
+export const app = ( state = initialState, action ) => {
     switch ( action.type ) {
         case `${GET_AUTHORISED_APPS}_PENDING`: {
             return { ...state, fetchingApps: true, revoked: false };
@@ -109,5 +109,3 @@ const app = ( state = initialState, action ) => {
         }
     }
 };
-
-export default app;

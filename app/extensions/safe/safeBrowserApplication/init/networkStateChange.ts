@@ -12,7 +12,7 @@ import {
 } from '$Actions/notification_actions';
 import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
-const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
+export const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
     logger.info( 'onNetworkStateChange' );
     const safeBrowserAppObject = getSafeBrowserAppObject();
 
@@ -45,5 +45,3 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
         store.dispatch( clearNotification( { id: notificationID } ) );
     }
 };
-
-export default onNetworkStateChange;

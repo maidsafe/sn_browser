@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
-import safeBrowserApp from '$Extensions/safe/reducers/safeBrowserApp';
+import { safeBrowserApp } from '$Extensions/safe/reducers/safeBrowserApp';
 import { TYPES } from '$Extensions/safe/actions/safeBrowserApplication_actions';
-import initialState from '$Extensions/safe/reducers/initialAppState';
+import { initialState } from '$Extensions/safe/reducers/initialAppState';
 import { CONFIG } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
 

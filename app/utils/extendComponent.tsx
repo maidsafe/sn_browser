@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { logger } from '$Logger';
 
-const extendComponent = ( WrappedComponent, extensionWrapperApi ) => {
+export const extendComponent = ( WrappedComponent, extensionWrapperApi ) => {
     if ( !WrappedComponent ) throw new Error( 'Must pass a component to wrap.' );
 
     if ( typeof extensionWrapperApi !== 'function' )
@@ -49,5 +49,3 @@ const extendComponent = ( WrappedComponent, extensionWrapperApi ) => {
 
     return Extended;
 };
-
-export default extendComponent;

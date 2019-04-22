@@ -1,3 +1,1 @@
-import TabContents from './TabContents';
-
-export default TabContents;
+export { TabContents } from './TabContents';

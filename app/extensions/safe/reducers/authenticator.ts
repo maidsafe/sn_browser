@@ -1,9 +1,9 @@
 import { TYPES } from '$Extensions/safe/actions/authenticator_actions';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.authenticator;
 
-export default function authenticator( state: object = initialState, action ) {
+export function authenticator( state: object = initialState, action ) {
     const { payload } = action;
 
     switch ( action.type ) {

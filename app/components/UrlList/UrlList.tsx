@@ -8,7 +8,7 @@ interface UrlListProps {
     onRemove?: ( ...args: Array<any> ) => any;
     addTab?: ( ...args: Array<any> ) => any;
 }
-export default class UrlList extends Component<UrlListProps, {}> {
+export class UrlList extends Component<UrlListProps, {}> {
     static defaultProps = {
         list: []
     };
