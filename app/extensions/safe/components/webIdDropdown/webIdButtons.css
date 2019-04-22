@@ -1,68 +1,52 @@
-.webIdList{
-/* display: block; */
-position: absolute;
-font-size: 1.4rem;
-top: 9rem;
-text-align: left;
-list-style: none;
-background-color: white;
-padding-top: 5px;
-padding-bottom: 5px;
-
-background-color: rgba( 246, 246, 246, 1);
-
-border:             1px solid rgba( 127, 127, 127, 1);
-display:            flex;
-z-index: 1;
-flex-direction: column;
-padding: 0rem;
-/* padding-right: 1rem; */
-white-space: nowrap;
-
+.webIdList {
+    position: absolute;
+    font-size: 1.4rem;
+    top: 3rem;
+    text-align: left;
+    list-style: none;
+    background-color: rgba(246, 246, 246, 1);
+    border: 1px solid rgba(127, 127, 127, 1);
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+    padding: 0;
+    white-space: nowrap;
 }
 
-
-.webId
-{
+.webId {
     cursor: pointer;
     padding: 1rem;
     padding-left: 1.2rem;
     padding-right: 1.2rem;
-    /* padding-right: 1rem; */
-    /* padding-bottom: 0.4rem; */
-    border-bottom:  1px solid rgba( 127, 127, 127, 0.3);
+    border-bottom: 1px solid rgba(127, 127, 127, 0.3);
 }
 
-.webIdInfo
-{
+.webIdInfo {
+    /* stylelint-disable-next-line */
     composes: webId;
     cursor: default;
 }
 
-.webIdManager
-{
+.webIdManager {
+    /* stylelint-disable-next-line */
     composes: webId;
     border-bottom: none;
 }
 
-.openAuth
-{
+.openAuth {
+    /* stylelint-disable-next-line */
     composes: webId;
 }
-.openAuth a
-{
+.openAuth a {
     text-decoration: none;
-    /* color: #19a2e2; */
 }
 
-.webIdManager a
-{
+.webIdManager a {
     text-decoration: none;
-    /* color: #19a2e2; */
 }
 
-.selectedWebId
-{
+.selectedWebId {
+    /* stylelint-disable-next-line */
     composes: webId;
     font-weight: bold;
 }
