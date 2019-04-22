@@ -1,11 +1,11 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import AUTH_UI_CLASSES from '$Extensions/safe/auth-web-app/classes';
+import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
 import { I18n } from 'react-redux-i18n';
 import { parseAppName, getAppIconClassName } from '../utils';
-import Popup from './popup';
-import CardLoaderFull from './card_loader_full';
-import CONSTANTS from '../constants';
+import { Popup } from './popup';
+import { CardLoaderFull } from './card_loader_full';
+import { CONSTANTS } from '../constants';
 
 interface AppInfoOptions {
     id: string;
@@ -37,7 +37,7 @@ interface contextTypes {
     router: object;
 }
 
-export default class AppList extends React.Component<propTypes, contextTypes> {
+export class AppList extends React.Component<propTypes, contextTypes> {
     constructor() {
         super();
         this.title = I18n.t( 'authorised_apps_title' );

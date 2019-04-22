@@ -1,4 +1,4 @@
-import AUTH_UI_CLASSES from '$Extensions/safe/auth-web-app/classes';
+import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
 
 import {

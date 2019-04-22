@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
 import { withRouter } from 'react-router';
-import AppList from '../components/app_list';
+import { AppList } from '../components/app_list';
 import * as appActions from '../actions/app';
 
 const mapStateToProps = state => ( {
@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => ( {
     ...bindActionCreators( appActions, dispatch )
 } );
 
-export default withRouter(
+export const AppListContainer =  withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps

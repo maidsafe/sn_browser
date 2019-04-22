@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
-import remoteCalls from '$Reducers/remoteCalls';
+import { remoteCalls } from '$Reducers/remoteCalls';
 import { TYPES } from '$Actions/remoteCall_actions';
-import initialState from '$Reducers/initialAppState';
+import { initialState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     let aCall;

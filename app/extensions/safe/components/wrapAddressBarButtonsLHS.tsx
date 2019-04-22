@@ -2,7 +2,7 @@ import { remote } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import WebIdDropdown from '$Extensions/safe/components/webIdDropdown';
+import { WebIdDropdown } from '$Extensions/safe/components/webIdDropdown';
 import { Row, Col } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
@@ -26,7 +26,7 @@ function mapDispatchToProps( dispatch ) {
     };
     return bindActionCreators( actions, dispatch );
 }
-const wrapAddressBarButtonsLHS = (
+export const wrapAddressBarButtonsLHS = (
     AddressBarButtons,
     extensionFunctionality = {}
 ) => {
@@ -85,4 +85,3 @@ const wrapAddressBarButtonsLHS = (
     )( WrappedAddressBarButtonsLHS );
     return hookedUpInput;
 };
-export default wrapAddressBarButtonsLHS;

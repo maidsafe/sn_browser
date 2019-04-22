@@ -7,10 +7,10 @@ import {
 import path from 'path';
 import url from 'url';
 
-import safeRoute from './safe';
-import authRoute from './auth';
+import { safeRoute } from './safe';
+import { authRoute } from './auth';
 
-const setupRoutes = ( server, store ) => {
+export const setupRoutes = ( server, store ) => {
     const routes = [safeRoute( store ), authRoute];
 
     // TODO: Remove serving onf antd files when we can package
@@ -42,5 +42,3 @@ const setupRoutes = ( server, store ) => {
         }
     } );
 };
-
-export default setupRoutes;

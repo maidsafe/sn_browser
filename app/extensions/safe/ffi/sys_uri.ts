@@ -5,7 +5,7 @@ import ffi from 'ffi';
 import os from 'os';
 import path from 'path';
 import ArrayType from 'ref-array';
-import CONSTANTS from '../auth-constants';
+import { CONSTANTS } from '../auth-constants';
 import * as type from './refs/types';
 
 const StringArray = ArrayType( type.CString );

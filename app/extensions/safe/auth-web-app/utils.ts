@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import CONSTANTS from './constants';
+import { CONSTANTS } from './constants';
 
 export const isUserAuthorised = () => window.safeAuthenticator.isAuthorised();
 

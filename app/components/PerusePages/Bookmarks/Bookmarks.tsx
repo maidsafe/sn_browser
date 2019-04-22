@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router';
 import { Page, H1, PageHeader } from 'nessie-ui';
-import UrlList from '$Components/UrlList';
+import { UrlList } from '$Components/UrlList';
 import styles from './bookmarks.css';
 import { CLASSES } from '$Constants';
 
@@ -9,7 +9,7 @@ interface BookmarksProps {
     bookmarks: Array<any>;
     addTab: ( ...args: Array<any> ) => any;
 }
-export default class Bookmarks extends Component<BookmarksProps, {}> {
+export class Bookmarks extends Component<BookmarksProps, {}> {
     static defaultProps = {
         bookmarks: []
     };

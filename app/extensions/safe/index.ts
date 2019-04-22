@@ -20,7 +20,7 @@ import sysUri from '$Extensions/safe/ffi/sys_uri';
 import { APP_INFO, PROTOCOLS } from '$Constants';
 import { addTab } from '$Actions/tabs_actions';
 
-import safeReducers from '$Extensions/safe/reducers';
+import { safeReducers } from '$Extensions/safe/reducers';
 import webviewPreload from '$Extensions/safe/webviewPreload';
 import {
     handleRemoteCalls,
@@ -31,10 +31,10 @@ import { addFileMenus } from '$Extensions/safe/menus';
 import { urlIsAllowedBySafe as urlIsValid } from '$Extensions/safe/utils/safeHelpers';
 import * as SafeBrowserActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
-import blockNonSAFERequests from './blockNonSafeReqs';
-import registerSafeAuthProtocol from './protocols/safe-auth';
-import registerSafeProtocol from './protocols/safe';
-import setupRoutes from './server-routes';
+import { blockNonSAFERequests } from './blockNonSafeReqs';
+import { registerSafeAuthProtocol } from './protocols/safe-auth';
+import { registerSafeProtocol } from './protocols/safe';
+import { setupRoutes } from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
 const onWebviewPreload = ( store ) => webviewPreload( store );

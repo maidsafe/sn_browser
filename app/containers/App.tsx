@@ -6,7 +6,7 @@ interface Props {
     children: React.Node;
 }
 
-export default class App extends React.Component<Props> {
+export class App extends React.Component<Props> {
     props: Props;
 
     render() {

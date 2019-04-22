@@ -2,7 +2,7 @@ import * as React from 'react';
 import { parseUrl } from 'query-string';
 import { I18n } from 'react-redux-i18n';
 import { parseAppName, getAppIconClassName } from '../utils';
-import CardLoaderFull from './card_loader_full';
+import { CardLoaderFull } from './card_loader_full';
 
 interface LocationOptions {
     query: QueryOptions;
@@ -36,7 +36,7 @@ interface ContextTypes {
     router: object;
 }
 
-export default class AppDetails extends React.Component<
+export class AppDetails extends React.Component<
   AppDetailsOptions,
   ContextTypes
 > {

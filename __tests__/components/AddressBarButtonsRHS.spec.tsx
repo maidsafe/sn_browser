@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import AddressBarButtonsRHS from '$Components/AddressBar/ButtonsRHS';
+import { ButtonsRHS as AddressBarButtonsRHS } from '$Components/AddressBar/ButtonsRHS';
 
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';

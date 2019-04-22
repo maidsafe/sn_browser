@@ -7,7 +7,7 @@ import {
 import url from 'url';
 import path from 'path';
 
-const authRoute = {
+export const authRoute = {
     method: 'GET',
     path: /auth:\//,
     handler: async ( request, res ) => {
@@ -51,5 +51,3 @@ const authRoute = {
         }
     }
 };
-
-export default authRoute;

@@ -3,13 +3,13 @@ import {
     NETWORK_DISCONNECTED,
     NETWORK_CONNECTED
 } from '../actions/network_state';
-import CONSTANTS from '../constants';
+import { CONSTANTS } from '../constants';
 
 const initialState = {
     state: CONSTANTS.NETWORK_STATUS.CONNECTING
 };
 
-const networkState = ( state = initialState, action ) => {
+export const networkState = ( state = initialState, action ) => {
     switch ( action.type ) {
         case `${NETWORK_CONNECTING}_PENDING`: {
             return {
@@ -40,5 +40,3 @@ const networkState = ( state = initialState, action ) => {
         }
     }
 };
-
-export default networkState;

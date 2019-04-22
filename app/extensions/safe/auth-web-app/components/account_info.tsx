@@ -9,7 +9,7 @@ interface AccInfoProps {
     refresh: ( ...args: Array<any> ) => any;
 }
 
-export default class AccountInfo extends React.Component<AccInfoProps> {
+export class AccountInfo extends React.Component<AccInfoProps> {
     render() {
         const { done, available, isLoading, refresh } = this.props;
         const total = done + available;

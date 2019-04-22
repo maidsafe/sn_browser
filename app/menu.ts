@@ -18,7 +18,7 @@ import pkg from '$Package';
 
 import { getExtensionMenuItems } from '$Extensions';
 
-export default class MenuBuilder {
+export class MenuBuilder {
     constructor( mainWindow: BrowserWindow, openWindow, store ) {
         this.mainWindow = mainWindow;
         this.openWindow = openWindow;

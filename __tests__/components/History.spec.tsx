@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import History from '$Components/PerusePages/History';
-import UrlList from '$Components/UrlList';
+import { History } from '$Components/PerusePages/History';
+import { UrlList } from '$Components/UrlList';
 import { CLASSES } from '$Constants';
 
 jest.mock( 'extensions', () => ( {

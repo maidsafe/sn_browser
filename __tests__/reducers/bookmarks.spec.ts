@@ -1,9 +1,9 @@
 /* eslint-disable func-names */
-import bookmarks from '$Reducers/bookmarks';
+import { bookmarks } from '$Reducers/bookmarks';
 import { TYPES } from '$Actions/bookmarks_actions';
 import { TYPES as UI_TYPES } from '$Actions/ui_actions';
 
-import initialState from '$Reducers/initialAppState';
+import { initialState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     it( 'should return the initial state', () => {

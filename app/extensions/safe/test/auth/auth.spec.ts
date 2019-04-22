@@ -6,7 +6,7 @@ import client from '$Extensions/safe/ffi/authenticator';
 
 import crypto from 'crypto';
 
-import CONST from '$Extensions/safe/auth-constants';
+import { CONSTANTS as CONST } from '$Extensions/safe/auth-constants';
 import toBeType from 'jest-tobetype';
 import * as helper from './helper';
 

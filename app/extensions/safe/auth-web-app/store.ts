@@ -11,7 +11,7 @@ import {
     syncTranslationWithStore
 } from 'react-redux-i18n';
 
-import createRootReducer from './reducers';
+import { createRootReducer } from './reducers';
 
 import en from '../locales/en.json';
 

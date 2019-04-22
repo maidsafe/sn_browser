@@ -1,4 +1,4 @@
-const initialState = {
+export const initialState = {
     authenticator: {
         reAuthoriseState: 0,
         isAuthorised: false,
@@ -38,5 +38,3 @@ const initialState = {
         options: ''
     }
 };
-
-export default initialState;

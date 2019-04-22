@@ -19,7 +19,7 @@ type TabBarProps = {
 type TabBarState = {
   tabInFocus: number;
 };
-export default class TabBar extends Component<TabBarProps, TabBarState> {
+export class TabBar extends Component<TabBarProps, TabBarState> {
   static defaultProps = {
     tabInFocus: 0,
     tabs: []

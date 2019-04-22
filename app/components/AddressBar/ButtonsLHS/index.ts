@@ -1,3 +1,1 @@
-import ButtonsLHS from './ButtonsLHS';
-
-export default ButtonsLHS;
+export { ExtendedButtonsLHS as ButtonsLHS } from './ButtonsLHS';

@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
-import ui from '$Reducers/ui';
+import { ui } from '$Reducers/ui';
 import { TYPES } from '$Actions/ui_actions';
-import initialState from '$Reducers/initialAppState';
+import { initialState } from '$Reducers/initialAppState';
 
 describe( 'notification reducer', () => {
     const uiInitialState = {

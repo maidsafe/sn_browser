@@ -16,7 +16,7 @@ const webIdManagerUri = startedRunningMock
     ? 'http://localhost:1234'
     : 'safe://webidmgr.dapp';
 const authHomeUri = 'safe-auth://home';
-export default class WebIdDropdown extends Component<{}, {}> {
+export class WebIdDropdown extends Component<{}, {}> {
     static defaultProps = {
         safeBrowserApp: {
             webIds: []

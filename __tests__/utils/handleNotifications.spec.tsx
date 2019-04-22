@@ -1,5 +1,5 @@
 import React from 'react';
-import handleNotifications from '$Utils/handleNotificiations';
+import { handleNotifications } from '$Utils/handleNotificiations';
 import { notification } from 'antd';
 import { reactNodeToElement } from '$Utils/reactNodeToElement';
 

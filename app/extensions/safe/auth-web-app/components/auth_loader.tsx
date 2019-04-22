@@ -5,7 +5,7 @@ interface propTypes {
     cancelAuthReq: ( ...args: Array<any> ) => any;
 }
 
-export default class AuthLoader extends React.Component<propTypes> {
+export class AuthLoader extends React.Component<propTypes> {
     render() {
         const { cancelAuthReq } = this.props;
         return (

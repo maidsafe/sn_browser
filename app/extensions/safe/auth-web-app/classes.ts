@@ -1,4 +1,4 @@
-const AUTH_UI_CLASSES = {
+export const AUTH_UI_CLASSES = {
     ALLOW_BUTTON: 'js-specton__safe-auth-allow',
     CREATE_ACCOUNT_BUTTON: 'js-spectron__auth__create-account',
     BROWSER_PLUGIN_TEST_FAILURES: 'failures',
@@ -17,5 +17,3 @@ const AUTH_UI_CLASSES = {
     AUTH_APP_LIST: 'js-spectron__auth__app-list',
     AUTH_APP_NAME: 'js-spectron__auth__app-name'
 };
-
-export default AUTH_UI_CLASSES;

@@ -11,7 +11,7 @@ import { logger } from '$Logger';
 // import { getSafeBackgroundProcessStore } from '$Extensions/safe/index';
 import { replyToRemoteCallFromAuth } from '$Extensions/safe/network';
 import authenticator from './authenticator';
-import CONSTANTS from '../auth-constants';
+import { CONSTANTS } from '../auth-constants';
 import { addAuthNotification } from '../manageAuthNotifications';
 import errConst from '../err-constants';
 

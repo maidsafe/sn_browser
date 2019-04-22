@@ -4,7 +4,7 @@ interface propTypes {
     msg: string;
 }
 
-export default class CardLoaderFull extends React.Component<propTypes> {
+export class CardLoaderFull extends React.Component<propTypes> {
     render() {
         return (
             <div className="full-loader">
