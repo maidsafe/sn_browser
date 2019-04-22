@@ -92,7 +92,7 @@ export default class Tab extends Component<TabProps, TabState> {
             append: ( params ) => [
                 {
                     label: 'Open Link in New Tab.',
-                    visible: params.linkURL.length > 0,
+                    visible: params.linkURL && params.linkURL.length > 0,
                     click() {
                         addTab( {
                             url: params.linkURL,
