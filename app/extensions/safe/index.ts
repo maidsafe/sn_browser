@@ -35,7 +35,7 @@ import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import registerSafeProtocol from './protocols/safe';
-import setupRoutes from './server-routes';
+import { setupRoutes } from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
 const onWebviewPreload = ( store ) => webviewPreload( store );
