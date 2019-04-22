@@ -164,7 +164,7 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
     //
     //     it( 'is registered to handle safe:// requests:', async( ) =>
     //     {
-    //         opn('safe://blabla');
+    //         open('safe://blabla');
     //         await delay(4500)
     //
     //         setClientToMainBrowserWindow(app);
