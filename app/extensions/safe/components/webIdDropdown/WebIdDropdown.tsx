@@ -10,6 +10,8 @@ import { Column, IconButton, Grid } from 'nessie-ui';
 import _ from 'lodash';
 import { logger } from '$Logger';
 import styles from './webIdButtons.css';
+import { Icon } from 'antd';
+import 'antd/lib/icon/style';
 
 const hideDropdownTimeout = 0.15; // seconds
 const webIdManagerUri = startedRunningMock
@@ -151,7 +153,8 @@ export default class WebIdDropdown extends Component<{}, {}> {
                     className={styles.openAuth}
                     key="fetching"
                 >
-          Updating webIds.
+                    Updating webIds &nbsp;
+                    <Icon type="loading" className={styles.loadingIcon} />
                 </li>
             );
         }
