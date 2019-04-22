@@ -135,14 +135,7 @@ before_deploy:
 - export RELEASE_DEV_ZIP="$(ls release/*-dev.zip)";
 - echo "deploying ${RELEASE_PROD_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - echo "deploying ${RELEASE_DEV_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*-x64.zip >> $RELEASE_PROD_ZIP.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*-dev.zip >> $RELEASE_DEV_ZIP.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*-x64.zip >> $RELEASE_PROD_ZIP.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*-dev.zip >> $RELEASE_DEV_ZIP.txt; fi
 - ls release
-- export SHA_256_SUM_PROD="$(ls release/*-x64.zip.txt)";
-- export SHA_256_SUM_DEV="$(ls release/*-dev.zip.txt)";
-
 
 deploy:
   provider: releases
@@ -151,8 +144,6 @@ deploy:
   file:
     - "${RELEASE_PROD_ZIP}"
     - "${RELEASE_DEV_ZIP}"
-    - "${SHA_256_SUM_DEV}"
-    - "${SHA_256_SUM_PROD}"
   draft: true
   tag_name: $TRAVIS_TAG
   on:
