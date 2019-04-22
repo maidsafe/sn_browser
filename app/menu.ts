@@ -11,11 +11,7 @@ import {
 } from '$Actions/tabs_actions';
 
 import { selectAddressBar, resetStore } from '$Actions/ui_actions';
-import {
-    isHot,
-    isRunningDebug,
-    isRunningSpectronTestProcess
-} from '$Constants';
+import { isHot, isRunningDebug, isRunningTestCafeProcess } from '$Constants';
 import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
@@ -44,8 +40,8 @@ export default class MenuBuilder {
 
     setupDevelopmentEnvironment() {
         this.mainWindow.openDevTools();
-        this.mainWindow.webContents.on( 'context-menu', ( e, props ) => {
-            const { x, y } = props;
+        this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
+            const { x, y } = properties;
 
             Menu.buildFromTemplate( [
                 {
@@ -408,9 +404,7 @@ export default class MenuBuilder {
                 {
                     label: 'Search Issues',
                     click() {
-                        open(
-                            'https://github.com/maidsafe/safe_browser/issues'
-                        );
+                        open( 'https://github.com/maidsafe/safe_browser/issues' );
                     }
                 }
             ]
@@ -442,8 +436,7 @@ export default class MenuBuilder {
             subMenuHistory,
             subMenuWindow,
             subMenuHelp,
-            subMenuTest
-            // ...( isRunningSpectronTestProcess ? [subMenuTest ] : [] )
+            ...( isRunningTestCafeProcess ? [subMenuTest] : [] )
         ];
 
         const extendedMenusArray = getExtensionMenuItems( store, initialMenusArray );
