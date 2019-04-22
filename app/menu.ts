@@ -132,7 +132,7 @@ export default class MenuBuilder {
                             const state = store.getState();
                             let index;
                             const openTabs = state.tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
                             );
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab.isActiveTab ) {
@@ -156,7 +156,7 @@ export default class MenuBuilder {
                             const state = store.getState();
                             let index;
                             const openTabs = state.tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
                             );
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab.isActiveTab ) {
@@ -180,7 +180,7 @@ export default class MenuBuilder {
                             const windowId = win.webContents.id;
 
                             const openTabs = tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
                             );
 
                             if ( openTabs.length === 1 ) {
@@ -296,8 +296,8 @@ export default class MenuBuilder {
                     label: 'Toggle Full Screen',
                     accelerator:
             process.platform === 'darwin' ? 'CommandOrControl+Shift+F' : 'F11',
-                    click: () => {
-                        this.mainWindow.setFullScreen( !this.mainWindow.isFullScreen() );
+                    click: ( item, win ) => {
+                        win.setFullScreen( !win.isFullScreen() );
                     }
                 },
                 {

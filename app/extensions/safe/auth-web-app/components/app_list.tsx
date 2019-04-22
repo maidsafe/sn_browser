@@ -134,6 +134,7 @@ export default class AppList extends React.Component<propTypes, contextTypes> {
                 </button>
                 <div className="app-list-search-ipt">
                     <input
+                        key="search-input"
                         type="text"
                         aria-label={I18n.t( 'aria.search_app_list_input' )}
                         ref={c => {
@@ -144,6 +145,7 @@ export default class AppList extends React.Component<propTypes, contextTypes> {
                         }}
                     />
                     <button
+                        key="search-button"
                         type="button"
                         className="app-list-search-cancel"
                         aria-label={I18n.t( 'aria.search_app_list_cancel' )}
