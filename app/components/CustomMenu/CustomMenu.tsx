@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 // import { logger } from '$Logger';
 import { CLASSES } from '$Constants';

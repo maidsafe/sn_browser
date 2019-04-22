@@ -12,21 +12,29 @@ import handleNotifications, { Notification } from '$Utils/handleNotificiations';
 interface BrowserProps {
     bookmarks?: Array<any>;
     notifications: Array<Notification>;
-    tabs: Array<any>;
+    tabs: object;
+    windows: object;
     addBookmark: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
-    selectAddressBar: ( ...args: Array<any> ) => any;
-    deselectAddressBar: ( ...args: Array<any> ) => any;
-    blurAddressBar: ( ...args: Array<any> ) => any;
-    addTab: ( ...args: Array<any> ) => any;
-    closeTab: ( ...args: Array<any> ) => any;
-    reopenTab: ( ...args: Array<any> ) => any;
+    addWindow : ( ...args: Array<any> ) => any,
+    addTabNext : ( ...args: Array<any> ) => any,
+    addTabEnd : ( ...args: Array<any> ) => any,
+    setActiveTab : ( ...args: Array<any> ) => any,
+    windowCloseTab : ( ...args: Array<any> ) => any,
+    reopenTab : ( ...args: Array<any> ) => any,
+    closeWindow : ( ...args: Array<any> ) => any,
+    showSettingsMenu : ( ...args: Array<any> ) => any,
+    hideSettingsMenu : ( ...args: Array<any> ) => any,
+    addTab : ( ...args: Array<any> ) => any,
+    updateTab : ( ...args: Array<any> ) => any,
+    tabForwards : ( ...args: Array<any> ) => any,
+    tabBackwards : ( ...args: Array<any> ) => any,
+    focusWebview : ( ...args: Array<any> ) => any,
+    blurAddressBar : ( ...args: Array<any> ) => any,
+    selectAddressBar : ( ...args: Array<any> ) => any,
+    deselectAddressBar : ( ...args: Array<any> ) => any,
     updateNotification: ( ...args: Array<any> ) => any;
     clearNotification: ( ...args: Array<any> ) => any;
-    ui: object;
-    showSettingsMenu: ( ...args: Array<any> ) => any;
-    hideSettingsMenu: ( ...args: Array<any> ) => any;
-    focusWebview: ( ...args: Array<any> ) => any;
 }
 interface BrowserState {
     windowId: any;
@@ -34,7 +42,8 @@ interface BrowserState {
 class Browser extends Component<BrowserProps, BrowserState> {
     static defaultProps = {
         addressBarIsSelected: false,
-        tabs: [],
+        tabs: {},
+        windows : {},
         bookmarks: [],
         notifications: []
     };
@@ -58,7 +67,9 @@ class Browser extends Component<BrowserProps, BrowserState> {
     componentDidMount() {
         const {
             addTab,
-            closeTab,
+            addTabEnd,
+            setActiveTab,
+            windowCloseTab,
             reopenTab,
             clearNotification,
             tabForwards,
@@ -74,15 +85,13 @@ class Browser extends Component<BrowserProps, BrowserState> {
     }
 
     shouldComponentUpdate = ( nextProps: BrowserProps ) => {
-        const { tabs } = nextProps;
+        const { windows, tabs, Bookmarks } = nextProps;
+        const { windowId } = this.state;
         const currentTabs = this.props.tabs;
-        const newWindowTabs = tabs.filter(
-            tab => tab.windowId === this.state.windowId
-        );
-        const currentWindowTabs = currentTabs.filter(
-            tab => tab.windowId === this.state.windowId
-        );
-        return newWindowTabs !== currentWindowTabs;
+        const currentBookmarks = this.props.bookmarks;
+        const newWindow = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId] :{}; 
+        const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {}; 
+        return newWindow !== currentWindow || tabs !== currentTabs || Bookmarks!== currentBookmarks;
     };
 
     componentDidUpdate = ( prevProps: BrowserProps ) => {
@@ -91,15 +100,13 @@ class Browser extends Component<BrowserProps, BrowserState> {
     };
 
     handleCloseBrowserTab = tab => {
-        const { closeTab, tabs } = this.props;
-        const openTabs = tabs.filter(
-            tab => !tab.isClosed && tab.windowId === this.state.windowId
-        );
-
+        const { windows, windowCloseTab } = this.props;
+        const { windowId } = this.state;
+        const openTabs = windows.openWindows[windowId].tabs;
         if ( openTabs.length === 1 ) {
             ipcRenderer.send( 'command:close-window' );
         } else {
-            closeTab( tab );
+            windowCloseTab( tab );
         }
     };
 
@@ -110,23 +117,29 @@ class Browser extends Component<BrowserProps, BrowserState> {
             bookmarks,
             addBookmark,
             removeBookmark,
-            // ui / addressbar
-            ui,
-            selectAddressBar,
-            deselectAddressBar,
-            blurAddressBar,
-            focusWebview,
             // tabs
             tabs,
             addTab,
-            closeTab,
-            setActiveTab,
             updateTab,
-            tabBackwards,
             tabForwards,
+            selectAddressBar,
+            deselectAddressBar,
+            tabBackwards,
+            focusWebview,
+            blurAddressBar,
+            // Notifications 
             addNotification,
             updateNotification,
             clearNotification,
+            // windows
+            windows,
+            addWindow,
+            addTabNext,
+            addTabEnd,
+            setActiveTab,
+            windowCloseTab,
+            reopenTab,
+            closeWindow,
             showSettingsMenu,
             hideSettingsMenu,
             // TODO extend tab to not need this
@@ -138,9 +151,13 @@ class Browser extends Component<BrowserProps, BrowserState> {
         // only show the first notification without a response.
         const { windowId } = this.state;
         // TODO: Move windowId from state to store.
-        const windowTabs = tabs.filter( tab => tab.windowId === windowId );
-        const openTabs = windowTabs.filter( tab => !tab.isClosed );
-        const activeTab = openTabs.find( tab => tab.isActiveTab );
+        const windowsTabs = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId].tabs : [];
+        const openTabs = [];
+        windowsTabs.forEach( element => {
+            openTabs.push( tabs[element] )
+        } );
+        const activeTabId = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId].activeTab : undefined ;
+        const activeTab = tabs[activeTabId];
         // TODO: if not, lets trigger close?
         if ( !activeTab ) {
             return <div className="noTabsToShow" />;
@@ -149,15 +166,13 @@ class Browser extends Component<BrowserProps, BrowserState> {
         const isBookmarked = !!bookmarks.find(
             bookmark => bookmark.url === activeTabAddress
         );
+        const isSelected = tabs[activeTab] ? tabs[activeTabId].ui.addressBarIsSelected : false;
+        const shouldFocusWebview = tabs[activeTab] ? tabs[activeTabId].ui.shouldFocusWebview : false;
+        const settingsMenuIsVisible = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId].ui.settingsMenuIsVisible : false;
 
-        const uiWindow = ui.windows;
-        const windowObjForCurrentWindow = uiWindow.find( function( element ) {
-            return element.windowId === windowId;
-        } );
-        const settingsMenuIsVisible = windowObjForCurrentWindow
-            ? windowObjForCurrentWindow.settingsMenuIsVisible
-            : false;
-
+        if (!(Object.keys(windows.openWindows).length>=1) && !(openTabs.length>=1) ) {
+            return <div />
+        }
         return (
             <div className={styles.container}>
                 <TabBar
@@ -166,8 +181,13 @@ class Browser extends Component<BrowserProps, BrowserState> {
                     setActiveTab={setActiveTab}
                     selectAddressBar={selectAddressBar}
                     addTab={addTab}
+                    activeTabId = {activeTabId}
+                    activeTab = {activeTab}
+                    addTabNext = {addTabNext}
+                    addTabEnd =  {addTabEnd}
                     closeTab={this.handleCloseBrowserTab}
                     tabs={openTabs}
+                    windows = {windows}
                     windowId={windowId}
                 />
                 <AddressBar
@@ -175,16 +195,20 @@ class Browser extends Component<BrowserProps, BrowserState> {
                     address={activeTabAddress}
                     addTab={addTab}
                     activeTab={activeTab}
+                    tabId = {activeTabId}
                     onSelect={deselectAddressBar}
                     onFocus={selectAddressBar}
+                    setActiveTab={setActiveTab}
                     onBlur={blurAddressBar}
                     addBookmark={addBookmark}
                     isBookmarked={isBookmarked}
+                    addTabNext= {addTabNext}
+                    addTabEnd = {addTabEnd}
                     removeBookmark={removeBookmark}
                     hideSettingsMenu={hideSettingsMenu}
                     showSettingsMenu={showSettingsMenu}
                     settingsMenuIsVisible={settingsMenuIsVisible}
-                    isSelected={ui.addressBarIsSelected}
+                    isSelected = { isSelected }
                     tabBackwards={tabBackwards}
                     tabForwards={tabForwards}
                     updateTab={updateTab}
@@ -195,13 +219,17 @@ class Browser extends Component<BrowserProps, BrowserState> {
                     }}
                 />
                 <TabContents
+                    key={4}
                     tabBackwards={tabBackwards}
                     focusWebview={focusWebview}
-                    shouldFocusWebview={ui.shouldFocusWebview}
-                    closeTab={closeTab}
-                    key={4}
+                    shouldFocusWebview={ shouldFocusWebview }
+                    closeTab={windowCloseTab}
                     addTab={addTab}
+                    addTabNext = {addTabNext}
+                    addTabEnd = {addTabEnd}
                     addNotification={addNotification}
+                    activeTabId = {activeTabId}
+                    activeTab = {activeTab}
                     updateTab={updateTab}
                     setActiveTab={setActiveTab}
                     tabs={openTabs}

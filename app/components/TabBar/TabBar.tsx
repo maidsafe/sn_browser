@@ -10,60 +10,84 @@ import { logger } from '$Logger';
 import { isInternalPage } from '$Utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from '$Constants';
 import { Column, Spinner, Row } from 'nessie-ui';
+
 type TabBarProps = {
   tabInFocus: number;
-  tabs: any[];
+  activeTab: any;
+  activeTabId: any;
   setActiveTab: (...args: any[]) => any;
-  addTab: (...args: any[]) => any;
+  selectAddressBar:  (...args: any[]) => any;
+  addTab:  (...args: any[]) => any;
+  addTabNext:  (...args: any[]) => any;
+  addTabEnd:  (...args: any[]) => any;
   closeTab: (...args: any[]) => any;
-  selectAddressBar: (...args: any[]) => any;
+  windowId: any;
+  windows : {};
+  tabs: any[];
 };
 type TabBarState = {
   tabInFocus: number;
 };
-export default class TabBar extends Component<TabBarProps, TabBarState> {
-  static defaultProps = {
-    tabInFocus: 0,
-    tabs: []
+export default class TabBar extends Component<TabBarProps, TabBarState>{
+  static default ={
+    tabs : [],
+    tabInFocus: 0
+    // have to add tab in focus
   };
-  constructor(props) {
+  constructor(props){
     super(props);
-    this.state = {
-      tabInFocus: 0 // to update when many tabs can exist
+    this.state ={
+      tabInFocus: 0
     };
     this.handleAddTabClick = this.handleAddTabClick.bind(this);
-  }
-  handleTabClick(tabData, event) {
+  };
+  handleAddTabClick(event)
+  {
     event.stopPropagation();
-    this.props.setActiveTab({
-      index: tabData.tabIndex,
-      url: event.target.value
+    const { windowId, addTab, addTabEnd,setActiveTab, selectAddressBar } = this.props;
+    event.stopPropagation();
+    const tabId = Math.random().toString( 36 );
+    addTab({
+      tabId,
+      windowId
     });
-  }
-  handleTabClose(tabData, event) {
+    addTabEnd({
+      tabId,
+      windowId
+    });
+    setActiveTab({
+      tabId,
+      windowId
+    });
+    selectAddressBar({
+      tabId
+    });
+  };
+  handleTabClose(tabId, event)
+  {
+    console.log('tabId',tabId);
     event.stopPropagation();
     const { closeTab, windowId } = this.props;
-    closeTab({ index: tabData.tabIndex, windowId });
-  }
-  handleAddTabClick(event) {
-    const { windowId } = this.props;
+    closeTab({ tabId, windowId });
+  };
+  handleTabClick(tabId, event)
+  {
+    console.log('tabId',tabId);
     event.stopPropagation();
-    const { addTab, selectAddressBar } = this.props;
-    const newTabUrl = 'about:blank';
-    event.preventDefault();
-    addTab({
-      url: newTabUrl,
-      isActiveTab: true,
-      windowId: windowId
+    const { setActiveTab, windowId } = this.props;
+    setActiveTab({
+      tabId, 
+      windowId
     });
-    selectAddressBar();
-  }
+  };
   getTabs = () => {
-    const { tabs } = this.props;
-    return tabs.map((tab, i) => {
-      let title = tab.title;
+    const {tabs, windowId, activeTabId} = this.props;
+    const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {};
+    console.log(tabs);
+    return tabs.map((tab, i)=>{
+      let title= tab.title;
+      let tabId = tab.tabId;
       if (isInternalPage(tab)) {
-        // TODO: DRY this out with TabContents.jsx
         const urlObj = url.parse(tab.url);
         switch (urlObj.host) {
           case INTERNAL_PAGES.HISTORY: {
@@ -80,24 +104,15 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
           }
         }
       }
-      if (tab.isClosed) {
-        return;
-      }
-      const isActiveTab = tab.isActiveTab;
       let tabStyleClass = styles.tab;
-      const tabData = {
-        key: tab.index,
-        tabIndex: tab.index,
-        url: tab.url
-      };
-      if (isActiveTab) {
+      if (tabId === activeTabId) {
         tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
       }
-      return (
+      return(
         <div
-          key={tab.index}
+          key={tab.tabId}
           className={`${tabStyleClass} ${CLASSES.TAB}`}
-          onClick={this.handleTabClick.bind(this, tabData)}
+          onClick={this.handleTabClick.bind(this,tabId)}
         >
           <Row verticalAlign="middle" gutters="S">
             <Column align="left" className={styles.favicon}>
@@ -112,7 +127,7 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
             <Column align="right" className={styles.favicon}>
               <MdClose
                 className={`${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}`}
-                onClick={this.handleTabClose.bind(this, tabData)}
+                onClick={this.handleTabClose.bind(this, tabId)}
                 title="Close"
               />
             </Column>
@@ -121,24 +136,24 @@ export default class TabBar extends Component<TabBarProps, TabBarState> {
       );
     });
   };
-  render() {
-    return (
+  render(){
+    return(
       <div
-        className={[
-          styles.container,
-          process.platform === 'darwin' ? styles.containerMac : ''
-        ].join(' ')}
+      className={[
+        styles.container,
+        process.platform === 'darwin' ? styles.containerMac : ''
+      ].join(' ')}
       >
         <div className={styles.tabBar}>
           {this.getTabs()}
           <div
             className={`${styles.addTab} ${CLASSES.ADD_TAB}`}
-            onClick={this.handleAddTabClick.bind(this)}
+            onClick = {this.handleAddTabClick.bind(this)}
           >
             <MdAdd className={styles.tabAddButton} title="New Tab" />
           </div>
         </div>
       </div>
-    );
+    )
   }
-}
+};

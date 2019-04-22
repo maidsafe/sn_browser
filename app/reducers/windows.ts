@@ -1,5 +1,5 @@
 import { TYPES } from '$Actions/windows_actions';
-import logger from '$Logger';
+import { logger } from '$Logger';
 import initialAppState from './initialAppState';
 
 const initialState = initialAppState.windows;

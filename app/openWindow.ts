@@ -8,7 +8,7 @@ import MenuBuilder from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
 import { addTab, updateTab, selectAddressBar } from './actions/tabs_actions';
-import { windowCloseTab, addTabNext, addTabEnd, setActiveTab, closeWindow } from '$Actions/windows_actions'
+import { windowCloseTab, addTabEnd, setActiveTab, closeWindow, addWindow } from '$Actions/windows_actions'
 
 const browserWindowArray = [];
 
@@ -87,7 +87,14 @@ const openWindow = store => {
         }
         // have to add a tab here now
         const webContentsId = mainWindow.webContents.id;
-        if ( browserWindowArray.length === 1 ) {
+        if ( browserWindowArray.length === 1 ) 
+        {
+            const tabId = Math.random().toString( 36 );
+            store.dispatch(addWindow({windowId: webContentsId}));
+            store.dispatch(addTabEnd({windowId: webContentsId, tabId}));
+            store.dispatch(addTab({url: 'safe-auth://home/' , tabId}))
+            store.dispatch(setActiveTab({windowId: webContentsId, tabId}))
+            /*
             const allTabs = store.getState().tabs;
             const orphanedTabs = allTabs.filter( tab => !tab.windowId );
             orphanedTabs.forEach( orphan => {
@@ -95,28 +102,18 @@ const openWindow = store => {
                     updateTab( { index: orphan.index, windowId: webContentsId } )
                 );
             } );
+        */
         } else {
             const tabId =Math.random().toString( 36 )
-            store.dispatch(
-                addTab( {
-                    url: 'about:blank',
-                    tabId
-                } )
-                );
-                store.dispatch(addTabNext( {
-                    windowId: webContentsId,
-                    tabId
-                } ))
-            store.dispatch( selectAddressBar(tabId) );
+            store.dispatch(addWindow({windowId: webContentsId}));
+            store.dispatch(addTabEnd({windowId: webContentsId, tabId}));
+            store.dispatch(addTab({url: 'about:blank' , tabId}))
+            store.dispatch(selectAddressBar({tabId}))
         }
     } );
     mainWindow.on( 'close', () => {
         const webContentsId = mainWindow.webContents.id;
-        store.dispatch(
-            uiRemoveWindow( {
-                windowId: webContentsId
-            } )
-        );
+        store.dispatch(closeWindow({windowId: webContentsId}));
     } );
     mainWindow.on( 'closed', () => {
         const index = browserWindowArray.indexOf( mainWindow );

@@ -15,7 +15,7 @@ export const TYPES = {
 export const {
     addTab,
     updateTab,
-    tabFowards,
+    tabForwards,
     tabBackwards,
     focusWebview,
     blurAddressBar,

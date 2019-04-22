@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { logger } from '$Logger';
 import { CLASSES, PROTOCOLS } from '$Constants';
@@ -17,13 +18,14 @@ import styles from './buttonsLHS.css';
 class ButtonsLHS extends Component<{}, {}> {
     render() {
         const {
-            activeTab,
+            activeTab,    
             handleBack,
+            canGoForwards,
+            canGoBackwards,
             handleForward,
             handleRefresh,
-            canGoForwards,
-            canGoBackwards
-        } = this.props;
+        } = this.props
+
         const activeTabUrl =
       activeTab && activeTab.url ? parse( activeTab.url ) : undefined;
 

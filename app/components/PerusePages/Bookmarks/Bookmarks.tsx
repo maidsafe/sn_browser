@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 // import { Link } from 'react-router';
 import { ipcRenderer, remote } from 'electron';
@@ -10,7 +11,11 @@ const log = require( 'electron-log' );
 
 interface BookmarksProps {
     bookmarks: Array<any>;
+    isActiveTab: boolean;
     addTab: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    windowId: number;
+    setActiveTab: ( ...args: Array<any> ) => any;
 }
 export default class Bookmarks extends Component<BookmarksProps, {}> {
     static defaultProps = {
@@ -18,7 +23,7 @@ export default class Bookmarks extends Component<BookmarksProps, {}> {
     };
 
     render() {
-        const { bookmarks, isActiveTab, addTab } = this.props;
+        const { bookmarks , addTab, isActiveTab, windowId, addTabEnd, setActiveTab  } = this.props;
         const bookmarkList = bookmarks.map( bookmark => bookmark.url );
         let moddedClass = styles.tab;
         if ( isActiveTab ) {
@@ -34,7 +39,7 @@ export default class Bookmarks extends Component<BookmarksProps, {}> {
                         <PageHeader>
                             <H1 title="Bookmarks" />
                         </PageHeader>
-                        <UrlList list={bookmarkList} addTab={addTab} />
+                        <UrlList list={bookmarkList} addTab={addTab} addTabEnd = {addTabEnd} setActiveTab = {setActiveTab} windowId= {windowId} />
                     </Page>
                 </div>
             </div>

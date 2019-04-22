@@ -5,10 +5,11 @@ import ReactDOMServer from 'react-dom/server';
 import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
 import { setWebFetchStatus } from '$Extensions/safe/actions/web_fetch_actions';
-import { addTab, closeTab } from '$Actions/tabs_actions';
+import { addTab } from '$Actions/tabs_actions';
 import errConsts from '$Extensions/safe/err-constants';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
 import { SAFE } from '../constants';
+import { windowCloseTab, addTabEnd, addTabNext } from '$Actions/windows_actions';
 
 const safeRoute = store => ( {
     method: 'GET',
@@ -81,10 +82,15 @@ const safeRoute = store => ( {
                         store.getState().tabs.forEach( tab => {
                             logger.info( tab.url, link, link.includes( tab.url ) );
                             if ( link.includes( tab.url ) && !tab.isActive ) {
-                                store.dispatch( closeTab( { index: tab.index } ) );
+                                store.dispatch( windowCloseTab( { tabId: tab.tabId } ) );
                             }
                         } );
-                        store.dispatch( addTab( { url: link, isActiveTab: true } ) );
+                        const tabId = Math.random().toString( 36 );
+                        const currentWebContentsId = remote ? remote.getCurrentWebContents().id : 1;
+                        // this is mounted but its not show?
+                        const windowId = currentWebContentsId;
+                        store.dispatch( addTab( { url: link, tabId  } ) );
+                        store.dispatch( addTabEnd( {tabId, windowId} ) );
                     }
 
                     error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;

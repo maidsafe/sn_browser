@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { remote } from 'electron';
 // import contextMenu from 'electron-context-menu';
 import React, { Component } from 'react';
@@ -18,17 +19,23 @@ const stdUrl = require( 'url' );
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
 interface TabProps {
-    isActiveTab: boolean;
+    addNotification: ( ...args: Array<any> ) => any;
     url: string;
-    index: number;
-    windowId: number;
+    isActiveTab: boolean;
+    addTab: ( ...args: Array<any> ) => any;
     closeTab: ( ...args: Array<any> ) => any;
     updateTab: ( ...args: Array<any> ) => any;
-    addTab: ( ...args: Array<any> ) => any;
-    addNotification: ( ...args: Array<any> ) => any;
+    setActiveTab: ( ...args: Array<any> ) => any;
+    addTabNext: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    key?: string;
+    tabId?: string; // replace index with this
+    windowId: number;
     focusWebview: ( ...args: Array<any> ) => any;
     shouldFocusWebview: boolean;
     tabBackwards: ( ...args: Array<any> ) => any;
+    shouldReload: boolean;
+    shouldToggleDevTools: boolean;
 }
 interface TabState {
     browserState:
@@ -84,7 +91,7 @@ export default class Tab extends Component<TabProps, TabState> {
 
     buildMenu = webview => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
-        const { addTab, windowId } = this.props;
+        const { addTab, windowId, addTabEnd, setActiveTab} = this.props;
         // require here to avoid jest/electron remote issues
         const contextMenu = require( 'electron-context-menu' );
         contextMenu( {
@@ -94,11 +101,20 @@ export default class Tab extends Component<TabProps, TabState> {
                     label: 'Open Link in New Tab.',
                     visible: params.linkURL.length > 0,
                     click() {
+                        const tabId = Math.random().toString( 36 );  
                         addTab( {
                             url: params.linkURL,
-                            windowId,
-                            isActiveTab: true
+                            tabId
                         } );
+                        addTabEnd( {
+                            windowId,
+                            tabId
+                        } );
+                        setActiveTab(
+                            {
+                                windowId,
+                                tabId
+                            } );
                     }
                 }
             ],
@@ -303,8 +319,10 @@ export default class Tab extends Component<TabProps, TabState> {
     didFailLoad( err ) {
         const {
             url,
-            index,
+            tabId,
             addTab,
+            addTabEnd,
+            setActiveTab,
             closeTab,
             addNotification,
             tabBackwards,
@@ -353,9 +371,12 @@ export default class Tab extends Component<TabProps, TabState> {
             if ( this.state.browserState.canGoBack ) {
                 tabBackwards( { index, windowId } );
             } else {
-                closeTab( { index, windowId } );
+                closeTab( { tabId, windowId } );
                 // add a fresh tab (should be only if no more tabs present)
+                const newTabId =  Math.random().toString( 36 );
                 addTab( { url: 'about:blank', windowId, isActiveTab: true } );
+                addTabEnd({tabId: newTabId, windowId});
+                setActiveTab({tabId: newTabId, windowId})
             }
         }
     }
@@ -373,10 +394,10 @@ export default class Tab extends Component<TabProps, TabState> {
     }
 
     didFinishLoading() {
-        const { updateTab, index, url } = this.props;
+        const { updateTab, tabId, url } = this.props;
         logger.info( 'Tab did finish loading' );
         const tabUpdate = {
-            index,
+            tabId,
             isLoading: false
         };
         if ( url === 'about:blank' ) {
@@ -401,39 +422,39 @@ export default class Tab extends Component<TabProps, TabState> {
     pageTitleUpdated( e ) {
         logger.info( 'Webview: page title updated' );
         const { title } = e;
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, tabId, isActiveTab } = this.props;
         const tabUpdate = {
             title,
-            index
+            tabId
         };
         updateTab( tabUpdate );
     }
 
     pageFaviconUpdated( e ) {
         logger.info( 'Webview: page favicon updated: ', e );
-        const { updateTab, index } = this.props;
+        const { updateTab, tabId } = this.props;
         const tabUpdate = {
-            index,
+            tabId,
             favicon: e.favicons[0]
         };
         updateTab( tabUpdate );
     }
 
     didNavigate( e ) {
-        const { updateTab, index } = this.props;
+        const { updateTab, tabId } = this.props;
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
         logger.info( 'webview did navigate' );
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
             this.updateBrowserState( { url, redirects: [url] } );
-            updateTab( { index, url } );
+            updateTab( { tabId, url } );
             this.setCurrentWebId( null );
         }
     }
 
     didNavigateInPage( e ) {
-        const { updateTab, index } = this.props;
+        const { updateTab, tabId } = this.props;
         const { url } = e;
         const noTrailingSlashUrl = removeTrailingSlash( url );
         logger.info(
@@ -445,7 +466,7 @@ export default class Tab extends Component<TabProps, TabState> {
         if ( !this.state.browserState.redirects.includes( url ) ) {
             if ( urlHasChanged( url, this.state.browserState.url ) ) {
                 this.updateBrowserState( { url, redirects: [url] } );
-                updateTab( { index, url } );
+                updateTab( { tabId, url } );
                 this.setCurrentWebId( null );
             }
         }
@@ -491,7 +512,7 @@ export default class Tab extends Component<TabProps, TabState> {
 
     // TODO Move this functinoality to extensions
     updateTheIdInWebview = newWebId => {
-        const { updateTab, index, webId } = this.props;
+        const { updateTab, tabId, webId } = this.props;
         const { webview } = this;
         const theWebId = newWebId || webId;
         logger.info( 'Setting currentWebid in tab' );
@@ -544,18 +565,21 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     newWindow( e ) {
-        const { addTab, windowId } = this.props;
+        const { addTab,addTabEnd, setActiveTab, windowId } = this.props;
         const { url } = e;
         logger.info( 'Tab: NewWindow event triggered for url: ', url );
         const activateTab = e.disposition == 'foreground-tab';
-        addTab( { url, isActiveTab: activateTab, windowId } );
+        const tabId = Math.random().toString( 36 );
+        addTab( { url, tabId } );
+        addTabEnd({ windowId, tabId });
+        setActiveTab({ windowId, tabId });
         this.goForward();
     }
 
     isFrozen( e ) {
         logger.info( 'Webview is frozen...' );
-        const { index } = this.props;
-        const frozen = !index;
+        const { tabId } = this.props;
+        const frozen = !tabId;
         // const frozen = staticTabData[index] || !index
         return frozen;
     }

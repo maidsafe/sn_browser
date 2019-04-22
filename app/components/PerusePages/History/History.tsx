@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 import { parse } from 'url';
@@ -7,12 +8,17 @@ import UrlList from '$Components/UrlList';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
+import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 
 const log = require( 'electron-log' );
 
 interface HistoryProps {
     history: Array<any>;
+    isActiveTab: boolean;
     addTab: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    windowId: number;
+    setActiveTab: ( ...args: Array<any> ) => any;
 }
 export default class History extends Component<HistoryProps, {}> {
     static defaultProps = {
@@ -27,7 +33,7 @@ export default class History extends Component<HistoryProps, {}> {
     };
 
     render() {
-        const { addTab, history, isActiveTab } = this.props;
+        const { addTab, history, isActiveTab, windowId, addTabEnd } = this.props;
         let historyList = [];
         history.forEach( ( tab, i ) => {
             if ( tab.history ) {
@@ -69,7 +75,7 @@ export default class History extends Component<HistoryProps, {}> {
                         <PageHeader>
                             <H1 title="History" />
                         </PageHeader>
-                        <UrlList list={historyList} addTab={addTab} />
+                        <UrlList list={historyList} addTab={addTab} addTabEnd = {addTabEnd} addTabEnd = {setActiveTab} windowId ={ windowId } />
                     </Page>
                 </div>
             </div>

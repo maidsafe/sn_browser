@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { ipcRenderer, remote } from 'electron';
 // import { logger } from '$Logger';
@@ -8,6 +9,9 @@ interface UrlListProps {
     list: Array<any>;
     onRemove?: ( ...args: Array<any> ) => any;
     addTab?: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...args: Array<any> ) => any;
+    setActiveTab: ( ...args: Array<any> ) => any;
+    windowId: number;
 }
 export default class UrlList extends Component<UrlListProps, {}> {
     static defaultProps = {
@@ -15,15 +19,24 @@ export default class UrlList extends Component<UrlListProps, {}> {
     };
 
     render = () => {
-        const { addTab, list } = this.props;
+        const { addTab, list, addTabEnd, setActiveTab, windowId } = this.props;
         const parsedList = [];
         list.forEach( ( item, i ) => {
             const handleClick = e => {
                 // required to prevent the app navigating by default.
                 e.preventDefault();
+                const tabId = Math.random().toString( 36 );
                 addTab( {
                     url: item,
-                    isActiveTab: true
+                    tabId
+                } );
+                addTabEnd( {
+                    tabId,
+                    windowId
+                } );
+                setActiveTab( {
+                    tabId,
+                    windowId
                 } );
             };
             const listItem = (
