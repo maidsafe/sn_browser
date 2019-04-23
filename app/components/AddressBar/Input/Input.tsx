@@ -98,7 +98,6 @@ class AddressBarInput extends Component<AddressBarInputProps, AddressBarInputSta
         if ( event.key !== 'Enter' ) {
             return;
         }
-        console.log('handleKeyPress - tabId', tabId);
         const input = event.target.value;
         this.props.updateTab( { tabId, url: input } );
     }

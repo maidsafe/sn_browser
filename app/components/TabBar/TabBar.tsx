@@ -17,7 +17,6 @@ type TabBarProps = {
   activeTabId: any;
   setActiveTab: (...args: any[]) => any;
   selectAddressBar:  (...args: any[]) => any;
-  addTab:  (...args: any[]) => any;
   addTabNext:  (...args: any[]) => any;
   addTabEnd:  (...args: any[]) => any;
   closeTab: (...args: any[]) => any;
@@ -44,18 +43,10 @@ export default class TabBar extends Component<TabBarProps, TabBarState>{
   handleAddTabClick(event)
   {
     event.stopPropagation();
-    const { windowId, addTab, addTabEnd,setActiveTab, selectAddressBar } = this.props;
+    const { windowId, addTabEnd, selectAddressBar } = this.props;
     event.stopPropagation();
     const tabId = Math.random().toString( 36 );
-    addTab({
-      tabId,
-      windowId
-    });
     addTabEnd({
-      tabId,
-      windowId
-    });
-    setActiveTab({
       tabId,
       windowId
     });
@@ -65,14 +56,12 @@ export default class TabBar extends Component<TabBarProps, TabBarState>{
   };
   handleTabClose(tabId, event)
   {
-    console.log('tabId',tabId);
     event.stopPropagation();
     const { closeTab, windowId } = this.props;
     closeTab({ tabId, windowId });
   };
   handleTabClick(tabId, event)
   {
-    console.log('tabId',tabId);
     event.stopPropagation();
     const { setActiveTab, windowId } = this.props;
     setActiveTab({
@@ -83,7 +72,6 @@ export default class TabBar extends Component<TabBarProps, TabBarState>{
   getTabs = () => {
     const {tabs, windowId, activeTabId} = this.props;
     const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {};
-    console.log(tabs);
     return tabs.map((tab, i)=>{
       let title= tab.title;
       let tabId = tab.tabId;

@@ -94,21 +94,14 @@ const openWindow = store => {
             store.dispatch(addTabEnd({windowId: webContentsId, tabId}));
             store.dispatch(addTab({url: 'safe-auth://home/' , tabId}))
             store.dispatch(setActiveTab({windowId: webContentsId, tabId}))
-            /*
-            const allTabs = store.getState().tabs;
-            const orphanedTabs = allTabs.filter( tab => !tab.windowId );
-            orphanedTabs.forEach( orphan => {
-                store.dispatch(
-                    updateTab( { index: orphan.index, windowId: webContentsId } )
-                );
-            } );
-        */
         } else {
             const tabId =Math.random().toString( 36 )
             store.dispatch(addWindow({windowId: webContentsId}));
+            console.log('windowId' ,webContentsId );
             store.dispatch(addTabEnd({windowId: webContentsId, tabId}));
-            store.dispatch(addTab({url: 'about:blank' , tabId}))
-            store.dispatch(selectAddressBar({tabId}))
+            store.dispatch(addTab({url: 'about:blank' , tabId}));
+            store.dispatch(setActiveTab({windowId: webContentsId, tabId}));
+            store.dispatch(selectAddressBar({tabId}));
         }
     } );
     mainWindow.on( 'close', () => {

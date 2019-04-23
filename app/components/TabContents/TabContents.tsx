@@ -26,14 +26,12 @@ export default class TabContents extends Component<{}, {}> {
             focusWebview,
             shouldFocusWebview,
             closeTab,
-            addTab,
             addTabNext,
             addTabEnd,
             activeTabId,
             activeTab,
             addNotification,
             updateTab,
-            setActiveTab,
             tabs,
             allTabs,
             bookmarks,
@@ -63,9 +61,7 @@ export default class TabContents extends Component<{}, {}> {
                         case INTERNAL_PAGES.HISTORY: {
                             return (
                                 <History
-                                    addTab={addTab}
                                     addTabEnd ={addTabEnd}
-                                    setActiveTab = {setActiveTab}
                                     history={allTabs}
                                     key={tab.tabId}
                                     isActiveTab={isActiveTab}
@@ -81,9 +77,7 @@ export default class TabContents extends Component<{}, {}> {
                         case INTERNAL_PAGES.BOOKMARKS: {
                             return (
                                 <Bookmarks
-                                    addTab={addTab}
                                     addTabEnd ={addTabEnd}
-                                    setActiveTab = {setActiveTab}
                                     windowId = {windowId}
                                     bookmarks={bookmarks}
                                     key={tab.tabId}
@@ -112,10 +106,8 @@ export default class TabContents extends Component<{}, {}> {
                         webId={tab.webId}
                         url={tab.url}
                         isActiveTab={isActiveTab}
-                        addTab={addTab}
                         closeTab={closeTab}
                         updateTab={updateTab}
-                        setActiveTab = {setActiveTab}
                         addTabNext = {addTabNext}
                         addTabEnd = {addTabEnd}
                         key={tab.tabId}

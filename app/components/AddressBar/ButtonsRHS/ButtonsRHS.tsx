@@ -13,7 +13,6 @@ import { CLASSES } from '$Constants';
 
 interface ButtonsRHSProps {
     address?: string;
-    addTab: ( ...args: Array<any> ) => any;
     addTabEnd: ( ...args: Array<any> ) => any;
     isBookmarked: boolean;
     addBookmark: ( ...args: Array<any> ) => any;
@@ -56,7 +55,6 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
             focusWebview,
             windowId
         } = this.props;
-        console.log( isBookmarked );
         return (
             <Row
                 type="flex"

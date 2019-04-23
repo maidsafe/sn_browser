@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { TYPES } from '$Actions/windows_actions';
 import { logger } from '$Logger';
 import initialAppState from './initialAppState';
@@ -95,10 +96,13 @@ const closetab = (state,tab) =>
   const closedWindows = { ...state.closedWindows };
   const tabId = tab.tabId;
   const lasttabIndex = openWindows[targetWindow].tabs.findIndex(tab => {return tab === tabId});
+  const tabsIndexLength = openWindows[targetWindow].tabs.length-1;
   const newOpenTabs = openWindows[targetWindow].tabs.filter(tab => tab !== tabId);
+  const newActiveTab = tabsIndexLength === lasttabIndex ? newOpenTabs[tabsIndexLength-1] : newOpenTabs[lasttabIndex] ;
   const newWindow = {
     ...openWindows[targetWindow],
-    tabs: newOpenTabs
+    tabs: newOpenTabs,
+    activeTab: newActiveTab
   };
   const obj =
   {

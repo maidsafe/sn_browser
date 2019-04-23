@@ -22,10 +22,8 @@ interface TabProps {
     addNotification: ( ...args: Array<any> ) => any;
     url: string;
     isActiveTab: boolean;
-    addTab: ( ...args: Array<any> ) => any;
     closeTab: ( ...args: Array<any> ) => any;
     updateTab: ( ...args: Array<any> ) => any;
-    setActiveTab: ( ...args: Array<any> ) => any;
     addTabNext: ( ...args: Array<any> ) => any;
     addTabEnd: ( ...args: Array<any> ) => any;
     key?: string;
@@ -91,7 +89,7 @@ export default class Tab extends Component<TabProps, TabState> {
 
     buildMenu = webview => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
-        const { addTab, windowId, addTabEnd, setActiveTab} = this.props;
+        const { windowId, addTabEnd } = this.props;
         // require here to avoid jest/electron remote issues
         const contextMenu = require( 'electron-context-menu' );
         contextMenu( {
@@ -102,19 +100,11 @@ export default class Tab extends Component<TabProps, TabState> {
                     visible: params.linkURL.length > 0,
                     click() {
                         const tabId = Math.random().toString( 36 );  
-                        addTab( {
-                            url: params.linkURL,
-                            tabId
-                        } );
                         addTabEnd( {
+                            url: params.linkURL,
                             windowId,
                             tabId
                         } );
-                        setActiveTab(
-                            {
-                                windowId,
-                                tabId
-                            } );
                     }
                 }
             ],
@@ -301,9 +291,9 @@ export default class Tab extends Component<TabProps, TabState> {
 
     didStartLoading() {
         logger.info( 'webview started loading' );
-        const { updateTab, index } = this.props;
+        const { updateTab, tabId } = this.props;
         const tabUpdate = {
-            index,
+            tabId,
             isLoading: true
         };
         this.updateBrowserState( { loading: true } );
@@ -320,9 +310,7 @@ export default class Tab extends Component<TabProps, TabState> {
         const {
             url,
             tabId,
-            addTab,
             addTabEnd,
-            setActiveTab,
             closeTab,
             addNotification,
             tabBackwards,
@@ -374,18 +362,16 @@ export default class Tab extends Component<TabProps, TabState> {
                 closeTab( { tabId, windowId } );
                 // add a fresh tab (should be only if no more tabs present)
                 const newTabId =  Math.random().toString( 36 );
-                addTab( { url: 'about:blank', windowId, isActiveTab: true } );
-                addTabEnd({tabId: newTabId, windowId});
-                setActiveTab({tabId: newTabId, windowId})
+                addTabEnd({  url: 'about:blank', tabId: newTabId, windowId});
             }
         }
     }
 
     didStopLoading() {
         logger.info( 'Tab did stop loading' );
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, tabId, isActiveTab } = this.props;
         const tabUpdate = {
-            index,
+            tabId,
             isLoading: false
         };
         this.updateBrowserState( { loading: false } );
@@ -565,14 +551,12 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     newWindow( e ) {
-        const { addTab,addTabEnd, setActiveTab, windowId } = this.props;
+        const { addTabEnd, windowId } = this.props;
         const { url } = e;
         logger.info( 'Tab: NewWindow event triggered for url: ', url );
         const activateTab = e.disposition == 'foreground-tab';
         const tabId = Math.random().toString( 36 );
-        addTab( { url, tabId } );
-        addTabEnd({ windowId, tabId });
-        setActiveTab({ windowId, tabId });
+        addTabEnd({ url, windowId, tabId });
         this.goForward();
     }
 

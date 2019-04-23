@@ -85,6 +85,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
     }
 
     shouldComponentUpdate = ( nextProps: BrowserProps ) => {
+        //Have to check this about pafge rendering
         const { windows, tabs, Bookmarks } = nextProps;
         const { windowId } = this.state;
         const currentTabs = this.props.tabs;
@@ -110,6 +111,31 @@ class Browser extends Component<BrowserProps, BrowserState> {
         }
     };
 
+    handleAddTabEnd = tab => {
+        const { addTabEnd, addTab, setActiveTab } = this.props;
+        const { windowId } = this.state;
+        const { url, tabId } = tab;
+        addTab( {url, tabId} );
+        addTabEnd( {windowId, tabId} );
+        setActiveTab( {windowId, tabId} );
+    };
+
+    handleAddTabNext = tab => {
+        const { addTab, addTabEnd, setActiveTab } = this.props;
+        const { windowId } = this.state;
+        const { tabId, url, tabIndex } = tab;
+        addTab( {tabId, url} );
+        if( tabIndex!== undefined )
+        {
+            addTabEnd( { tabId, tabIndex, windowId } );
+        }
+        else
+        {
+            addTabEnd( { tabId, windowId } );
+        }
+        setActiveTab( {tabId , windowId} );
+    };
+
     render() {
         const { props } = this;
         const {
@@ -119,7 +145,6 @@ class Browser extends Component<BrowserProps, BrowserState> {
             removeBookmark,
             // tabs
             tabs,
-            addTab,
             updateTab,
             tabForwards,
             selectAddressBar,
@@ -129,17 +154,15 @@ class Browser extends Component<BrowserProps, BrowserState> {
             blurAddressBar,
             // Notifications 
             addNotification,
-            updateNotification,
-            clearNotification,
+            updateNotification, // remove if not needed
+            clearNotification, // remove if not needed
             // windows
             windows,
-            addWindow,
-            addTabNext,
-            addTabEnd,
+            addWindow,// remove if not needed 
             setActiveTab,
             windowCloseTab,
-            reopenTab,
-            closeWindow,
+            reopenTab,// remove if not needed 
+            closeWindow,// remove if not needed
             showSettingsMenu,
             hideSettingsMenu,
             // TODO extend tab to not need this
@@ -151,98 +174,95 @@ class Browser extends Component<BrowserProps, BrowserState> {
         // only show the first notification without a response.
         const { windowId } = this.state;
         // TODO: Move windowId from state to store.
-        const windowsTabs = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId].tabs : [];
-        const openTabs = [];
-        windowsTabs.forEach( element => {
-            openTabs.push( tabs[element] )
-        } );
-        const activeTabId = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId].activeTab : undefined ;
-        const activeTab = tabs[activeTabId];
+        if(windows.openWindows[windowId]!== undefined)
+        {
+            const windowsTabs = windows.openWindows[windowId].tabs;
+            const openTabs = [];
+            windowsTabs.forEach( element => {
+                openTabs.push( tabs[element] )
+            } );
+            const activeTabId = windows.openWindows[windowId].activeTab;
+            const activeTab = activeTabId!== undefined ? tabs[activeTabId]: undefined;
+            if ( !activeTab ) {
+                return <div className="noTabsToShow" />;
+            }
+            const activeTabAddress = activeTab.url;
+            const isBookmarked = !!bookmarks.find(
+                bookmark => bookmark.url === activeTabAddress
+            );
+            const isSelected = tabs[activeTabId].ui.addressBarIsSelected ;
+            const { shouldFocusWebview } = tabs[activeTabId].ui.shouldFocusWebview;
+            const { settingsMenuIsVisible } = windows.openWindows[windowId].ui;
+            return (
+                <div className={styles.container}>
+                    <TabBar
+                        key={1}
+                        updateTab={updateTab}
+                        setActiveTab={setActiveTab}
+                        selectAddressBar={selectAddressBar}
+                        activeTabId = {activeTabId}
+                        activeTab = {activeTab}
+                        addTabNext = {this.handleAddTabNext}
+                        addTabEnd =  {this.handleAddTabEnd}
+                        closeTab={this.handleCloseBrowserTab}
+                        tabs={openTabs}
+                        windows = {windows}
+                        windowId={windowId}
+                    />
+                    <AddressBar
+                        key={2}
+                        address={activeTabAddress}
+                        activeTab={activeTab}
+                        tabId = {activeTabId}
+                        onSelect={deselectAddressBar}
+                        onFocus={selectAddressBar}
+                        setActiveTab={setActiveTab}
+                        onBlur={blurAddressBar}
+                        addBookmark={addBookmark}
+                        isBookmarked={isBookmarked}
+                        addTabNext = {this.handleAddTabNext}
+                        addTabEnd =  {this.handleAddTabEnd}
+                        removeBookmark={removeBookmark}
+                        hideSettingsMenu={hideSettingsMenu}
+                        showSettingsMenu={showSettingsMenu}
+                        settingsMenuIsVisible={settingsMenuIsVisible}
+                        isSelected = { isSelected }
+                        tabBackwards={tabBackwards}
+                        tabForwards={tabForwards}
+                        updateTab={updateTab}
+                        windowId={windowId}
+                        focusWebview={focusWebview}
+                        ref={c => {
+                            this.address = c;
+                        }}
+                    />
+                    <TabContents
+                        key={4}
+                        tabBackwards={tabBackwards}
+                        focusWebview={focusWebview}
+                        shouldFocusWebview={ shouldFocusWebview }
+                        closeTab={windowCloseTab}
+                        addTabNext = {this.handleAddTabNext}
+                        addTabEnd =  {this.handleAddTabEnd}
+                        addNotification={addNotification}
+                        activeTabId = {activeTabId}
+                        activeTab = {activeTab}
+                        updateTab={updateTab}
+                        setActiveTab={setActiveTab}
+                        tabs={openTabs}
+                        allTabs={tabs}
+                        bookmarks={bookmarks}
+                        windowId={windowId}
+                        safeExperimentsEnabled={experimentsEnabled}
+                        ref={c => {
+                            this.tabContents = c;
+                        }}
+                    />
+                </div>
+            );
+        };
+        return <div />
         // TODO: if not, lets trigger close?
-        if ( !activeTab ) {
-            return <div className="noTabsToShow" />;
-        }
-        const activeTabAddress = activeTab.url;
-        const isBookmarked = !!bookmarks.find(
-            bookmark => bookmark.url === activeTabAddress
-        );
-        const isSelected = tabs[activeTab] ? tabs[activeTabId].ui.addressBarIsSelected : false;
-        const shouldFocusWebview = tabs[activeTab] ? tabs[activeTabId].ui.shouldFocusWebview : false;
-        const settingsMenuIsVisible = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId].ui.settingsMenuIsVisible : false;
-
-        if (!(Object.keys(windows.openWindows).length>=1) && !(openTabs.length>=1) ) {
-            return <div />
-        }
-        return (
-            <div className={styles.container}>
-                <TabBar
-                    key={1}
-                    updateTab={updateTab}
-                    setActiveTab={setActiveTab}
-                    selectAddressBar={selectAddressBar}
-                    addTab={addTab}
-                    activeTabId = {activeTabId}
-                    activeTab = {activeTab}
-                    addTabNext = {addTabNext}
-                    addTabEnd =  {addTabEnd}
-                    closeTab={this.handleCloseBrowserTab}
-                    tabs={openTabs}
-                    windows = {windows}
-                    windowId={windowId}
-                />
-                <AddressBar
-                    key={2}
-                    address={activeTabAddress}
-                    addTab={addTab}
-                    activeTab={activeTab}
-                    tabId = {activeTabId}
-                    onSelect={deselectAddressBar}
-                    onFocus={selectAddressBar}
-                    setActiveTab={setActiveTab}
-                    onBlur={blurAddressBar}
-                    addBookmark={addBookmark}
-                    isBookmarked={isBookmarked}
-                    addTabNext= {addTabNext}
-                    addTabEnd = {addTabEnd}
-                    removeBookmark={removeBookmark}
-                    hideSettingsMenu={hideSettingsMenu}
-                    showSettingsMenu={showSettingsMenu}
-                    settingsMenuIsVisible={settingsMenuIsVisible}
-                    isSelected = { isSelected }
-                    tabBackwards={tabBackwards}
-                    tabForwards={tabForwards}
-                    updateTab={updateTab}
-                    windowId={windowId}
-                    focusWebview={focusWebview}
-                    ref={c => {
-                        this.address = c;
-                    }}
-                />
-                <TabContents
-                    key={4}
-                    tabBackwards={tabBackwards}
-                    focusWebview={focusWebview}
-                    shouldFocusWebview={ shouldFocusWebview }
-                    closeTab={windowCloseTab}
-                    addTab={addTab}
-                    addTabNext = {addTabNext}
-                    addTabEnd = {addTabEnd}
-                    addNotification={addNotification}
-                    activeTabId = {activeTabId}
-                    activeTab = {activeTab}
-                    updateTab={updateTab}
-                    setActiveTab={setActiveTab}
-                    tabs={openTabs}
-                    allTabs={tabs}
-                    bookmarks={bookmarks}
-                    windowId={windowId}
-                    safeExperimentsEnabled={experimentsEnabled}
-                    ref={c => {
-                        this.tabContents = c;
-                    }}
-                />
-            </div>
-        );
     }
 }
 export default extendComponent( Browser, wrapBrowserComponent );

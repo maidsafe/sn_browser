@@ -1,25 +1,24 @@
+/* eslint-disable */
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import {
     addTab,
     tabForwards,
     tabBackwards,
-    closeTab,
-    reopenTab,
-    setActiveTab,
-    updateTab
+    updateTab,
+    selectAddressBar, 
+    resetStore
 } from '$Actions/tabs_actions';
-
-import { selectAddressBar, resetStore } from '$Actions/ui_actions';
 import {
     isHot,
     isRunningDebug,
     isRunningSpectronTestProcess
 } from '$Constants';
-import { getLastClosedTab } from '$Reducers/tabs';
+// import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
 
 import { getExtensionMenuItems } from '$Extensions';
+import { addTabEnd, addTabNext, closeWindow, windowCloseTab, setActiveTab,reopenTab } from '$Actions/windows_actions';
 
 export default class MenuBuilder {
     constructor( mainWindow: BrowserWindow, openWindow, store ) {
@@ -111,14 +110,26 @@ export default class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.webContents.id;
+                            const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
                                     url: 'about:blank',
-                                    windowId,
-                                    isActiveTab: true
+                                    tabId
                                 } )
                             );
-                            this.store.dispatch( selectAddressBar() );
+                            this.store.dispatch(
+                                addTabEnd({
+                                    tabId,
+                                    windowId
+                                })
+                            );
+                            this.store.dispatch(
+                                setActiveTab({
+                                    tabId,
+                                    windowId
+                                })
+                            );
+                            this.store.dispatch( selectAddressBar({tabId}) );
                         }
                     }
                 },
@@ -175,17 +186,14 @@ export default class MenuBuilder {
                     accelerator: 'CommandOrControl+W',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const { tabs } = store.getState();
                             const windowId = win.webContents.id;
-
-                            const openTabs = tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
-                            );
-
+                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
+                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
                             if ( openTabs.length === 1 ) {
                                 win.close();
                             } else {
-                                this.store.dispatch( closeTab( { windowId } ) );
+                                ///wdwaawdwadwa
+                                this.store.dispatch( windowCloseTab( { windowId, tabId } ) );
                             }
                         }
                     }
@@ -203,15 +211,9 @@ export default class MenuBuilder {
                     label: 'Reopen Last Tab',
                     accelerator: 'CommandOrControl+Shift+T',
                     click: ( item, win ) => {
-                        const lastTab = getLastClosedTab( store.getState().tabs );
-                        let windowToFocus = lastTab.windowId;
-
-                        if ( windowToFocus ) {
-                            windowToFocus = BrowserWindow.fromId( windowToFocus );
-                            windowToFocus.focus();
-                        }
-
-                        store.dispatch( reopenTab() );
+                        let windowId = win.webContents.id;
+                        // need to figure this one out
+                        store.dispatch( reopenTab({windowId }) );
                     }
                 },
                 { type: 'separator' },
@@ -270,11 +272,23 @@ export default class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.webContents.id;
+                            const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://bookmarks',
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                addTabEnd( {
                                     windowId,
-                                    isActiveTab: true
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                setActiveTab( {
+                                    windowId,
+                                    tabId
                                 } )
                             );
                         }
@@ -323,11 +337,23 @@ export default class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.webContents.id;
+                            const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://history',
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                addTabEnd( {
                                     windowId,
-                                    isActiveTab: true
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                setActiveTab( {
+                                    windowId,
+                                    tabId
                                 } )
                             );
                         }
@@ -338,8 +364,10 @@ export default class MenuBuilder {
                     label: 'Forward',
                     accelerator: 'CommandOrControl + ]',
                     click: ( item, win ) => {
+                        const windowId = win.webContents.id;
+                        const tabId = store.getState().windows.openWindows[windowId].activeTab;
                         if ( win ) {
-                            store.dispatch( tabForwards() );
+                            store.dispatch( tabForwards({tabId}) );
                         }
                     }
                 },
@@ -347,8 +375,10 @@ export default class MenuBuilder {
                     label: 'Backward',
                     accelerator: 'CommandOrControl + [',
                     click: ( item, win ) => {
+                        const windowId = win.webContents.id;
+                        const tabId = store.getState().windows.openWindows[windowId].activeTab;
                         if ( win ) {
-                            store.dispatch( tabBackwards() );
+                            store.dispatch( tabBackwards({ tabId }) );
                         }
                     }
                 }
@@ -426,7 +456,7 @@ export default class MenuBuilder {
 
                             logger.verbose( 'Triggering store reset from window:', windowId );
                             // reset
-                            this.store.dispatch( resetStore( { windowId } ) );
+                            this.store.dispatch( resetStore() );
                         }
                     }
                 }

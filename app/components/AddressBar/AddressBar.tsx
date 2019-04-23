@@ -13,7 +13,6 @@ import styles from './addressBar.css';
 
 interface AddressBarProps {
     address?: string;
-    addTab: ( ...args: Array<any> ) => any;
     activeTab?: {
         tabId?: string,
         url?: string;
@@ -64,12 +63,10 @@ export default class AddressBar extends Component<AddressBarProps, {}> {
     };
 
     getSettingsMenuItems = () => {
-        const { addTab, windowId, addTabEnd, setActiveTab } = this.props;
+        const { windowId, addTabEnd} = this.props;
         const tabId = Math.random().toString( 36 );
         const addATab = tab => {
-            addTab( { url: `safe-browser://${tab}`, tabId } );
-            addTabEnd( { windowId, tabId } );
-            setActiveTab( { windowId, tabId } )
+            addTabEnd( { url: `safe-browser://${tab}`, windowId, tabId } );
         };
         return [
             <Row key="menuItem-bookmarks" type="flex" justify="start" align="middle">
@@ -99,7 +96,6 @@ export default class AddressBar extends Component<AddressBarProps, {}> {
         const { props } = this;
         const {
             address,
-            addTab,
             addTabEnd,
             addTabNext,
             addBookmark,
@@ -146,7 +142,6 @@ export default class AddressBar extends Component<AddressBarProps, {}> {
                     <Col>
                         <ButtonsRHS
                             address={address}
-                            addTab={addTab}
                             addTabEnd= {addTabEnd}
                             isBookmarked={isBookmarked}
                             addBookmark={addBookmark}

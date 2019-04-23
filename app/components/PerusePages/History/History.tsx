@@ -15,10 +15,8 @@ const log = require( 'electron-log' );
 interface HistoryProps {
     history: Array<any>;
     isActiveTab: boolean;
-    addTab: ( ...args: Array<any> ) => any;
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
-    setActiveTab: ( ...args: Array<any> ) => any;
 }
 export default class History extends Component<HistoryProps, {}> {
     static defaultProps = {
@@ -33,11 +31,15 @@ export default class History extends Component<HistoryProps, {}> {
     };
 
     render() {
-        const { addTab, history, isActiveTab, windowId, addTabEnd } = this.props;
+        const { history, isActiveTab, windowId, addTabEnd } = this.props;
         let historyList = [];
-        history.forEach( ( tab, i ) => {
+        var historyArray = []
+        Object.keys(history).map(function(key) {
+            historyArray.push(history[key]);
+          });
+        historyArray.forEach( ( tab, i ) => {
             if ( tab.history ) {
-                tab.history.forEach( ( history, ii ) => {
+                tab.history.forEach( ( history, i ) => {
                     const historyItem = history;
                     historyList.push( historyItem );
                 } );
@@ -75,7 +77,7 @@ export default class History extends Component<HistoryProps, {}> {
                         <PageHeader>
                             <H1 title="History" />
                         </PageHeader>
-                        <UrlList list={historyList} addTab={addTab} addTabEnd = {addTabEnd} addTabEnd = {setActiveTab} windowId ={ windowId } />
+                        <UrlList list={historyList} addTabEnd = {addTabEnd} windowId ={ windowId } />
                     </Page>
                 </div>
             </div>

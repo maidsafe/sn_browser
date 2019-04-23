@@ -1,7 +1,7 @@
 import * as theAuthApi from '$Extensions/safe/auth-api/authFuncs';
 import { callIPC, setAuthCallbacks } from '$Extensions/safe/ffi/ipc';
 import * as authActions from '$Extensions/safe/actions/authenticator_actions';
-import * as uiActions from '$Actions/ui_actions';
+import * as tabActions from '$Actions/tabs_actions';
 import { SAFE } from '$Extensions/safe/constants';
 import CONSTANTS from '$Extensions/safe/auth-constants';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
@@ -71,7 +71,7 @@ export const remoteCallApis = {
         }
 
         clearAppObj();
-        theStore.dispatch( uiActions.resetStore() );
+        theStore.dispatch( tabActions.resetStore() );
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED )
         );

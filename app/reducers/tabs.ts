@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { TYPES } from '$Actions/tabs_actions';
 import {
     makeValidAddressBarUrl
