@@ -11,7 +11,7 @@ jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
 
 jest.mock( 'ref-array', () => jest.fn() );
 //
-jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'ffi-napi', () => jest.fn() );
 jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
@@ -52,7 +52,7 @@ describe( 'SAFE manageWebIdUpdates', () => {
     test( 'webIdEventEmitter should emit events', async () => {
         expect.assertions( 1 );
         const theData = 'webId!!!';
-        win.webIdEventEmitter.on( 'update', data => {
+        win.webIdEventEmitter.on( 'update', ( data ) => {
             expect( data ).toBe( theData );
         } );
 

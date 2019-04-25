@@ -37,7 +37,7 @@ function getNewWindowPosition( mainWindowState ) {
     return newWindowPosition;
 }
 
-const openWindow = store => {
+const openWindow = ( store ) => {
     const mainWindowState = windowStateKeeper( {
         defaultWidth: 2048,
         defaultHeight: 1024
@@ -59,10 +59,10 @@ const openWindow = store => {
         titleBarStyle: 'hiddenInset',
         icon: appIcon,
         webPreferences: {
-            partition: 'persist:safe-tab'
-            // preload : path.join( __dirname, 'browserPreload.js' )
-            //  isRunningUnpacked ?
-            // `http://localhost:${devPort}/webPreload.js` : `file://${ __dirname }/browserPreload.js`;
+            partition: 'persist:safe-tab',
+            webviewTag: true,
+            nodeIntegration: true,
+            backgroundThrottling: false
         }
     };
 
@@ -72,8 +72,11 @@ const openWindow = store => {
 
     mainWindow.loadURL( `file://${__dirname}/app.html` );
 
-    // @TODO: Use 'ready-to-show' event
-    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+    mainWindow.webContents.once( 'ready-to-show', async () => {
+    // before show let state load
+        mainWindow.show();
+        mainWindow.focus();
+    } );
 
     mainWindow.webContents.on( 'did-finish-load', async () => {
         if ( !mainWindow ) {
@@ -82,10 +85,6 @@ const openWindow = store => {
 
         await onOpenLoadExtensions( store );
 
-        // before show lets load state
-        mainWindow.show();
-        mainWindow.focus();
-
         if ( isRunningDebug && !isRunningSpectronTestProcess ) {
             mainWindow.openDevTools( { mode: 'undocked' } );
         }
@@ -93,8 +92,8 @@ const openWindow = store => {
         const webContentsId = mainWindow.webContents.id;
         if ( browserWindowArray.length === 1 ) {
             const allTabs = store.getState().tabs;
-            const orphanedTabs = allTabs.filter( tab => !tab.windowId );
-            orphanedTabs.forEach( orphan => {
+            const orphanedTabs = allTabs.filter( ( tab ) => !tab.windowId );
+            orphanedTabs.forEach( ( orphan ) => {
                 store.dispatch(
                     updateTab( { index: orphan.index, windowId: webContentsId } )
                 );

@@ -2,7 +2,7 @@
  * LibLoader class to load APIs
  */
 /* eslint-disable no-underscore-dangle */
-import ffi from 'ffi';
+import ffi from 'ffi-napi';
 import os from 'os';
 import path from 'path';
 
@@ -13,22 +13,22 @@ import * as types from './refs/types';
 import CONSTANTS from '../auth-constants';
 
 const _mods = Symbol( '_mods' );
-const _libPath = Symbol( '_libPath' );
+const _libraryPath = Symbol( '_libPath' );
 
-class LibLoader {
+class LibraryLoader {
     constructor() {
         this[_mods] = [authenticator];
-        this[_libPath] = CONSTANTS.LIB_PATH.SAFE_AUTH[os.platform()];
+        this[_libraryPath] = CONSTANTS.LIB_PATH.SAFE_AUTH[os.platform()];
     }
 
     load( isMock = false ) {
         if ( isMock ) {
-            this[_libPath] = CONSTANTS.LIB_PATH_MOCK.SAFE_AUTH[os.platform()];
+            this[_libraryPath] = CONSTANTS.LIB_PATH_MOCK.SAFE_AUTH[os.platform()];
         }
 
-        logger.info( 'Auth lib location loading: ', this[_libPath] );
+        logger.info( 'Auth lib location loading: ', this[_libraryPath] );
 
-        const safeLib = {};
+        const safeLibrary = {};
         const { RTLD_NOW } = ffi.DynamicLibrary.FLAGS;
         const { RTLD_GLOBAL } = ffi.DynamicLibrary.FLAGS;
         const mode = RTLD_NOW || RTLD_GLOBAL;
@@ -38,11 +38,11 @@ class LibLoader {
         let fnDefinition;
 
         // Load all modules
-        this[_mods].forEach( mod => {
-            if ( !( mod instanceof SafeLib ) ) {
+        this[_mods].forEach( ( module_ ) => {
+            if ( !( module_ instanceof SafeLib ) ) {
                 return;
             }
-            fnsToRegister = mod.fnsToRegister();
+            fnsToRegister = module_.fnsToRegister();
             if ( !fnsToRegister ) {
                 return;
             }
@@ -51,25 +51,25 @@ class LibLoader {
 
         return new Promise( ( resolve, reject ) => {
             try {
-                const lib = ffi.DynamicLibrary(
-                    path.resolve( __dirname, this[_libPath] ),
+                const library = ffi.DynamicLibrary(
+                    path.resolve( __dirname, this[_libraryPath] ),
                     mode
                 );
 
-                Object.keys( ffiFunctions ).forEach( fnName => {
+                Object.keys( ffiFunctions ).forEach( ( fnName ) => {
                     fnDefinition = ffiFunctions[fnName];
-                    safeLib[fnName] = ffi.ForeignFunction(
-                        lib.get( fnName ),
+                    safeLibrary[fnName] = ffi.ForeignFunction(
+                        library.get( fnName ),
                         fnDefinition[0],
                         fnDefinition[1]
                     );
                 } );
-                this[_mods].forEach( mod => {
-                    if ( !( mod instanceof SafeLib ) ) {
+                this[_mods].forEach( ( module_ ) => {
+                    if ( !( module_ instanceof SafeLib ) ) {
                         return;
                     }
-                    mod.isLibLoaded = true;
-                    mod.safeLib = safeLib;
+                    module_.isLibLoaded = true;
+                    module_.safeLib = safeLibrary;
                 } );
 
                 const setConfigSearchPath = () => {
@@ -79,7 +79,7 @@ class LibLoader {
                     ) {
                         const configPath = types.allocCString( process.env.SAFE_CONFIG_PATH );
 
-                        safeLib.auth_set_additional_search_path(
+                        safeLibrary.auth_set_additional_search_path(
                             configPath,
                             types.Null,
                             ffi.Callback(
@@ -100,7 +100,7 @@ class LibLoader {
                 };
 
                 // init logging
-                safeLib.auth_init_logging(
+                safeLibrary.auth_init_logging(
                     types.allocCString( 'authenticator.log' ),
                     types.Null,
                     ffi.Callback(
@@ -116,18 +116,18 @@ class LibLoader {
                         }
                     )
                 );
-            } catch ( err ) {
-                this[_mods].forEach( mod => {
-                    if ( !( mod instanceof SafeLib ) ) {
+            } catch ( error ) {
+                this[_mods].forEach( ( module_ ) => {
+                    if ( !( module_ instanceof SafeLib ) ) {
                         return;
                     }
-                    mod.isLibLoaded = false;
+                    module_.isLibLoaded = false;
                 } );
-                return reject( err );
+                return reject( error );
             }
         } );
     }
 }
 
-const libLoader = new LibLoader();
-export default libLoader;
+const libraryLoader = new LibraryLoader();
+export default libraryLoader;

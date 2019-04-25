@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-unresolved, import/extensions */
-import ffi from 'ffi';
+import ffi from 'ffi-napi';
 /* eslint-enable import/no-unresolved, import/extensions */
 import os from 'os';
 import path from 'path';
@@ -11,12 +11,12 @@ import * as type from './refs/types';
 const StringArray = ArrayType( type.CString );
 
 const _ffiFunctions = Symbol( 'ffiFunctions' );
-const _libPath = Symbol( 'libPath' );
-const _isLibLoaded = Symbol( 'isLibLoaded' );
+const _libraryPath = Symbol( 'libPath' );
+const _isLibraryLoaded = Symbol( 'isLibLoaded' );
 
 class SystemUriLoader {
     constructor() {
-        this[_libPath] = CONSTANTS.LIB_PATH.SYSTEM_URI[os.platform()];
+        this[_libraryPath] = CONSTANTS.LIB_PATH.SYSTEM_URI[os.platform()];
         this[_ffiFunctions] = {
             open_uri: [type.Void, ['string', 'pointer', 'pointer']],
             install: [
@@ -34,23 +34,23 @@ class SystemUriLoader {
                 ]
             ]
         };
-        this[_isLibLoaded] = false;
+        this[_isLibraryLoaded] = false;
         this.lib = null;
     }
 
     get isLibLoaded() {
-        return this[_isLibLoaded];
+        return this[_isLibraryLoaded];
     }
 
     load() {
         try {
             this.lib = ffi.Library(
-                path.resolve( __dirname, this[_libPath] ),
+                path.resolve( __dirname, this[_libraryPath] ),
                 this[_ffiFunctions]
             );
-            this[_isLibLoaded] = true;
-        } catch ( err ) {
-            this[_isLibLoaded] = false;
+            this[_isLibraryLoaded] = true;
+        } catch ( error ) {
+            this[_isLibraryLoaded] = false;
         }
     }
 
@@ -72,7 +72,7 @@ class SystemUriLoader {
 
         return new Promise( ( resolve, reject ) => {
             try {
-                const cb = this._handleError( resolve, reject );
+                const callback = this._handleError( resolve, reject );
                 this.lib.install(
                     bundle,
                     vendor,
@@ -82,24 +82,24 @@ class SystemUriLoader {
                     icon,
                     joinedSchemes,
                     type.Null,
-                    cb
+                    callback
                 );
-            } catch ( err ) {
-                return reject( err );
+            } catch ( error ) {
+                return reject( error );
             }
         } );
     }
 
-    openUri( str ) {
+    openUri( string ) {
         if ( !this.lib ) {
             return;
         }
         return new Promise( ( resolve, reject ) => {
             try {
-                const cb = this._handleError( resolve, reject );
-                this.lib.open_uri( str, type.Null, cb );
-            } catch ( err ) {
-                return reject( err );
+                const callback = this._handleError( resolve, reject );
+                this.lib.open_uri( string, type.Null, callback );
+            } catch ( error ) {
+                return reject( error );
             }
         } );
     }

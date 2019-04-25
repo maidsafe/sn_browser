@@ -14,7 +14,7 @@ jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
 
 jest.mock( 'ref-array', () => jest.fn() );
 //
-jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'ffi-napi', () => jest.fn() );
 jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
@@ -23,11 +23,11 @@ jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 describe( 'AddressBar', () => {
     let wrapper;
     let instance;
-    let props;
+    let properties;
     let store;
 
     beforeEach( () => {
-        props = {
+        properties = {
             windowId: 1,
             address: 'about:blank',
             isSelected: false,
@@ -50,11 +50,11 @@ describe( 'AddressBar', () => {
 
     describe( 'constructor( props )', () => {
         beforeEach( () => {
-            store = mockStore( props );
+            store = mockStore( properties );
 
             wrapper = shallow(
                 <Provider store={store}>
-                    <AddressBar {...props} />
+                    <AddressBar {...properties} />
                 </Provider>
             ).dive();
 

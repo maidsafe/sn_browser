@@ -13,7 +13,7 @@ jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
 
 jest.mock( 'ref-array', () => jest.fn() );
 //
-jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'ffi-napi', () => jest.fn() );
 jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
@@ -22,11 +22,11 @@ jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 describe( 'AddressBarInput', () => {
     let wrapper;
     let instance;
-    let props;
+    let properties;
     let store;
 
     beforeEach( () => {
-        props = {
+        properties = {
             windowId: 1,
             address: 'about:blank',
             isSelected: false,
@@ -46,11 +46,11 @@ describe( 'AddressBarInput', () => {
 
     describe( 'constructor( props )', () => {
         beforeEach( () => {
-            store = mockStore( props );
+            store = mockStore( properties );
 
             wrapper = shallow(
                 <Provider store={store}>
-                    <AddressBarInput {...props} />
+                    <AddressBarInput {...properties} />
                 </Provider>
             ).dive();
             instance = wrapper.instance();
@@ -63,11 +63,11 @@ describe( 'AddressBarInput', () => {
 
     describe( 'events', () => {
         beforeEach( () => {
-            store = mockStore( props );
+            store = mockStore( properties );
 
             wrapper = mount(
                 <Provider store={store}>
-                    <AddressBarInput {...props} />
+                    <AddressBarInput {...properties} />
                 </Provider>
             );
             instance = wrapper.instance();
@@ -81,7 +81,7 @@ describe( 'AddressBarInput', () => {
             const handleBlur = jest.fn();
             wrapper = mount(
                 <Provider store={store}>
-                    <AddressBarInput {...props} onBlur={handleBlur} />
+                    <AddressBarInput {...properties} onBlur={handleBlur} />
                 </Provider>
             );
             const input = wrapper.find( 'Input' );
@@ -92,14 +92,14 @@ describe( 'AddressBarInput', () => {
         it( 'check on onBlur,onBlur() is called', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'blur' );
-            expect( props.onBlur ).toHaveBeenCalled();
+            expect( properties.onBlur ).toHaveBeenCalled();
         } );
 
         it( 'check on onFocus,handleFocus is called', () => {
             const handleFocus = jest.fn();
             wrapper = mount(
                 <Provider store={store}>
-                    <AddressBarInput {...props} onFocus={handleFocus} />
+                    <AddressBarInput {...properties} onFocus={handleFocus} />
                 </Provider>
             );
             instance = wrapper.instance();
@@ -111,25 +111,25 @@ describe( 'AddressBarInput', () => {
         it( 'check on onFocus,onFocus() is called', () => {
             wrapper = mount(
                 <Provider store={store}>
-                    <AddressBarInput {...props} />
+                    <AddressBarInput {...properties} />
                 </Provider>
             );
             instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
-            expect( props.onFocus ).toHaveBeenCalled();
+            expect( properties.onFocus ).toHaveBeenCalled();
         } );
 
         it( 'check on onKeyPress if updateTab is called', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateTab ).toHaveBeenCalled();
+            expect( properties.updateTab ).toHaveBeenCalled();
         } );
 
         it( 'check on onKeyPress if updateTab is called with params', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateTab ).toHaveBeenCalledWith( {
+            expect( properties.updateTab ).toHaveBeenCalledWith( {
                 url: 'about:blank',
                 windowId: 1
             } );
@@ -139,7 +139,7 @@ describe( 'AddressBarInput', () => {
             const input = wrapper.find( 'Input' );
             input.value = '123456';
             input.simulate( 'change' );
-            expect( props.onSelect ).toHaveBeenCalled();
+            expect( properties.onSelect ).toHaveBeenCalled();
         } );
     } );
 } );

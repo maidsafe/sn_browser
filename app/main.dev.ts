@@ -15,7 +15,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-import { app, protocol, ipcMain, shell, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
 import { logger } from '$Logger';
 
 import {
@@ -29,8 +29,6 @@ import {
     PROTOCOLS,
     CONFIG
 } from '$Constants';
-
-import pkg from '$Package';
 
 import setupBackground from './setupBackground';
 
@@ -84,8 +82,6 @@ if ( process.argv.includes( '--preload' ) ) {
         logger.error( 'Error preloading MockVault' );
     }
 }
-
-protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
 if ( isRunningPackaged ) {
     const sourceMapSupport = require( 'source-map-support' );
@@ -145,9 +141,9 @@ app.on( 'ready', async () => {
     }
 
     if ( process.platform === 'linux' || process.platform === 'win32' ) {
-        const uriArg = process.argv[process.argv.length - 1];
-        if ( process.argv.length >= 2 && uriArg && uriArg.indexOf( 'safe' ) === 0 ) {
-            onReceiveUrl( store, uriArg );
+        const uriArgument = process.argv[process.argv.length - 1];
+        if ( process.argv.length >= 2 && uriArgument && uriArgument.indexOf( 'safe' ) === 0 ) {
+            onReceiveUrl( store, uriArgument );
 
             if ( mainWindow ) {
                 mainWindow.show();

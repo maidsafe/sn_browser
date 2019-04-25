@@ -119,6 +119,7 @@ export default class Tab extends Component<TabProps, TabState> {
 
     componentDidMount() {
         const { webview } = this;
+
         const callbackSetup = () => {
             if ( !webview ) {
                 logger.info(
@@ -126,6 +127,12 @@ export default class Tab extends Component<TabProps, TabState> {
                 );
                 return;
             }
+
+            const webContents = webview.getWebContents();
+
+            webContents.on( 'preload-error', ( error ) => {
+                logger.error('Webview: Preload script Error:', error );
+            } )
             webview.addEventListener(
                 'did-start-loading',
                 this.didStartLoading.bind( this )
@@ -216,7 +223,8 @@ export default class Tab extends Component<TabProps, TabState> {
             const webviewSource = parseURL( webview.src );
             if (
                 webviewSource.href === '' ||
-        `${webviewSource.protocol}${webviewSource.hostname}` === 'about:blank' ||
+        `${webviewSource.protocol}${webviewSource.hostname}` ===
+          'about:blank' ||
         urlHasChanged( webview.src, nextProperties.url )
             ) {
                 this.loadURL( nextProperties.url );
@@ -331,7 +339,10 @@ export default class Tab extends Component<TabProps, TabState> {
                 }
             ` );
         };
-        if ( urlObject.hostname === '127.0.0.1' || urlObject.hostname === 'localhost' ) {
+        if (
+            urlObject.hostname === '127.0.0.1' ||
+      urlObject.hostname === 'localhost'
+        ) {
             try {
                 renderError( 'Page Load Failed' );
             } catch ( scriptError ) {
@@ -643,7 +654,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
             ] );
             logger.error( 'Error from Tab.jsx', error );
             logger.error( stringError );
-            // You can render any custom fallback UI
+
             return (
                 <div className={moddedClass}>
                     <h4>Something went wrong with this tab.</h4>
@@ -658,8 +669,8 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
             <div className={moddedClass}>
                 <webview
                     style={{ height: '100%', display: 'flex', flex: '1 1' }}
-                    tabIndex="0"
-                    webpreferences="nodeIntegration, contextIsolation=false"
+                    tabIndex={0}
+                    webpreferences="nodeIntegration=true, contextIsolation=false"
                     preload={injectPath}
                     partition="persist:safe-tab"
                     ref={( c ) => {

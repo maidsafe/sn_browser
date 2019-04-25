@@ -85,19 +85,20 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( '' );
 
-    // process.on( 'uncaughtTypeError', err =>
-    // {
-    //     log.error(
-    //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    //     );
-    //     log.error( 'whoops! there was an uncaught type error:' );
-    //     log.error( err );
-    //     log.error( err.file );
-    //     log.error( err.line );
-    //     log.error(
-    //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    //     );
-    // } );
+    process.on( 'uncaughtTypeError', error =>
+    {
+        log.error(
+            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+        );
+        log.error( 'whoops! there was an uncaught type error:' );
+        console.log('HER EI AM',error)
+        log.error( error );
+        log.error( error.file );
+        log.error( error.line );
+        log.error(
+            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+        );
+    } );
 
     process.on( 'uncaughtException', ( err: NodeError ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

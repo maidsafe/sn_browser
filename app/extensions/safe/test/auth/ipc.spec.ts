@@ -7,7 +7,7 @@ jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
 
 jest.mock( 'ref-array', () => jest.fn() );
 //
-jest.mock( 'ffi', () => jest.fn() );
+jest.mock( 'ffi-napi', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 

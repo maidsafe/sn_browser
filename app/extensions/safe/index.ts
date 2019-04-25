@@ -3,7 +3,9 @@ import {
     handleAuthUrl,
     setAuthLibStatus
 } from '$Extensions/safe/actions/authenticator_actions';
-import { app, BrowserWindow } from 'electron';
+
+import { app, protocol, BrowserWindow } from 'electron';
+
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { initSafeBrowserApp } from '$Extensions/safe/safeBrowserApplication';
 import { getLibStatus } from '$Extensions/safe/auth-api/authFuncs';
@@ -35,13 +37,35 @@ import { handleSafeBrowserStoreChanges } from './safeBrowserApplication';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import registerSafeProtocol from './protocols/safe';
-import { setupRoutes } from './server-routes';
+import { setupRoutes } from '$Extensions/safe/server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
+import pkg from '$Package';
 
 const onWebviewPreload = ( store ) => webviewPreload( store );
 
 const preAppLoad = () => {
-    // app.setPath( 'userData', path.resolve( app.getPath( 'temp' ), 'safe-browser' ) );
+
+
+    pkg.build.protocols.schemes.forEach( ( theScheme ) => {
+
+        logger.verbose('Registering priviledged scheme: ', theScheme)
+        protocol.registerSchemesAsPrivileged( [
+            {
+                scheme: theScheme,
+                privileges: {
+                    standard: true,
+                    secure: true
+                    ,
+                    bypassCSP: true,
+                    allowServiceWorkers: true,
+                    supportFetchAPI: true,
+                    corsEnabled: true,
+                }
+            }
+        ] );
+    } );
+
+
     if ( isRunningUnpacked && process.platform === 'win32' ) return;
     app.setAsDefaultProtocolClient( 'safe-auth' );
     app.setAsDefaultProtocolClient( 'safe' );

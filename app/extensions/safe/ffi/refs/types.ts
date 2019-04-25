@@ -1,4 +1,4 @@
-import ref from 'ref';
+import ref from 'ref-napi';
 import ArrayType from 'ref-array';
 import StructType from 'ref-struct';
 
@@ -114,10 +114,10 @@ export const AppAccessPointer = ref.refType( AppAccess );
 
 export const allocAppHandlePointer = () => ref.alloc( ClientHandlePointer );
 
-export const allocCString = str => ref.allocCString( str );
+export const allocCString = ( string ) => ref.allocCString( string );
 
-export const allocAuthReq = req => ref.alloc( AuthReq, req );
+export const allocAuthReq = ( request ) => ref.alloc( AuthReq, request );
 
-export const allocContainerReq = req => ref.alloc( ContainersReq, req );
+export const allocContainerReq = ( request ) => ref.alloc( ContainersReq, request );
 
-export const allocSharedMdataReq = req => ref.alloc( ShareMDataReq, req );
+export const allocSharedMdataReq = ( request ) => ref.alloc( ShareMDataReq, request );
