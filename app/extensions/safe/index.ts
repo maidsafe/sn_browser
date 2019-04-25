@@ -3,7 +3,7 @@ import {
     handleAuthUrl,
     setAuthLibStatus
 } from '$Extensions/safe/actions/authenticator_actions';
-import { app } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { initSafeBrowserApp } from '$Extensions/safe/safeBrowserApplication';
 import { getLibStatus } from '$Extensions/safe/auth-api/authFuncs';
@@ -38,7 +38,7 @@ import registerSafeProtocol from './protocols/safe';
 import setupRoutes from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
-const onWebviewPreload = store => webviewPreload( store );
+const onWebviewPreload = ( store ) => webviewPreload( store );
 
 const preAppLoad = () => {
     // app.setPath( 'userData', path.resolve( app.getPath( 'temp' ), 'safe-browser' ) );
@@ -61,7 +61,7 @@ const addExtensionMenuItems = ( store, menusArray ) => {
 
     const newMenuArray = [];
 
-    menusArray.forEach( menu => {
+    menusArray.forEach( ( menu ) => {
         const { label } = menu;
         let newMenu = menu;
 
@@ -96,7 +96,7 @@ const actionsForBrowser = {
     ...SafeBrowserActions
 };
 
-const onInitBgProcess = async store => {
+const onInitBgProcess = async ( store ) => {
     logger.info( 'Registering SAFE Network Protocols' );
     try {
         setSafeBgProcessStore( store );
@@ -112,15 +112,15 @@ const onInitBgProcess = async store => {
     // load the auth/safe libs
     const theLibs = await ffiLoader.loadLibrary( startedRunningMock );
 
-    let prevAuthLibStatus;
+    let previousAuthLibraryStatus;
 
     store.subscribe( () => {
-        const authLibStatus = getLibStatus();
+        const authLibraryStatus = getLibStatus();
 
-        if ( authLibStatus && authLibStatus !== prevAuthLibStatus ) {
-            logger.info( 'Authenticator lib status: ', authLibStatus );
-            prevAuthLibStatus = authLibStatus;
-            store.dispatch( setAuthLibStatus( authLibStatus ) );
+        if ( authLibraryStatus && authLibraryStatus !== previousAuthLibraryStatus ) {
+            logger.info( 'Authenticator lib status: ', authLibraryStatus );
+            previousAuthLibraryStatus = authLibraryStatus;
+            store.dispatch( setAuthLibStatus( authLibraryStatus ) );
 
             initSafeBrowserApp( store );
         }
@@ -145,7 +145,7 @@ const onInitBgProcess = async store => {
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onOpen = store =>
+const onOpen = ( store ) =>
     new Promise( ( resolve, reject ) => {
         logger.info( 'OnOpen: Setting mock in store. ', startedRunningMock );
         store.dispatch( setIsMock( startedRunningMock ) );
@@ -157,7 +157,7 @@ const onOpen = store =>
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onAppReady = store => {
+const onAppReady = ( store ) => {
     logger.info( 'OnAppReady: Setting mock in store. ', startedRunningMock );
     store.dispatch( setIsMock( startedRunningMock ) );
 };
@@ -166,7 +166,7 @@ const onAppReady = store => {
  * Add middleware to Peruse redux store
  * @param  {Object} store redux store
  */
-const middleware = store => next => action => {
+const middleware = ( store ) => ( next ) => ( action ) => {
     if ( isRunningSpectronTestProcess ) {
         logger.info( 'ACTION:', action );
     }
@@ -180,7 +180,7 @@ const parseSafeUri = function( uri ) {
 };
 
 const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
-    new Promise( resolve => {
+    new Promise( ( resolve ) => {
         let timeLeft = timeout;
         const check = () => {
             timeLeft -= 500;
@@ -230,9 +230,13 @@ const onReceiveUrl = async ( store, url ) => {
     if ( parsedUrl.protocol === 'safe:' ) {
         await waitForBasicConnection( store );
 
-        logger.info( 'Handling safe: url', url );
-        // which window is in focus?
-        store.dispatch( addTab( { url, isActiveTab: true } ) );
+        logger.info( 'Opening safe: url', url );
+
+        const focusedWindowId = BrowserWindow.getFocusedWindow().webContents.id;
+
+        store.dispatch(
+            addTab( { url, isActiveTab: true, windowId: focusedWindowId } )
+        );
     }
     // 20 is arbitrarily looong right now...
     else if (
