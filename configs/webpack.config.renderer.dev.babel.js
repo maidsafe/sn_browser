@@ -65,6 +65,12 @@ export default merge.smart( baseConfig, {
     module: {
         rules: [
             {
+                test: /node_modules[\/\\](iconv-lite)[\/\\].+/,
+                resolve: {
+                    aliasFields: ['main']
+                }
+            },
+            {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
                 use: {

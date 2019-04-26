@@ -1,6 +1,4 @@
 import { combineReducers } from 'redux';
-import { connectRouter } from 'connected-react-router';
-// import { routerReducer as routing } from 'react-router-redux';
 
 import { bookmarks } from './bookmarks';
 import { notifications } from './notifications';
@@ -13,9 +11,8 @@ import { getExtensionReducers } from '$Extensions';
 
 const additionalReducers = getExtensionReducers();
 
-export function createRootReducer( history: History ) {
+export function createRootReducer() {
     return combineReducers( {
-        router: history ? connectRouter( history ) : null,
         bookmarks,
         notifications,
         remoteCalls,

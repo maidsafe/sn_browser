@@ -6,8 +6,6 @@ import {
     Reducer,
     StoreEnhancer
 } from 'redux';
-import { createBrowserHistory, History } from 'history';
-import { routerMiddleware, routerActions } from 'connected-react-router';
 import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
 
 import { addMiddlewares } from '$Store/addMiddlewares';
@@ -25,13 +23,7 @@ const initialStateFromMain: {} = inRendererProcess
     ? getInitialStateRenderer()
     : {};
 
-let ourHistory: History;
-
-if ( inRendererProcess ) {
-    ourHistory = createBrowserHistory();
-}
-
-const rootReducer: Reducer = createRootReducer( ourHistory );
+const rootReducer: Reducer = createRootReducer();
 
 declare namespace window {
     function __REDUX_DEVTOOLS_EXTENSION_COMPOSE__( actionCreators: {} );
@@ -42,29 +34,12 @@ export const configureStore = ( initialState: {} = initialStateFromMain ) => {
     const middleware: Array<any> = [];
     const enhancers: Array<StoreEnhancer> = [];
 
-    // Router Middleware
-    if ( ourHistory ) {
-        const router = routerMiddleware( ourHistory );
-        middleware.push( router );
-    }
-
     addMiddlewares( middleware );
-
-    // Logging Middleware
-    // const logger = createLogger( {
-    //     level: 'info',
-    //     collapsed: true
-    // } );
-    //
-    // // Skip redux logs in console during the tests
-    // if ( process.env.NODE_ENV !== 'test' ) {
-    //     middleware.push( logger );
-    // }
 
     // Redux DevTools Configuration
     const actionCreators = {
-        ...bookmarkActions,
-        ...routerActions
+        ...bookmarkActions
+    // ...routerActions
     };
 
     let composeEnhancers;
@@ -106,5 +81,3 @@ export const configureStore = ( initialState: {} = initialStateFromMain ) => {
 
     return store;
 };
-
-export const history = ourHistory;

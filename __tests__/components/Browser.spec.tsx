@@ -13,6 +13,8 @@ import { handleNotifications } from '$Utils/handleNotificiations';
 jest.mock( '$Utils/extendComponent' );
 jest.mock( '$Utils/handleNotificiations' );
 
+jest.mock( '$Logger' );
+
 // create any initial state needed
 const initialState = {
     ui: { windows: [] },
@@ -47,11 +49,7 @@ describe( 'Browser', () => {
     describe( 'constructor( )', () => {
         store = mockStore( initialState );
 
-        wrapper = shallow(
-            <Provider store={store}>
-                <Browser {...initialState} />
-            </Provider>
-        ).dive();
+        wrapper = mount( <Browser {...initialState} /> );
         instance = wrapper.instance();
 
         it( 'should have name Browser', () => {
@@ -77,7 +75,6 @@ describe( 'Browser', () => {
 
         store = mockStore( newState );
 
-        // must be mount for component did mount
         wrapper = mount(
             <Provider store={store}>
                 <Browser {...newState} />
@@ -97,6 +94,7 @@ describe( 'Browser', () => {
         } );
 
         it( 'handles notifications on componentDidUpdate', () => {
+            wrapper = mount( <Browser {...newState} /> );
             wrapper.setProps( { notifications: [{ id: '0.j1m6f62qm8' }] } );
             expect( handleNotifications ).toHaveBeenCalled();
         } );
@@ -117,20 +115,20 @@ describe( 'Browser', () => {
 
         describe( 'addressBarIsSelected', () => {
             it( 'addressBarIsSelected should be "false" by default', () => {
-                expect( instance.addressBarIsSelected ).toBeFalsy();
+                expect( wrapper.addressBarIsSelected ).toBeFalsy();
             } );
         } );
 
         describe( 'tabs', () => {
             it( 'should exist', () => {
-                expect( instance.props ).not.toBeUndefined();
+                expect( wrapper.props() ).not.toBeUndefined();
             } );
             it( 'should be empty by default', () => {
-                expect( instance.props.tabs.length ).toBe( 0 );
+                expect( wrapper.props().tabs.length ).toBe( 0 );
             } );
 
             it( 'should be an array', () => {
-                expect( Array.isArray( instance.props.tabs ) ).toBeTruthy();
+                expect( Array.isArray( wrapper.props().tabs ) ).toBeTruthy();
             } );
         } );
     } );
