@@ -342,7 +342,7 @@
     "connected-react-router": "^5.0.1",
     "detect-port": "^1.3.0",
     "electron-context-menu": "0.11.0",
-    "electron-debug": "^2.1.0",
+    "electron-debug": "^2.2.0",
     "electron-log": "3.0.1",
     "electron-redux": "1.3.1",
     "electron-updater": "4.0.6",
