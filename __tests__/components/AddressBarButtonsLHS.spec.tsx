@@ -4,7 +4,6 @@ import { Button } from 'antd';
 
 import { ButtonsLHS as AddressBarButtonsLHS } from '$Components/AddressBar/ButtonsLHS';
 
-import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();
@@ -24,10 +23,12 @@ jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 jest.mock( '$Utils/extendComponent' );
+jest.mock( '$Logger' );
 
 describe( 'AddressBarButtonsLHS', () => {
     let wrapper;
     let props;
+    let instance;
     let store;
 
     beforeEach( () => {
@@ -52,11 +53,8 @@ describe( 'AddressBarButtonsLHS', () => {
         beforeEach( () => {
             store = mockStore( props );
 
-            wrapper = shallow(
-                <Provider store={store}>
-                    <AddressBarButtonsLHS {...props} />
-                </Provider>
-            ).dive();
+            wrapper = shallow( <AddressBarButtonsLHS {...props} /> );
+            instance = wrapper.instance();
         } );
 
         it( 'should render 3 buttons', () => {

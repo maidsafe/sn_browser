@@ -66,6 +66,7 @@ export const getRemoteCallApis = () => {
         }
     } );
 
+    logger.verbose('Remote Call extensions set up.')
     return apisToAdd;
 };
 

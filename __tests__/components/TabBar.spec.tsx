@@ -1,8 +1,18 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import TabBar from '$Components/TabBar';
+import { TabBar } from '$Components/TabBar';
 import { Icon } from 'antd';
 import { CLASSES } from '$Constants';
+
+jest.mock( '$Logger' );
+
+// jest.mock( '$Logger', () => ( {
+//     info : jest.fn(),
+//     verbose : jest.fn(),
+//     error : jest.fn(),
+//     warn : jest.fn(),
+//     silly : jest.fn(),
+// } ) );
 
 describe( 'TabBar', () => {
     let wrapper;
@@ -40,7 +50,7 @@ describe( 'TabBar', () => {
                     }
                 ]
             };
-            wrapper = shallow( <TabBar {...props} /> );
+            wrapper = mount( <TabBar {...props} /> );
         } );
 
         it( 'should have exactly 1 tab', () => {

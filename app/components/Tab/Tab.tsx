@@ -13,7 +13,8 @@ import { parse as parseURL } from 'url';
 import { logger } from '$Logger';
 import styles from './tab.css';
 
-const stdUrl = require( 'url' );
+import stdUrl from  'url' ;
+
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
@@ -92,7 +93,7 @@ export class Tab extends Component<TabProps, TabState> {
             append: params => [
                 {
                     label: 'Open Link in New Tab.',
-                    visible: params.linkURL.length > 0,
+                    visible: params.linkURL && params.linkURL.length > 0,
                     click() {
                         addTab( {
                             url: params.linkURL,

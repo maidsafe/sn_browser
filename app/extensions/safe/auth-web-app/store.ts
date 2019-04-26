@@ -32,11 +32,12 @@ export const history = createHashHistory();
 
 const router = routerMiddleware( history );
 
+console.log( 'HERE WE HAVE::::', thunk, router, logger, promise );
 const enhancer = compose(
-    applyMiddleware( thunk, router, logger, promise() ),
+    applyMiddleware( thunk, router, logger, promise ),
     window.devToolsExtension
         ? window.devToolsExtension( { actionCreators } )
-        : noop => noop
+        : ( noop ) => noop
 );
 
 export function configureStore( initialState ) {
