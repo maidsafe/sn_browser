@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import {
-    startedRunningMock
-} from '$Constants';
+import { startedRunningMock } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
 import { IconButton } from 'nessie-ui';
 import _ from 'lodash';
 // import { logger } from '$Logger';
-import styles from './webIdButtons.css';
 import { Icon } from 'antd';
+import styles from './webIdButtons.css';
 import 'antd/lib/icon/style';
 
 const hideDropdownTimeout = 0.15; // seconds
@@ -151,7 +149,7 @@ export class WebIdDropdown extends Component<{}, {}> {
                     className={styles.openAuth}
                     key="fetching"
                 >
-                    Updating webIds &nbsp;
+          Updating webIds &nbsp;
                     <Icon type="loading" className={styles.loadingIcon} />
                 </li>
             );

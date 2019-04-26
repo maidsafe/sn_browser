@@ -10,74 +10,77 @@ import { CLASSES } from '$Constants';
 import { bindActionCreators } from 'redux';
 import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 
-function mapStateToProps(state) {
-  return {
-    safeBrowserApp: state.safeBrowserApp
-  };
+function mapStateToProps( state ) {
+    return {
+        safeBrowserApp: state.safeBrowserApp
+    };
 }
 
-function mapDispatchToProps(dispatch) {
-  const actions = {
-    ...SafeBrowserAppActions
-  };
-  return bindActionCreators(actions, dispatch);
+function mapDispatchToProps( dispatch ) {
+    const actions = {
+        ...SafeBrowserAppActions
+    };
+    return bindActionCreators( actions, dispatch );
 }
 
-export const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
-  class WrappedAddressBarInput extends Component {
+export const wrapAddressBarInput = (
+    AddressBarInput,
+    extensionFunctionality = {}
+) => {
+    class WrappedAddressBarInput extends Component {
     // static propTypes = {
     //   safeBrowserApp: PropTypes.shape({
     //     isMock: PropTypes.bool,
     //     experimentsEnabled: PropTypes.bool
     //   }).isRequired
     // };
-    static defaultProps = {
-      safeBrowserApp: {
-        isMock: false,
-        experimentsEnabled: false
-      }
-    };
+        static defaultProps = {
+            safeBrowserApp: {
+                isMock: false,
+                experimentsEnabled: false
+            }
+        };
 
-    render() {
-      const { safeBrowserApp, disableExperiments } = this.props;
-      const { isMock, experimentsEnabled } = safeBrowserApp;
-      const addOnsBefore = [];
-      const addOnsAfter = [];
-      if (isMock) {
-        addOnsBefore.push(
-          <Tag key="F5222D" className={CLASSES.MOCK_TAG} color="#F5222D">
+        render() {
+            const { safeBrowserApp, disableExperiments } = this.props;
+            const { isMock, experimentsEnabled } = safeBrowserApp;
+            const addOnsBefore = [];
+            const addOnsAfter = [];
+            if ( isMock ) {
+                addOnsBefore.push(
+                    <Tag key="F5222D" className={CLASSES.MOCK_TAG} color="#F5222D">
             Mock Network
-          </Tag>
-        );
-      }
-      if (experimentsEnabled) {
-        addOnsAfter.push(
-          <Tag
-            key="42566E"
-            color="#42566E"
-            onClick={() => disableExperiments()}
-          >
-            <Icon type="experiment" />
-          </Tag>
-        );
-      }
-      return (
-        <Grid gutters="M">
-          <Column align="center" verticalAlign="middle">
-            <AddressBarInput
-              // className={ styles.addressBar }
-              {...this.props}
-              addonBefore={addOnsBefore}
-              addonAfter={addOnsAfter}
-            />
-          </Column>
-        </Grid>
-      );
+                    </Tag>
+                );
+            }
+            if ( experimentsEnabled ) {
+                addOnsAfter.push(
+                    <Tag
+                        key="42566E"
+                        color="#42566E"
+                        onClick={() => disableExperiments()}
+                    >
+                        <Icon type="experiment" />
+                    </Tag>
+                );
+            }
+            return (
+                <Grid gutters="M">
+                    <Column align="center" verticalAlign="middle">
+                        <AddressBarInput
+                            // className={ styles.addressBar }
+                            {...this.props}
+                            addonBefore={addOnsBefore}
+                            addonAfter={addOnsAfter}
+                        />
+                    </Column>
+                </Grid>
+            );
+        }
     }
-  }
-  const hookedUpInput = connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(WrappedAddressBarInput);
-  return hookedUpInput;
+    const hookedUpInput = connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )( WrappedAddressBarInput );
+    return hookedUpInput;
 };

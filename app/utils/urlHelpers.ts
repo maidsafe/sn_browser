@@ -107,7 +107,7 @@ const getProtocolPosition = ( url, inputProtocol ) => {
 
     let protocolPos;
 
-    if ( url.indexOf( fullProto ) > -1 ) {
+    if ( url.includes( fullProto ) ) {
         protocolPos = url.indexOf( fullProto ) + 3;
     } else {
         protocolPos = url.indexOf( shortProto );

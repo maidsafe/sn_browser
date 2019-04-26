@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => ( {
     ...bindActionCreators( authActions, dispatch )
 } );
 
-export const CreateAccountContainer =  withRouter(
+export const CreateAccountContainer = withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps

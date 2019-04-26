@@ -3,13 +3,8 @@ import {
     afterAllTests,
     beforeAllTests
 } from 'spectron-lib/setupSpectronApp';
-import {
-    delay,
-    setClientToMainBrowserWindow
-} from './lib/browser-driver';
-import {
-    DEFAULT_TIMEOUT_INTERVAL
-} from './lib/constants';
+import { delay, setClientToMainBrowserWindow } from './lib/browser-driver';
+import { DEFAULT_TIMEOUT_INTERVAL } from './lib/constants';
 
 jest.unmock( 'electron' );
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL;

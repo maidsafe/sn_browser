@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => ( {
     ...bindActionCreators( appActions, dispatch )
 } );
 
-export const AppListContainer =  withRouter(
+export const AppListContainer = withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps

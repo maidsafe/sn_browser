@@ -142,4 +142,7 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
         );
     }
 }
-export const ExtendedInput = extendComponent( AddressBarInput, wrapAddressBarInput );
+export const ExtendedInput = extendComponent(
+    AddressBarInput,
+    wrapAddressBarInput
+);

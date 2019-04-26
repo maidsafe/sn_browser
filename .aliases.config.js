@@ -10,5 +10,5 @@ module.exports = {
     $Package: './package.json',
     $Utils: './app/utils',
     $TestCafeHelpers: './__testcafe__/helpers.js',
-    "spectron-lib": "./__e2e__/lib",
+    'spectron-lib': './__e2e__/lib'
 };

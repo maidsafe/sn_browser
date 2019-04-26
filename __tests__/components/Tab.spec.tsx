@@ -93,7 +93,10 @@ describe( 'Tab', () => {
                 browserState: { canGoBack: true }
             };
 
-            instance.didFailLoad( { errorDescription: 'ERR_BLOCKED_BY_CLIENT', validatedURL : '' } );
+            instance.didFailLoad( {
+                errorDescription: 'ERR_BLOCKED_BY_CLIENT',
+                validatedURL: ''
+            } );
             expect( props.addNotification ).toHaveBeenCalled();
             expect( props.tabBackwards ).toHaveBeenCalled();
             expect( props.closeTab ).not.toHaveBeenCalled();

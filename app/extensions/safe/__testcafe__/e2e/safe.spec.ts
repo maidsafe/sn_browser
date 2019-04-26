@@ -6,9 +6,9 @@
 //     navigateTo,
 //     resetStore
 // } from '$TestCafeHelpers';
-// 
+//
 // import { CLASSES, GET_DOM_EL_CLASS as BROWSER_UI } from '$Constants';
-// 
+//
 // fixture`Browser UI`.page( '../../../../../app.html' ).afterEach( resetStore );
 
 // Blocked until we can see webview.
