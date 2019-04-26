@@ -12,16 +12,16 @@ interface AppInfoOptions {
     name: string;
     vendor: string;
 }
-interface authorisedAppsoptions {
+interface AuthorisedAppsoptions {
     [index: number]: { app_info: AppInfoOptions };
 }
-interface searchResultOptions {
+interface SearchResultOptions {
     [index: number]: { app_info: AppInfoOptions };
 }
-interface propTypes {
+interface PropTypes {
     fetchingApps: boolean;
-    authorisedApps: authorisedAppsoptions;
-    searchResult: searchResultOptions;
+    authorisedApps: AuthorisedAppsoptions;
+    searchResult: SearchResultOptions;
     searchApp: ( ...args: Array<any> ) => any;
     clearSearch: ( ...args: Array<any> ) => any;
     clearAppError: ( ...args: Array<any> ) => any;
@@ -33,11 +33,11 @@ interface propTypes {
     getAccountInfo: ( ...args: Array<any> ) => any;
 }
 
-interface contextTypes {
+interface ContextTypes {
     router: object;
 }
 
-export class AppList extends React.Component<propTypes, contextTypes> {
+export class AppList extends React.Component<PropTypes, ContextTypes> {
     constructor() {
         super();
         this.title = I18n.t( 'authorised_apps_title' );

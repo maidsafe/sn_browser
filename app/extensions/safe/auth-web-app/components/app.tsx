@@ -12,7 +12,7 @@ interface AccountInfoOptions {
     available: number;
 }
 
-interface propTypes {
+interface PropTypes {
     children: JSX.Element;
     networkState: number;
     isAuthorised: boolean;
@@ -23,7 +23,7 @@ interface propTypes {
     setNetworkConnecting: ( ...args: Array<any> ) => any;
 }
 
-export class App extends React.Component<propTypes> {
+export class App extends React.Component<PropTypes> {
     constructor() {
         super();
         this.getHeaderOptions = this.getHeaderOptions.bind( this );

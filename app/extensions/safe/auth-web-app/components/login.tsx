@@ -6,25 +6,25 @@ import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
 import { CardLoaderFull } from './card_loader_full';
 import { Popup } from './popup';
 
-interface error {
+interface Error {
     code: number;
     description: string;
 }
 
-interface propTypes {
+interface PropTypes {
     isAuthorised: boolean;
     libErrPopup: boolean;
     loading: boolean;
     login: ( ...args: Array<any> ) => any;
     clearError: ( ...args: Array<any> ) => any;
-    error: error;
+    error: Error;
 }
 
-interface contextTypes {
+interface ContextTypes {
     router: object;
 }
 
-export class Login extends React.Component<propTypes, contextTypes> {
+export class Login extends React.Component<PropTypes, ContextTypes> {
     constructor() {
         super();
         this.title = 'Sign in to manage your apps';

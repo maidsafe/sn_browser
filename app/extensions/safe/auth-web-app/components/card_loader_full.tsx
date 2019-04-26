@@ -1,20 +1,18 @@
-import * as React from 'react';
+import React from 'react';
 
-interface propTypes {
+interface PropTypes {
     msg: string;
 }
 
-export class CardLoaderFull extends React.Component<propTypes> {
-    render() {
-        return (
-            <div className="full-loader">
-                <div className="full-loader-b">
-                    <div className="full-loader-ib">
-                        <span className="full-loader-i" />
-                        <span className="full-loader-msg">{this.props.msg}</span>
-                    </div>
+export const CardLoaderFull = ( props: PropTypes ) => {
+    return (
+        <div className="full-loader">
+            <div className="full-loader-b">
+                <div className="full-loader-ib">
+                    <span className="full-loader-i" />
+                    <span className="full-loader-msg">{props.msg}</span>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }
