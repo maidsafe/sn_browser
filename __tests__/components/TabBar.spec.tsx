@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import TabBar from '$Components/TabBar';
+import { TabBar } from '$Components/TabBar';
 import MdClose from 'react-icons/lib/md/close';
 import MdAdd from 'react-icons/lib/md/add';
 import { CLASSES } from '$Constants';

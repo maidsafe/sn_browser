@@ -1,14 +1,12 @@
 import * as React from 'react';
 
-import nessieStyles from 'nessie-ui/dist/styles.css';
 import { SpriteMap } from 'nessie-ui';
-import styles from './app.css';
 
 interface Props {
     children: React.Node;
 }
 
-export default class App extends React.Component<Props> {
+export class App extends React.Component<Props> {
     props: Props;
 
     render() {

@@ -24,7 +24,7 @@ interface BrowserProps {
     notifications: Array<Notification>;
 }
 
-const handleNotifications = (
+export const handleNotifications = (
     prevProps: BrowserProps,
     currentProps: BrowserProps
 ) => {
@@ -108,5 +108,3 @@ const handleNotifications = (
         notification[latestNotification.type]( config );
     }
 };
-
-export default handleNotifications;

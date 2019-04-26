@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { remote } from 'electron';
 import { CLASSES } from '$Constants';
 import { I18n } from 'react-redux-i18n';
-import { logger } from '$Logger';
-import extendComponent from '$Utils/extendComponent';
+// import { logger } from '$Logger';
+import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarInput } from '$Extensions/components';
 import { Input } from 'antd';
 import 'antd/lib/input/style';
@@ -142,4 +142,4 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
         );
     }
 }
-export default extendComponent( AddressBarInput, wrapAddressBarInput );
+export const ExtendedInput = extendComponent( AddressBarInput, wrapAddressBarInput );

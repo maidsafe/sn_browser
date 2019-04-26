@@ -1,5 +1,5 @@
 import open from 'open';
-import { remote, shell } from 'electron';
+import { remote } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
 import { CONFIG, isRunningTestCafeProcess, allowedHttp } from '$Constants';
@@ -9,7 +9,7 @@ import { urlIsAllowedBySafe } from './utils/safeHelpers';
 // const isForLocalServer = ( parsedUrlObject ) =>
 //     parsedUrlObject.protocol === 'localhost:' || parsedUrlObject.hostname === '127.0.0.1';
 
-const blockNonSAFERequests = () => {
+export const blockNonSAFERequests = () => {
     const filter = {
         urls: ['*://*']
     };
@@ -55,5 +55,3 @@ const blockNonSAFERequests = () => {
         callback( { cancel: true } );
     } );
 };
-
-export default blockNonSAFERequests;

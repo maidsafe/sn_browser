@@ -1,3 +1,1 @@
-import TabBar from './TabBar';
-
-export default TabBar;
+export { TabBar } from './TabBar';

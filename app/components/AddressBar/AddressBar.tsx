@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { CLASSES } from '$Constants';
 // import { Column, Grid } from 'nessie-ui';
-import ButtonsLHS from '$Components/AddressBar/ButtonsLHS';
-import ButtonsRHS from '$Components/AddressBar/ButtonsRHS';
-import Input from '$Components/AddressBar/Input';
-import { logger } from '$Logger';
+import { ButtonsLHS } from '$Components/AddressBar/ButtonsLHS';
+import { ButtonsRHS } from '$Components/AddressBar/ButtonsRHS';
+import { Input } from '$Components/AddressBar/Input';
+// import { logger } from '$Logger';
 import { Row, Col } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
@@ -32,7 +32,7 @@ interface AddressBarProps {
     focusWebview: ( ...args: Array<any> ) => any;
     updateTab: ( ...args: Array<any> ) => any;
 }
-export default class AddressBar extends Component<AddressBarProps, {}> {
+export class AddressBar extends Component<AddressBarProps, {}> {
     static defaultProps = {
         address: '',
         isSelected: false,

@@ -1,9 +1,9 @@
-import { remote, shell, webContents } from 'electron';
+import { remote } from 'electron';
 import _ from 'lodash';
 import { TYPES } from '$Actions/bookmarks_actions';
 import { TYPES as UI_TYPES } from '$Actions/ui_actions';
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
 
@@ -88,7 +88,7 @@ const updateBookmark = ( state, payload ) => {
  * @param  { object } action action Object
  * @return { array }        updatd state object
  */
-export default function bookmarks(
+export function bookmarks(
     state: Array<{}> = initialState,
     action
 ): Array<{}> {

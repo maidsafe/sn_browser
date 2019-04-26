@@ -1,9 +1,9 @@
 import classNames from 'classnames';
-import CONSTANTS from './constants';
+import { CONSTANTS } from './constants';
 
 export const isUserAuthorised = () => window.safeAuthenticator.isAuthorised();
 
-export const checkAuthorised = ( nextState, replace, callback ) => {
+export const checkAuthorised = ( _nextState, replace, callback ) => {
     if ( !isUserAuthorised() ) {
         replace( '/login' );
     }

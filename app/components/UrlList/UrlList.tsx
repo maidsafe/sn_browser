@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { ipcRenderer, remote } from 'electron';
 // import { logger } from '$Logger';
-import { PageContent, Text, TableRow, TableCell, Table } from 'nessie-ui';
+import { TableRow, TableCell, Table } from 'nessie-ui';
 import styles from './urlList.css';
 
 interface UrlListProps {
@@ -9,7 +8,7 @@ interface UrlListProps {
     onRemove?: ( ...args: Array<any> ) => any;
     addTab?: ( ...args: Array<any> ) => any;
 }
-export default class UrlList extends Component<UrlListProps, {}> {
+export class UrlList extends Component<UrlListProps, {}> {
     static defaultProps = {
         list: []
     };

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import AUTH_UI_CLASSES from '$Extensions/safe/auth-web-app/classes';
+import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
 
 import { I18n } from 'react-redux-i18n';
-import CONSTANTS from '../constants';
-import NetworkStatus from './network_status';
-import AccountInfo from './account_info';
+import { CONSTANTS } from '../constants';
+import { NetworkStatus } from './network_status';
+import { AccountInfo } from './account_info';
 
 interface AccountInfoOptions {
     done: number;
@@ -23,7 +23,7 @@ interface propTypes {
     setNetworkConnecting: ( ...args: Array<any> ) => any;
 }
 
-export default class App extends React.Component<propTypes> {
+export class App extends React.Component<propTypes> {
     constructor() {
         super();
         this.getHeaderOptions = this.getHeaderOptions.bind( this );

@@ -20,7 +20,7 @@ function mapDispatchToProps( dispatch ) {
     };
     return bindActionCreators( actions, dispatch );
 }
-const wrapAddressBarButtonsRHS = (
+export const wrapAddressBarButtonsRHS = (
     AddressBarButtons,
     extensionFunctionality = {}
 ) => {
@@ -109,4 +109,3 @@ const wrapAddressBarButtonsRHS = (
     )( WrappedAddressBarButtonsRHS );
     return hookedUpInput;
 };
-export default wrapAddressBarButtonsRHS;

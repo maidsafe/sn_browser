@@ -3,7 +3,7 @@ import { callIPC, setAuthCallbacks } from '$Extensions/safe/ffi/ipc';
 import * as authActions from '$Extensions/safe/actions/authenticator_actions';
 import * as uiActions from '$Actions/ui_actions';
 import { SAFE } from '$Extensions/safe/constants';
-import CONSTANTS from '$Extensions/safe/auth-constants';
+import { CONSTANTS } from '$Extensions/safe/auth-constants';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import * as remoteCallActions from '$Actions/remoteCall_actions';
 import { clearAppObj } from '$Extensions/safe/safeBrowserApplication/theApplication';

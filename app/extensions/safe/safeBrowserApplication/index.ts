@@ -26,12 +26,11 @@ import {
     receivedAuthResponse
 } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
-    addNotification,
-    clearNotification
+    addNotification
 } from '$Actions/notification_actions';
 import { logger } from '$Logger';
 import { initAnon } from '$Extensions/safe/safeBrowserApplication/init/initAnon';
-import initAuthedApplication from '$Extensions/safe/safeBrowserApplication/init/initAuthed';
+import { initAuthedApplication } from '$Extensions/safe/safeBrowserApplication/init/initAuthed';
 
 // let safeBrowserAppObject;
 let tempSafeBrowserObjectUntilAuthed;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { logger } from '$Logger';
 import { CLASSES } from '$Constants';
-import { Row, Icon, Button } from 'antd';
+import { Icon, Button } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
@@ -33,7 +33,7 @@ interface CustomMenuProps {
  * A menu which will be displayed / hidden based upon isVisisble prop.
  * An ordered array of menu items can be passed in as an array of nodes to be displayed, each within their own Row.
  */
-export default class CustomMenu extends Component<CustomMenuProps, {}> {
+export class CustomMenu extends Component<CustomMenuProps, {}> {
     static defaultProps = {
         isVisible: false,
         menuItems: []

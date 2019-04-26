@@ -1,3 +1,1 @@
-import CustomMenu from './CustomMenu';
-
-export default CustomMenu;
+export { CustomMenu } from './CustomMenu';

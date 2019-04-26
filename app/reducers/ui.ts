@@ -1,6 +1,5 @@
-import { createActions } from 'redux-actions';
 import { TYPES } from '$Actions/ui_actions';
-import initialAppState from './initialAppState';
+import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.ui;
 
@@ -56,7 +55,7 @@ const removeWindowUI = ( state, payload ) => {
     return newState;
 };
 
-export default function ui( state: Array = initialState, action ) {
+export function ui( state: Array = initialState, action ) {
     const { payload } = action;
 
     switch ( action.type ) {

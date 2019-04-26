@@ -1,7 +1,6 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
 import { callIPC } from '$Extensions/safe/ffi/ipc';
-import AUTH_CONSTANTS from '$Extensions/safe/auth-constants';
 import { inBgProcess } from '$Constants';
 
 import { logger } from '$Logger';

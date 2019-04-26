@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import UrlList from '$Components/UrlList';
+import { UrlList } from '$Components/UrlList';
 import { Table, TableRow } from 'nessie-ui';
 
 describe( 'UrlList', () => {

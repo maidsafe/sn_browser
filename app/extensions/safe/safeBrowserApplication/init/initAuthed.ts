@@ -1,5 +1,5 @@
 import { initialiseApp } from '@maidsafe/safe-node-app';
-import onNetworkStateChange from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
+import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
 import { APP_INFO, CONFIG } from '$Constants';
 
@@ -11,7 +11,7 @@ import { ipcRenderer } from 'electron';
  * @param  {Boolean} isMock is the browser being run on a mock network
  * @return {Promise}        Peruse SafeApp object
  */
-const initAuthedApplication = async ( passedStore, options ) => {
+export const initAuthedApplication = async ( passedStore, options ) => {
     logger.info( 'Requesting safeBrowserApp auth.', process.mainModule.filename );
     let safeBrowserAppObject;
 
@@ -49,5 +49,3 @@ const initAuthedApplication = async ( passedStore, options ) => {
         throw err;
     }
 };
-
-export default initAuthedApplication;

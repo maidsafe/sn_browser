@@ -8,7 +8,7 @@ interface ListItemOptions {
     revokeApp: ( ...args: Array<any> ) => any;
 }
 
-export default class ListItem extends React.Component<ListItemOptions> {
+export class ListItem extends React.Component<ListItemOptions> {
     constructor() {
         super();
         this.toggleList = this.toggleList.bind( this );

@@ -20,8 +20,7 @@ import {
     setupSpectronApp,
     travisOS,
     afterAllTests,
-    beforeAllTests,
-    windowLoaded
+    beforeAllTests
 } from 'spectron-lib/setupSpectronApp';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 320000;

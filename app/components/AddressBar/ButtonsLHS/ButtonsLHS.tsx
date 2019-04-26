@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 import { CLASSES, PROTOCOLS } from '$Constants';
 import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import { I18n } from 'react-redux-i18n';
-import extendComponent from '$Utils/extendComponent';
+import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarButtonsLHS } from '$Extensions/components';
 import { parse } from 'url';
-import styles from './buttonsLHS.css';
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component
@@ -73,4 +72,4 @@ class ButtonsLHS extends Component<{}, {}> {
         );
     }
 }
-export default extendComponent( ButtonsLHS, wrapAddressBarButtonsLHS );
+export const ExtendedButtonsLHS = extendComponent( ButtonsLHS, wrapAddressBarButtonsLHS );

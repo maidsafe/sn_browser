@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { connectRouter, routerMiddleware, push } from 'connected-react-router';
+import { routerMiddleware, push } from 'connected-react-router';
 import promise from 'redux-promise-middleware';
 import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
@@ -11,7 +11,7 @@ import {
     syncTranslationWithStore
 } from 'react-redux-i18n';
 
-import createRootReducer from './reducers';
+import { createRootReducer } from './reducers';
 
 import en from '../locales/en.json';
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { ipcRenderer, remote } from 'electron';
+import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
-import { Column, Page, PageHeader, H1, Row, Text } from 'nessie-ui';
-import UrlList from '$Components/UrlList';
+import { Page, PageHeader, H1 } from 'nessie-ui';
+import { UrlList } from '$Components/UrlList';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
@@ -14,7 +14,7 @@ interface HistoryProps {
     history: Array<any>;
     addTab: ( ...args: Array<any> ) => any;
 }
-export default class History extends Component<HistoryProps, {}> {
+export class History extends Component<HistoryProps, {}> {
     static defaultProps = {
         history: []
     };

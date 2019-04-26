@@ -1,9 +1,9 @@
 import { logger } from '$Logger';
 
-import { default as safeWrapBrowser } from '$Extensions/safe/components/wrapBrowser';
-import safeWrapAddressBarButtonsLHS from '$Extensions/safe/components/wrapAddressBarButtonsLHS';
-import safeWrapAddressBarButtonsRHS from '$Extensions/safe/components/wrapAddressBarButtonsRHS';
-import safeWrapAddressBarInput from '$Extensions/safe/components/wrapAddressBarInput';
+import { wrapBrowser as safeWrapBrowser } from '$Extensions/safe/components/wrapBrowser';
+import { wrapAddressBarButtonsLHS as safeWrapAddressBarButtonsLHS } from '$Extensions/safe/components/wrapAddressBarButtonsLHS';
+import { wrapAddressBarButtonsRHS as  safeWrapAddressBarButtonsRHS } from '$Extensions/safe/components/wrapAddressBarButtonsRHS';
+import { wrapAddressBarInput as safeWrapAddressBarInput } from '$Extensions/safe/components/wrapAddressBarInput';
 
 const allBrowserExtensions = [safeWrapBrowser];
 const allAddressBarButtonLHSExtensions = [safeWrapAddressBarButtonsLHS];

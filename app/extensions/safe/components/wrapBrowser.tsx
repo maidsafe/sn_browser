@@ -36,7 +36,7 @@ const browserContainer = {
     flexDirection: 'column',
     position: 'relative'
 };
-const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => {
+export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => {
     class WrappedSafeBrowser extends Component {
     // static propTypes = {
     //   addressBarIsSelected: PropTypes.bool,
@@ -96,4 +96,3 @@ const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => {
     )( WrappedSafeBrowser );
     return hookedUpInput;
 };
-export default wrapBrowser;

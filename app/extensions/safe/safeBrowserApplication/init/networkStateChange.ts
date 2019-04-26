@@ -1,13 +1,9 @@
 import { logger } from '$Logger';
-import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
-import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 
 import {
-    handleAuthentication,
     attemptReconnect
 } from '$Extensions/safe/network';
-import { initialiseApp } from '@maidsafe/safe-node-app';
 
 import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
@@ -16,7 +12,7 @@ import {
 } from '$Actions/notification_actions';
 import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
-const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
+export const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
     logger.info( 'onNetworkStateChange' );
     const safeBrowserAppObject = getSafeBrowserAppObject();
 
@@ -49,5 +45,3 @@ const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
         store.dispatch( clearNotification( { id: notificationID } ) );
     }
 };
-
-export default onNetworkStateChange;

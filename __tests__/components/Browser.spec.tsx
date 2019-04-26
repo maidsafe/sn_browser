@@ -4,11 +4,11 @@ import { Provider } from 'react-redux';
 
 import configureStore from 'redux-mock-store';
 
-import Browser from '$Components/Browser';
-import AddressBar from '$Components/AddressBar';
-import TabBar from '$Components/TabBar';
-import TabContents from '$Components/TabContents';
-import handleNotifications from '$Utils/handleNotificiations';
+import { Browser } from '$Components/Browser';
+import { AddressBar } from '$Components/AddressBar';
+import { TabBar } from '$Components/TabBar';
+import { TabContents } from '$Components/TabContents';
+import { handleNotifications } from '$Utils/handleNotificiations';
 
 jest.mock( '$Utils/extendComponent' );
 jest.mock( '$Utils/handleNotificiations' );

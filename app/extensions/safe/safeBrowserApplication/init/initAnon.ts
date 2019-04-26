@@ -1,12 +1,11 @@
 import { logger } from '$Logger';
 import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
-import { SAFE } from '$Extensions/safe/constants';
 import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 
 import { handleAuthentication } from '$Extensions/safe/network';
 import { initialiseApp } from '@maidsafe/safe-node-app';
 
-import onNetworkStateChange from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
+import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
 // todo... is this needed?
 let browserAuthReqUri;

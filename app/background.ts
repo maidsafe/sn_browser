@@ -2,12 +2,11 @@
 import { logger } from '$Logger';
 import { configureStore } from '$Store/configureStore';
 import i18n from 'i18n';
-import { I18N_CONFIG, startedRunningMock } from '$Constants';
+import { I18N_CONFIG } from '$Constants';
 
-import { remote } from 'electron';
-import manageRemoteCalls from './background.manageRemoteCalls';
+import { manageRemoteCalls } from './background.manageRemoteCalls';
 import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';
-import setupServer from './server';
+import { setupServer } from './server';
 
 const initSafeServer = store => {
     const server = setupServer();

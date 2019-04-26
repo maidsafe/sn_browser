@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as TabActions from '$Actions/tabs_actions';
 import * as NotificationActions from '$Actions/notification_actions';
 import * as UiActions from '$Actions/ui_actions';
 import * as BookmarksActions from '$Actions/bookmarks_actions';
-import Browser from '$Components/Browser';
+import { Browser } from '$Components/Browser';
 import { getActionsForBrowser } from '$Extensions';
 
 function mapStateToProps( state ) {
@@ -31,7 +30,7 @@ function mapDispatchToProps( dispatch ) {
     return bindActionCreators( actions, dispatch );
 }
 
-export default connect(
+export const BrowserWindow = connect(
     mapStateToProps,
     mapDispatchToProps
 )( Browser );

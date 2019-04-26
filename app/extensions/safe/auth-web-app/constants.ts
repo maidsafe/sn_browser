@@ -1,4 +1,4 @@
-export default {
+export const CONSTANTS = {
     NETWORK_STATUS: {
         CONNECTED: 0,
         CONNECTING: 1,

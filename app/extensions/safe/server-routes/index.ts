@@ -7,17 +7,16 @@ import {
 import path from 'path';
 import url from 'url';
 
-import safeRoute from './safe';
-import authRoute from './auth';
+import { safeRoute } from './safe';
+import { authRoute } from './auth';
 
-const setupRoutes = ( server, store ) => {
+export const setupRoutes = ( server, store ) => {
     const routes = [safeRoute( store ), authRoute];
 
     // TODO: Remove serving onf antd files when we can package
     // webId manager properly.
     server.get( /dummy/, ( request, res ) => {
         const { link } = request.params;
-        const linkUrl = url.parse( link );
 
         let safeFolder = isRunningPackaged
             ? '../extensions/safe/'
@@ -43,5 +42,3 @@ const setupRoutes = ( server, store ) => {
         }
     } );
 };
-
-export default setupRoutes;

@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
 import {
-    CLASSES,
-    isRunningSpectronTestProcess,
     startedRunningMock
 } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
-import { Column, IconButton, Grid } from 'nessie-ui';
+import { IconButton } from 'nessie-ui';
 import _ from 'lodash';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 import styles from './webIdButtons.css';
 import { Icon } from 'antd';
 import 'antd/lib/icon/style';
@@ -18,7 +16,7 @@ const webIdManagerUri = startedRunningMock
     ? 'http://localhost:1234'
     : 'safe://webidmgr.dapp';
 const authHomeUri = 'safe-auth://home';
-export default class WebIdDropdown extends Component<{}, {}> {
+export class WebIdDropdown extends Component<{}, {}> {
     static defaultProps = {
         safeBrowserApp: {
             webIds: []

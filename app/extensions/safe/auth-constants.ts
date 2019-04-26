@@ -1,15 +1,11 @@
 import Enum from 'enum';
 import path from 'path';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 
 import {
-    isHot,
     isRunningPackaged,
-    inRendererProcess,
-    startedRunningProduction,
     startedRunningMock,
-    isRunningNodeEnvTest,
-    isRunningSpectronTestProcess
+    isRunningNodeEnvTest
 } from '$Constants';
 
 // let libLocaleModifier = '';
@@ -27,7 +23,7 @@ if ( isRunningNodeEnvTest ) {
     libLocaleModifier = '../../extensions/safe/';
 }
 
-export default {
+export const CONSTANTS = {
     NETWORK_STATUS: {
         CONNECTED: 0,
         CONNECTING: 1,

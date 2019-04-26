@@ -1,13 +1,13 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
-import AddressBar from '$Components/AddressBar';
-import TabBar from '$Components/TabBar';
-import TabContents from '$Components/TabContents';
-import { logger } from '$Logger';
-import extendComponent from '$Utils/extendComponent';
+import { AddressBar } from '$Components/AddressBar';
+import { TabBar } from '$Components/TabBar';
+import { TabContents } from '$Components/TabContents';
+// import { logger } from '$Logger';
+import { extendComponent } from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
 import styles from './browser.css';
-import handleNotifications, { Notification } from '$Utils/handleNotificiations';
+import { handleNotifications,  Notification } from '$Utils/handleNotificiations';
 
 interface BrowserProps {
     bookmarks?: Array<any>;
@@ -217,4 +217,4 @@ class Browser extends Component<BrowserProps, BrowserState> {
         );
     }
 }
-export default extendComponent( Browser, wrapBrowserComponent );
+export const ExtendedBrowser = extendComponent( Browser, wrapBrowserComponent );

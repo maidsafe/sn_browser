@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Error = props => {
+export const Error = props => {
     const { error } = props;
     const pageStyle = {
         width: '100%',
@@ -34,4 +34,3 @@ const Error = props => {
         </div>
     );
 };
-export default Error;

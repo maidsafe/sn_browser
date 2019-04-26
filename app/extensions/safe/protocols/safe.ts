@@ -1,9 +1,9 @@
 import { remote } from 'electron';
 import url from 'url';
 import { logger } from '$Logger';
-import { CONFIG, PROTOCOLS, APP_INFO, isRunningPackaged } from '$Constants';
+import { CONFIG, PROTOCOLS } from '$Constants';
 
-const registerSafeProtocol = () => {
+export const registerSafeProtocol = () => {
     logger.info( `${PROTOCOLS.SAFE} Registering` );
     // bind to partition.
     const partition = CONFIG.SAFE_PARTITION;
@@ -45,5 +45,3 @@ const registerSafeProtocol = () => {
         }
     );
 };
-
-export default registerSafeProtocol;

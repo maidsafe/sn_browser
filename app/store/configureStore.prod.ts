@@ -8,7 +8,6 @@ import {
 } from 'redux';
 import { createHashHistory, History } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
-import { createLogger } from 'redux-logger';
 
 import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
 

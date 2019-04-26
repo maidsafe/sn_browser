@@ -10,7 +10,7 @@ import { logger } from '$Logger';
 import SafeLib from './safe_lib';
 import authenticator from './authenticator';
 import * as types from './refs/types';
-import CONSTANTS from '../auth-constants';
+import { CONSTANTS } from '../auth-constants';
 
 const _mods = Symbol( '_mods' );
 const _libPath = Symbol( '_libPath' );

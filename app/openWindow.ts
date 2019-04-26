@@ -1,10 +1,9 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
-import os from 'os';
 import windowStateKeeper from 'electron-window-state';
-import { logger } from '$Logger';
-import MenuBuilder from './menu';
+// import { logger } from '$Logger';
+import { MenuBuilder } from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
 import { addTab, updateTab } from './actions/tabs_actions';
@@ -37,7 +36,7 @@ function getNewWindowPosition( mainWindowState ) {
     return newWindowPosition;
 }
 
-const openWindow = store => {
+export const openWindow = store => {
     const mainWindowState = windowStateKeeper( {
         defaultWidth: 2048,
         defaultHeight: 1024
@@ -146,8 +145,6 @@ const openWindow = store => {
 
     return mainWindow;
 };
-
-export default openWindow;
 
 ipcMain.on( 'command:close-window', () => {
     const win = BrowserWindow.getFocusedWindow();

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import CONSTANTS from '../constants';
+import { CONSTANTS } from '../constants';
 
 interface propTypes {
     status: number;
 }
 
-export default class NetworkStatus extends React.Component<propTypes> {
+export class NetworkStatus extends React.Component<propTypes> {
     render() {
         let message = null;
         switch ( this.props.status ) {

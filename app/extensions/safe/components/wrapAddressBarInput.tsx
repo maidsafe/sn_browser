@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(actions, dispatch);
 }
 
-const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
+export const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
   class WrappedAddressBarInput extends Component {
     // static propTypes = {
     //   safeBrowserApp: PropTypes.shape({
@@ -81,4 +81,3 @@ const wrapAddressBarInput = (AddressBarInput, extensionFunctionality = {}) => {
   )(WrappedAddressBarInput);
   return hookedUpInput;
 };
-export default wrapAddressBarInput;

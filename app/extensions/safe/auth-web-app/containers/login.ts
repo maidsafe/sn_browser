@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router';
 import { push } from 'connected-react-router';
-import Login from '../components/login';
+import { Login } from '../components/login';
 import { login, clearAuthLoader, clearError } from '../actions/auth';
 
 const mapStateToProps = state => ( {
@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => ( {
     )
 } );
 
-export default withRouter(
+export const LoginContainer = withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps

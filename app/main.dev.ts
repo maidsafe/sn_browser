@@ -15,7 +15,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-import { app, protocol, ipcMain, shell } from 'electron';
+import { app, protocol, ipcMain } from 'electron';
 import { logger } from '$Logger';
 
 import {
@@ -24,17 +24,14 @@ import {
     isRunningSpectronTestProcess,
     isRunningPackaged,
     isCI,
-    travisOS,
-    I18N_CONFIG,
-    PROTOCOLS,
     CONFIG
 } from '$Constants';
 
 import pkg from '$Package';
 
-import setupBackground from './setupBackground';
+import { setupBackground } from './setupBackground';
 
-import openWindow from './openWindow';
+import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
 import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions';
 

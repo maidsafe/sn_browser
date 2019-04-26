@@ -5,14 +5,13 @@ import {
     isRunningUnpacked,
     isRunningDebug,
     isRunningSpectronTestProcess,
-    isRunningDevelopment,
     isCI
 } from '$Constants';
 
 const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
 
 let backgroundProcessWindow = null;
-const setupBackground = async () =>
+export const setupBackground = async () =>
     new Promise( ( resolve, reject ) => {
         logger.info( 'Setting up Background Process' );
 
@@ -74,5 +73,3 @@ const setupBackground = async () =>
             return backgroundProcessWindow;
         }
     } );
-
-export default setupBackground;

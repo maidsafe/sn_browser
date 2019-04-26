@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import { withRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
-import AppDetails from '../components/app_details';
+import { AppDetails } from '../components/app_details';
 import { getAuthorisedApps, revokeApp } from '../actions/app';
 
 const mapStateToProps = state => ( {
@@ -19,7 +18,7 @@ const mapDispatchToProps = dispatch => ( {
     ...bindActionCreators( { getAuthorisedApps, revokeApp }, dispatch )
 } );
 
-export default connect(
+export const AppDetailsContainer = connect(
     mapStateToProps,
     mapDispatchToProps
 )( AppDetails );
