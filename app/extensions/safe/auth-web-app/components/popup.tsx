@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
-interface propTypes {
+interface PropTypes {
     show: boolean;
     error?: boolean;
     title?: string;
@@ -9,7 +9,7 @@ interface propTypes {
     callback?: ( ...args: Array<any> ) => any;
 }
 
-export class Popup extends React.Component<propTypes> {
+export class Popup extends React.Component<PropTypes> {
     constructor() {
         super();
         this.state = {

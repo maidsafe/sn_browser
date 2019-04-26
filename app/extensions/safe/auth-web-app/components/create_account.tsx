@@ -7,12 +7,12 @@ import { getStrengthMsg } from '../utils';
 import { CONSTANTS } from '../constants';
 import { CardLoaderFull } from './card_loader_full';
 
-interface errorOptions {
+interface ErrorOptions {
     code: number;
     description: string;
 }
 
-interface propTypes {
+interface PropTypes {
     isAuthorised: boolean;
     loading: boolean;
     navPos: number;
@@ -34,14 +34,14 @@ interface propTypes {
     clearInviteCode: ( ...args: Array<any> ) => any;
     setPasswordStrength: ( ...args: Array<any> ) => any;
     setSecretStrength: ( ...args: Array<any> ) => any;
-    error: errorOptions;
+    error: ErrorOptions;
 }
 
-interface contextTypes {
+interface ContextTypes {
     router: object;
 }
 
-export class CreateAccount extends React.Component<propTypes, contextTypes> {
+export class CreateAccount extends React.Component<PropTypes, ContextTypes> {
     constructor() {
         super();
         this.state = {
