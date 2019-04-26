@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [0.13.0](https://github.com/maidsafe/safe_browser/compare/v0.12.0...v0.13.0) (2019-04-26)
+
+### Bug Fixes
+
+- **auth-app:** adds necessary keys to resolve error message ([0261449](https://github.com/maidsafe/safe_browser/commit/0261449))
+- **blocking:** Url blocking canGoBack check added. ([afa7c77](https://github.com/maidsafe/safe_browser/commit/afa7c77)), closes [#689](https://github.com/maidsafe/safe_browser/issues/689)
+- **Fullscreen:** Fixes fullscreening when triggering on a second browser window ([90b954c](https://github.com/maidsafe/safe_browser/commit/90b954c))
+- **icon:** Upon clicking experimental icon, experimental mode is turned off ([413d667](https://github.com/maidsafe/safe_browser/commit/413d667))
+- **Links:** Opening a link will only open in focussed browser window now ([fc6f90c](https://github.com/maidsafe/safe_browser/commit/fc6f90c))
+- **Menu:** Test menu now only shown during testcafe tests ([5aabb1a](https://github.com/maidsafe/safe_browser/commit/5aabb1a))
+- **ui:** Adds antd spinner when waiting for webid's are fetching ([9803d41](https://github.com/maidsafe/safe_browser/commit/9803d41))
+- **webId:** Dropdown positioning fixed ([a00a4ad](https://github.com/maidsafe/safe_browser/commit/a00a4ad))
+
+### Features
+
+- **Testing:** Add testcafe for alternative e2e testing ([6ef3bea](https://github.com/maidsafe/safe_browser/commit/6ef3bea))
+
 # [0.12.0](https://github.com/maidsafe/safe_browser/compare/v0.11.2...v0.12.0) (2019-03-25)
 
 ### Bug Fixes
