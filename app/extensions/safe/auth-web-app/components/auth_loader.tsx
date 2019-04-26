@@ -13,7 +13,7 @@ export const AuthLoader = ( props: PropTypes ) => {
                 {window.location.hash.slice( 1 ) === '/create-account'
                     ? I18n.t( 'registering' )
                     : I18n.t( 'authorising' )}{' '}
-      SAFE Network!
+        SAFE Network!
             </h3>
             <span className="loader" />
             <div className="opt">
@@ -31,4 +31,4 @@ export const AuthLoader = ( props: PropTypes ) => {
             </div>
         </div>
     );
-}
+};

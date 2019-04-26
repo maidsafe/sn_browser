@@ -7,7 +7,7 @@ const RELEASE_FOLDER_NAME = require( './releaseName' );
 const pkg = require( './package.json' );
 
 const env = process.env.NODE_ENV || 'production';
-const isBuildingDev = env.startsWith('dev');
+const isBuildingDev = env.startsWith( 'dev' );
 
 const targetDir = path.resolve( __dirname, 'release' );
 

@@ -7,7 +7,6 @@ import { CONSTANTS } from '$Extensions/safe/auth-constants';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import * as remoteCallActions from '$Actions/remoteCall_actions';
 import { clearAppObj } from '$Extensions/safe/safeBrowserApplication/theApplication';
-import { setIsAuthorisedState } from '$Extensions/safe/actions/authenticator_actions';
 
 import { logger } from '$Logger';
 
@@ -75,7 +74,7 @@ export const remoteCallApis = {
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED )
         );
-        theStore.dispatch( setIsAuthorisedState( false ) );
+        theStore.dispatch( authActions.setIsAuthorisedState( false ) );
     },
     /**
    * Handle auth URI calls from webview processes. Should take an authURI, decode, handle auth and reply

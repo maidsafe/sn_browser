@@ -66,10 +66,10 @@ export const app = ( state = initialState, action ) => {
         case SEARCH_APP: {
             return {
                 ...state,
-                searchResult: state.authorisedApps.filter(
-                    apps =>
-                        parseAppName( apps.app_info.name )
-                            .toLowerCase().includes( action.value.toLowerCase() )
+                searchResult: state.authorisedApps.filter( apps =>
+                    parseAppName( apps.app_info.name )
+                        .toLowerCase()
+                        .includes( action.value.toLowerCase() )
                 )
             };
         }

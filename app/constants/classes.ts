@@ -34,9 +34,9 @@ export const CLASSES = {
 export const getDomClasses = () => {
     const domClasses = {};
 
-    Object.keys( CLASSES ).forEach(
-        theClass => { domClasses[theClass] = `.${CLASSES[theClass]}` }
-    );
+    Object.keys( CLASSES ).forEach( theClass => {
+        domClasses[theClass] = `.${CLASSES[theClass]}`;
+    } );
 
     return domClasses;
 };
