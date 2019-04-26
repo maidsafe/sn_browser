@@ -1,6 +1,6 @@
 import * as CONSTANTS from '$Constants';
 
-describe( 'CONSTANTS', async () => {
+describe( 'CONSTANTS', () => {
     it( 'should exist', async () => {
         expect( CONSTANTS ).not.toBeNull();
     } );
