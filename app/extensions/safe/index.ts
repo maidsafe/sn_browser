@@ -37,7 +37,7 @@ import { registerSafeProtocol } from './protocols/safe';
 import { setupRoutes } from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
-const onWebviewPreload = ( store ) => webviewPreload( store );
+const onWebviewPreload = store => webviewPreload( store );
 
 const preAppLoad = () => {
     // app.setPath( 'userData', path.resolve( app.getPath( 'temp' ), 'safe-browser' ) );
@@ -60,7 +60,7 @@ const addExtensionMenuItems = ( store, menusArray ) => {
 
     const newMenuArray = [];
 
-    menusArray.forEach( ( menu ) => {
+    menusArray.forEach( menu => {
         const { label } = menu;
         let newMenu = menu;
 
@@ -95,7 +95,7 @@ const actionsForBrowser = {
     ...SafeBrowserActions
 };
 
-const onInitBgProcess = async ( store ) => {
+const onInitBgProcess = async store => {
     logger.info( 'Registering SAFE Network Protocols' );
     try {
         setSafeBgProcessStore( store );
@@ -144,7 +144,7 @@ const onInitBgProcess = async ( store ) => {
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onOpen = ( store ) =>
+const onOpen = store =>
     new Promise( ( resolve, reject ) => {
         logger.info( 'OnOpen: Setting mock in store. ', startedRunningMock );
         store.dispatch( setIsMock( startedRunningMock ) );
@@ -156,7 +156,7 @@ const onOpen = ( store ) =>
  * on open of peruse application
  * @param  {Object} store redux store
  */
-const onAppReady = ( store ) => {
+const onAppReady = store => {
     logger.info( 'OnAppReady: Setting mock in store. ', startedRunningMock );
     store.dispatch( setIsMock( startedRunningMock ) );
 };
@@ -165,7 +165,7 @@ const onAppReady = ( store ) => {
  * Add middleware to Peruse redux store
  * @param  {Object} store redux store
  */
-const middleware = ( store ) => ( next ) => ( action ) => {
+const middleware = store => next => action => {
     if ( isRunningSpectronTestProcess ) {
         logger.info( 'ACTION:', action );
     }
@@ -179,7 +179,7 @@ const parseSafeUri = function( uri ) {
 };
 
 const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
-    new Promise( ( resolve ) => {
+    new Promise( resolve => {
         let timeLeft = timeout;
         const check = () => {
             timeLeft -= 500;

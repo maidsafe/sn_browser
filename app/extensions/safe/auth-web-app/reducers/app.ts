@@ -69,8 +69,7 @@ export const app = ( state = initialState, action ) => {
                 searchResult: state.authorisedApps.filter(
                     apps =>
                         parseAppName( apps.app_info.name )
-                            .toLowerCase()
-                            .indexOf( action.value.toLowerCase() ) >= 0
+                            .toLowerCase().includes( action.value.toLowerCase() )
                 )
             };
         }

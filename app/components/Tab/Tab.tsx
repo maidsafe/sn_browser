@@ -82,14 +82,14 @@ export class Tab extends Component<TabProps, TabState> {
         }
     };
 
-    buildMenu = ( webview ) => {
+    buildMenu = webview => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
         const { addTab, windowId } = this.props;
         // require here to avoid jest/electron remote issues
         const contextMenu = require( 'electron-context-menu' );
         contextMenu( {
             window: webview,
-            append: ( params ) => [
+            append: params => [
                 {
                     label: 'Open Link in New Tab.',
                     visible: params.linkURL.length > 0,
@@ -216,7 +216,8 @@ export class Tab extends Component<TabProps, TabState> {
             const webviewSource = parseURL( webview.src );
             if (
                 webviewSource.href === '' ||
-        `${webviewSource.protocol}${webviewSource.hostname}` === 'about:blank' ||
+        `${webviewSource.protocol}${webviewSource.hostname}` ===
+          'about:blank' ||
         urlHasChanged( webview.src, nextProperties.url )
             ) {
                 this.loadURL( nextProperties.url );
@@ -268,17 +269,17 @@ export class Tab extends Component<TabProps, TabState> {
         }
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
         if ( url && url !== 'about:blank' ) {
-            this.loadURL( url ).catch( ( error ) => console.info( 'err in loadurl', error ) );
+            this.loadURL( url ).catch( error => console.info( 'err in loadurl', error ) );
             this.setCurrentWebId( null );
         }
     }
 
-    onCrash = ( e ) => {
+    onCrash = e => {
         console.error( e );
         logger.error( 'The webview crashed', e );
     };
 
-    onGpuCrash = ( e ) => {
+    onGpuCrash = e => {
         console.error( e );
         logger.error( 'The webview GPU crashed', e );
     };
@@ -331,7 +332,10 @@ export class Tab extends Component<TabProps, TabState> {
                 }
             ` );
         };
-        if ( urlObject.hostname === '127.0.0.1' || urlObject.hostname === 'localhost' ) {
+        if (
+            urlObject.hostname === '127.0.0.1' ||
+      urlObject.hostname === 'localhost'
+        ) {
             try {
                 renderError( 'Page Load Failed' );
             } catch ( scriptError ) {
@@ -496,7 +500,7 @@ export class Tab extends Component<TabProps, TabState> {
     }
 
     // TODO Move this functinoality to extensions
-    updateTheIdInWebview = ( newWebId ) => {
+    updateTheIdInWebview = newWebId => {
         const { updateTab, index, webId } = this.props;
         const { webview } = this;
         const theWebId = newWebId || webId;
@@ -586,28 +590,28 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     stop() {
-        this.with( ( wv ) => wv.stop() );
+        this.with( wv => wv.stop() );
     }
 
     reload() {
         logger.info( 'webview reloading' );
-        this.with( ( wv ) => {
+        this.with( wv => {
             wv.reload();
         } );
     }
 
     goBack( e ) {
-        this.with( ( wv ) => wv.goBack() );
+        this.with( wv => wv.goBack() );
     }
 
     goForward() {
         console.warn(
             'Electron bug preventing goForward: https://github.com/electron/electron/issues/9999'
         );
-        this.with( ( wv ) => wv.goForward() );
+        this.with( wv => wv.goForward() );
     }
 
-    loadURL = async ( input ) => {
+    loadURL = async input => {
         const { webview } = this;
         const url = addTrailingSlashIfNeeded( input );
         logger.info( 'Webview: loading url:', url );
@@ -661,7 +665,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
                     tabIndex="0"
                     preload={injectPath}
                     partition="persist:safe-tab"
-                    ref={( c ) => {
+                    ref={c => {
                         this.webview = c;
                     }}
                 />

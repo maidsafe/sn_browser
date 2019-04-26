@@ -72,4 +72,7 @@ class ButtonsLHS extends Component<{}, {}> {
         );
     }
 }
-export const ExtendedButtonsLHS = extendComponent( ButtonsLHS, wrapAddressBarButtonsLHS );
+export const ExtendedButtonsLHS = extendComponent(
+    ButtonsLHS,
+    wrapAddressBarButtonsLHS
+);
