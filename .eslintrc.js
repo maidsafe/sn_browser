@@ -2,6 +2,10 @@ const aliases = require('./.aliases.config');
 const aliasesArray = Object.keys(aliases);
 
 module.exports = {
+    env: {
+        browser: true,
+        node: true
+    },
     parser: '@typescript-eslint/parser',
     extends: [
         'airbnb-typescript',
