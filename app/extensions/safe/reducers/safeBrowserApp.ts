@@ -22,9 +22,6 @@ export function safeBrowserApp( state = initialState, action ) {
         case TYPES.SET_NETWORK_STATUS: {
             return { ...state, networkStatus: payload };
         }
-        case TYPES.SET_NETWORK_STATUS: {
-            return { ...state, networkStatus: payload };
-        }
         case TYPES.SET_READ_CONFIG_STATUS: {
             return {
                 ...state,

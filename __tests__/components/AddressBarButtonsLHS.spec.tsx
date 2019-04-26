@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { Button } from 'antd';
 
 import { ButtonsLHS as AddressBarButtonsLHS } from '$Components/AddressBar/ButtonsLHS';
 
@@ -26,7 +27,6 @@ jest.mock( '$Utils/extendComponent' );
 
 describe( 'AddressBarButtonsLHS', () => {
     let wrapper;
-    let instance;
     let props;
     let store;
 
@@ -57,12 +57,10 @@ describe( 'AddressBarButtonsLHS', () => {
                     <AddressBarButtonsLHS {...props} />
                 </Provider>
             ).dive();
-            instance = wrapper.instance();
-            instance = wrapper.instance();
         } );
 
-        it( 'should have name AddressBarButtonsLHS', () => {
-            expect( instance.constructor.name ).toMatch( 'ButtonsLHS' );
+        it( 'should render 3 buttons', () => {
+            expect( wrapper.find( Button ).length ).toBe( 3 );
         } );
     } );
 } );

@@ -30,9 +30,13 @@ export const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => 
                 } )
             );
 
-            mockAttemptReconnect
-                ? mockAttemptReconnect( store )
-                : attemptReconnect( store, safeBrowserAppObject );
+            if ( mockAttemptReconnect )
+            {
+                mockAttemptReconnect( store )
+            } else {
+                attemptReconnect( store, safeBrowserAppObject );
+
+            }
         }
     }
 
