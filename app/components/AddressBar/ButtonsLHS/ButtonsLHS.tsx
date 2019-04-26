@@ -22,7 +22,8 @@ const ButtonsLHS = props => {
         canGoForwards,
         canGoBackwards
     } = props;
-    const activeTabUrl = activeTab && activeTab.url ? parse( activeTab.url ) : undefined;
+    const activeTabUrl =
+    activeTab && activeTab.url ? parse( activeTab.url ) : undefined;
 
     return (
         <Row

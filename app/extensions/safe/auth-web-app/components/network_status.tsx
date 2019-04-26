@@ -40,4 +40,4 @@ export const NetworkStatus = ( props: PropTypes ) => {
             <span className="nw-status-tooltip">{message}</span>
         </div>
     );
-}
+};

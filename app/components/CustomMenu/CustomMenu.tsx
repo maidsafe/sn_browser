@@ -46,7 +46,7 @@ export class CustomMenu extends Component<CustomMenuProps, {}> {
             hideMenu( { windowId } );
         } else {
             showMenu( { windowId } );
-            const windowClickListener = event => {
+            const windowClickListener = _event => {
                 hideMenu( { windowId } );
             };
             window.addEventListener( 'click', windowClickListener, {

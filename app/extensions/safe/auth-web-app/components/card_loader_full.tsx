@@ -15,4 +15,4 @@ export const CardLoaderFull = ( props: PropTypes ) => {
             </div>
         </div>
     );
-}
+};
