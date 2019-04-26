@@ -93,7 +93,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
     handleCloseBrowserTab = tab => {
         const { closeTab, tabs } = this.props;
         const openTabs = tabs.filter(
-            tab => !tab.isClosed && tab.windowId === this.state.windowId
+            t => !t.isClosed && t.windowId === this.state.windowId
         );
 
         if ( openTabs.length === 1 ) {

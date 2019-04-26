@@ -40,9 +40,7 @@ export const AccountInfo = ( props: AccInfoProps ) => {
                     >
                         {''}
                     </button>
-                    <div className="tooltip">
-                        {I18n.t( 'auth_intro.desc.put_credits' )}
-                    </div>
+                    <div className="tooltip">{I18n.t( 'auth_intro.desc.put_credits' )}</div>
                 </div>
                 <div className="timer">
                     <span className="val">02:00</span>
@@ -50,4 +48,4 @@ export const AccountInfo = ( props: AccInfoProps ) => {
             </div>
         </div>
     );
-}
+};

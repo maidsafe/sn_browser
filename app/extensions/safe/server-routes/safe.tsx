@@ -14,7 +14,6 @@ export const safeRoute = store => ( {
     method: 'GET',
     path: /safe:\//,
     handler: async ( request, res ) => {
-        const link = request.url.substr( 1 ); // remove initial /
         const sendErrResponse = ( error, errSubHeader ) =>
             res.send(
                 ReactDOMServer.renderToStaticMarkup(

@@ -3,7 +3,7 @@ const { spawn } = require( 'child_process' );
 
 const env = process.env.NODE_ENV || 'production';
 
-const isRunningDevelopment = env.startsWith('dev');
+const isRunningDevelopment = env.startsWith( 'dev' );
 
 if ( isRunningDevelopment ) {
     spawn( 'yarn', ['run', 'install-mock'], {
