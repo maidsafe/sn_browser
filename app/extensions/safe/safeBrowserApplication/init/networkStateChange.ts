@@ -1,9 +1,7 @@
 import { logger } from '$Logger';
 import { SAFE } from '$Extensions/safe/constants';
 
-import {
-    attemptReconnect
-} from '$Extensions/safe/network';
+import { attemptReconnect } from '$Extensions/safe/network';
 
 import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {

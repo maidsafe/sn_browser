@@ -41,10 +41,7 @@ interface contextTypes {
     router: object;
 }
 
-export class CreateAccount extends React.Component<
-  propTypes,
-  contextTypes
-> {
+export class CreateAccount extends React.Component<propTypes, contextTypes> {
     constructor() {
         super();
         this.state = {

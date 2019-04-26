@@ -7,7 +7,7 @@ import { TabContents } from '$Components/TabContents';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
 import styles from './browser.css';
-import { handleNotifications,  Notification } from '$Utils/handleNotificiations';
+import { handleNotifications, Notification } from '$Utils/handleNotificiations';
 
 interface BrowserProps {
     bookmarks?: Array<any>;
