@@ -15,7 +15,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-import { app, protocol, ipcMain } from 'electron';
+import { app, protocol, ipcMain, BrowserWindow } from 'electron';
 import { logger } from '$Logger';
 
 import {
@@ -66,7 +66,7 @@ ipcMain.on( 'open', ( event, data ) => {
     open( data );
 } );
 
-let mainWindow = null;
+export let mainWindow: BrowserWindow;
 
 // Do any pre app extension work
 preAppLoad();
@@ -108,55 +108,30 @@ const installExtensions = async () => {
     const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
     return Promise.all(
-        extensions.map( name => installer.default( installer[name], forceDownload ) )
+        extensions.map( ( name ) => installer.default( installer[name], forceDownload ) )
     ).catch( console.log );
 };
 
-const shouldQuit = app.makeSingleInstance( commandLine => {
-    // We expect the URI to be the last argument
-    const uri = commandLine[commandLine.length - 1];
-
-    if ( commandLine.length >= 2 && uri ) {
-        onReceiveUrl( store, uri );
-    }
-
-    // Someone tried to run a second instance, we should focus our window
-    if ( mainWindow ) {
-        if ( mainWindow.isMinimized() ) mainWindow.restore();
-        mainWindow.focus();
-    }
-} );
-
 app.on( 'ready', async () => {
-    // For electron upgrade:
-    //      const gotTheLock = app.requestSingleInstanceLock()
-    //
-    //     if (!gotTheLock) {
-    //         console.error('Not got the lock. This is so sad')
-    //         app.quit()
-    //     } else {
-    //         app.on('second-instance', (event, commandLine, workingDirectory) => {
-    //             // We expect the URI to be the last argument
-    //             const uri = commandLine[commandLine.length - 1];
-    //
-    //             if ( commandLine.length >= 2 && uri )
-    //             {
-    //                 onReceiveUrl( store, uri );
-    //             }
-    //
-    //         // Someone tried to run a second instance, we should focus our window.
-    //             if ( mainWindow )
-    //             {
-    //                 if ( mainWindow.isMinimized() ) mainWindow.restore();
-    //                 mainWindow.focus();
-    //             }
-    //         })
-    //     }
+    const obtainedInstanceLock = app.requestSingleInstanceLock();
 
-    if ( shouldQuit ) {
-        console.info( 'This instance should quit. Ciao!' );
-        app.exit();
-        return;
+    if ( !obtainedInstanceLock ) {
+        console.error( 'Unable to obtain instance lock. Quitting...' );
+        app.quit();
+    } else {
+        app.on( 'second-instance', ( event, commandLine ) => {
+            const uri = commandLine[commandLine.length - 1];
+
+            if ( commandLine.length >= 2 && uri ) {
+                onReceiveUrl( store, uri );
+            }
+
+            // Someone tried to run a second instance, we should focus our window
+            if ( mainWindow ) {
+                if ( mainWindow.isMinimized() ) mainWindow.restore();
+                mainWindow.focus();
+            }
+        } );
     }
 
     logger.info( 'App Ready' );
