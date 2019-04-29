@@ -5,7 +5,7 @@ import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
 import { removeRemoteCall } from '$Actions/remoteCall_actions';
 
-const { configureStore } = require( './store/configureStore' );
+import { configureStore } from './store/configureStore' ;
 
 // TODO This handling needs to be imported via extension apis more seemlessly
 const store = configureStore();
@@ -25,7 +25,7 @@ store.subscribe( async () => {
     const state = store.getState();
     const calls = state.remoteCalls;
 
-    calls.forEach( theCall => {
+    calls.forEach( ( theCall ) => {
         if ( theCall === pendingCalls[theCall.id] ) {
             return;
         }
@@ -39,15 +39,15 @@ store.subscribe( async () => {
         if ( theCall.done && callPromises.resolve ) {
             pendingCalls[theCall.id] = theCall;
 
-            let callbackArgs = theCall.response;
+            let callbackArguments = theCall.response;
 
-            callbackArgs = [theCall.response];
+            callbackArguments = [theCall.response];
 
             if ( theCall.isListener ) {
                 // error first
-                callPromises.resolve( null, ...callbackArgs );
+                callPromises.resolve( null, ...callbackArguments );
             }
-            callPromises.resolve( ...callbackArgs );
+            callPromises.resolve( ...callbackArguments );
             store.dispatch( removeRemoteCall( theCall ) );
 
             delete pendingCalls[theCall.id];

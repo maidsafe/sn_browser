@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Provider } from 'react-redux';
 
 import { AddressBar } from '$Components/AddressBar';
 import configureStore from 'redux-mock-store';
@@ -11,6 +10,7 @@ const mockStore = configureStore();
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
+jest.mock( '$Logger' );
 
 jest.mock( 'ref-array', () => jest.fn() );
 //
@@ -52,11 +52,7 @@ describe( 'AddressBar', () => {
         beforeEach( () => {
             store = mockStore( props );
 
-            wrapper = shallow(
-                <Provider store={store}>
-                    <AddressBar {...props} />
-                </Provider>
-            ).dive();
+            wrapper = shallow( <AddressBar {...props} /> );
 
             instance = wrapper.instance();
         } );

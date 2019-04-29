@@ -4,9 +4,6 @@ matrix:
   include:
     - os: osx
       language: node_js
-      node_js:
-          # Must use node 8 while on electron 2.x (for safe.spec tests.)
-        - 8
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
@@ -14,8 +11,6 @@ matrix:
 
     - os: linux
       language: node_js
-      node_js:
-        - 8
       env:
         - NODE_ENV=dev
       addons:
@@ -89,8 +84,8 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
     fi
-  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-peruse --forceExit"
-  - travis_retry eval "pkill -f electron || pkill -f jest || yarn run test-exts --forceExit"
+  - travis_retry yarn run test-peruse --forceExit
+  - travis_retry yarn run test-exts --forceExit
   - yarn build-e2e
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/peruse.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/navigation.spec.ts
