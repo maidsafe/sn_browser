@@ -1,3 +1,4 @@
+<!--
 #### Thank you for contributing!
 
 Please reference the issue(s) which this pull request addresses using [keywords](https://help.github.com/articles/closing-issues-using-keywords/) such as:
@@ -66,3 +67,4 @@ Commit `scope` is open to any succinct term which indicates the effected feature
 See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/)
 
 ---
+Write your description below this line: -->
