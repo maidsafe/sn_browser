@@ -8,8 +8,6 @@ import styles from './history.css';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
 
-const log = require( 'electron-log' );
-
 interface HistoryProps {
     history: Array<any>;
     addTab: ( ...args: Array<any> ) => any;

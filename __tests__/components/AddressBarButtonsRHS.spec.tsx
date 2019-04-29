@@ -3,10 +3,10 @@ import { shallow } from 'enzyme';
 
 import { ButtonsRHS as AddressBarButtonsRHS } from '$Components/AddressBar/ButtonsRHS';
 
-import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 const mockStore = configureStore();
+jest.mock( '$Logger' );
 
 // Some mocks to negate FFI and native libs we dont care about
 jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
@@ -50,11 +50,7 @@ describe( 'AddressBarButtonsRHS', () => {
         beforeEach( () => {
             store = mockStore( props );
 
-            wrapper = shallow(
-                <Provider store={store}>
-                    <AddressBarButtonsRHS {...props} />
-                </Provider>
-            ).dive();
+            wrapper = shallow( <AddressBarButtonsRHS {...props} /> );
             instance = wrapper.instance();
         } );
 
