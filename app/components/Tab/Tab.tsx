@@ -9,11 +9,11 @@ import {
     removeTrailingSlash,
     urlHasChanged
 } from '$Utils/urlHelpers';
-import { parse as parseURL } from 'url';
+import stdUrl, { parse as parseURL } from 'url';
 import { logger } from '$Logger';
 import styles from './tab.css';
 
-import stdUrl from  'url' ;
+
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
@@ -83,14 +83,14 @@ export class Tab extends Component<TabProps, TabState> {
         }
     };
 
-    buildMenu = webview => {
+    buildMenu = ( webview ) => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
         const { addTab, windowId } = this.props;
         // require here to avoid jest/electron remote issues
         const contextMenu = require( 'electron-context-menu' );
         contextMenu( {
             window: webview,
-            append: params => [
+            append: ( params ) => [
                 {
                     label: 'Open Link in New Tab.',
                     visible: params.linkURL && params.linkURL.length > 0,
@@ -270,17 +270,17 @@ export class Tab extends Component<TabProps, TabState> {
         }
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
         if ( url && url !== 'about:blank' ) {
-            this.loadURL( url ).catch( error => console.info( 'err in loadurl', error ) );
+            this.loadURL( url ).catch( ( error ) => console.info( 'err in loadurl', error ) );
             this.setCurrentWebId( null );
         }
     }
 
-    onCrash = e => {
+    onCrash = ( e ) => {
         console.error( e );
         logger.error( 'The webview crashed', e );
     };
 
-    onGpuCrash = e => {
+    onGpuCrash = ( e ) => {
         console.error( e );
         logger.error( 'The webview GPU crashed', e );
     };
@@ -296,7 +296,6 @@ export class Tab extends Component<TabProps, TabState> {
         updateTab( tabUpdate );
         window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) => {
-                webview.focus();
                 webContents.focus();
             } );
         } );
@@ -501,7 +500,7 @@ export class Tab extends Component<TabProps, TabState> {
     }
 
     // TODO Move this functinoality to extensions
-    updateTheIdInWebview = newWebId => {
+    updateTheIdInWebview = ( newWebId ) => {
         const { updateTab, index, webId } = this.props;
         const { webview } = this;
         const theWebId = newWebId || webId;
@@ -591,28 +590,28 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     }
 
     stop() {
-        this.with( wv => wv.stop() );
+        this.with( ( wv ) => wv.stop() );
     }
 
     reload() {
         logger.info( 'webview reloading' );
-        this.with( wv => {
+        this.with( ( wv ) => {
             wv.reload();
         } );
     }
 
     goBack( e ) {
-        this.with( wv => wv.goBack() );
+        this.with( ( wv ) => wv.goBack() );
     }
 
     goForward() {
         console.warn(
             'Electron bug preventing goForward: https://github.com/electron/electron/issues/9999'
         );
-        this.with( wv => wv.goForward() );
+        this.with( ( wv ) => wv.goForward() );
     }
 
-    loadURL = async input => {
+    loadURL = async ( input ) => {
         const { webview } = this;
         const url = addTrailingSlashIfNeeded( input );
         logger.info( 'Webview: loading url:', url );
@@ -667,7 +666,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
                     webpreferences="nodeIntegration, contextIsolation=false"
                     preload={injectPath}
                     partition="persist:safe-tab"
-                    ref={c => {
+                    ref={( c ) => {
                         this.webview = c;
                     }}
                 />
