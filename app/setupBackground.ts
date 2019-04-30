@@ -68,6 +68,28 @@ export const setupBackground = async () =>
                 }
             );
 
+            backgroundProcessWindow.webContents.on(
+                'preload-error',
+                ( event, code, message ) => {
+                    logger.error(
+                        '>>>>>>>>>>>>>>>>>>>>>>>> Bg process preload error <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+                    );
+                    logger.error( error );
+                    reject( message );
+                }
+            );
+
+            backgroundProcessWindow.webContents.on(
+                'crashed',
+                ( event, code, message ) => {
+                    logger.error(
+                        '>>>>>>>>>>>>>>>>>>>>>>>> Bg process crashed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+                    );
+                    logger.error( event, message );
+                    reject( message );
+                }
+            );
+
             backgroundProcessWindow.loadURL( BACKGROUND_PROCESS );
 
             return backgroundProcessWindow;

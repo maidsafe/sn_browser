@@ -29,10 +29,17 @@ const initBgProcess = async () => {
 
 initBgProcess();
 
-window.addEventListener( 'error', function( error, url, line ) {
-    console.error( error );
-    console.error( url );
-    console.error( line );
-
-    logger.error( 'errorInBackgroundWindow', error, url, line );
+window.addEventListener( 'error', function( error ) {
+    console.error( 'errorInBackgroundWindow', error );
+    logger.error(
+        'errorInBackgroundWindow',
+        JSON.stringify( error, [
+            'message',
+            'arguments',
+            'type',
+            'name',
+            'file',
+            'line'
+        ] )
+    );
 } );

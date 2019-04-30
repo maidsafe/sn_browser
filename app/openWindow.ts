@@ -150,6 +150,22 @@ export const openWindow = ( store ): BrowserWindow => {
         }
     );
 
+    mainWindow.webContents.on( 'preload-error', ( event, code, message ) => {
+        logger.error(
+            '>>>>>>>>>>>>>>>>>>>>>>>> Browser render process preload error <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+        );
+        logger.error( error );
+        reject( message );
+    } );
+
+    mainWindow.webContents.on( 'crashed', ( event, code, message ) => {
+        logger.error(
+            '>>>>>>>>>>>>>>>>>>>>>>>> Browser render process crashed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+        );
+        logger.error( event, message );
+        reject( message );
+    } );
+
     browserWindowArray.push( mainWindow );
 
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
