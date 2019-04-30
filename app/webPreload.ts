@@ -5,7 +5,7 @@ import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
 import { removeRemoteCall } from '$Actions/remoteCall_actions';
 
-import { configureStore } from './store/configureStore' ;
+import { configureStore } from './store/configureStore';
 
 // TODO This handling needs to be imported via extension apis more seemlessly
 const store = configureStore();
@@ -71,9 +71,16 @@ triggerOnWebviewPreload( store );
 // setupPreloadedSafeAuthApis( store );
 
 window.addEventListener( 'error', ( error: Error, url: string, line: string ) => {
-    logger.error( error );
-    logger.error( url );
+    logger.error( 'Error in webview' );
+    logger.error(
+        JSON.stringify( error, [
+            'message',
+            'arguments',
+            'type',
+            'name',
+            'file',
+            'line'
+        ] )
+    );
     logger.error( line );
-
-    ipcRenderer.send( 'errorInPreload', error, url, line );
 } );

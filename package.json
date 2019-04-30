@@ -373,8 +373,7 @@
     "ref-array": "1.2.0",
     "ref-struct": "1.1.0",
     "source-map-support": "^0.5.12",
-    "tslint": "5.16.0",
-    "weak": "1.0.1"
+    "tslint": "5.16.0"
   },
   "download_deps": {
     "system_uri": {

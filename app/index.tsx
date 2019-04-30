@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { Root } from './containers/Root';
-import { configureStore, history } from './store/configureStore';
+import { configureStore } from './store/configureStore';
 import './app.global.css';
 
 import { logger } from '$Logger';
@@ -11,10 +11,19 @@ const log = require( 'electron-log' );
 
 log.info( 'Starting render process' );
 
-window.addEventListener( 'error', function( error, url, line ) {
-    logger.error( error );
-    logger.error( url );
-    logger.error( line );
+window.addEventListener( 'error', function( error ) {
+    console.error( 'error in UI:', error );
+    logger.error(
+        'errorInUI',
+        JSON.stringify( error, [
+            'message',
+            'arguments',
+            'type',
+            'name',
+            'file',
+            'line'
+        ] )
+    );
 } );
 
 const store = configureStore();
@@ -28,7 +37,7 @@ if ( window.perusePendingNavigation && window.perusePendingNavigation.length ) {
 
 render(
     <AppContainer>
-        <Root store={store} history={history} />
+        <Root store={store} />
     </AppContainer>,
     document.getElementById( 'root' )
 );
@@ -39,7 +48,7 @@ if ( module.hot ) {
         const NextRoot = require( './containers/Root' ).default;
         render(
             <AppContainer>
-                <NextRoot store={store} history={history} />
+                <NextRoot store={store} />
             </AppContainer>,
             document.getElementById( 'root' )
         );
