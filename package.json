@@ -284,7 +284,7 @@
     "jest": "^24.7.1",
     "json-loader": "^0.5.7",
     "less": "3.9.0",
-    "less-loader": "4.1.0",
+    "less-loader": "5.0.0",
     "lint-staged": "^8.1.5",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.12.0",
