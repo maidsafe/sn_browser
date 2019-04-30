@@ -1821,18 +1821,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
-  version "16.8.11"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.11.tgz#2b13a7ab797b7ed1309e3cbf69994405d2391623"
-  integrity sha512-xEqvjpe7L5xAMlbZYUxxrgo3+ZXBvdnbhDtLWE/Md5LRw/quMRebZBIbqyKCl/77i64rqVtC2/WVDuYmO/diJQ==
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^2.2.0"
-
-"@types/react@16.8.14":
-  version "16.8.14"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.14.tgz#b561bfabeb8f60d12e6d4766367e7a9ae927aa18"
-  integrity sha512-26tFVJ1omGmzIdFTFmnC5zhz1GTaqCjxgUxV4KzWvsybF42P7/j4RBn6UeO3KbHPXqKWZszMXMoI65xIWm954A==
+"@types/react@*", "@types/react@16.8.15":
+  version "16.8.15"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.15.tgz#a76515fed5aa3e996603056f54427fec5f2a5122"
+  integrity sha512-dMhzw1rWK+wwJWvPp5Pk12ksSrm/z/C/+lOQbMZ7YfDQYnJ02bc0wtg4EJD9qrFhuxFrf/ywNgwTboucobJqQg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -6131,10 +6123,10 @@ electron-chromedriver@~3.0.0:
     electron-download "^4.1.0"
     extract-zip "^1.6.5"
 
-electron-context-menu@0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-0.12.0.tgz#ee882a3e9bf219df0e0b9473ca041ef40940fccd"
-  integrity sha512-kZEPG3a864UQOZDJnfsVUiWjhonIpfPPtH8Z7luvPUf7sra/Sz1x2n3aRnyzGN8jQhgRvQomJg/QKXHNbZZ/+g==
+electron-context-menu@0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-0.12.1.tgz#ad39be2a91cdb4f5d0ff61679782dae59ab04e46"
+  integrity sha512-VZ7fKWhrfKGl2KsC3jBuZBs4hXrP7akH1F1gnjtmi9JCHMwzbuBS2fzQIHAL4vimtP1X3OT+h7xuWLopVy1G+A==
   dependencies:
     electron-dl "^1.2.0"
     electron-is-dev "^1.0.1"
@@ -9950,14 +9942,14 @@ left-pad@^1.3.0:
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.3.0.tgz#5b8a3a7765dfe001261dde915589e782f8c94d1e"
   integrity sha512-XI5MPzVNApjAyhQzphX8BkmKsKUxD4LdyK24iZeQGinBN9yTQT3bFlCBy/aVx2HrNcqQGsdot8ghrjyrvMCoEA==
 
-less-loader@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-4.1.0.tgz#2c1352c5b09a4f84101490274fd51674de41363e"
-  integrity sha512-KNTsgCE9tMOM70+ddxp9yyt9iHqgmSs0yTZc5XH5Wo+g80RWRIYNqE58QJKm/yMud5wZEvz50ugRDuzVIkyahg==
+less-loader@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-5.0.0.tgz#498dde3a6c6c4f887458ee9ed3f086a12ad1b466"
+  integrity sha512-bquCU89mO/yWLaUq0Clk7qCsKhsF/TZpJUzETRvJa9KSVEL9SO3ovCvdEHISBhrC81OwC8QSVX7E0bzElZj9cg==
   dependencies:
     clone "^2.1.1"
     loader-utils "^1.1.0"
-    pify "^3.0.0"
+    pify "^4.0.1"
 
 less@3.9.0:
   version "3.9.0"
@@ -11010,10 +11002,10 @@ neo-async@^2.5.0, neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-nessie-ui@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.1.0.tgz#905820a9cb9fe8559db434f2100494c95e013906"
-  integrity sha512-hQnrZr8vU+sR7wLUCNbR3oDWsloXjY2tpw6cIIrXrKb6OH/SkzmtxG5sNb67Dctk9tCpAIkiFf9ELYLw4Sd6XQ==
+nessie-ui@6.4.7:
+  version "6.4.7"
+  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.4.7.tgz#e94bfbd4a43b2e3f7715d8c2b29f9eb0d4a36112"
+  integrity sha512-fU4yXiST+UCBRgy+Gsz/Ai+vrE03pyR2wczpFYeGMSG6NtM7J7qE7qz2c9aJEdJLk1VkRxRONvB4uTBuhZzFpA==
 
 next-tick@^1.0.0:
   version "1.0.0"
