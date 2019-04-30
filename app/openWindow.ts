@@ -1,4 +1,3 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import windowStateKeeper from 'electron-window-state';
@@ -15,7 +14,7 @@ import {
 
 const browserWindowArray = [];
 
-function getNewWindowPosition( mainWindowState ) {
+function getNewWindowPosition( mainWindowState ): { x: number; y: number } {
     // for both x and y, we start at 0
     const defaultWindowPosition = 0;
 
@@ -36,7 +35,7 @@ function getNewWindowPosition( mainWindowState ) {
     return newWindowPosition;
 }
 
-export const openWindow = store => {
+export const openWindow = ( store ): BrowserWindow => {
     const mainWindowState = windowStateKeeper( {
         defaultWidth: 2048,
         defaultHeight: 1024
@@ -71,72 +70,85 @@ export const openWindow = store => {
 
     mainWindow.loadURL( `file://${__dirname}/app.html` );
 
-    // @TODO: Use 'ready-to-show' event
-    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-
-    mainWindow.webContents.on( 'did-finish-load', async () => {
-        if ( !mainWindow ) {
-            throw new Error( '"mainWindow" is not defined' );
+    mainWindow.webContents.once(
+        'ready-to-show',
+        async (): Promise<void> => {
+            // before show let state load
+            mainWindow.show();
+            mainWindow.focus();
         }
+    );
 
-        await onOpenLoadExtensions( store );
+    mainWindow.webContents.on(
+        'did-finish-load',
+        async (): Promise<void> => {
+            if ( !mainWindow ) {
+                throw new Error( '"mainWindow" is not defined' );
+            }
 
-        // before show lets load state
-        mainWindow.show();
-        mainWindow.focus();
+            await onOpenLoadExtensions( store );
 
-        if ( isRunningDebug && !isRunningSpectronTestProcess ) {
-            mainWindow.openDevTools( { mode: 'undocked' } );
-        }
+            if ( isRunningDebug && !isRunningSpectronTestProcess ) {
+                mainWindow.openDevTools( { mode: 'undocked' } );
+            }
 
-        const webContentsId = mainWindow.webContents.id;
-        if ( browserWindowArray.length === 1 ) {
-            const allTabs = store.getState().tabs;
-            const orphanedTabs = allTabs.filter( tab => !tab.windowId );
-            orphanedTabs.forEach( orphan => {
-                store.dispatch(
-                    updateTab( { index: orphan.index, windowId: webContentsId } )
+            const webContentsId = mainWindow.webContents.id;
+            if ( browserWindowArray.length === 1 ) {
+                const allTabs = store.getState().tabs;
+                const orphanedTabs = allTabs.filter( ( tab ): boolean => !tab.windowId );
+                orphanedTabs.forEach(
+                    ( orphan ): void => {
+                        store.dispatch(
+                            updateTab( { index: orphan.index, windowId: webContentsId } )
+                        );
+                    }
                 );
-            } );
+                store.dispatch(
+                    uiAddWindow( {
+                        windowId: webContentsId
+                    } )
+                );
+            } else {
+                store.dispatch(
+                    addTab( {
+                        url: 'about:blank',
+                        windowId: webContentsId,
+                        isActiveTab: true
+                    } )
+                );
+                store.dispatch(
+                    uiAddWindow( {
+                        windowId: webContentsId
+                    } )
+                );
+                store.dispatch( selectAddressBar() );
+            }
+        }
+    );
+    mainWindow.on(
+        'close',
+        (): void => {
+            const webContentsId = mainWindow.webContents.id;
             store.dispatch(
-                uiAddWindow( {
+                uiRemoveWindow( {
                     windowId: webContentsId
                 } )
             );
-        } else {
-            store.dispatch(
-                addTab( {
-                    url: 'about:blank',
-                    windowId: webContentsId,
-                    isActiveTab: true
-                } )
-            );
-            store.dispatch(
-                uiAddWindow( {
-                    windowId: webContentsId
-                } )
-            );
-            store.dispatch( selectAddressBar() );
         }
-    } );
-    mainWindow.on( 'close', () => {
-        const webContentsId = mainWindow.webContents.id;
-        store.dispatch(
-            uiRemoveWindow( {
-                windowId: webContentsId
-            } )
-        );
-    } );
-    mainWindow.on( 'closed', () => {
-        const index = browserWindowArray.indexOf( mainWindow );
-        mainWindow = null;
-        if ( index > -1 ) {
-            browserWindowArray.splice( index, 1 );
+    );
+    mainWindow.on(
+        'closed',
+        (): void => {
+            const index = browserWindowArray.indexOf( mainWindow );
+            mainWindow = null;
+            if ( index > -1 ) {
+                browserWindowArray.splice( index, 1 );
+            }
+            if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+                app.quit();
+            }
         }
-        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-            app.quit();
-        }
-    } );
+    );
 
     browserWindowArray.push( mainWindow );
 
@@ -146,13 +158,16 @@ export const openWindow = store => {
     return mainWindow;
 };
 
-ipcMain.on( 'command:close-window', () => {
-    const win = BrowserWindow.getFocusedWindow();
+ipcMain.on(
+    'command:close-window',
+    (): void => {
+        const win = BrowserWindow.getFocusedWindow();
 
-    if ( win ) {
-        win.close();
+        if ( win ) {
+            win.close();
+        }
+        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+            app.quit();
+        }
     }
-    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-        app.quit();
-    }
-} );
+);

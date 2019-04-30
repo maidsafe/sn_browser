@@ -58,6 +58,19 @@ module.exports = {
         'jest/no-jasmine-globals': 'off',
         'jest/valid-describe': 'off',
         'react/destructuring-assignment': 'off',
+        'react/sort-comp': [
+            1,
+            {
+                order: [
+                    'type-annotations',
+                    'static-methods',
+                    'lifecycle',
+                    '/^on.+$/',
+                    'render',
+                    'everything-else'
+                ]
+            }
+        ],
         'space-in-parens': ['error', 'always'],
         'react/jsx-filename-extension': 'off',
         'no-shadow': 'error',
