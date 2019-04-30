@@ -1,5 +1,4 @@
-import { remote } from 'electron';
-// import contextMenu from 'electron-context-menu';
+import { remote, WebviewTag } from 'electron';
 import React, { Component } from 'react';
 import { Error } from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
@@ -12,8 +11,6 @@ import {
 import stdUrl, { parse as parseURL } from 'url';
 import { logger } from '$Logger';
 import styles from './tab.css';
-
-
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
@@ -30,8 +27,14 @@ interface TabProps {
     focusWebview: ( ...args: Array<any> ) => any;
     shouldFocusWebview: boolean;
     tabBackwards: ( ...args: Array<any> ) => any;
+    shouldToggleDevelopmentTools: boolean;
+    safeExperimentsEnabled: boolean;
+    shouldReload: boolean;
+    webId: object;
 }
 interface TabState {
+    hasError: boolean;
+    theError: Error;
     browserState:
     | any
     | {
@@ -44,6 +47,14 @@ interface TabState {
     };
 }
 export class Tab extends Component<TabProps, TabState> {
+    debouncedWebIdUpdateFunc: Function;
+
+    webview: WebviewTag;
+
+    lastNavigationUrl: string;
+
+    lastNavigationTimeStamp: number;
+
     static defaultProps = {
         isActiveTab: false,
         url: 'http://nowhere.com'
@@ -76,17 +87,20 @@ export class Tab extends Component<TabProps, TabState> {
         this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
     }
 
-    isDevToolsOpened = () => {
+    isDevToolsOpened = (): boolean => {
         const { webview } = this;
         if ( webview ) {
             return webview.isDevToolsOpened();
         }
+
+        return false;
     };
 
     buildMenu = ( webview ) => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
         const { addTab, windowId } = this.props;
         // require here to avoid jest/electron remote issues
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
         const contextMenu = require( 'electron-context-menu' );
         contextMenu( {
             window: webview,
@@ -108,7 +122,8 @@ export class Tab extends Component<TabProps, TabState> {
         } );
     };
 
-    webviewFocussed( event ) {
+    // eslint-disable-next-line class-methods-use-this
+    webviewFocussed() {
         logger.info( 'Webview focussed: Triggering click event on browser window' );
         const fakeClick = new MouseEvent( 'click', {
             view: window,
@@ -192,8 +207,8 @@ export class Tab extends Component<TabProps, TabState> {
         const { webview } = this;
         logger.info( 'Tab: did receive updated props' );
         if ( nextProperties.shouldFocusWebview && isActiveTab ) {
-            this.with( ( webview, webContents ) => {
-                webview.focus();
+            this.with( ( theWebview: WebviewTag, webContents ) => {
+                theWebview.focus();
                 webContents.focus();
             } );
             focusWebview( false );
@@ -234,7 +249,12 @@ export class Tab extends Component<TabProps, TabState> {
             updateTab( tabUpdate );
         }
         if ( !shouldToggleDevelopmentTools && nextProperties.shouldToggleDevTools ) {
-            this.isDevToolsOpened() ? this.closeDevTools() : this.openDevTools();
+            if ( this.isDevToolsOpened() ) {
+                this.closeDevTools();
+            } else {
+                this.openDevTools();
+            }
+
             const tabUpdate = {
                 index,
                 shouldToggleDevTools: false
@@ -251,8 +271,11 @@ export class Tab extends Component<TabProps, TabState> {
         if ( !webview.partition || webview.partition === '' ) {
             console.warn( `${this.props.index}: webview has empty partition` );
         }
+
+        const currentState = this.state.browserState;
+
         const browserState = {
-            ...this.state.browserState,
+            ...currentState,
             canGoBack: webview.canGoBack(),
             canGoForward: webview.canGoForward(),
             ...properties
@@ -316,7 +339,7 @@ export class Tab extends Component<TabProps, TabState> {
         const errorUrl = error.validatedURL;
 
         logger.info( 'didfail load', error );
-        const renderError = ( header, subHeader ) => {
+        const renderError = ( header, subHeader? ) => {
             const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
                 <Error error={{ header, subHeader }} />
             );
@@ -372,7 +395,7 @@ export class Tab extends Component<TabProps, TabState> {
 
     didStopLoading() {
         logger.info( 'Tab did stop loading' );
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, index } = this.props;
         const tabUpdate = {
             index,
             isLoading: false
@@ -397,6 +420,7 @@ export class Tab extends Component<TabProps, TabState> {
         this.setCurrentWebId( null );
     }
 
+    // eslint-disable-next-line class-methods-use-this
     updateTargetUrl( url ) {
         const linkRevealer = document.getElementById( 'link_revealer' );
         if ( url.url ) {
@@ -411,7 +435,7 @@ export class Tab extends Component<TabProps, TabState> {
     pageTitleUpdated( e ) {
         logger.info( 'Webview: page title updated' );
         const { title } = e;
-        const { updateTab, index, isActiveTab } = this.props;
+        const { updateTab, index } = this.props;
         const tabUpdate = {
             title,
             index
@@ -432,7 +456,6 @@ export class Tab extends Component<TabProps, TabState> {
     didNavigate( e ) {
         const { updateTab, index } = this.props;
         const { url } = e;
-        const noTrailingSlashUrl = removeTrailingSlash( url );
         logger.info( 'webview did navigate' );
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
@@ -445,7 +468,6 @@ export class Tab extends Component<TabProps, TabState> {
     didNavigateInPage( e ) {
         const { updateTab, index } = this.props;
         const { url } = e;
-        const noTrailingSlashUrl = removeTrailingSlash( url );
         logger.info(
             'Webview: did navigate in page',
             url,
@@ -501,7 +523,7 @@ export class Tab extends Component<TabProps, TabState> {
 
     // TODO Move this functinoality to extensions
     updateTheIdInWebview = ( newWebId ) => {
-        const { updateTab, index, webId } = this.props;
+        const { index, webId } = this.props;
         const { webview } = this;
         const theWebId = newWebId || webId;
         logger.info( 'Setting currentWebid in tab' );
@@ -557,12 +579,12 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         const { addTab, windowId } = this.props;
         const { url } = e;
         logger.info( 'Tab: NewWindow event triggered for url: ', url );
-        const activateTab = e.disposition == 'foreground-tab';
+        const activateTab = e.disposition === 'foreground-tab';
         addTab( { url, isActiveTab: activateTab, windowId } );
         this.goForward();
     }
 
-    isFrozen( e ) {
+    isFrozen() {
         logger.info( 'Webview is frozen...' );
         const { index } = this.props;
         const frozen = !index;
@@ -600,14 +622,11 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         } );
     }
 
-    goBack( e ) {
+    goBack() {
         this.with( ( wv ) => wv.goBack() );
     }
 
     goForward() {
-        console.warn(
-            'Electron bug preventing goForward: https://github.com/electron/electron/issues/9999'
-        );
         this.with( ( wv ) => wv.goForward() );
     }
 
@@ -620,7 +639,8 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         //     logger.info( 'not loading URL as it has not changed');
         //     return;
         // }
-        const browserState = { ...this.state.browserState, url };
+        const currentState = this.state.browserState;
+        const browserState = { ...currentState, url };
         this.setState( { browserState } );
         // prevent looping over attempted url loading
         if ( webview ) {
@@ -662,8 +682,8 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
             <div className={moddedClass}>
                 <webview
                     style={{ height: '100%', display: 'flex', flex: '1 1' }}
-                    tabIndex="0"
-                    webpreferences="nodeIntegration, contextIsolation=false"
+                    tabIndex={0}
+                    webpreferences="nodeIntegration=true, contextIsolation=false"
                     preload={injectPath}
                     partition="persist:safe-tab"
                     ref={( c ) => {
