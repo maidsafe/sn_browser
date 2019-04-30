@@ -1,4 +1,5 @@
 module.exports = {
+    $App: './app',
     $Test: './__tests__',
     $Actions: './app/actions',
     $Store: './app/store',
