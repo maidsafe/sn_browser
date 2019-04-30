@@ -11002,10 +11002,10 @@ neo-async@^2.5.0, neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-nessie-ui@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.1.0.tgz#905820a9cb9fe8559db434f2100494c95e013906"
-  integrity sha512-hQnrZr8vU+sR7wLUCNbR3oDWsloXjY2tpw6cIIrXrKb6OH/SkzmtxG5sNb67Dctk9tCpAIkiFf9ELYLw4Sd6XQ==
+nessie-ui@6.4.7:
+  version "6.4.7"
+  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.4.7.tgz#e94bfbd4a43b2e3f7715d8c2b29f9eb0d4a36112"
+  integrity sha512-fU4yXiST+UCBRgy+Gsz/Ai+vrE03pyR2wczpFYeGMSG6NtM7J7qE7qz2c9aJEdJLk1VkRxRONvB4uTBuhZzFpA==
 
 next-tick@^1.0.0:
   version "1.0.0"
