@@ -8,7 +8,7 @@ import { manageRemoteCalls } from './background.manageRemoteCalls';
 import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';
 import { setupServer } from './server';
 
-const initSafeServer = store => {
+const initSafeServer = ( store ) => {
     const server = setupServer();
     onInitBgProcess( server, store );
 };
@@ -30,9 +30,9 @@ const initBgProcess = async () => {
 initBgProcess();
 
 window.addEventListener( 'error', function( error, url, line ) {
-    log.error( error );
-    log.error( url );
-    log.error( line );
+    console.error( error );
+    console.error( url );
+    console.error( line );
 
     logger.error( 'errorInBackgroundWindow', error, url, line );
 } );
