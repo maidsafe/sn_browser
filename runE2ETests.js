@@ -70,8 +70,10 @@ switch ( arg ) {
 // should be first
 argsArray.unshift( pattern );
 
+// eslint-disable-next-line no-console
 console.info( 'Running tests via:', testCommand, argsArray );
 
 const result = spawn.sync( testCommand, argsArray, { stdio: 'inherit' } );
 
+// eslint-disable-next-line unicorn/no-process-exit
 process.exit( result.status );

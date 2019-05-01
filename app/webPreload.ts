@@ -14,9 +14,12 @@ const safeBrowserAppState = store.getState().safeBrowserApp;
 const { isMock } = safeBrowserAppState;
 
 if ( !isMock ) {
-    window.eval = global.eval = () => {
+    // eslint-disable-next-line no-eval
+    window.eval = () => {
         throw new Error( 'Sorry, peruse does not support window.eval().' );
     };
+    // eslint-disable-next-line no-eval
+    global.eval = window.eval;
 }
 
 const pendingCalls = {};
@@ -70,7 +73,7 @@ store.subscribe( async () => {
 triggerOnWebviewPreload( store );
 // setupPreloadedSafeAuthApis( store );
 
-window.addEventListener( 'error', ( error: Error, url: string, line: string ) => {
+window.addEventListener( 'error', ( error: Event ) => {
     logger.error( 'Error in webview' );
     logger.error(
         JSON.stringify( error, [
@@ -82,5 +85,4 @@ window.addEventListener( 'error', ( error: Error, url: string, line: string ) =>
             'line'
         ] )
     );
-    logger.error( line );
 } );
