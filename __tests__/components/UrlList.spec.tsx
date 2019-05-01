@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { UrlList } from '$Components/UrlList';
 import { Table, TableRow } from 'nessie-ui';
@@ -14,24 +14,19 @@ describe( 'UrlList', () => {
             list: []
         };
 
-        wrapper = shallow( <UrlList {...props} /> );
-        instance = wrapper.instance();
+        wrapper = mount( <UrlList {...props} /> );
     } );
 
     describe( 'constructor( props )', () => {
         it( 'should have name UrlList', () => {
-            expect( instance.constructor.name ).toBe( 'UrlList' );
+            expect( UrlList.name ).toBe( 'UrlList' );
         } );
     } );
 
     describe( 'render() with one tab', () => {
-        beforeEach( () => {
-            props = { ...props, list: ['hello'] };
-            wrapper = shallow( <UrlList {...props} /> );
-        } );
-
         it( 'should have one link', () => {
-            wrapper = shallow( <UrlList {...props} /> );
+            props = { ...props, list: ['hello'] };
+            wrapper = mount( <UrlList {...props} /> );
             expect( wrapper.find( 'a' ).length ).toBe( 1 );
         } );
 
@@ -46,7 +41,7 @@ describe( 'UrlList', () => {
     describe( 'props', () => {
         describe( 'list', () => {
             it( 'list length should be "0" by default', () => {
-                expect( instance.props.list.length ).toBe( 0 );
+                expect( wrapper.props().list.length ).toBe( 0 );
             } );
         } );
     } );
