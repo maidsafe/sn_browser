@@ -43,6 +43,7 @@ module.exports = {
         'no-prototype-builtins': 'off',
         'unicorn/prefer-type-error': 'off',
         'unicorn/new-for-builtins': 'off',
+        'import/no-cycle': 'warn',
         'import/prefer-default-export': 'off',
         'import/no-default-export': 'error',
         'import/no-extraneous-dependencies': [
@@ -82,13 +83,14 @@ module.exports = {
     },
     overrides: [
         {
-            files: ['*config*.js'],
+            files: ['*config*js', 'internals/**/*'],
             rules: {
                 'no-console': 'off',
                 'import/no-extraneous-dependencies': 'off',
                 'import/no-default-export': 'off',
                 '@typescript-eslint/tslint/config': 'off',
-                '@typescript-eslint/no-var-requires': 'off'
+                '@typescript-eslint/no-var-requires': 'off',
+                'global-require': 'off'
             }
         },
         {
@@ -97,6 +99,10 @@ module.exports = {
                 '@typescript-eslint/tslint/config': 'off',
                 '@typescript-eslint/no-var-requires': 'off'
             }
+        },
+        {
+            files: ['*.spec.*'],
+            globals: { fixture: 'readonly' }
         },
         {
             files: ['*.tsx'],

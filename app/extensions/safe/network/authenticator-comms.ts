@@ -28,32 +28,15 @@ export const attemptReconnect = ( passedStore, appObj ) => {
             passedStore.getState().safeBrowserApp.networkStatus ===
       SAFE.NETWORK_STATE.DISCONNECTED
         ) {
-            attemptReconnect( passedStore );
+            attemptReconnect( passedStore, appObj );
         }
     }, 5000 );
-};
-
-export const handleSafeAuthUrlReception = async res => {
-    if ( typeof res !== 'string' ) {
-        throw new Error( 'Response url should be a string' );
-    }
-
-    let authUrl = null;
-    logger.info( 'Received URL response', res );
-
-    if ( parseURL( res ).protocol === `${PROTOCOLS.SAFE_AUTH}:` ) {
-        authUrl = parseSafeAuthUrl( res );
-
-        if ( authUrl.action === 'auth' ) {
-            return handleAuthentication( res );
-        }
-    }
 };
 
 /**
  * Reconnect the application with SAFE Network when disconnected
  */
-export const reconnect = app => {
+export const reconnect = ( app ) => {
     if ( !app ) {
         return Promise.reject( new Error( 'Application not initialised' ) );
     }
@@ -65,14 +48,14 @@ export const reconnect = app => {
  * (ClientType === 'WEB' )
  * @param  {Object} request request object from ipc.js
  */
-export const replyToRemoteCallFromAuth = request => {
+export const replyToRemoteCallFromAuth = ( request ) => {
     logger.info( 'Replying to RemoteCall From Auth' );
     const store = getCurrentStore();
     const state = store.getState();
     const { remoteCalls } = state;
 
-    const remoteCallToReply = remoteCalls.find( theCall => {
-        if ( theCall.name !== 'authenticateFromUriObject' ) return;
+    const remoteCallToReply = remoteCalls.find( ( theCall ) : boolean => {
+        if ( theCall.name !== 'authenticateFromUriObject' ) return false;
 
         const theRequestFromCall = theCall.args[0].uri;
 

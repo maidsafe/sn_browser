@@ -7,22 +7,6 @@ import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
 
-/**
- * Get the current window's webcontents Id. Defaults to `1` if none found.
- * @return { Integer } WebContents Id of the curremt BrowserWindow webcontents.
- */
-const getCurrentWindowId = () => {
-    let currentWindowId;
-
-    if ( typeof currentWindowId === 'undefined' && remote ) {
-        currentWindowId = remote.getCurrentWindow().webContents.id;
-    } else if ( typeof currentWindowId === 'undefined' ) {
-        currentWindowId = 1;
-    }
-
-    return currentWindowId;
-};
-
 const addBookmark = ( state, bookmark ) => {
     if ( !bookmark ) {
         throw new Error( 'You must pass a bookmark object with url' );
@@ -47,7 +31,7 @@ const addBookmark = ( state, bookmark ) => {
  */
 const removeBookmark = ( state, payload ) => {
     const removalIndex = state.findIndex(
-        bookmark => bookmark.url === payload.url
+        ( bookmark ) => bookmark.url === payload.url
     );
     const updatedState = [...state];
 

@@ -5,7 +5,7 @@ import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
 import { removeRemoteCall } from '$Actions/remoteCall_actions';
 
-import { configureStore } from './store/configureStore' ;
+import { configureStore } from './store/configureStore';
 
 // TODO This handling needs to be imported via extension apis more seemlessly
 const store = configureStore();
@@ -14,9 +14,12 @@ const safeBrowserAppState = store.getState().safeBrowserApp;
 const { isMock } = safeBrowserAppState;
 
 if ( !isMock ) {
-    window.eval = global.eval = () => {
+    // eslint-disable-next-line no-eval
+    window.eval = () => {
         throw new Error( 'Sorry, peruse does not support window.eval().' );
     };
+    // eslint-disable-next-line no-eval
+    global.eval = window.eval;
 }
 
 const pendingCalls = {};
@@ -70,10 +73,16 @@ store.subscribe( async () => {
 triggerOnWebviewPreload( store );
 // setupPreloadedSafeAuthApis( store );
 
-window.addEventListener( 'error', ( error: Error, url: string, line: string ) => {
-    logger.error( error );
-    logger.error( url );
-    logger.error( line );
-
-    ipcRenderer.send( 'errorInPreload', error, url, line );
+window.addEventListener( 'error', ( error: Event ) => {
+    logger.error( 'Error in webview' );
+    logger.error(
+        JSON.stringify( error, [
+            'message',
+            'arguments',
+            'type',
+            'name',
+            'file',
+            'line'
+        ] )
+    );
 } );

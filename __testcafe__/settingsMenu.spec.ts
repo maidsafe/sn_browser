@@ -4,10 +4,10 @@ import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
 
-const assertNoConsoleErrors = async t => {
+const assertNoConsoleErrors = async ( t ) => {
     const { error } = await t.getBrowserConsoleMessages();
 
-    if ( error.length ) {
+    if ( error.length !== 0 ) {
         console.log( 'Errors encountered:', error );
     }
 
@@ -17,7 +17,7 @@ const assertNoConsoleErrors = async t => {
 fixture`Settings Menu`.page( '../app/app.html' ).afterEach( resetStore );
 // .afterEach(assertNoConsoleErrors);
 
-test( 'should open window', async t => {
+test( 'should open window', async ( t ) => {
     await t.expect( getPageTitle() ).eql( 'SAFE Browser' );
 } );
 
@@ -35,11 +35,11 @@ test( 'should open window', async t => {
 //
 // } );
 //
-test( 'can check if settings menu exists', async t => {
+test( 'can check if settings menu exists', async ( t ) => {
     await t.expect( Selector( `.${CLASSES.SETTINGS_MENU__BUTTON}` ).exists ).ok();
 } );
 
-test( 'can open settings menu to check options exist', async t => {
+test( 'can open settings menu to check options exist', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .expect( Selector( `.${CLASSES.SETTINGS_MENU__BOOKMARKS}` ).exists )
@@ -52,7 +52,7 @@ test( 'can open settings menu to check options exist', async t => {
         .click( `.${CLASSES.ADDRESS_BAR}` );
 } );
 
-test( 'hides settings menu after clicking elsewhere', async t => {
+test( 'hides settings menu after clicking elsewhere', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .expect( Selector( `.${CLASSES.SETTINGS_MENU}` ).exists )
@@ -64,7 +64,7 @@ test( 'hides settings menu after clicking elsewhere', async t => {
         .notOk();
 } );
 
-test( 'can open settings menu and go to bookmarks', async t => {
+test( 'can open settings menu and go to bookmarks', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__BOOKMARKS}` )
@@ -72,7 +72,7 @@ test( 'can open settings menu and go to bookmarks', async t => {
         .eql( 'safe-browser://bookmarks' );
 } );
 
-test( 'can open settings menu and go to history', async t => {
+test( 'can open settings menu and go to history', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` )

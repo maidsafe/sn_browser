@@ -3,15 +3,15 @@ import { CONFIG } from '$Constants';
 import url from 'url';
 import { logger } from '$Logger';
 
-export const isForSafeServer = parsedUrlObject =>
+export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
-export const urlIsAllowedBySafe = testUrl => {
+export const urlIsAllowedBySafe = ( testUrl ) => {
     logger.info( 'Checking urlIsAllowedBySafe', testUrl );
     const urlObj = url.parse( testUrl );
 
     const validProtocols = pkg.build.protocols.schemes || ['http'];
-    const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
+    const adaptedProtocols = validProtocols.map( ( proto ) => `${proto}:` );
 
     // TODO: locally server appspot files to avoid reqs thereto.
     if (
@@ -44,12 +44,12 @@ export const generateBoundaryStr = () => {
     return text;
 };
 
-export const rangeStringToArray = rangeString => {
+export const rangeStringToArray = ( rangeString ) => {
     const BYTES = 'bytes=';
     return rangeString
         .substring( BYTES.length, rangeString.length )
         .split( ',' )
-        .map( part => {
+        .map( ( part ) => {
             const partObj = {};
             part.split( '-' ).forEach( ( int, i ) => {
                 if ( i === 0 ) {
@@ -70,13 +70,13 @@ export const rangeStringToArray = rangeString => {
         } );
 };
 
-export const generateResponseStr = data => {
+export const generateResponseStr = ( data ) => {
     const boundaryStr = generateBoundaryStr();
     const crlf = '\r\n';
     let responseStr = `HTTP/1.1 206 Partial Content${crlf}`;
     responseStr += `Content-Type: multipart/byteranges; boundary=${boundaryStr}${crlf}`;
     responseStr += `Content-Length:${data.headers['Content-Length']}${crlf}`;
-    data.parts.forEach( part => {
+    data.parts.forEach( ( part ) => {
         responseStr += `--${boundaryStr}${crlf}`;
         responseStr += `Content-Type:${part.headers['Content-Type']}${crlf}`;
         responseStr += `Content-Range: ${part.headers['Content-Range']}${crlf}`;
@@ -86,12 +86,18 @@ export const generateResponseStr = data => {
     return responseStr;
 };
 
-export function parseSafeAuthUrl( safeUrl, isClient ) {
+export function parseSafeAuthUrl( safeUrl, isClient? ) {
     if ( typeof safeUrl !== 'string' ) {
         throw new Error( 'URl should be a string to parse' );
     }
 
-    const safeAuthUrl = {};
+    const safeAuthUrl: {
+        protocol?: string;
+        action?: string;
+        appId?: string;
+        payload?: string;
+        search?: string;
+    } = {};
     const parsedUrl = url.parse( safeUrl );
 
     if (

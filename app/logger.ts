@@ -85,32 +85,58 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( '' );
 
-    // process.on( 'uncaughtTypeError', err =>
-    // {
-    //     log.error(
-    //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    //     );
-    //     log.error( 'whoops! there was an uncaught type error:' );
-    //     log.error( err );
-    //     log.error( err.file );
-    //     log.error( err.line );
-    //     log.error(
-    //         '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    //     );
-    // } );
-
-    process.on( 'uncaughtException', ( err: NodeError ) => {
+    process.on( 'uncaughtTypeError', ( error ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-        log.error( 'whoops! there was an uncaught error:' );
-        log.error( err, err.line );
+        log.error( 'whoops! there was an uncaught type error:' );
+        log.error(
+            JSON.stringify( error, [
+                'message',
+                'arguments',
+                'type',
+                'name',
+                'file',
+                'line'
+            ] )
+        );
+        log.error( error );
+        log.error( error.file );
+        log.error( error.line );
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 
-    process.on( 'unhandledRejection', ( err: NodeError ) => {
+    process.on( 'uncaughtException', ( error: NodeError ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-        log.error( 'Unhandled Rejection. Reason:', err.message || err );
-        log.error( err.line );
-        log.error( err.file );
+        log.error( 'whoops! there was an uncaught error:' );
+        log.error(
+            JSON.stringify( error, [
+                'message',
+                'arguments',
+                'type',
+                'name',
+                'file',
+                'line'
+            ] )
+        );
+        log.error( error, error.line );
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    } );
+
+    process.on( 'unhandledRejection', ( error: NodeError ) => {
+        log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+        log.error( 'Unhandled Rejection. Reason:', error.message || error );
+        log.error(
+            JSON.stringify( error, [
+                'message',
+                'arguments',
+                'type',
+                'name',
+                'file',
+                'line'
+            ] )
+        );
+
+        log.error( error.line );
+        log.error( error.file );
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 }

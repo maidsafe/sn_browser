@@ -49,17 +49,6 @@ logger.info( 'Main process starting.' );
 
 global.mainProcessStore = store;
 
-// renderer error notifications
-ipcMain.on( 'errorInPreload', ( event, data ) => {
-    logger.error( data );
-} );
-ipcMain.on( 'errorInBackgroundWindow', ( event, data ) => {
-    logger.error( data );
-} );
-ipcMain.on( 'errorInRenderWindow', ( event, data ) => {
-    logger.error( data );
-} );
-
 // Needed for windows w/ SAFE browser app login
 ipcMain.on( 'open', ( event, data ) => {
     logger.info( 'Opening link in system via open.' );
