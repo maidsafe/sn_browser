@@ -87,7 +87,8 @@ Therefore need a node version inline w/electron (8 for e2.x eg.)
 
         await client.pause( 1500 );
 
-        const theSafeClient = await client.execute( () => eval( 'true' ) );
+        // eslint-disable-next-line no-eval
+        const theSafeClient = await client.execute( (): boolean => eval( 'true' ) );
 
         expect( theSafeClient.value ).toBeTruthy();
     } );

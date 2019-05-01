@@ -23,64 +23,62 @@ function mapDispatchToProps( dispatch ) {
     return bindActionCreators( actions, dispatch );
 }
 
+interface AddressBarInputProps {
+    safeBrowserApp: {
+        isMock: boolean;
+        experimentsEnabled: boolean;
+    };
+    disableExperiments?: Function;
+}
+
 export const wrapAddressBarInput = (
     AddressBarInput,
     extensionFunctionality = {}
 ) => {
-    class WrappedAddressBarInput extends Component {
-    // static propTypes = {
-    //   safeBrowserApp: PropTypes.shape({
-    //     isMock: PropTypes.bool,
-    //     experimentsEnabled: PropTypes.bool
-    //   }).isRequired
-    // };
-        static defaultProps = {
+    const WrappedAddressBarInput = (
+        props: AddressBarInputProps = {
             safeBrowserApp: {
                 isMock: false,
                 experimentsEnabled: false
             }
-        };
-
-        render() {
-            const { safeBrowserApp, disableExperiments } = this.props;
-            const { isMock, experimentsEnabled } = safeBrowserApp;
-            const addOnsBefore = [];
-            const addOnsAfter = [];
-            if ( isMock ) {
-                addOnsBefore.push(
-                    <Tag key="F5222D" className={CLASSES.MOCK_TAG} color="#F5222D">
-            Mock Network
-                    </Tag>
-                );
-            }
-            if ( experimentsEnabled ) {
-                addOnsAfter.push(
-                    <Tag
-                        key="42566E"
-                        color="#42566E"
-                        onClick={() => disableExperiments()}
-                    >
-                        <Icon type="experiment" />
-                    </Tag>
-                );
-            }
-            return (
-                <Grid gutters="M">
-                    <Column align="center" verticalAlign="middle">
-                        <AddressBarInput
-                            // className={ styles.addressBar }
-                            {...this.props}
-                            addonBefore={addOnsBefore}
-                            addonAfter={addOnsAfter}
-                        />
-                    </Column>
-                </Grid>
+        }
+    ) => {
+        const { safeBrowserApp, disableExperiments } = props;
+        const { isMock, experimentsEnabled } = safeBrowserApp;
+        const addOnsBefore = [];
+        const addOnsAfter = [];
+        if ( isMock ) {
+            addOnsBefore.push(
+                <Tag key="F5222D" className={CLASSES.MOCK_TAG} color="#F5222D">
+          Mock Network
+                </Tag>
             );
         }
-    }
+        if ( experimentsEnabled ) {
+            addOnsAfter.push(
+                <Tag key="42566E" color="#42566E" onClick={() => disableExperiments()}>
+                    <Icon type="experiment" />
+                </Tag>
+            );
+        }
+        return (
+            <Grid gutters="M">
+                <Column align="center" verticalAlign="middle">
+                    <AddressBarInput
+                        // className={ styles.addressBar }
+                        {...props}
+                        addonBefore={addOnsBefore}
+                        addonAfter={addOnsAfter}
+                    />
+                </Column>
+            </Grid>
+        );
+    };
+
     const hookedUpInput = connect(
         mapStateToProps,
         mapDispatchToProps
     )( WrappedAddressBarInput );
+
     return hookedUpInput;
 };

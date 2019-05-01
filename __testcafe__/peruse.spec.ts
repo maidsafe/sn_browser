@@ -4,10 +4,10 @@ import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
 
-const assertNoConsoleErrors = async t => {
+const assertNoConsoleErrors = async ( t ) => {
     const { error } = await t.getBrowserConsoleMessages();
 
-    if ( error.length ) {
+    if ( error.length !== 0 ) {
         console.log( 'Errors encountered:', error );
     }
 
@@ -17,7 +17,7 @@ const assertNoConsoleErrors = async t => {
 fixture`Browser UI`.page( '../app/app.html' ).afterEach( resetStore );
 // .afterEach(assertNoConsoleErrors);
 
-test( 'should open window', async t => {
+test( 'should open window', async ( t ) => {
     await t.expect( getPageTitle() ).eql( 'SAFE Browser' );
 } );
 
@@ -26,18 +26,18 @@ test( 'should open window', async t => {
 //   assertNoConsoleErrors
 // );
 
-test( 'add tab should exist', async t => {
+test( 'add tab should exist', async ( t ) => {
     await t.expect( Selector( `.${CLASSES.ADD_TAB}` ).exists ).ok();
 } );
 
-test( 'can add a tab', async t => {
+test( 'can add a tab', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
         .eql( 2 );
 } );
 
-test( 'can close a tab', async t => {
+test( 'can close a tab', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
@@ -47,7 +47,7 @@ test( 'can close a tab', async t => {
         .eql( 1 );
 } );
 
-test( 'can type in the address bar and get safe: automatically', async t => {
+test( 'can type in the address bar and get safe: automatically', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )

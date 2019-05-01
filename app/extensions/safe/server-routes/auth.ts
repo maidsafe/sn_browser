@@ -10,7 +10,7 @@ import path from 'path';
 export const authRoute = {
     method: 'GET',
     path: /auth:\//,
-    handler: async ( request, res ) => {
+    handler: async ( request, res ): Promise<void> => {
         try {
             const link = request.url.split( '/auth/' )[1];
             const linkUrl = url.parse( link );
@@ -47,7 +47,7 @@ export const authRoute = {
             }
         } catch ( e ) {
             logger.error( e );
-            return res.send( e.message || e );
+            res.send( e.message || e );
         }
     }
 };

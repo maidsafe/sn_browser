@@ -9,6 +9,7 @@ import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
 
 interface HistoryProps {
+    isActiveTab: boolean;
     history: Array<any>;
     addTab: ( ...args: Array<any> ) => any;
 }
@@ -29,8 +30,8 @@ export class History extends Component<HistoryProps, {}> {
         let historyList = [];
         history.forEach( ( tab, i ) => {
             if ( tab.history ) {
-                tab.history.forEach( ( history, ii ) => {
-                    const historyItem = history;
+                tab.history.forEach( ( tabsHistory ) => {
+                    const historyItem = tabsHistory;
                     historyList.push( historyItem );
                 } );
             }
@@ -43,7 +44,7 @@ export class History extends Component<HistoryProps, {}> {
         ];
         // TODO: uniq by object props, so will be less harsh once we have title etc.
         historyList = _.uniq( historyList );
-        historyList = historyList.filter( url => {
+        historyList = historyList.filter( ( url ) => {
             const urlObj = parse( url );
             if (
                 ignoreList.includes( url ) ||

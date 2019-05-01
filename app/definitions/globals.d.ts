@@ -1,3 +1,5 @@
+import { Store } from 'redux';
+
 declare namespace NodeJS {
     interface Global {
         port: number;
@@ -24,4 +26,14 @@ declare module '*.css' {
     const content: any;
     /* eslint-disable-next-line import/no-default-export */
     export default content;
+}
+
+interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: Function;
+    eval: Function | boolean;
+    safe: object;
+    peruseStore: Store;
+    safeAuthenticator: {
+        isAuthorised: () => boolean;
+    };
 }
