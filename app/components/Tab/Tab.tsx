@@ -106,6 +106,35 @@ export class Tab extends Component<TabProps, TabState> {
             window: webview,
             append: ( params ) => [
                 {
+                    label: 'Reload',
+                    accelerator: 'CommandOrControl+R',
+                    click() {
+                        webview.reload();
+                    }
+                },
+                {
+                    label: 'Hard Reload',
+                    // accelerator: 'CommandOrControl+Shift+R',
+                    click() {
+                        webview.reloadIgnoringCache();
+                    }
+                },
+                {
+                    label: 'Forward',
+                    accelerator: 'CommandOrControl + ]',
+                    click() {
+                        webview.goForward();
+                    }
+                },
+                {
+                    label: 'Backward',
+                    accelerator: 'CommandOrControl + [',
+                    click() {
+                        webview.goBack();
+                    }
+                },
+                { type: 'separator' },
+                {
                     label: 'Open Link in New Tab.',
                     visible: params.linkURL && params.linkURL.length > 0,
                     click() {
@@ -115,6 +144,23 @@ export class Tab extends Component<TabProps, TabState> {
                             isActiveTab: true
                         } );
                     }
+                },
+                { type: 'separator' },
+                {
+                    label: 'Cut',
+                    selector: 'cut:'
+                },
+                {
+                    label: 'Copy',
+                    selector: 'copy:'
+                },
+                {
+                    label: 'Paste',
+                    selector: 'paste:'
+                },
+                {
+                    label: 'Select All',
+                    selector: 'selectAll:'
                 }
             ],
             showCopyImageAddress: true,

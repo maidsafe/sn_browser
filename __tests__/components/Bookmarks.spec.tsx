@@ -16,13 +16,12 @@ describe( 'Bookmarks', () => {
             addTab: jest.fn()
         };
 
-        wrapper = shallow( <Bookmarks {...props} /> );
-        instance = wrapper.instance();
+        wrapper = mount( <Bookmarks {...props} /> );
     } );
 
     describe( 'constructor( props )', () => {
         it( 'should have name Bookmarks', () => {
-            expect( instance.constructor.name ).toBe( 'Bookmarks' );
+            expect( Bookmarks.name ).toBe( 'Bookmarks' );
         } );
     } );
 
@@ -52,7 +51,7 @@ describe( 'Bookmarks', () => {
     describe( 'props', () => {
         describe( 'tabs', () => {
             it( 'tabs length should be "0" by default', () => {
-                expect( instance.props.bookmarks.length ).toBe( 0 );
+                expect( wrapper.props().bookmarks.length ).toBe( 0 );
             } );
         } );
     } );

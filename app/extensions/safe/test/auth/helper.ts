@@ -14,7 +14,14 @@ export const getRandomCredentials = () => ( {
     invite: crypto.randomBytes( 10 ).toString( 'hex' )
 } );
 
-export const createRandomAccount = async () => {
+export const createRandomAccount = async (): Promise<
+| {
+    locator: string;
+    secret: string;
+    invite: string;
+}
+| Error
+> => {
     const randomCredentials = getRandomCredentials();
 
     try {
@@ -25,7 +32,8 @@ export const createRandomAccount = async () => {
         );
         return randomCredentials;
     } catch ( e ) {
-        console.info( 'helper/createRandom error:', e );
+        console.error( 'helper/createRandom error:', e );
+        return e;
     }
 };
 

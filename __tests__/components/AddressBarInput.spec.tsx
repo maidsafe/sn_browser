@@ -42,7 +42,11 @@ describe( 'AddressBarInput', () => {
             onSelect: jest.fn(),
             onFocus: jest.fn(),
             activeTab: { isLoading: false },
-            updateTab: jest.fn()
+            updateTab: jest.fn(),
+            safeBrowserApp: {
+                isMock: false,
+                experimentsEnabled: false
+            }
         };
     } );
 

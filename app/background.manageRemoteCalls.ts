@@ -17,15 +17,15 @@ const allApiCalls = {
  * updating the remoteCall.
  * @param  {[type]}  store Redux store
  */
-export const manageRemoteCalls = async store => {
+export const manageRemoteCalls = async ( store ) => {
     const state = store.getState();
     const { remoteCalls } = state;
     if ( cachedRemoteCallArray !== remoteCalls ) {
         cachedRemoteCallArray = remoteCalls;
 
-        if ( !remoteCalls.length ) return;
+        if ( remoteCalls.length === 0 ) return;
 
-        remoteCalls.forEach( async theCall => {
+        remoteCalls.forEach( async ( theCall ) => {
             if ( !theCall.inProgress && !pendingCallIds[theCall.id] ) {
                 // hack to prevent multi store triggering.
                 // not needed for auth via redux.

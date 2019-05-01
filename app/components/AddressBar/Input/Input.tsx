@@ -81,7 +81,7 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
         }
     }
 
-    handleFocus = event => {
+    handleFocus = ( event ) => {
         const { onFocus } = this.props;
         onFocus();
         event.target.select();
@@ -123,7 +123,7 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
                 size="large"
                 value={address}
                 type="text"
-                ref={input => {
+                ref={( input ) => {
                     this.addressInput = input;
                     if (
                         isSelected &&

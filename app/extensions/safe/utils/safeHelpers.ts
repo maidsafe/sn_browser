@@ -88,12 +88,18 @@ export const generateResponseStr = ( data ) => {
     return responseString;
 };
 
-export function parseSafeAuthUrl( safeUrl, isClient ) {
+export function parseSafeAuthUrl( safeUrl, isClient? ) {
     if ( typeof safeUrl !== 'string' ) {
         throw new Error( 'URl should be a string to parse' );
     }
 
-    const safeAuthUrl = {};
+    const safeAuthUrl: {
+        protocol?: string;
+        action?: string;
+        appId?: string;
+        payload?: string;
+        search?: string;
+    } = {};
     const parsedUrl = url.parse( safeUrl );
 
     if (

@@ -26,10 +26,6 @@ const initialStateFromMain: {} = inRendererProcess
 
 const rootReducer: Reducer = createRootReducer();
 
-declare namespace window {
-    function __REDUX_DEVTOOLS_EXTENSION_COMPOSE__( actionCreators: {} );
-}
-
 export const configureStore = ( initialState: {} = initialStateFromMain ) => {
     // Redux Configuration
     const middleware: Array<any> = [];

@@ -8,43 +8,37 @@ interface UrlListProps {
     onRemove?: ( ...args: Array<any> ) => any;
     addTab?: ( ...args: Array<any> ) => any;
 }
-export class UrlList extends Component<UrlListProps, {}> {
-    static defaultProps = {
-        list: []
-    };
-
-    render = () => {
-        const { addTab, list } = this.props;
-        const parsedList = [];
-        list.forEach( ( item, i ) => {
-            const handleClick = e => {
-                // required to prevent the app navigating by default.
-                e.preventDefault();
-                addTab( {
-                    url: item,
-                    isActiveTab: true
-                } );
-            };
-            const listItem = (
-                <TableRow align="left" verticalAlign="middle" gutters="S" key={i}>
-                    <TableCell>
-                        <a onClick={handleClick} href={item}>
-                            {item}
-                        </a>
-                    </TableCell>
-                </TableRow>
-            );
-            parsedList.push( listItem );
-        } );
-        return (
-            <Table className={styles.table}>
-                {parsedList}
-                {!parsedList.length && (
-                    <TableRow>
-                        <TableCell>Nothing to see here yet.</TableCell>
-                    </TableRow>
-                )}
-            </Table>
+export const UrlList = ( props: UrlListProps = { list: [] } ) => {
+    const { addTab, list } = props;
+    const parsedList = [];
+    list.forEach( ( item ) => {
+        const handleClick = ( event ) => {
+            // required to prevent the app navigating by default.
+            event.preventDefault();
+            addTab( {
+                url: item,
+                isActiveTab: true
+            } );
+        };
+        const listItem = (
+            <TableRow align="left" verticalAlign="middle" gutters="S" key={item}>
+                <TableCell>
+                    <a onClick={handleClick} href={item}>
+                        {item}
+                    </a>
+                </TableCell>
+            </TableRow>
         );
-    };
-}
+        parsedList.push( listItem );
+    } );
+    return (
+        <Table className={styles.table}>
+            {parsedList}
+            {!parsedList.length && (
+                <TableRow>
+                    <TableCell>Nothing to see here yet.</TableCell>
+                </TableRow>
+            )}
+        </Table>
+    );
+};
