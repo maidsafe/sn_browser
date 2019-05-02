@@ -70,15 +70,6 @@ export const openWindow = ( store ): BrowserWindow => {
 
     mainWindow.loadURL( `file://${__dirname}/app.html` );
 
-    mainWindow.webContents.once(
-        'ready-to-show',
-        async (): Promise<void> => {
-            // before show let state load
-            mainWindow.show();
-            mainWindow.focus();
-        }
-    );
-
     mainWindow.webContents.on(
         'did-finish-load',
         async (): Promise<void> => {
@@ -123,6 +114,9 @@ export const openWindow = ( store ): BrowserWindow => {
                 );
                 store.dispatch( selectAddressBar() );
             }
+
+            mainWindow.show();
+            mainWindow.focus();
         }
     );
     mainWindow.on(
