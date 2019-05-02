@@ -1,7 +1,7 @@
 import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import windowStateKeeper from 'electron-window-state';
-// import { logger } from '$Logger';
+import { logger } from '$Logger';
 import { MenuBuilder } from './menu';
 import { onOpenLoadExtensions } from './extensions';
 import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
@@ -150,20 +150,11 @@ export const openWindow = ( store ): BrowserWindow => {
         }
     );
 
-    mainWindow.webContents.on( 'preload-error', ( event, code, message ) => {
-        logger.error(
-            '>>>>>>>>>>>>>>>>>>>>>>>> Browser render process preload error <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
-        );
-        logger.error( error );
-        reject( message );
-    } );
-
     mainWindow.webContents.on( 'crashed', ( event, code, message ) => {
         logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>> Browser render process crashed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
         );
         logger.error( event, message );
-        reject( message );
     } );
 
     browserWindowArray.push( mainWindow );

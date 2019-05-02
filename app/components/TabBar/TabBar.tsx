@@ -38,8 +38,9 @@ export class TabBar extends Component<TabBarProps> {
         this.handleAddTabClick = this.handleAddTabClick.bind( this );
     }
 
-    getTabs = () => {
+    getTabs = (): Array<React.ReactNode> => {
         const { tabs } = this.props;
+
         return tabs.map(
             ( tab ): React.ReactNode => {
                 let { title } = tab;
@@ -62,8 +63,9 @@ export class TabBar extends Component<TabBarProps> {
                     }
                 }
                 if ( tab.isClosed ) {
-                    return;
+                    return null;
                 }
+
                 const { isActiveTab } = tab;
                 let tabStyleClass = styles.tab;
                 const tabData = {
@@ -71,14 +73,21 @@ export class TabBar extends Component<TabBarProps> {
                     tabIndex: tab.index,
                     url: tab.url
                 };
+
                 if ( isActiveTab ) {
                     tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
                 }
+
                 return (
-                    <div
+                    <button
+                        type="button"
+                        role="tab"
                         key={tab.index}
                         className={`${tabStyleClass} ${CLASSES.TAB}`}
                         onClick={( event ) => {
+                            this.handleTabClick( tabData, event );
+                        }}
+                        onKeyPress={( event ) => {
                             this.handleTabClick( tabData, event );
                         }}
                     >
@@ -116,7 +125,7 @@ export class TabBar extends Component<TabBarProps> {
                                 />
                             </Col>
                         </Row>
-                    </div>
+                    </button>
                 );
             }
         );

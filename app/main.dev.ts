@@ -38,12 +38,7 @@ import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions';
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
 const initialState = {};
-let bgProcessWindow = null;
-
-// Add middleware from extensions here.
-const loadMiddlewarePackages = [];
-
-const store = configureStore( initialState, loadMiddlewarePackages );
+const store = configureStore( initialState );
 
 logger.info( 'Main process starting.' );
 
@@ -55,7 +50,7 @@ ipcMain.on( 'open', ( event, data ) => {
     open( data );
 } );
 
-export let mainWindow: BrowserWindow;
+let mainWindow: BrowserWindow;
 
 // Do any pre app extension work
 preAppLoad();
@@ -74,6 +69,7 @@ if ( process.argv.includes( '--preload' ) ) {
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
 if ( isRunningPackaged ) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const sourceMapSupport = require( 'source-map-support' );
     sourceMapSupport.install();
 }
@@ -82,21 +78,22 @@ if (
     ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked ) ||
   isRunningDebug
 ) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require( 'electron-debug' )();
-    const path = require( 'path' );
     const p = path.join( __dirname, '..', 'app', 'node_modules' );
     require( 'module' ).globalPaths.push( p );
 }
 
-const installExtensions = async () => {
+const installExtensions = async (): Promise<void> => {
     if ( isCI ) return;
 
     logger.info( 'Installing devtools extensions' );
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const installer = require( 'electron-devtools-installer' );
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
-    return Promise.all(
+    await Promise.all(
         extensions.map( ( name ) => installer.default( installer[name], forceDownload ) )
     ).catch( console.log );
 };
@@ -141,7 +138,7 @@ app.on( 'ready', async () => {
         }
     }
 
-    bgProcessWindow = await setupBackground();
+    await setupBackground();
 
     mainWindow = openWindow( store );
 } );
