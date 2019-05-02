@@ -7,14 +7,6 @@ import safeBrowsing from './safe';
 // const allPackages = [ ];
 const allPackages = [safeBrowsing];
 
-export const preAppLoad = ( store: Store ): void => {
-    allPackages.forEach( ( extension ) => {
-        if ( extension.preAppLoad ) {
-            extension.preAppLoad( store );
-        }
-    } );
-};
-
 export const triggerOnWebviewPreload = ( store: Store ): void => {
     allPackages.forEach( ( extension ) => {
         if ( extension.onWebviewPreload ) {
@@ -155,14 +147,6 @@ export const onAppReady = ( store ) => {
     allPackages.forEach( ( extension ) => {
         if ( extension.onAppReady ) {
             extension.onAppReady( store );
-        }
-    } );
-};
-
-export const onReceiveUrl = ( store, url ) => {
-    allPackages.forEach( ( extension ) => {
-        if ( extension.onReceiveUrl ) {
-            extension.onReceiveUrl( store, url );
         }
     } );
 };

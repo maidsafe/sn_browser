@@ -33,7 +33,11 @@ import { setupBackground } from './setupBackground';
 
 import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
-import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions';
+import {
+    onReceiveUrl,
+    preAppLoad,
+    onAppReady
+} from '$Extensions/main-process-extensions';
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -53,7 +57,7 @@ ipcMain.on( 'open', ( event, data ) => {
 let mainWindow: BrowserWindow;
 
 // Do any pre app extension work
-preAppLoad();
+preAppLoad( store );
 
 // Apply MockVault if wanted for prealod
 if ( process.argv.includes( '--preload' ) ) {
