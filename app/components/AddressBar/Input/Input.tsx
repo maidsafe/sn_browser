@@ -117,9 +117,11 @@ class AddressBarInput extends Component<{}, AddressBarInputState> {
                 className={CLASSES.ADDRESS_INPUT}
                 aria-label={I18n.t( 'aria.address_bar' )}
                 addonBefore={
-                    addonBefore && addonBefore.length ? addonBefore : undefined
+                    addonBefore && addonBefore.length !== 0 ? addonBefore : undefined
                 }
-                addonAfter={addonAfter && addonAfter.length ? addonAfter : undefined}
+                addonAfter={
+                    addonAfter && addonAfter.length !== 0 ? addonAfter : undefined
+                }
                 size="large"
                 value={address}
                 type="text"

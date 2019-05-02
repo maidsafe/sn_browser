@@ -65,7 +65,7 @@ export default merge.smart( baseConfig, {
     module: {
         rules: [
             {
-                test: /node_modules[\/\\](iconv-lite)[\/\\].+/,
+                test: /node_modules[/\\](iconv-lite)[/\\].+/,
                 resolve: {
                     aliasFields: ['main']
                 }
@@ -310,8 +310,8 @@ export default merge.smart( baseConfig, {
                     env: process.env,
                     stdio: 'inherit'
                 } )
-                    .on( 'close', code => process.exit( code ) )
-                    .on( 'error', spawnError => console.error( spawnError ) );
+                    .on( 'close', ( code ) => process.exit( code ) )
+                    .on( 'error', ( spawnError ) => console.error( spawnError ) );
             }
         }
     }

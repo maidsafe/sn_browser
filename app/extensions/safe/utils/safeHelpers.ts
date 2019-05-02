@@ -28,7 +28,10 @@ export const urlIsAllowedBySafe = ( testUrl ) => {
         return true;
     }
 
-    if ( urlObject.hostname === '127.0.0.1' || urlObject.hostname === 'localhost' ) {
+    if (
+        urlObject.hostname === '127.0.0.1' ||
+    urlObject.hostname === 'localhost'
+    ) {
         return true;
     }
 
@@ -39,7 +42,7 @@ export const generateBoundaryStr = () => {
     let text = '';
     const charSet = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-    for ( let i = 0; i < 13; i++ ) {
+    for ( let i = 0; i < 13; i += 1 ) {
         text += charSet.charAt( Math.floor( Math.random() * charSet.length ) );
     }
 
@@ -113,9 +116,12 @@ export function parseSafeAuthUrl( safeUrl, isClient? ) {
 
     const data = parsedUrl.pathname ? parsedUrl.pathname.split( '/' ) : null;
     if ( !isClient && !!data ) {
+    // eslint-disable-next-line prefer-destructuring
         safeAuthUrl.appId = data[1];
+        // eslint-disable-next-line prefer-destructuring
         safeAuthUrl.payload = data[2];
     } else {
+    // eslint-disable-next-line prefer-destructuring
         safeAuthUrl.appId = parsedUrl.protocol.split( '-' ).slice( -1 )[0];
         safeAuthUrl.payload = null;
     }

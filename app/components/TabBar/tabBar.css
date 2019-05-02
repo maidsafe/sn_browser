@@ -47,6 +47,10 @@
     max-width: 250px;
     text-align: left;
     user-select: none;
+    background-color: transparent;
+    outline: none;
+    border-bottom: none;
+    border-left: none;
 }
 
 .tab:first-child {

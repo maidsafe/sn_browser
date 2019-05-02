@@ -90,7 +90,9 @@ module.exports = {
                 'import/no-default-export': 'off',
                 '@typescript-eslint/tslint/config': 'off',
                 '@typescript-eslint/no-var-requires': 'off',
-                'global-require': 'off'
+                'global-require': 'off',
+                'unicorn/no-unsafe-regex': 'off',
+                'unicorn/no-process-exit': 'off'
             }
         },
         {
@@ -102,7 +104,11 @@ module.exports = {
         },
         {
             files: ['*.spec.*'],
-            globals: { fixture: 'readonly' }
+            globals: { fixture: 'readonly' },
+            rules: {
+                'consistent-return': 'off',
+                '@typescript-eslint/explicit-function-return-type': 'off'
+            }
         },
         {
             files: ['*.tsx'],
