@@ -8,25 +8,27 @@ export const isForSafeServer = ( parsedUrlObject ) =>
 
 export const urlIsAllowedBySafe = ( testUrl ) => {
     logger.info( 'Checking urlIsAllowedBySafe', testUrl );
-    const urlObj = url.parse( testUrl );
+    const urlObject = url.parse( testUrl );
 
     const validProtocols = pkg.build.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( ( proto ) => `${proto}:` );
 
+    if ( testUrl === 'about:blank' ) return true;
+
     // TODO: locally server appspot files to avoid reqs thereto.
     if (
-        adaptedProtocols.includes( urlObj.protocol ) ||
-    isForSafeServer( urlObj ) ||
-    urlObj.protocol === 'chrome-devtools:' ||
-    urlObj.protocol === 'file:' ||
-    urlObj.protocol === 'blob:' ||
-    urlObj.protocol === 'chrome-extension:' ||
-    urlObj.host === 'chrome-devtools-frontend.appspot.com'
+        adaptedProtocols.includes( urlObject.protocol ) ||
+    isForSafeServer( urlObject ) ||
+    urlObject.protocol === 'chrome-devtools:' ||
+    urlObject.protocol === 'file:' ||
+    urlObject.protocol === 'blob:' ||
+    urlObject.protocol === 'chrome-extension:' ||
+    urlObject.host === 'chrome-devtools-frontend.appspot.com'
     ) {
         return true;
     }
 
-    if ( urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost' ) {
+    if ( urlObject.hostname === '127.0.0.1' || urlObject.hostname === 'localhost' ) {
         return true;
     }
 
@@ -50,40 +52,40 @@ export const rangeStringToArray = ( rangeString ) => {
         .substring( BYTES.length, rangeString.length )
         .split( ',' )
         .map( ( part ) => {
-            const partObj = {};
+            const partObject = {};
             part.split( '-' ).forEach( ( int, i ) => {
                 if ( i === 0 ) {
                     if ( Number.isInteger( parseInt( int, 10 ) ) ) {
-                        partObj.start = parseInt( int, 10 );
+                        partObject.start = parseInt( int, 10 );
                     } else {
-                        partObj.start = null;
+                        partObject.start = null;
                     }
                 } else if ( i === 1 ) {
                     if ( Number.isInteger( parseInt( int, 10 ) ) ) {
-                        partObj.end = parseInt( int, 10 );
+                        partObject.end = parseInt( int, 10 );
                     } else {
-                        partObj.end = null;
+                        partObject.end = null;
                     }
                 }
             } );
-            return partObj;
+            return partObject;
         } );
 };
 
 export const generateResponseStr = ( data ) => {
-    const boundaryStr = generateBoundaryStr();
+    const boundaryString = generateBoundaryStr();
     const crlf = '\r\n';
-    let responseStr = `HTTP/1.1 206 Partial Content${crlf}`;
-    responseStr += `Content-Type: multipart/byteranges; boundary=${boundaryStr}${crlf}`;
-    responseStr += `Content-Length:${data.headers['Content-Length']}${crlf}`;
+    let responseString = `HTTP/1.1 206 Partial Content${crlf}`;
+    responseString += `Content-Type: multipart/byteranges; boundary=${boundaryString}${crlf}`;
+    responseString += `Content-Length:${data.headers['Content-Length']}${crlf}`;
     data.parts.forEach( ( part ) => {
-        responseStr += `--${boundaryStr}${crlf}`;
-        responseStr += `Content-Type:${part.headers['Content-Type']}${crlf}`;
-        responseStr += `Content-Range: ${part.headers['Content-Range']}${crlf}`;
-        responseStr += `${part.body}${crlf}`;
+        responseString += `--${boundaryString}${crlf}`;
+        responseString += `Content-Type:${part.headers['Content-Type']}${crlf}`;
+        responseString += `Content-Range: ${part.headers['Content-Range']}${crlf}`;
+        responseString += `${part.body}${crlf}`;
     } );
-    responseStr += `--${boundaryStr}--`;
-    return responseStr;
+    responseString += `--${boundaryString}--`;
+    return responseString;
 };
 
 export function parseSafeAuthUrl( safeUrl, isClient? ) {
