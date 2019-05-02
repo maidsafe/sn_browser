@@ -78,23 +78,6 @@ export const {
     TYPES.SHOW_WEB_ID_DROPDOWN
 );
 
-const triggerGetWebIds = async () => {
-    if ( !inBgProcess ) return;
-
-    logger.info( 'BGBG Retrieving webIds' );
-    const ids = await getWebIds();
-};
-
-export const getAvailableWebIds = createAliasedAction(
-    TYPES.GET_AVAILABLE_WEB_IDS,
-    // TODO: there is a complaint about not having middleware, despite redux-promise.
-    () => ( {
-    // the real action
-        type: TYPES.GET_AVAILABLE_WEB_IDS,
-        payload: triggerGetWebIds()
-    } )
-);
-
 /**
  * Get WebIds for the current user
  * @return {Promise} Resolves to Array of webIds
@@ -121,6 +104,21 @@ const getWebIds = async () => {
     webIds = await safeBrowserApp.web.getWebIds();
 
     currentStore.dispatch( setAvailableWebIds( webIds ) );
-
-    return webIds;
 };
+
+const triggerGetWebIds = async () => {
+    if ( !inBgProcess ) return;
+
+    logger.info( 'BG Retrieving webIds' );
+    const ids = await getWebIds();
+};
+
+export const getAvailableWebIds = createAliasedAction(
+    TYPES.GET_AVAILABLE_WEB_IDS,
+    // TODO: there is a complaint about not having middleware, despite redux-promise.
+    () => ( {
+    // the real action
+        type: TYPES.GET_AVAILABLE_WEB_IDS,
+        payload: triggerGetWebIds()
+    } )
+);

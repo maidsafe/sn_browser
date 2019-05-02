@@ -24,6 +24,7 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => ( {
             return Promise.resolve( 'Resolving encodeMDataResp via mock' );
         }
         if ( !isAllowed ) {
+            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject( 'Rejecting encodeMDataResp via mock' );
         }
     } )
@@ -38,7 +39,7 @@ describe( 'shared MD auth decision', () => {
     test( 'throws error on no data', async () => {
         expect.assertions( 2 );
         try {
-            await onSharedMDataDecision();
+            await onSharedMDataDecision( '_', '_' );
         } catch ( error ) {
             expect( error ).toEqual( new Error( 'hello Fake message' ) );
             expect( error.message ).not.toBeUndefined();

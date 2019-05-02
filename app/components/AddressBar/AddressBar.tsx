@@ -50,7 +50,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
         tabForwards( { windowId } );
     };
 
-    handleRefresh = () => {
+    handleRefresh = ( event ) => {
     // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
         const { updateTab, windowId } = this.props;
@@ -59,7 +59,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
 
     getSettingsMenuItems = () => {
         const { addTab, windowId } = this.props;
-        const addATab = tab => {
+        const addATab = ( tab ) => {
             addTab( { url: `safe-browser://${tab}`, isActiveTab: true, windowId } );
         };
         return [
@@ -69,6 +69,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                     tabIndex={0}
                     className={`${styles.menuItem} ${CLASSES.SETTINGS_MENU__BOOKMARKS}`}
                     onClick={() => addATab( 'bookmarks' )}
+                    onKeyPress={() => addATab( 'bookmarks' )}
                 >
           Bookmarks
                 </div>
@@ -79,6 +80,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                     tabIndex={0}
                     className={`${styles.menuItem} ${CLASSES.SETTINGS_MENU__HISTORY}`}
                     onClick={() => addATab( 'history' )}
+                    onKeyPress={() => addATab( 'history' )}
                 >
           History
                 </div>

@@ -27,12 +27,13 @@ export const isRunningSpectronTestProcess =
       ? remote.getGlobal( 'isRunningSpectronTestProcess' )
       : process.env.SPECTRON_TEST || false;
 
+const appIsPackaged = app ? app.isPackaged : false;
+
 export const isRunningPackaged =
   remote && remote.getGlobal
       ? remote.getGlobal( 'isRunningPackaged' )
-      : app
-          ? app.isPackaged
-          : false;
+      : appIsPackaged;
+
 export const isRunningUnpacked = !isRunningPackaged;
 export const isRunningSpectronTestProcessingPackagedApp =
   remote && remote.getGlobal
@@ -75,7 +76,7 @@ export const env = shouldStartAsMockFromFlagsOrPackage
     ? 'development'
     : process.env.NODE_ENV || 'production';
 
-export const isRunningDevelopment = /^dev/.test( env );
+export const isRunningDevelopment = env.startsWith( 'dev' );
 
 export const isCI =
   remote && remote.getGlobal ? remote.getGlobal( 'isCI' ) : process.env.CI;
@@ -90,9 +91,9 @@ const startAsMockNetwork = shouldStartAsMockFromFlagsOrPackage;
 export const startedRunningMock =
   remote && remote.getGlobal
       ? remote.getGlobal( 'startedRunningMock' )
-      : startAsMockNetwork || /^dev/.test( env );
+      : startAsMockNetwork || env.startsWith( 'dev' );
 export const startedRunningProduction = !startedRunningMock;
-export const isRunningNodeEnvTest = /^test/.test( env );
+export const isRunningNodeEnvTest = env.startsWith( 'test' );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = typeof remote === 'undefined';

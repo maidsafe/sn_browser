@@ -2,16 +2,17 @@ import { Store } from 'redux';
 
 declare namespace NodeJS {
     interface Global {
-        port: number;
-        preloadFile: string;
         appDir: string;
         isCI: boolean;
+        macAllWindowsClosed: boolean;
+        mainProcessStore: Store;
+        port: number;
+        preloadFile: string;
         startedRunningMock: boolean;
         shouldStartAsMockFromFlagsOrPackage: boolean;
         isRunningSpectronTestProcessingPackagedApp: boolean;
         SAFE_NODE_LIB_PATH: string;
         SPECTRON_TEST: boolean;
-        macAllWindowsClosed: boolean;
     }
 }
 

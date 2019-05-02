@@ -33,19 +33,10 @@ import { initAuthedApplication } from '$Extensions/safe/safeBrowserApplication/i
 // let safeBrowserAppObject;
 let tempSafeBrowserObjectUntilAuthed;
 
-/**
- * Setup actions to be triggered in response to store state changes.
- * @param  { ReduxStore } store [description]
- */
-export const handleSafeBrowserStoreChanges = store => {
-    // TODO check why we need this vs passing it around
-    setCurrentStore( store );
-
-    // lets set state for all funcs to have the same reference.
-    manageSaveStateActions( store );
-    manageReadStateActions( store );
-    manageAuthorisationActions( store );
-};
+let debouncedPassAuthUriToStore;
+let prevSafeBrowserAppAuthState;
+let prevSafeBrowserAppExperimentalState;
+const urisUnderAuth = [];
 
 /**
  * Everything we need to do to start the SafeBrowser App for fetching at least.
@@ -85,8 +76,6 @@ export const initSafeBrowserApp = async ( passedStore, authorise = false ) => {
         throw new Error( 'Safe Browser init failed' );
     }
 };
-
-const urisUnderAuth = [];
 
 const authFromStoreResponse = async ( res, store ) => {
     logger.info( 'Authing from a store-passed response.', Date.now(), res );
@@ -159,15 +148,12 @@ const authFromStoreResponse = async ( res, store ) => {
     }
 };
 
-let debouncedPassAuthUriToStore;
-let prevSafeBrowserAppAuthState;
-let prevSafeBrowserAppExperimentalState;
 /**
  * Handle triggering actions and related functionality for Authorising on the SAFE netowrk
  * based upon the application auth state
  * @param  {Object} state Application state (from redux)
  */
-const manageAuthorisationActions = async store => {
+const manageAuthorisationActions = async ( store ) => {
     // TODO: Do this via aliased action.
 
     // const
@@ -175,7 +161,7 @@ const manageAuthorisationActions = async store => {
 
     debouncedPassAuthUriToStore =
     debouncedPassAuthUriToStore ||
-    _.debounce( responseUri => {
+    _.debounce( ( responseUri ) => {
         store.dispatch( receivedAuthResponse( '' ) );
         authFromStoreResponse( responseUri, store );
         setIsAuthing( false );
@@ -212,7 +198,7 @@ const manageAuthorisationActions = async store => {
 
     if (
         safeBrowserState.authResponseUri &&
-    safeBrowserState.authResponseUri.length
+    safeBrowserState.authResponseUri.length !== 0
     ) {
     // TODO: This should 'clear' or somesuch....
     // OR: Only run if not authed?
@@ -225,4 +211,18 @@ const manageAuthorisationActions = async store => {
         prevSafeBrowserAppExperimentalState = experimentsEnabled;
         initSafeBrowserApp( store, safeBrowserAppIsAuthed() );
     }
+};
+
+/**
+ * Setup actions to be triggered in response to store state changes.
+ * @param  { ReduxStore } store [description]
+ */
+export const handleSafeBrowserStoreChanges = ( store ) => {
+    // TODO check why we need this vs passing it around
+    setCurrentStore( store );
+
+    // lets set state for all funcs to have the same reference.
+    manageSaveStateActions( store );
+    manageReadStateActions( store );
+    manageAuthorisationActions( store );
 };
