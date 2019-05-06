@@ -10,6 +10,7 @@
         "esModuleInterop": true,
         "paths": {
             "*": ["app/definitions"],
+            "$App/*": ["app/*"],
             "$Tests/*": ["__tests__/*"],
             "spectron-lib/*": ["__e2e__/lib"],
             "$Actions/*": ["app/actions/*"],

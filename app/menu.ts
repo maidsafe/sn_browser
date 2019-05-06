@@ -1,4 +1,5 @@
 import open from 'open';
+import { Store } from 'redux';
 import { app, Menu, BrowserWindow } from 'electron';
 import {
     addTab,
@@ -17,15 +18,22 @@ import { logger } from '$Logger';
 import pkg from '$Package';
 
 import { getExtensionMenuItems } from '$Extensions';
+// import { AppWindow } from '$App/definitions/globals.d';
 
 export class MenuBuilder {
-    constructor( mainWindow: BrowserWindow, openWindow, store ) {
+    private mainWindow: AppWindow;
+
+    private openWindow: Function;
+
+    public store: Store;
+
+    public constructor( mainWindow: AppWindow, openWindow, store ) {
         this.mainWindow = mainWindow;
         this.openWindow = openWindow;
         this.store = store;
     }
 
-    buildMenu() {
+    public buildMenu() {
         if ( isHot ) {
             this.setupDevelopmentEnvironment();
         }
@@ -38,7 +46,7 @@ export class MenuBuilder {
         return menu;
     }
 
-    setupDevelopmentEnvironment() {
+    private setupDevelopmentEnvironment() {
         this.mainWindow.openDevTools();
         this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
             const { x, y } = properties;
@@ -54,7 +62,7 @@ export class MenuBuilder {
         } );
     }
 
-    buildMenusTemplate() {
+    private buildMenusTemplate() {
         const { store } = this;
 
         const subMenuAbout = {
@@ -128,13 +136,15 @@ export class MenuBuilder {
                             const state = store.getState();
                             let index;
                             const openTabs = state.tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
                             );
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab.isActiveTab ) {
                                     if ( i === openTabs.length - 1 ) {
+                                        // eslint-disable-next-line prefer-destructuring
                                         index = openTabs[0].index;
                                     } else {
+                                        // eslint-disable-next-line prefer-destructuring
                                         index = openTabs[i + 1].index;
                                     }
                                 }
@@ -152,13 +162,15 @@ export class MenuBuilder {
                             const state = store.getState();
                             let index;
                             const openTabs = state.tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
                             );
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab.isActiveTab ) {
                                     if ( i === 0 ) {
+                                        // eslint-disable-next-line prefer-destructuring
                                         index = openTabs[openTabs.length - 1].index;
                                     } else {
+                                        // eslint-disable-next-line prefer-destructuring
                                         index = openTabs[i - 1].index;
                                     }
                                 }
@@ -176,7 +188,7 @@ export class MenuBuilder {
                             const windowId = win.webContents.id;
 
                             const openTabs = tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
                             );
 
                             if ( openTabs.length === 1 ) {
@@ -201,6 +213,8 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+Shift+T',
                     click: ( item, win ) => {
                         const lastTab = getLastClosedTab( store.getState().tabs );
+
+                        // TODO properly declare tab type.
                         let windowToFocus = lastTab.windowId;
 
                         if ( windowToFocus ) {
