@@ -235,7 +235,7 @@
     "@typescript-eslint/parser": "1.7.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
-    "babel-jest": "^24.7.1",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-add-module-exports": "1.0.2",
     "babel-plugin-dev-expression": "^0.2.1",
