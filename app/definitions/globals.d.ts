@@ -1,4 +1,5 @@
 import { Store } from 'redux';
+import { BrowserWindow } from 'electron';
 
 declare namespace NodeJS {
     interface Global {
@@ -37,4 +38,11 @@ interface Window {
     safeAuthenticator: {
         isAuthorised: () => boolean;
     };
+}
+
+export interface AppWindow extends BrowserWindow {
+    mainWindow: BrowserWindow;
+    openWindow: Function;
+    store: Store;
+    openDevTools: Function;
 }
