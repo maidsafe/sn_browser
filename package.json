@@ -291,7 +291,7 @@
     "opencollective-postinstall": "^2.0.1",
     "opensans-npm-webfont": "1.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "postcss": "^7.0.14",
+    "postcss": "^7.0.16",
     "postcss-loader": "^3.0.0",
     "postcss-scss": "^2.0.0",
     "precss": "^4.0.0",
