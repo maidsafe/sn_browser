@@ -100,17 +100,9 @@ class Browser extends Component<BrowserProps, BrowserState> {
     };
 
     handleCloseBrowserTab = tab => {
-<<<<<<< HEAD
-        const { closeTab, tabs } = this.props;
-        const openTabs = tabs.filter(
-            t => !t.isClosed && t.windowId === this.state.windowId
-        );
-
-=======
         const { windows, windowCloseTab } = this.props;
         const { windowId } = this.state;
         const openTabs = windows.openWindows[windowId].tabs;
->>>>>>> d76d4c23... fix(tabs): Generate Unique Ids for individual tabs
         if ( openTabs.length === 1 ) {
             ipcRenderer.send( 'command:close-window' );
         } else {

@@ -82,15 +82,9 @@ class AddressBarInput extends Component<AddressBarInputProps, AddressBarInputSta
         }
     }
 
-<<<<<<< HEAD
-    handleFocus = ( event ) => {
-        const { onFocus } = this.props;
-        onFocus();
-=======
     handleFocus = event => {
         const { onFocus, tabId } = this.props;
         onFocus({ tabId });
->>>>>>> d76d4c23... fix(tabs): Generate Unique Ids for individual tabs
         event.target.select();
     };
 
