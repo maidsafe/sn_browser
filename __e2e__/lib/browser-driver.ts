@@ -4,9 +4,10 @@ import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from './constants';
 let peruseBrowserWindowIndex;
 let peruseBgWindowIndex;
 
-export const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
+export const delay = ( time ) =>
+    new Promise( ( resolve ) => setTimeout( resolve, time ) );
 
-export const setClientToMainBrowserWindow = async app => {
+export const setClientToMainBrowserWindow = async ( app ) => {
     const { client } = app;
     const windows = await client.getWindowCount();
 
@@ -15,9 +16,11 @@ export const setClientToMainBrowserWindow = async app => {
         return;
     }
 
-    for ( let i = 0; i < windows; i++ ) {
+    for ( let i = 0; i < windows; i += 1 ) {
     // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
+    // eslint-disable-next-line no-await-in-loop
         await client.windowByIndex( i );
+        // eslint-disable-next-line no-await-in-loop
         const url = await client.getUrl();
         const urlObj = urlParse( url );
         // get the PeruseBrowserWindow
@@ -31,12 +34,14 @@ export const setClientToMainBrowserWindow = async app => {
     await client.windowByIndex( peruseBrowserWindowIndex );
 };
 
-export const setClientToBackgroundProcessWindow = async app => {
+export const setClientToBackgroundProcessWindow = async ( app ) => {
     const { client } = app;
     const windows = await client.getWindowCount();
 
-    for ( let i = 0; i < windows; i++ ) {
+    for ( let i = 0; i < windows; i += 1 ) {
+    // eslint-disable-next-line no-await-in-loop
         await client.windowByIndex( i );
+        // eslint-disable-next-line no-await-in-loop
         const url = await client.getUrl();
         const urlObj = urlParse( url );
 
@@ -71,14 +76,16 @@ export const navigateTo = async ( app, url ) => {
     await client.pause( 1500 );
 };
 
-export const newTab = async app => {
+export const newTab = async ( app ) => {
     const { client } = app;
 
     const windows = await client.getWindowCount();
 
-    for ( let i = 0; i < windows; i++ ) {
+    for ( let i = 0; i < windows; i += 1 ) {
     // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
+    // eslint-disable-next-line no-await-in-loop
         await client.windowByIndex( i );
+        // eslint-disable-next-line no-await-in-loop
         await client.getUrl();
     }
 
@@ -90,7 +97,7 @@ export const newTab = async app => {
     return length2 - 1;
 };
 
-export const bookmarkActiveTabPage = async app => {
+export const bookmarkActiveTabPage = async ( app ) => {
     const { client } = app;
     await client.waitForExist( BROWSER_UI.BOOKMARK_PAGE, WAIT_FOR_EXIST_TIMEOUT );
     await client.click( BROWSER_UI.BOOKMARK_PAGE );

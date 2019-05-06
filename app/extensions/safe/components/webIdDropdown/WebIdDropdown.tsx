@@ -14,12 +14,37 @@ const webIdManagerUri = startedRunningMock
     ? 'http://localhost:1234'
     : 'safe://webidmgr.dapp';
 const authHomeUri = 'safe-auth://home';
-export class WebIdDropdown extends Component<{}, {}> {
+
+interface WebIdDropdownProps {
+    safeBrowserApp: {
+        webIds: Array<any>;
+        showingWebIdDropdown: boolean;
+        experimentsEnabled: boolean;
+        appStatus: string;
+        networkStatus: number;
+        isFetchingWebIds: boolean;
+    };
+    activeTab: {
+        webId: number;
+    };
+    addTab: Function;
+    getAvailableWebIds: Function;
+    updateTab: Function;
+    showWebIdDropdown: Function;
+    windowId: number;
+}
+export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
     static defaultProps = {
         safeBrowserApp: {
             webIds: []
         }
     };
+
+    private debouncedGetWebIds: Function;
+
+    private hoverTime: number;
+
+    private isMouseOverIdButton: boolean;
 
     constructor( props ) {
         super( props );
@@ -28,7 +53,7 @@ export class WebIdDropdown extends Component<{}, {}> {
         this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
     }
 
-    handleIdClick = webId => {
+    handleIdClick = ( webId ) => {
         const { updateTab, windowId, showWebIdDropdown } = this.props;
         // also if only 1 webID? mark as defualt?
         updateTab( { windowId, webId } );
@@ -36,7 +61,7 @@ export class WebIdDropdown extends Component<{}, {}> {
 
     handleIdButtonClick = () => {
         const { showWebIdDropdown } = this.props;
-        this.hoverTime = new Date();
+        this.hoverTime = new Date().getTime();
         showWebIdDropdown( true );
     };
 
@@ -94,7 +119,7 @@ export class WebIdDropdown extends Component<{}, {}> {
         } = safeBrowserApp;
         const activeWebId = activeTab.webId || {};
         const { handleIdClick } = this;
-        const webIdsList = webIds.map( webId => {
+        const webIdsList = webIds.map( ( webId ) => {
             const nickname = webId['#me'].nick || webId['#me'].name;
             const isSelected = webId['@id'] === activeWebId['@id'];
             if ( isSelected ) {
