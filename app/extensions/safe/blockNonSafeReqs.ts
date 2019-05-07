@@ -32,18 +32,6 @@ export const blockNonSAFERequests = () => {
                 return;
             }
 
-            // HACK for idMgr and Patter. until:
-            // https://github.com/parcel-bundler/parcel/issues/1663
-            if ( details.url.includes( 'font_148784_v4ggb6wrjmkotj4i' ) ) {
-                const thePath = parseURL( details.url ).path;
-                const extension = path.extname( thePath );
-
-                const newUrl = `http://localhost:${
-                    CONFIG.PORT
-                }/dummy/iconfont${extension}`;
-                callback( { redirectURL: newUrl } );
-                return;
-            }
 
             if ( httpRegExp.test( details.url ) ) {
                 if ( allowedHttp.includes( details.url ) ) {

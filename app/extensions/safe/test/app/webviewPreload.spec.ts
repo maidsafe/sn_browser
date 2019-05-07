@@ -52,7 +52,7 @@ describe( 'SAFE manageWebIdUpdates', () => {
     test( 'webIdEventEmitter should emit events', async () => {
         expect.assertions( 1 );
         const theData = 'webId!!!';
-        win.webIdEventEmitter.on( 'update', data => {
+        win.webIdEventEmitter.on( 'update', ( data ) => {
             expect( data ).toBe( theData );
         } );
 
@@ -63,10 +63,6 @@ describe( 'SAFE manageWebIdUpdates', () => {
 } );
 
 describe( 'SAFE Webview Preload APIs', () => {
-    if ( APPVEYOR ) {
-        return;
-    }
-
     let win;
     let store;
 
@@ -84,7 +80,6 @@ describe( 'SAFE Webview Preload APIs', () => {
     test( 'setupSafeAPIs populates the window object', async () => {
         expect.assertions( 4 );
 
-        console.info( 'winsafe', win.safe );
         expect( win ).toHaveProperty( 'safe' );
         // expect( win.safe ).toHaveProperty( 'CONSTANTS' );
         expect( win.safe ).toHaveProperty( 'initialiseApp' );
