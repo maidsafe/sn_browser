@@ -1,4 +1,4 @@
-/* eslint-disable func-names */
+/* eslint-disable func-names, no-underscore-dangle */
 import path from 'path';
 import i18n from 'i18n';
 import ffiLoader from '$Extensions/safe/ffi/lib';
@@ -218,6 +218,7 @@ describe( 'Authenticator functions', () => {
         beforeAll( () =>
             helper.createRandomAccount().then( credential => {
                 randomCredentials = credential;
+                return credential;
             } )
         );
 
