@@ -8,12 +8,18 @@ import { manifest as authManifest } from '$Extensions/safe/auth-api/manifest';
 import { callIPC } from './ffi/ipc';
 
 // shim for rdflib.js
+// eslint-disable-next-line no-underscore-dangle
 const _setImmediate = setImmediate;
+// eslint-disable-next-line no-underscore-dangle
 const _clearImmediate = clearImmediate;
-process.once( 'loaded', () => {
-    global.setImmediate = _setImmediate;
-    global.clearImmediate = _clearImmediate;
-} );
+
+process.once(
+    'loaded',
+    (): void => {
+        global.setImmediate = _setImmediate;
+        global.clearImmediate = _clearImmediate;
+    }
+);
 
 global.safeExperimentsEnabled = null;
 
@@ -24,10 +30,30 @@ class WebIdEvents extends EventEmitter {}
 
 const webIdEventEmitter = new WebIdEvents();
 
-export const onPreload = ( passedStore, win = window ) => {
-    watchForExpermentalChangesAndReload( passedStore, win );
-    setupPreloadedSafeAuthApis( passedStore, win );
-    setupWebIdEventEmitter( passedStore, win );
+const createRemoteCall = ( functionName, passedStore ) => {
+    if ( !functionName ) {
+        throw new Error( 'Remote calls must have a functionName to call.' );
+    }
+
+    const remoteCall = ( ...args ) =>
+        new Promise( ( resolve, reject ) => {
+            const callId = Math.random().toString( 36 );
+
+            const theCall = {
+                id: callId,
+                name: functionName,
+                args
+            };
+
+            passedStore.dispatch( remoteCallActions.addRemoteCall( theCall ) );
+
+            pendingCalls[theCall.id] = {
+                resolve,
+                reject
+            };
+        } );
+
+    return remoteCall;
 };
 
 /**
@@ -35,18 +61,21 @@ export const onPreload = ( passedStore, win = window ) => {
  * Also subscrives to the store to watch for updates / trigger reload.
  */
 const watchForExpermentalChangesAndReload = ( passedStore, win = window ) => {
+    const theWindow = win;
     const stopListening = passedStore.subscribe( async () => {
         const safeBrowserAppState = passedStore.getState().safeBrowserApp;
         const { experimentsEnabled } = safeBrowserAppState;
 
-        if ( win.safeExperimentsEnabled === null ) {
-            win.safeExperimentsEnabled = experimentsEnabled;
+        if ( theWindow.safeExperimentsEnabled === null ) {
+            theWindow.safeExperimentsEnabled = experimentsEnabled;
             return;
         }
 
-        if ( win.safeExperimentsEnabled !== experimentsEnabled ) {
+        if ( theWindow.safeExperimentsEnabled !== experimentsEnabled ) {
             stopListening();
-            win.safeExperimentsEnabled = experimentsEnabled;
+            theWindow.safeExperimentsEnabled = experimentsEnabled;
+
+            // eslint-disable-next-line no-restricted-globals
             location.reload();
         }
     } );
@@ -55,6 +84,8 @@ const watchForExpermentalChangesAndReload = ( passedStore, win = window ) => {
 export const setupWebIdEventEmitter = ( passedStore, win = window ) => {
     const safeBrowserAppState = passedStore.getState().safeBrowserApp;
     const { experimentsEnabled } = safeBrowserAppState;
+
+    const theWindow = win;
 
     if ( typeof win !== 'undefined' && experimentsEnabled ) {
         console.warn(
@@ -67,24 +98,25 @@ export const setupWebIdEventEmitter = ( passedStore, win = window ) => {
             'font-weight: normal'
         );
 
-        win.webIdEventEmitter = webIdEventEmitter;
+        theWindow.webIdEventEmitter = webIdEventEmitter;
     } else {
-        win.webIdEventEmitter = null;
+        theWindow.webIdEventEmitter = null;
     }
 };
 
 export const setupSafeAPIs = ( passedStore, win = window ) => {
+    const theWindow = win;
     logger.info( 'Setup up SAFE Dom API via @maidsafe/safe-node-app' );
 
     // use from passed object if present (for testing)
-    win.safe = win.safe || { ...safe };
-    win.process = null;
+    theWindow.safe = theWindow.safe || { ...safe };
+    theWindow.process = null;
 
     const safeBrowserAppState = passedStore.getState().safeBrowserApp;
     const { experimentsEnabled } = safeBrowserAppState;
     const { isMock } = safeBrowserAppState;
 
-    win.safe.initialiseApp = async ( appInfo, netStateCallback, options ) => {
+    theWindow.safe.initialiseApp = async ( appInfo, netStateCallback, options ) => {
     // TODO: Throw warnings for these options.
         const optionsToUse = {
             ...options,
@@ -111,7 +143,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
         return app;
     };
 
-    win.safe.fromAuthUri = async (
+    theWindow.safe.fromAuthUri = async (
         appInfo,
         authURI,
         netStateCallback,
@@ -127,7 +159,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
             forceUseMock: isMock,
             enableExperimentalApis: experimentsEnabled
         };
-        const app = await win.safe.initialiseApp(
+        const app = await theWindow.safe.initialiseApp(
             appInfo,
             netStateCallback,
             optionsToUse
@@ -142,7 +174,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
    * @param  {[type]}  authUri [description]
    * @return {Promise}         resolves to URI string.
    */
-    win.safe.authorise = async authObj => {
+    theWindow.safe.authorise = async ( authObj ) => {
         if ( !authObj || typeof authObj !== 'object' )
             throw new Error( 'Auth object is required' );
         let authReqObj = authObj;
@@ -157,54 +189,63 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
 
 export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
     setupSafeAPIs( passedStore, win );
-    window[pkg.name] = { version: VERSION };
 
-    // TODO: Abstract into extension.
-    if ( !window.location.protocol === PROTOCOLS.SAFE_AUTH ) {
+    const theWindow = win;
+
+    const authProtocol = `${PROTOCOLS.SAFE_AUTH}:`;
+
+    theWindow[pkg.name] = { version: VERSION };
+
+    if (
+    // if no location, we're in jest, so lets keep going to test
+        theWindow.location &&
+    theWindow.location.protocol !== authProtocol
+    ) {
         return;
     }
 
-    window.safeAuthenticator = {};
+    theWindow.safeAuthenticator = {};
+    // eslint-disable-next-line no-bitwise
     const safeAppGroupId = ( ( Math.random() * 1000 ) | 0 ) + Date.now();
-    window.safeAppGroupId = safeAppGroupId;
+    theWindow.safeAppGroupId = safeAppGroupId;
 
-    authManifest.forEach( func => {
-        window.safeAuthenticator[func] = createRemoteCall( func, passedStore );
+    authManifest.forEach( ( func ) => {
+        theWindow.safeAuthenticator[func] = createRemoteCall( func, passedStore );
     } );
 
-    window.safeAuthenticator.getNetworkState = () => {
+    theWindow.safeAuthenticator.getNetworkState = () => {
         const state = passedStore.getState();
         logger.info( 'getting the network state!', state.authenticator.networkState );
         return { state: state.authenticator.networkState };
     };
 
-    window.safeAuthenticator.isAuthorised = () => {
+    theWindow.safeAuthenticator.isAuthorised = () => {
         const state = passedStore.getState();
         return state.authenticator.isAuthorised;
     };
 
-    window.safeAuthenticator.setIsAuthorised = isAuthorised =>
+    theWindow.safeAuthenticator.setIsAuthorised = ( isAuthorised ) =>
         callIPC.setIsAuthorisedState( passedStore, isAuthorised );
 
-    window.safeAuthenticator.getAuthenticatorHandle = () => {
+    theWindow.safeAuthenticator.getAuthenticatorHandle = () => {
         const state = passedStore.getState();
         logger.info(
-            'window method for get auth handle being called',
+            'theWindow method for get auth handle being called',
             state.authenticator.authenticatorHandle
         );
         return state.authenticator.authenticatorHandle;
     };
 
-    window.safeAuthenticator.getLibStatus = () => {
+    theWindow.safeAuthenticator.getLibStatus = () => {
         const state = passedStore.getState();
         return state.authenticator.libStatus;
     };
 
-    window.safeAuthenticator.setReAuthoriseState = state =>
+    theWindow.safeAuthenticator.setReAuthoriseState = ( state ) =>
         callIPC.setReAuthoriseState( state, passedStore );
 
     // Add custom and continual listeners.
-    window.safeAuthenticator.setNetworkListener = cb => {
+    theWindow.safeAuthenticator.setNetworkListener = ( cb ) => {
         const callId = Math.random().toString( 36 );
 
         passedStore.dispatch(
@@ -216,12 +257,12 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
         );
 
         pendingCalls[callId] = {
-            resolve: response => cb( null, response ),
-            reject: err => cb( err )
+            resolve: ( response ) => cb( null, response ),
+            reject: ( err ) => cb( err )
         };
     };
 
-    window.safeAuthenticator.setAppListUpdateListener = cb => {
+    theWindow.safeAuthenticator.setAppListUpdateListener = ( cb ) => {
         const callId = Math.random().toString( 36 );
 
         passedStore.dispatch(
@@ -233,12 +274,12 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
         );
 
         pendingCalls[callId] = {
-            resolve: response => cb( null, response ),
-            reject: err => cb( err )
+            resolve: ( response ) => cb( null, response ),
+            reject: ( err ) => cb( err )
         };
     };
 
-    window.safeAuthenticator.setIsAuthorisedListener = cb => {
+    theWindow.safeAuthenticator.setIsAuthorisedListener = ( cb ) => {
         const callId = Math.random().toString( 36 );
 
         passedStore.dispatch(
@@ -250,8 +291,8 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
         );
 
         pendingCalls[callId] = {
-            resolve: response => cb( null, response ),
-            reject: err => cb( err )
+            resolve: ( response ) => cb( null, response ),
+            reject: ( err ) => cb( err )
         };
     };
 
@@ -259,7 +300,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
         const state = passedStore.getState();
         const calls = state.remoteCalls;
 
-        calls.forEach( theCall => {
+        calls.forEach( ( theCall ) => {
             if ( theCall === pendingCalls[theCall.id] ) {
                 return;
             }
@@ -297,30 +338,8 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
     } );
 };
 
-const createRemoteCall = ( functionName, passedStore ) => {
-    if ( !functionName ) {
-        throw new Error( 'Remote calls must have a functionName to call.' );
-    }
-
-    const remoteCall = ( ...args ) =>
-        new Promise( ( resolve, reject ) => {
-            const callId = Math.random().toString( 36 );
-
-            const theCall = {
-                id: callId,
-                name: functionName,
-                args
-            };
-
-            passedStore.dispatch( remoteCallActions.addRemoteCall( theCall ) );
-
-            pendingCalls[theCall.id] = {
-                resolve,
-                reject
-            };
-        } );
-
-    return remoteCall;
+export const onPreload = ( passedStore, win = window ) => {
+    watchForExpermentalChangesAndReload( passedStore, win );
+    setupPreloadedSafeAuthApis( passedStore, win );
+    setupWebIdEventEmitter( passedStore, win );
 };
-
-export default onPreload;

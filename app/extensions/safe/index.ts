@@ -17,7 +17,7 @@ import {
 import sysUri from '$Extensions/safe/ffi/sys_uri';
 
 import { safeReducers } from '$Extensions/safe/reducers';
-import webviewPreload from '$Extensions/safe/webviewPreload';
+import { onPreload } from '$Extensions/safe/webviewPreload';
 import {
     handleRemoteCalls,
     remoteCallApis
@@ -32,7 +32,7 @@ import { registerSafeProtocol } from './protocols/safe';
 import { setupRoutes } from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
-const onWebviewPreload = ( store ) => webviewPreload( store );
+const onWebviewPreload = ( store ) => onPreload( store );
 
 /**
  * Adds menu items to the main peruse menus.

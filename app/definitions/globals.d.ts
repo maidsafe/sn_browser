@@ -1,5 +1,6 @@
 import { Store } from 'redux';
 import { BrowserWindow } from 'electron';
+import EventEmitter from 'events';
 
 declare namespace NodeJS {
     interface Global {
@@ -9,6 +10,7 @@ declare namespace NodeJS {
         mainProcessStore: Store;
         port: number;
         preloadFile: string;
+        safeExperimentsEnabled : boolean | null ;
         startedRunningMock: boolean;
         shouldStartAsMockFromFlagsOrPackage: boolean;
         isRunningSpectronTestProcessingPackagedApp: boolean;
@@ -30,11 +32,14 @@ declare module '*.css' {
     export default content;
 }
 
-interface Window {
+export interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: Function;
     eval: Function | boolean;
     safe: object;
+    safeAppGroupId : number;
+    webIdEventEmitter : EventEmitter;
     peruseStore: Store;
+    safeExperimentsEnabled : boolean | null ;
     safeAuthenticator: {
         isAuthorised: () => boolean;
     };
