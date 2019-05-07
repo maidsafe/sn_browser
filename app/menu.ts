@@ -140,21 +140,24 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const state = store.getState();
-                            let index;
-                            const openTabs = state.tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
-                            );
-                            openTabs.forEach( ( tab, i ) => {
-                                if ( tab.isActiveTab ) {
-                                    if ( i === openTabs.length - 1 ) {
-                                        index = openTabs[0].index;
-                                    } else {
-                                        index = openTabs[i + 1].index;
+                            const activeTab = store.getState().windows.openWindows[windowId].activeTab;
+                            logger.info('set Active Tab is happening');
+                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
+                            let newActiveTab;
+                            openTabs.forEach((tabId, i ) => {
+                                if ( tabId === activeTab ) 
+                                {
+                                    if(i === openTabs.length - 1)
+                                    {
+                                        newActiveTab = openTabs[0]
+                                    }
+                                    else
+                                    {
+                                        newActiveTab = openTabs[i + 1];
                                     }
                                 }
-                            } );
-                            this.store.dispatch( setActiveTab( { index } ) );
+                            });
+                            this.store.dispatch( setActiveTab( { windowId, tabId: newActiveTab } ) );
                         }
                     }
                 },
@@ -164,21 +167,20 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const state = store.getState();
-                            let index;
-                            const openTabs = state.tabs.filter(
-                                tab => !tab.isClosed && tab.windowId === windowId
-                            );
+                            const activeTab = store.getState().windows.openWindows[windowId].activeTab;
+                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
+                            let newActiveTab;
                             openTabs.forEach( ( tab, i ) => {
-                                if ( tab.isActiveTab ) {
+                                if ( tab === activeTab ) 
+                                {
                                     if ( i === 0 ) {
-                                        index = openTabs[openTabs.length - 1].index;
+                                        newActiveTab = openTabs[openTabs.length - 1];
                                     } else {
-                                        index = openTabs[i - 1].index;
+                                        newActiveTab = openTabs[i - 1];
                                     }
                                 }
                             } );
-                            this.store.dispatch( setActiveTab( { index } ) );
+                            this.store.dispatch( setActiveTab( { windowId, tabId: newActiveTab } ) );
                         }
                     }
                 },
@@ -301,7 +303,8 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            this.store.dispatch( updateTab( { windowId, shouldReload: true } ) );
+                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
+                            this.store.dispatch( updateTab( { tabId, shouldReload: true } ) );
                         }
                     }
                 },
@@ -319,8 +322,9 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
+                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
                             store.dispatch(
-                                updateTab( { windowId, shouldToggleDevTools: true } )
+                                updateTab( { tabId, shouldToggleDevTools: true } )
                             );
                         }
                     }
@@ -454,11 +458,12 @@ export class MenuBuilder {
                             const state = store.getState();
                             const windowState = state.windows.openWindows;
                             const windows = Object.keys(windowState);
+                            const tabId = Math.random().toString( 36 );
                             const windowsToBeClosed =  windows.filter(Id=> parseInt(Id,10) !== windowId );
                             ipcRenderer.send('resetStore', windowsToBeClosed);
                             logger.verbose( 'Triggering store reset from window:', windowId );
                             // reset
-                            this.store.dispatch( resetStore() );
+                            this.store.dispatch( resetStore({windowId, tabId, url: 'safe-auth://home/'}) );
                         }
                     }
                 }

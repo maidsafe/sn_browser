@@ -51,6 +51,7 @@ export const remoteCallApis = {
             safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH )
         );
     },
+
     login: async ( secret, password ) => {
         logger.info( 'Handling login call from webview.' );
         await theAuthApi.login( secret, password );

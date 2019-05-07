@@ -21,10 +21,12 @@ const addTab = ( state , tab ) =>
         url          : tabUrl,
         tabId, 
         historyIndex : 0,
-        ui :  {
+        ui :  
+        {
             addressBarIsSelected : false,
             pageIsLoading        : false,
-            shouldFocusWebview   : false
+            shouldFocusWebview   : false,
+            shouldToggleDevTools : false,
         }, 
         webId        : undefined,
         history      : [ tabUrl ],

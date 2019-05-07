@@ -1,7 +1,7 @@
 /* eslint-disable */
-import windows from '$Reducers/windows';
+import { windows } from '$Reducers/windows';
 import { TYPES } from '$Actions/windows_actions';
-import initialState from '$Reducers/initialAppState';
+import  { initialState } from '$Reducers/initialAppState';
 import { isRunningUnpacked } from '$Constants';
 
 describe( 'windows reducer', () =>
@@ -579,7 +579,7 @@ describe( 'windows reducer', () =>
         });
     });
     describe('CLOSE_TAB',()=>{
-        it('close the intial tab',()=>{
+        it('close the initial tab',()=>{
             const state =
             {
                 openWindows: {
@@ -603,6 +603,7 @@ describe( 'windows reducer', () =>
                 openWindows: {
                     '1': {
                         ...basicwindow,
+                        activeTab: tabId2,
                         tabs: [tabId2, tabId1]
                     }
                 },
@@ -649,6 +650,7 @@ describe( 'windows reducer', () =>
                     '1':
                     {
                         ...basicwindow,
+                        activeTab: tabId1,
                         tabs: [tabId, tabId1]
                     }
                 },

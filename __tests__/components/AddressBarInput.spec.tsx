@@ -133,7 +133,7 @@ describe( 'AddressBarInput', () => {
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
             expect( props.updateTab ).toHaveBeenCalledWith( {
                 url: 'about:blank',
-                windowId: 1
+                //tabId: undefined
             } );
         } );
 

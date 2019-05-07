@@ -29,6 +29,7 @@ export default class TabContents extends Component<{}, {}> {
             addTabNext,
             addTabEnd,
             activeTabId,
+            setActiveTab,
             activeTab,
             addNotification,
             updateTab,
@@ -110,6 +111,7 @@ export default class TabContents extends Component<{}, {}> {
                         updateTab={updateTab}
                         addTabNext = {addTabNext}
                         addTabEnd = {addTabEnd}
+                        setActiveTab = {setActiveTab}
                         key={tab.tabId}
                         tabId = {tab.tabId}
                         windowId={windowId}
@@ -118,7 +120,7 @@ export default class TabContents extends Component<{}, {}> {
                         shouldFocusWebview={shouldFocusWebview}
                         tabBackwards={tabBackwards}
                         shouldReload={tab.shouldReload}
-                        shouldToggleDevTools={tab.shouldToggleDevTools}
+                        shouldToggleDevTools={tab.ui.shouldToggleDevTools}
                         ref={c => {
                             if ( isActiveTab ) {
                                 this.activeTab = c;

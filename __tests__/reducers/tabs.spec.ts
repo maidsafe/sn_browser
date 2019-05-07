@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import { tabs } from '$Reducers/tabs';
 import { TYPES } from '$Actions/tabs_actions';
-import initialState from '$Reducers/initialAppState';
+import  { initialState } from '$Reducers/initialAppState';
 import { isRunningUnpacked } from '$Constants';
 
 
@@ -564,9 +564,19 @@ describe( 'tabs reducer', () =>
         it( 'should reset tabs to the inital state', () =>
         {
             const tabsPostLogout = tabs( {[tabId]: basicTab, [tabId1]: {...basicTab, tabId: tabId1}}, {
-                type : TYPES.RESET_STORE
+                type : TYPES.RESET_STORE,
+                payload : { tabId: tabId, url: 'safe-auth://home/' }
             } );
-            expect( tabsPostLogout ).toMatchObject( initialState.tabs );
+            expect( tabsPostLogout ).toMatchObject(
+                {
+                    [tabId]: 
+                    {
+                        ...basicTab,
+                        url : 'safe-auth://home/',
+                        history : [ 'safe-auth://home/' ],
+                    }
+                }
+            );
         } );
     } );
 } );
