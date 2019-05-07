@@ -36,7 +36,7 @@ const authReqWithoutMockBit =
 const sixtyFourBitReq =
   'safe-auth:AAAAAIdLdL0AAAAAJwAAAAAAAABuZXQubWFpZHNhZmUuYXBpX3BsYXlncm91bmQud2ViY2xpZW50LjkAFwAAAAAAAABTQUZFIHdlYiBBUEkgcGxheWdyb3VuZA0AAAAAAAAATWFpZFNhZmUgTHRkLgECAAAAAAAAAAcAAAAAAAAAX3B1YmxpYwQAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAwAAAAAAAAAX3B1YmxpY05hbWVzBAAAAAAAAAAAAAAAAQAAAAIAAAADAAAA';
 
-const decodedReqForRandomClient = uri =>
+const decodedReqForRandomClient = ( uri ) =>
     helper.createRandomAccount().then( () => client.decodeRequest( uri ) );
 
 const init = async () => {
@@ -191,7 +191,7 @@ describe( 'Authenticator functions', () => {
         } );
 
         it( 'emits network state as connected when account creation is successful', () =>
-            new Promise( resolve => {
+            new Promise( ( resolve ) => {
                 expect.assertions( 3 );
                 const nwListener = client.setListener(
                     CONST.LISTENER_TYPES.NW_STATE_CHANGE,
@@ -216,7 +216,7 @@ describe( 'Authenticator functions', () => {
     // Login
     describe( 'Login', () => {
         beforeAll( () =>
-            helper.createRandomAccount().then( credential => {
+            helper.createRandomAccount().then( ( credential ) => {
                 randomCredentials = credential;
                 return credential;
             } )
@@ -333,7 +333,7 @@ describe( 'Authenticator functions', () => {
         } );
 
         it( 'emits network state as connected when account login is successful', () =>
-            new Promise( resolve => {
+            new Promise( ( resolve ) => {
                 expect.assertions( 3 );
                 const nwListener = client.setListener(
                     CONST.LISTENER_TYPES.NW_STATE_CHANGE,
@@ -584,7 +584,7 @@ describe( 'Authenticator functions', () => {
         } );
     } );
 
-    describe( 'Encode auth response', async () => {
+    describe( 'Encode auth response', () => {
         it( 'throws an error if request is undefined', async () => {
             expect.assertions( 2 );
             await decodedReqForRandomClient( encodedAuthUri );
