@@ -3,6 +3,7 @@ import { TYPES } from '$Actions/notification_actions';
 import { initialState as initialAppState } from './initialAppState';
 
 const initialState = initialAppState.notifications;
+
 const findNotificationIndexById = ( theState, theCall ) => {
     if ( !theCall.id ) {
         logger.error( 'Noticications cannot be removed without an ID property' );

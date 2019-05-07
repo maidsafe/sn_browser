@@ -15,7 +15,7 @@ const getCurrentWindowId = () => {
     let currentWindowId;
 
     if ( typeof currentWindowId === 'undefined' && remote ) {
-        currentWindowId = remote.getCurrentWindow().id;
+        currentWindowId = remote.getCurrentWindow().webContents.id;
     } else if ( typeof currentWindowId === 'undefined' ) {
         currentWindowId = 1;
     }
@@ -47,7 +47,7 @@ const addBookmark = ( state, bookmark ) => {
  */
 const removeBookmark = ( state, payload ) => {
     const removalIndex = state.findIndex(
-        ( bookmark ) => bookmark.url === payload.url
+        bookmark => bookmark.url === payload.url
     );
     const updatedState = [...state];
 
@@ -88,7 +88,10 @@ const updateBookmark = ( state, payload ) => {
  * @param  { object } action action Object
  * @return { array }        updatd state object
  */
-export function bookmarks( state: Array<{}> = initialState, action ): Array<{}> {
+export function bookmarks(
+    state: Array<{}> = initialState,
+    action
+): Array<{}> {
     const { payload } = action;
 
     if ( action.error ) {

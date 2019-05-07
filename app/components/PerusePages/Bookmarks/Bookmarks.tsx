@@ -8,7 +8,6 @@ import { CLASSES } from '$Constants';
 interface BookmarksProps {
     isActiveTab?: boolean;
     bookmarks: Array<any>;
-    isActiveTab: boolean;
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
 }
@@ -40,19 +39,4 @@ export default class Bookmarks extends Component<BookmarksProps, {}> {
             </div>
         );
     }
-    return (
-        <div className={moddedClass}>
-            <div className={`${styles.container}`}>
-                <Page
-                    className={`${CLASSES.SAFE_BROWSER_PAGE} ${styles.page}`}
-                    overflow="auto"
-                >
-                    <PageHeader>
-                        <H1 title="Bookmarks" />
-                    </PageHeader>
-                    <UrlList list={bookmarkList} addTab={addTab} />
-                </Page>
-            </div>
-        </div>
-    );
 };

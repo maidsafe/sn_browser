@@ -119,7 +119,7 @@ export const openWindow = ( store ): BrowserWindow => {
         if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
             app.quit();
         }
-    );
+    });
 
     mainWindow.webContents.on( 'crashed', ( event, code, message ) => {
         logger.error(
@@ -136,20 +136,20 @@ export const openWindow = ( store ): BrowserWindow => {
     return mainWindow;
 };
 
+
 ipcMain.on(
     'command:close-window',
     (): void => {
         const win = BrowserWindow.getFocusedWindow();
 
-ipcMain.on( 'command:close-window', () => {
-    const win = BrowserWindow.getFocusedWindow();
-    if ( win ) {
-        win.close();
+        if ( win ) {
+            win.close();
+        }
+        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+            app.quit();
+        }
     }
-    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-        app.quit();
-    }
-} );
+);
 
 ipcMain.on( 'resetStore', ( event, data ) => {
     data.forEach(element => {
@@ -157,4 +157,4 @@ ipcMain.on( 'resetStore', ( event, data ) => {
         const win = BrowserWindow.fromId(winId);
         win.close();
     });
-} );
+});

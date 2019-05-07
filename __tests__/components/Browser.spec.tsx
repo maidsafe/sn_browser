@@ -6,8 +6,8 @@ import configureStore from 'redux-mock-store';
 
 import { Browser } from '$Components/Browser';
 import { AddressBar } from '$Components/AddressBar';
-import { TabBar } from '$Components/TabBar';
-import { TabContents } from '$Components/TabContents';
+import TabBar from '$Components/TabBar';
+import TabContents from '$Components/TabContents';
 import { handleNotifications } from '$Utils/handleNotificiations';
 
 jest.mock( '$Utils/extendComponent' );
@@ -17,13 +17,21 @@ jest.mock( '$Logger' );
 
 // create any initial state needed
 const initialState = {
-    ui: { windows: [] },
-    tabs: [],
+    //ui: { windows: [] },
+    //tabs: [],
+    windows       : {
+        openWindows   : {},
+        closedWindows : {}
+    },
+    tabs : {},
     notifications: [],
     windowId: 1,
     addTab: jest.fn(),
+    addTabEnd: jest.fn(),
+    addTabNext: jest.fn(),
     updateTab: jest.fn(),
-    closeTab: jest.fn(),
+    windowCloseTab: jest.fn(),
+    closeWindow: jest.fn(),
     setActiveTab: jest.fn(),
     reopenTab: jest.fn(),
     addBookmark: jest.fn(),
@@ -40,6 +48,7 @@ const initialState = {
 // here it is possible to pass in any middleware if needed into //configureStore
 const mockStore = configureStore();
 let store;
+const tabId = Math.random().toString( 36 );
 
 describe( 'Browser', () => {
     let wrapper;
@@ -58,21 +67,50 @@ describe( 'Browser', () => {
     } );
 
     describe( 'mount() with one tab', () => {
-        newState = {
+        newState = 
+        {
             ...initialState,
-            tabs: [
+            tabs :
+            {
+                [tabId] : 
                 {
                     url: 'hello',
-                    isActiveTab: true,
-                    windowId: 1,
-                    index: 1,
-                    isClosed: false,
+                    history: ['a', 'hello'],
+                    tabId,
                     historyIndex: 1,
-                    history: ['a', 'hello']
+                    webId: undefined,
+                    ui: 
+                    {
+                        addressBarIsSelected : false,
+                        pageIsLoading        : false,
+                        shouldFocusWebview   : false
+                    }
                 }
-            ]
+            },
+            windows:
+            {
+                openWindows : 
+                {
+                    1: 
+                    {
+                        activeTab: tabId,
+                        ui: 
+                        {
+                            settingsMenuIsVisible: false
+                        },
+                        tabs: [tabId],    
+                    }        
+                },
+                closedWindows : 
+                {
+                    1 :
+                    {
+                        closedtabs : [],
+                        lastActiveTabs : []
+                    }
+                }
+            }
         };
-
         store = mockStore( newState );
 
         wrapper = mount(
@@ -80,7 +118,6 @@ describe( 'Browser', () => {
                 <Browser {...newState} />
             </Provider>
         );
-
         it( 'should have exactly 1 AddressBar component', () => {
             expect( wrapper.find( AddressBar ).length ).toBe( 1 );
         } );
@@ -102,7 +139,16 @@ describe( 'Browser', () => {
 
     describe( 'props', () => {
         beforeEach( () => {
-            newState = { ...initialState, tabs: [] };
+            newState =
+            {
+                tabs          : {},
+                windows       : 
+                {
+                    openWindows   : {},
+                    closedWindows : {}
+                }
+            }
+            //newState = { ...initialState, tabs: {} };
             store = mockStore( newState );
 
             wrapper = shallow(
@@ -124,11 +170,12 @@ describe( 'Browser', () => {
                 expect( wrapper.props() ).not.toBeUndefined();
             } );
             it( 'should be empty by default', () => {
-                expect( wrapper.props().tabs.length ).toBe( 0 );
+                
+                expect(Object.keys(wrapper.props().tabs).length).toBe( 0 );
             } );
 
-            it( 'should be an array', () => {
-                expect( Array.isArray( wrapper.props().tabs ) ).toBeTruthy();
+            it( 'should be an Object', () => {
+                expect(wrapper.props().tabs instanceof Object).toBeTruthy();
             } );
         } );
     } );

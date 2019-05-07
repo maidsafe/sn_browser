@@ -10,7 +10,7 @@ interface UrlListProps {
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
 }
-export default class UrlList extends Component<UrlListProps, {}> {
+export class UrlList extends Component<UrlListProps, {}> {
     static defaultProps = {
         list: []
     };
@@ -50,16 +50,5 @@ export default class UrlList extends Component<UrlListProps, {}> {
                 )}
             </Table>
         );
-        parsedList.push( listItem );
-    } );
-    return (
-        <Table className={styles.table}>
-            {parsedList}
-            {!parsedList.length && (
-                <TableRow>
-                    <TableCell>Nothing to see here yet.</TableCell>
-                </TableRow>
-            )}
-        </Table>
-    );
-};
+    };
+}

@@ -63,16 +63,10 @@ export class AddressBar extends Component<AddressBarProps, {}> {
     };
 
     getSettingsMenuItems = () => {
-<<<<<<< HEAD
-        const { addTab, windowId } = this.props;
-        const addATab = ( tab ) => {
-            addTab( { url: `safe-browser://${tab}`, isActiveTab: true, windowId } );
-=======
         const { windowId, addTabEnd} = this.props;
         const tabId = Math.random().toString( 36 );
         const addATab = tab => {
             addTabEnd( { url: `safe-browser://${tab}`, windowId, tabId } );
->>>>>>> d76d4c23... fix(tabs): Generate Unique Ids for individual tabs
         };
         return [
             <Row key="menuItem-bookmarks" type="flex" justify="start" align="middle">
