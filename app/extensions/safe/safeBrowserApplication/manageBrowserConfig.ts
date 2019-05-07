@@ -45,82 +45,84 @@ export const saveConfigToSafe = ( store, quit ) => {
     };
     const JSONToSave = JSON.stringify( stateToSave );
 
-    return new Promise( async ( resolve, reject ) => {
-        const safeBrowserAppObject = getSafeBrowserAppObject();
+    return new Promise(
+        async ( resolve, reject ): Promise<void> => {
+            const safeBrowserAppObject = getSafeBrowserAppObject();
 
-        let mData;
-        let mdEntries;
+            let mData;
+            let mdEntries;
 
-        if ( !safeBrowserAppObject ) {
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.FAILED_TO_SAVE
-                )
-            );
-            logger.error( 'Not authorised to save to the network.' );
-            return reject( 'Not authorised to save data' );
-        }
-
-        try {
-            const container = await safeBrowserAppObject.auth.getOwnContainer();
-            const mut = await safeBrowserAppObject.mutableData.newMutation();
-            const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
-            const encryptedData = await container.encryptValue( JSONToSave );
-
-            let createdNewEntry = false;
-            let previousEntry;
-            let version;
-
-            try {
-                mdEntries = await container.getEntries();
-            } catch ( e ) {
-                logger.info( 'Saved Data not found. Creating.' );
-
-                if ( e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND ) {
-                    mut.insert( encryptedKey, encryptedData );
-                    createdNewEntry = true;
-                    container.applyEntriesMutation( mut );
-                } else {
-                    reject( e );
-                }
+            if ( !safeBrowserAppObject ) {
+                store.dispatch(
+                    safeBrowserAppActions.setSaveConfigStatus(
+                        SAFE.SAVE_STATUS.FAILED_TO_SAVE
+                    )
+                );
+                logger.error( 'Not authorised to save to the network.' );
+                reject( new Error( 'Not authorised to save data' ) );
             }
 
             try {
-                logger.info( 'checking prev entry.' );
-                previousEntry = await container.get( encryptedKey );
-            } catch ( e ) {
-                if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY ) {
-                    logger.info( 'Previous didnt exist, creating...' );
-                    mut.insert( encryptedKey, encryptedData );
-                    createdNewEntry = true;
-                    container.applyEntriesMutation( mut );
-                } else {
-                    reject( e );
+                const container = await safeBrowserAppObject.auth.getOwnContainer();
+                const mut = await safeBrowserAppObject.mutableData.newMutation();
+                const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
+                const encryptedData = await container.encryptValue( JSONToSave );
+
+                let createdNewEntry = false;
+                let previousEntry;
+                let version;
+
+                try {
+                    mdEntries = await container.getEntries();
+                } catch ( e ) {
+                    logger.info( 'Saved Data not found. Creating.' );
+
+                    if ( e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND ) {
+                        mut.insert( encryptedKey, encryptedData );
+                        createdNewEntry = true;
+                        container.applyEntriesMutation( mut );
+                    } else {
+                        reject( e );
+                    }
                 }
+
+                try {
+                    logger.info( 'checking prev entry.' );
+                    previousEntry = await container.get( encryptedKey );
+                } catch ( e ) {
+                    if ( e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY ) {
+                        logger.info( 'Previous didnt exist, creating...' );
+                        mut.insert( encryptedKey, encryptedData );
+                        createdNewEntry = true;
+                        container.applyEntriesMutation( mut );
+                    } else {
+                        reject( e );
+                    }
+                }
+
+                if (
+                    !createdNewEntry &&
+          previousEntry &&
+          typeof previousEntry.version !== 'undefined'
+                ) {
+                    logger.info( 'Previous entry exists, updating...' );
+
+                    version = previousEntry.version + 1;
+                    await mut.update( encryptedKey, encryptedData, version );
+                    container.applyEntriesMutation( mut );
+                }
+
+                logger.info( 'Data saved successfully' );
+                resolve();
+            } catch ( e ) {
+                logger.error( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' );
+                logger.error( e.message || e );
+                logger.error( e.code );
+                logger.error( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' );
+                reject( e );
             }
-
-            if (
-                !createdNewEntry &&
-        previousEntry &&
-        typeof previousEntry.version !== 'undefined'
-            ) {
-                logger.info( 'Previous entry exists, updating...' );
-
-                version = previousEntry.version + 1;
-                await mut.update( encryptedKey, encryptedData, version );
-                container.applyEntriesMutation( mut );
-            }
-
-            logger.info( 'Data saved successfully' );
-            resolve();
-        } catch ( e ) {
-            logger.error( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' );
-            logger.error( e.message || e );
-            logger.error( e.code );
-            logger.error( 'xxxxxxxxxxxxxxxxxxxxxxxxxx' );
-            reject( e );
         }
-    } );
+    );
 };
 
 /**
