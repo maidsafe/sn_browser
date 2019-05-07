@@ -2,29 +2,31 @@ import * as React from 'react';
 import { logger } from '$Logger';
 import { CLASSES } from '$Constants';
 
-// TODO: When I import the following, an error is thrown in CodeMirror, used by nessie-ui, that navigator is not defined
-// import { Text, Column } from 'nessie-ui';
-
 // import './authRequest.css';
 //
-const createAppContainersElement = containers => (
+const createAppContainersElement = ( containers ) => (
     <div key="req_containers_parent_div">
-        <a key="info_box_expander" className="info_box_expander" tabIndex="0">
+        <a
+            href="#"
+            key="info_box_expander"
+            className="info_box_expander"
+            tabIndex={0}
+        >
       Details
         </a>
         <div key="info_box_details" className="info_box_details">
             <p className="blockText" key="requested_containers">
         With access to the following containers:
             </p>
-            {containers.map( ( container, i ) => (
-                <div key={`${container.cont_name}_parent_${i}`}>
+            {containers.map( ( container ) => (
+                <div key={`${container.cont_name}_parent`}>
                     <p className="blockText" key={container.cont_name}>
                         {container.cont_name}
                     </p>
                     <ul key={`${container.cont_name}_ul`}>
                         {Object.keys( container.access )
-                            .filter( permission => container.access[permission] )
-                            .map( permission => (
+                            .filter( ( permission ) => container.access[permission] )
+                            .map( ( permission ) => (
                                 <li key={`${container.cont_name}_${permission}`}>
                                     {permission}
                                 </li>
@@ -36,7 +38,7 @@ const createAppContainersElement = containers => (
     </div>
 );
 
-export const createAuthRequestElement = authReqData => {
+export const createAuthRequestElement = ( authReqData ) => {
     let reqType = 'authReq';
     let reqTypeText = ' requests authorisation.';
     if ( authReqData.authReq && authReqData.isAuthorised ) {
@@ -58,7 +60,7 @@ export const createAuthRequestElement = authReqData => {
         if (
             authReqData.isAuthorised &&
       authReqData.previouslyAuthorisedContainers &&
-      authReqData.previouslyAuthorisedContainers.length
+      authReqData.previouslyAuthorisedContainers.length > 0
         ) {
             return createAppContainersElement(
                 authReqData.previouslyAuthorisedContainers
@@ -66,7 +68,7 @@ export const createAuthRequestElement = authReqData => {
         }
         if (
             authReqData[reqType].containers &&
-      authReqData[reqType].containers.length
+      authReqData[reqType].containers.length > 0
         ) {
             logger.info( 'auth req containers: ', authReqData[reqType].containers );
             const containers = authReqData[reqType].containers.slice( 0 );
@@ -92,7 +94,12 @@ export const createAuthRequestElement = authReqData => {
         if ( reqType === 'mDataReq' ) {
             return (
                 <div key="share_mdata_parent_div">
-                    <a key="info_box_expander" className="info_box_expander" tabIndex="0">
+                    <a
+                        href="#"
+                        key="info_box_expander"
+                        className="info_box_expander"
+                        tabIndex={0}
+                    >
             Details
                     </a>
                     <div key="info_box_details" className="info_box_details">
@@ -103,15 +110,19 @@ export const createAuthRequestElement = authReqData => {
                             const metaName = authReqData.metaData[i].name;
                             const metaDesc = authReqData.metaData[i].description;
                             return (
-                                <div key={`${metaName}_parent_${i}`}>
+                                <div key={`${metaName}_parent`}>
+                                    {/* eslint-disable-next-line react/no-array-index-key */}
                                     <p key={metaName + i}>{metaName}</p>
+                                    {/* eslint-disable-next-line react/no-array-index-key */}
                                     <p key={metaDesc + i}>{metaDesc}</p>
+                                    {/* eslint-disable-next-line react/no-array-index-key */}
                                     <p key={metaName + mdatum.type_tag + i}>{mdatum.type_tag}</p>
+                                    {/* eslint-disable-next-line react/no-array-index-key */}
                                     <p key={`Permissions:${i}`}>Permissions:</p>
                                     {Object.keys( mdatum.perms )
-                                        .filter( perm => mdatum.perms[perm] )
-                                        .map( ( perm, i ) => (
-                                            <p key={metaName + perm + i}>{perm}</p>
+                                        .filter( ( perm ) => mdatum.perms[perm] )
+                                        .map( ( perm ) => (
+                                            <p key={metaName + perm}>{perm}</p>
                                         ) )}
                                 </div>
                             );

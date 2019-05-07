@@ -147,9 +147,9 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         if ( appStatus !== SAFE.APP_STATUS.AUTHORISED ) {
             webIdDropdownContents.push(
                 <li
-                    className={styles.webIdInfo}
                     onClick={this.authorisePeruse}
-                    className={styles.openAuth}
+                    onKeyUp={this.authorisePeruse}
+                    className={styles.webIdInfo}
                     key="noAuth"
                 >
                     <a href="#">Authorise to display your WebIds.</a>
@@ -169,11 +169,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         if ( isFetchingWebIds ) {
             webIdDropdownContents = webIdDropdownContents || [];
             webIdDropdownContents.push(
-                <li
-                    className={styles.webIdInfo}
-                    className={styles.openAuth}
-                    key="fetching"
-                >
+                <li className={styles.openAuth} key="fetching">
           Updating webIds &nbsp;
                     <Icon type="loading" className={styles.loadingIcon} />
                 </li>
