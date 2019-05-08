@@ -188,19 +188,13 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
 };
 
 export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
-    setupSafeAPIs( passedStore, win );
-
     const theWindow = win;
 
     const authProtocol = `${PROTOCOLS.SAFE_AUTH}:`;
 
     theWindow[pkg.name] = { version: VERSION };
 
-    if (
-    // if no location, we're in jest, so lets keep going to test
-        theWindow.location &&
-    theWindow.location.protocol !== authProtocol
-    ) {
+    if ( theWindow.location && theWindow.location.protocol !== authProtocol ) {
         return;
     }
 
@@ -339,6 +333,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
 };
 
 export const onPreload = ( passedStore, win = window ) => {
+    setupSafeAPIs( passedStore, win );
     watchForExpermentalChangesAndReload( passedStore, win );
     setupPreloadedSafeAuthApis( passedStore, win );
     setupWebIdEventEmitter( passedStore, win );
