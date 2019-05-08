@@ -25,7 +25,8 @@ describe( 'tabs reducer', () =>
         ui :  {
             addressBarIsSelected : false,
             pageIsLoading        : false,
-            shouldFocusWebview   : false
+            shouldFocusWebview   : false,
+            shouldToggleDevTools : false,
         }, 
         webId        : undefined,
         history      : [ 'hello' ],
@@ -69,7 +70,8 @@ describe( 'tabs reducer', () =>
                         ui :  {
                             addressBarIsSelected : false,
                             pageIsLoading        : false,
-                            shouldFocusWebview   : false
+                            shouldFocusWebview   : false,
+                            shouldToggleDevTools : false
                         }, 
                         webId        : undefined,
                         history : [ 'another-url' ],
@@ -524,7 +526,8 @@ describe( 'tabs reducer', () =>
                         ui :{     
                             addressBarIsSelected : true,
                             pageIsLoading        : false,
-                            shouldFocusWebview   : false
+                            shouldFocusWebview   : false,
+                            shouldToggleDevTools : false
                         }
                     }
                 } );
@@ -552,7 +555,8 @@ describe( 'tabs reducer', () =>
                         ui :{     
                             addressBarIsSelected : false,
                             pageIsLoading        : false,
-                            shouldFocusWebview   : false
+                            shouldFocusWebview   : false,
+                            shouldToggleDevTools : false
                         }
                     }
                 } 

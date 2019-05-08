@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import { TabBar } from '$Components/TabBar';
+import  TabBar from '$Components/TabBar';
 import { Icon } from 'antd';
 import { CLASSES } from '$Constants';
 
@@ -18,10 +18,11 @@ describe( 'TabBar', () => {
     let wrapper;
     let instance;
     let props;
+    const tabId = Math.random().toString( 36 );
 
     beforeEach( () => {
         props = {
-            addTab: jest.fn(),
+            addTabEnd: jest.fn(),
             closeTab: jest.fn(),
             selectAddressBar: jest.fn(),
             setActiveTab: jest.fn()
@@ -41,14 +42,36 @@ describe( 'TabBar', () => {
         beforeEach( () => {
             props = {
                 ...props,
-                tabs: [
-                    {
+                tabs: {
+                    [ tabId ]: {
                         url: 'hello',
-                        isActiveTab: true,
-                        windowId: 1,
+                        tabId,
                         favicon: '../../resources/favicon.ico'
                     }
-                ]
+                },
+                windows:
+                {
+                    openWindows:{
+                        openWindows   : {
+                            1: 
+                            {
+                                activeTab: tabId,
+                                ui:
+                                {
+                                    settingsMenuIsVisible: false
+                                },
+                                tabs: [tabId],
+                            }
+                        },
+                        closedWindows : {
+                            1:
+                            {
+                                closedtabs : [],
+                                lastActiveTabs : []
+                            }
+                        }
+                    }
+                }
             };
             wrapper = mount( <TabBar {...props} /> );
         } );
@@ -72,14 +95,36 @@ describe( 'TabBar', () => {
         beforeEach( () => {
             props = {
                 ...props,
-                tabs: [
-                    {
+                tabs: {
+                    [ tabId ]: {
                         url: 'hello',
-                        isActiveTab: true,
-                        windowId: 1,
-                        isLoading: true
+                        tabId,
+                        favicon: '../../resources/favicon.ico'
                     }
-                ]
+                },
+                windows:
+                {
+                    openWindows:{
+                        openWindows   : {
+                            1: 
+                            {
+                                activeTab: tabId,
+                                ui:
+                                {
+                                    settingsMenuIsVisible: false
+                                },
+                                tabs: [tabId],
+                            }
+                        },
+                        closedWindows : {
+                            1:
+                            {
+                                closedtabs : [],
+                                lastActiveTabs : []
+                            }
+                        }
+                    }
+                }
             };
             wrapper = shallow( <TabBar {...props} /> );
         } );

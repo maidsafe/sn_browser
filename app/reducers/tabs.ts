@@ -244,7 +244,8 @@ const resetStore = ( initialState, tab )=>{
         ui :  {
             addressBarIsSelected : false,
             pageIsLoading        : false,
-            shouldFocusWebview   : false
+            shouldFocusWebview   : false,
+            shouldToggleDevTools : false
         }, 
         webId        : undefined,
         history      : [ tabUrl ],
