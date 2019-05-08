@@ -1,3 +1,4 @@
+
 /* eslint-disable */
 import { remote, WebviewTag } from 'electron';
 import React , { Component } from 'React';
@@ -96,13 +97,13 @@ export class Tab extends Component<TabProps, TabState>
     this.debouncedWebIdUpdateFunc = _.debounce(this.updateTheIdInWebview, 300);
   }
 
-  isDevToolsOpened = () => {
+  isDevToolsOpened = (): boolean => {
     const { webview } = this;
-    if (webview) {
-      return webview.isDevToolsOpened();
+    if ( webview ) {
+        return webview.isDevToolsOpened();
     }
-  };
-
+    return false;
+};
   buildMenu = (webview) => {
     if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
     const { addTabEnd, windowId } = this.props;
@@ -363,6 +364,8 @@ export class Tab extends Component<TabProps, TabState>
     this.updateBrowserState( { loading: false, mountedAndReady: true } );
     if ( url && url !== 'about:blank' ) {
       this.loadURL( url ).catch( ( error ) => console.info( 'err in loadurl', error ) );
+      
+      logger.info('>>>>>>>>>>>>>>>>>>')
       this.setCurrentWebId( null );
     }
   }
@@ -617,15 +620,15 @@ export class Tab extends Component<TabProps, TabState>
   // TODO Move this functinoality to extensions
   updateTheIdInWebview = ( newWebId ) => 
   {
-    const { updateTab, tabId, webId } = this.props;
+    const { updateTab, tabId, webId, windowId } = this.props;
     const { webview } = this;
     const theWebId = newWebId || webId;
-    logger.info('Setting currentWebid in tab', currentWindowId);
+    // logger.info('Setting currentWebid in tab', currentWindowId);
     //if ( !webview || !theWebId ) return;
     const setupEventEmitter = `
       webIdUpdater = () =>
       {
-        window.currentWindowId = ${ currentWindowId };
+        window.currentWindowId = ${windowId};
         // check for experiments set...
         if( ! safeExperimentsEnabled )
           return;
@@ -799,3 +802,4 @@ export class Tab extends Component<TabProps, TabState>
     );
   }
 }
+

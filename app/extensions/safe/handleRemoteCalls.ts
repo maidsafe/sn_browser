@@ -77,7 +77,12 @@ export const remoteCallApis = {
         const windowState = state.windows.openWindows;
         const windows = Object.keys(windowState);
         const windowsToBeClosed =  windows.filter(Id=> parseInt(Id,10) !== windowId );
-        ipcRenderer.send('resetStore', windowsToBeClosed);
+        console.log('state-windowId', windowId);
+        console.log('state- windowsToBeClosed', windowsToBeClosed)
+        if(windowsToBeClosed.length > 0)
+        {
+            //ipcRenderer.send('resetStore', windowsToBeClosed);
+        }
         theStore.dispatch( tabActions.resetStore({windowId, tabId, url: 'safe-auth://home/'}) );
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED )

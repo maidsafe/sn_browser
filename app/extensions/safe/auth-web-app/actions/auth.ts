@@ -96,10 +96,18 @@ export const login = ( secret, password ) => ( {
     payload: window.safeAuthenticator.login( secret, password )
 } );
 
-export const logout = () => ({
-    type: LOGOUT,
-    payload: Promise.resolve( window.safeAuthenticator.logout(window.currentWindowId) )
-}); 
+export const logout = () => {
+    console.log( 'WHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAAAAA' );
+
+    console.log( 'IDIDIDIDIDIDD', window.currentWindowId );
+
+    return {
+        type: LOGOUT,
+        payload: Promise.resolve(
+            window.safeAuthenticator.logout( window.currentWindowId )
+        )
+    };
+};
 
 export const showLibErrPopup = () => ( {
     type: SHOW_LIB_ERR_POPUP

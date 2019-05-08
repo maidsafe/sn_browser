@@ -176,6 +176,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
         if(windows.openWindows[windowId]!== undefined)
         {
             const windowsTabs = windows.openWindows[windowId].tabs;
+            console.log('The current Tabs WindowIds', windowId)
             const openTabs = [];
             windowsTabs.forEach( element => {
                 openTabs.push( tabs[element] )
