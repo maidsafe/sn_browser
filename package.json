@@ -65,7 +65,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --ignore-path .eslintignore --arrow-parens always --single-quote --write",
-      "cross-env NODE_ENV=development eslint --cache --format=pretty --fix",
+      "cross-env NODE_ENV=development eslint --cache --format=pretty --fix --ignore-pattern ffi/ --ignore-pattern auth-web-app",
       "git add"
     ],
     "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
@@ -223,12 +223,12 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@commitlint/cli": "7.5.2",
-    "@commitlint/config-conventional": "7.5.0",
+    "@commitlint/cli": "7.6.0",
+    "@commitlint/config-conventional": "7.6.0",
     "@types/jest": "24.0.12",
     "@types/node": "12.0.0",
     "@types/react": "16.8.16",
-    "@types/react-router-dom": "4.3.2",
+    "@types/react-router-dom": "4.3.3",
     "@types/webpack-env": "1.13.9",
     "@types/window-or-global": "1.0.0",
     "@typescript-eslint/eslint-plugin": "1.7.0",
@@ -281,7 +281,7 @@
     "file-loader": "^3.0.1",
     "husky": "^2.2.0",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^24.7.1",
+    "jest": "^24.8.0",
     "json-loader": "^0.5.7",
     "less": "3.9.0",
     "less-loader": "5.0.0",

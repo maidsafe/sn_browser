@@ -1,6 +1,11 @@
 /* eslint-disable */
 import open from 'open';
+<<<<<<< HEAD
 import { app, Menu, shell, BrowserWindow, webContents, ipcRenderer } from 'electron';
+=======
+import { Store } from 'redux';
+import { app, Menu, BrowserWindow } from 'electron';
+>>>>>>> bf37a8ae4780e237753c6ade8fe0c45233ff3423
 import {
     addTab,
     tabForwards,
@@ -19,16 +24,26 @@ import { logger } from '$Logger';
 import pkg from '$Package';
 
 import { getExtensionMenuItems } from '$Extensions';
+<<<<<<< HEAD
 import { addTabEnd, addTabNext, closeWindow, windowCloseTab, setActiveTab,reopenTab, addWindow } from '$Actions/windows_actions';
+=======
+// import { AppWindow } from '$App/definitions/globals.d';
+>>>>>>> bf37a8ae4780e237753c6ade8fe0c45233ff3423
 
 export class MenuBuilder {
-    constructor( mainWindow: BrowserWindow, openWindow, store ) {
+    private mainWindow: AppWindow;
+
+    private openWindow: Function;
+
+    public store: Store;
+
+    public constructor( mainWindow: AppWindow, openWindow, store ) {
         this.mainWindow = mainWindow;
         this.openWindow = openWindow;
         this.store = store;
     }
 
-    buildMenu() {
+    public buildMenu() {
         if ( isHot ) {
             this.setupDevelopmentEnvironment();
         }
@@ -41,7 +56,7 @@ export class MenuBuilder {
         return menu;
     }
 
-    setupDevelopmentEnvironment() {
+    private setupDevelopmentEnvironment() {
         this.mainWindow.openDevTools();
         this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
             const { x, y } = properties;
@@ -57,7 +72,7 @@ export class MenuBuilder {
         } );
     }
 
-    buildMenusTemplate() {
+    private buildMenusTemplate() {
         const { store } = this;
 
         const subMenuAbout = {
@@ -149,10 +164,12 @@ export class MenuBuilder {
                                 {
                                     if(i === openTabs.length - 1)
                                     {
+                                        // eslint-disable-next-line prefer-destructuring
                                         newActiveTab = openTabs[0]
                                     }
                                     else
                                     {
+                                        // eslint-disable-next-line prefer-destructuring
                                         newActiveTab = openTabs[i + 1];
                                     }
                                 }
@@ -166,17 +183,34 @@ export class MenuBuilder {
                     accelerator: 'Ctrl+Shift+Tab',
                     click: ( item, win ) => {
                         if ( win ) {
+<<<<<<< HEAD
                             const windowId = win.id;
                             const activeTab = store.getState().windows.openWindows[windowId].activeTab;
                             const openTabs = store.getState().windows.openWindows[windowId].tabs;
                             let newActiveTab;
+=======
+                            const windowId = win.webContents.id;
+                            const state = store.getState();
+                            let index;
+                            const openTabs = state.tabs.filter(
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
+                            );
+>>>>>>> bf37a8ae4780e237753c6ade8fe0c45233ff3423
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab === activeTab ) 
                                 {
                                     if ( i === 0 ) {
+<<<<<<< HEAD
                                         newActiveTab = openTabs[openTabs.length - 1];
                                     } else {
                                         newActiveTab = openTabs[i - 1];
+=======
+                                        // eslint-disable-next-line prefer-destructuring
+                                        index = openTabs[openTabs.length - 1].index;
+                                    } else {
+                                        // eslint-disable-next-line prefer-destructuring
+                                        index = openTabs[i - 1].index;
+>>>>>>> bf37a8ae4780e237753c6ade8fe0c45233ff3423
                                     }
                                 }
                             } );
@@ -189,9 +223,19 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+W',
                     click: ( item, win ) => {
                         if ( win ) {
+<<<<<<< HEAD
                             const windowId = win.id;
                             const tabId = store.getState().windows.openWindows[windowId].activeTab;
                             const openTabs = store.getState().windows.openWindows[windowId].tabs;
+=======
+                            const { tabs } = store.getState();
+                            const windowId = win.webContents.id;
+
+                            const openTabs = tabs.filter(
+                                ( tab ) => !tab.isClosed && tab.windowId === windowId
+                            );
+
+>>>>>>> bf37a8ae4780e237753c6ade8fe0c45233ff3423
                             if ( openTabs.length === 1 ) {
                                 win.close();
                             } else {
@@ -213,9 +257,23 @@ export class MenuBuilder {
                     label: 'Reopen Last Tab',
                     accelerator: 'CommandOrControl+Shift+T',
                     click: ( item, win ) => {
+<<<<<<< HEAD
                         let windowId = win.id;
                         // need to figure this one out
                         store.dispatch( reopenTab({windowId }) );
+=======
+                        const lastTab = getLastClosedTab( store.getState().tabs );
+
+                        // TODO properly declare tab type.
+                        let windowToFocus = lastTab.windowId;
+
+                        if ( windowToFocus ) {
+                            windowToFocus = BrowserWindow.fromId( windowToFocus );
+                            windowToFocus.focus();
+                        }
+
+                        store.dispatch( reopenTab() );
+>>>>>>> bf37a8ae4780e237753c6ade8fe0c45233ff3423
                     }
                 },
                 { type: 'separator' },

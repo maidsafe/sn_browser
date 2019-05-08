@@ -1,14 +1,10 @@
 import { logger } from '$Logger';
 import {
-    setSaveConfigStatus,
-    setReadConfigStatus
-} from '$Extensions/safe/actions/safeBrowserApplication_actions';
-
-import {
     safeBrowserAppIsAuthing,
     safeBrowserAppIsAuthed,
     safeBrowserAppIsConnected,
-    safeBrowserAppAuthFailed
+    safeBrowserAppAuthFailed,
+    getSafeBrowserAppObject
 } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
 import { addNotification } from '$Actions/notification_actions';
@@ -26,155 +22,11 @@ import * as WindowsActions from '$Actions/windows_actions';
 let isReading = false;
 let isSaving = false;
 
-/**
- * Handle triggering actions and related functionality for saving to SAFE netowrk
- * based upon the application stateToSave
- * @param  {Object} state Application state (from redux)
- */
-export const manageReadStateActions = async store => {
-    // Hack as store is actually unreliable.
-    // TODO: Rework this to use aliased funcs.
-    if ( isReading ) {
-        return;
-    }
-
-    const safeBrowserAppState = store.getState().safeBrowserApp;
-
-    // if its not to save, or isnt authed yet...
-    if (
-        safeBrowserAppState.readStatus !== SAFE.READ_STATUS.TO_READ ||
-    safeBrowserAppIsAuthing() ||
-    safeBrowserAppAuthFailed()
-    ) {
-    // do nothing
-        return;
-    }
-
-    if ( !safeBrowserAppIsAuthed() ) {
-    // come back when authed.
-        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
-        return;
-    }
-    logger.info( 'Managing a READ action' );
-
-    if ( !safeBrowserAppIsConnected() ) {
-        return;
-    }
-
-    isReading = true;
-
-    logger.info( 'Attempting to READ SafeBrowserApp state from network' );
-    store.dispatch(
-        safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING )
-    );
-
-    readConfigFromSafe( store )
-        .then( savedState => {
-            // store.dispatch( safeBrowserAppActions.receivedConfig( savedState ) );
-            store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
-            store.dispatch( WindowsActions.windowCloseTab( savedState ) );
-            store.dispatch(
-                safeBrowserAppActions.setReadConfigStatus(
-                    SAFE.READ_STATUS.READ_SUCCESSFULLY
-                )
-            );
-
-            isReading = false;
-            return null;
-        } )
-        .catch( e => {
-            isReading = false;
-            logger.error( e );
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.FAILED_TO_READ
-                )
-            );
-            throw new Error( e );
-        } );
-};
-
-/**
- * Handle triggering actions and related functionality for saving to SAFE netowrk
- * based upon the application stateToSave
- * @param  {Object} state Application state (from redux)
- */
-export const manageSaveStateActions = async store => {
-    // Hack as store is actually unreliable.
-    // TODO: Rework this to use aliased funcs.
-    if ( isSaving ) {
-        return;
-    }
-
-    const { safeBrowserApp } = store.getState();
-
-    // if its not to save, or isnt authed yet...
-    if (
-        safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE ||
-    safeBrowserAppIsAuthing() ||
-    safeBrowserAppAuthFailed()
-    ) {
-    // do nothing
-        return;
-    }
-
-    // if it auth didnt happen, and hasnt failed...
-    // previously... we can try again (we're in TO SAVE, not SAVING.)
-    if ( !safeBrowserAppIsAuthed() ) {
-    // come back when authed.
-        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
-        return;
-    }
-
-    if ( !safeBrowserAppIsConnected() ) {
-        return;
-    }
-
-    // lets scrap read for now.
-    if (
-        safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
-    safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT &&
-    safeBrowserApp.readStatus !== SAFE.READ_STATUS.TO_READ &&
-    safeBrowserApp.readStatus !== SAFE.READ_STATUS.READING
-    ) {
-        logger.info( "Can't save state, not read yet... Triggering a read." );
-        store.dispatch(
-            safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ )
-        );
-
-        return;
-    }
-
-    isSaving = true;
-
-    logger.info( 'Attempting to SAVE SafeBrowserApp state to network' );
-    store.dispatch(
-        safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING )
-    );
-    saveConfigToSafe( store )
-        .then( () => {
-            isSaving = false;
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY
-                )
-            );
-
-            return null;
-        } )
-        .catch( e => {
-            isSaving = false;
-            logger.error( e );
-
-            // TODO: Handle errors across the store in a separate error watcher?
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.FAILED_TO_SAVE
-                )
-            );
-            throw new Error( e );
-        } );
-};
+function delay( t ) {
+    return new Promise( ( resolve ) => {
+        setTimeout( resolve, t );
+    } );
+}
 
 /**
  * Parses the browser state to json (removes safeBrowserApp) and saves to an MD on the app Homecontainer,
@@ -202,7 +54,11 @@ export const saveConfigToSafe = ( store, quit ) => {
         let mdEntries;
 
         if ( !safeBrowserAppObject ) {
-            store.dispatch( setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
+            store.dispatch(
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.FAILED_TO_SAVE
+                )
+            );
             logger.error( 'Not authorised to save to the network.' );
             return reject( 'Not authorised to save data' );
         }
@@ -269,21 +125,15 @@ export const saveConfigToSafe = ( store, quit ) => {
     } );
 };
 
-function delay( t ) {
-    return new Promise( resolve => {
-        setTimeout( resolve, t );
-    } );
-}
-
 /**
  * Read the configuration from the netowrk
  * @param  {[type]} app SafeApp reference, with handle and authUri
  */
-export const readConfigFromSafe = store =>
+export const readConfigFromSafe = ( store ) =>
     new Promise( async ( resolve, reject ) => {
         const safeBrowserAppObject = getSafeBrowserAppObject();
         if ( !safeBrowserAppObject ) {
-            reject( 'Not authorised to read from the network.' );
+            reject( Error( 'Not authorised to read from the network.' ) );
         }
 
         // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
@@ -317,7 +167,9 @@ export const readConfigFromSafe = store =>
                 }
 
                 store.dispatch(
-                    setReadConfigStatus( SAFE.READ_STATUS.READ_BUT_NONEXISTANT )
+                    safeBrowserAppActions.setReadConfigStatus(
+                        SAFE.READ_STATUS.READ_BUT_NONEXISTANT
+                    )
                 );
             } else {
                 logger.error( e );
@@ -325,3 +177,153 @@ export const readConfigFromSafe = store =>
             }
         }
     } );
+
+/**
+ * Handle triggering actions and related functionality for saving to SAFE netowrk
+ * based upon the application stateToSave
+ * @param  {Object} state Application state (from redux)
+ */
+export const manageReadStateActions = async ( store ) => {
+    // Hack as store is actually unreliable.
+    // TODO: Rework this to use aliased funcs.
+    if ( isReading ) {
+        return;
+    }
+
+    const safeBrowserAppState = store.getState().safeBrowserApp;
+
+    // if its not to save, or isnt authed yet...
+    if (
+        safeBrowserAppState.readStatus !== SAFE.READ_STATUS.TO_READ ||
+    safeBrowserAppIsAuthing() ||
+    safeBrowserAppAuthFailed()
+    ) {
+    // do nothing
+        return;
+    }
+
+    if ( !safeBrowserAppIsAuthed() ) {
+    // come back when authed.
+        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+        return;
+    }
+    logger.info( 'Managing a READ action' );
+
+    if ( !safeBrowserAppIsConnected() ) {
+        return;
+    }
+
+    isReading = true;
+
+    logger.info( 'Attempting to READ SafeBrowserApp state from network' );
+    store.dispatch(
+        safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING )
+    );
+
+    readConfigFromSafe( store )
+        .then( ( savedState ) => {
+            // store.dispatch( safeBrowserAppActions.receivedConfig( savedState ) );
+            store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
+            store.dispatch( WindowsActions.windowCloseTab( savedState ) );
+            store.dispatch(
+                safeBrowserAppActions.setReadConfigStatus(
+                    SAFE.READ_STATUS.READ_SUCCESSFULLY
+                )
+            );
+
+            isReading = false;
+            return null;
+        } )
+        .catch( ( e ) => {
+            isReading = false;
+            logger.error( e );
+            store.dispatch(
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.FAILED_TO_READ
+                )
+            );
+            throw new Error( e );
+        } );
+};
+
+/**
+ * Handle triggering actions and related functionality for saving to SAFE netowrk
+ * based upon the application stateToSave
+ * @param  {Object} state Application state (from redux)
+ */
+export const manageSaveStateActions = async ( store ) => {
+    // Hack as store is actually unreliable.
+    // TODO: Rework this to use aliased funcs.
+    if ( isSaving ) {
+        return;
+    }
+
+    const { safeBrowserApp } = store.getState();
+
+    // if its not to save, or isnt authed yet...
+    if (
+        safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE ||
+    safeBrowserAppIsAuthing() ||
+    safeBrowserAppAuthFailed()
+    ) {
+    // do nothing
+        return;
+    }
+
+    // if it auth didnt happen, and hasnt failed...
+    // previously... we can try again (we're in TO SAVE, not SAVING.)
+    if ( !safeBrowserAppIsAuthed() ) {
+    // come back when authed.
+        store.dispatch( safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+        return;
+    }
+
+    if ( !safeBrowserAppIsConnected() ) {
+        return;
+    }
+
+    // lets scrap read for now.
+    if (
+        safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
+    safeBrowserApp.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT &&
+    safeBrowserApp.readStatus !== SAFE.READ_STATUS.TO_READ &&
+    safeBrowserApp.readStatus !== SAFE.READ_STATUS.READING
+    ) {
+        logger.info( "Can't save state, not read yet... Triggering a read." );
+        store.dispatch(
+            safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ )
+        );
+
+        return;
+    }
+
+    isSaving = true;
+
+    logger.info( 'Attempting to SAVE SafeBrowserApp state to network' );
+    store.dispatch(
+        safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING )
+    );
+    saveConfigToSafe( store )
+        .then( () => {
+            isSaving = false;
+            store.dispatch(
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY
+                )
+            );
+
+            return null;
+        } )
+        .catch( ( e ) => {
+            isSaving = false;
+            logger.error( e );
+
+            // TODO: Handle errors across the store in a separate error watcher?
+            store.dispatch(
+                safeBrowserAppActions.setSaveConfigStatus(
+                    SAFE.SAVE_STATUS.FAILED_TO_SAVE
+                )
+            );
+            throw new Error( e );
+        } );
+};
