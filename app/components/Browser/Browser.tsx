@@ -85,13 +85,13 @@ class Browser extends Component<BrowserProps, BrowserState> {
 
     shouldComponentUpdate = ( nextProps: BrowserProps ) => {
         //Have to check this about pafge rendering
-        const { windows, tabs, Bookmarks } = nextProps;
+        const { windows, tabs, bookmarks } = nextProps;
         const { windowId } = this.state;
         const currentTabs = this.props.tabs;
         const currentBookmarks = this.props.bookmarks;
         const newWindow = Object.keys(windows.openWindows).length>=1 ? windows.openWindows[windowId] :{}; 
         const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {}; 
-        return newWindow !== currentWindow || tabs !== currentTabs || Bookmarks!== currentBookmarks;
+        return newWindow !== currentWindow || tabs !== currentTabs || bookmarks!== currentBookmarks;
     };
 
     componentDidUpdate = ( prevProps: BrowserProps ) => {
@@ -120,17 +120,17 @@ class Browser extends Component<BrowserProps, BrowserState> {
     };
 
     handleAddTabNext = tab => {
-        const { addTab, addTabEnd, setActiveTab } = this.props;
+        const { addTab, addTabNext, setActiveTab } = this.props;
         const { windowId } = this.state;
         const { tabId, url, tabIndex } = tab;
         addTab( {tabId, url} );
         if( tabIndex!== undefined )
         {
-            addTabEnd( { tabId, tabIndex, windowId } );
+            addTabNext( { tabId, tabIndex, windowId } );
         }
         else
         {
-            addTabEnd( { tabId, windowId } );
+            addTabNext( { tabId, windowId } );
         }
         setActiveTab( {tabId , windowId} );
     };
