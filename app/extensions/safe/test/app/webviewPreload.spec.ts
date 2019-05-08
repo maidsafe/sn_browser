@@ -67,13 +67,19 @@ describe( 'SAFE Webview Preload APIs', () => {
     let store;
 
     beforeEach( () => {
-        win = {};
+        win = {
+            location: {
+                protocol: 'safe-auth:'
+            }
+        };
+
         store = {
             subscribe: jest.fn(),
             getState: jest.fn( () => ( {
                 safeBrowserApp: { experimentsEnabled: true }
             } ) )
         };
+
         webviewPreload.onPreload( store, win );
     } );
 
@@ -87,8 +93,9 @@ describe( 'SAFE Webview Preload APIs', () => {
         expect( win.safe ).toHaveProperty( 'authorise' );
     } );
 
-    test( 'window.safe.authorise exists', async () => {
+    test( 'window.authorise exists for "auth" protocol', async () => {
         expect.assertions( 2 );
+
         expect( win.safe.authorise ).not.toBeUndefined();
 
         try {
@@ -96,6 +103,30 @@ describe( 'SAFE Webview Preload APIs', () => {
         } catch ( e ) {
             expect( e.message ).toBe( 'Auth object is required' );
         }
+    } );
+
+    test( 'window.safeAuthenticator exists for "auth" protocol', async () => {
+        expect.assertions( 1 );
+        expect( win.safeAuthenticator ).not.toBeUndefined();
+    } );
+
+    test( 'window.safe.authorise does NOT exists for non "auth" protocol', async () => {
+        win = {};
+
+        win.location = {
+            protocol: 'safe:'
+        };
+        store = {
+            subscribe: jest.fn(),
+            getState: jest.fn( () => ( {
+                safeBrowserApp: { experimentsEnabled: true }
+            } ) )
+        };
+
+        webviewPreload.onPreload( store, win );
+
+        expect.assertions( 1 );
+        expect( win.safeAuthenticator ).toBeUndefined();
     } );
 
     // skip final tests in a production environment as libs dont exist
