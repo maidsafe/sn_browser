@@ -162,18 +162,22 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "zip"
       ]
     },
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "zip"
       ],
       "category": "Development"
     },
-    "mac": {
-      "target": "dmg"
-    },
+    "target": [
+       "dmg",
+       "pkg",
+       "zip"
+   ],
     "directories": {
       "buildResources": "resources",
       "output": "release"
