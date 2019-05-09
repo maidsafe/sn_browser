@@ -13,7 +13,7 @@ import { parse } from 'url';
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-const ButtonsLHS = props => {
+const ButtonsLHS = ( props ) => {
     const {
         activeTab,
         handleBack,
@@ -60,7 +60,8 @@ const ButtonsLHS = props => {
                     icon="reload"
                     aria-label={I18n.t( 'aria.reload_page' )}
                     disabled={
-                        activeTab.isLoading || ( activeTabUrl && activeTabUrl.protocol )
+                        ( activeTab && activeTab.isLoading ) ||
+            ( activeTabUrl && activeTabUrl.protocol )
                             ? activeTabUrl.protocol.includes( PROTOCOLS.INTERNAL_PAGES )
                             : false
                     }

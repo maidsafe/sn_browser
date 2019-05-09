@@ -7,12 +7,25 @@ import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.tabs;
 
+const handleTabPayload = ( state, payload ) => {
+    if ( payload ) {
+        if ( payload.constructor !== Object ) {
+            throw new Error( 'Payload must be an Object.' );
+        }
+        const { tabId } = payload;
+        const tabToMerge = { ...state[tabId] };
+        return { tabId, tabToMerge };
+    }
+};
+
 const addTab = ( state, tab ) => {
     const tabUrl = makeValidAddressBarUrl( tab.url || '' );
     const { tabId } = tab;
+
     const faviconPath = isRunningUnpacked
         ? '../resources/favicon.ico'
         : '../favicon.ico';
+
     const newTab = {
         url: tabUrl,
         tabId,
@@ -38,12 +51,14 @@ const moveTabFowards = ( state, payload ) => {
         logger.error( err );
         return state;
     }
+
     const updatedTab = tabToMerge;
     const { history } = updatedTab;
     const nextHistoryIndex = updatedTab.historyIndex + 1 || 1;
     if ( !history || history.length < 2 || !history[nextHistoryIndex] ) {
         return state;
     }
+
     const newUrl = history[nextHistoryIndex];
     updatedTab.historyIndex = nextHistoryIndex;
     updatedTab.url = newUrl;
@@ -123,25 +138,15 @@ const updateTabHistory = ( tabToMerge, payload ) => {
     return updatedTab;
 };
 
-const handleTabPayload = ( state, payload ) => {
-    if ( payload ) {
-        if ( payload.constructor !== Object ) {
-            throw new Error( 'Payload must be an Object.' );
-        }
-        const { tabId } = payload;
-        const tabToMerge = { ...state[tabId] };
-        return { tabId, tabToMerge };
-    }
-};
-
+// TODO: sort this out
 const focusWebview = ( state, tab ) => {
     const { tabId } = tab;
     const payload = tab.toggle;
-    const TabtoMerge = { ...state[tabId] };
+    const tabtoMerge = { ...state[tabId] };
     const newTab = {
-        ...TabtoMerge,
+        ...tabtoMerge,
         ui: {
-            ...TabtoMerge.ui,
+            ...tabtoMerge.ui,
             shouldFocusWebview: payload
         }
     };
@@ -151,11 +156,10 @@ const focusWebview = ( state, tab ) => {
 
 const blurAddressBar = ( state, tab ) => {
     const { tabId } = tab;
-    const TabtoMerge = { ...state[tabId] };
     const newTab = {
-        ...TabtoMerge,
+        ...state[tabId],
         ui: {
-            ...TabtoMerge.ui,
+            ...state[tabId].ui,
             addressBarIsSelected: false
         }
     };
@@ -165,11 +169,10 @@ const blurAddressBar = ( state, tab ) => {
 
 const selectAddressBar = ( state, tab ) => {
     const { tabId } = tab;
-    const TabtoMerge = { ...state[tabId] };
     const newTab = {
-        ...TabtoMerge,
+        ...state[tabId],
         ui: {
-            ...TabtoMerge.ui,
+            ...state[tabId].ui,
             addressBarIsSelected: true
         }
     };
@@ -179,11 +182,10 @@ const selectAddressBar = ( state, tab ) => {
 
 const deselectAddressBar = ( state, tab ) => {
     const { tabId } = tab;
-    const TabtoMerge = { ...state[tabId] };
     const newTab = {
-        ...TabtoMerge,
+        ...state[tabId],
         ui: {
-            ...TabtoMerge.ui,
+            ...state[tabId].ui,
             addressBarIsSelected: false
         }
     };

@@ -16,6 +16,8 @@ export class TabContents extends Component<{}, {}> {
 
     constructor( props ) {
         super( props );
+
+        console.log('TTTTTTTTed tabContents constructed')
         this.allTabComponents = [];
     }
 
