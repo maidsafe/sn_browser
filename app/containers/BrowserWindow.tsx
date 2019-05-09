@@ -1,5 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
 import * as TabActions from '$Actions/tabs_actions';
 import * as NotificationActions from '$Actions/notification_actions';
 import * as BookmarksActions from '$Actions/bookmarks_actions';
@@ -7,12 +8,14 @@ import * as WindowsActions from '$Actions/windows_actions';
 import { Browser } from '$Components/Browser';
 import { getActionsForBrowser } from '$Extensions';
 
+const windowId = remote ? remote.getCurrentWindow().id : undefined;
 function mapStateToProps( state ) {
     return {
         bookmarks: state.bookmarks,
         notifications: state.notifications,
         tabs: state.tabs,
         windows: state.windows,
+        windowId,
         safeBrowserApp: state.safeBrowserApp
     };
 }
