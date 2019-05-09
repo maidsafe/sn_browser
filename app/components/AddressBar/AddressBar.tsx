@@ -44,6 +44,12 @@ export class AddressBar extends Component<AddressBarProps, {}> {
         editingUrl: false
     };
 
+    constructor( props )
+    {
+        super( props )
+        console.log("addressbar constructued")
+    }
+
     handleBack = () => {
         const { tabBackwards, tabId } = this.props;
         tabBackwards( { tabId } );

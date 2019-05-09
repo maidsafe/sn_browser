@@ -33,11 +33,13 @@ interface TabBarState {
 export class TabBar extends Component<TabBarProps, TabBarState> {
     static defaultProps = {
         tabInFocus: 0,
-        tabs: []
+        tabs: [{ title: '', tabId: '' }],
+        activeTab: {}
     };
 
     constructor( props ) {
         super( props );
+        console.log( 'tabbbbbb bar constructed ........' );
         // this.state = {
         //     // tabInFocus: 0 // to update when many tabs can exist
         // };
@@ -49,6 +51,7 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
         // const { tabs, windowId, activeTabId } = this.props;
         // const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {};
 
+        console.log( 'tabs hereeee', tabs );
         return tabs.map(
             ( tab ): React.ReactNode => {
                 let { title } = tab;

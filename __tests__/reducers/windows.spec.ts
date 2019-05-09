@@ -34,7 +34,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -49,7 +49,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -69,11 +69,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -91,7 +91,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -109,7 +109,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -125,7 +125,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -143,7 +143,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -159,7 +159,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -177,7 +177,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -194,7 +194,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -212,7 +212,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -228,7 +228,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -246,7 +246,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -266,11 +266,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -292,11 +292,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -316,11 +316,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -342,11 +342,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -364,7 +364,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -383,7 +383,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -399,7 +399,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -418,7 +418,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -439,11 +439,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -467,11 +467,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -489,7 +489,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -508,9 +508,9 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 0,
+                                lastTabIndex: 0,
                                 tabId
                             }
                         ],
@@ -529,7 +529,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -548,9 +548,9 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 1,
+                                lastTabIndex: 1,
                                 tabId: tabId2
                             }
                         ],
@@ -575,16 +575,16 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 0,
+                                lastTabIndex: 0,
                                 tabId
                             }
                         ],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -608,18 +608,18 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 0,
+                                lastTabIndex: 0,
                                 tabId
                             }
                         ],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 0,
+                                lastTabIndex: 0,
                                 tabId: tabId2
                             }
                         ],
@@ -640,13 +640,13 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 1,
+                                lastTabIndex: 1,
                                 tabId
                             },
                             {
-                                lasttabIndex: 1,
+                                lastTabIndex: 1,
                                 tabId: tabId2
                             }
                         ],
@@ -667,9 +667,9 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 1,
+                                lastTabIndex: 1,
                                 tabId
                             }
                         ],
@@ -688,9 +688,9 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 1,
+                                lastTabIndex: 1,
                                 tabId
                             }
                         ],
@@ -711,7 +711,7 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -731,13 +731,13 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [
+                        closedTabs: [
                             {
-                                lasttabIndex: 1,
+                                lastTabIndex: 1,
                                 tabId
                             }
                         ],
@@ -762,11 +762,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -788,11 +788,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -801,6 +801,7 @@ describe( 'windows reducer', () => {
                 type: TYPES.CLOSE_WINDOW,
                 payload: { windowId: 1 }
             } );
+
             expect( closeWindow ).toEqual( {
                 openWindows: {
                     '2': {
@@ -810,11 +811,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: [tabId, tabId1, tabId2]
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -836,11 +837,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -865,11 +866,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -894,11 +895,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
@@ -923,11 +924,11 @@ describe( 'windows reducer', () => {
                 },
                 closedWindows: {
                     '1': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     },
                     '2': {
-                        closedtabs: [],
+                        closedTabs: [],
                         lastActiveTabs: []
                     }
                 }
