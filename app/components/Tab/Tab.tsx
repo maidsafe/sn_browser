@@ -1,5 +1,5 @@
 import { remote, WebviewTag } from 'electron';
-import React, { Component } from 'React';
+import React, { Component } from 'react';
 import { Error } from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
@@ -9,7 +9,6 @@ import {
     urlHasChanged
 } from '$Utils/urlHelpers';
 import stdUrl, { parse as parseURL } from 'url';
-import { currentWindowId } from '$Constants';
 import { logger } from '$Logger';
 import styles from './tab.css';
 
@@ -75,7 +74,6 @@ export class Tab extends Component<TabProps, TabState> {
     constructor( properties ) {
         super( properties );
 
-        console.log( 'TTTTABBB CONSTRUCTED' );
         this.state = {
             browserState: {
                 canGoBack: false,
@@ -93,14 +91,8 @@ export class Tab extends Component<TabProps, TabState> {
         this.stop = this.stop.bind( this );
         this.openDevTools = this.openDevTools.bind( this );
         this.loadURL = this.loadURL.bind( this );
-        this.debouncedWebIdUpdateFunc = _.debounce(this.updateTheIdInWebview, 300);
+        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
     }
-
-    shouldComponentUpdate = ( newProps ) => {
-        console.log( 'TTTTAB got new props', newProps );
-
-        return true;
-    };
 
     isDevToolsOpened = () => {
         const { webview } = this;
@@ -114,7 +106,9 @@ export class Tab extends Component<TabProps, TabState> {
         const { addTabEnd, windowId } = this.props;
         // require here to avoid jest/electron remote issues
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+        logger.info( 'TRYING TO BUILD MEMNUUU', !webview.getWebContents );
         const contextMenu = require( 'electron-context-menu' );
+
         contextMenu( {
             window: webview,
             append: ( params ) => [
@@ -146,19 +140,7 @@ export class Tab extends Component<TabProps, TabState> {
                         webview.goBack();
                     }
                 },
-                { type: 'separator' },
-                {
-                    label: 'Open Link in New Tab.',
-                    visible: params.linkURL && params.linkURL.length > 0,
-                    click() {
-                        addTabEnd( {
-                            url: params.linkURL,
-                            windowId,
-                            tabId: Math.random().toString( 36 )
-                        } );
-                    }
-                },
-                { type: 'seperator' },
+                // { type': seperator' },
                 {
                     label: 'Cut',
                     selector: 'cut:'
@@ -174,6 +156,18 @@ export class Tab extends Component<TabProps, TabState> {
                 {
                     label: 'Select All',
                     selector: 'selectAll:'
+                },
+                { type: 'separator' },
+                {
+                    label: 'Open Link in New Tab.',
+                    visible: params.linkURL && params.linkURL.length > 0,
+                    click() {
+                        addTabEnd( {
+                            url: params.linkURL,
+                            windowId,
+                            tabId: Math.random().toString( 36 )
+                        } );
+                    }
                 }
             ],
             showCopyImageAddress: true,
@@ -270,14 +264,14 @@ export class Tab extends Component<TabProps, TabState> {
                 theWebview.focus();
                 webContents.focus();
             } );
-            focusWebview( false );
+            focusWebview( { tabId, shouldFocus: false } );
         }
         if (
             !this.props.shouldFocusWebview &&
       !nextProperties.shouldFocusWebview &&
       nextProperties.isActiveTab
         ) {
-            focusWebview( true );
+            focusWebview( { tabId, shouldFocus: true } );
         }
         const nextId = nextProperties.webId || {};
         const currentId = this.props.webId || {};
@@ -354,6 +348,7 @@ export class Tab extends Component<TabProps, TabState> {
         if ( url && url !== 'about:blank' ) {
             this.loadURL( url ).catch( ( error ) => console.info( 'err in loadurl', error ) );
             this.setCurrentWebId( null );
+            this.addWindowIdToTab();
         }
     }
 
@@ -462,6 +457,7 @@ export class Tab extends Component<TabProps, TabState> {
         };
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
+        this.addWindowIdToTab();
         this.setCurrentWebId( null );
     }
 
@@ -477,6 +473,7 @@ export class Tab extends Component<TabProps, TabState> {
         }
         this.updateBrowserState( { loading: false } );
         updateTab( tabUpdate );
+        this.addWindowIdToTab();
         this.setCurrentWebId( null );
     }
 
@@ -521,6 +518,7 @@ export class Tab extends Component<TabProps, TabState> {
         if ( !this.state.browserState.redirects.includes( url ) ) {
             this.updateBrowserState( { url, redirects: [url] } );
             updateTab( { tabId, url } );
+            this.addWindowIdToTab();
             this.setCurrentWebId( null );
         }
     }
@@ -538,6 +536,7 @@ export class Tab extends Component<TabProps, TabState> {
             if ( urlHasChanged( url, this.state.browserState.url ) ) {
                 this.updateBrowserState( { url, redirects: [url] } );
                 updateTab( { tabId, url } );
+                this.addWindowIdToTab();
                 this.setCurrentWebId( null );
             }
         }
@@ -581,17 +580,26 @@ export class Tab extends Component<TabProps, TabState> {
         }
     }
 
+    addWindowIdToTab = () => {
+        const { windowId } = this.props;
+        const { webview } = this;
+
+        const setWindowId = `
+              window.currentWindowId = ${windowId};
+              `;
+        webview.executeJavaScript( setWindowId );
+    };
+
     // TODO Move this functinoality to extensions
     updateTheIdInWebview = ( newWebId ) => {
-        const { tabId, webId, windowId } = this.props;
+        const { tabId, webId } = this.props;
         const { webview } = this;
         const theWebId = newWebId || webId;
-        logger.info( 'Setting currentWebid in tab', windowId );
+        logger.info( 'Setting currentWebid in tab' );
         // if ( !webview || !theWebId ) return;
         const setupEventEmitter = `
           webIdUpdater = () =>
           {
-              window.currentWindowId = ${currentWindowId};
               // check for experiments set...
               if( ! safeExperimentsEnabled )
                   return;
@@ -622,41 +630,41 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         webview.executeJavaScript( setupEventEmitter );
     };
 
-    setCurrentWebId(newWebId) {
-        // TODO: move webId func into extensions
+    setCurrentWebId( newWebId ) {
+    // TODO: move webId func into extensions
         const { safeExperimentsEnabled } = this.props;
         // if ( safeExperimentsEnabled ) {
-        this.debouncedWebIdUpdateFunc(newWebId);
-        // }
-      }
+        this.debouncedWebIdUpdateFunc( newWebId );
+    // }
+    }
 
-      newWindow(e) {
+    newWindow( e ) {
         const { addTabEnd, windowId } = this.props;
         const { url } = e;
-        logger.info('Tab: NewWindow event triggered for url: ', url);
-        const tabId = Math.random().toString(36);
-        addTabEnd({ url, windowId, tabId });
+        logger.info( 'Tab: NewWindow event triggered for url: ', url );
+        const tabId = Math.random().toString( 36 );
+        addTabEnd( { url, windowId, tabId } );
         this.goForward();
-      }
+    }
 
-      isFrozen(e) {
-        logger.info('Webview is frozen...');
+    isFrozen( e ) {
+        logger.info( 'Webview is frozen...' );
         const { tabId } = this.props;
         const frozen = !tabId;
         // const frozen = staticTabData[index] || !index
         return frozen;
-      }
+    }
 
-      with(callback, options = { insist: false }) {
+    with( callback, options = { insist: false } ) {
         const { webview } = this;
-        if (!webview) return;
+        if ( !webview ) return;
         const webContents = webview.getWebContents();
-        if (!webContents) {
-          return;
+        if ( !webContents ) {
+            return;
         }
-        if (webContents.isDestroyed()) return;
-        callback(webview, webContents);
-      }
+        if ( webContents.isDestroyed() ) return;
+        callback( webview, webContents );
+    }
 
     openDevTools() {
         this.with( ( wv, wc ) => wc.openDevTools( { mode: 'detach' } ) );

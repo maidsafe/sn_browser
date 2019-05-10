@@ -23,6 +23,7 @@ interface ButtonsRHSProps {
     focusWebview: ( ...args: Array<any> ) => any;
     windowId: number;
     setActiveTab: ( ...args: Array<any> ) => any;
+    tabId: string;
 }
 /**
  * Left hand side buttons for the Address Bar
@@ -52,7 +53,8 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
             hideSettingsMenu,
             menuItems,
             focusWebview,
-            windowId
+            windowId,
+            tabId
         } = this.props;
         return (
             <Row
@@ -72,7 +74,7 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
                                 ? I18n.t( 'aria.is_bookmarked' )
                                 : I18n.t( 'aria.not_bookmarked' )
                         }
-                        onKeyDown={e => {
+                        onKeyDown={( e ) => {
                             if ( e.keyCode === 13 ) {
                                 this.handleBookmarking();
                             }
@@ -90,7 +92,7 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
                         tabIndex="0"
                         windowId={windowId}
                         aria-label={I18n.t( 'aria.settings_menu' )}
-                        onBlur={() => focusWebview( true )}
+                        onBlur={() => focusWebview( { tabId, shouldFocus: true } )}
                     />
                 </Col>
             </Row>

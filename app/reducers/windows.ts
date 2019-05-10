@@ -1,7 +1,7 @@
 import { TYPES } from '$Actions/windows_actions';
 import { logger } from '$Logger';
 import { TYPES as TAB_TYPES } from '$Actions/tabs_actions';
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash';
 import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.windows;
@@ -98,7 +98,7 @@ const closetab = ( state, tab ) => {
     const { tabId } = tab;
 
     const openWindows = { ...state.openWindows };
-    const closedWindows = cloneDeep(state.closedWindows);
+    const closedWindows = cloneDeep( state.closedWindows );
 
     const lastTabIndex = openWindows[targetWindow].tabs.findIndex( ( tab ) => {
         return tab === tabId;
@@ -145,26 +145,22 @@ const reOpenTab = ( state, tabs ) => {
 
     const newWindow = { ...newOpenWindows[targetWindowId] };
 
-    newWindow.tabs = [ ...newWindow.tabs ];
+    newWindow.tabs = [...newWindow.tabs];
 
-    const closedWindowTabs = [ ...closedWindows[targetWindowId].closedTabs ];
+    const closedWindowTabs = [...closedWindows[targetWindowId].closedTabs];
 
     closedWindows[targetWindowId] = {
         ...closedWindows[targetWindowId],
         closedTabs: closedWindowTabs
     };
 
-    const lastTabObj = closedWindowTabs[ closedWindowTabs.length - 1 ];
+    const lastTabObj = closedWindowTabs[closedWindowTabs.length - 1];
 
     closedWindowTabs.pop();
 
     const { tabId, lastTabIndex } = lastTabObj;
 
-    newWindow.tabs.splice(
-        lastTabIndex,
-        0,
-        tabId
-    );
+    newWindow.tabs.splice( lastTabIndex, 0, tabId );
 
     newOpenWindows[targetWindowId] = newWindow;
 
@@ -183,7 +179,13 @@ const closeWindow = ( state, tab ) => {
     const newOpenWindows = { ...state.openWindows };
     const newClosedWindows = { ...state.closedWindows };
 
-    const newTabs = [...state.openWindows[targetwindow].tabs];
+    const closingWindow = state.openWindows[targetwindow];
+
+    if ( !closingWindow ) return state;
+
+    const closingWindowsTabs = state.openWindows[targetwindow].tabs;
+
+    const newTabs = [...closingWindowsTabs];
     const newCloseWindow = {
         ...newClosedWindows[targetwindow],
         lastActiveTabs: newTabs
@@ -229,8 +231,10 @@ const hideSettingsMenu = ( state, payload ) => {
 };
 
 const resetStore = ( state, payload ) => {
-    const targetWindow = payload.windowId;
+    const targetWindow = payload.fromWindow;
     const { tabId } = payload;
+
+    if ( !targetWindow ) return state;
 
     const newState = {
         openWindows: {

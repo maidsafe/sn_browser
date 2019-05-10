@@ -14,5 +14,5 @@ module.exports = {
     mainWindowUrl: './app/app.html',
     appPath: '.',
     electronPath: `./release/${RELEASE_FOLDER_NAME}/${appString}`,
-    appArgs: ['']
+    appArgs: ['--debug']
 };

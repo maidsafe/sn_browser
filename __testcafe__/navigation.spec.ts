@@ -1,13 +1,23 @@
 import { Selector } from 'testcafe';
 import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
-import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
+import {
+    getMainMenuItem,
+    clickOnMainMenuItem
+} from 'testcafe-browser-provider-electron';
+import {
+    getPageUrl,
+    getPageTitle,
+    openLocation,
+    navigateTo,
+    resetStore
+} from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
 
 fixture`Browser UI Navigation`.page( '../app/app.html' ).afterEach( resetStore );
 // .afterEach(assertNoConsoleErrors);
 
-test( 'should open window', async t => {
+test( 'should open window', async ( t ) => {
     await t.expect( getPageTitle() ).eql( 'SAFE Browser' );
 } );
 
@@ -16,8 +26,14 @@ test( 'should open window', async t => {
 //   assertNoConsoleErrors
 // );
 
-test( 'add tab should exist', async t => {
+test( 'add tab should exist', async ( t ) => {
     await t.expect( Selector( `.${CLASSES.ADD_TAB}` ).exists ).ok();
+} );
+
+test( 'openLocation should select the address bar', async ( t ) => {
+    await openLocation();
+    await t.expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).exists ).ok();
+    await t.expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).focused ).ok();
 } );
 
 // Blocked until we can see webview.
@@ -34,7 +50,7 @@ test( 'add tab should exist', async t => {
 //
 // } );
 
-test( 'can go backwards', async t => {
+test( 'can go backwards', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
@@ -48,7 +64,7 @@ test( 'can go backwards', async t => {
         .eql( 'safe://example.com' );
 } );
 
-test( 'can go backwards to about:blank', async t => {
+test( 'can go backwards to about:blank', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
@@ -61,7 +77,7 @@ test( 'can go backwards to about:blank', async t => {
         .eql( 'about:blank' );
 } );
 
-test( 'can load about:blank', async t => {
+test( 'can load about:blank', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
@@ -74,7 +90,7 @@ test( 'can load about:blank', async t => {
         .eql( 'about:blank' );
 } );
 
-test( 'can go forwards', async t => {
+test( 'can go forwards', async ( t ) => {
     await t
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )

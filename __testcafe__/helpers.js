@@ -6,12 +6,11 @@ import {
 import { CLASSES } from '../app/constants/classes';
 
 export const getPageUrl = ClientFunction( () => window.location.href );
-export const resetStore = async t => {
+export const resetStore = async ( t ) => {
     await clickOnMainMenuItem( ['&Tests', 'Reset the store'] );
-    // await t.wait(1000);
-    // await clickOnMainMenuItem(['&File', 'New Window']);
-    // const menuItem = await getMainMenuItem(['&Tests', 'Reset the store']);
-    // await clickOnMainMenuItem(menuItem);
+};
+export const openLocation = async ( t ) => {
+    await clickOnMainMenuItem( ['&File', 'Open Location'] );
 };
 
 export const getPageTitle = ClientFunction( () => document.title );
