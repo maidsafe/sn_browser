@@ -80,11 +80,6 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                 }
 
                 let tabStyleClass = styles.tab;
-                const tabData = {
-                    key: tab.index,
-                    tabIndex: tab.index,
-                    url: tab.url
-                };
 
                 if ( tabId === activeTabId ) {
                     tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
@@ -94,7 +89,7 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                     <button
                         type="button"
                         role="tab"
-                        key={tab.index}
+                        key={tab.tabId}
                         className={`${tabStyleClass} ${CLASSES.TAB}`}
                         onClick={( event ) => {
                             this.handleTabClick( tabId, event );

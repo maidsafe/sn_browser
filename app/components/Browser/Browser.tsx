@@ -15,6 +15,7 @@ interface BrowserProps {
     notifications: Array<Notification>;
     tabs: object;
     windows: object;
+    windowId: any;
     addBookmark: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
     addWindow: ( ...args: Array<any> ) => any;
@@ -37,10 +38,8 @@ interface BrowserProps {
     updateNotification: ( ...args: Array<any> ) => any;
     clearNotification: ( ...args: Array<any> ) => any;
 }
-interface BrowserState {
-    windowId: any;
-}
-class Browser extends Component<BrowserProps, BrowserState> {
+
+class Browser extends Component<BrowserProps, {}> {
     static defaultProps = {
         addressBarIsSelected: false,
         tabs: {},
@@ -99,17 +98,11 @@ class Browser extends Component<BrowserProps, BrowserState> {
             thisWindowOpenTabs.push( tabs[tabId] );
         } );
 
-        // if ( !isEqual( newOpenTabs, this.openTabs ) ) {
-        //     this.openTabs = newOpenTabs;
-        // }
         const activeTabId = windows.openWindows[windowId]
             ? windows.openWindows[windowId].activeTab
             : undefined;
 
         const activeTab = activeTabId !== undefined ? tabs[activeTabId] : undefined;
-        // if ( !activeTab ) {
-        //     return <div className="noTabsToShow" />;
-        // }
 
         const activeTabAddress = activeTab ? activeTab.url : '';
 
@@ -120,7 +113,7 @@ class Browser extends Component<BrowserProps, BrowserState> {
             ? tabs[activeTabId].ui.addressBarIsSelected
             : false;
 
-        const { shouldFocusWebview } = tabs[activeTabId]
+        const { shouldFocusWebview } = activeTabId && tabs[activeTabId]
             ? tabs[activeTabId].ui.shouldFocusWebview
             : false;
         const { settingsMenuIsVisible } = windows.openWindows[windowId]
@@ -141,54 +134,9 @@ class Browser extends Component<BrowserProps, BrowserState> {
         };
     }
 
-    // shouldComponentUpdate = ( nextProps: BrowserProps ) => {
-    // // Have to check this about pafge rendering
-    //     const { windows, tabs, Bookmarks } = nextProps;
-    //     const { windowId } = this.state;
-    //     const currentTabs = this.props.tabs;
-    //     // const currentBookmarks = this.props.bookmarks;
-    //     const newWindow = windows.openWindows[windowId] || {};
-    //     const currentWindow = this.props.windows.openWindows[windowId] || {};
-    //
-    //     // TODO: compare the actual tab contents.......????
-    //     console.log( 'new window', newWindow );
-    //     console.log( 'currentWindow', currentWindow );
-    //     return !isEqual( currentWindow, newWindow );
-    // };
-
     componentDidUpdate = ( prevProps: BrowserProps ) => {
         const currentProps = { ...this.props };
         handleNotifications( prevProps, currentProps );
-    };
-
-    handleCloseBrowserTab = ( tab ) => {
-        const { windows, windowCloseTab, windowId } = this.props;
-        const openTabIds = windows.openWindows[windowId].tabs;
-        if ( openTabIds.length === 1 ) {
-            ipcRenderer.send( 'command:close-window' );
-        } else {
-            windowCloseTab( tab );
-        }
-    };
-
-    handleAddTabEnd = ( tab ) => {
-        const { addTabEnd, addTab, setActiveTab, windowId } = this.props;
-        const { url, tabId } = tab;
-        addTab( { url, tabId } );
-        addTabEnd( { windowId, tabId } );
-        setActiveTab( { windowId, tabId } );
-    };
-
-    handleAddTabNext = ( tab ) => {
-        const { addTab, addTabEnd, setActiveTab, windowId } = this.props;
-        const { tabId, url, tabIndex } = tab;
-        addTab( { tabId, url } );
-        if ( tabIndex !== undefined ) {
-            addTabEnd( { tabId, tabIndex, windowId } );
-        } else {
-            addTabEnd( { tabId, windowId } );
-        }
-        setActiveTab( { tabId, windowId } );
     };
 
     render() {
@@ -308,5 +256,35 @@ class Browser extends Component<BrowserProps, BrowserState> {
         );
     // TODO: if not, lets trigger close?
     }
+
+    handleCloseBrowserTab = ( tab ) => {
+        const { windows, windowCloseTab, windowId } = this.props;
+        const openTabIds = windows.openWindows[windowId].tabs;
+        if ( openTabIds.length === 1 ) {
+            ipcRenderer.send( 'command:close-window' );
+        } else {
+            windowCloseTab( tab );
+        }
+    };
+
+    handleAddTabEnd = ( tab ) => {
+        const { addTabEnd, addTab, setActiveTab, windowId } = this.props;
+        const { url, tabId } = tab;
+        addTab( { url, tabId } );
+        addTabEnd( { windowId, tabId } );
+        setActiveTab( { windowId, tabId } );
+    };
+
+    handleAddTabNext = ( tab ) => {
+        const { addTab, addTabEnd, setActiveTab, windowId } = this.props;
+        const { tabId, url, tabIndex } = tab;
+        addTab( { tabId, url } );
+        if ( tabIndex !== undefined ) {
+            addTabEnd( { tabId, tabIndex, windowId } );
+        } else {
+            addTabEnd( { tabId, windowId } );
+        }
+        setActiveTab( { tabId, windowId } );
+    };
 }
 export const ExtendedBrowser = extendComponent( Browser, wrapBrowserComponent );

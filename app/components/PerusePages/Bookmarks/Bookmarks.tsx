@@ -10,7 +10,7 @@ interface BookmarksProps {
     addTabEnd?: ( ...args: Array<any> ) => any;
 }
 export const Bookmarks = ( props: BookmarksProps = { bookmarks: [] } ) => {
-    const { bookmarks, isActiveTab, addTab } = props;
+    const { bookmarks, isActiveTab, addTabEnd } = props;
     const bookmarkList = bookmarks.map( bookmark => bookmark.url );
     let moddedClass = styles.tab;
     if ( isActiveTab ) {
@@ -26,7 +26,7 @@ export const Bookmarks = ( props: BookmarksProps = { bookmarks: [] } ) => {
                     <PageHeader>
                         <H1 title="Bookmarks" />
                     </PageHeader>
-                    <UrlList list={bookmarkList} addTab={addTab} />
+                    <UrlList list={bookmarkList} addTabEnd={addTabEnd} />
                 </Page>
             </div>
         </div>
