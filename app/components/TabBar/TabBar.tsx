@@ -39,10 +39,7 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
 
     constructor( props ) {
         super( props );
-        console.log( 'tabbbbbb bar constructed ........' );
-        // this.state = {
-        //     // tabInFocus: 0 // to update when many tabs can exist
-        // };
+
         this.handleAddTabClick = this.handleAddTabClick.bind( this );
     }
 

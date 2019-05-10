@@ -44,10 +44,9 @@ export class AddressBar extends Component<AddressBarProps, {}> {
         editingUrl: false
     };
 
-    constructor( props )
-    {
-        super( props )
-        console.log("addressbar constructued")
+    constructor( props ) {
+        super( props );
+        console.log( 'addressbar constructued' );
     }
 
     handleBack = () => {
@@ -60,7 +59,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
         tabForwards( { tabId } );
     };
 
-    handleRefresh = event => {
+    handleRefresh = ( event ) => {
     // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
         const { updateTab, tabId } = this.props;
@@ -70,7 +69,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
     getSettingsMenuItems = () => {
         const { windowId, addTabEnd } = this.props;
         const tabId = Math.random().toString( 36 );
-        const addATab = tab => {
+        const addATab = ( tab ) => {
             addTabEnd( { url: `safe-browser://${tab}`, windowId, tabId } );
         };
         return [
@@ -150,6 +149,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                         <ButtonsRHS
                             address={address}
                             addTabEnd={addTabEnd}
+                            tabId={tabId}
                             isBookmarked={isBookmarked}
                             addBookmark={addBookmark}
                             removeBookmark={removeBookmark}

@@ -1,6 +1,6 @@
 import open from 'open';
 import { Store } from 'redux';
-import { app, Menu, ipcRenderer } from 'electron';
+import { app, Menu, ipcMain } from 'electron';
 import {
     addTab,
     tabForwards,
@@ -9,7 +9,7 @@ import {
     selectAddressBar,
     resetStore
 } from '$Actions/tabs_actions';
-import { isHot } from '$Constants';
+import { isHot, isRunningTestCafeProcess } from '$Constants';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
@@ -17,6 +17,10 @@ import pkg from '$Package';
 import { AppWindow } from '$App/definitions/global.d';
 
 import { getExtensionMenuItems } from '$Extensions';
+
+// TODO: Properly abstract this
+import { getResetStoreActionObject } from '$Extensions/safe/handleRemoteCalls';
+
 import {
     addTabEnd,
     windowCloseTab,
@@ -150,8 +154,11 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
-                            const activeTab = store.getState().windows.openWindows[windowId].activeTab;
+                            const openTabs = store.getState().windows.openWindows[windowId]
+                                .tabs;
+                            const { activeTab } = store.getState().windows.openWindows[
+                                windowId
+                            ];
                             let tabId;
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab === activeTab ) {
@@ -174,8 +181,11 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
-                            const { activeTab } = store.getState().windows.openWindows[windowId];
+                            const openTabs = store.getState().windows.openWindows[windowId]
+                                .tabs;
+                            const { activeTab } = store.getState().windows.openWindows[
+                                windowId
+                            ];
                             let tabId;
                             openTabs.forEach( ( tab, i ) => {
                                 if ( tab === activeTab ) {
@@ -198,8 +208,10 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
-                            const openTabs = store.getState().windows.openWindows[windowId].tabs;
+                            const tabId = store.getState().windows.openWindows[windowId]
+                                .activeTab;
+                            const openTabs = store.getState().windows.openWindows[windowId]
+                                .tabs;
                             if ( openTabs.length === 1 ) {
                                 win.close();
                             } else {
@@ -214,8 +226,7 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+Shift+W',
                     click: ( item, win ) => {
                         const windowId = win.id;
-                        if ( win )
-                        {
+                        if ( win ) {
                             this.store.dispatch( closeWindow( { windowId } ) );
                             win.close();
                         }
@@ -236,7 +247,13 @@ export class MenuBuilder {
                     label: 'Open Location',
                     accelerator: 'CommandOrControl+L',
                     click: ( item, win ) => {
-                        this.store.dispatch( selectAddressBar() );
+                        const thisWindowActiveTabId = store.getState().windows.openWindows[
+                            win.id
+                        ].activeTab;
+
+                        this.store.dispatch(
+                            selectAddressBar( { tabId: thisWindowActiveTabId } )
+                        );
                     }
                 }
             ]
@@ -316,7 +333,8 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
+                            const tabId = store.getState().windows.openWindows[windowId]
+                                .activeTab;
                             this.store.dispatch( updateTab( { tabId, shouldReload: true } ) );
                         }
                     }
@@ -335,10 +353,9 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
-                            const tabId = store.getState().windows.openWindows[windowId].activeTab;
-                            store.dispatch(
-                                updateTab( { tabId, shouldToggleDevTools: true } )
-                            );
+                            const tabId = store.getState().windows.openWindows[windowId]
+                                .activeTab;
+                            store.dispatch( updateTab( { tabId, shouldToggleDevTools: true } ) );
                         }
                     }
                 }
@@ -469,18 +486,15 @@ export class MenuBuilder {
                     label: 'Reset the store',
                     click: ( item, win ) => {
                         if ( win ) {
+                            // TODO: Refactor and DRY this out w/ handleRemoteCalls
                             const windowId = win.id;
-                            const state = store.getState();
-                            const tabId =  Math.random().toString( 36 );
-                            const windowState = state.windows.openWindows;
-                            const windows = Object.keys( windowState );
-                            const windowsToBeClosed = windows.filter(
-                                Id => parseInt( Id, 10 ) !== windowId
+
+                            const resetStoreActionObject = getResetStoreActionObject(
+                                store.getState(),
+                                windowId
                             );
-                            ipcRenderer.send( 'resetStore', windowsToBeClosed );
-                            logger.verbose( 'Triggering store reset from window:', windowId );
-                            // reset
-                            this.store.dispatch( resetStore({windowId, tabId, url: 'safe-auth://home/' }) );
+
+                            this.store.dispatch( resetStore( resetStoreActionObject ) );
                         }
                     }
                 }

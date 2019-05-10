@@ -17,6 +17,8 @@ import {
 
 const browserWindowArray = [];
 
+let unSubscribeOnClose;
+
 function getNewWindowPosition( mainWindowState ): { x: number; y: number } {
     // for both x and y, we start at 0
     const defaultWindowPosition = 0;
@@ -112,9 +114,12 @@ export const openWindow = ( store ): BrowserWindow => {
             }
         }
     );
+
     mainWindow.on( 'close', () => {
         const webContentsId = mainWindow.webContents.id;
         const mainWindowId = mainWindow.id;
+
+        logger.info('dispatching closeWindow for', mainWindowId)
         store.dispatch( closeWindow( { windowId: mainWindowId } ) );
     } );
 
@@ -141,6 +146,11 @@ export const openWindow = ( store ): BrowserWindow => {
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();
 
+    unSubscribeOnClose = store.subscribe( () => {
+        const state = store.getState();
+        const windows = state.windows;
+    })
+
     return mainWindow;
 };
 
@@ -161,7 +171,14 @@ ipcMain.on( 'command:close-window', () => {
     }
 } );
 
-ipcMain.on( 'resetStore', ( event, data ) => {
+ipcMain.on( 'closeWindows', ( event, data ) => {
+    logger.info( 'resetStore IPC received...', data );
+
+    if( data.length < 1 )
+    {
+        logger.error('No windowIds passed to closeWindows.')
+    }
+
     data.forEach( element => {
         const winId = parseInt( element );
         const win = BrowserWindow.fromId( winId );
