@@ -13,6 +13,25 @@ import { ipcRenderer } from 'electron';
 
 let theStore;
 
+export const getResetStoreActionObject = ( state, windowId ) => {
+    logger.verbose( 'Setting up reset store from window:', windowId );
+    const newTabId = Math.random().toString( 36 );
+
+    if ( !state.windows ) {
+        throw Error(
+            'No windows object passed in the app state. Ensure you have called `store.getState()`'
+        );
+    }
+
+    const windowState = state.windows.openWindows;
+    const windows = Object.keys( windowState );
+    const windowsToBeClosed = windows.filter(
+        ( aWindowId ) => parseInt( aWindowId, 10 ) !== windowId
+    );
+
+    return { fromWindow: windowId, windowsToBeClosed, tabId: newTabId };
+};
+
 export const handleRemoteCalls = ( store, allAPICalls, theCall ) => {
     theStore = store;
 
@@ -60,7 +79,7 @@ export const remoteCallApis = {
             safeBrowserAppActions.setAppStatus( SAFE.APP_STATUS.TO_AUTH )
         );
     },
-    logout: async windowId => {
+    logout: async ( windowId ) => {
         logger.info( 'Handling logout call from webview.' );
 
         try {
@@ -69,18 +88,16 @@ export const remoteCallApis = {
             logger.error( 'ERROR AT LOGOUT', e );
             throw e;
         }
+
         clearAppObj();
-        const tabId = Math.random().toString( 36 );
-        const state = theStore.getState();
-        const windowState = state.windows.openWindows;
-        const windows = Object.keys( windowState );
-        const windowsToBeClosed = windows.filter(
-            Id => parseInt( Id, 10 ) !== windowId
+
+        const resetStoreActionObject = getResetStoreActionObject(
+            theStore.getState(),
+            windowId
         );
-        ipcRenderer.send( 'resetStore', windowsToBeClosed );
-        theStore.dispatch(
-            tabActions.resetStore( { windowId, tabId, url: 'safe-auth://home/' } )
-        );
+
+        theStore.dispatch( tabActions.resetStore( resetStoreActionObject ) );
+
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED )
         );
@@ -91,7 +108,7 @@ export const remoteCallApis = {
    * with auth respnose.
    * @type {[type]}
    */
-    authenticateFromUriObject: async authUriObject => {
+    authenticateFromUriObject: async ( authUriObject ) => {
         logger.info( 'Authenticating a webapp via remote call.' );
 
         return new Promise( ( resolve, reject ) => {

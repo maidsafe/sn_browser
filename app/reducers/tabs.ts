@@ -33,7 +33,7 @@ const addTab = ( state, tab ) => {
         ui: {
             addressBarIsSelected: false,
             pageIsLoading: false,
-            shouldFocusWebview: false,
+            shouldFocusWebview: false
         },
         shouldToggleDevTools: false,
         webId: undefined,
@@ -140,14 +140,19 @@ const updateTabHistory = ( tabToMerge, payload ) => {
 
 // TODO: sort this out
 const focusWebview = ( state, tab ) => {
-    const { tabId } = tab;
-    const payload = tab.toggle;
+    const { tabId, shouldFocus } = tab;
+
+    if ( !tabId ) {
+        logger.error( 'No tabId provided to focusWebview' );
+        return state;
+    }
+
     const tabtoMerge = { ...state[tabId] };
     const newTab = {
         ...tabtoMerge,
         ui: {
             ...tabtoMerge.ui,
-            shouldFocusWebview: payload
+            shouldFocusWebview: shouldFocus
         }
     };
     const newState = { ...state, [tabId]: newTab };
@@ -193,14 +198,14 @@ const deselectAddressBar = ( state, tab ) => {
     return newState;
 };
 
-const resetStore = ( initialState, tab ) => {
-    const tabUrl = makeValidAddressBarUrl( tab.url || '' );
-    const { tabId } = tab;
+const resetStore = ( initialState, payload ) => {
+    const { tabId } = payload;
+    const newTabStartLocation = makeValidAddressBarUrl( 'safe-auth://home' );
     const faviconPath = isRunningUnpacked
         ? '../resources/favicon.ico'
         : '../favicon.ico';
     const newTab = {
-        url: tabUrl,
+        url: newTabStartLocation,
         tabId,
         historyIndex: 0,
         ui: {
@@ -210,7 +215,7 @@ const resetStore = ( initialState, tab ) => {
         },
         shouldToggleDevTools: false,
         webId: undefined,
-        history: [tabUrl],
+        history: [newTabStartLocation],
         favicon: faviconPath
     };
     const newState = { ...initialState, [tabId]: newTab };

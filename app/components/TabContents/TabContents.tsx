@@ -14,13 +14,6 @@ export class TabContents extends Component<{}, {}> {
         return { hasError: true, theError: error };
     }
 
-    constructor( props ) {
-        super( props );
-
-        console.log('TTTTTTTTed tabContents constructed')
-        this.allTabComponents = [];
-    }
-
     render() {
         const {
             tabBackwards,
@@ -68,7 +61,7 @@ export class TabContents extends Component<{}, {}> {
                                 key={tab.tabId}
                                 isActiveTab={isActiveTab}
                                 windowId={windowId}
-                                ref={c => {
+                                ref={( c ) => {
                                     if ( isActiveTab ) {
                                         this.activeTab = c;
                                     }
@@ -84,7 +77,7 @@ export class TabContents extends Component<{}, {}> {
                                 bookmarks={bookmarks}
                                 key={tab.tabId}
                                 isActiveTab={isActiveTab}
-                                ref={c => {
+                                ref={( c ) => {
                                     if ( isActiveTab ) {
                                         this.activeTab = c;
                                     }
@@ -122,7 +115,7 @@ export class TabContents extends Component<{}, {}> {
                     tabBackwards={tabBackwards}
                     shouldReload={tab.shouldReload}
                     shouldToggleDevTools={tab.shouldToggleDevTools}
-                    ref={c => {
+                    ref={( c ) => {
                         if ( isActiveTab ) {
                             this.activeTab = c;
                         }

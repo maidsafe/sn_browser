@@ -1,4 +1,7 @@
+import { ipcRenderer } from 'electron';
 import { createActions } from 'redux-actions';
+import { createAliasedAction } from 'electron-redux';
+import { logger } from '$Logger';
 
 export const TYPES = {
     ADD_TAB: 'ADD_TAB',
@@ -12,6 +15,25 @@ export const TYPES = {
     RESET_STORE: 'RESET_STORE'
 };
 
+const triggerWindowClosingByIPC = ( { fromWindow, windowsToBeClosed } ) => {
+    const tabId = Math.random().toString( 36 );
+
+    if ( windowsToBeClosed.length > 0 ) {
+        ipcRenderer.send( 'closeWindows', windowsToBeClosed );
+    }
+
+    return { fromWindow, windowsToBeClosed };
+};
+
+export const resetStore = createAliasedAction(
+    TYPES.RESET_STORE,
+    ( freshState ) => ( {
+    // the real action
+        type: TYPES.RESET_STORE,
+        payload: triggerWindowClosingByIPC( freshState )
+    } )
+);
+
 export const {
     addTab,
     updateTab,
@@ -20,8 +42,7 @@ export const {
     focusWebview,
     blurAddressBar,
     selectAddressBar,
-    deselectAddressBar,
-    resetStore
+    deselectAddressBar
 } = createActions(
     TYPES.ADD_TAB,
     TYPES.UPDATE_TAB,
@@ -30,6 +51,5 @@ export const {
     TYPES.FOCUS_WEBVIEW,
     TYPES.BLUR_ADDRESS_BAR,
     TYPES.SELECT_ADDRESS_BAR,
-    TYPES.DESELECT_ADDRESS_BAR,
-    TYPES.RESET_STORE
+    TYPES.DESELECT_ADDRESS_BAR
 );

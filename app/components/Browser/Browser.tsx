@@ -51,8 +51,6 @@ class Browser extends Component<BrowserProps, {}> {
     constructor( props ) {
         super( props );
         this.state = {};
-
-        console.log( 'browser constructed-----' );
     }
 
     componentDidMount() {
@@ -185,8 +183,6 @@ class Browser extends Component<BrowserProps, {}> {
             openTabs,
             experimentsEnabled
         } = this.state;
-
-        console.log( 'OPEN TABS AS WE SEEEEEE', openTabs );
 
         return (
             <div className={styles.container}>
