@@ -10,7 +10,6 @@ import { urlIsValid } from '$Extensions';
 import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 
 interface HistoryProps {
-    isActiveTab: boolean;
     history: Array<any>;
     isActiveTab: boolean;
     addTabEnd: ( ...args: Array<any> ) => any;

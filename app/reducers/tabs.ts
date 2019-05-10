@@ -34,8 +34,8 @@ const addTab = ( state, tab ) => {
             addressBarIsSelected: false,
             pageIsLoading: false,
             shouldFocusWebview: false,
-            shouldToggleDevTools: false
         },
+        shouldToggleDevTools: false,
         webId: undefined,
         history: [tabUrl],
         favicon: faviconPath
@@ -208,6 +208,7 @@ const resetStore = ( initialState, tab ) => {
             pageIsLoading: false,
             shouldFocusWebview: false
         },
+        shouldToggleDevTools: false,
         webId: undefined,
         history: [tabUrl],
         favicon: faviconPath
