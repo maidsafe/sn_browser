@@ -93,7 +93,7 @@ class Browser extends Component<BrowserProps, {}> {
         windowsTabs.forEach( ( tabId ) => {
             const aTab = tabs[tabId];
 
-            if ( !aTab ) return;
+            if ( !aTab || !aTab.url ) return;
 
             thisWindowOpenTabs.push( tabs[tabId] );
         } );
@@ -113,9 +113,10 @@ class Browser extends Component<BrowserProps, {}> {
             ? tabs[activeTabId].ui.addressBarIsSelected
             : false;
 
-        const { shouldFocusWebview } = activeTabId && tabs[activeTabId]
-            ? tabs[activeTabId].ui.shouldFocusWebview
-            : false;
+        const { shouldFocusWebview } =
+      activeTabId && tabs[activeTabId]
+          ? tabs[activeTabId].ui.shouldFocusWebview
+          : false;
         const { settingsMenuIsVisible } = windows.openWindows[windowId]
             ? windows.openWindows[windowId].ui
             : false;
