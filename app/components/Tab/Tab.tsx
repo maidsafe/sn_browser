@@ -93,7 +93,7 @@ export class Tab extends Component<TabProps, TabState> {
         this.stop = this.stop.bind( this );
         this.openDevTools = this.openDevTools.bind( this );
         this.loadURL = this.loadURL.bind( this );
-        this.debouncedWebIdUpdateFunc = _.debounce( this.updateTheIdInWebview, 300 );
+        this.debouncedWebIdUpdateFunc = _.debounce(this.updateTheIdInWebview, 300);
     }
 
     shouldComponentUpdate = ( newProps ) => {
@@ -591,7 +591,7 @@ export class Tab extends Component<TabProps, TabState> {
         const setupEventEmitter = `
           webIdUpdater = () =>
           {
-              window.currentWindowId = ${windowId};
+              window.currentWindowId = ${currentWindowId};
               // check for experiments set...
               if( ! safeExperimentsEnabled )
                   return;
@@ -610,6 +610,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
                   oldWebId_Id = window.currentWebId['@id'];
               }
               window.currentWebId = ${JSON.stringify( theWebId )};
+
               if( typeof webIdEventEmitter !== 'undefined' &&
                   oldWebId_Id !== window.currentWebId['@id'] )
                   {
@@ -621,41 +622,41 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
         webview.executeJavaScript( setupEventEmitter );
     };
 
-    setCurrentWebId( newWebId ) {
-    // TODO: move webId func into extensions
+    setCurrentWebId(newWebId) {
+        // TODO: move webId func into extensions
         const { safeExperimentsEnabled } = this.props;
-        if ( safeExperimentsEnabled ) {
-            this.debouncedWebIdUpdateFunc( newWebId );
-        }
-    }
+        // if ( safeExperimentsEnabled ) {
+        this.debouncedWebIdUpdateFunc(newWebId);
+        // }
+      }
 
-    newWindow( e ) {
+      newWindow(e) {
         const { addTabEnd, windowId } = this.props;
         const { url } = e;
-        logger.info( 'Tab: NewWindow event triggered for url: ', url );
-        const tabId = Math.random().toString( 36 );
-        addTabEnd( { url, tabId, windowId } );
+        logger.info('Tab: NewWindow event triggered for url: ', url);
+        const tabId = Math.random().toString(36);
+        addTabEnd({ url, windowId, tabId });
         this.goForward();
-    }
+      }
 
-    isFrozen( e ) {
-        logger.info( 'Webview is frozen...' );
+      isFrozen(e) {
+        logger.info('Webview is frozen...');
         const { tabId } = this.props;
         const frozen = !tabId;
         // const frozen = staticTabData[index] || !index
         return frozen;
-    }
+      }
 
-    with( callback, options = { insist: false } ) {
+      with(callback, options = { insist: false }) {
         const { webview } = this;
-        if ( !webview ) return;
+        if (!webview) return;
         const webContents = webview.getWebContents();
-        if ( !webContents ) {
-            return;
+        if (!webContents) {
+          return;
         }
-        if ( webContents.isDestroyed() ) return;
-        callback( webview, webContents );
-    }
+        if (webContents.isDestroyed()) return;
+        callback(webview, webContents);
+      }
 
     openDevTools() {
         this.with( ( wv, wc ) => wc.openDevTools( { mode: 'detach' } ) );
