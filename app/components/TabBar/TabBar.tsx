@@ -33,7 +33,7 @@ interface TabBarState {
 export class TabBar extends Component<TabBarProps, TabBarState> {
     static defaultProps = {
         tabInFocus: 0,
-        tabs: [{ title: '', tabId: '' }],
+        tabs: [],
         activeTab: {}
     };
 
@@ -48,15 +48,11 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
 
     getTabs = (): Array<React.ReactNode> => {
         const { tabs, activeTabId } = this.props;
-        // const { tabs, windowId, activeTabId } = this.props;
-        // const currentWindow = Object.keys(this.props.windows.openWindows).length>=1 ? this.props.windows.openWindows[windowId] : {};
 
-        console.log( 'tabs hereeee', tabs );
         return tabs.map(
             ( tab ): React.ReactNode => {
                 let { title } = tab;
                 const { tabId } = tab;
-
                 if ( isInternalPage( tab ) ) {
                     // TODO: DRY this out with TabContents.jsx
                     const urlObj = url.parse( tab.url );
