@@ -55,7 +55,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
 
     handleIdClick = ( webId ) => {
         const { updateTab, windowId, showWebIdDropdown, activeTab } = this.props;
-        const tabId = activeTab.tabId;
+        const { tabId } = activeTab;
         // also if only 1 webID? mark as defualt?
         updateTab( { tabId, webId } );
     };
@@ -123,8 +123,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         let activeWebId;
         const { handleIdClick } = this;
         let webIdsList;
-        if(activeTab !== undefined )
-        {
+        if ( activeTab !== undefined ) {
             activeWebId = activeTab.webId || {};
             webIdsList = webIds.map( ( webId ) => {
                 const nickname = webId['#me'].nick || webId['#me'].name;

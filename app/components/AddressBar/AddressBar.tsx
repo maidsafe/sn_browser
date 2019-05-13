@@ -44,11 +44,6 @@ export class AddressBar extends Component<AddressBarProps, {}> {
         editingUrl: false
     };
 
-    constructor( props ) {
-        super( props );
-        console.log( 'addressbar constructued' );
-    }
-
     handleBack = () => {
         const { tabBackwards, tabId } = this.props;
         tabBackwards( { tabId } );
@@ -132,7 +127,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                 >
                     <Col>
                         <ButtonsLHS
-                            addTabEnd = {addTabEnd}
+                            addTabEnd={addTabEnd}
                             activeTab={activeTab}
                             updateTab={updateTab}
                             handleBack={this.handleBack}

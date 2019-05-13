@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import { bookmarks } from '$Reducers/bookmarks';
 import { TYPES } from '$Actions/bookmarks_actions';
-import { TYPES as TABS_TYPES } from '$Actions/tabs_actions'
+import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
 
 import { initialAppState } from '$Reducers/initialAppState';
 
