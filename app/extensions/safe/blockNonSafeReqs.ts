@@ -32,7 +32,6 @@ export const blockNonSAFERequests = () => {
                 return;
             }
 
-
             if ( httpRegExp.test( details.url ) ) {
                 if ( allowedHttp.includes( details.url ) ) {
                     try {

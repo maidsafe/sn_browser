@@ -49,8 +49,8 @@ describe( 'Browser', () => {
     let wrapper;
     let instance;
     let newState;
-    let windowId = 1;
-    let tabId = Math.random().toString( 36 );
+    const windowId = 1;
+    const tabId = Math.random().toString( 36 );
 
     describe( 'constructor( )', () => {
         store = mockStore( initialState );
@@ -66,16 +66,13 @@ describe( 'Browser', () => {
     describe( 'mount() with one tab', () => {
         newState = {
             ...initialState,
-            tabs: 
-            {
-                [tabId]:
-                {
+            tabs: {
+                [tabId]: {
                     url: 'hello',
                     historyIndex: 1,
                     history: ['a', 'hello'],
                     tabId,
-                    ui: 
-                    {
+                    ui: {
                         addressBarIsSelected: false,
                         pageIsLoading: false,
                         shouldFocusWebview: false,
@@ -83,12 +80,9 @@ describe( 'Browser', () => {
                     }
                 }
             },
-            windows:
-            {
-                openWindows: 
-                {
-                    [windowId]:
-                    {
+            windows: {
+                openWindows: {
+                    [windowId]: {
                         activeTab: tabId,
                         ui: {
                             settingsMenuIsVisible: false
@@ -96,10 +90,8 @@ describe( 'Browser', () => {
                         tabs: [tabId]
                     }
                 },
-                closedWindows: 
-                {
-                    [windowId]:
-                    {
+                closedWindows: {
+                    [windowId]: {
                         closedtabs: [],
                         lastActiveTabs: []
                     }
@@ -136,7 +128,11 @@ describe( 'Browser', () => {
 
     describe( 'props', () => {
         beforeEach( () => {
-            newState = { ...initialState, tabs: {}, windows:{openWindows: {}, closedWindows: {}} };
+            newState = {
+                ...initialState,
+                tabs: {},
+                windows: { openWindows: {}, closedWindows: {} }
+            };
             store = mockStore( newState );
 
             wrapper = shallow(
@@ -158,7 +154,7 @@ describe( 'Browser', () => {
                 expect( wrapper.props() ).not.toBeUndefined();
             } );
             it( 'should be empty by default', () => {
-                expect(Object.keys(wrapper.props().tabs).length).toBe( 0 );
+                expect( Object.keys( wrapper.props().tabs ).length ).toBe( 0 );
             } );
 
             it( 'should be an array', () => {

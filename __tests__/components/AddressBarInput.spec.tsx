@@ -26,7 +26,7 @@ describe( 'AddressBarInput', () => {
     let instance;
     let props;
     let store;
-    let tabId =  Math.random().toString( 36 );
+    const tabId = Math.random().toString( 36 );
 
     beforeEach( () => {
         props = {
