@@ -119,7 +119,7 @@ export const openWindow = ( store ): BrowserWindow => {
         const webContentsId = mainWindow.webContents.id;
         const mainWindowId = mainWindow.id;
 
-        logger.info('dispatching closeWindow for', mainWindowId)
+        logger.info( 'dispatching closeWindow for', mainWindowId );
         store.dispatch( closeWindow( { windowId: mainWindowId } ) );
     } );
 
@@ -148,8 +148,8 @@ export const openWindow = ( store ): BrowserWindow => {
 
     unSubscribeOnClose = store.subscribe( () => {
         const state = store.getState();
-        const windows = state.windows;
-    })
+        const { windows } = state;
+    } );
 
     return mainWindow;
 };
@@ -174,12 +174,11 @@ ipcMain.on( 'command:close-window', () => {
 ipcMain.on( 'closeWindows', ( event, data ) => {
     logger.info( 'resetStore IPC received...', data );
 
-    if( data.length < 1 )
-    {
-        logger.error('No windowIds passed to closeWindows.')
+    if ( data.length === 0 ) {
+        logger.error( 'No windowIds passed to closeWindows.' );
     }
 
-    data.forEach( element => {
+    data.forEach( ( element ) => {
         const winId = parseInt( element );
         const win = BrowserWindow.fromId( winId );
         win.close();

@@ -10,7 +10,7 @@ declare namespace NodeJS {
         mainProcessStore: Store;
         port: number;
         preloadFile: string;
-        safeExperimentsEnabled : boolean | null ;
+        safeExperimentsEnabled: boolean | null;
         startedRunningMock: boolean;
         shouldStartAsMockFromFlagsOrPackage: boolean;
         isRunningSpectronTestProcessingPackagedApp: boolean;
@@ -36,10 +36,10 @@ export interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: Function;
     eval: Function | boolean;
     safe: object;
-    safeAppGroupId : number;
-    webIdEventEmitter : EventEmitter;
+    safeAppGroupId: number;
+    webIdEventEmitter: EventEmitter;
     peruseStore: Store;
-    safeExperimentsEnabled : boolean | null ;
+    safeExperimentsEnabled: boolean | null;
     safeAuthenticator: {
         isAuthorised: () => boolean;
     };
