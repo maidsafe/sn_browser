@@ -15,6 +15,7 @@ import { parse } from 'url';
  */
 const ButtonsLHS = ( props ) => {
     const {
+        addTabEnd,
         activeTab,
         handleBack,
         handleForward,
