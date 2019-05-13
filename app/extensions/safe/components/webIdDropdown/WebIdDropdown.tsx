@@ -27,7 +27,7 @@ interface WebIdDropdownProps {
     activeTab: {
         webId: number;
     };
-    addTab: Function;
+    addTabEnd: Function;
     getAvailableWebIds: Function;
     updateTab: Function;
     showWebIdDropdown: Function;
@@ -53,10 +53,11 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
     }
 
-    handleIdClick = webId => {
-        const { updateTab, windowId, showWebIdDropdown } = this.props;
+    handleIdClick = ( webId ) => {
+        const { updateTab, windowId, showWebIdDropdown, activeTab } = this.props;
+        const tabId = activeTab.tabId;
         // also if only 1 webID? mark as defualt?
-        updateTab( { windowId, webId } );
+        updateTab( { tabId, webId } );
     };
 
     handleIdButtonClick = () => {
@@ -79,13 +80,15 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
     };
 
     launchWebIdManager = () => {
-        const { addTab, windowId } = this.props;
-        addTab( { url: webIdManagerUri, isActiveTab: true, windowId } );
+        const { addTabEnd, windowId } = this.props;
+        const tabId = Math.random().toString( 36 );
+        addTabEnd( { tabId, url: webIdManagerUri, isActiveTab: true, windowId } );
     };
 
     launchAuthenticator = () => {
-        const { addTab, windowId } = this.props;
-        addTab( { url: authHomeUri, isActiveTab: true, windowId } );
+        const { addTabEnd, windowId } = this.props;
+        const tabId = Math.random().toString( 36 );
+        addTabEnd( { tabId, url: authHomeUri, isActiveTab: true, windowId } );
     };
 
     authorisePeruse = () => {
@@ -117,32 +120,37 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
             networkStatus,
             isFetchingWebIds
         } = safeBrowserApp;
-        const activeWebId = activeTab.webId || {};
+        let activeWebId;
         const { handleIdClick } = this;
-        const webIdsList = webIds.map( webId => {
-            const nickname = webId['#me'].nick || webId['#me'].name;
-            const isSelected = webId['@id'] === activeWebId['@id'];
-            if ( isSelected ) {
+        let webIdsList;
+        if(activeTab !== undefined )
+        {
+            activeWebId = activeTab.webId || {};
+            webIdsList = webIds.map( ( webId ) => {
+                const nickname = webId['#me'].nick || webId['#me'].name;
+                const isSelected = webId['@id'] === activeWebId['@id'];
+                if ( isSelected ) {
+                    return (
+                        <li
+                            onClick={handleIdClick.bind( this, webId )}
+                            key={webId['@id']}
+                            className={styles.selectedWebId}
+                        >
+                            {nickname}
+                        </li>
+                    );
+                }
                 return (
                     <li
                         onClick={handleIdClick.bind( this, webId )}
                         key={webId['@id']}
-                        className={styles.selectedWebId}
+                        className={styles.webId}
                     >
                         {nickname}
                     </li>
                 );
-            }
-            return (
-                <li
-                    onClick={handleIdClick.bind( this, webId )}
-                    key={webId['@id']}
-                    className={styles.webId}
-                >
-                    {nickname}
-                </li>
-            );
-        } );
+            } );
+        }
         let webIdDropdownContents = [];
         if ( appStatus !== SAFE.APP_STATUS.AUTHORISED ) {
             webIdDropdownContents.push(

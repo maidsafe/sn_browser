@@ -132,6 +132,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                 >
                     <Col>
                         <ButtonsLHS
+                            addTabEnd = {addTabEnd}
                             activeTab={activeTab}
                             updateTab={updateTab}
                             handleBack={this.handleBack}
