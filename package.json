@@ -333,7 +333,7 @@
     "@fortawesome/fontawesome-free": "^5.8.2",
     "@maidsafe/safe-node-app": "0.11.1",
     "@types/redux": "3.6.0",
-    "antd": "3.17.0",
+    "antd": "3.18.0",
     "chalk": "^2.4.1",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.4.0",
