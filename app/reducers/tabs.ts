@@ -16,6 +16,7 @@ const handleTabPayload = ( state, payload ) => {
         const tabToMerge = { ...state[tabId] };
         return { tabId, tabToMerge };
     }
+    throw new Error( 'Payload does not exist' );
 };
 
 const addTab = ( state, tab ) => {
@@ -45,13 +46,7 @@ const addTab = ( state, tab ) => {
 };
 
 const moveTabFowards = ( state, payload ) => {
-    try {
-        var { tabId, tabToMerge } = handleTabPayload( state, payload );
-    } catch ( err ) {
-        logger.error( err );
-        return state;
-    }
-
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
     const updatedTab = tabToMerge;
     const { history } = updatedTab;
     const nextHistoryIndex = updatedTab.historyIndex + 1 || 1;
@@ -67,12 +62,7 @@ const moveTabFowards = ( state, payload ) => {
 };
 
 const moveTabBackwards = ( state, payload ) => {
-    try {
-        var { tabId, tabToMerge } = handleTabPayload( state, payload );
-    } catch ( err ) {
-        logger.error( err );
-        return state;
-    }
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
     const updatedTab = tabToMerge;
     const { history } = updatedTab;
     const nextHistoryIndex = updatedTab.historyIndex - 1;
@@ -87,25 +77,6 @@ const moveTabBackwards = ( state, payload ) => {
     const newUrl = history[nextHistoryIndex];
     updatedTab.historyIndex = nextHistoryIndex;
     updatedTab.url = newUrl;
-    const updatedState = { ...state, [tabId]: updatedTab };
-    return updatedState;
-};
-
-const updateTab = ( state, payload ) => {
-    try {
-        var { tabId, tabToMerge } = handleTabPayload( state, payload );
-    } catch ( err ) {
-        logger.error( err );
-        return state;
-    }
-    if ( tabId === undefined ) {
-        return state;
-    }
-    let updatedTab = { ...tabToMerge, ...payload };
-    if ( payload.url ) {
-        updatedTab = updateTabHistory( tabToMerge, payload );
-    }
-
     const updatedState = { ...state, [tabId]: updatedTab };
     return updatedState;
 };
@@ -136,6 +107,20 @@ const updateTabHistory = ( tabToMerge, payload ) => {
         url
     };
     return updatedTab;
+};
+
+const updateTab = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined ) {
+        return state;
+    }
+    let updatedTab = { ...tabToMerge, ...payload };
+    if ( payload.url ) {
+        updatedTab = updateTabHistory( tabToMerge, payload );
+    }
+
+    const updatedState = { ...state, [tabId]: updatedTab };
+    return updatedState;
 };
 
 // TODO: sort this out
@@ -198,7 +183,7 @@ const deselectAddressBar = ( state, tab ) => {
     return newState;
 };
 
-const resetStore = ( initialState, payload ) => {
+const resetStore = ( payload ) => {
     const { tabId } = payload;
     const newTabStartLocation = makeValidAddressBarUrl( 'safe-auth://home' );
     const faviconPath = isRunningUnpacked
@@ -262,7 +247,7 @@ export function tabs( state: object = initialState, action ) {
             return deselectAddressBar( state, payload );
         }
         case TYPES.RESET_STORE: {
-            return resetStore( state, payload );
+            return resetStore( payload );
         }
         default:
             return state;

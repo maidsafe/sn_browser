@@ -14,7 +14,7 @@ import { isHot, isRunningTestCafeProcess } from '$Constants';
 import { logger } from '$Logger';
 import pkg from '$Package';
 
-import { AppWindow } from '$App/definitions/global.d';
+import { AppWindow } from '$App/definitions/globals.d';
 
 import { getExtensionMenuItems } from '$Extensions';
 

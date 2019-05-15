@@ -179,7 +179,7 @@ ipcMain.on( 'closeWindows', ( event, data ) => {
     }
 
     data.forEach( ( element ) => {
-        const winId = parseInt( element );
+        const winId = parseInt( element, 10 );
         const win = BrowserWindow.fromId( winId );
         win.close();
     } );

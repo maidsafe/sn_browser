@@ -7,7 +7,6 @@ import { UrlList } from '$Components/UrlList';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
-import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 
 interface HistoryProps {
     history: Array<any>;
@@ -31,12 +30,13 @@ export class History extends Component<HistoryProps, {}> {
         const { history, isActiveTab, windowId, addTabEnd } = this.props;
         let historyList = [];
         const historyArray = [];
+        // eslint-disable-next-line array-callback-return
         Object.keys( history ).map( function( key ) {
             historyArray.push( history[key] );
         } );
         historyArray.forEach( ( tab, i ) => {
             if ( tab.history ) {
-                tab.history.forEach( tabsHistory => {
+                tab.history.forEach( ( tabsHistory ) => {
                     const historyItem = tabsHistory;
                     historyList.push( historyItem );
                 } );
@@ -50,7 +50,7 @@ export class History extends Component<HistoryProps, {}> {
         ];
         // TODO: uniq by object props, so will be less harsh once we have title etc.
         historyList = _.uniq( historyList );
-        historyList = historyList.filter( url => {
+        historyList = historyList.filter( ( url ) => {
             const urlObj = parse( url );
             if (
                 ignoreList.includes( url ) ||

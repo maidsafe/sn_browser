@@ -99,6 +99,7 @@ export class Tab extends Component<TabProps, TabState> {
         if ( webview ) {
             return webview.isDevToolsOpened();
         }
+        return false;
     };
 
     buildMenu = ( webview ) => {
@@ -106,7 +107,6 @@ export class Tab extends Component<TabProps, TabState> {
         const { addTabEnd, windowId } = this.props;
         // require here to avoid jest/electron remote issues
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
-        logger.info( 'TRYING TO BUILD MEMNUUU', !webview.getWebContents );
         const contextMenu = require( 'electron-context-menu' );
 
         contextMenu( {
