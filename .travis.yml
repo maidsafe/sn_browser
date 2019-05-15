@@ -84,6 +84,7 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
     fi
+  - yarn lint --quiet --ignore-pattern auth-web-app --ignore-pattern ffi/
   - travis_retry yarn run test-peruse --forceExit
   - travis_retry yarn run test-exts --forceExit
   - yarn build-e2e

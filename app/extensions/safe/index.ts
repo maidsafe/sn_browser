@@ -148,7 +148,7 @@ const middleware = ( store ) => ( next ) => ( action ) => {
     return next( action );
 };
 
-export default {
+export const safeBrowsing = {
     addExtensionMenuItems,
     getRemoteCallApis,
     actionsForBrowser,
