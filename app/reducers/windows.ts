@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { TYPES } from '$Actions/windows_actions';
 import { logger } from '$Logger';
 import { TYPES as TAB_TYPES } from '$Actions/tabs_actions';
@@ -35,6 +36,7 @@ const addWindow = ( state, tab ) => {
 const addTabNext = ( state, tab ) => {
     const targetWindow = tab.windowId;
     const { tabId } = tab;
+    let { tabIndex } = tab;
 
     const openWindows = { ...state.openWindows };
     const newState = { ...state, openWindows };
@@ -46,8 +48,8 @@ const addTabNext = ( state, tab ) => {
         },
         tabs: [...openWindows[targetWindow].tabs]
     };
-
-    const lastTabIndex = ++tab.tabIndex || 0;
+    tabIndex += 1;
+    const lastTabIndex = tabIndex || 0;
 
     newWindow.tabs.splice( lastTabIndex, 0, tabId );
 
@@ -100,12 +102,12 @@ const closetab = ( state, tab ) => {
     const openWindows = { ...state.openWindows };
     const closedWindows = cloneDeep( state.closedWindows );
 
-    const lastTabIndex = openWindows[targetWindow].tabs.findIndex( ( tab ) => {
-        return tab === tabId;
+    const lastTabIndex = openWindows[targetWindow].tabs.findIndex( ( Id ) => {
+        return Id === tabId;
     } );
 
     const newOpenTabs = openWindows[targetWindow].tabs.filter(
-        ( tab ) => tab !== tabId
+        ( Id ) => Id !== tabId
     );
 
     const tabsIndexLength = openWindows[targetWindow].tabs.length - 1;

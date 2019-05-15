@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
 import { logger } from '$Logger';
 import { CLASSES } from '$Constants';
