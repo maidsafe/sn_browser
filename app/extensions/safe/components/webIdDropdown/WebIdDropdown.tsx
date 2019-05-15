@@ -26,6 +26,7 @@ interface WebIdDropdownProps {
     };
     activeTab: {
         webId: number;
+        tabId: string;
     };
     addTabEnd: Function;
     getAvailableWebIds: Function;
@@ -134,6 +135,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
                             onClick={handleIdClick.bind( this, webId )}
                             key={webId['@id']}
                             className={styles.selectedWebId}
+                            role="presentation"
                         >
                             {nickname}
                         </li>
@@ -144,6 +146,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
                         onClick={handleIdClick.bind( this, webId )}
                         key={webId['@id']}
                         className={styles.webId}
+                        role="presentation"
                     >
                         {nickname}
                     </li>
@@ -158,7 +161,9 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
                     onKeyUp={this.authorisePeruse}
                     className={styles.webIdInfo}
                     key="noAuth"
+                    role="presentation"
                 >
+                    {/* eslint-disable-next-line  jsx-a11y/anchor-is-valid */}
                     <a href="#">Authorise to display your WebIds.</a>
                 </li>
             );
@@ -200,7 +205,9 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
                         <li
                             onClick={this.launchWebIdManager}
                             className={styles.webIdManager}
+                            role="presentation"
                         >
+                            {/* eslint-disable-next-line  jsx-a11y/anchor-is-valid */}
                             <a href="#">Launch WebIdManager</a>
                         </li>
                     </ul>

@@ -15,7 +15,7 @@ import {
     addTabNext
 } from '$Actions/windows_actions';
 
-export const safeRoute = store => ( {
+export const safeRoute = ( store ) => ( {
     method: 'GET',
     path: /safe:\//,
     handler: async ( request, res ) => {
@@ -82,17 +82,19 @@ export const safeRoute = store => ( {
                 if ( shouldTryAgain ) {
                     const { safeBrowserApp } = store.getState();
                     if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED ) {
-                        store.getState().tabs.forEach( tab => {
+                        store.getState().tabs.forEach( ( tab ) => {
                             logger.info( tab.url, link, link.includes( tab.url ) );
                             if ( link.includes( tab.url ) && !tab.isActive ) {
                                 store.dispatch( windowCloseTab( { tabId: tab.tabId } ) );
                             }
                         } );
                         const tabId = Math.random().toString( 36 );
+                        /* eslint-disable no-undef */
                         const currentWebContentsId = remote
                             ? remote.getCurrentWebContents().id
                             : 1;
                         // this is mounted but its not show?
+                        /* eslint-enable no-undef */
                         const windowId = currentWebContentsId;
                         store.dispatch( addTab( { url: link, tabId } ) );
                         store.dispatch( addTabEnd( { tabId, windowId } ) );
