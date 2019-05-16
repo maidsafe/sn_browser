@@ -6,9 +6,9 @@ import {
     tabForwards,
     tabBackwards,
     updateTab,
-    selectAddressBar,
-    resetStore
+    selectAddressBar
 } from '$Actions/tabs_actions';
+import { resetStore } from '$Actions/resetStore_action';
 import { isHot, isRunningTestCafeProcess } from '$Constants';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
