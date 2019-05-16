@@ -4,9 +4,11 @@ import { logger } from '$Logger';
 import { openWindow } from '$App/openWindow';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { handleAuthUrl } from '$Extensions/safe/actions/authenticator_actions';
+import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
 
 import { getSafeBrowserUnauthedReqUri } from '$Extensions/safe/safeBrowserApplication/init/initAnon';
 import { addTab } from '$Actions/tabs_actions';
+import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 
 const parseSafeUri = function( uri ) {
     logger.info( 'Parsing safe uri', uri );
@@ -14,7 +16,7 @@ const parseSafeUri = function( uri ) {
 };
 
 const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
-    new Promise( resolve => {
+    new Promise( ( resolve ) => {
         let timeLeft = timeout;
         const check = () => {
             timeLeft -= 500;
@@ -66,10 +68,18 @@ export const onReceiveUrl = async ( store, url ) => {
 
         logger.info( 'Opening safe: url', url );
 
-        const focusedWindowId = BrowserWindow.getFocusedWindow().webContents.id;
+        const windowId = getMostRecentlyActiveWindow( store ).id;
+        const tabId = Math.random().toString( 36 );
+
+        store.dispatch( addTab( { tabId, url, windowId, isActiveTab: true } ) );
+
+        store.dispatch( addTabEnd( { tabId, windowId } ) );
 
         store.dispatch(
-            addTab( { url, isActiveTab: true, windowId: focusedWindowId } )
+            setActiveTab( {
+                tabId,
+                windowId
+            } )
         );
     }
     // 20 is arbitrarily looong right now...
