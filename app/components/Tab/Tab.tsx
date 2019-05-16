@@ -369,8 +369,8 @@ export class Tab extends Component<TabProps, TabState> {
             tabId,
             isLoading: true
         };
-        this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
+        this.updateBrowserState( { loading: true } );
         window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) => {
                 webContents.focus();
