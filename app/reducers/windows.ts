@@ -16,6 +16,7 @@ const addWindow = ( state, tab ) => {
             ...openWindows,
             [targetWindow]: {
                 activeTab: null,
+                wasLastInFocus: true,
                 ui: {
                     settingsMenuIsVisible: false
                 },
@@ -42,6 +43,7 @@ const addTabNext = ( state, tab ) => {
     const newState = { ...state, openWindows };
 
     const newWindow = {
+        ...openWindows[targetWindow],
         activeTab: null,
         ui: {
             settingsMenuIsVisible: false
@@ -65,6 +67,7 @@ const addTabEnd = ( state, tab ) => {
     const newState = { ...state, openWindows };
 
     const newWindow = {
+        ...openWindows[targetWindow],
         activeTab: null,
         ui: {
             settingsMenuIsVisible: false
@@ -138,6 +141,30 @@ const closetab = ( state, tab ) => {
     return newState;
 };
 
+const setWindowLastInFocus = ( state, aWindowId ) => {
+    const newState = { ...state };
+
+    const newOpenWindows = {};
+
+    Object.keys( newState.openWindows ).forEach( ( someWindowId ) => {
+        newOpenWindows[someWindowId] = {
+            ...newState.openWindows[someWindowId],
+            wasLastInFocus: false
+        };
+    } );
+
+    const newFocusWindow = {
+        ...newOpenWindows[aWindowId],
+        wasLastInFocus: true
+    };
+
+    newOpenWindows[aWindowId] = newFocusWindow;
+
+    newState.openWindows = newOpenWindows;
+
+    return newState;
+};
+
 const reOpenTab = ( state, tabs ) => {
     const targetWindowId = tabs.windowId;
 
@@ -185,7 +212,7 @@ const closeWindow = ( state, tab ) => {
 
     if ( !closingWindow ) return state;
 
-    const closingWindowsTabs = state.openWindows[targetwindow].tabs;
+    const closingWindowsTabs = state.openWindows[targetwindow].tabs || [];
 
     const newTabs = [...closingWindowsTabs];
     const newCloseWindow = {
@@ -287,6 +314,9 @@ export const windows = ( state: object = initialState, action ) => {
         }
         case TYPES.CLOSE_WINDOW: {
             return closeWindow( state, payload );
+        }
+        case TYPES.SET_LAST_FOCUSED_WINDOW: {
+            return setWindowLastInFocus( state, payload );
         }
         case TYPES.SHOW_SETTINGS_MENU: {
             return showSettingsMenu( state, payload );

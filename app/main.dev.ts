@@ -27,6 +27,7 @@ import {
 } from '$Constants';
 
 import pkg from '$Package';
+import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
 
 import { setupBackground } from './setupBackground';
 
@@ -112,14 +113,16 @@ app.on( 'ready', async () => {
         app.on( 'second-instance', ( event, commandLine ) => {
             const uri = commandLine[commandLine.length - 1];
 
-            if ( commandLine.length >= 2 && uri ) {
-                onReceiveUrl( store, uri );
+            // TODO: trigger window/focus on current active....
+            const target = getMostRecentlyActiveWindow( store );
+            // Someone tried to run a second instance, we should focus our window
+            if ( target ) {
+                if ( target.isMinimized() ) target.restore();
+                target.focus();
             }
 
-            // Someone tried to run a second instance, we should focus our window
-            if ( mainWindow ) {
-                if ( mainWindow.isMinimized() ) mainWindow.restore();
-                mainWindow.focus();
+            if ( commandLine.length >= 2 && uri ) {
+                onReceiveUrl( store, uri );
             }
         } );
     }
@@ -148,11 +151,14 @@ app.on( 'ready', async () => {
 } );
 
 app.on( 'open-url', ( e, url ) => {
-    onReceiveUrl( store, url );
+    const target = getMostRecentlyActiveWindow( store );
 
-    if ( mainWindow ) {
-        mainWindow.show();
+    if ( target ) {
+        if ( target.isMinimized() ) target.restore();
+        target.focus();
     }
+
+    onReceiveUrl( store, url );
 } );
 
 /**

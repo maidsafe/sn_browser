@@ -12,8 +12,9 @@ describe( 'windows reducer', () => {
     const firstWindowId = '1';
     const secondWindowId = '2';
     const IntialState = initialAppState.windows;
-    const basicwindow = {
+    const basicWindow = {
         activeTab: null,
+        wasLastInFocus: true,
         ui: {
             settingsMenuIsVisible: false
         },
@@ -32,7 +33,7 @@ describe( 'windows reducer', () => {
             expect( addWindow ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow
+                        ...basicWindow
                     }
                 },
                 closedWindows: {
@@ -47,7 +48,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow
+                        ...basicWindow
                     }
                 },
                 closedWindows: {
@@ -65,10 +66,10 @@ describe( 'windows reducer', () => {
             expect( addWindow ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow
+                        ...basicWindow
                     },
                     [secondWindowId]: {
-                        ...basicwindow
+                        ...basicWindow
                     }
                 },
                 closedWindows: {
@@ -89,7 +90,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: []
                     }
                 },
@@ -116,7 +117,7 @@ describe( 'windows reducer', () => {
             expect( addTabNext ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId]
                     }
                 },
@@ -132,7 +133,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId]
                     }
                 },
@@ -159,7 +160,7 @@ describe( 'windows reducer', () => {
             expect( addTabNext ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId]
                     }
                 },
@@ -175,7 +176,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId]
                     }
                 },
@@ -202,7 +203,7 @@ describe( 'windows reducer', () => {
             expect( addTabNext ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId2, tabId]
                     }
                 },
@@ -220,7 +221,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow
+                        ...basicWindow
                     }
                 },
                 closedWindows: {
@@ -246,7 +247,7 @@ describe( 'windows reducer', () => {
             expect( addTabEnd ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId]
                     }
                 },
@@ -262,7 +263,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId]
                     }
                 },
@@ -289,7 +290,7 @@ describe( 'windows reducer', () => {
             expect( addTabEnd ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1]
                     }
                 },
@@ -305,11 +306,11 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: []
                     }
                 },
@@ -340,11 +341,11 @@ describe( 'windows reducer', () => {
             expect( addTabEnd ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId2]
                     }
                 },
@@ -364,11 +365,11 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId2]
                     }
                 },
@@ -399,11 +400,11 @@ describe( 'windows reducer', () => {
             expect( addTabEnd ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1, tabId3]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId2]
                     }
                 },
@@ -425,7 +426,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId]
                     }
                 },
@@ -457,7 +458,7 @@ describe( 'windows reducer', () => {
             expect( setActiveTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId,
                         tabs: [tabId]
                     }
@@ -474,7 +475,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1]
                     }
                 },
@@ -506,7 +507,7 @@ describe( 'windows reducer', () => {
             expect( setActiveTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId1,
                         tabs: [tabId, tabId1]
                     }
@@ -523,12 +524,12 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId,
                         tabs: [tabId]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1]
                     }
                 },
@@ -576,12 +577,12 @@ describe( 'windows reducer', () => {
             expect( setActiveTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId,
                         tabs: [tabId]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId1,
                         tabs: [tabId1]
                     }
@@ -604,7 +605,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId2, tabId1]
                     }
                 },
@@ -631,7 +632,7 @@ describe( 'windows reducer', () => {
             expect( closeTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId2,
                         tabs: [tabId2, tabId1]
                     }
@@ -653,7 +654,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId2, tabId1]
                     }
                 },
@@ -680,7 +681,7 @@ describe( 'windows reducer', () => {
             expect( closeTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId1,
                         tabs: [tabId, tabId1]
                     }
@@ -702,12 +703,12 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId,
                         tabs: [tabId1]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId3,
                         tabs: [tabId2, tabId3]
                     }
@@ -750,12 +751,12 @@ describe( 'windows reducer', () => {
             expect( closeTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId,
                         tabs: [tabId1]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         activeTab: tabId3,
                         tabs: [tabId3]
                     }
@@ -788,7 +789,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1]
                     }
                 },
@@ -837,7 +838,7 @@ describe( 'windows reducer', () => {
             expect( reopenTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId2]
                     }
                 },
@@ -858,7 +859,7 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId2]
                     }
                 },
@@ -903,7 +904,7 @@ describe( 'windows reducer', () => {
             expect( reopenTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId, tabId2]
                     }
                 },
@@ -919,11 +920,11 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId3]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId2]
                     }
                 },
@@ -979,11 +980,11 @@ describe( 'windows reducer', () => {
             expect( reopenTab ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId3]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId1, tabId, tabId2]
                     }
                 },
@@ -1005,11 +1006,11 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId, tabId1, tabId2]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId3]
                     }
                 },
@@ -1037,7 +1038,7 @@ describe( 'windows reducer', () => {
             expect( closeWindow ).toEqual( {
                 openWindows: {
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId3]
                     }
                 },
@@ -1059,11 +1060,11 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId]
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: []
                     }
                 },
@@ -1104,14 +1105,14 @@ describe( 'windows reducer', () => {
             expect( showSettingsMenu ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId],
                         ui: {
                             settingsMenuIsVisible: true
                         }
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: []
                     }
                 },
@@ -1128,19 +1129,20 @@ describe( 'windows reducer', () => {
             } );
         } );
     } );
+
     describe( 'HIDE_SETTINGS_MENU', () => {
         it( 'hide setting menu for a given window', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId],
                         ui: {
                             settingsMenuIsVisible: true
                         }
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: []
                     }
                 },
@@ -1181,14 +1183,14 @@ describe( 'windows reducer', () => {
             expect( hideSettingsMenu ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: [tabId],
                         ui: {
                             settingsMenuIsVisible: false
                         }
                     },
                     [secondWindowId]: {
-                        ...basicwindow,
+                        ...basicWindow,
                         tabs: []
                     }
                 },
@@ -1201,6 +1203,57 @@ describe( 'windows reducer', () => {
                         closedTabs: [],
                         lastActiveTabs: []
                     }
+                }
+            } );
+        } );
+    } );
+
+    describe( 'SET_LAST_FOCUSED_WINDOW', () => {
+        it( 'enable setting window focus', () => {
+            const state = {
+                openWindows: {
+                    [firstWindowId]: {
+                        ...basicWindow
+                    },
+                    [secondWindowId]: {
+                        ...basicWindow,
+                        wasLastInFocus: false
+                    }
+                },
+                closedWindows: {
+                    [firstWindowId]: {
+                        closedTabs: [],
+                        lastActiveTabs: []
+                    },
+                    [secondWindowId]: {
+                        closedTabs: [],
+                        lastActiveTabs: []
+                    }
+                }
+            };
+            const focusWindow = windows( state, {
+                type: TYPES.SET_LAST_FOCUSED_WINDOW,
+                payload: 2
+            } );
+
+            expect( focusWindow ).not.toStrictEqual( state );
+            expect( focusWindow.openWindows[firstWindowId] ).not.toStrictEqual(
+                state.openWindows[firstWindowId]
+            );
+
+            expect( focusWindow.openWindows[secondWindowId] ).not.toStrictEqual(
+                state.openWindows[secondWindowId]
+            );
+            expect( focusWindow.closedWindows ).toStrictEqual( state.closedWindows );
+
+            expect( focusWindow.openWindows ).toEqual( {
+                [firstWindowId]: {
+                    ...basicWindow,
+                    wasLastInFocus: false
+                },
+                [secondWindowId]: {
+                    ...basicWindow,
+                    wasLastInFocus: true
                 }
             } );
         } );

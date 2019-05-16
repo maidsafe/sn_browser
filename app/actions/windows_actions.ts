@@ -9,7 +9,8 @@ export const TYPES = {
     REOPEN_TAB: 'REOPEN_TAB',
     CLOSE_WINDOW: 'CLOSE_WINDOW',
     SHOW_SETTINGS_MENU: 'SHOW_SETTINGS_MENU',
-    HIDE_SETTINGS_MENU: 'HIDE_SETTINGS_MENU'
+    HIDE_SETTINGS_MENU: 'HIDE_SETTINGS_MENU',
+    SET_LAST_FOCUSED_WINDOW: 'SET_LAST_FOCUSED_WINDOW'
 };
 
 export const {
@@ -21,7 +22,8 @@ export const {
     reopenTab,
     closeWindow,
     showSettingsMenu,
-    hideSettingsMenu
+    hideSettingsMenu,
+    setLastFocusedWindow
 } = createActions(
     TYPES.ADD_WINDOW,
     TYPES.ADD_TAB_NEXT,
@@ -31,5 +33,6 @@ export const {
     TYPES.REOPEN_TAB,
     TYPES.CLOSE_WINDOW,
     TYPES.SHOW_SETTINGS_MENU,
-    TYPES.HIDE_SETTINGS_MENU
+    TYPES.HIDE_SETTINGS_MENU,
+    TYPES.SET_LAST_FOCUSED_WINDOW
 );
