@@ -349,7 +349,10 @@ export class MenuBuilder {
                 },
                 {
                     label: 'Toggle Developer Tools',
-                    accelerator: 'Alt+CommandOrControl+I',
+                    accelerator:
+            process.platform === 'darwin'
+                ? 'Alt+CommandOrControl+I'
+                : 'Control+Shift+I',
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
