@@ -12,14 +12,13 @@ import {
     addTabEnd,
     setActiveTab,
     closeWindow,
-    addWindow
+    addWindow,
+    setLastFocusedWindow
 } from '$Actions/windows_actions';
 
 const browserWindowArray = [];
 
-let unSubscribeOnClose;
-
-function getNewWindowPosition( mainWindowState ): { x: number; y: number } {
+function getNewWindowPosition( thisWindowState ): { x: number; y: number } {
     // for both x and y, we start at 0
     const defaultWindowPosition = 0;
 
@@ -29,7 +28,7 @@ function getNewWindowPosition( mainWindowState ): { x: number; y: number } {
     let newWindowPosition;
 
     if ( noOfBrowserWindows === 0 ) {
-        newWindowPosition = { x: mainWindowState.x, y: mainWindowState.y };
+        newWindowPosition = { x: thisWindowState.x, y: thisWindowState.y };
     } else {
         newWindowPosition = {
             x: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows,
@@ -41,7 +40,7 @@ function getNewWindowPosition( mainWindowState ): { x: number; y: number } {
 }
 
 export const openWindow = ( store ): BrowserWindow => {
-    const mainWindowState = windowStateKeeper( {
+    const thisWindowState = windowStateKeeper( {
         defaultWidth: 2048,
         defaultHeight: 1024
     } );
@@ -52,13 +51,13 @@ export const openWindow = ( store ): BrowserWindow => {
         appIcon = path.join( __dirname, '../resources/icon.ico' );
     }
 
-    const newWindowPosition = getNewWindowPosition( mainWindowState );
+    const newWindowPosition = getNewWindowPosition( thisWindowState );
     const browserWindowConfig = {
         show: false,
         x: newWindowPosition.x,
         y: newWindowPosition.y,
-        width: mainWindowState.width,
-        height: mainWindowState.height,
+        width: thisWindowState.width,
+        height: thisWindowState.height,
         titleBarStyle: 'hiddenInset',
         icon: appIcon,
         webPreferences: {
@@ -69,63 +68,67 @@ export const openWindow = ( store ): BrowserWindow => {
         }
     };
 
-    let mainWindow = new BrowserWindow( browserWindowConfig );
+    let thisWindow = new BrowserWindow( browserWindowConfig );
 
-    mainWindowState.manage( mainWindow );
+    thisWindowState.manage( thisWindow );
 
-    mainWindow.loadURL( `file://${__dirname}/app.html` );
+    thisWindow.loadURL( `file://${__dirname}/app.html` );
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
 
-    mainWindow.webContents.on(
+    thisWindow.webContents.on(
         'did-finish-load',
         async (): Promise<void> => {
-            if ( !mainWindow ) {
-                throw new Error( '"mainWindow" is not defined' );
+            if ( !thisWindow ) {
+                throw new Error( '"thisWindow" is not defined' );
             }
 
             await onOpenLoadExtensions( store );
 
             // before show lets load state
-            mainWindow.show();
-            mainWindow.focus();
+            thisWindow.show();
+            thisWindow.focus();
 
             if ( isRunningDebug && !isRunningSpectronTestProcess ) {
-                mainWindow.openDevTools( { mode: 'undocked' } );
+                thisWindow.openDevTools( { mode: 'undocked' } );
             }
             // have to add a tab here now
-            // const webContentsId = mainWindow.webContents.id;
-            const mainWindowId = mainWindow.id;
-            logger.info( 'state-mainWindowId', mainWindowId );
+            const thisWindowId = thisWindow.id;
+            logger.info( 'state-thisWindowId', thisWindowId );
             if ( browserWindowArray.length === 1 ) {
                 const tabId = Math.random().toString( 36 );
-                store.dispatch( addWindow( { windowId: mainWindowId } ) );
-                store.dispatch( addTabEnd( { windowId: mainWindowId, tabId } ) );
+                store.dispatch( addWindow( { windowId: thisWindowId } ) );
+                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
                 store.dispatch( addTab( { url: 'safe-auth://home/', tabId } ) );
-                store.dispatch( setActiveTab( { windowId: mainWindowId, tabId } ) );
+                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
             } else {
                 const tabId = Math.random().toString( 36 );
-                store.dispatch( addWindow( { windowId: mainWindowId } ) );
-                store.dispatch( addTabEnd( { windowId: mainWindowId, tabId } ) );
+                store.dispatch( addWindow( { windowId: thisWindowId } ) );
+                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
                 store.dispatch( addTab( { url: 'about:blank', tabId } ) );
-                store.dispatch( setActiveTab( { windowId: mainWindowId, tabId } ) );
+                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
                 store.dispatch( selectAddressBar( { tabId } ) );
             }
         }
     );
 
-    mainWindow.on( 'close', () => {
-        const webContentsId = mainWindow.webContents.id;
-        const mainWindowId = mainWindow.id;
-
-        logger.info( 'dispatching closeWindow for', mainWindowId );
-        store.dispatch( closeWindow( { windowId: mainWindowId } ) );
+    thisWindow.on( 'focus', () => {
+        const thisWindowId = thisWindow.id;
+        store.dispatch( setLastFocusedWindow( thisWindowId ) );
     } );
 
-    mainWindow.on( 'closed', () => {
-        const index = browserWindowArray.indexOf( mainWindow );
-        mainWindow = null;
+    thisWindow.on( 'close', () => {
+        const thisWindowId = thisWindow.id;
+
+        logger.info( 'dispatching closeWindow for', thisWindowId );
+        store.dispatch( closeWindow( { windowId: thisWindowId } ) );
+
+    } );
+
+    thisWindow.on( 'closed', () => {
+        const index = browserWindowArray.indexOf( thisWindow );
+        thisWindow = null;
         if ( index > -1 ) {
             browserWindowArray.splice( index, 1 );
         }
@@ -134,42 +137,33 @@ export const openWindow = ( store ): BrowserWindow => {
         }
     } );
 
-    mainWindow.webContents.on( 'crashed', ( event, code, message ) => {
+    thisWindow.webContents.on( 'crashed', ( event, code, message ) => {
         logger.error(
             '>>>>>>>>>>>>>>>>>>>>>>>> Browser render process crashed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
         );
         logger.error( event, message );
     } );
 
-    browserWindowArray.push( mainWindow );
+    browserWindowArray.push( thisWindow );
 
-    const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
+    const menuBuilder = new MenuBuilder( thisWindow, openWindow, store );
     menuBuilder.buildMenu();
 
-    unSubscribeOnClose = store.subscribe( () => {
-        const state = store.getState();
-        const { windows } = state;
-    } );
-
-    return mainWindow;
+    return thisWindow;
 };
 
 ipcMain.on(
     'command:close-window',
     (): void => {
         const win = BrowserWindow.getFocusedWindow();
+        if ( win ) {
+            win.close();
+        }
+        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+            app.quit();
+        }
     }
 );
-
-ipcMain.on( 'command:close-window', () => {
-    const win = BrowserWindow.getFocusedWindow();
-    if ( win ) {
-        win.close();
-    }
-    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-        app.quit();
-    }
-} );
 
 ipcMain.on( 'closeWindows', ( event, data ) => {
     logger.info( 'resetStore IPC received...', data );

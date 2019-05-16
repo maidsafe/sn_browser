@@ -23,6 +23,12 @@ const addTab = ( state, tab ) => {
     const tabUrl = makeValidAddressBarUrl( tab.url || '' );
     const { tabId } = tab;
 
+    if ( !tabId ) {
+        logger.error( new Error( 'No tab ID passed into addTab' ) );
+
+        return state;
+    }
+
     const faviconPath = isRunningUnpacked
         ? '../resources/favicon.ico'
         : '../favicon.ico';
