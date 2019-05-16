@@ -13,10 +13,12 @@ const handleTabPayload = ( state, payload ) => {
             throw new Error( 'Payload must be an Object.' );
         }
         const { tabId } = payload;
-        const tabToMerge = { ...state[tabId] };
-        return { tabId, tabToMerge };
+        if ( state[tabId] !== undefined ) {
+            const tabToMerge = { ...state[tabId] };
+            return { tabId, tabToMerge };
+        }
     }
-    throw new Error( 'Payload does not exist' );
+    return state;
 };
 
 const addTab = ( state, tab ) => {
@@ -117,7 +119,7 @@ const updateTabHistory = ( tabToMerge, payload ) => {
 
 const updateTab = ( state, payload ) => {
     const { tabId, tabToMerge } = handleTabPayload( state, payload );
-    if ( tabId === undefined ) {
+    if ( tabId === undefined && tabToMerge === undefined ) {
         return state;
     }
     let updatedTab = { ...tabToMerge, ...payload };
@@ -252,7 +254,7 @@ export function tabs( state: object = initialState, action ) {
         case TYPES.DESELECT_ADDRESS_BAR: {
             return deselectAddressBar( state, payload );
         }
-        case TYPES.RESET_STORE: {
+        case TYPES.TABS_RESET_STORE: {
             return resetStore( payload );
         }
         default:
