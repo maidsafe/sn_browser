@@ -5059,7 +5059,12 @@ core-js@^1.0.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
   integrity sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
 
-core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0:
+core-js@^2.4.0:
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.6.tgz#00eb6d6bf815471cc16d8563edd7d38786dec50b"
+  integrity sha512-Mt/LaAym54NXnrjEMdo918cT2h70tqb/Yl7T3uPHQHRm5SxVoqlKmerUy4mL11k8saSBDWQ7ULIHxmeFyT3pfg==
+
+core-js@^2.4.1, core-js@^2.5.0:
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
   integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
@@ -15846,7 +15851,7 @@ test-exclude@^5.0.0:
     read-pkg-up "^4.0.0"
     require-main-filename "^1.0.1"
 
-"testcafe-browser-provider-electron@https://github.com/joshuef/testcafe-browser-provider-electron.git#OSXFixed":
+"testcafe-browser-provider-electron@https://github.com/joshuef/testcafe-browser-provider-electron.git#FixOSXOpening":
   version "0.0.8"
   resolved "https://github.com/joshuef/testcafe-browser-provider-electron.git#8b64a0f283530429d0f47547ef9f0a89e22de382"
   dependencies:

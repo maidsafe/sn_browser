@@ -12,14 +12,14 @@ export const registerSafeAuthProtocol = () => {
     ses.protocol.registerHttpProtocol(
         PROTOCOLS.SAFE_AUTH,
         ( req, cb ) => {
-            logger.info( `Procotol:: safe-auth:// url being parsed: ${req.url}` );
+            logger.info( `Protocol:: safe-auth:// url being parsed: ${req.url}` );
 
             // TODO. Sort out when/where with slash
             const newUrl = `http://localhost:${CONFIG.PORT}/auth/${req.url}`;
 
             cb( { url: newUrl } );
         },
-        err => {
+        ( err ) => {
             if ( !err ) return;
 
             if ( err.message === 'The scheme has been registered' ) {

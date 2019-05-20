@@ -93,8 +93,9 @@ export class TabContents extends Component<{}, {}> {
 
             if ( isRunningTestCafeProcess ) {
                 // tab contents cant be parsed atm.
-                return <div>no tab for testcafe </div>;
+                return <div>no tab for testcafe UI tests.</div>;
             }
+
             const TheTab = (
                 <Tab
                     addNotification={addNotification}

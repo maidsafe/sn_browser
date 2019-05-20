@@ -85,7 +85,7 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( '' );
 
-    process.on( 'uncaughtTypeError', error => {
+    process.on( 'uncaughtTypeError', ( error ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
         log.error( 'whoops! there was an uncaught type error:' );
         log.error(
@@ -123,7 +123,7 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
 
     process.on( 'unhandledRejection', ( error: NodeError ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-        log.error( 'Unhandled Rejection. Reason:', error.message || error );
+        log.error( 'Unhandled Rejection. Reason:', error );
         log.error(
             JSON.stringify( error, [
                 'message',

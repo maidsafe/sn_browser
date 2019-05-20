@@ -63,6 +63,17 @@ if ( allPassedArguments.includes( '--debug' ) ) {
     hasDebugFlag = true;
 }
 
+let testCafeUrlString = null;
+
+if ( allPassedArguments.includes( '--testCafeURL' ) ) {
+    const cafeUrlIndex =
+    allPassedArguments.findIndex( ( arg ): boolean => arg === '--testCafeURL' ) + 1;
+
+    testCafeUrlString = allPassedArguments[cafeUrlIndex];
+}
+
+export const testCafeURL = testCafeUrlString;
+
 let ignoreAppLocationMacOs = false;
 
 if ( allPassedArguments.includes( '--ignoreAppLocation' ) ) {

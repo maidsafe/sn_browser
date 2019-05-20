@@ -1,9 +1,10 @@
 import { ClientFunction, Selector } from 'testcafe';
+import { ReactSelector } from 'testcafe-react-selectors';
+
 import {
     getMainMenuItem,
     clickOnMainMenuItem
 } from 'testcafe-browser-provider-electron';
-import { CLASSES } from '../app/constants/classes';
 
 export const getPageUrl = ClientFunction( () => window.location.href );
 export const resetStore = async ( t ) => {
@@ -16,12 +17,13 @@ export const openLocation = async ( t ) => {
 export const getPageTitle = ClientFunction( () => document.title );
 
 export const navigateTo = async ( t, address ) => {
+    const input = ReactSelector( 'Input' ).find( 'input' );
     return (
         t
-            .selectText( `.${CLASSES.ADDRESS_INPUT}` )
+            .selectText( input )
             .pressKey( 'backspace' )
             // .debug()
-            .typeText( `.${CLASSES.ADDRESS_INPUT}`, address )
+            .typeText( input, address )
             .pressKey( 'enter' )
     );
 };

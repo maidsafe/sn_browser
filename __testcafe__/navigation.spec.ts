@@ -14,7 +14,12 @@ import {
 
 import { CLASSES } from '../app/constants/classes';
 
-fixture`Browser UI Navigation`.page( '../app/app.html' ).afterEach( resetStore );
+fixture`Browser UI Navigation`
+    .page( '../app/app.html' )
+    .afterEach( resetStore )
+    .beforeEach( async () => {
+        await waitForReact();
+    } );
 // .afterEach(assertNoConsoleErrors);
 
 test( 'should open window', async ( t ) => {
@@ -32,8 +37,8 @@ test( 'add tab should exist', async ( t ) => {
 
 test( 'openLocation should select the address bar', async ( t ) => {
     await openLocation();
-    await t.expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).exists ).ok();
-    await t.expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).focused ).ok();
+    await t.expect( ReactSelector( 'Input' ).find( 'input' ).exists ).ok();
+    await t.expect( ReactSelector( 'Input' ).find( 'input' ).focused ).ok();
 } );
 
 // Blocked until we can see webview.
@@ -45,7 +50,7 @@ test( 'openLocation should select the address bar', async ( t ) => {
 //
 //         navigateTo( t, 'http://:invalid-url');
 //
-//     // await t.expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
+//     // await t.expect( ReactSelector('Input').find('input').value )
 //
 //
 // } );
@@ -60,7 +65,7 @@ test( 'can go backwards', async ( t ) => {
     navigateTo( t, 'google.com' );
     await t
         .click( `.${CLASSES.BACKWARDS}` )
-        .expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
+        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
         .eql( 'safe://example.com' );
 } );
 
@@ -73,7 +78,7 @@ test( 'can go backwards to about:blank', async ( t ) => {
     navigateTo( t, 'example.com' );
     await t
         .click( `.${CLASSES.BACKWARDS}` )
-        .expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
+        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
         .eql( 'about:blank' );
 } );
 
@@ -85,9 +90,7 @@ test( 'can load about:blank', async ( t ) => {
 
     navigateTo( t, 'example.com' );
     navigateTo( t, 'about:blank' );
-    await t
-        .expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
-        .eql( 'about:blank' );
+    await t.expect( ReactSelector( 'Input' ).find( 'input' ).value ).eql( 'about:blank' );
 } );
 
 test( 'can go forwards', async ( t ) => {
@@ -100,9 +103,9 @@ test( 'can go forwards', async ( t ) => {
     navigateTo( t, 'google.com' );
     await t
         .click( `.${CLASSES.BACKWARDS}` )
-        .expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
+        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
         .eql( 'safe://example.com' )
         .click( `.${CLASSES.FORWARDS}` )
-        .expect( Selector( `.${CLASSES.ADDRESS_INPUT}` ).value )
+        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
         .eql( 'safe://google.com' );
 } );
