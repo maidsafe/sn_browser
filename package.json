@@ -357,7 +357,7 @@
     "open": "^6.3.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-hot-loader": "^4.8.5",
+    "react-hot-loader": "^4.8.6",
     "react-redux": "^7.0.3",
     "react-redux-i18n": "1.9.3",
     "react-router": "^5.0.0",
