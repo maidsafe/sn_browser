@@ -13,11 +13,13 @@ import open from 'open';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
+import { enforceMacOSAppLocation } from 'electron-util';
 
 import { app, protocol, ipcMain, BrowserWindow } from 'electron';
 import { logger } from '$Logger';
 
 import {
+    ignoreAppLocation,
     isRunningUnpacked,
     isRunningDebug,
     isRunningSpectronTestProcess,
@@ -104,6 +106,10 @@ const installExtensions = async (): Promise<void> => {
 };
 
 app.on( 'ready', async () => {
+    if ( !ignoreAppLocation ) {
+        enforceMacOSAppLocation();
+    }
+
     const obtainedInstanceLock = app.requestSingleInstanceLock();
 
     if ( !obtainedInstanceLock ) {

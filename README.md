@@ -85,6 +85,12 @@ The resulting packages are contained within the `releases` folder.
 
 A packaged application, built in a `NODE_ENV=dev`, can access either `prod` or `dev` networks. `prod` is the default, or alternatively you can open the application and pass a `--mock` flag to open and use a mock network.
 
+##### macOS
+
+On macOS, the application should be located in the 'Applications' for [security reasons](https://github.com/potionfactory/LetsMove/issues/56). By default the packaged application will prompt to move the application. To override this, you can pass `--ignoreAppLocation`:
+
+`open release/safe-browser-<version>-osx-x64/SAFE\ Browser.app --args --ignoreAppLocation`
+
 #### Development commands
 
 There are a few build commands for various situations:
