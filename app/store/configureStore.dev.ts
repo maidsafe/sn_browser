@@ -45,6 +45,7 @@ export const configureStore = ( initialState: {} = initialStateFromMain ) => {
     /* eslint-disable no-underscore-dangle */
         composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
             ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {
+                trace: true,
                 // Options: http://extension.remotedev.io/docs/API/Arguments.html
                 actionCreators
             } )
