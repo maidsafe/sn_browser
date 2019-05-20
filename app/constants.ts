@@ -63,6 +63,14 @@ if ( allPassedArguments.includes( '--debug' ) ) {
     hasDebugFlag = true;
 }
 
+let ignoreAppLocationMacOs = false;
+
+if ( allPassedArguments.includes( '--ignoreAppLocation' ) ) {
+    ignoreAppLocationMacOs = true;
+}
+
+export const ignoreAppLocation = ignoreAppLocationMacOs;
+
 let forcedPort;
 if ( allPassedArguments.includes( '--port' ) ) {
     const index = allPassedArguments.indexOf( '--port' );

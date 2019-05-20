@@ -6271,6 +6271,14 @@ electron-updater@4.0.6:
     semver "^5.6.0"
     source-map-support "^0.5.9"
 
+electron-util@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.11.0.tgz#d9b71692241598a5f1e2a6866adf7e1589b783fa"
+  integrity sha512-zfFeBdeBgnKQqXUC4ozmcGqbN5bxSVWH82FZ2Ydpo9PPOen77MAFGrd8+KEloUW36bpuSuMYCtlcp4xejWfKjw==
+  dependencies:
+    electron-is-dev "^1.0.1"
+    new-github-issue-url "^0.2.0"
+
 electron-window-state@^5.0.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-5.0.3.tgz#4f36d09e3f953d87aff103bf010f460056050aa8"
@@ -11005,6 +11013,11 @@ nessie-ui@6.4.7:
   version "6.4.7"
   resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.4.7.tgz#e94bfbd4a43b2e3f7715d8c2b29f9eb0d4a36112"
   integrity sha512-fU4yXiST+UCBRgy+Gsz/Ai+vrE03pyR2wczpFYeGMSG6NtM7J7qE7qz2c9aJEdJLk1VkRxRONvB4uTBuhZzFpA==
+
+new-github-issue-url@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/new-github-issue-url/-/new-github-issue-url-0.2.1.tgz#e17be1f665a92de465926603e44b9f8685630c1d"
+  integrity sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==
 
 next-tick@^1.0.0:
   version "1.0.0"
