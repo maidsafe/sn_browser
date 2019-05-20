@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
 import { removeRemoteCall } from '$Actions/remoteCall_actions';
-
+import { isRunningTestCafeProcess } from '$Constants';
 import { configureStore } from './store/configureStore';
 
 // TODO This handling needs to be imported via extension apis more seemlessly
@@ -13,7 +13,7 @@ const store = configureStore();
 const safeBrowserAppState = store.getState().safeBrowserApp;
 const { isMock } = safeBrowserAppState;
 
-if ( !isMock ) {
+if ( !isRunningTestCafeProcess && !isMock ) {
     // eslint-disable-next-line no-eval
     window.eval = () => {
         throw new Error( 'Sorry, peruse does not support window.eval().' );
@@ -28,7 +28,7 @@ store.subscribe( async () => {
     const state = store.getState();
     const calls = state.remoteCalls;
 
-    calls.forEach( theCall => {
+    calls.forEach( ( theCall ) => {
         if ( theCall === pendingCalls[theCall.id] ) {
             return;
         }

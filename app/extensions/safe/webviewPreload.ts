@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import { logger } from '$Logger';
 import * as remoteCallActions from '$Actions/remoteCall_actions';
 import safe from '@maidsafe/safe-node-app';
-import { PROTOCOLS, CONFIG } from '$Constants';
+import { PROTOCOLS, CONFIG, isRunningTestCafeProcess } from '$Constants';
 import { manifest as authManifest } from '$Extensions/safe/auth-api/manifest';
 import { callIPC } from './ffi/ipc';
 
@@ -110,7 +110,10 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
 
     // use from passed object if present (for testing)
     theWindow.safe = theWindow.safe || { ...safe };
-    theWindow.process = null;
+
+    if ( !isRunningTestCafeProcess ) {
+        theWindow.process = null;
+    }
 
     const safeBrowserAppState = passedStore.getState().safeBrowserApp;
     const { experimentsEnabled } = safeBrowserAppState;
@@ -194,7 +197,11 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
 
     theWindow[pkg.name] = { version: VERSION };
 
-    if ( theWindow.location && theWindow.location.protocol !== authProtocol ) {
+    if (
+        !isRunningTestCafeProcess &&
+    theWindow.location &&
+    theWindow.location.protocol !== authProtocol
+    ) {
         return;
     }
 
