@@ -5,7 +5,12 @@ import windowStateKeeper from 'electron-window-state';
 import { logger } from '$Logger';
 import { MenuBuilder } from './menu';
 import { onOpenLoadExtensions } from './extensions';
-import { isRunningSpectronTestProcess, isRunningDebug } from '$Constants';
+import {
+    isRunningTestCafeProcess,
+    isRunningSpectronTestProcess,
+    isRunningDebug,
+    testCafeURL
+} from '$Constants';
 import { addTab, updateTab, selectAddressBar } from './actions/tabs_actions';
 import {
     windowCloseTab,
@@ -61,10 +66,8 @@ export const openWindow = ( store ): BrowserWindow => {
         titleBarStyle: 'hiddenInset',
         icon: appIcon,
         webPreferences: {
-            partition: 'persist:safe-tab'
-            // preload : path.join( __dirname, 'browserPreload.js' )
-            //  isRunningUnpacked ?
-            // `http://localhost:${devPort}/webPreload.js` : `file://${ __dirname }/browserPreload.js`;
+            partition: 'persist:safe-tab',
+            preload: testCafeURL ? path.join( __dirname, 'webPreload.prod.js' ) : ''
         }
     };
 
@@ -73,9 +76,6 @@ export const openWindow = ( store ): BrowserWindow => {
     thisWindowState.manage( thisWindow );
 
     thisWindow.loadURL( `file://${__dirname}/app.html` );
-
-    // @TODO: Use 'ready-to-show' event
-    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
 
     thisWindow.webContents.on(
         'did-finish-load',
@@ -96,13 +96,26 @@ export const openWindow = ( store ): BrowserWindow => {
             // have to add a tab here now
             const thisWindowId = thisWindow.id;
             logger.info( 'state-thisWindowId', thisWindowId );
+
             if ( browserWindowArray.length === 1 ) {
                 const tabId = Math.random().toString( 36 );
                 store.dispatch( addWindow( { windowId: thisWindowId } ) );
                 store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
-                store.dispatch( addTab( { url: 'safe-auth://home/', tabId } ) );
+
+                if ( !testCafeURL ) {
+                    store.dispatch( addTab( { url: 'safe-auth://home/', tabId } ) );
+                } else {
+                    store.dispatch(
+                        addTab( {
+                            url: testCafeURL,
+                            tabId
+                        } )
+                    );
+                }
+
                 store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
             } else {
+                logger.info( 'SO WERE IN THE OTTTHHHEERRR ONE' );
                 const tabId = Math.random().toString( 36 );
                 store.dispatch( addWindow( { windowId: thisWindowId } ) );
                 store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
@@ -123,7 +136,6 @@ export const openWindow = ( store ): BrowserWindow => {
 
         logger.info( 'dispatching closeWindow for', thisWindowId );
         store.dispatch( closeWindow( { windowId: thisWindowId } ) );
-
     } );
 
     thisWindow.on( 'closed', () => {
