@@ -3,12 +3,12 @@ import { logger } from '$Logger';
 import { configureStore } from '$Store/configureStore';
 import i18n from 'i18n';
 import { I18N_CONFIG } from '$Constants';
-
 import { manageRemoteCalls } from './background.manageRemoteCalls';
+import { setCurrentStore } from '$Actions/resetStore_action';
 import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';
 import { setupServer } from './server';
 
-const initSafeServer = store => {
+const initSafeServer = ( store ) => {
     const server = setupServer();
     onInitBgProcess( server, store );
 };
@@ -18,6 +18,7 @@ const initBgProcess = async () => {
     const loadMiddlewarePackages = getExtensionReduxMiddleware() || [];
     const store = configureStore( undefined, loadMiddlewarePackages, true );
     initSafeServer( store );
+    setCurrentStore( store );
 
     i18n.configure( I18N_CONFIG );
     i18n.setLocale( 'en' );
