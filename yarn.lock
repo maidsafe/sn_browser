@@ -4400,7 +4400,6 @@ ci-info@^2.0.0:
 
 cids@bochaco/js-cid#temp-use-bochaco-multicodec:
   version "0.5.3"
-  uid fdd908ad57edd5359008adffde1ce32e3e970b15
   resolved "https://codeload.github.com/bochaco/js-cid/tar.gz/fdd908ad57edd5359008adffde1ce32e3e970b15"
   dependencies:
     multibase "~0.4.0"
