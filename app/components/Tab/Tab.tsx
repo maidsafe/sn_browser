@@ -627,7 +627,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
           }
           webIdUpdater();
       `;
-        webview.executeJavaScript( setupEventEmitter );
+        if ( webview !== null ) webview.executeJavaScript( setupEventEmitter );
     };
 
     setCurrentWebId( newWebId ) {
