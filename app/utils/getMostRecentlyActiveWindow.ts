@@ -9,7 +9,7 @@ export const getMostRecentlyActiveWindow = ( aStore: Store ): BrowserWindow => {
     const { openWindows } = aStore.getState().windows;
     const openWindowArray = Object.keys( openWindows );
 
-    const windowInFocusId: number = Number(
+    const windowInFocusId = Number(
         openWindowArray.find(
             ( aWindowId ): boolean => openWindows[aWindowId].wasLastInFocus
         )

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { TYPES } from '$Actions/windows_actions';
 import { logger } from '$Logger';
-import { TYPES as TAB_TYPES } from '$Actions/tabs_actions';
+import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
 import { cloneDeep } from 'lodash';
 import { initialAppState } from './initialAppState';
 
@@ -324,7 +323,7 @@ export const windows = ( state: object = initialState, action ) => {
         case TYPES.HIDE_SETTINGS_MENU: {
             return hideSettingsMenu( state, payload );
         }
-        case TAB_TYPES.RESET_STORE: {
+        case TABS_TYPES.TABS_RESET_STORE: {
             return resetStore( state, payload );
         }
         default:

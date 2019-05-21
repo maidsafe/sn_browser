@@ -1,35 +1,31 @@
 import * as theAuthApi from '$Extensions/safe/auth-api/authFuncs';
 import { callIPC, setAuthCallbacks } from '$Extensions/safe/ffi/ipc';
 import * as authActions from '$Extensions/safe/actions/authenticator_actions';
-import * as tabActions from '$Actions/tabs_actions';
+import * as resetTabAction from '$Actions/resetStore_action';
 import { SAFE } from '$Extensions/safe/constants';
 import { CONSTANTS } from '$Extensions/safe/auth-constants';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import * as remoteCallActions from '$Actions/remoteCall_actions';
 import { clearAppObj } from '$Extensions/safe/safeBrowserApplication/theApplication';
-
 import { logger } from '$Logger';
-import { ipcRenderer } from 'electron';
 
 let theStore;
 
 export const getResetStoreActionObject = ( state, windowId ) => {
     logger.verbose( 'Setting up reset store from window:', windowId );
-    const newTabId = Math.random().toString( 36 );
-
+    const tabId = Math.random().toString( 36 );
     if ( !state.windows ) {
         throw Error(
             'No windows object passed in the app state. Ensure you have called `store.getState()`'
         );
     }
-
     const windowState = state.windows.openWindows;
     const windows = Object.keys( windowState );
     const windowsToBeClosed = windows.filter(
         ( aWindowId ) => parseInt( aWindowId, 10 ) !== windowId
     );
 
-    return { fromWindow: windowId, windowsToBeClosed, tabId: newTabId };
+    return { fromWindow: windowId, tabId, windowsToBeClosed };
 };
 
 export const handleRemoteCalls = ( store, allAPICalls, theCall ) => {
@@ -95,8 +91,7 @@ export const remoteCallApis = {
             theStore.getState(),
             windowId
         );
-
-        theStore.dispatch( tabActions.resetStore( resetStoreActionObject ) );
+        theStore.dispatch( resetTabAction.resetStore( resetStoreActionObject ) );
 
         theStore.dispatch(
             safeBrowserAppActions.setNetworkStatus( SAFE.NETWORK_STATE.CONNECTED )

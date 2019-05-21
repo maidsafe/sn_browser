@@ -663,7 +663,7 @@ describe( 'tabs reducer', () => {
                 [tabId1]: { ...basicTab, tabId: tabId1 }
             };
             const tabsPostLogout = tabs( state, {
-                type: TYPES.RESET_STORE,
+                type: TYPES.TABS_RESET_STORE,
                 payload: { tabId: 'asdad' }
             } );
 
