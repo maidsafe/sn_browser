@@ -369,8 +369,8 @@ export class Tab extends Component<TabProps, TabState> {
             tabId,
             isLoading: true
         };
-        this.updateBrowserState( { loading: true } );
         updateTab( tabUpdate );
+        this.updateBrowserState( { loading: true } );
         window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) => {
                 webContents.focus();
@@ -627,7 +627,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
           }
           webIdUpdater();
       `;
-        webview.executeJavaScript( setupEventEmitter );
+        if ( webview !== null ) webview.executeJavaScript( setupEventEmitter );
     };
 
     setCurrentWebId( newWebId ) {
