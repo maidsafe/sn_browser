@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { remote, webContents } from 'electron';
 import { TYPES } from '$Actions/tabs_actions';
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
@@ -116,19 +117,112 @@ const updateTabHistory = ( tabToMerge, payload ) => {
     };
     return updatedTab;
 };
+const updateTab = ( tabId, tabToMerge, payload, state ) => {
+    const updatedTab = { ...tabToMerge, ...payload };
+    const updatedState = { ...state, [tabId]: updatedTab };
+    return updatedState;
+};
 
-const updateTab = ( state, payload ) => {
+const updateTabUrl = ( state, payload ) => {
     const { tabId, tabToMerge } = handleTabPayload( state, payload );
     if ( tabId === undefined && tabToMerge === undefined ) {
         return state;
     }
-    let updatedTab = { ...tabToMerge, ...payload };
     if ( payload.url ) {
-        updatedTab = updateTabHistory( tabToMerge, payload );
-    }
+        let updatedTab = { ...tabToMerge, ...payload };
+        if ( payload.url ) {
+            updatedTab = updateTabHistory( tabToMerge, payload );
+        }
 
-    const updatedState = { ...state, [tabId]: updatedTab };
-    return updatedState;
+        const updatedState = { ...state, [tabId]: updatedTab };
+        return updatedState;
+    }
+    logger.error( 'No URL passed' );
+    return state;
+};
+
+const updateTabWebId = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'tab  Does not exist' );
+        return state;
+    }
+    if ( payload.webId ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'No WebId to Update' );
+    return state;
+};
+
+const toggleDevTools = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'tab  Does not exist' );
+        return state;
+    }
+    if ( typeof payload.shouldToggleDevTools === 'boolean' ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'Invalid Tab Toggle DevTools Parameter passed' );
+    return state;
+};
+
+const tabShouldReload = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'tab  Does not exist' );
+        return state;
+    }
+    if ( typeof payload.shouldReload === 'boolean' ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'Invalid Reload Parameter passed' );
+    return state;
+};
+
+const updateTabTitle = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'tab  Does not exist' );
+        return state;
+    }
+    if ( payload.title ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'No Title Parameter passed' );
+    return state;
+};
+
+const updateTabFavicon = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'tab  Does not exist' );
+        return state;
+    }
+    if ( payload.favicon ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'No Favicon Parameter passed' );
+    return state;
+};
+
+const tabLoad = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'tab  Does not exist' );
+        return state;
+    }
+    if ( typeof payload.isLoading === 'boolean' ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'Invalid tabLoad Parameter passed' );
+    return state;
 };
 
 // TODO: sort this out
@@ -233,8 +327,26 @@ export function tabs( state: object = initialState, action ) {
         case TYPES.ADD_TAB: {
             return addTab( state, payload );
         }
-        case TYPES.UPDATE_TAB: {
-            return updateTab( state, payload );
+        case TYPES.UPDATE_TAB_URL: {
+            return updateTabUrl( state, payload );
+        }
+        case TYPES.UPDATE_TAB_WEBID: {
+            return updateTabWebId( state, payload );
+        }
+        case TYPES.TOGGLE_DEV_TOOLS: {
+            return toggleDevTools( state, payload );
+        }
+        case TYPES.TAB_SHOULD_RELOAD: {
+            return tabShouldReload( state, payload );
+        }
+        case TYPES.UPDATE_TAB_TITLE: {
+            return updateTabTitle( state, payload );
+        }
+        case TYPES.UPDATE_TAB_FAVICON: {
+            return updateTabFavicon( state, payload );
+        }
+        case TYPES.TAB_LOAD: {
+            return tabLoad( state, payload );
         }
         case TYPES.TAB_FORWARDS: {
             return moveTabFowards( state, payload );

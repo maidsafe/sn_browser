@@ -16,7 +16,7 @@ interface AddressBarInputProps {
     onBlur: ( ...args: Array<any> ) => any;
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
-    updateTab: ( ...args: Array<any> ) => any;
+    updateTabUrl: ( ...args: Array<any> ) => any;
 }
 interface AddressBarInputState {
     address: any;
@@ -85,7 +85,7 @@ AddressBarInputState
         }
     }
 
-    handleFocus = event => {
+    handleFocus = ( event ) => {
         const { onFocus, tabId } = this.props;
         onFocus( { tabId } );
         event.target.select();
@@ -102,7 +102,7 @@ AddressBarInputState
             return;
         }
         const input = event.target.value;
-        this.props.updateTab( { tabId, url: input } );
+        this.props.updateTabUrl( { tabId, url: input } );
     }
 
     handleClick = () => {
@@ -129,7 +129,7 @@ AddressBarInputState
                 size="large"
                 value={address}
                 type="text"
-                ref={input => {
+                ref={( input ) => {
                     this.addressInput = input;
                     if (
                         isSelected &&

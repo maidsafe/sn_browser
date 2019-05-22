@@ -15,6 +15,7 @@ interface BrowserProps {
     notifications: Array<Notification>;
     tabs: object;
     windows: object;
+    history: object;
     windowId: any;
     addBookmark: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
@@ -28,13 +29,20 @@ interface BrowserProps {
     showSettingsMenu: ( ...args: Array<any> ) => any;
     hideSettingsMenu: ( ...args: Array<any> ) => any;
     addTab: ( ...args: Array<any> ) => any;
-    updateTab: ( ...args: Array<any> ) => any;
+    updateTabUrl: ( ...args: Array<any> ) => any;
+    updateTabWebId: ( ...args: Array<any> ) => any;
+    toggleDevTools: ( ...args: Array<any> ) => any;
+    tabShouldReload: ( ...args: Array<any> ) => any;
+    updateTabTitle: ( ...args: Array<any> ) => any;
+    updateTabFavicon: ( ...args: Array<any> ) => any;
+    tabLoad: ( ...args: Array<any> ) => any;
     tabForwards: ( ...args: Array<any> ) => any;
     tabBackwards: ( ...args: Array<any> ) => any;
     focusWebview: ( ...args: Array<any> ) => any;
     blurAddressBar: ( ...args: Array<any> ) => any;
     selectAddressBar: ( ...args: Array<any> ) => any;
     deselectAddressBar: ( ...args: Array<any> ) => any;
+    addNotification: ( ...args: Array<any> ) => any;
     updateNotification: ( ...args: Array<any> ) => any;
     clearNotification: ( ...args: Array<any> ) => any;
 }
@@ -87,7 +95,6 @@ class Browser extends Component<BrowserProps, {}> {
             : [];
 
         const thisWindowOpenTabs = [];
-
         windowsTabs.forEach( ( tabId ) => {
             const aTab = tabs[tabId];
 
@@ -141,13 +148,21 @@ class Browser extends Component<BrowserProps, {}> {
     render() {
         const { props } = this;
         const {
+            // history
+            history,
             // bookmarks
             bookmarks,
             addBookmark,
             removeBookmark,
             // tabs
             tabs,
-            updateTab,
+            updateTabUrl,
+            updateTabWebId,
+            toggleDevTools,
+            tabShouldReload,
+            updateTabTitle,
+            updateTabFavicon,
+            tabLoad,
             tabForwards,
             selectAddressBar,
             deselectAddressBar,
@@ -188,7 +203,6 @@ class Browser extends Component<BrowserProps, {}> {
             <div className={styles.container}>
                 <TabBar
                     key={1}
-                    updateTab={updateTab}
                     setActiveTab={setActiveTab}
                     selectAddressBar={selectAddressBar}
                     activeTabId={activeTabId}
@@ -207,6 +221,7 @@ class Browser extends Component<BrowserProps, {}> {
                     tabId={activeTabId}
                     onSelect={deselectAddressBar}
                     onFocus={selectAddressBar}
+                    updateTabUrl={updateTabUrl}
                     setActiveTab={setActiveTab}
                     onBlur={blurAddressBar}
                     addBookmark={addBookmark}
@@ -220,7 +235,7 @@ class Browser extends Component<BrowserProps, {}> {
                     isSelected={activeTabAddressIsSelected}
                     tabBackwards={tabBackwards}
                     tabForwards={tabForwards}
-                    updateTab={updateTab}
+                    tabShouldReload={tabShouldReload}
                     windowId={windowId}
                     focusWebview={focusWebview}
                     ref={( c ) => {
@@ -238,10 +253,17 @@ class Browser extends Component<BrowserProps, {}> {
                     addNotification={addNotification}
                     activeTabId={activeTabId}
                     activeTab={activeTab}
-                    updateTab={updateTab}
+                    updateTabUrl={updateTabUrl}
+                    updateTabWebId={updateTabWebId}
+                    toggleDevTools={toggleDevTools}
+                    tabShouldReload={tabShouldReload}
+                    updateTabTitle={updateTabTitle}
+                    updateTabFavicon={updateTabFavicon}
+                    tabLoad={tabLoad}
                     setActiveTab={setActiveTab}
                     tabs={openTabs}
                     allTabs={tabs}
+                    history={history}
                     bookmarks={bookmarks}
                     windowId={windowId}
                     safeExperimentsEnabled={experimentsEnabled}

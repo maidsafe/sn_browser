@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
-import { Page, PageHeader, H1 } from 'nessie-ui';
-import { UrlList } from '$Components/UrlList';
+import { logger } from '$Logger';
+import { Page, PageHeader, H1, TableRow, TableCell, Table } from 'nessie-ui';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
 
 interface HistoryProps {
-    history: Array<any>;
+    history: Record<string, any>;
     isActiveTab: boolean;
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
@@ -28,39 +28,73 @@ export class History extends Component<HistoryProps, {}> {
 
     render() {
         const { history, isActiveTab, windowId, addTabEnd } = this.props;
-        let historyList = [];
-        const historyArray = [];
-        // eslint-disable-next-line array-callback-return
-        Object.keys( history ).map( function( key ) {
-            historyArray.push( history[key] );
-        } );
-        historyArray.forEach( ( tab, i ) => {
-            if ( tab.history ) {
-                tab.history.forEach( ( tabsHistory ) => {
-                    const historyItem = tabsHistory;
-                    historyList.push( historyItem );
-                } );
-            }
-        } );
         const ignoreProtocolList = ['safe-auth:'];
         const ignoreList = [
             'about:blank',
             'safe-browser://history',
             'safe-browser://bookmarks'
         ];
-        // TODO: uniq by object props, so will be less harsh once we have title etc.
-        historyList = _.uniq( historyList );
-        historyList = historyList.filter( ( url ) => {
-            const urlObj = parse( url );
-            if (
-                ignoreList.includes( url ) ||
-        ignoreProtocolList.includes( urlObj.protocol )
-            ) {
-                return false;
+        const dates = Object.keys( history );
+        let list = [];
+        const parsedList = [];
+        /* eslint-disable array-callback-return */
+        dates.map( ( date ) => {
+            list = [...history[date]];
+            list = _.uniq( list );
+            list = list.filter( ( listObj ) => {
+                const { url } = listObj;
+                const urlObj = parse( url );
+                if (
+                    ignoreList.includes( url ) ||
+          ignoreProtocolList.includes( urlObj.protocol )
+                ) {
+                    return false;
+                }
+                return urlIsValid( url );
+            } );
+
+            if ( list.length >= 1 ) {
+                const dateHeader = (
+                    <TableRow align="left" verticalAlign="middle" gutters="S" key={date}>
+                        <TableCell className={styles.date}>
+                            <h1>{date}</h1>
+                        </TableCell>
+                    </TableRow>
+                );
+                parsedList.push( dateHeader );
+                list.map( ( item ) => {
+                    const handleClick = ( event ) => {
+                        // required to prevent the app navigating by default.
+                        event.preventDefault();
+                        const tabId = Math.random().toString( 36 );
+                        addTabEnd( {
+                            url: item.url,
+                            tabId,
+                            windowId
+                        } );
+                    };
+                    const listItem = (
+                        <TableRow
+                            align="left"
+                            verticalAlign="middle"
+                            gutters="S"
+                            key={Math.random().toString( 10 )}
+                        >
+                            <TableCell className={styles.item}>
+                                <span className={styles.timeStamp}>{item.timeStamp}</span>
+                                <a onClick={handleClick} href={item.url} className={styles.url}>
+                                    {item.url}
+                                </a>
+                            </TableCell>
+                        </TableRow>
+                    );
+                    parsedList.push( listItem );
+                } );
             }
-            return urlIsValid( url );
         } );
+        /* eslint-enable array-callback-return */
         let moddedClass = styles.tab;
+
         if ( isActiveTab ) {
             moddedClass = styles.activeTab;
         }
@@ -74,12 +108,15 @@ export class History extends Component<HistoryProps, {}> {
                         <PageHeader>
                             <H1 title="History" />
                         </PageHeader>
-                        <UrlList
-                            list={historyList}
-                            addTabEnd={addTabEnd}
-                            windowId={windowId}
-                        />
                     </Page>
+                    <Table className={styles.table}>
+                        {parsedList}
+                        {!parsedList.length && (
+                            <TableRow>
+                                <TableCell>Nothing to see here yet.</TableCell>
+                            </TableRow>
+                        )}
+                    </Table>
                 </div>
             </div>
         );

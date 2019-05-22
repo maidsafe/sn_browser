@@ -14,6 +14,7 @@ function mapStateToProps( state ) {
         bookmarks: state.bookmarks,
         notifications: state.notifications,
         tabs: state.tabs,
+        history: state.history,
         windows: state.windows,
         windowId,
         safeBrowserApp: state.safeBrowserApp

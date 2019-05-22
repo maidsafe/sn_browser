@@ -2,7 +2,13 @@ import { createActions } from 'redux-actions';
 
 export const TYPES = {
     ADD_TAB: 'ADD_TAB',
-    UPDATE_TAB: 'UPDATE_TAB',
+    UPDATE_TAB_URL: 'UPDATE_TAB_URL',
+    UPDATE_TAB_WEBID: 'UPDATE_TAB_WEBID',
+    TOGGLE_DEV_TOOLS: 'TOGGLE_DEV_TOOLS',
+    TAB_SHOULD_RELOAD: 'TAB_SHOULD_RELOAD',
+    UPDATE_TAB_TITLE: 'UPDATE_TAB_TITLE',
+    UPDATE_TAB_FAVICON: 'UPDATE_TAB_FAVICON',
+    TAB_LOAD: 'TAB_LOAD',
     TAB_FORWARDS: 'TAB_FORWARDS',
     TAB_BACKWARDS: 'TAB_BACKWARDS',
     FOCUS_WEBVIEW: 'FOCUS_WEBVIEW',
@@ -14,7 +20,13 @@ export const TYPES = {
 
 export const {
     addTab,
-    updateTab,
+    updateTabUrl,
+    updateTabWebId,
+    toggleDevTools,
+    tabShouldReload,
+    updateTabTitle,
+    updateTabFavicon,
+    tabLoad,
     tabForwards,
     tabBackwards,
     focusWebview,
@@ -24,7 +36,13 @@ export const {
     tabsResetStore
 } = createActions(
     TYPES.ADD_TAB,
-    TYPES.UPDATE_TAB,
+    TYPES.UPDATE_TAB_URL,
+    TYPES.UPDATE_TAB_WEBID,
+    TYPES.TOGGLE_DEV_TOOLS,
+    TYPES.TAB_SHOULD_RELOAD,
+    TYPES.UPDATE_TAB_TITLE,
+    TYPES.UPDATE_TAB_FAVICON,
+    TYPES.TAB_LOAD,
     TYPES.TAB_FORWARDS,
     TYPES.TAB_BACKWARDS,
     TYPES.FOCUS_WEBVIEW,

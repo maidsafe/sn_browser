@@ -5,9 +5,7 @@
     width: 100%;
     padding-top: 3px;
     padding-bottom: 3px;
-    display:            flex;
-    flex:  none;
-    align-content: center;
+    display: block;
     box-sizing: border-box;
     border-right: 0;
     overflow: auto;
@@ -29,3 +27,36 @@
 {
     composes: activeTab from '../../Tab/tab.css';
 }
+
+.table
+{
+    max-width: 800px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    align-content: center;
+    box-sizing: border-box;
+    border-right: 0;
+    margin: 0 auto;
+
+}
+
+.date
+{
+    margin: 0 auto;
+}
+
+.item
+{
+    display: inline;
+}
+
+.url
+{
+    padding-left: 15px;
+}
+
+.timeStamp
+{
+    opacity: 0.5;
+}
+

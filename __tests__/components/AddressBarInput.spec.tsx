@@ -36,6 +36,7 @@ describe( 'AddressBarInput', () => {
             tabId,
             isBookmarked: false,
             experimentsEnabled: false,
+            updateTabUrl: jest.fn(),
             addBookmark: jest.fn(),
             removeBookmark: jest.fn(),
             tabBackwards: jest.fn(),
@@ -127,13 +128,13 @@ describe( 'AddressBarInput', () => {
         it( 'check on onKeyPress if updateTab is called', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateTab ).toHaveBeenCalled();
+            expect( props.updateTabUrl ).toHaveBeenCalled();
         } );
 
         it( 'check on onKeyPress if updateTab is called with params', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            expect( props.updateTab ).toHaveBeenCalledWith( {
+            expect( props.updateTabUrl ).toHaveBeenCalledWith( {
                 url: 'about:blank',
                 tabId
             } );

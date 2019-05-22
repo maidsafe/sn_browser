@@ -23,6 +23,7 @@ interface AddressBarProps {
     windowId: number;
     addBookmark: ( ...args: Array<any> ) => any;
     isBookmarked: boolean;
+    updateTabUrl: ( ...args: Array<any> ) => any;
     addTabNext: ( ...args: Array<any> ) => any;
     addTabEnd: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
@@ -32,7 +33,7 @@ interface AddressBarProps {
     isSelected: boolean;
     tabBackwards: ( ...args: Array<any> ) => any;
     tabForwards: ( ...args: Array<any> ) => any;
-    updateTab: ( ...args: Array<any> ) => any;
+    tabShouldReload: ( ...args: Array<any> ) => any;
     focusWebview: ( ...args: Array<any> ) => any;
     setActiveTab: ( ...args: Array<any> ) => any;
 }
@@ -57,8 +58,8 @@ export class AddressBar extends Component<AddressBarProps, {}> {
     handleRefresh = ( event ) => {
     // TODO: if cmd or so clicked, hard.
         event.stopPropagation();
-        const { updateTab, tabId } = this.props;
-        updateTab( { tabId, shouldReload: true } );
+        const { tabShouldReload, tabId } = this.props;
+        tabShouldReload( { tabId, shouldReload: true } );
     };
 
     getSettingsMenuItems = () => {
@@ -99,12 +100,12 @@ export class AddressBar extends Component<AddressBarProps, {}> {
             address,
             addTabEnd,
             addTabNext,
+            updateTabUrl,
             addBookmark,
             removeBookmark,
             isBookmarked,
             activeTab,
             tabId,
-            updateTab,
             settingsMenuIsVisible,
             showSettingsMenu,
             hideSettingsMenu,
@@ -129,7 +130,6 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                         <ButtonsLHS
                             addTabEnd={addTabEnd}
                             activeTab={activeTab}
-                            updateTab={updateTab}
                             handleBack={this.handleBack}
                             canGoForwards={canGoForwards}
                             canGoBackwards={canGoBackwards}

@@ -13,13 +13,48 @@ describe( 'tab actions', () => {
         };
         expect( actions.addTab( payload ) ).toEqual( expectedAction );
     } );
-    it( 'should create an action to updateTab', () => {
+    it( 'should create an action to updateTabUrl', () => {
         const payload = { url: 'hi', tabId: Math.random().toString( 36 ) };
         const expectedAction = {
-            type: actions.TYPES.UPDATE_TAB,
+            type: actions.TYPES.UPDATE_TAB_URL,
             payload
         };
-        expect( actions.updateTab( payload ) ).toEqual( expectedAction );
+        expect( actions.updateTabUrl( payload ) ).toEqual( expectedAction );
+    } );
+    it( 'should create an action to updateTabTitle', () => {
+        const payload = { title: 'hi', tabId: Math.random().toString( 36 ) };
+        const expectedAction = {
+            type: actions.TYPES.UPDATE_TAB_TITLE,
+            payload
+        };
+        expect( actions.updateTabTitle( payload ) ).toEqual( expectedAction );
+    } );
+    it( 'should create an action to tabShouldReload', () => {
+        const payload = { shouldReload: true, tabId: Math.random().toString( 36 ) };
+        const expectedAction = {
+            type: actions.TYPES.TAB_SHOULD_RELOAD,
+            payload
+        };
+        expect( actions.tabShouldReload( payload ) ).toEqual( expectedAction );
+    } );
+    it( 'should create an action to toggleDevTools', () => {
+        const payload = {
+            shouldToggleDevTools: true,
+            tabId: Math.random().toString( 36 )
+        };
+        const expectedAction = {
+            type: actions.TYPES.TOGGLE_DEV_TOOLS,
+            payload
+        };
+        expect( actions.toggleDevTools( payload ) ).toEqual( expectedAction );
+    } );
+    it( 'should create an action to tabLoad', () => {
+        const payload = { isLoading: true, tabId: Math.random().toString( 36 ) };
+        const expectedAction = {
+            type: actions.TYPES.TAB_LOAD,
+            payload
+        };
+        expect( actions.tabLoad( payload ) ).toEqual( expectedAction );
     } );
     it( 'should set addressbar selected', () => {
         const payload = { tabId: Math.random().toString( 36 ) };
