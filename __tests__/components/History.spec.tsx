@@ -2,8 +2,9 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import { History } from '$Components/PerusePages/History';
-import { UrlList } from '$Components/UrlList';
 import { CLASSES } from '$Constants';
+
+const date = new Date().toLocaleDateString();
 
 jest.mock( 'extensions', () => ( {
     urlIsValid: () => true
@@ -16,8 +17,9 @@ describe( 'History Component', () => {
 
     beforeEach( () => {
         props = {
-            tabs: [],
-            addTab: jest.fn()
+            tabs: {},
+            addTab: jest.fn(),
+            addTabEnd: jest.fn()
         };
 
         wrapper = shallow( <History {...props} /> );
@@ -34,24 +36,20 @@ describe( 'History Component', () => {
         beforeEach( () => {
             props = {
                 ...props,
-                history: [
-                    {
-                        url: 'safe://hello',
-                        isActiveTab: true,
-                        windowId: 1,
-                        history: ['safe://hello']
-                    }
-                ]
+                history: {
+                    [date]: [
+                        {
+                            url: 'safe://hello',
+                            timeStamp: new Date().toLocaleTimeString()
+                        }
+                    ]
+                }
             };
             wrapper = shallow( <History {...props} /> );
         } );
 
         it( 'should have a safeBrowser__page class', () => {
             expect( wrapper.find( `.${CLASSES.SAFE_BROWSER_PAGE}` ).length ).toBe( 1 );
-        } );
-
-        it( 'should have one url list', () => {
-            expect( wrapper.find( UrlList ).length ).toBe( 1 );
         } );
 
         it( 'should have one link', () => {
@@ -64,44 +62,40 @@ describe( 'History Component', () => {
         beforeEach( () => {
             props = {
                 ...props,
-                history: [
-                    {
-                        url: 'safe-auth://lalala',
-                        isActiveTab: true,
-                        windowId: 1,
-                        history: [
-                            'safe-auth://lalala',
-                            'safe://somethingreal',
-                            'about:blank',
-                            'safe-browser://history',
-                            'safe-browser://bookmarks'
-                        ]
-                    }
-                ]
+                history: {
+                    [date]: [
+                        {
+                            url: 'safe-auth://lalala',
+                            timeStamp: new Date().toLocaleTimeString()
+                        },
+                        {
+                            url: 'safe://somethingreal',
+                            timeStamp: new Date().toLocaleTimeString()
+                        },
+                        {
+                            url: 'about:blank',
+                            timeStamp: new Date().toLocaleTimeString()
+                        },
+                        {
+                            url: 'safe-browser://history',
+                            timeStamp: new Date().toLocaleTimeString()
+                        },
+                        {
+                            url: 'safe-browser://bookmarks',
+                            timeStamp: new Date().toLocaleTimeString()
+                        }
+                    ]
+                }
             };
             wrapper = shallow( <History {...props} /> );
         } );
-
-        it( 'should have one url list', () => {
-            expect( wrapper.find( UrlList ).length ).toBe( 1 );
-        } );
-
+        wrapper = mount( <History {...props} /> );
         it( 'should have one link', () => {
-            wrapper = mount( <History {...props} /> );
             expect( wrapper.find( 'a' ).length ).toBe( 1 );
         } );
 
         it( 'should have one link with text', () => {
-            wrapper = mount( <History {...props} /> );
             expect( wrapper.find( 'a' ).text() ).toBe( 'safe://somethingreal' );
-        } );
-    } );
-
-    describe( 'props', () => {
-        describe( 'tabs', () => {
-            it( 'tabs length should be "0" by default', () => {
-                expect( instance.props.tabs.length ).toBe( 0 );
-            } );
         } );
     } );
 } );

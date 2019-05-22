@@ -30,7 +30,7 @@ interface WebIdDropdownProps {
     };
     addTabEnd: Function;
     getAvailableWebIds: Function;
-    updateTab: Function;
+    updateTabWebId: Function;
     showWebIdDropdown: Function;
     windowId: number;
 }
@@ -55,10 +55,15 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
     }
 
     handleIdClick = ( webId ) => {
-        const { updateTab, windowId, showWebIdDropdown, activeTab } = this.props;
+        const {
+            updateTabWebId,
+            windowId,
+            showWebIdDropdown,
+            activeTab
+        } = this.props;
         const { tabId } = activeTab;
         // also if only 1 webID? mark as defualt?
-        updateTab( { tabId, webId } );
+        updateTabWebId( { tabId, webId } );
     };
 
     handleIdButtonClick = () => {

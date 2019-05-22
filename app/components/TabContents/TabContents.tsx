@@ -25,8 +25,15 @@ export class TabContents extends Component<{}, {}> {
             activeTabId,
             setActiveTab,
             activeTab,
+            history,
             addNotification,
-            updateTab,
+            updateTabUrl,
+            updateTabWebId,
+            toggleDevTools,
+            tabShouldReload,
+            updateTabTitle,
+            updateTabFavicon,
+            tabLoad,
             tabs,
             allTabs,
             bookmarks,
@@ -57,7 +64,7 @@ export class TabContents extends Component<{}, {}> {
                         return (
                             <History
                                 addTabEnd={addTabEnd}
-                                history={allTabs}
+                                history={history}
                                 key={tab.tabId}
                                 isActiveTab={isActiveTab}
                                 windowId={windowId}
@@ -103,7 +110,13 @@ export class TabContents extends Component<{}, {}> {
                     url={tab.url}
                     isActiveTab={isActiveTab}
                     closeTab={closeTab}
-                    updateTab={updateTab}
+                    updateTabUrl={updateTabUrl}
+                    updateTabWebId={updateTabWebId}
+                    toggleDevTools={toggleDevTools}
+                    tabShouldReload={tabShouldReload}
+                    updateTabTitle={updateTabTitle}
+                    updateTabFavicon={updateTabFavicon}
+                    tabLoad={tabLoad}
                     addTabNext={addTabNext}
                     addTabEnd={addTabEnd}
                     setActiveTab={setActiveTab}
