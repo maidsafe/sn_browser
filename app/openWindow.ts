@@ -11,7 +11,7 @@ import {
     isRunningDebug,
     testCafeURL
 } from '$Constants';
-import { addTab, updateTab, selectAddressBar } from './actions/tabs_actions';
+import { addTab, selectAddressBar } from './actions/tabs_actions';
 import {
     windowCloseTab,
     addTabEnd,

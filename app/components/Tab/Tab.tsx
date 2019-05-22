@@ -22,7 +22,13 @@ interface TabProps {
     url: string;
     isActiveTab: boolean;
     closeTab: ( ...args: Array<any> ) => any;
-    updateTab: ( ...args: Array<any> ) => any;
+    updateTabUrl: ( ...args: Array<any> ) => any;
+    updateTabWebId: ( ...args: Array<any> ) => any;
+    toggleDevTools: ( ...args: Array<any> ) => any;
+    tabShouldReload: ( ...args: Array<any> ) => any;
+    updateTabTitle: ( ...args: Array<any> ) => any;
+    updateTabFavicon: ( ...args: Array<any> ) => any;
+    tabLoad: ( ...args: Array<any> ) => any;
     addTabNext: ( ...args: Array<any> ) => any;
     addTabEnd: ( ...args: Array<any> ) => any;
     setActiveTab: ( ...args: Array<any> ) => any;
@@ -252,7 +258,8 @@ export class Tab extends Component<TabProps, TabState> {
             focusWebview,
             isActiveTab,
             url,
-            updateTab,
+            tabShouldReload,
+            toggleDevTools,
             tabId,
             shouldToggleDevTools,
             shouldReload
@@ -299,7 +306,7 @@ export class Tab extends Component<TabProps, TabState> {
                 tabId,
                 shouldReload: false
             };
-            updateTab( tabUpdate );
+            tabShouldReload( tabUpdate );
         }
         if ( !shouldToggleDevTools && nextProperties.shouldToggleDevTools ) {
             if ( this.isDevToolsOpened() ) {
@@ -312,7 +319,7 @@ export class Tab extends Component<TabProps, TabState> {
                 tabId,
                 shouldToggleDevTools: false
             };
-            updateTab( tabUpdate );
+            toggleDevTools( tabUpdate );
         }
     }
 
@@ -364,12 +371,12 @@ export class Tab extends Component<TabProps, TabState> {
 
     didStartLoading() {
         logger.info( 'webview started loading' );
-        const { updateTab, tabId } = this.props;
+        const { tabLoad, tabId } = this.props;
         const tabUpdate = {
             tabId,
             isLoading: true
         };
-        updateTab( tabUpdate );
+        tabLoad( tabUpdate );
         this.updateBrowserState( { loading: true } );
         window.addEventListener( 'focus', () => {
             this.with( ( webview, webContents ) => {
@@ -443,26 +450,26 @@ export class Tab extends Component<TabProps, TabState> {
                 closeTab( { tabId, windowId } );
                 // add a fresh tab (should be only if no more tabs present)
                 const newTabId = Math.random().toString( 36 );
-                addTabEnd( { tabId, url: 'about:blank', windowId } );
+                addTabEnd( { tabId: newTabId, url: 'about:blank', windowId } );
             }
         }
     }
 
     didStopLoading() {
         logger.info( 'Tab did stop loading' );
-        const { updateTab, tabId } = this.props;
+        const { tabLoad, tabId } = this.props;
         const tabUpdate = {
             tabId,
             isLoading: false
         };
         this.updateBrowserState( { loading: false } );
-        updateTab( tabUpdate );
+        tabLoad( tabUpdate );
         this.addWindowIdToTab();
         this.setCurrentWebId( null );
     }
 
     didFinishLoading() {
-        const { updateTab, tabId, url } = this.props;
+        const { tabLoad, tabId, url } = this.props;
         logger.info( 'Tab did finish loading' );
         const tabUpdate = {
             tabId,
@@ -472,7 +479,7 @@ export class Tab extends Component<TabProps, TabState> {
             tabUpdate.title = '';
         }
         this.updateBrowserState( { loading: false } );
-        updateTab( tabUpdate );
+        tabLoad( tabUpdate );
         this.addWindowIdToTab();
         this.setCurrentWebId( null );
     }
@@ -492,39 +499,39 @@ export class Tab extends Component<TabProps, TabState> {
     pageTitleUpdated( e ) {
         logger.info( 'Webview: page title updated' );
         const { title } = e;
-        const { updateTab, tabId } = this.props;
+        const { updateTabTitle, tabId } = this.props;
         const tabUpdate = {
             title,
             tabId
         };
-        updateTab( tabUpdate );
+        updateTabTitle( tabUpdate );
     }
 
     pageFaviconUpdated( e ) {
         logger.info( 'Webview: page favicon updated: ', e );
-        const { updateTab, tabId } = this.props;
+        const { updateTabTitle, tabId } = this.props;
         const tabUpdate = {
             tabId,
             favicon: e.favicons[0]
         };
-        updateTab( tabUpdate );
+        updateTabTitle( tabUpdate );
     }
 
     didNavigate( e ) {
-        const { updateTab, tabId } = this.props;
+        const { updateTabUrl, tabId } = this.props;
         const { url } = e;
         logger.info( 'webview did navigate' );
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
             this.updateBrowserState( { url, redirects: [url] } );
-            updateTab( { tabId, url } );
+            updateTabUrl( { tabId, url } );
             this.addWindowIdToTab();
             this.setCurrentWebId( null );
         }
     }
 
     didNavigateInPage( e ) {
-        const { updateTab, tabId } = this.props;
+        const { updateTabUrl, tabId } = this.props;
         const { url } = e;
         logger.info(
             'Webview: did navigate in page',
@@ -535,7 +542,7 @@ export class Tab extends Component<TabProps, TabState> {
         if ( !this.state.browserState.redirects.includes( url ) ) {
             if ( urlHasChanged( url, this.state.browserState.url ) ) {
                 this.updateBrowserState( { url, redirects: [url] } );
-                updateTab( { tabId, url } );
+                updateTabUrl( { tabId, url } );
                 this.addWindowIdToTab();
                 this.setCurrentWebId( null );
             }
@@ -574,9 +581,9 @@ export class Tab extends Component<TabProps, TabState> {
         this.lastNavigationUrl = url;
         this.lastNavigationTimeStamp = e.timeStamp;
         const { tabId } = this.props;
-        this.props.updateTab( { tabId, url } );
+        this.props.updateTabUrl( { tabId, url } );
         if ( this.props.isActiveTab ) {
-            this.props.updateTab( { tabId, url } );
+            this.props.updateTabUrl( { tabId, url } );
         }
     }
 

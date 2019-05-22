@@ -80,13 +80,13 @@ describe( 'tabs reducer', () => {
         } );
     } );
 
-    describe( 'UPDATE_TAB', () => {
+    describe( 'UPDATE_TAB_URL', () => {
         it( 'should throw if no tabId is passed', () => {
             try {
                 const state = { [tabId]: { ...basicTab }, [tabId1]: { ...basicTab } };
                 const newState = tabs( state, {
-                    type: TYPES.UPDATE_TAB,
-                    payload: { url: 'changed!', title: 'hi' }
+                    type: TYPES.UPDATE_TAB_URL,
+                    payload: { url: 'changed!' }
                 } );
             } catch ( e ) {
                 expect( e.message ).toMatch( /tabId/ );
@@ -100,8 +100,8 @@ describe( 'tabs reducer', () => {
             };
 
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
-                payload: { url: 'changed!', title: 'hi', tabId }
+                type: TYPES.UPDATE_TAB_URL,
+                payload: { url: 'changed!', tabId }
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -111,7 +111,6 @@ describe( 'tabs reducer', () => {
             expect( newState[tabId] ).toMatchObject( {
                 ...basicTab,
                 url: 'changed!',
-                title: 'hi',
                 historyIndex: 1,
                 history: ['hello', 'changed!']
             } );
@@ -125,9 +124,10 @@ describe( 'tabs reducer', () => {
                 [tabId]: { ...basicTab },
                 [tabId1]: { ...basicTab, tabId: tabId1 }
             };
+
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
-                payload: { url: 'changed!', title: 'hi', tabId: tabId1 }
+                type: TYPES.UPDATE_TAB_URL,
+                payload: { url: 'changed!', tabId: tabId1 }
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -138,7 +138,6 @@ describe( 'tabs reducer', () => {
                 ...basicTab,
                 tabId: tabId1,
                 url: 'changed!',
-                title: 'hi',
                 historyIndex: 1,
                 history: ['hello', 'changed!']
             } );
@@ -153,8 +152,8 @@ describe( 'tabs reducer', () => {
                 [tabId1]: { ...basicTab, tabId: tabId1 }
             };
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
-                payload: { url: 'changed!', title: 'hi', tabId }
+                type: TYPES.UPDATE_TAB_URL,
+                payload: { url: 'changed!', tabId }
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -169,9 +168,10 @@ describe( 'tabs reducer', () => {
                 [tabId]: { ...basicTab },
                 [tabId1]: { ...basicTab, tabId: tabId1 }
             };
+
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
-                payload: { url: 'changed!', title: 'hi', tabId: tabId1 }
+                type: TYPES.UPDATE_TAB_URL,
+                payload: { url: 'changed!', tabId: tabId1 }
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -181,8 +181,8 @@ describe( 'tabs reducer', () => {
             const secondState = tabs(
                 { ...newState },
                 {
-                    type: TYPES.UPDATE_TAB,
-                    payload: { url: 'changed!', title: 'hi', tabId: tabId1 }
+                    type: TYPES.UPDATE_TAB_URL,
+                    payload: { url: 'changed!', tabId: tabId1 }
                 }
             );
 
@@ -193,8 +193,8 @@ describe( 'tabs reducer', () => {
             const thirdState = tabs(
                 { ...secondState },
                 {
-                    type: TYPES.UPDATE_TAB,
-                    payload: { url: 'changed#woooo', title: 'hi', tabId: tabId1 }
+                    type: TYPES.UPDATE_TAB_URL,
+                    payload: { url: 'changed#woooo', tabId: tabId1 }
                 }
             );
 
@@ -205,8 +205,8 @@ describe( 'tabs reducer', () => {
             const fourthState = tabs(
                 { ...thirdState },
                 {
-                    type: TYPES.UPDATE_TAB,
-                    payload: { url: 'changed#woooo', title: 'hi', tabId: tabId1 }
+                    type: TYPES.UPDATE_TAB_URL,
+                    payload: { url: 'changed#woooo', tabId: tabId1 }
                 }
             );
 
@@ -218,7 +218,6 @@ describe( 'tabs reducer', () => {
                 ...basicTab,
                 tabId: tabId1,
                 url: 'changed!',
-                title: 'hi',
                 historyIndex: 1,
                 history: ['hello', 'changed!']
             } );
@@ -227,20 +226,21 @@ describe( 'tabs reducer', () => {
                 ...basicTab,
                 tabId: tabId1,
                 url: 'changed#woooo',
-                title: 'hi',
                 historyIndex: 2,
                 history: ['hello', 'changed!', 'changed#woooo']
             } );
 
             expect( fourthState[tabId1].history.length ).toBe( 3 );
         } );
+
         it( 'should update the tab specified in the payload', () => {
             const state = {
                 [tabId]: { ...basicTab },
                 [tabId1]: { ...basicTab, tabId: tabId1 }
             };
+
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
+                type: TYPES.UPDATE_TAB_URL,
                 payload: { url: 'changedagain!', title: 'hi', tabId }
             } );
 
@@ -250,7 +250,6 @@ describe( 'tabs reducer', () => {
             expect( updatedTab ).toMatchObject( {
                 ...basicTab,
                 url: 'changedagain!',
-                title: 'hi',
                 historyIndex: 1,
                 history: ['hello', 'changedagain!']
             } );
@@ -267,8 +266,8 @@ describe( 'tabs reducer', () => {
             };
 
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
-                payload: { url: 'hello/newurl', title: 'hi', tabId }
+                type: TYPES.UPDATE_TAB_URL,
+                payload: { url: 'hello/newurl', tabId }
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -276,8 +275,8 @@ describe( 'tabs reducer', () => {
             expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
 
             const secondState = tabs( newState, {
-                type: TYPES.UPDATE_TAB,
-                payload: { url: 'hello/newurl2', title: 'hi', tabId }
+                type: TYPES.UPDATE_TAB_URL,
+                payload: { url: 'hello/newurl2', tabId }
             } );
 
             expect( secondState ).not.toStrictEqual( newState );
@@ -288,7 +287,6 @@ describe( 'tabs reducer', () => {
             expect( updatedTab ).toMatchObject( {
                 ...basicTab,
                 url: 'hello/newurl2',
-                title: 'hi',
                 historyIndex: 2,
                 history: ['hello', 'hello/newurl', 'hello/newurl2']
             } );
@@ -296,6 +294,98 @@ describe( 'tabs reducer', () => {
             expect( updatedTab ).toHaveProperty( 'history' );
             expect( updatedTab.historyIndex ).toBe( 2 );
             expect( updatedTab.history ).toHaveLength( 3 );
+        } );
+    } );
+
+    describe( 'UPDATE_TAB_TITLE', () => {
+        it( "should update the tab's properties", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.UPDATE_TAB_TITLE,
+                payload: { title: 'hi', tabId }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).not.toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
+
+            expect( newState[tabId] ).toMatchObject( {
+                ...basicTab,
+                title: 'hi'
+            } );
+        } );
+    } );
+
+    describe( 'TOGGLE_DEV_TOOLS', () => {
+        it( "should update the tab's properties", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.TOGGLE_DEV_TOOLS,
+                payload: { shouldToggleDevTools: true, tabId }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).not.toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
+
+            expect( newState[tabId] ).toMatchObject( {
+                ...basicTab,
+                shouldToggleDevTools: true
+            } );
+        } );
+    } );
+
+    describe( 'TAB_SHOULD_RELOAD', () => {
+        it( "should update the tab's properties", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.TAB_SHOULD_RELOAD,
+                payload: { shouldReload: true, tabId }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).not.toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
+
+            expect( newState[tabId] ).toMatchObject( {
+                ...basicTab,
+                shouldReload: true
+            } );
+        } );
+    } );
+
+    describe( 'TAB_LOAD', () => {
+        it( "should update the tab's properties", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.TAB_LOAD,
+                payload: { isLoading: true, tabId }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).not.toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
+
+            expect( newState[tabId] ).toMatchObject( {
+                ...basicTab,
+                isLoading: true
+            } );
         } );
     } );
 
@@ -434,7 +524,7 @@ describe( 'tabs reducer', () => {
 
             const state = { [tabId]: { ...basicTab }, [tabId1]: { ...activeTab } };
             const newState = tabs( state, {
-                type: TYPES.UPDATE_TAB,
+                type: TYPES.UPDATE_TAB_URL,
                 payload: { url: 'hello/newurl', title: 'hi', tabId: tabId1 }
             } );
 
@@ -443,7 +533,7 @@ describe( 'tabs reducer', () => {
             expect( newState[tabId1] ).not.toStrictEqual( state[tabId1] );
 
             const secondState = tabs( newState, {
-                type: TYPES.UPDATE_TAB,
+                type: TYPES.UPDATE_TAB_URL,
                 payload: { url: 'hello/newurl2', title: 'hi', tabId: tabId1 }
             } );
 
@@ -569,7 +659,7 @@ describe( 'tabs reducer', () => {
             expect( updatedTabAgain.history ).toHaveLength( 5 );
 
             const thirdUpdate = tabs( secondUpdate, {
-                type: TYPES.UPDATE_TAB,
+                type: TYPES.UPDATE_TAB_URL,
                 payload: {
                     url: 'new url overwriting previous history array',
                     tabId: tabId1

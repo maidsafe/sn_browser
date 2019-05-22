@@ -5,7 +5,8 @@ import {
     addTab,
     tabForwards,
     tabBackwards,
-    updateTab,
+    tabShouldReload,
+    toggleDevTools,
     selectAddressBar
 } from '$Actions/tabs_actions';
 import { resetStore } from '$Actions/resetStore_action';
@@ -336,7 +337,9 @@ export class MenuBuilder {
                             const windowId = win.id;
                             const tabId = store.getState().windows.openWindows[windowId]
                                 .activeTab;
-                            this.store.dispatch( updateTab( { tabId, shouldReload: true } ) );
+                            this.store.dispatch(
+                                tabShouldReload( { tabId, shouldReload: true } )
+                            );
                         }
                     }
                 },
@@ -359,7 +362,9 @@ export class MenuBuilder {
                             const windowId = win.id;
                             const tabId = store.getState().windows.openWindows[windowId]
                                 .activeTab;
-                            store.dispatch( updateTab( { tabId, shouldToggleDevTools: true } ) );
+                            store.dispatch(
+                                toggleDevTools( { tabId, shouldToggleDevTools: true } )
+                            );
                         }
                     }
                 }
