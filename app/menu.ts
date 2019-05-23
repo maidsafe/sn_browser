@@ -329,7 +329,8 @@ export class MenuBuilder {
                 { type: 'separator' },
                 {
                     label: 'Reload',
-                    accelerator: 'CommandOrControl+R',
+                    accelerator:
+            process.platform === 'darwin' ? 'CommandOrControl+R' : 'F5',
                     click: ( item, win ) => {
                         if ( win ) {
                             const windowId = win.id;
