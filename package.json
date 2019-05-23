@@ -253,7 +253,7 @@
     "css-loader": "^2.1.0",
     "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz",
     "devtron": "^1.4.0",
-    "electron": "4.1.4",
+    "electron": "5.0.1",
     "electron-builder": "20.40.2",
     "electron-devtools-installer": "^2.2.4",
     "electron-window-state": "^5.0.3",
