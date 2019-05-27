@@ -11014,10 +11014,10 @@ neo-async@^2.5.0, neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-nessie-ui@6.4.7:
-  version "6.4.7"
-  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-6.4.7.tgz#e94bfbd4a43b2e3f7715d8c2b29f9eb0d4a36112"
-  integrity sha512-fU4yXiST+UCBRgy+Gsz/Ai+vrE03pyR2wczpFYeGMSG6NtM7J7qE7qz2c9aJEdJLk1VkRxRONvB4uTBuhZzFpA==
+nessie-ui@7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-7.0.4.tgz#9b2327d68ecf1f887bc8bb1eb7d18bf342376b96"
+  integrity sha512-djME3jjauhaxPqHZT2BFYOgi2ZAma7sGR8J+I+1JCED9LVgszpQORddqNz+U1euJ2VlDDgyKFYaeVpD3/wf2Ig==
 
 new-github-issue-url@^0.2.0:
   version "0.2.1"
