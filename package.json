@@ -164,6 +164,12 @@
       "target": [
         "nsis",
         "zip"
+      ],
+      "extraFiles": [
+        {
+          "from": "resources/crust.config",
+          "to": "${productName}.crust.config"
+        }
       ]
     },
     "linux": {
@@ -171,7 +177,13 @@
         "AppImage",
         "zip"
       ],
-      "category": "Development"
+      "category": "Development",
+      "extraFiles": [
+        {
+          "from": "resources/crust.config",
+          "to": "${name}.crust.config"
+        }
+      ]
     },
     "target": [
        "dmg",
