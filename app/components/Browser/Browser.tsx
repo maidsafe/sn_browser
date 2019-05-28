@@ -9,6 +9,7 @@ import { wrapBrowserComponent } from '$Extensions/components';
 import { isEqual } from 'lodash';
 import styles from './browser.css';
 import { handleNotifications, Notification } from '$Utils/handleNotificiations';
+// import { logger } from '$App/__mocks__/logger';
 
 interface BrowserProps {
     bookmarks?: Array<any>;
@@ -90,8 +91,9 @@ class Browser extends Component<BrowserProps, {}> {
 
         // only show the first notification without a response.
         // TODO: Move windowId from state to store.
-        const windowsTabs = windows.openWindows[windowId]
-            ? windows.openWindows[windowId].tabs
+        const currentWindow = windows.openWindows[windowId] ? windows.openWindows[windowId] : {};
+        const windowsTabs = currentWindow &&
+            currentWindow.tabs ? currentWindow.tabs
             : [];
 
         const thisWindowOpenTabs = [];
@@ -103,8 +105,8 @@ class Browser extends Component<BrowserProps, {}> {
             thisWindowOpenTabs.push( tabs[tabId] );
         } );
 
-        const activeTabId = windows.openWindows[windowId]
-            ? windows.openWindows[windowId].activeTab
+        const activeTabId = currentWindow &&
+            currentWindow.activeTab ? currentWindow.activeTab
             : undefined;
 
         const activeTab = activeTabId !== undefined ? tabs[activeTabId] : undefined;
@@ -122,8 +124,10 @@ class Browser extends Component<BrowserProps, {}> {
       activeTabId && tabs[activeTabId]
           ? tabs[activeTabId].ui.shouldFocusWebview
           : false;
-        const { settingsMenuIsVisible } = windows.openWindows[windowId]
-            ? windows.openWindows[windowId].ui
+        const  settingsMenuIsVisible = currentWindow
+            && currentWindow.ui
+            && currentWindow.ui.settingsMenuIsVisible
+            ? currentWindow.settingsMenuIsVisible
             : false;
 
         return {
@@ -278,7 +282,8 @@ class Browser extends Component<BrowserProps, {}> {
 
     handleCloseBrowserTab = ( tab ) => {
         const { windows, windowCloseTab, windowId } = this.props;
-        const openTabIds = windows.openWindows[windowId].tabs;
+        const currentWindow = windows.openWindows[windowId] ? windows.openWindows[windowId] : {};
+        const openTabIds = currentWindow.tabs;
         if ( openTabIds.length === 1 ) {
             ipcRenderer.send( 'command:close-window' );
         } else {
