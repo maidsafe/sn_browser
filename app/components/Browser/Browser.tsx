@@ -9,6 +9,7 @@ import { wrapBrowserComponent } from '$Extensions/components';
 import { isEqual } from 'lodash';
 import styles from './browser.css';
 import { handleNotifications, Notification } from '$Utils/handleNotificiations';
+// import { logger } from '$App/__mocks__/logger';
 
 interface BrowserProps {
     bookmarks?: Array<any>;
