@@ -445,7 +445,8 @@ export class Tab extends Component<TabProps, TabState> {
 
             // check its the same link incase of double click
             if ( this.state.browserState.canGoBack && !urlHasChanged( errorUrl, url ) ) {
-                tabBackwards( { tabId, windowId } );
+                const timeStamp = new Date().getTime();
+                tabBackwards( { tabId, windowId, timeStamp } );
             } else if ( !this.state.browserState.canGoBack ) {
                 closeTab( { tabId, windowId } );
                 // add a fresh tab (should be only if no more tabs present)
@@ -509,12 +510,12 @@ export class Tab extends Component<TabProps, TabState> {
 
     pageFaviconUpdated( e ) {
         logger.info( 'Webview: page favicon updated: ', e );
-        const { updateTabTitle, tabId } = this.props;
+        const { updateTabFavicon, tabId } = this.props;
         const tabUpdate = {
             tabId,
             favicon: e.favicons[0]
         };
-        updateTabTitle( tabUpdate );
+        updateTabFavicon( tabUpdate );
     }
 
     didNavigate( e ) {
@@ -524,7 +525,8 @@ export class Tab extends Component<TabProps, TabState> {
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
             this.updateBrowserState( { url, redirects: [url] } );
-            updateTabUrl( { tabId, url } );
+            const timeStamp = new Date().getTime();
+            updateTabUrl( { tabId, url, timeStamp } );
             this.addWindowIdToTab();
             this.setCurrentWebId( null );
         }
@@ -542,7 +544,8 @@ export class Tab extends Component<TabProps, TabState> {
         if ( !this.state.browserState.redirects.includes( url ) ) {
             if ( urlHasChanged( url, this.state.browserState.url ) ) {
                 this.updateBrowserState( { url, redirects: [url] } );
-                updateTabUrl( { tabId, url } );
+                const timeStamp = new Date().getTime();
+                updateTabUrl( { tabId, url, timeStamp } );
                 this.addWindowIdToTab();
                 this.setCurrentWebId( null );
             }
@@ -581,9 +584,10 @@ export class Tab extends Component<TabProps, TabState> {
         this.lastNavigationUrl = url;
         this.lastNavigationTimeStamp = e.timeStamp;
         const { tabId } = this.props;
-        this.props.updateTabUrl( { tabId, url } );
+        const timeStamp = new Date().getTime();
+        this.props.updateTabUrl( { tabId, url, timeStamp } );
         if ( this.props.isActiveTab ) {
-            this.props.updateTabUrl( { tabId, url } );
+            this.props.updateTabUrl( { tabId, url, timeStamp } );
         }
     }
 

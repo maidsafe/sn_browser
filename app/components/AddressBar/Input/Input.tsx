@@ -102,7 +102,8 @@ AddressBarInputState
             return;
         }
         const input = event.target.value;
-        this.props.updateTabUrl( { tabId, url: input } );
+        const timeStamp = new Date().getTime();
+        this.props.updateTabUrl( { tabId, url: input, timeStamp } );
     }
 
     handleClick = () => {
