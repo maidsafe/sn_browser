@@ -9,10 +9,12 @@ const date = new Date().toLocaleDateString();
 describe( 'history reducer', () => {
     it( 'add an initial url', () => {
         const state = {};
+        const timeStamp = new Date().getTime();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
-                url: 'another-url'
+                url: 'another-url',
+                timeStamp
             }
         } );
 
@@ -21,7 +23,7 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-url',
-                    timeStamp: new Date().toLocaleTimeString()
+                    timeStamp
                 }
             ]
         } );
@@ -31,14 +33,16 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-url',
-                    timeStamp: '2:20:28 PM'
+                    timeStamp: 1559635003845
                 }
             ]
         };
+        const timeStamp = new Date().getTime();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
-                url: 'another-another-url'
+                url: 'another-another-url',
+                timeStamp
             }
         } );
 
@@ -47,37 +51,51 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: new Date().toLocaleTimeString()
+                    timeStamp
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: '2:20:28 PM'
+                    timeStamp: 1559635003845
                 }
             ]
         } );
     } );
 
-    it( 'state should be the same if the same url is passed', () => {
+    it( 'state should have the new timeStamp if the same url is passed', () => {
         const state = {
             [date]: [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: new Date().toLocaleTimeString()
+                    timeStamp: 1559635306833
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: '2:20:28 PM'
+                    timeStamp: 1559635306845
                 }
             ]
         };
+        const timeStamp = new Date().getTime();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
-                url: 'another-another-url'
+                url: 'another-another-url',
+                timeStamp
             }
         } );
 
-        expect( newState ).toStrictEqual( state );
+        expect( newState ).not.toStrictEqual( state );
+        expect( newState ).toEqual( {
+            [date]: [
+                {
+                    url: 'safe://another-another-url',
+                    timeStamp
+                },
+                {
+                    url: 'safe://another-url',
+                    timeStamp: 1559635306845
+                }
+            ]
+        } );
     } );
 
     it( 'add pass a different url with a different date', () => {
@@ -85,25 +103,27 @@ describe( 'history reducer', () => {
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: '4:45:69 PM'
+                    timeStamp: 1559635306845
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: '2:20:28 PM'
+                    timeStamp: 1559635322845
                 }
             ],
             [date]: [
                 {
                     url: 'safe://hello',
-                    timeStamp: '2:25:29 PM'
+                    timeStamp: 1559635306858
                 }
             ]
         };
 
+        const timeStamp = new Date().getTime();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
-                url: 'helloAgain'
+                url: 'helloAgain',
+                timeStamp
             }
         } );
 
@@ -112,21 +132,21 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://helloAgain',
-                    timeStamp: new Date().toLocaleTimeString()
+                    timeStamp
                 },
                 {
                     url: 'safe://hello',
-                    timeStamp: '2:25:29 PM'
+                    timeStamp: 1559635306858
                 }
             ],
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: '4:45:69 PM'
+                    timeStamp: 1559635306845
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: '2:20:28 PM'
+                    timeStamp: 1559635322845
                 }
             ]
         } );
@@ -137,21 +157,21 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://helloAgain',
-                    timeStamp: new Date().toLocaleTimeString()
+                    timeStamp: 1559635322225
                 },
                 {
                     url: 'safe://hello',
-                    timeStamp: '2:25:29 PM'
+                    timeStamp: 1559635322845
                 }
             ],
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: '4:45:69 PM'
+                    timeStamp: 1469635322845
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: '2:20:28 PM'
+                    timeStamp: 1239635322845
                 }
             ]
         };
