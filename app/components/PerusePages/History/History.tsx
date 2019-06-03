@@ -37,8 +37,7 @@ export class History extends Component<HistoryProps, {}> {
         const dates = Object.keys( history );
         let list = [];
         const parsedList = [];
-        /* eslint-disable array-callback-return */
-        dates.map( ( date ) => {
+        dates.forEach( ( date ) => {
             list = [...history[date]];
             list = _.uniq( list );
             list = list.filter( ( listObj ) => {
@@ -62,7 +61,14 @@ export class History extends Component<HistoryProps, {}> {
                     </TableRow>
                 );
                 parsedList.push( dateHeader );
-                list.map( ( item ) => {
+                list.forEach( ( item ) => {
+                    const timeStamp = new Date( item.timeStamp );
+                    let Hours = timeStamp.getUTCHours();
+                    Hours = `0${Hours}`.slice( -2 );
+                    let Mins = timeStamp.getUTCMinutes();
+                    Mins = `0${Mins}`.slice( -2 );
+                    const amOrPm = Hours <= 12 ? 'AM' : 'PM';
+                    const newTimeStamp = `${Hours}:${Mins}\t${amOrPm}`;
                     const handleClick = ( event ) => {
                         // required to prevent the app navigating by default.
                         event.preventDefault();
@@ -81,7 +87,7 @@ export class History extends Component<HistoryProps, {}> {
                             key={Math.random().toString( 10 )}
                         >
                             <TableCell className={styles.item}>
-                                <span className={styles.timeStamp}>{item.timeStamp}</span>
+                                <span className={styles.timeStamp}>{newTimeStamp}</span>
                                 <a onClick={handleClick} href={item.url} className={styles.url}>
                                     {item.url}
                                 </a>
@@ -92,7 +98,6 @@ export class History extends Component<HistoryProps, {}> {
                 } );
             }
         } );
-        /* eslint-enable array-callback-return */
         let moddedClass = styles.tab;
 
         if ( isActiveTab ) {

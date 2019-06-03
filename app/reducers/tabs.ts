@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { remote, webContents } from 'electron';
 import { TYPES } from '$Actions/tabs_actions';
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
@@ -144,7 +143,7 @@ const updateTabUrl = ( state, payload ) => {
 const updateTabWebId = ( state, payload ) => {
     const { tabId, tabToMerge } = handleTabPayload( state, payload );
     if ( tabId === undefined && tabToMerge === undefined ) {
-        logger.error( 'tab  Does not exist' );
+        logger.error( 'Tab does not exist' );
         return state;
     }
     if ( payload.webId ) {

@@ -408,10 +408,11 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl + ]',
                     click: ( item, win ) => {
                         const windowId = win.id;
+                        const timeStamp = new Date().getTime();
                         const tabId = store.getState().windows.openWindows[windowId]
                             .activeTab;
                         if ( win ) {
-                            store.dispatch( tabForwards( { tabId } ) );
+                            store.dispatch( tabForwards( { tabId, timeStamp } ) );
                         }
                     }
                 },
@@ -420,10 +421,11 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl + [',
                     click: ( item, win ) => {
                         const windowId = win.id;
+                        const timeStamp = new Date().getTime();
                         const tabId = store.getState().windows.openWindows[windowId]
                             .activeTab;
                         if ( win ) {
-                            store.dispatch( tabBackwards( { tabId } ) );
+                            store.dispatch( tabBackwards( { tabId, timeStamp } ) );
                         }
                     }
                 }

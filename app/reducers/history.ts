@@ -6,11 +6,12 @@ import { logger } from '$Logger';
 const initialState = initialAppState.history;
 
 const updateHistory = ( state, payload ) => {
-    if ( payload.url ) {
+    if ( payload.url || payload.timeStamp ) {
         const historyState = { ...state };
         const date = new Date().toLocaleDateString();
+        const { timeStamp } = payload;
         const url = makeValidAddressBarUrl( payload.url );
-        const timeStamp = new Date().toLocaleTimeString();
+
         const updateDate = {
             url,
             timeStamp
@@ -20,13 +21,14 @@ const updateHistory = ( state, payload ) => {
       historyState[date] !== undefined
         ) {
             const latestUrl = historyState[date][0].url;
+            const updateState = [...historyState[date]];
             if ( latestUrl !== url ) {
-                const updateState = [...historyState[date]];
                 updateState.unshift( updateDate );
-                const newState = { ...state, [date]: [...updateState] };
-                return newState;
+            } else {
+                updateState.splice( 0, 1, updateDate );
             }
-            return state;
+            const newState = { ...state, [date]: [...updateState] };
+            return newState;
         }
         const newState = { [date]: [{ ...updateDate }], ...state };
         return newState;

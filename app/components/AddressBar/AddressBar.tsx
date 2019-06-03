@@ -47,12 +47,14 @@ export class AddressBar extends Component<AddressBarProps, {}> {
 
     handleBack = () => {
         const { tabBackwards, tabId } = this.props;
-        tabBackwards( { tabId } );
+        const timeStamp = new Date().getTime();
+        tabBackwards( { tabId, timeStamp } );
     };
 
     handleForward = () => {
         const { tabForwards, tabId } = this.props;
-        tabForwards( { tabId } );
+        const timeStamp = new Date().getTime();
+        tabForwards( { tabId, timeStamp } );
     };
 
     handleRefresh = ( event ) => {
