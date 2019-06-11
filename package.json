@@ -254,7 +254,7 @@
     "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz",
     "devtron": "^1.4.0",
     "electron": "4.1.4",
-    "electron-builder": "20.41.0",
+    "electron-builder": "20.43.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-window-state": "^5.0.3",
     "enzyme": "^3.7.0",
