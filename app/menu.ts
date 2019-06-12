@@ -1,6 +1,6 @@
 import open from 'open';
 import { Store } from 'redux';
-import { app, Menu, ipcMain } from 'electron';
+import { app, Menu } from 'electron';
 import {
     addTab,
     tabForwards,
@@ -11,6 +11,9 @@ import {
 } from '$Actions/tabs_actions';
 import { resetStore } from '$Actions/resetStore_action';
 import { isHot, isRunningTestCafeProcess, isRunningPackaged } from '$Constants';
+import { AppUpdater } from './autoUpdate';
+import { addNotification } from '$Actions/notification_actions';
+import { autoUpdater } from 'electron-updater';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
@@ -491,6 +494,38 @@ export class MenuBuilder {
             ]
         };
 
+        const helpMenuPacked = {
+            label: '&Help',
+            submenu: [
+                ...subMenuHelp.submenu,
+                {
+                    label: 'Check for Updates...',
+                    click() {
+                        logger.info( 'Checking for updates' );
+                        autoUpdater.autoDownload = false;
+                        autoUpdater.on( 'update-not-available', () => {
+                            const title = 'No Updates';
+                            const notificationId = Math.random().toString( 36 );
+                            const message = 'Current version is up-to-date.';
+                            const theNotification = {
+                                id: notificationId,
+                                type: 'warning',
+                                title,
+                                body: message,
+                                duration: 2
+                            };
+                            console.log( 'addNotification' );
+                            console.log( 'theNotification', theNotification );
+                            store.dispatch( addNotification( theNotification ) );
+                            autoUpdater.removeAllListeners( 'update-not-available' );
+                        } );
+                        // eslint-disable-next-line no-new
+                        new AppUpdater( store );
+                    }
+                }
+            ]
+        };
+
         const subMenuTest = {
             label: '&Tests',
             submenu: [
@@ -566,6 +601,7 @@ export class MenuBuilder {
             subMenuHistory,
             subMenuWindow,
             subMenuHelp,
+            ...( isRunningPackaged ? [helpMenuPacked] : [subMenuHelp] ),
             ...( isRunningTestCafeProcess ? [subMenuTest] : [] )
         ];
 

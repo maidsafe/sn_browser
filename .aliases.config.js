@@ -8,6 +8,7 @@ module.exports = {
     $Logger: './app/logger.ts',
     $Components: './app/components',
     $Constants: './app/constants.ts',
+    $BuilderConfig: './builderConfig.js',
     $Package: './package.json',
     $Utils: './app/utils',
     $TestCafeHelpers: './__testcafe__/helpers.js',

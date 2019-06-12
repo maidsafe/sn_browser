@@ -14,7 +14,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import { enforceMacOSAppLocation } from 'electron-util';
-import { autoUpdater } from 'electron-updater';
+import buildConfig from '$BuilderConfig';
 
 import { app, protocol, ipcMain, BrowserWindow } from 'electron';
 import { logger } from '$Logger';
@@ -32,8 +32,8 @@ import {
 import pkg from '$Package';
 import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
 
-import { setupBackground } from './setupBackground';
 import log from 'electron-log';
+import { setupBackground } from './setupBackground';
 
 import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
@@ -43,20 +43,7 @@ import {
     onAppReady
 } from '$Extensions/main-process-extensions';
 
-/* eslint-disable-next-line import/no-default-export */
-export default class AppUpdater {
-    public constructor() {
-        log.transports.file.level = 'info';
-        autoUpdater.logger = log;
-
-        try {
-            autoUpdater.checkForUpdatesAndNotify();
-        } catch ( error ) {
-            logger.error( 'Problems with auto updating...' );
-            logger.error( error );
-        }
-    }
-}
+import { AppUpdater } from './autoUpdate';
 
 const initialState = {};
 const store = configureStore( initialState );
@@ -87,7 +74,9 @@ if ( process.argv.includes( '--preload' ) ) {
     }
 }
 
-protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
+protocol.registerStandardSchemes( buildConfig.protocols.schemes, {
+    secure: true
+} );
 
 if ( isRunningPackaged ) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
@@ -170,8 +159,10 @@ app.on( 'ready', async () => {
 
     mainWindow = openWindow( store );
 
+    if ( app.whenReady() ) {
     // eslint-disable-next-line no-new
-    new AppUpdater();
+        new AppUpdater( store );
+    }
 } );
 
 app.on( 'open-url', ( e, url ) => {

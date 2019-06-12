@@ -1,17 +1,18 @@
 import pkg from '$Package';
+import buildConfig from '$BuilderConfig';
 import { CONFIG } from '$Constants';
 import url from 'url';
 import { logger } from '$Logger';
 
-export const isForSafeServer = parsedUrlObject =>
+export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
-export const urlIsAllowedBySafe = testUrl => {
+export const urlIsAllowedBySafe = ( testUrl ) => {
     logger.info( 'Checking urlIsAllowedBySafe', testUrl );
     const urlObject = url.parse( testUrl );
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
-    const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
+    const validProtocols = buildConfig.protocols.schemes || ['http'];
+    const adaptedProtocols = validProtocols.map( ( proto ) => `${proto}:` );
 
     if ( testUrl === 'about:blank' ) return true;
 
@@ -49,12 +50,12 @@ export const generateBoundaryStr = () => {
     return text;
 };
 
-export const rangeStringToArray = rangeString => {
+export const rangeStringToArray = ( rangeString ) => {
     const BYTES = 'bytes=';
     return rangeString
         .substring( BYTES.length, rangeString.length )
         .split( ',' )
-        .map( part => {
+        .map( ( part ) => {
             const partObject = {};
             part.split( '-' ).forEach( ( int, i ) => {
                 if ( i === 0 ) {
@@ -75,13 +76,13 @@ export const rangeStringToArray = rangeString => {
         } );
 };
 
-export const generateResponseStr = data => {
+export const generateResponseStr = ( data ) => {
     const boundaryString = generateBoundaryStr();
     const crlf = '\r\n';
     let responseString = `HTTP/1.1 206 Partial Content${crlf}`;
     responseString += `Content-Type: multipart/byteranges; boundary=${boundaryString}${crlf}`;
     responseString += `Content-Length:${data.headers['Content-Length']}${crlf}`;
-    data.parts.forEach( part => {
+    data.parts.forEach( ( part ) => {
         responseString += `--${boundaryString}${crlf}`;
         responseString += `Content-Type:${part.headers['Content-Type']}${crlf}`;
         responseString += `Content-Range: ${part.headers['Content-Range']}${crlf}`;

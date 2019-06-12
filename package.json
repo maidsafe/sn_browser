@@ -27,7 +27,7 @@
     "prepush": "yarn test",
     "prelint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,ts,tsx,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "prerelease": "standard-version --prerelease rc",
-    "package": "yarn build && electron-builder build --publish never && yarn post-pack",
+    "package": "yarn build && electron-builder build --config ./builderConfig.js --publish never && yarn post-pack",
     "post-pack": "node ./post-pack.js",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -85,122 +85,6 @@
     ]
   },
   "main": "./app/main.prod.js",
-  "build": {
-    "productName": "SAFE Browser",
-    "files": [
-      "app/dist/",
-      "locales",
-      "app/locales",
-      "app/app.html",
-      "app/bg.html",
-      "app/background.prod.js",
-      "app/background.prod.js.map",
-      "app/webPreload.prod.js",
-      "app/webPreload.prod.js.map",
-      "app/main.prod.js",
-      "app/main.prod.js.map",
-      "package.json"
-    ],
-    "extraFiles": [],
-    "extraResources": [
-      {
-        "from": "resources/log.toml",
-        "to": "log.toml"
-      },
-      {
-        "from": "resources/favicon.ico",
-        "to": "favicon.ico"
-      },
-      {
-        "from": "resources/PreloadDevVault",
-        "to": "PreloadDevVault"
-      },
-      {
-        "from": "resources/locales",
-        "to": "locales"
-      },
-      {
-        "from": "resources/crust.config",
-        "to": "${productName}.crust.config"
-      },
-      {
-        "from": "app/extensions/safe/dist",
-        "to": "extensions/safe/dist"
-      },
-      {
-        "from": "app/extensions/safe/iconfont",
-        "to": "extensions/safe/iconfont"
-      },
-      {
-        "from": "app/extensions/safe/auth-web-app/dist",
-        "to": "extensions/safe/auth-web-app/dist"
-      },
-      {
-        "from": "node_modules/nessie-ui/dist/styles.css",
-        "to": "nessie-styles.css"
-      }
-    ],
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "protocols": {
-      "name": "SAFE Network URL",
-      "schemes": [
-        "safe",
-        "safe-auth"
-      ]
-    },
-    "win": {
-      "target": [
-        "nsis",
-        "zip"
-      ],
-      "extraFiles": [
-        {
-          "from": "resources/crust.config",
-          "to": "${productName}.crust.config"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "zip"
-      ],
-      "category": "Development",
-      "extraFiles": [
-        {
-          "from": "resources/crust.config",
-          "to": "${name}.crust.config"
-        }
-      ]
-    },
-    "target": [
-       "dmg",
-       "pkg",
-       "zip"
-   ],
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    },
-      "publish": {
-      "provider": "github",
-      "owner": "joshuef",
-      "repo": "safe_browser"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maidsafe/safe_browser"
