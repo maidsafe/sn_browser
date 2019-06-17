@@ -264,6 +264,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId,
                         tabs: [tabId]
                     }
                 },
@@ -291,6 +292,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId,
                         tabs: [tabId, tabId1]
                     }
                 },
@@ -307,6 +309,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId1,
                         tabs: [tabId, tabId1]
                     },
                     [secondWindowId]: {
@@ -342,6 +345,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId1,
                         tabs: [tabId, tabId1]
                     },
                     [secondWindowId]: {
@@ -366,6 +370,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId1,
                         tabs: [tabId, tabId1]
                     },
                     [secondWindowId]: {
@@ -401,6 +406,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId1,
                         tabs: [tabId, tabId1, tabId3]
                     },
                     [secondWindowId]: {

@@ -67,7 +67,6 @@ const addTabEnd = ( state, tab ) => {
 
     const newWindow = {
         ...openWindows[targetWindow],
-        activeTab: null,
         ui: {
             settingsMenuIsVisible: false
         },
