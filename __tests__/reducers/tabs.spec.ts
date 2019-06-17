@@ -297,6 +297,108 @@ describe( 'tabs reducer', () => {
         } );
     } );
 
+    describe( 'UPDATE_TAB_WEB_ID', () => {
+        it( "should update the tab's properties", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.UPDATE_TAB_WEB_ID,
+                payload: {
+                    tabId,
+                    webId: {
+                        '#me': {
+                            '@id': 'safe://something.its#me',
+                            '@type': 'http://xmlns.com/foaf/0.1/Person',
+                            inbox: {
+                                '@id':
+                  'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                            },
+                            name: 'Its Something',
+                            nick: 'Its Something'
+                        },
+                        '@id': 'safe://its.something',
+                        '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
+                    }
+                }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).not.toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
+            const updatedTab = newState[tabId];
+            expect( updatedTab ).toMatchObject( {
+                ...basicTab,
+                webId: {
+                    '#me': {
+                        '@id': 'safe://something.its#me',
+                        '@type': 'http://xmlns.com/foaf/0.1/Person',
+                        inbox: {
+                            '@id':
+                'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                        },
+                        name: 'Its Something',
+                        nick: 'Its Something'
+                    },
+                    '@id': 'safe://its.something',
+                    '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
+                }
+            } );
+        } );
+        it( "should update another tab's properties", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.UPDATE_TAB_WEB_ID,
+                payload: {
+                    tabId: tabId1,
+                    webId: {
+                        '#me': {
+                            '@id': 'safe://something.another#me',
+                            '@type': 'http://xmlns.com/foaf/0.1/Person',
+                            inbox: {
+                                '@id':
+                  'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                            },
+                            name: 'Another Something',
+                            nick: 'Another Something'
+                        },
+                        '@id': 'safe://another.something',
+                        '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
+                    }
+                }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).not.toStrictEqual( state[tabId1] );
+            const updatedTab = newState[tabId1];
+            expect( updatedTab ).toMatchObject( {
+                ...basicTab,
+                tabId: tabId1,
+                webId: {
+                    '#me': {
+                        '@id': 'safe://something.another#me',
+                        '@type': 'http://xmlns.com/foaf/0.1/Person',
+                        inbox: {
+                            '@id':
+                'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                        },
+                        name: 'Another Something',
+                        nick: 'Another Something'
+                    },
+                    '@id': 'safe://another.something',
+                    '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
+                }
+            } );
+        } );
+    } );
+
     describe( 'UPDATE_TAB_TITLE', () => {
         it( "should update the tab's properties", () => {
             const state = {
