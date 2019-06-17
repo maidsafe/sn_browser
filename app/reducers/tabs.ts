@@ -329,7 +329,7 @@ export function tabs( state: object = initialState, action ) {
         case TYPES.UPDATE_TAB_URL: {
             return updateTabUrl( state, payload );
         }
-        case TYPES.UPDATE_TAB_WEBID: {
+        case TYPES.UPDATE_TAB_WEB_ID: {
             return updateTabWebId( state, payload );
         }
         case TYPES.TOGGLE_DEV_TOOLS: {
