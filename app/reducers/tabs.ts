@@ -33,7 +33,7 @@ const addTab = ( state, tab ) => {
 
     const faviconPath = isRunningUnpacked
         ? '../resources/favicon.ico'
-        : '../favicon.ico';
+        : '../../favicon.ico';
 
     const newTab = {
         url: tabUrl,
