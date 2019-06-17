@@ -20,6 +20,7 @@ interface AddressBarProps {
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
     onBlur: ( ...args: Array<any> ) => any;
+    updateTabWebId: ( ...args: Array<any> ) => any;
     windowId: number;
     addBookmark: ( ...args: Array<any> ) => any;
     isBookmarked: boolean;
@@ -104,6 +105,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
             addTabNext,
             updateTabUrl,
             addBookmark,
+            updateTabWebId,
             removeBookmark,
             isBookmarked,
             activeTab,
@@ -132,6 +134,7 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                         <ButtonsLHS
                             addTabEnd={addTabEnd}
                             activeTab={activeTab}
+                            updateTabWebId={updateTabWebId}
                             handleBack={this.handleBack}
                             canGoForwards={canGoForwards}
                             canGoBackwards={canGoBackwards}

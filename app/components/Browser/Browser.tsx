@@ -90,9 +90,12 @@ class Browser extends Component<BrowserProps, {}> {
 
         // only show the first notification without a response.
         // TODO: Move windowId from state to store.
-        const windowsTabs = windows.openWindows[windowId]
-            ? windows.openWindows[windowId].tabs
-            : [];
+        const currentWindow = windows.openWindows[windowId]
+            ? windows.openWindows[windowId]
+            : {};
+
+        const windowsTabs =
+      currentWindow && currentWindow.tabs ? currentWindow.tabs : [];
 
         const thisWindowOpenTabs = [];
         windowsTabs.forEach( ( tabId ) => {
@@ -103,9 +106,10 @@ class Browser extends Component<BrowserProps, {}> {
             thisWindowOpenTabs.push( tabs[tabId] );
         } );
 
-        const activeTabId = windows.openWindows[windowId]
-            ? windows.openWindows[windowId].activeTab
-            : undefined;
+        const activeTabId =
+      currentWindow && currentWindow.activeTab
+          ? currentWindow.activeTab
+          : undefined;
 
         const activeTab = activeTabId !== undefined ? tabs[activeTabId] : undefined;
 
@@ -122,9 +126,13 @@ class Browser extends Component<BrowserProps, {}> {
       activeTabId && tabs[activeTabId]
           ? tabs[activeTabId].ui.shouldFocusWebview
           : false;
-        const { settingsMenuIsVisible } = windows.openWindows[windowId]
-            ? windows.openWindows[windowId].ui
-            : false;
+
+        const settingsMenuIsVisible =
+      currentWindow &&
+      currentWindow.ui &&
+      currentWindow.ui.settingsMenuIsVisible
+          ? currentWindow.ui.settingsMenuIsVisible
+          : false;
 
         return {
             activeTab,
@@ -225,6 +233,7 @@ class Browser extends Component<BrowserProps, {}> {
                     setActiveTab={setActiveTab}
                     onBlur={blurAddressBar}
                     addBookmark={addBookmark}
+                    updateTabWebId={updateTabWebId}
                     isBookmarked={activeTabIsBookmarked}
                     addTabNext={this.handleAddTabNext}
                     addTabEnd={this.handleAddTabEnd}
@@ -278,7 +287,10 @@ class Browser extends Component<BrowserProps, {}> {
 
     handleCloseBrowserTab = ( tab ) => {
         const { windows, windowCloseTab, windowId } = this.props;
-        const openTabIds = windows.openWindows[windowId].tabs;
+        const currentWindow = windows.openWindows[windowId]
+            ? windows.openWindows[windowId]
+            : {};
+        const openTabIds = currentWindow.tabs;
         if ( openTabIds.length === 1 ) {
             ipcRenderer.send( 'command:close-window' );
         } else {
