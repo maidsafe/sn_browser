@@ -120,7 +120,8 @@ export class Tab extends Component<TabProps, TabState> {
             append: ( params ) => [
                 {
                     label: 'Reload',
-                    accelerator: 'CommandOrControl+R',
+                    accelerator:
+            process.platform === 'darwin' ? 'CommandOrControl+R' : 'F5',
                     click() {
                         webview.reload();
                     }
