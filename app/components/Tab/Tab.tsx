@@ -627,12 +627,13 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
               var currentIdDefined = typeof window.currentWebId !== 'undefined';
               if( currentIdDefined )
               {
-                  oldWebId_Id = window.currentWebId['@id'];
+                oldWebId_Id = window.currentWebId["@id"];
               }
               window.currentWebId = ${JSON.stringify( theWebId )};
-
-              if( typeof webIdEventEmitter !== 'undefined' &&
-                  oldWebId_Id !== window.currentWebId['@id'] )
+              if( 
+                    typeof webIdEventEmitter !== 'undefined' &&
+                    window.currentWebId !== undefined &&
+                    oldWebId_Id !== window.currentWebId["@id"] )
                   {
                       webIdEventEmitter.emit('update', currentWebId );
                   }

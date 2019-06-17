@@ -86,15 +86,15 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
     };
 
     launchWebIdManager = () => {
-        const { addTabEnd, windowId } = this.props;
+        const { addTabEnd } = this.props;
         const tabId = Math.random().toString( 36 );
-        addTabEnd( { tabId, url: webIdManagerUri, isActiveTab: true, windowId } );
+        addTabEnd( { tabId, url: webIdManagerUri } );
     };
 
     launchAuthenticator = () => {
-        const { addTabEnd, windowId } = this.props;
+        const { addTabEnd } = this.props;
         const tabId = Math.random().toString( 36 );
-        addTabEnd( { tabId, url: authHomeUri, isActiveTab: true, windowId } );
+        addTabEnd( { tabId, url: authHomeUri } );
     };
 
     authorisePeruse = () => {
