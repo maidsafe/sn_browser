@@ -61,14 +61,7 @@ export class MenuBuilder {
         this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
             const { x, y } = properties;
 
-            Menu.buildFromTemplate( [
-                {
-                    label: 'Inspect element',
-                    click: () => {
-                        this.mainWindow.inspectElement( x, y );
-                    }
-                }
-            ] ).popup( this.mainWindow );
+            Menu.buildFromTemplate( [] ).popup( this.mainWindow );
         } );
     }
 

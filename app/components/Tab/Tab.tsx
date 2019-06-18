@@ -110,14 +110,25 @@ export class Tab extends Component<TabProps, TabState> {
 
     buildMenu = ( webview ) => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
-        const { addTabEnd, windowId } = this.props;
+        const { addTabEnd, windowId, toggleDevTools, tabId } = this.props;
         // require here to avoid jest/electron remote issues
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
         const contextMenu = require( 'electron-context-menu' );
 
         contextMenu( {
             window: webview,
-            append: ( params ) => [
+            append: ( e, params ) => [
+                {
+                    label: 'Inspect element',
+                    accelerator:
+            process.platform === 'darwin'
+                ? 'Alt+CommandOrControl+I'
+                : 'Control+Shift+I',
+                    click() {
+                        toggleDevTools( { tabId, shouldToggleDevTools: true } );
+                    }
+                },
+                { type: 'separator' },
                 {
                     label: 'Reload',
                     accelerator:
@@ -149,24 +160,15 @@ export class Tab extends Component<TabProps, TabState> {
                 },
                 // { type': seperator' },
                 {
-                    label: 'Cut',
-                    selector: 'cut:'
-                },
-                {
-                    label: 'Copy',
-                    selector: 'copy:'
-                },
-                {
-                    label: 'Paste',
-                    selector: 'paste:'
-                },
-                {
                     label: 'Select All',
                     selector: 'selectAll:'
                 },
-                { type: 'separator' },
                 {
-                    label: 'Open Link in New Tab.',
+                    type: 'separator',
+                    visible: !!( params.linkURL && params.linkURL.length > 0 )
+                },
+                {
+                    label: 'Open Link in New Tab',
                     visible: params.linkURL && params.linkURL.length > 0,
                     click() {
                         addTabEnd( {
@@ -177,8 +179,9 @@ export class Tab extends Component<TabProps, TabState> {
                     }
                 }
             ],
-            showCopyImageAddress: true,
-            showInspectElement: true
+            saveImage: false,
+            saveImageAs: false,
+            showCopyImageAddress: true
         } );
     };
 
