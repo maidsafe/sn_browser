@@ -172,7 +172,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
                     <a href="#">Authorise to display your WebIds.</a>
                 </li>
             );
-        } else if ( webIdsList.length > 0 ) {
+        } else if ( webIdsList !== undefined && webIdsList.length > 0 ) {
             webIdDropdownContents = webIdsList;
         } else {
             webIdDropdownContents.push(
