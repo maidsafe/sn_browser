@@ -119,6 +119,9 @@ export class History extends Component<HistoryProps, {}> {
                             <H1 title="History" />
                         </PageHeader>
                     </Page>
+                    <h6 className={`${styles.warning}`}>
+            *Note: Time displayed is in GMT format
+                    </h6>
                     <Table className={styles.table}>
                         {parsedList}
                         {!parsedList.length && (
