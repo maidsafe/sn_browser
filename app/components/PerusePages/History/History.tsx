@@ -65,9 +65,14 @@ export class History extends Component<HistoryProps, {}> {
                     const timeStamp = new Date( item.timeStamp );
                     let Hours = timeStamp.getUTCHours();
                     Hours = `0${Hours}`.slice( -2 );
+                    const checkAmOrPm = `0${Hours}`.slice( -2 );
+                    if ( Hours > 12 ) {
+                        Hours = parseInt( Hours, 10 );
+                        Hours -= 12;
+                    }
                     let Mins = timeStamp.getUTCMinutes();
                     Mins = `0${Mins}`.slice( -2 );
-                    const amOrPm = Hours <= 12 ? 'AM' : 'PM';
+                    const amOrPm = checkAmOrPm <= 12 ? 'AM' : 'PM';
                     const newTimeStamp = `${Hours}:${Mins}\t${amOrPm}`;
                     const handleClick = ( event ) => {
                         // required to prevent the app navigating by default.
