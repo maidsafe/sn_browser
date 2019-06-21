@@ -75,8 +75,14 @@ describe( 'notification reducer', () => {
     } );
 
     describe( 'UI_RESET_STORE', () => {
-        const bookmarksPostLogout = bookmarks( [{ url: 'i should not exist' }], {
-            type: TABS_TYPES.RESET_STORE
+        const state = [
+            { url: 'safe-auth://home/#/login' },
+            { url: 'i should not exist' },
+            { url: 'i should not exist  1' }
+        ];
+
+        const bookmarksPostLogout = bookmarks( state, {
+            type: TABS_TYPES.TABS_RESET_STORE
         } );
 
         it( 'should reset bookmarks to inital state', () => {
