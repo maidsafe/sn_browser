@@ -1,4 +1,5 @@
 import { history } from '$Reducers/history';
+import { TYPES } from '$Actions/history_actions';
 import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
 import { initialAppState } from '$Reducers/initialAppState';
 
@@ -147,6 +148,115 @@ describe( 'history reducer', () => {
                 {
                     url: 'safe://another-url',
                     timeStamp: 1559635322845
+                }
+            ]
+        } );
+    } );
+
+    it( 'should update History State', () => {
+        const state = {
+            [date]: [
+                {
+                    url: 'safe://helloAgain',
+                    timeStamp: 1559635322225
+                },
+                {
+                    url: 'safe://hello',
+                    timeStamp: 1559635322845
+                }
+            ],
+            '5/21/2019': [
+                {
+                    url: 'safe://another-another-url',
+                    timeStamp: 1469635322845
+                },
+                {
+                    url: 'safe://another-url',
+                    timeStamp: 1239635322845
+                }
+            ]
+        };
+
+        const newState = history( state, {
+            type: TYPES.UPDATE_HISTORY_STATE,
+            payload: {
+                history: {
+                    [date]: [
+                        { url: 'safe-auth://home/#/login', timeStamp: 1559635322450 },
+                        { url: 'safe://cat.ashi', timeStamp: 1559635322111 },
+                        { url: 'safe://home.dgeddes', timeStamp: 1559635322123 },
+                        { url: 'safe://eye.eye', timeStamp: 1559635322345 },
+                        { url: 'safe://safenetworkprimer', timeStamp: 1559635322456 },
+                        { url: 'safe://typer.game', timeStamp: 1559635322678 }
+                    ],
+                    '10/11/2019': [
+                        {
+                            url: 'safe://another-another-url',
+                            timeStamp: 1469635322567
+                        },
+                        {
+                            url: 'safe://another-url',
+                            timeStamp: 1239635322567
+                        }
+                    ]
+                }
+            }
+        } );
+
+        expect( newState ).not.toStrictEqual( state );
+        expect( newState ).toEqual( {
+            [date]: [
+                {
+                    url: 'safe://helloAgain',
+                    timeStamp: 1559635322225
+                },
+                {
+                    url: 'safe://hello',
+                    timeStamp: 1559635322845
+                },
+                {
+                    url: 'safe-auth://home/#/login',
+                    timeStamp: 1559635322450
+                },
+                {
+                    url: 'safe://cat.ashi',
+                    timeStamp: 1559635322111
+                },
+                {
+                    url: 'safe://home.dgeddes',
+                    timeStamp: 1559635322123
+                },
+                {
+                    url: 'safe://eye.eye',
+                    timeStamp: 1559635322345
+                },
+                {
+                    url: 'safe://safenetworkprimer',
+                    timeStamp: 1559635322456
+                },
+                {
+                    url: 'safe://typer.game',
+                    timeStamp: 1559635322678
+                }
+            ],
+            '5/21/2019': [
+                {
+                    url: 'safe://another-another-url',
+                    timeStamp: 1469635322845
+                },
+                {
+                    url: 'safe://another-url',
+                    timeStamp: 1239635322845
+                }
+            ],
+            '10/11/2019': [
+                {
+                    url: 'safe://another-another-url',
+                    timeStamp: 1469635322567
+                },
+                {
+                    url: 'safe://another-url',
+                    timeStamp: 1239635322567
                 }
             ]
         } );
