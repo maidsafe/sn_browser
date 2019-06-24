@@ -10,7 +10,7 @@ import {
     selectAddressBar
 } from '$Actions/tabs_actions';
 import { resetStore } from '$Actions/resetStore_action';
-import { isHot, isRunningTestCafeProcess } from '$Constants';
+import { isHot, isRunningTestCafeProcess, isRunningPackaged } from '$Constants';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
@@ -61,7 +61,14 @@ export class MenuBuilder {
         this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
             const { x, y } = properties;
 
-            Menu.buildFromTemplate( [] ).popup( this.mainWindow );
+            Menu.buildFromTemplate( [
+                {
+                    label: 'Inspect Element',
+                    click: () => {
+                        this.mainWindow.inspectElement( x, y );
+                    }
+                }
+            ] ).popup( this.mainWindow );
         } );
     }
 
