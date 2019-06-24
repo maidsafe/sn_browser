@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
@@ -63,17 +64,10 @@ export class History extends Component<HistoryProps, {}> {
                 parsedList.push( dateHeader );
                 list.forEach( ( item ) => {
                     const timeStamp = new Date( item.timeStamp );
-                    let Hours = timeStamp.getUTCHours();
-                    Hours = `0${Hours}`.slice( -2 );
-                    const checkAmOrPm = `0${Hours}`.slice( -2 );
-                    if ( Hours > 12 ) {
-                        Hours = parseInt( Hours, 10 );
-                        Hours -= 12;
-                    }
-                    let Mins = timeStamp.getUTCMinutes();
-                    Mins = `0${Mins}`.slice( -2 );
-                    const amOrPm = checkAmOrPm <= 12 ? 'AM' : 'PM';
-                    const newTimeStamp = `${Hours}:${Mins}\t${amOrPm}`;
+                    const newTimeStamp = moment
+                        .utc( timeStamp )
+                        .local()
+                        .format( 'LT' );
                     const handleClick = ( event ) => {
                         // required to prevent the app navigating by default.
                         event.preventDefault();
@@ -119,9 +113,6 @@ export class History extends Component<HistoryProps, {}> {
                             <H1 title="History" />
                         </PageHeader>
                     </Page>
-                    <h6 className={`${styles.warning}`}>
-            *Note: Time displayed is in GMT format
-                    </h6>
                     <Table className={styles.table}>
                         {parsedList}
                         {!parsedList.length && (
