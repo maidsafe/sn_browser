@@ -1,5 +1,6 @@
 import { initialAppState } from './initialAppState';
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
+import { TYPES } from '$Actions/history_actions';
 import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
 import { logger } from '$Logger';
 
@@ -36,6 +37,27 @@ const updateHistory = ( state, payload ) => {
     return state;
 };
 
+const updateHistoryState = ( state, payload ) => {
+    const networkHistoryState = { ...payload.history };
+    const historyState = { ...state };
+    const networkStateDates = Object.keys( networkHistoryState );
+    let updateState;
+    let newState = { ...state };
+
+    networkStateDates.forEach( ( date ) => {
+        if (
+            Object.keys( historyState ).length > 0 &&
+      historyState[date] !== undefined
+        ) {
+            updateState = [...historyState[date], ...networkHistoryState[date]];
+        } else {
+            updateState = [...networkHistoryState[date]];
+        }
+        newState = { ...newState, [date]: [...updateState] };
+    } );
+    return newState;
+};
+
 export function history( state: object = initialState, action ) {
     const { payload } = action;
 
@@ -49,6 +71,9 @@ export function history( state: object = initialState, action ) {
       TABS_TYPES.TAB_FORWARDS ||
       TABS_TYPES.TAB_BACKWARDS: {
             return updateHistory( state, payload );
+        }
+        case TYPES.UPDATE_HISTORY_STATE: {
+            return updateHistoryState( state, payload );
         }
         case TABS_TYPES.TABS_RESET_STORE: {
             const initial = initialState;
