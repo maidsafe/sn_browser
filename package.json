@@ -150,10 +150,7 @@
       "target": "dir"
     },
     "linux": {
-      "target": [
-        "dir",
-        "AppImage"
-      ]
+      "target": "dir"
     },
     "mac": {
       "target": "dir"
