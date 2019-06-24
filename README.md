@@ -85,6 +85,10 @@ The resulting packages are contained within the `releases` folder.
 
 A packaged application, built in a `NODE_ENV=dev`, can access either `prod` or `dev` networks. `prod` is the default, or alternatively you can open the application and pass a `--mock` flag to open and use a mock network.
 
+##### linux
+
+On Linux, the packaged application gets generated as a `Shared Library` file and hence cannot be run by double-clicking the executable. This is due to an issue with `electron-builder`( https://github.com/electron-userland/electron-builder/issues/3950 ). But the application can be run through the terminal. You can run the browser by running `./safe-browser`.
+
 ##### macOS
 
 On macOS, the application should be located in the 'Applications' for [security reasons](https://github.com/potionfactory/LetsMove/issues/56). By default the packaged application will prompt to move the application. To override this, you can pass `--ignoreAppLocation`:
