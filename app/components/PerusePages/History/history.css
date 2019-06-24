@@ -15,12 +15,6 @@
     min-height: auto; /* override nessie 100vh */
 }
 
-.warning {
-    text-align: right;
-    padding-right: 10px;
-    color: #a9a9a9;
-}
-
 .tab {
     /* stylelint-disable-next-line property-no-unknown  */
     composes: tab from '../../Tab/tab.css';
