@@ -54,6 +54,7 @@
     "test-exts-e2e-prod": "cross-env SPECTRON_TEST=true IS_PACKED=true BABEL_DISABLE_CACHE=1 node runE2ETests.js exts-e2e",
     "test-watch": "yarn test --watch",
     "cafe-e2e": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/*.spec.ts",
+    "reset": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/resetStore.spec.ts",
     "cafe-e2e-safe": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true TEST_CAFE_TEST_AUTH=true testcafe electron:. ./__testcafe__/safe/*.spec*",
     "cafe-e2e-live": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe-live electron:. ./__testcafe__/atest.spec.ts"
   },
