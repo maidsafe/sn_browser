@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
@@ -63,12 +64,10 @@ export class History extends Component<HistoryProps, {}> {
                 parsedList.push( dateHeader );
                 list.forEach( ( item ) => {
                     const timeStamp = new Date( item.timeStamp );
-                    let Hours = timeStamp.getUTCHours();
-                    Hours = `0${Hours}`.slice( -2 );
-                    let Mins = timeStamp.getUTCMinutes();
-                    Mins = `0${Mins}`.slice( -2 );
-                    const amOrPm = Hours <= 12 ? 'AM' : 'PM';
-                    const newTimeStamp = `${Hours}:${Mins}\t${amOrPm}`;
+                    const newTimeStamp = moment
+                        .utc( timeStamp )
+                        .local()
+                        .format( 'LT' );
                     const handleClick = ( event ) => {
                         // required to prevent the app navigating by default.
                         event.preventDefault();

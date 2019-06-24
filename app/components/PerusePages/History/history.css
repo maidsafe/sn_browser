@@ -1,35 +1,31 @@
 /* @import '../Tab/tab.css' */
 
-.container
-{
+.container {
     width: 100%;
     padding-top: 3px;
     padding-bottom: 3px;
     display: block;
     box-sizing: border-box;
     border-right: 0;
-    overflow: auto;
+    overflow-x: hidden;
 }
 
-.page
-{
+.page {
     background-color: #fff;
     min-height: auto; /* override nessie 100vh */
 }
 
-.tab
-{
+.tab {
+    /* stylelint-disable-next-line property-no-unknown  */
     composes: tab from '../../Tab/tab.css';
-
 }
 
-.activeTab
-{
+.activeTab {
+    /* stylelint-disable-next-line property-no-unknown  */
     composes: activeTab from '../../Tab/tab.css';
 }
 
-.table
-{
+.table {
     max-width: 800px;
     padding-top: 3px;
     padding-bottom: 3px;
@@ -37,26 +33,20 @@
     box-sizing: border-box;
     border-right: 0;
     margin: 0 auto;
-
 }
 
-.date
-{
+.date {
     margin: 0 auto;
 }
 
-.item
-{
+.item {
     display: inline;
 }
 
-.url
-{
+.url {
     padding-left: 15px;
 }
 
-.timeStamp
-{
+.timeStamp {
     opacity: 0.5;
 }
-
