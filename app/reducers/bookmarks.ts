@@ -31,7 +31,7 @@ const addBookmark = ( state, bookmark ) => {
  */
 const removeBookmark = ( state, payload ) => {
     const removalIndex = state.findIndex(
-        bookmark => bookmark.url === payload.url
+        ( bookmark ) => bookmark.url === payload.url
     );
     const updatedState = [...state];
 
@@ -96,7 +96,7 @@ export function bookmarks( state: Array<{}> = initialState, action ): Array<{}> 
 
             return _.uniqBy( newBookmarks, 'url' );
         }
-        case TABS_TYPES.RESET_STORE: {
+        case TABS_TYPES.TABS_RESET_STORE: {
             const initial = initialState;
             return [...initial];
         }
