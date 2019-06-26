@@ -188,6 +188,47 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
             authReqObj
         );
     };
+
+    passedStore.subscribe( async () => {
+        const state = passedStore.getState();
+        const calls = state.remoteCalls;
+
+        calls.forEach( ( theCall ) => {
+            if ( theCall === pendingCalls[theCall.id] ) {
+                return;
+            }
+
+            const callPromises = pendingCalls[theCall.id];
+
+            if ( !callPromises ) {
+                return;
+            }
+
+            if ( theCall.done && callPromises.resolve ) {
+                pendingCalls[theCall.id] = theCall;
+
+                let callbackArgs = theCall.response;
+
+                callbackArgs = [theCall.response];
+
+                callPromises.resolve( ...callbackArgs );
+
+                passedStore.dispatch( remoteCallActions.removeRemoteCall( theCall ) );
+            } else if ( theCall.error && callPromises.reject ) {
+                pendingCalls[theCall.id] = theCall;
+
+                logger.error(
+                    'remoteCall ',
+                    theCall.name,
+                    'was rejected with: ',
+                    theCall.error
+                );
+                callPromises.reject( new Error( theCall.error.message || theCall.error ) );
+                passedStore.dispatch( remoteCallActions.removeRemoteCall( theCall ) );
+                delete pendingCalls[theCall.id];
+            }
+        } );
+    } );
 };
 
 export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
@@ -296,47 +337,6 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
             reject: ( err ) => cb( err )
         };
     };
-
-    passedStore.subscribe( async () => {
-        const state = passedStore.getState();
-        const calls = state.remoteCalls;
-
-        calls.forEach( ( theCall ) => {
-            if ( theCall === pendingCalls[theCall.id] ) {
-                return;
-            }
-
-            const callPromises = pendingCalls[theCall.id];
-
-            if ( !callPromises ) {
-                return;
-            }
-
-            if ( theCall.done && callPromises.resolve ) {
-                pendingCalls[theCall.id] = theCall;
-
-                let callbackArgs = theCall.response;
-
-                callbackArgs = [theCall.response];
-
-                callPromises.resolve( ...callbackArgs );
-
-                passedStore.dispatch( remoteCallActions.removeRemoteCall( theCall ) );
-            } else if ( theCall.error && callPromises.reject ) {
-                pendingCalls[theCall.id] = theCall;
-
-                logger.error(
-                    'remoteCall ',
-                    theCall.name,
-                    'was rejected with: ',
-                    theCall.error
-                );
-                callPromises.reject( new Error( theCall.error.message || theCall.error ) );
-                passedStore.dispatch( remoteCallActions.removeRemoteCall( theCall ) );
-                delete pendingCalls[theCall.id];
-            }
-        } );
-    } );
 };
 
 export const onPreload = ( passedStore, win = window ) => {
