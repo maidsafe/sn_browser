@@ -1,6 +1,43 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [0.14.0](https://github.com/maidsafe/safe_browser/compare/v0.13.0...v0.14.0) (2019-06-27)
+
+### Bug Fixes
+
+- **Addressbar:** Removes focus() overkill to allow addressbar selection ([f81ca8e](https://github.com/maidsafe/safe_browser/commit/f81ca8e))
+- **bookmarks:** Bookmarks should reset on logout ([2df5f5c](https://github.com/maidsafe/safe_browser/commit/2df5f5c))
+- **CI:** Update travis xvfb invocation ([99deea8](https://github.com/maidsafe/safe_browser/commit/99deea8))
+- **ConnectedRouter:** Previously Connected-react-router was listed a dev dep. Adds this as a standard dep ([ad0a631](https://github.com/maidsafe/safe_browser/commit/ad0a631))
+- **DevTools:** Fix Toggle DevTools Shortcut ([bf7a8d0](https://github.com/maidsafe/safe_browser/commit/bf7a8d0))
+- **history:** Minor fixes ([824747b](https://github.com/maidsafe/safe_browser/commit/824747b))
+- **history/tabs:** Seperate history from tabs history / Add more tab actions ([da06a00](https://github.com/maidsafe/safe_browser/commit/da06a00))
+- **Invite:** Invite page not notified as blocked when opening in clearnet browser ([#699](https://github.com/maidsafe/safe_browser/issues/699)) ([9b38a18](https://github.com/maidsafe/safe_browser/commit/9b38a18))
+- **Menu:** fix minor issues with right click Menu ([3106567](https://github.com/maidsafe/safe_browser/commit/3106567))
+- **Menu:** Inspect Element Fix ([329ba26](https://github.com/maidsafe/safe_browser/commit/329ba26))
+- **Opening Links:** Adds a `wasLastInFocus` state to windows. ([c085abb](https://github.com/maidsafe/safe_browser/commit/c085abb))
+- **openWindow:** use did-finish-load event for window open. ([952f83c](https://github.com/maidsafe/safe_browser/commit/952f83c))
+- **reducers:** windows immutability fixes in reducer ([c477def](https://github.com/maidsafe/safe_browser/commit/c477def))
+- **resetStore:** fix resetStore Action ([d8c4166](https://github.com/maidsafe/safe_browser/commit/d8c4166))
+- **store:** Update History on read state from Network ([a288b29](https://github.com/maidsafe/safe_browser/commit/a288b29))
+- **TabBar:** Prevents long tabtext overflow ([7b7715c](https://github.com/maidsafe/safe_browser/commit/7b7715c))
+- **tabs:** Generate Unique Ids for individual tabs ([f201531](https://github.com/maidsafe/safe_browser/commit/f201531))
+- **timeStamps:** Display local TimeStamps ([0aee7e6](https://github.com/maidsafe/safe_browser/commit/0aee7e6))
+- **webId:** fix minor issues with WebIdDropDown ([4cc2971](https://github.com/maidsafe/safe_browser/commit/4cc2971))
+- **webId:** fix webId dropdown error ([edab748](https://github.com/maidsafe/safe_browser/commit/edab748))
+- **webIdDropDown:** Fix Error shown on opening a new Window ([b8530b8](https://github.com/maidsafe/safe_browser/commit/b8530b8))
+- **webView:** Minor fixes for WebView Preload ([69c054e](https://github.com/maidsafe/safe_browser/commit/69c054e))
+- **windows:** fix addTab End setting ActiveTab to null ([6421206](https://github.com/maidsafe/safe_browser/commit/6421206))
+
+### Features
+
+- ** electron :** Update to electron v 4.x ([4f453f6](https://github.com/maidsafe/safe_browser/commit/4f453f6))
+- **context:** Add more context menus. ([87741c5](https://github.com/maidsafe/safe_browser/commit/87741c5)), closes [#597](https://github.com/maidsafe/safe_browser/issues/597)
+- **Logging:** Minor tweaks and improved internal logging ([005b767](https://github.com/maidsafe/safe_browser/commit/005b767))
+- **macOS:** Prompt to move app by default to 'Applications' ([5f6ae4a](https://github.com/maidsafe/safe_browser/commit/5f6ae4a))
+- **redux-devtools:** Trace actions calls ([7d4edea](https://github.com/maidsafe/safe_browser/commit/7d4edea))
+- **reload:** F5 for reload ([0e0a07b](https://github.com/maidsafe/safe_browser/commit/0e0a07b))
 
 # [0.13.0](https://github.com/maidsafe/safe_browser/compare/v0.12.0...v0.13.0) (2019-04-26)
 
