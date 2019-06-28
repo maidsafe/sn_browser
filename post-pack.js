@@ -84,6 +84,11 @@ if ( platform === WINDOWS ) {
         CONTAINING_FOLDER,
         'resources'
     );
+    fs.moveSync(
+        path.resolve( PERUSE_RESOURCES_FOLDER, LOGS ),
+        path.resolve( CONTAINING_FOLDER, LOGS ),
+        { overwrite: true }
+    );
     fs.copySync(
         path.resolve( PERUSE_RESOURCES_FOLDER, 'SAFE Browser.crust.config' ),
         path.resolve( CONTAINING_FOLDER, 'SAFE Browser.crust.config' ),
@@ -112,7 +117,7 @@ const removalArray = [
     'LICENSE'
 ];
 
-removalArray.forEach( file => {
+removalArray.forEach( ( file ) => {
     fs.removeSync( `${CONTAINING_FOLDER}/${file}` );
 } );
 
