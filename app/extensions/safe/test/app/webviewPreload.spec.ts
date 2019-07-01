@@ -1,4 +1,5 @@
 import * as webviewPreload from '$Extensions/safe/webviewPreload';
+import { addRemoteCall } from '$Actions/remoteCall_actions';
 import { APP_INFO, startedRunningProduction } from '$Constants';
 
 // avoid appveyour for its weak.ref issues right now.
@@ -16,6 +17,34 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
+const pendingCalls = {};
+
+const createRemoteCall = ( functionName, passedStore ) => {
+    if ( !functionName ) {
+        throw new Error( 'Remote calls must have a functionName to call.' );
+    }
+
+    const remoteCall = ( ...args ) =>
+        new Promise( ( resolve, reject ) => {
+            const callId = Math.random().toString( 36 );
+
+            const theCall = {
+                id: callId,
+                name: functionName,
+                args
+            };
+
+            passedStore.dispatch( addRemoteCall( theCall ) );
+
+            pendingCalls[theCall.id] = {
+                resolve,
+                reject
+            };
+        } );
+
+    return remoteCall;
+};
+
 describe( 'SAFE manageWebIdUpdates', () => {
     if ( APPVEYOR ) return;
 
@@ -29,7 +58,7 @@ describe( 'SAFE manageWebIdUpdates', () => {
     };
 
     beforeEach( () => {
-        webviewPreload.onPreload( store, win );
+        webviewPreload.onPreload( store, pendingCalls, createRemoteCall, win );
     } );
 
     test( 'webIdEventEmitter should not exist with experiments disabled', () => {
@@ -40,7 +69,7 @@ describe( 'SAFE manageWebIdUpdates', () => {
             } ) )
         };
 
-        webviewPreload.onPreload( noExpStore, win );
+        webviewPreload.onPreload( noExpStore, pendingCalls, createRemoteCall, win );
 
         expect( win.webIdEventEmitter ).toBeNull();
     } );
@@ -80,7 +109,7 @@ describe( 'SAFE Webview Preload APIs', () => {
             } ) )
         };
 
-        webviewPreload.onPreload( store, win );
+        webviewPreload.onPreload( store, pendingCalls, createRemoteCall, win );
     } );
 
     test( 'setupSafeAPIs populates the window object', async () => {
@@ -123,7 +152,7 @@ describe( 'SAFE Webview Preload APIs', () => {
             } ) )
         };
 
-        webviewPreload.onPreload( store, win );
+        webviewPreload.onPreload( store, pendingCalls, createRemoteCall, win );
 
         expect.assertions( 1 );
         expect( win.safeAuthenticator ).toBeUndefined();
