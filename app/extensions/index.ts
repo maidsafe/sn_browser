@@ -7,10 +7,14 @@ import { safeBrowsing } from './safe';
 // const allPackages = [ ];
 const allPackages = [safeBrowsing];
 
-export const triggerOnWebviewPreload = ( store: Store ): void => {
+export const triggerOnWebviewPreload = (
+    store: Store,
+    pendingCalls,
+    createRemoteCall
+) => {
     allPackages.forEach( ( extension ) => {
         if ( extension.onWebviewPreload ) {
-            extension.onWebviewPreload( store );
+            extension.onWebviewPreload( store, pendingCalls, createRemoteCall );
         }
     } );
 };

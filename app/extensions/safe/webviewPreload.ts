@@ -24,37 +24,10 @@ process.once(
 global.safeExperimentsEnabled = null;
 
 const VERSION = pkg.version;
-const pendingCalls = {};
 
 class WebIdEvents extends EventEmitter {}
 
 const webIdEventEmitter = new WebIdEvents();
-
-const createRemoteCall = ( functionName, passedStore ) => {
-    if ( !functionName ) {
-        throw new Error( 'Remote calls must have a functionName to call.' );
-    }
-
-    const remoteCall = ( ...args ) =>
-        new Promise( ( resolve, reject ) => {
-            const callId = Math.random().toString( 36 );
-
-            const theCall = {
-                id: callId,
-                name: functionName,
-                args
-            };
-
-            passedStore.dispatch( remoteCallActions.addRemoteCall( theCall ) );
-
-            pendingCalls[theCall.id] = {
-                resolve,
-                reject
-            };
-        } );
-
-    return remoteCall;
-};
 
 /**
  * Set the window var for experimentsEnabled for Tab api import.
@@ -104,7 +77,7 @@ export const setupWebIdEventEmitter = ( passedStore, win = window ) => {
     }
 };
 
-export const setupSafeAPIs = ( passedStore, win = window ) => {
+export const setupSafeAPIs = ( passedStore, win = window, createRemoteCall ) => {
     const theWindow = win;
     logger.info( 'Setup up SAFE Dom API via @maidsafe/safe-node-app' );
 
@@ -188,50 +161,14 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
             authReqObj
         );
     };
-
-    passedStore.subscribe( async () => {
-        const state = passedStore.getState();
-        const calls = state.remoteCalls;
-
-        calls.forEach( ( theCall ) => {
-            if ( theCall === pendingCalls[theCall.id] ) {
-                return;
-            }
-
-            const callPromises = pendingCalls[theCall.id];
-
-            if ( !callPromises ) {
-                return;
-            }
-
-            if ( theCall.done && callPromises.resolve ) {
-                pendingCalls[theCall.id] = theCall;
-
-                let callbackArgs = theCall.response;
-
-                callbackArgs = [theCall.response];
-
-                callPromises.resolve( ...callbackArgs );
-
-                passedStore.dispatch( remoteCallActions.removeRemoteCall( theCall ) );
-            } else if ( theCall.error && callPromises.reject ) {
-                pendingCalls[theCall.id] = theCall;
-
-                logger.error(
-                    'remoteCall ',
-                    theCall.name,
-                    'was rejected with: ',
-                    theCall.error
-                );
-                callPromises.reject( new Error( theCall.error.message || theCall.error ) );
-                passedStore.dispatch( remoteCallActions.removeRemoteCall( theCall ) );
-                delete pendingCalls[theCall.id];
-            }
-        } );
-    } );
 };
 
-export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
+export const setupPreloadedSafeAuthApis = (
+    passedStore,
+    win = window,
+    pendingCalls,
+    createRemoteCall
+) => {
     const theWindow = win;
 
     const authProtocol = `${PROTOCOLS.SAFE_AUTH}:`;
@@ -298,6 +235,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
             } )
         );
 
+        // eslint-disable-next-line no-param-reassign
         pendingCalls[callId] = {
             resolve: ( response ) => cb( null, response ),
             reject: ( err ) => cb( err )
@@ -315,6 +253,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
             } )
         );
 
+        // eslint-disable-next-line no-param-reassign
         pendingCalls[callId] = {
             resolve: ( response ) => cb( null, response ),
             reject: ( err ) => cb( err )
@@ -332,6 +271,7 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
             } )
         );
 
+        // eslint-disable-next-line no-param-reassign
         pendingCalls[callId] = {
             resolve: ( response ) => cb( null, response ),
             reject: ( err ) => cb( err )
@@ -339,9 +279,14 @@ export const setupPreloadedSafeAuthApis = ( passedStore, win = window ) => {
     };
 };
 
-export const onPreload = ( passedStore, win = window ) => {
-    setupSafeAPIs( passedStore, win );
+export const onPreload = (
+    passedStore,
+    pendingCalls,
+    createRemoteCall,
+    win = window
+) => {
+    setupSafeAPIs( passedStore, win, createRemoteCall );
     watchForExpermentalChangesAndReload( passedStore, win );
-    setupPreloadedSafeAuthApis( passedStore, win );
+    setupPreloadedSafeAuthApis( passedStore, win, pendingCalls, createRemoteCall );
     setupWebIdEventEmitter( passedStore, win );
 };

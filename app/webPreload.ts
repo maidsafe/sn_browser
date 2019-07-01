@@ -3,7 +3,7 @@
 import { ipcRenderer } from 'electron';
 import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
-import { removeRemoteCall } from '$Actions/remoteCall_actions';
+import { removeRemoteCall, addRemoteCall } from '$Actions/remoteCall_actions';
 import { isRunningTestCafeProcess } from '$Constants';
 import { configureStore } from './store/configureStore';
 
@@ -24,6 +24,32 @@ if ( !isRunningTestCafeProcess && !isMock ) {
 
 const pendingCalls = {};
 
+const createRemoteCall = ( functionName, passedStore ) => {
+    if ( !functionName ) {
+        throw new Error( 'Remote calls must have a functionName to call.' );
+    }
+
+    const remoteCall = ( ...args ) =>
+        new Promise( ( resolve, reject ) => {
+            const callId = Math.random().toString( 36 );
+
+            const theCall = {
+                id: callId,
+                name: functionName,
+                args
+            };
+
+            passedStore.dispatch( addRemoteCall( theCall ) );
+
+            pendingCalls[theCall.id] = {
+                resolve,
+                reject
+            };
+        } );
+
+    return remoteCall;
+};
+
 store.subscribe( async () => {
     const state = store.getState();
     const calls = state.remoteCalls;
@@ -42,18 +68,13 @@ store.subscribe( async () => {
         if ( theCall.done && callPromises.resolve ) {
             pendingCalls[theCall.id] = theCall;
 
-            let callbackArguments = theCall.response;
+            let callbackArgs = theCall.response;
 
-            callbackArguments = [theCall.response];
+            callbackArgs = [theCall.response];
 
-            if ( theCall.isListener ) {
-                // error first
-                callPromises.resolve( null, ...callbackArguments );
-            }
-            callPromises.resolve( ...callbackArguments );
+            callPromises.resolve( ...callbackArgs );
+
             store.dispatch( removeRemoteCall( theCall ) );
-
-            delete pendingCalls[theCall.id];
         } else if ( theCall.error && callPromises.reject ) {
             pendingCalls[theCall.id] = theCall;
 
@@ -70,7 +91,7 @@ store.subscribe( async () => {
     } );
 } );
 
-triggerOnWebviewPreload( store );
+triggerOnWebviewPreload( store, pendingCalls, createRemoteCall );
 // setupPreloadedSafeAuthApis( store );
 
 window.addEventListener( 'error', ( error: Event ) => {

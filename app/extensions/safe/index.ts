@@ -32,7 +32,8 @@ import { registerSafeProtocol } from './protocols/safe';
 import { setupRoutes } from './server-routes';
 import * as ffiLoader from './auth-api/ffiLoader';
 
-const onWebviewPreload = ( store ) => onPreload( store );
+const onWebviewPreload = ( store, pendingCalls, createRemoteCall ) =>
+    onPreload( store, pendingCalls, createRemoteCall );
 
 /**
  * Adds menu items to the main peruse menus.
