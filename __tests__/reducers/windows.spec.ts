@@ -826,7 +826,7 @@ describe( 'windows reducer', () => {
             expect( reopenTab.openWindows[firstWindowId].ui ).toStrictEqual(
                 state.openWindows[firstWindowId].ui
             );
-            expect( reopenTab.openWindows[firstWindowId].activeTab ).toStrictEqual(
+            expect( reopenTab.openWindows[firstWindowId].activeTab ).not.toStrictEqual(
                 state.openWindows[firstWindowId].activeTab
             );
             expect( reopenTab.openWindows[firstWindowId].tabs ).not.toStrictEqual(
@@ -845,6 +845,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId2,
                         tabs: [tabId1, tabId2]
                     }
                 },
@@ -892,7 +893,7 @@ describe( 'windows reducer', () => {
             expect( reopenTab.openWindows[firstWindowId].ui ).toStrictEqual(
                 state.openWindows[firstWindowId].ui
             );
-            expect( reopenTab.openWindows[firstWindowId].activeTab ).toStrictEqual(
+            expect( reopenTab.openWindows[firstWindowId].activeTab ).not.toStrictEqual(
                 state.openWindows[firstWindowId].activeTab
             );
             expect( reopenTab.openWindows[firstWindowId].tabs ).not.toStrictEqual(
@@ -911,6 +912,7 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId,
                         tabs: [tabId1, tabId, tabId2]
                     }
                 },
@@ -968,7 +970,7 @@ describe( 'windows reducer', () => {
             expect( reopenTab.openWindows[secondWindowId].ui ).toStrictEqual(
                 state.openWindows[secondWindowId].ui
             );
-            expect( reopenTab.openWindows[secondWindowId].activeTab ).toStrictEqual(
+            expect( reopenTab.openWindows[secondWindowId].activeTab ).not.toStrictEqual(
                 state.openWindows[secondWindowId].activeTab
             );
             expect( reopenTab.openWindows[secondWindowId].tabs ).not.toStrictEqual(
@@ -991,6 +993,7 @@ describe( 'windows reducer', () => {
                     },
                     [secondWindowId]: {
                         ...basicWindow,
+                        activeTab: tabId,
                         tabs: [tabId1, tabId, tabId2]
                     }
                 },
