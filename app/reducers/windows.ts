@@ -189,6 +189,8 @@ const reOpenTab = ( state, tabs ) => {
 
     newWindow.tabs.splice( lastTabIndex, 0, tabId );
 
+    newWindow.activeTab = tabId;
+
     newOpenWindows[targetWindowId] = newWindow;
 
     const newState = {
