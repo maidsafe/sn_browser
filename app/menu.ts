@@ -24,6 +24,7 @@ import { getResetStoreActionObject } from '$Extensions/safe/handleRemoteCalls';
 
 import {
     addTabEnd,
+    addTabNext,
     windowCloseTab,
     setActiveTab,
     reopenTab,
@@ -506,6 +507,51 @@ export class MenuBuilder {
                             );
 
                             this.store.dispatch( resetStore( resetStoreActionObject ) );
+                        }
+                    }
+                },
+                {
+                    label: 'Add Tab Next',
+                    click: ( item, win ) => {
+                        if ( win ) {
+                            // TODO: Refactor and DRY this out w/ handleRemoteCalls
+                            const windowId = win.id;
+
+                            const state = store.getState();
+
+                            const { windows } = state;
+
+                            const currentWindow = windows.openWindows[windowId]
+                                ? windows.openWindows[windowId]
+                                : {};
+
+                            const activeTabId =
+                currentWindow !== {} ? currentWindow.activeTab : null;
+
+                            const currentTabs =
+                currentWindow !== {} ? currentWindow.tabs : [];
+                            const tabIndex = currentTabs.findIndex(
+                                ( element ) => element === activeTabId
+                            );
+
+                            const tabId = Math.random().toString( 36 );
+
+                            this.store.dispatch(
+                                addTab( {
+                                    url: 'safe://home.dgeddes',
+                                    tabId
+                                } )
+                            );
+
+                            this.store.dispatch(
+                                addTabNext( {
+                                    windowId,
+                                    tabId,
+                                    tabIndex
+                                } )
+                            );
+
+                            this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
                     }
                 }

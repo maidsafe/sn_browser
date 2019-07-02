@@ -1,6 +1,13 @@
 import { ClientFunction, Selector } from 'testcafe';
 import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
-import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
+import {
+    getPageUrl,
+    getPageTitle,
+    navigateTo,
+    resetStore,
+    addTabNext,
+    selectPreviousTab
+} from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
 
@@ -40,6 +47,23 @@ test( 'can add a tab', async ( t ) => {
         .click( `.${CLASSES.ADD_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
         .eql( 2 );
+} );
+
+test( 'can add a tab next', async ( t ) => {
+    await t
+        .click( `.${CLASSES.ADD_TAB}` )
+        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .eql( 2 );
+
+    selectPreviousTab();
+
+    addTabNext();
+
+    await t.expect( Selector( `.${CLASSES.TAB}` ).count ).eql( 3 );
+
+    await t
+        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .eql( 'safe://home.dgeddes' );
 } );
 
 test( 'can close a tab', async ( t ) => {
