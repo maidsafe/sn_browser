@@ -110,7 +110,7 @@ export class Tab extends Component<TabProps, TabState> {
 
     buildMenu = ( webview ) => {
         if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
-        const { addTabEnd, windowId, toggleDevTools, tabId } = this.props;
+        const { windowId, toggleDevTools, tabId, addTabNext } = this.props;
         // require here to avoid jest/electron remote issues
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
         const contextMenu = require( 'electron-context-menu' );
@@ -171,7 +171,7 @@ export class Tab extends Component<TabProps, TabState> {
                     label: 'Open Link in New Tab',
                     visible: params.linkURL && params.linkURL.length > 0,
                     click() {
-                        addTabEnd( {
+                        addTabNext( {
                             url: params.linkURL,
                             windowId,
                             tabId: Math.random().toString( 36 )

@@ -307,11 +307,26 @@ class Browser extends Component<BrowserProps, {}> {
     };
 
     handleAddTabNext = ( tab ) => {
-        const { addTab, addTabEnd, setActiveTab, windowId } = this.props;
-        const { tabId, url, tabIndex } = tab;
+        const {
+            addTab,
+            addTabEnd,
+            setActiveTab,
+            windowId,
+            windows,
+            addTabNext
+        } = this.props;
+        const { activeTabId } = this.state;
+        const { tabId, url } = tab;
         addTab( { tabId, url } );
+        const currentWindow = windows.openWindows[windowId]
+            ? windows.openWindows[windowId]
+            : {};
+        const currentTabs = currentWindow !== {} ? currentWindow.tabs : [];
+        const tabIndex = currentTabs.findIndex(
+            ( element ) => element === activeTabId
+        );
         if ( tabIndex !== undefined ) {
-            addTabEnd( { tabId, tabIndex, windowId } );
+            addTabNext( { tabId, tabIndex, windowId } );
         } else {
             addTabEnd( { tabId, windowId } );
         }
