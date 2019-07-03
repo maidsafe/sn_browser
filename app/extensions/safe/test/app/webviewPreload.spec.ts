@@ -1,5 +1,4 @@
 import * as webviewPreload from '$Extensions/safe/webviewPreload';
-import { addRemoteCall } from '$Actions/remoteCall_actions';
 import { APP_INFO, startedRunningProduction } from '$Constants';
 
 // avoid appveyour for its weak.ref issues right now.
@@ -24,23 +23,14 @@ const createRemoteCall = ( functionName, passedStore ) => {
         throw new Error( 'Remote calls must have a functionName to call.' );
     }
 
-    const remoteCall = ( ...args ) =>
-        new Promise( ( resolve, reject ) => {
-            const callId = Math.random().toString( 36 );
-
-            const theCall = {
-                id: callId,
-                name: functionName,
-                args
-            };
-
-            passedStore.dispatch( addRemoteCall( theCall ) );
-
-            pendingCalls[theCall.id] = {
-                resolve,
-                reject
-            };
-        } );
+    const remoteCall = ( ...args ) => {
+        const callId = Math.random().toString( 36 );
+        const theCall = {
+            id: callId,
+            name: functionName,
+            args
+        };
+    };
 
     return remoteCall;
 };
