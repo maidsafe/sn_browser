@@ -19,6 +19,9 @@ export const openLocation = async ( t ) => {
 export const selectPreviousTab = async ( t ) => {
     await clickOnMainMenuItem( ['&File', 'Select Previous Tab'] );
 };
+export const reOpenClosedTab = async ( t ) => {
+    await clickOnMainMenuItem( ['&File', 'Reopen Last Tab'] );
+};
 
 export const getPageTitle = ClientFunction( () => document.title );
 

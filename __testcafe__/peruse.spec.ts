@@ -6,7 +6,8 @@ import {
     navigateTo,
     resetStore,
     addTabNext,
-    selectPreviousTab
+    selectPreviousTab,
+    reOpenClosedTab
 } from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
@@ -74,6 +75,20 @@ test( 'can close a tab', async ( t ) => {
         .click( `.${CLASSES.CLOSE_TAB}` )
         .expect( Selector( `.${CLASSES.TAB}` ).count )
         .eql( 1 );
+} );
+
+test( 'can reopen a tab', async ( t ) => {
+    await t
+        .click( `.${CLASSES.ADD_TAB}` )
+        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .eql( 2 )
+        .click( `.${CLASSES.CLOSE_TAB}` )
+        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .eql( 1 );
+
+    reOpenClosedTab();
+
+    await t.expect( Selector( `.${CLASSES.TAB}` ).count ).eql( 2 );
 } );
 
 test( 'can type in the address bar and get safe: automatically', async ( t ) => {
