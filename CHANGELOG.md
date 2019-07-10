@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.14.1](https://github.com/maidsafe/safe_browser/compare/v0.14.0...v0.14.1) (2019-07-10)
+
+### Bug Fixes
+
+- **logs:** fix logging on windows ([9f794de](https://github.com/maidsafe/safe_browser/commit/9f794de))
+- **tab:** Open new tab next to current tab ([3e9a9f7](https://github.com/maidsafe/safe_browser/commit/3e9a9f7))
+- **test:** add testcafe tests for addTabNext ([0b74d25](https://github.com/maidsafe/safe_browser/commit/0b74d25))
+
 ## [0.14.0](https://github.com/maidsafe/safe_browser/compare/v0.13.0...v0.14.0) (2019-06-27)
 
 ### Bug Fixes
