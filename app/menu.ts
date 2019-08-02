@@ -437,7 +437,7 @@ export class MenuBuilder {
             label: '&Window',
             submenu: [
                 {
-                    label: 'Minimize',
+                    label: 'Minimise',
                     accelerator: 'CommandOrControl+M',
                     role: 'minimize'
                 },
