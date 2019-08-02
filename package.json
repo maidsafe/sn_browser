@@ -325,7 +325,7 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.6.0",
     "webpack-merge": "^4.1.4",
-    "yarn": "^1.16.0",
+    "yarn": "^1.17.3",
     "zxcvbn": "4.4.2"
   },
   "dependencies": {
