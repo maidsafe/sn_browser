@@ -331,7 +331,7 @@
   "dependencies": {
     "@babel/plugin-proposal-object-rest-spread": "7.4.4",
     "@babel/preset-typescript": "7.3.3",
-    "@fortawesome/fontawesome-free": "^5.8.2",
+    "@fortawesome/fontawesome-free": "^5.10.1",
     "@maidsafe/safe-node-app": "0.11.1",
     "@types/redux": "3.6.0",
     "antd": "3.18.2",
