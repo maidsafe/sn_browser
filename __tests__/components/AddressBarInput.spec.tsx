@@ -134,12 +134,12 @@ describe( 'AddressBarInput', () => {
         it( 'check on onKeyPress if updateTab is called with params', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            const timeStamp = new Date().getTime();
-            expect( props.updateTabUrl ).toHaveBeenCalledWith( {
-                url: 'about:blank',
-                timeStamp,
-                tabId
-            } );
+            expect( props.updateTabUrl ).toHaveBeenCalledWith(
+                expect.objectContaining( {
+                    url: 'about:blank',
+                    tabId
+                } )
+            );
         } );
 
         it( 'check on onChange, if onSelect() is called', () => {
