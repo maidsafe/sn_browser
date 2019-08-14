@@ -1,4 +1,3 @@
-import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
 
 import {
@@ -7,6 +6,7 @@ import {
     newTab,
     setClientToMainBrowserWindow
 } from 'spectron-lib/browser-driver';
+import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
 
 /**
  * Helper to creat valid accounts.

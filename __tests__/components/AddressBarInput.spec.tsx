@@ -1,8 +1,8 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
+import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 
 const mockStore = configureStore();
 

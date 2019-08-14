@@ -1,7 +1,7 @@
-import { logger } from '$Logger';
 import React from 'react';
-import { Error } from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
+import { logger } from '$Logger';
+import { Error } from '$Components/PerusePages/Error';
 import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
 import { setWebFetchStatus } from '$Extensions/safe/actions/web_fetch_actions';

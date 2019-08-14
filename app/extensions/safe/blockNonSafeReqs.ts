@@ -17,35 +17,32 @@ export const blockNonSAFERequests = () => {
 
     const safeSession = remote.session.fromPartition( CONFIG.SAFE_PARTITION );
 
-    safeSession.webRequest.onBeforeRequest(
-        filter,
-        ( details, callback ): void => {
-            //  testcafe needs access to inject code
-            if ( isRunningTestCafeProcess ) {
-                callback( {} );
-                return;
-            }
+    safeSession.webRequest.onBeforeRequest( filter, ( details, callback ): void => {
+    //  testcafe needs access to inject code
+        if ( isRunningTestCafeProcess ) {
+            callback( {} );
+            return;
+        }
 
-            if ( urlIsAllowedBySafe( details.url ) ) {
-                logger.info( `Allowing url ${details.url}` );
-                callback( {} );
-                return;
-            }
+        if ( urlIsAllowedBySafe( details.url ) ) {
+            logger.info( `Allowing url ${details.url}` );
+            callback( {} );
+            return;
+        }
 
-            if ( httpRegExp.test( details.url ) ) {
-                if ( allowedHttp.includes( details.url ) ) {
-                    try {
-                        open( details.url );
-                        callback( { redirectURL: 'about:blank' } );
-                        return;
-                    } catch ( error ) {
-                        logger.error( error );
-                    }
+        if ( httpRegExp.test( details.url ) ) {
+            if ( allowedHttp.includes( details.url ) ) {
+                try {
+                    open( details.url );
+                    callback( { redirectURL: 'about:blank' } );
+                    return;
+                } catch ( error ) {
+                    logger.error( error );
                 }
             }
-
-            logger.error( 'Blocked URL:', details.url );
-            callback( { cancel: true } );
         }
-    );
+
+        logger.error( 'Blocked URL:', details.url );
+        callback( { cancel: true } );
+    } );
 };

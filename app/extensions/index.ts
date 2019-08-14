@@ -1,5 +1,5 @@
-import { logger } from '$Logger';
 import { Store } from 'redux';
+import { logger } from '$Logger';
 // TODO: This should load all packages either from here or from node_modules etc...
 import { safeBrowsing } from './safe';
 
@@ -131,14 +131,12 @@ export const onInitBgProcess = ( server, store ) => {
 };
 
 export const onOpenLoadExtensions = async ( store: Store ): Promise<any> => {
-    const allExtensionLoading = allPackages.map(
-        ( extension ): any => {
-            if ( extension.onOpen ) {
-                return extension.onOpen( store );
-            }
-            return null;
+    const allExtensionLoading = allPackages.map( ( extension ): any => {
+        if ( extension.onOpen ) {
+            return extension.onOpen( store );
         }
-    );
+        return null;
+    } );
 
     return Promise.all( allExtensionLoading );
 };

@@ -7,15 +7,7 @@ import {
     setClientToMainBrowserWindow
 } from 'spectron-lib/browser-driver';
 
-import {
-    createAccountDetails,
-    createAccount,
-    login,
-    logout
-} from '$Extensions/safe/test/e2e/lib/authenticator-drivers';
 import { BROWSER_UI, WAIT_FOR_EXIST_TIMEOUT } from 'spectron-lib/constants';
-import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
-
 import {
     setupSpectronApp,
     travisOS,
@@ -24,6 +16,14 @@ import {
     windowLoaded,
     isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
+import {
+    createAccountDetails,
+    createAccount,
+    login,
+    logout
+} from '$Extensions/safe/test/e2e/lib/authenticator-drivers';
+import { AUTH_UI_CLASSES } from '$Extensions/safe/auth-web-app/classes';
+
 import { CLASSES } from '$Constants';
 
 const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 50000;

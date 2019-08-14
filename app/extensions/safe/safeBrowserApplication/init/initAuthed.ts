@@ -1,10 +1,10 @@
 import { initialiseApp } from '@maidsafe/safe-node-app';
+import { ipcRenderer } from 'electron';
 import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
 import { APP_INFO, CONFIG } from '$Constants';
 
 import { logger } from '$Logger';
-import { ipcRenderer } from 'electron';
 
 /**
  * requests Safe network access for the Safe Browser application.

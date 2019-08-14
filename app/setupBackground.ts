@@ -42,25 +42,22 @@ export const setupBackground = async () =>
                 //     }
                 // });
 
-                backgroundProcessWindow.webContents.on(
-                    'did-finish-load',
-                    (): void => {
-                        logger.info( 'Background process renderer loaded.' );
+                backgroundProcessWindow.webContents.on( 'did-finish-load', (): void => {
+                    logger.info( 'Background process renderer loaded.' );
 
-                        if ( isRunningSpectronTestProcess || isCI )
-                            return resolve( backgroundProcessWindow );
-
-                        if (
-                            isRunningDebug ||
-              ( isRunningUnpacked && !isRunningSpectronTestProcess )
-                        ) {
-                            backgroundProcessWindow.webContents.openDevTools( {
-                                mode: 'undocked'
-                            } );
-                        }
+                    if ( isRunningSpectronTestProcess || isCI )
                         return resolve( backgroundProcessWindow );
+
+                    if (
+                        isRunningDebug ||
+            ( isRunningUnpacked && !isRunningSpectronTestProcess )
+                    ) {
+                        backgroundProcessWindow.webContents.openDevTools( {
+                            mode: 'undocked'
+                        } );
                     }
-                );
+                    return resolve( backgroundProcessWindow );
+                } );
 
                 backgroundProcessWindow.webContents.on(
                     'did-fail-load',

@@ -3,9 +3,9 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 export default {
     devtool: 'cheap-module-source-map',
-    entry: path.resolve( './app/extensions/safe/auth-web-app/index.tsx' ),
+    entry: path.resolve('./app/extensions/safe/auth-web-app/index.tsx'),
     output: {
-        path: path.join( __dirname, 'dist' ),
+        path: path.join(__dirname, 'dist'),
         filename: 'bundle.js'
     },
     target: 'electron-renderer',
@@ -45,9 +45,9 @@ export default {
         extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
     },
     plugins: [
-        new CopyWebpackPlugin( [
-            { from: path.resolve( __dirname, 'app.html' ), to: './' },
-            { from: path.resolve( __dirname, 'favicon.png' ), to: './' }
-        ] )
+        new CopyWebpackPlugin([
+            { from: path.resolve(__dirname, 'app.html'), to: './' },
+            { from: path.resolve(__dirname, 'favicon.png'), to: './' }
+        ])
     ]
 };

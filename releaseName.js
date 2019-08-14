@@ -32,8 +32,6 @@ if ( isBuildingDev ) {
     devModifier = '-dev';
 }
 
-const RELEASE_FOLDER_NAME = `${pkgName}-v${
-    pkg.version
-}-${PLATFORM_NAME}-x64${devModifier}`;
+const RELEASE_FOLDER_NAME = `${pkgName}-v${pkg.version}-${PLATFORM_NAME}-x64${devModifier}`;
 
 module.exports = RELEASE_FOLDER_NAME;

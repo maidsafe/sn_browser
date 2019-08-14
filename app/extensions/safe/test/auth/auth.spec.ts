@@ -1,13 +1,12 @@
 /* eslint-disable func-names, no-underscore-dangle */
 import path from 'path';
 import i18n from 'i18n';
+import crypto from 'crypto';
+import toBeType from 'jest-tobetype';
 import ffiLoader from '$Extensions/safe/ffi/lib';
 import client from '$Extensions/safe/ffi/authenticator';
 
-import crypto from 'crypto';
-
 import { CONSTANTS as CONST } from '$Extensions/safe/auth-constants';
-import toBeType from 'jest-tobetype';
 import * as helper from './helper';
 
 expect.extend( toBeType );
@@ -851,7 +850,7 @@ describe( 'Authenticator functions', () => {
             expect.assertions( 1 );
 
             await setup();
-            expect( client.revokeApp( ' ' ) ).rejects.toHaveProperty(
+            await expect( client.revokeApp( ' ' ) ).rejects.toHaveProperty(
                 'message',
                 i18n.__( 'messages.should_not_be_empty', i18n.__( 'AppId' ) )
             );

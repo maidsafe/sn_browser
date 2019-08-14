@@ -1,7 +1,7 @@
+import { remote } from 'electron';
 import { logger } from '$Logger';
 import { CONFIG, PROTOCOLS } from '$Constants';
 
-import { remote } from 'electron';
 /* eslint-enable import/extensions */
 
 export const registerSafeAuthProtocol = () => {
