@@ -1,11 +1,11 @@
+import path from 'path';
+import url from 'url';
 import { logger } from '$Logger';
 import {
     isRunningPackaged,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp
 } from '$Constants';
-import path from 'path';
-import url from 'url';
 
 import { safeRoute } from './safe';
 import { authRoute } from './auth';

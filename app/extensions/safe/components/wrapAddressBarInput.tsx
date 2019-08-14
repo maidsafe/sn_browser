@@ -6,8 +6,8 @@ import { Tag, Icon } from 'antd';
 import 'antd/lib/tag/style';
 import 'antd/lib/icon/style';
 import './wrapAddressBarInput.less';
-import { CLASSES } from '$Constants';
 import { bindActionCreators } from 'redux';
+import { CLASSES } from '$Constants';
 import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 
 function mapStateToProps( state ) {

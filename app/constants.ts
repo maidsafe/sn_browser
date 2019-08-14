@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { remote, app } from 'electron';
-import pkg from '$Package';
 import getPort from 'get-port';
+import pkg from '$Package';
 import { CLASSES, GET_DOM_EL_CLASS } from './constants/classes';
 
 export const { platform } = process;

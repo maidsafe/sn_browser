@@ -1,14 +1,14 @@
 import { remote, WebviewTag } from 'electron';
 import React, { Component } from 'react';
-import { Error } from '$Components/PerusePages/Error';
 import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
+import stdUrl, { parse as parseURL } from 'url';
 import {
     addTrailingSlashIfNeeded,
     removeTrailingSlash,
     urlHasChanged
 } from '$Utils/urlHelpers';
-import stdUrl, { parse as parseURL } from 'url';
+import { Error } from '$Components/PerusePages/Error';
 import { logger } from '$Logger';
 import styles from './tab.css';
 

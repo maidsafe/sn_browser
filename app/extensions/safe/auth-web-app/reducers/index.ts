@@ -8,12 +8,12 @@ import { networkState } from './network_state';
 
 // import { combineReducers } from 'redux'
 
-export const createRootReducer = history =>
-    combineReducers( {
-        router: connectRouter( history ),
-        app,
-        auth,
-        networkState,
-        routing,
-        i18n: i18nReducer
-    } );
+export const createRootReducer = (history) =>
+  combineReducers({
+    router: connectRouter(history),
+    app,
+    auth,
+    networkState,
+    routing,
+    i18n: i18nReducer
+  });

@@ -1,13 +1,13 @@
 import { remote } from 'electron';
 import url from 'url';
 import React, { Component } from 'react';
-import styles from './tabBar.css';
 import { Row, Col, Icon } from 'antd';
 import 'antd/lib/icon/style';
 import 'antd/lib/button/style';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import { I18n } from 'react-redux-i18n';
+import styles from './tabBar.css';
 
 // import { logger } from '$Logger';
 import { isInternalPage } from '$Utils/urlHelpers';

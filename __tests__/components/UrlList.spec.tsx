@@ -1,8 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { UrlList } from '$Components/UrlList';
 import { Table, TableRow } from 'nessie-ui';
+import { UrlList } from '$Components/UrlList';
 
 describe( 'UrlList', () => {
     let wrapper;

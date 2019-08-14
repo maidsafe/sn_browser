@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { WebIdDropdown } from '$Extensions/safe/components/webIdDropdown';
 import { Row, Col } from 'antd';
+import { WebIdDropdown } from '$Extensions/safe/components/webIdDropdown';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
@@ -30,7 +30,7 @@ export const wrapAddressBarButtonsLHS = (
     AddressBarButtons,
     extensionFunctionality = {}
 ) => {
-    const WrappedAddressBarButtonsLHS = props => {
+    const WrappedAddressBarButtonsLHS = ( props ) => {
         const { safeBrowserApp } = props;
         const { experimentsEnabled } = safeBrowserApp;
         return (

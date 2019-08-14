@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { remote } from 'electron';
-import { CLASSES } from '$Constants';
 import { I18n } from 'react-redux-i18n';
+import { Input } from 'antd';
+import { CLASSES } from '$Constants';
 // import { logger } from '$Logger';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarInput } from '$Extensions/components';
-import { Input } from 'antd';
 import 'antd/lib/input/style';
 
 interface AddressBarInputProps {

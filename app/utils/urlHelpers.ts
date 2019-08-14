@@ -4,13 +4,13 @@ import pkg from '$Package';
 import { logger } from '$Logger';
 import { PROTOCOLS } from '$Constants';
 
-export const isInternalPage = tab => {
+export const isInternalPage = ( tab ) => {
     const urlObj = parse( tab.url );
 
     return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
 };
 
-export const removeTrailingSlash = url => {
+export const removeTrailingSlash = ( url ) => {
     if ( url ) {
         return url.replace( /\/$/, '' );
     }
@@ -18,7 +18,7 @@ export const removeTrailingSlash = url => {
     return url;
 };
 
-export const removeLeadingSlash = url => {
+export const removeLeadingSlash = ( url ) => {
     if ( url ) {
         return url.replace( /^\//, '' );
     }
@@ -26,13 +26,13 @@ export const removeLeadingSlash = url => {
     return url;
 };
 
-export const trimSlashes = url => {
+export const trimSlashes = ( url ) => {
     let newUrl = removeLeadingSlash( url );
     newUrl = removeTrailingSlash( newUrl );
     return newUrl;
 };
 
-export const addTrailingSlashIfNeeded = url => {
+export const addTrailingSlashIfNeeded = ( url ) => {
     const urlObj = parse( url );
     const urlPath = urlObj.path;
     let extName;
@@ -50,9 +50,9 @@ export const addTrailingSlashIfNeeded = url => {
     return slashedUrl;
 };
 
-export const removeTrailingHash = url => url.replace( /#$/, '' );
+export const removeTrailingHash = ( url ) => url.replace( /#$/, '' );
 
-export const removeTrailingRedundancies = url => {
+export const removeTrailingRedundancies = ( url ) => {
     let newUrl = removeTrailingSlash( url );
     newUrl = removeTrailingHash( newUrl );
 
@@ -123,7 +123,7 @@ const getProtocolPosition = ( url, inputProtocol ) => {
  * @param  {String} input address bar input
  * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
  */
-export const makeValidAddressBarUrl = input => {
+export const makeValidAddressBarUrl = ( input ) => {
     if ( !input ) {
         logger.warn( 'url must be a string' );
         return 'about:blank';
@@ -158,9 +158,7 @@ export const makeValidAddressBarUrl = input => {
             input.length
         );
 
-        everythingAfterProtocol = `localhost:${
-            parsedURL.hostname
-        }/${everythingAfterProtocol}`;
+        everythingAfterProtocol = `localhost:${parsedURL.hostname}/${everythingAfterProtocol}`;
     } else if ( inputProtocol ) {
     // TODO: Show error page for bad urls.
         return removeTrailingRedundancies( input );

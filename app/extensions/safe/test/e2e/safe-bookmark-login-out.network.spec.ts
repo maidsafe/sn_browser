@@ -6,12 +6,6 @@ import {
     delay
 } from 'spectron-lib/browser-driver';
 import {
-    createAccountDetails,
-    createAccount,
-    login,
-    logout
-} from '$Extensions/safe/test/e2e/lib/authenticator-drivers';
-import {
     BROWSER_UI,
     WAIT_FOR_EXIST_TIMEOUT,
     DEFAULT_TIMEOUT_INTERVAL
@@ -22,6 +16,12 @@ import {
     afterAllTests,
     beforeAllTests
 } from 'spectron-lib/setupSpectronApp';
+import {
+    createAccountDetails,
+    createAccount,
+    login,
+    logout
+} from '$Extensions/safe/test/e2e/lib/authenticator-drivers';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 320000;
 

@@ -1,7 +1,7 @@
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
+import i18n from 'i18n';
 import { logger } from '$Logger';
 import { configureStore } from '$Store/configureStore';
-import i18n from 'i18n';
 import { I18N_CONFIG } from '$Constants';
 import { manageRemoteCalls } from './background.manageRemoteCalls';
 import { setCurrentStore } from '$Actions/resetStore_action';

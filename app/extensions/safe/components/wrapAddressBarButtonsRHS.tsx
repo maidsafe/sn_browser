@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { CLASSES } from '$Constants';
 import { Row, Col, Switch } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/switch/style';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { CLASSES } from '$Constants';
 import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import styles from './wrapAddressBarButtons.css';
 
@@ -74,9 +74,7 @@ export const wrapAddressBarButtonsRHS = (
                 >
                     <Col span={6}>
                         <span
-                            className={`${styles.toggleText} ${
-                                CLASSES.SETTINGS_MENU__TOGGLE_TEXT
-                            }`}
+                            className={`${styles.toggleText} ${CLASSES.SETTINGS_MENU__TOGGLE_TEXT}`}
                         >
               Toggle Experiments
                         </span>

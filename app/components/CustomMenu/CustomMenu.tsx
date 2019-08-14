@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { logger } from '$Logger';
-import { CLASSES } from '$Constants';
 import { Icon, Button } from 'antd';
+import { CLASSES } from '$Constants';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
@@ -39,14 +39,14 @@ export class CustomMenu extends Component<CustomMenuProps, {}> {
         menuItems: []
     };
 
-    handleShowingMenu = event => {
+    handleShowingMenu = ( event ) => {
         event.nativeEvent.stopImmediatePropagation();
         const { showMenu, hideMenu, isVisible, windowId } = this.props;
         if ( isVisible ) {
             hideMenu( { windowId } );
         } else {
             showMenu( { windowId } );
-            const windowClickListener = _event => {
+            const windowClickListener = ( _event ) => {
                 hideMenu( { windowId } );
             };
             window.addEventListener( 'click', windowClickListener, {
@@ -61,9 +61,7 @@ export class CustomMenu extends Component<CustomMenuProps, {}> {
             <div>
                 <Button
                     shape="circle"
-                    className={`${styles.customMenuItem} ${
-                        CLASSES.SETTINGS_MENU__BUTTON
-                    }`}
+                    className={`${styles.customMenuItem} ${CLASSES.SETTINGS_MENU__BUTTON}`}
                     aria-label="settings-menu-button"
                     onClick={this.handleShowingMenu}
                 >

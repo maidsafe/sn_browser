@@ -164,18 +164,15 @@ export const openWindow = ( store ): BrowserWindow => {
     return thisWindow;
 };
 
-ipcMain.on(
-    'command:close-window',
-    (): void => {
-        const win = BrowserWindow.getFocusedWindow();
-        if ( win ) {
-            win.close();
-        }
-        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-            app.quit();
-        }
+ipcMain.on( 'command:close-window', (): void => {
+    const win = BrowserWindow.getFocusedWindow();
+    if ( win ) {
+        win.close();
     }
-);
+    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+        app.quit();
+    }
+} );
 
 ipcMain.on( 'closeWindows', ( event, data ) => {
     logger.info( 'resetStore IPC received...', data );

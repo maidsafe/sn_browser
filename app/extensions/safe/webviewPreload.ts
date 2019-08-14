@@ -1,8 +1,8 @@
-import pkg from '$Package';
 import EventEmitter from 'events';
+import safe from '@maidsafe/safe-node-app';
+import pkg from '$Package';
 import { logger } from '$Logger';
 import * as remoteCallActions from '$Actions/remoteCall_actions';
-import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS, CONFIG, isRunningTestCafeProcess } from '$Constants';
 import { manifest as authManifest } from '$Extensions/safe/auth-api/manifest';
 import { callIPC } from './ffi/ipc';
@@ -13,13 +13,10 @@ const _setImmediate = setImmediate;
 // eslint-disable-next-line no-underscore-dangle
 const _clearImmediate = clearImmediate;
 
-process.once(
-    'loaded',
-    (): void => {
-        global.setImmediate = _setImmediate;
-        global.clearImmediate = _clearImmediate;
-    }
-);
+process.once( 'loaded', (): void => {
+    global.setImmediate = _setImmediate;
+    global.clearImmediate = _clearImmediate;
+} );
 
 global.safeExperimentsEnabled = null;
 

@@ -1,11 +1,11 @@
+import url from 'url';
+import path from 'path';
 import { logger } from '$Logger';
 import {
     isRunningPackaged,
     isRunningSpectronTestProcess,
     isRunningSpectronTestProcessingPackagedApp
 } from '$Constants';
-import url from 'url';
-import path from 'path';
 
 export const authRoute = {
     method: 'GET',

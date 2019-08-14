@@ -6,10 +6,6 @@ import {
     delay
 } from 'spectron-lib/browser-driver';
 import {
-    createSafeApp,
-    createRandomDomain
-} from '$Extensions/safe/test/e2e/lib/safe-helpers';
-import {
     BROWSER_UI,
     WAIT_FOR_EXIST_TIMEOUT,
     DEFAULT_TIMEOUT_INTERVAL
@@ -22,6 +18,10 @@ import {
     windowLoaded,
     isTestingPackagedApp
 } from 'spectron-lib/setupSpectronApp';
+import {
+    createSafeApp,
+    createRandomDomain
+} from '$Extensions/safe/test/e2e/lib/safe-helpers';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL + 40000;
 const NOTIFICATION_WAIT = WAIT_FOR_EXIST_TIMEOUT + 20000;
