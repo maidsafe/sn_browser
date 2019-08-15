@@ -15,7 +15,7 @@ import path from 'path';
 import fs from 'fs';
 import { enforceMacOSAppLocation } from 'electron-util';
 
-import { app, protocol, ipcMain, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
 import { logger } from '$Logger';
 
 import {
@@ -71,8 +71,6 @@ if ( process.argv.includes( '--preload' ) ) {
         logger.error( 'Error preloading MockVault' );
     }
 }
-
-protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
 
 if ( isRunningPackaged ) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require

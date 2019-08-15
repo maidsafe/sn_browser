@@ -29,7 +29,7 @@ export class History extends Component<HistoryProps, {}> {
 
     render() {
         const { history, isActiveTab, windowId, addTabEnd } = this.props;
-        const ignoreProtocolList = ['safe-auth:'];
+
         const ignoreList = [
             'about:blank',
             'safe-browser://history',
@@ -44,10 +44,7 @@ export class History extends Component<HistoryProps, {}> {
             list = list.filter( ( listObj ) => {
                 const { url } = listObj;
                 const urlObj = parse( url );
-                if (
-                    ignoreList.includes( url ) ||
-          ignoreProtocolList.includes( urlObj.protocol )
-                ) {
+                if ( ignoreList.includes( url ) ) {
                     return false;
                 }
                 return urlIsValid( url );

@@ -1,22 +1,10 @@
 import { parse as parseURL } from 'url';
 import { logger } from '$Logger';
-import { handleAuthUrl } from '$Extensions/safe/actions/authenticator_actions';
 import { updateRemoteCall } from '$Actions/remoteCall_actions';
 import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 import { getCurrentStore } from '$Extensions/safe/safeBrowserApplication/theApplication';
 import { PROTOCOLS } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
-
-export const handleAuthentication = ( passedStore, uriOrReqObject ) => {
-    if (
-        typeof uriOrReqObject !== 'string' &&
-    typeof uriOrReqObject.uri !== 'string'
-    ) {
-        throw new Error( 'Auth URI should be provided as a string' );
-    }
-
-    passedStore.dispatch( handleAuthUrl( uriOrReqObject ) );
-};
 
 export const attemptReconnect = ( passedStore, appObj ) => {
     setTimeout( () => {

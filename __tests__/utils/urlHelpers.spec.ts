@@ -25,12 +25,6 @@ describe( 'makeValidAddressBarUrl', () => {
         );
     } );
 
-    it( 'should NOT convert a url with a valid protocol to safe://', () => {
-        expect( makeValidAddressBarUrl( 'safe-auth://hello' ) ).toBe(
-            'safe-auth://hello'
-        );
-    } );
-
     it( 'should NOT convert a url with a protocol to safe://', () => {
         expect( makeValidAddressBarUrl( 'http://hello' ) ).toBe( 'http://hello' );
         expect( makeValidAddressBarUrl( 'file://hello' ) ).toBe( 'file://hello' );

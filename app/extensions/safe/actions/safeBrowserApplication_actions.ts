@@ -9,6 +9,10 @@ import {
 } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
 export const TYPES = {
+    ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP:
+    'ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP',
+    CONNECT_UNAUTHORISED_BROWSER_APP: 'CONNECT_UNAUTHORISED_BROWSER_APP',
+
     SET_APP_STATUS: 'SET_APP_STATUS',
     SET_NETWORK_STATUS: 'SET_NETWORK_STATUS',
     SET_IS_MOCK: 'SET_IS_MOCK',
@@ -115,6 +119,16 @@ const triggerGetWebIds = async () => {
 
 export const getAvailableWebIds = createAliasedAction(
     TYPES.GET_AVAILABLE_WEB_IDS,
+    // TODO: there is a complaint about not having middleware, despite redux-promise.
+    () => ( {
+    // the real action
+        type: TYPES.GET_AVAILABLE_WEB_IDS,
+        payload: triggerGetWebIds()
+    } )
+);
+
+export const triggerConnectUnauthorised = createAliasedAction(
+    TYPES.ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP,
     // TODO: there is a complaint about not having middleware, despite redux-promise.
     () => ( {
     // the real action

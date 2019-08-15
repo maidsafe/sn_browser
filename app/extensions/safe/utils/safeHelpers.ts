@@ -6,8 +6,8 @@ import { logger } from '$Logger';
 export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
-export const urlIsAllowedBySafe = ( testUrl ) => {
-    logger.info( 'Checking urlIsAllowedBySafe', testUrl );
+export const urlIsValid = ( testUrl ) => {
+    logger.info( 'Checking urlIsValid', testUrl );
     const urlObject = url.parse( testUrl );
 
     const validProtocols = pkg.build.protocols.schemes || ['http'];

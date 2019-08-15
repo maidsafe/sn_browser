@@ -33,11 +33,6 @@ switch ( arg ) {
         argsArray.push( '--runInBand' );
         argsArray.push( '--testPathIgnorePatterns=network' );
 
-        // exclude weakref tests for now.
-        if ( platform === WINDOWS ) {
-            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\auth.spec\\.ts$`;
-        }
-
         break;
     }
     case 'exts-e2e-network': {
@@ -51,11 +46,6 @@ switch ( arg ) {
 
         argsArray.push( '--bail' );
         argsArray.push( '--runInBand' );
-
-        // exclude weakref tests for now.
-        if ( platform === WINDOWS ) {
-            pattern = `app${s}extensions${s}[^${s}].+e2e${s}(?!safe).+\\auth.spec\\.ts$`;
-        }
 
         break;
     }

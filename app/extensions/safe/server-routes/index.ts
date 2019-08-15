@@ -1,17 +1,11 @@
 import path from 'path';
 import url from 'url';
 import { logger } from '$Logger';
-import {
-    isRunningPackaged,
-    isRunningSpectronTestProcess,
-    isRunningSpectronTestProcessingPackagedApp
-} from '$Constants';
 
 import { safeRoute } from './safe';
-import { authRoute } from './auth';
 
 export const setupRoutes = ( server, store ) => {
-    const routes = [safeRoute( store ), authRoute];
+    const routes = [safeRoute( store )];
 
     routes.forEach( ( route ) => {
         try {

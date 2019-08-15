@@ -67,7 +67,9 @@ export const openWindow = ( store ): BrowserWindow => {
         icon: appIcon,
         webPreferences: {
             partition: 'persist:safe-tab',
-            preload: testCafeURL ? path.join( __dirname, 'webPreload.prod.js' ) : ''
+            webviewTag: true,
+            nodeIntegration: true,
+            backgroundThrottling: false
         }
     };
 
@@ -103,7 +105,7 @@ export const openWindow = ( store ): BrowserWindow => {
                 store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
 
                 if ( !testCafeURL ) {
-                    store.dispatch( addTab( { url: 'safe-auth://home/', tabId } ) );
+                    store.dispatch( addTab( { url: 'safe://nowhereyet/', tabId } ) );
                 } else {
                     store.dispatch(
                         addTab( {

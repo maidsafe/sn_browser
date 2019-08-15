@@ -77,7 +77,7 @@ module.exports = {
         'no-shadow': 'error',
         'react/prefer-stateless-function': 'error',
         '@typescript-eslint/interface-name-prefix': 'off',
-        '@typescript-eslint/array-type': ['error', 'generic'],
+        '@typescript-eslint/array-type': ['error', { default: 'generic' }],
         indent: 'off',
         '@typescript-eslint/indent': ['error', 4]
     },

@@ -1,7 +1,5 @@
 const RELEASE_FOLDER_NAME = require('./releaseName');
 
-const AUTH_TAB = './app/extensions/safe/auth-web-app/dist/app.html';
-
 let appString = 'SAFE Browser.app';
 
 if (process.platform === 'linux') {

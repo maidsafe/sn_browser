@@ -13,7 +13,6 @@ const hideDropdownTimeout = 0.15; // seconds
 const webIdManagerUri = startedRunningMock
     ? 'http://localhost:1234'
     : 'safe://webidmgr.dapp';
-const authHomeUri = 'safe-auth://home';
 
 interface WebIdDropdownProps {
     safeBrowserApp: {
@@ -89,12 +88,6 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
         const { addTabEnd } = this.props;
         const tabId = Math.random().toString( 36 );
         addTabEnd( { tabId, url: webIdManagerUri } );
-    };
-
-    launchAuthenticator = () => {
-        const { addTabEnd } = this.props;
-        const tabId = Math.random().toString( 36 );
-        addTabEnd( { tabId, url: authHomeUri } );
     };
 
     authorisePeruse = () => {
