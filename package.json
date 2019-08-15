@@ -251,7 +251,7 @@
     "core-js": "3.1.2",
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
-    "css-loader": "^2.1.0",
+    "css-loader": "^3.2.0",
     "deps_downloader": "https://s3.eu-west-2.amazonaws.com/deps-downloader/deps_downloader-0.1.0.tgz",
     "devtron": "^1.4.0",
     "electron": "4.1.4",
