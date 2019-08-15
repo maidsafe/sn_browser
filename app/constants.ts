@@ -132,24 +132,6 @@ if ( isRunningPackaged && !isRunningNodeEnvTest ) {
     safeNodeAppPathModifier = '../../app.asar.unpacked/';
 }
 
-/**
- * retrieve the safe node lib path, either as a relative path in the main process,
- * or from the main process global
- * @return {[type]} [description]
- */
-const safeNodeLibraryPath = () => {
-    // only exists in render processes
-    if ( remote && remote.getGlobal && !isRunningNodeEnvTest ) {
-        return remote.getGlobal( 'SAFE_NODE_LIB_PATH' );
-    }
-
-    return path.resolve(
-        __dirname,
-        safeNodeAppPathModifier,
-        'node_modules/@maidsafe/safe-node-app/src/native'
-    );
-};
-
 // HACK: Prevent jest dying due to no electron globals
 const safeNodeAppPath = () => {
     if ( !remote || !remote.app ) {
@@ -169,7 +151,6 @@ export const I18N_CONFIG = {
 
 export const PROTOCOLS = {
     SAFE: 'safe',
-    SAFE_AUTH: 'safe-auth',
     SAFE_LOGS: 'safe-logs',
     INTERNAL_PAGES: 'safe-browser'
 };
@@ -193,7 +174,6 @@ const getRandomPort = async () => {
 export const CONFIG = {
     PORT: remote ? remote.getGlobal( 'port' ) : getRandomPort(),
     SAFE_PARTITION: 'persist:safe-tab',
-    SAFE_NODE_LIB_PATH: safeNodeLibraryPath(),
     APP_HTML_PATH: path.resolve( __dirname, './app.html' ),
     DATE_FORMAT: 'h:MM-mmm dd',
     NET_STATUS_CONNECTED: 'Connected',

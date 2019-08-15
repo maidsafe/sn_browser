@@ -5,16 +5,8 @@ import { APP_INFO, startedRunningProduction } from '$Constants';
 const { APPVEYOR } = process.env;
 
 // Some mocks to negate FFI and native libs we dont care about
-jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
-jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
-jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
 
-jest.mock( 'ref-array', () => jest.fn() );
 //
-jest.mock( 'ffi', () => jest.fn() );
-jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
-
-jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
 describe( 'SAFE manageWebIdUpdates', () => {
     if ( APPVEYOR ) return;
@@ -60,112 +52,4 @@ describe( 'SAFE manageWebIdUpdates', () => {
     } );
 
     /* xtest( 'Check response to store change?' ); */
-} );
-
-describe( 'SAFE Webview Preload APIs', () => {
-    let win;
-    let store;
-
-    beforeEach( () => {
-        win = {
-            location: {
-                protocol: 'safe-auth:'
-            }
-        };
-
-        store = {
-            subscribe: jest.fn(),
-            getState: jest.fn( () => ( {
-                safeBrowserApp: { experimentsEnabled: true }
-            } ) )
-        };
-
-        webviewPreload.onPreload( store, win );
-    } );
-
-    test( 'setupSafeAPIs populates the window object', async () => {
-        expect.assertions( 4 );
-
-        expect( win ).toHaveProperty( 'safe' );
-        // expect( win.safe ).toHaveProperty( 'CONSTANTS' );
-        expect( win.safe ).toHaveProperty( 'initialiseApp' );
-        expect( win.safe ).toHaveProperty( 'fromAuthUri' );
-        expect( win.safe ).toHaveProperty( 'authorise' );
-    } );
-
-    test( 'window.authorise exists for "auth" protocol', async () => {
-        expect.assertions( 2 );
-
-        expect( win.safe.authorise ).not.toBeUndefined();
-
-        try {
-            await win.safe.authorise();
-        } catch ( e ) {
-            expect( e.message ).toBe( 'Auth object is required' );
-        }
-    } );
-
-    test( 'window.safeAuthenticator exists for "auth" protocol', async () => {
-        expect.assertions( 1 );
-        expect( win.safeAuthenticator ).not.toBeUndefined();
-    } );
-
-    test( 'window.safe.authorise does NOT exists for non "auth" protocol', async () => {
-        win = {};
-
-        win.location = {
-            protocol: 'safe:'
-        };
-        store = {
-            subscribe: jest.fn(),
-            getState: jest.fn( () => ( {
-                safeBrowserApp: { experimentsEnabled: true }
-            } ) )
-        };
-
-        webviewPreload.onPreload( store, win );
-
-        expect.assertions( 1 );
-        expect( win.safeAuthenticator ).toBeUndefined();
-    } );
-
-    // skip final tests in a production environment as libs dont exist
-    if ( startedRunningProduction ) return;
-
-    test( 'setupSafeApiss safe.initialiseApp', async () => {
-        expect.assertions( 5 );
-
-        try {
-            await win.safe.initialiseApp();
-        } catch ( e ) {
-            expect( e.message ).not.toBeNull();
-            expect( e.message ).toBe( "Cannot read property 'id' of undefined" );
-        }
-
-        const app = await win.safe.initialiseApp( APP_INFO.info );
-
-        expect( app ).not.toBeNull();
-        expect( app.auth ).not.toBeUndefined();
-        expect( app.auth.openUri() ).toBeUndefined();
-    } );
-
-    test( 'setupSafeAPIss safe.fromAuthUri, gets initialiseApp errors', async () => {
-        expect.assertions( 3 );
-
-        try {
-            await win.safe.fromAuthUri();
-        } catch ( e ) {
-            // error from initApp.
-            expect( e.message ).not.toBeNull();
-            expect( e.message ).toBe( "Cannot read property 'id' of undefined" );
-        }
-
-        win.safe.initialiseApp = jest.fn().mockName( 'mockInitApp' );
-
-        try {
-            await win.safe.fromAuthUri();
-        } catch ( e ) {
-            expect( win.safe.initialiseApp.mock.calls.length ).toBe( 1 );
-        }
-    } );
 } );

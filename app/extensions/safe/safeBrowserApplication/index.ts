@@ -8,11 +8,11 @@ import {
     setIsAuthing,
     safeBrowserAppIsAuthed
 } from '$Extensions/safe/safeBrowserApplication/theApplication';
-
-import {
-    manageReadStateActions,
-    manageSaveStateActions
-} from '$Extensions/safe/safeBrowserApplication/manageBrowserConfig';
+//
+// import {
+//     manageReadStateActions,
+//     manageSaveStateActions
+// } from '$Extensions/safe/safeBrowserApplication/manageBrowserConfig';
 
 import {
     isCI,
@@ -153,7 +153,7 @@ const authFromStoreResponse = async ( res, store ) => {
  * based upon the application auth state
  * @param  {Object} state Application state (from redux)
  */
-const manageAuthorisationActions = async store => {
+const manageAuthorisationActions = async ( store ) => {
     // TODO: Do this via aliased action.
 
     // const
@@ -161,7 +161,7 @@ const manageAuthorisationActions = async store => {
 
     debouncedPassAuthUriToStore =
     debouncedPassAuthUriToStore ||
-    _.debounce( responseUri => {
+    _.debounce( ( responseUri ) => {
         store.dispatch( receivedAuthResponse( '' ) );
         authFromStoreResponse( responseUri, store );
         setIsAuthing( false );
@@ -217,12 +217,12 @@ const manageAuthorisationActions = async store => {
  * Setup actions to be triggered in response to store state changes.
  * @param  { ReduxStore } store [description]
  */
-export const handleSafeBrowserStoreChanges = store => {
+export const handleSafeBrowserStoreChanges = ( store ) => {
     // TODO check why we need this vs passing it around
     setCurrentStore( store );
 
     // lets set state for all funcs to have the same reference.
-    manageSaveStateActions( store );
-    manageReadStateActions( store );
-    manageAuthorisationActions( store );
+    // manageSaveStateActions( store );
+    // manageReadStateActions( store );
+    // manageAuthorisationActions( store );
 };

@@ -84,12 +84,9 @@ script:
 
 
 after_failure:
-- ls /home/travis/safe-browser/app/node_modules/@maidsafe/safe-node-app/src/native
 # - cat ~/.local/share/applications/mimeapps.list
-# - cat ~/.local/share/applications/maidsafenet-ltd-safe-browser-authenticator.desktop
 - which xdg-open
 - xdg-open --version
-# - bash -x ~/bin/xdg-open safe-auth://whaaaaa
 # - cat $TMPDIR/safe-browser.log;
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
@@ -99,8 +96,6 @@ after_failure:
 before_deploy:
 
 - yarn package
-- rm -rf node_modules/@maidsafe/safe-node-app/src/native/mock
-- rm -rf app/extensions/safe/dist/mock/
 - NODE_ENV=prod yarn package
 - cd release;
 - |

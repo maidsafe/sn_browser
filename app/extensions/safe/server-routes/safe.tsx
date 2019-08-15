@@ -4,7 +4,6 @@ import { logger } from '$Logger';
 import { Error } from '$Components/PerusePages/Error';
 import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
 
-import { setWebFetchStatus } from '$Extensions/safe/actions/web_fetch_actions';
 import { addTab } from '$Actions/tabs_actions';
 import errConsts from '$Extensions/safe/err-constants';
 import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
@@ -59,22 +58,13 @@ export const safeRoute = ( store ) => ( {
             if ( isRangeReq ) {
                 options.range = rangeArray;
             }
-            store.dispatch(
-                setWebFetchStatus( {
-                    fetching: true,
-                    link,
-                    options: JSON.stringify( options )
-                } )
-            );
 
             let data = null;
             try {
                 data = await app.webFetch( link, options );
             } catch ( error ) {
                 logger.error( 'SAFE Fetch error:', error.code, error.message );
-                store.dispatch(
-                    setWebFetchStatus( { fetching: false, error, options: '' } )
-                );
+
                 const shouldTryAgain =
           error.code === errConsts.ERR_OPERATION_ABORTED.code ||
           error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
@@ -105,7 +95,6 @@ export const safeRoute = ( store ) => ( {
                 }
                 return sendErrResponse( error.message || error );
             }
-            store.dispatch( setWebFetchStatus( { fetching: false, options: '' } ) );
 
             if ( isRangeReq && multipartReq ) {
                 const responseStr = generateResponseStr( data );

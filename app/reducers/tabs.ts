@@ -286,7 +286,7 @@ const deselectAddressBar = ( state, tab ) => {
 
 const resetStore = ( payload ) => {
     const { tabId } = payload;
-    const newTabStartLocation = makeValidAddressBarUrl( 'safe-auth://home' );
+    const newTabStartLocation = makeValidAddressBarUrl( 'safe://hello' );
     const faviconPath = isRunningUnpacked
         ? '../resources/favicon.ico'
         : '../favicon.ico';

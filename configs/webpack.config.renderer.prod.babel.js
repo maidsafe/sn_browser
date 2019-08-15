@@ -58,8 +58,10 @@ export default merge.smart( baseConfig, {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
-                            localIdentName: '[name]__[local]',
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[name]__[local]'
+                            },
                             sourceMap: true
                         }
                     }
@@ -97,9 +99,11 @@ export default merge.smart( baseConfig, {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[name]__[local]'
+                            },
                             importLoaders: 1,
-                            localIdentName: '[name]__[local]',
                             sourceMap: true
                         }
                     },

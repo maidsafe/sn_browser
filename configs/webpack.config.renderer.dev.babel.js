@@ -103,10 +103,12 @@ export default merge.smart( baseConfig, {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[name]__[local]'
+                            },
                             sourceMap: true,
-                            importLoaders: 1,
-                            localIdentName: '[name]__[local]'
+                            importLoaders: 1
                         }
                     }
                 ]
@@ -139,10 +141,12 @@ export default merge.smart( baseConfig, {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[name]__[local]'
+                            },
                             sourceMap: true,
-                            importLoaders: 1,
-                            localIdentName: '[name]__[local]'
+                            importLoaders: 1
                         }
                     },
                     {
@@ -310,8 +314,8 @@ export default merge.smart( baseConfig, {
                     env: process.env,
                     stdio: 'inherit'
                 } )
-                    .on( 'close', code => process.exit( code ) )
-                    .on( 'error', spawnError => console.error( spawnError ) );
+                    .on( 'close', ( code ) => process.exit( code ) )
+                    .on( 'error', ( spawnError ) => console.error( spawnError ) );
             }
         }
     }

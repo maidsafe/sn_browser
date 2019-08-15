@@ -38,7 +38,6 @@ app/*.js.map
 app/style.css
 app/style.css.map
 dist
-app/extensions/safe/auth-web-app/dist
 dll
 app/extensions/safe/iconfont/iconfont.js
 

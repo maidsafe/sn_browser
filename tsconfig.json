@@ -30,7 +30,6 @@
         "app/*.prod.js",
         "app/dist",
         "node_modules",
-        "release",
-        "extensions/safe/auth-web-app"
+        "release"
     ]
 }

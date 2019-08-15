@@ -130,54 +130,9 @@ export const saveConfigToSafe = ( store, quit ) => {
  * Read the configuration from the netowrk
  * @param  {[type]} app SafeApp reference, with handle and authUri
  */
-export const readConfigFromSafe = ( store ) =>
-    new Promise( async ( resolve, reject ) => {
-        const safeBrowserAppObject = getSafeBrowserAppObject();
-        if ( !safeBrowserAppObject ) {
-            reject( Error( 'Not authorised to read from the network.' ) );
-        }
-
-        // FIXME: we add a delay here to prevent a deadlock known in the node-ffi
-        // logic when dealing with the callbacks.
-        // Research and remove this ASAP.
-        await delay( 5000 );
-
-        try {
-            const container = await safeBrowserAppObject.auth.getOwnContainer();
-            const encryptedKey = await container.encryptKey( CONFIG.STATE_KEY );
-            const encryptedValue = await container.get( encryptedKey );
-            const decryptedValue = await container.decrypt( encryptedValue.buf );
-            const browserState = await JSON.parse( decryptedValue.toString() );
-
-            logger.info( 'State retrieved: ', browserState );
-            resolve( browserState );
-        } catch ( e ) {
-            if (
-                e.code === SAFE_APP_ERROR_CODES.ERR_NO_SUCH_ENTRY ||
-        e.code === SAFE_APP_ERROR_CODES.ERR_DATA_NOT_FOUND
-            ) {
-                const state = store.getState();
-
-                // only error if we're only reading
-                if ( state.safeBrowserApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE ) {
-                    store.dispatch(
-                        addNotification( {
-                            body: 'No browser data found on the network.'
-                        } )
-                    );
-                }
-
-                store.dispatch(
-                    safeBrowserAppActions.setReadConfigStatus(
-                        SAFE.READ_STATUS.READ_BUT_NONEXISTANT
-                    )
-                );
-            } else {
-                logger.error( e );
-                reject( e );
-            }
-        }
-    } );
+export const readConfigFromSafe = ( store ) => {
+    logger.info( 'Need to reimpl get store from safe...' );
+};
 
 /**
  * Handle triggering actions and related functionality for saving to SAFE netowrk
@@ -217,34 +172,35 @@ export const manageReadStateActions = async ( store ) => {
     isReading = true;
 
     logger.info( 'Attempting to READ SafeBrowserApp state from network' );
-    store.dispatch(
-        safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING )
-    );
+    logger.info( 'Reimpl read from safe...' );
+    // store.dispatch(
+    //     safeBrowserAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING )
+    // );
 
-    readConfigFromSafe( store )
-        .then( ( savedState ) => {
-            // store.dispatch( safeBrowserAppActions.receivedConfig( savedState ) );
-            store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
-            store.dispatch( historyActions.updateHistoryState( savedState ) );
-            store.dispatch(
-                safeBrowserAppActions.setReadConfigStatus(
-                    SAFE.READ_STATUS.READ_SUCCESSFULLY
-                )
-            );
-
-            isReading = false;
-            return null;
-        } )
-        .catch( ( e ) => {
-            isReading = false;
-            logger.error( e );
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.FAILED_TO_READ
-                )
-            );
-            throw new Error( e );
-        } );
+    // readConfigFromSafe( store )
+    //     .then( ( savedState ) => {
+    //         // store.dispatch( safeBrowserAppActions.receivedConfig( savedState ) );
+    //         store.dispatch( bookmarksActions.updateBookmarks( savedState ) );
+    //         store.dispatch( historyActions.updateHistoryState( savedState ) );
+    //         store.dispatch(
+    //             safeBrowserAppActions.setReadConfigStatus(
+    //                 SAFE.READ_STATUS.READ_SUCCESSFULLY
+    //             )
+    //         );
+    //
+    //         isReading = false;
+    //         return null;
+    //     } )
+    //     .catch( ( e ) => {
+    //         isReading = false;
+    //         logger.error( e );
+    //         store.dispatch(
+    //             safeBrowserAppActions.setSaveConfigStatus(
+    //                 SAFE.SAVE_STATUS.FAILED_TO_READ
+    //             )
+    //         );
+    //         throw new Error( e );
+    //     } );
 };
 
 /**
@@ -304,27 +260,27 @@ export const manageSaveStateActions = async ( store ) => {
     store.dispatch(
         safeBrowserAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING )
     );
-    saveConfigToSafe( store )
-        .then( () => {
-            isSaving = false;
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY
-                )
-            );
-
-            return null;
-        } )
-        .catch( ( e ) => {
-            isSaving = false;
-            logger.error( e );
-
-            // TODO: Handle errors across the store in a separate error watcher?
-            store.dispatch(
-                safeBrowserAppActions.setSaveConfigStatus(
-                    SAFE.SAVE_STATUS.FAILED_TO_SAVE
-                )
-            );
-            throw new Error( e );
-        } );
+    // saveConfigToSafe( store )
+    //     .then( () => {
+    //         isSaving = false;
+    //         store.dispatch(
+    //             safeBrowserAppActions.setSaveConfigStatus(
+    //                 SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY
+    //             )
+    //         );
+    //
+    //         return null;
+    //     } )
+    //     .catch( ( e ) => {
+    //         isSaving = false;
+    //         logger.error( e );
+    //
+    //         // TODO: Handle errors across the store in a separate error watcher?
+    //         store.dispatch(
+    //             safeBrowserAppActions.setSaveConfigStatus(
+    //                 SAFE.SAVE_STATUS.FAILED_TO_SAVE
+    //             )
+    //         );
+    //         throw new Error( e );
+    //     } );
 };

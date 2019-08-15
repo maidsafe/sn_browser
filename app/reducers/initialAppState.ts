@@ -1,6 +1,6 @@
 export const initialAppState = {
     history: {},
-    bookmarks: [{ url: 'safe-auth://home/#/login' }],
+    bookmarks: [{ url: 'safe://hello' }],
     remoteCalls: [],
     notifications: [],
     tabs: {},
