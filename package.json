@@ -279,7 +279,7 @@
     "eslint-plugin-unicorn": "^8.0.2",
     "express": "4.17.1",
     "fbjs-scripts": "^1.0.1",
-    "file-loader": "^3.0.1",
+    "file-loader": "^4.2.0",
     "husky": "^2.4.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.8.0",
