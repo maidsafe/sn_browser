@@ -317,7 +317,7 @@
     "testcafe": "1.2.1",
     "testcafe-browser-provider-electron": "https://github.com/joshuef/testcafe-browser-provider-electron.git#FixOSXOpening",
     "testcafe-live": "^0.1.4",
-    "testcafe-react-selectors": "3.1.0",
+    "testcafe-react-selectors": "3.2.0",
     "typescript": "3.5.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.34.0",
