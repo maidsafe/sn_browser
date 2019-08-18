@@ -2,7 +2,7 @@ import * as resetTabAction from '$Actions/resetStore_action';
 import { SAFE } from '$Extensions/safe/constants';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import * as remoteCallActions from '$Actions/remoteCall_actions';
-import { clearAppObj } from '$Extensions/safe/safeBrowserApplication/theApplication';
+
 import { logger } from '$Logger';
 
 let theStore;

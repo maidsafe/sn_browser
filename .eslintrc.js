@@ -29,6 +29,16 @@ module.exports = {
         codeFrame: true
     },
     rules: {
+        'prefer-destructuring': [
+            'error',
+            {
+                array: false,
+                object: true
+            },
+            {
+                enforceForRenamedProperties: false
+            }
+        ],
         'unicorn/prevent-abbreviations': 'off',
         'unicorn/catch-error-name': 'off',
         'unicorn/filename-case': 'off',

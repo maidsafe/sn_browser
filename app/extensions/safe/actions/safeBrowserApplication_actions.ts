@@ -2,11 +2,7 @@ import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
 import { logger } from '$Logger';
 import { inBgProcess } from '$Constants';
-import {
-    getCurrentStore,
-    getSafeBrowserAppObject,
-    safeBrowserAppIsAuthed
-} from '$Extensions/safe/safeBrowserApplication/theApplication';
+import { getWebIds } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
 
 export const TYPES = {
     ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP:
@@ -22,6 +18,7 @@ export const TYPES = {
     DISABLE_EXPERIMENTS: 'DISABLE_EXPERIMENTS',
 
     // webId
+    ALIAS_GET_AVAILABLE_WEB_IDS: 'ALIAS_GET_AVAILABLE_WEB_IDS',
     GET_AVAILABLE_WEB_IDS: 'GET_AVAILABLE_WEB_IDS',
     SET_AVAILABLE_WEB_IDS: 'SET_AVAILABLE_WEB_IDS',
     FETCHING_WEB_IDS: 'FETCHING_WEB_IDS',
@@ -82,57 +79,22 @@ export const {
     TYPES.SHOW_WEB_ID_DROPDOWN
 );
 
-/**
- * Get WebIds for the current user
- * @return {Promise} Resolves to Array of webIds
- */
-const getWebIds = async () => {
-    if ( !inBgProcess ) {
-        logger.error( 'Cannot getWebIds unless in BG process' );
-        return;
-    }
-
-    const currentStore = getCurrentStore();
-
-    const safeBrowserApp = getSafeBrowserAppObject();
-    logger.info( 'getWebIds' );
-
-    if ( !safeBrowserApp ) throw new Error( 'SafeBrowserApp should be initiated.' );
-
-    if ( !safeBrowserAppIsAuthed() )
-        throw new Error( 'SafeBrowserApp is not authorised' );
-
-    let webIds = [];
-
-    currentStore.dispatch( fetchingWebIds() );
-    webIds = await safeBrowserApp.web.getWebIds();
-
-    currentStore.dispatch( setAvailableWebIds( webIds ) );
-};
-
-const triggerGetWebIds = async () => {
-    if ( !inBgProcess ) return;
-
-    logger.info( 'BG Retrieving webIds' );
-    const ids = await getWebIds();
-};
-
 export const getAvailableWebIds = createAliasedAction(
-    TYPES.GET_AVAILABLE_WEB_IDS,
+    TYPES.ALIAS_GET_AVAILABLE_WEB_IDS,
     // TODO: there is a complaint about not having middleware, despite redux-promise.
     () => ( {
     // the real action
         type: TYPES.GET_AVAILABLE_WEB_IDS,
-        payload: triggerGetWebIds()
+        payload: getWebIds()
     } )
 );
 
-export const triggerConnectUnauthorised = createAliasedAction(
-    TYPES.ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP,
-    // TODO: there is a complaint about not having middleware, despite redux-promise.
-    () => ( {
-    // the real action
-        type: TYPES.GET_AVAILABLE_WEB_IDS,
-        payload: triggerGetWebIds()
-    } )
-);
+// export const triggerConnectUnauthorised = createAliasedAction(
+//     TYPES.ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP,
+//     // TODO: there is a complaint about not having middleware, despite redux-promise.
+//     () => ( {
+//     // the real action
+//         type: TYPES.CONNECT_UNAUTHORISED_BROWSER_APP,
+//         payload: triggerGetWebIds()
+//     } )
+// );

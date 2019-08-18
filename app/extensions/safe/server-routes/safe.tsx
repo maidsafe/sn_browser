@@ -1,12 +1,19 @@
+import { parse } from 'url';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { logger } from '$Logger';
 import { Error } from '$Components/PerusePages/Error';
-import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
-
+import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
 import { addTab } from '$Actions/tabs_actions';
-import errConsts from '$Extensions/safe/err-constants';
-import { rangeStringToArray, generateResponseStr } from '../utils/safeHelpers';
+import { errConsts } from '$Extensions/safe/err-constants';
+
+import {
+    rangeStringToArray,
+    generateResponseStr,
+    cleanupNeonError
+} from '../utils/safeHelpers';
+
+import { getHTTPFriendlyData } from '$Extensions/safe/backgroundProcess';
 import { SAFE } from '../constants';
 import {
     windowCloseTab,
@@ -18,7 +25,7 @@ export const safeRoute = ( store ) => ( {
     method: 'GET',
     path: /safe:\//,
     handler: async ( request, res ) => {
-        const sendErrResponse = ( error, errSubHeader ) =>
+        const sendErrResponse = ( error, errSubHeader? ) =>
             res.send(
                 ReactDOMServer.renderToStaticMarkup(
                     <Error error={{ header: error, subHeader: errSubHeader }} />
@@ -28,7 +35,7 @@ export const safeRoute = ( store ) => ( {
         try {
             const link = request.url.substr( 1 ); // remove initial /
 
-            const app = getSafeBrowserAppObject() || {};
+            const app = ( await getSafeBrowserAppObject() ) || {};
             const { headers } = request;
             let isRangeReq = false;
             let multipartReq = false;
@@ -61,39 +68,55 @@ export const safeRoute = ( store ) => ( {
 
             let data = null;
             try {
-                data = await app.webFetch( link, options );
+                data = await app.fetch( link );
+                data = getHTTPFriendlyData( data, link );
             } catch ( error ) {
-                logger.error( 'SAFE Fetch error:', error.code, error.message );
+                const message = cleanupNeonError( error );
+                logger.error( message, error.code );
 
-                const shouldTryAgain =
-          error.code === errConsts.ERR_OPERATION_ABORTED.code ||
-          error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
-          error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
-                if ( shouldTryAgain ) {
-                    const { safeBrowserApp } = store.getState();
-                    if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED ) {
-                        store.getState().tabs.forEach( ( tab ) => {
-                            logger.info( tab.url, link, link.includes( tab.url ) );
-                            if ( link.includes( tab.url ) && !tab.isActive ) {
-                                store.dispatch( windowCloseTab( { tabId: tab.tabId } ) );
-                            }
-                        } );
-                        const tabId = Math.random().toString( 36 );
-                        /* eslint-disable no-undef */
-                        const currentWebContentsId = remote
-                            ? remote.getCurrentWebContents().id
-                            : 1;
-                        // this is mounted but its not show?
-                        /* eslint-enable no-undef */
-                        const windowId = currentWebContentsId;
-                        store.dispatch( addTab( { url: link, tabId } ) );
-                        store.dispatch( addTabEnd( { tabId, windowId } ) );
-                    }
+                //  ContentError("No data found for path \"/testfolder/\"
+                if ( message.includes( 'ContentError("No data found for path' ) ) {
+                    logger.error(
+                        'Failed to find path, attempting to retrieve root container.',
+                        link
+                    );
+                    const parsed = parse( link );
+                    logger.info( 'link info', parsed );
 
-                    error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
-                    return sendErrResponse( error.message );
+                    data = await app.fetch( `safe://${parsed.host}` );
+                    data = getHTTPFriendlyData( data, link );
                 }
-                return sendErrResponse( error.message || error );
+
+                // return;
+                //       const shouldTryAgain =
+                // error.code === errConsts.ERR_OPERATION_ABORTED.code ||
+                // error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
+                // error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
+                //       if ( shouldTryAgain ) {
+                //           const { safeBrowserApp } = store.getState();
+                //           if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED ) {
+                //               store.getState().tabs.forEach( ( tab ) => {
+                //                   logger.info( tab.url, link, link.includes( tab.url ) );
+                //                   if ( link.includes( tab.url ) && !tab.isActive ) {
+                //                       store.dispatch( windowCloseTab( { tabId: tab.tabId } ) );
+                //                   }
+                //               } );
+                //               const tabId = Math.random().toString( 36 );
+                //               /* eslint-disable no-undef */
+                //               const currentWebContentsId = remote
+                //                   ? remote.getCurrentWebContents().id
+                //                   : 1;
+                //               // this is mounted but its not show?
+                //               /* eslint-enable no-undef */
+                //               const windowId = currentWebContentsId;
+                //               store.dispatch( addTab( { url: link, tabId } ) );
+                //               store.dispatch( addTabEnd( { tabId, windowId } ) );
+                //           }
+                //
+                //           error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
+                //           return sendErrResponse( error.message );
+                //       }
+                //       return sendErrResponse( message );
             }
 
             if ( isRangeReq && multipartReq ) {
@@ -119,13 +142,16 @@ export const safeRoute = ( store ) => ( {
                     'Accept-Ranges': 'bytes'
                 } )
                 .send( data.body );
-        } catch ( e ) {
-            logger.error( e );
+        } catch ( error ) {
+            logger.error( error );
 
-            if ( e.code && e.code === -302 ) {
+            if ( error.code && error.code === -302 ) {
                 return res.status( 416 ).send( 'Requested Range Not Satisfiable' );
             }
-            return sendErrResponse( e.message || e );
+
+            const message = cleanupNeonError( error );
+
+            return sendErrResponse( message || error );
         }
     }
 } );
