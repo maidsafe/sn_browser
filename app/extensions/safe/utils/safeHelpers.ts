@@ -3,6 +3,16 @@ import pkg from '$Package';
 import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
 
+export const cleanupNeonError = ( error: Error ): string => {
+    const neonError = 'internal error in Neon module:';
+    let { message } = error;
+
+    if ( message && message.startsWith( neonError ) ) {
+        message = message.replace( neonError, '' );
+    }
+    return message;
+};
+
 export const isForSafeServer = ( parsedUrlObject ) =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 

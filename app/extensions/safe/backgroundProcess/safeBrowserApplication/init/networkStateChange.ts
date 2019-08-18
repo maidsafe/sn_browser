@@ -8,7 +8,7 @@ import {
     addNotification,
     clearNotification
 } from '$Actions/notification_actions';
-import { getSafeBrowserAppObject } from '$Extensions/safe/safeBrowserApplication/theApplication';
+import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
 export const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
     logger.info( 'onNetworkStateChange' );

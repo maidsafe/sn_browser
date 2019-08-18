@@ -4,7 +4,7 @@ import {
     getCurrentStore,
     getSafeBrowserAppObject,
     safeBrowserAppIsAuthed
-} from '$Extensions/safe/safeBrowserApplication/theApplication';
+} from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
 /**
  * Get WebIds for the current user

@@ -5,7 +5,7 @@ import {
     safeBrowserAppIsConnected,
     safeBrowserAppAuthFailed,
     getSafeBrowserAppObject
-} from '$Extensions/safe/safeBrowserApplication/theApplication';
+} from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import * as historyActions from '$Actions/history_actions';
 import { addNotification } from '$Actions/notification_actions';
 import { CONFIG } from '$Constants';

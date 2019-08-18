@@ -80,6 +80,11 @@ export default merge.smart( baseConfig, {
                     }
                 }
             },
+            // NODE Files
+            {
+                test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
+                use: 'node-loader'
+            },
             {
                 test: /\.global\.css$/,
                 use: [
@@ -210,6 +215,7 @@ export default merge.smart( baseConfig, {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
                 use: 'file-loader'
             },
+
             // SVG Font
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,

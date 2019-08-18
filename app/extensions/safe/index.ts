@@ -1,9 +1,5 @@
 import { logger } from '$Logger';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
-import {
-    initSafeBrowserApp,
-    handleSafeBrowserStoreChanges
-} from '$Extensions/safe/safeBrowserApplication';
 
 import {
     startedRunningMock,

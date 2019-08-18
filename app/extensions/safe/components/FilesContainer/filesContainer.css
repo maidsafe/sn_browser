@@ -1,0 +1,56 @@
+.webIdList {
+    position: absolute;
+    font-size: 1.4rem;
+    top: 3rem;
+    text-align: left;
+    list-style: none;
+    background-color: rgba(246, 246, 246, 1);
+    border: 1px solid rgba(127, 127, 127, 1);
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.webId {
+    cursor: pointer;
+    padding: 1rem;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.webIdInfo {
+    /* stylelint-disable-next-line */
+    composes: webId;
+    cursor: default;
+}
+
+.webIdManager {
+    /* stylelint-disable-next-line */
+    composes: webId;
+    border-bottom: none;
+}
+
+.openAuth {
+    /* stylelint-disable-next-line */
+    composes: webId;
+}
+.openAuth a {
+    text-decoration: none;
+}
+
+.webIdManager a {
+    text-decoration: none;
+}
+
+.selectedWebId {
+    /* stylelint-disable-next-line */
+    composes: webId;
+    font-weight: bold;
+}
+
+.loadingIcon {
+    font-size: 20px;
+}
