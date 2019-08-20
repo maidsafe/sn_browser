@@ -16,6 +16,8 @@ import fs from 'fs';
 import { enforceMacOSAppLocation } from 'electron-util';
 
 import { app, protocol, ipcMain, BrowserWindow } from 'electron';
+import log from 'electron-log';
+import buildConfig from '$BuilderConfig';
 import { logger } from '$Logger';
 
 import {
@@ -40,6 +42,7 @@ import {
     preAppLoad,
     onAppReady
 } from '$Extensions/main-process-extensions';
+import { AppUpdater } from './autoUpdate';
 
 // import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -72,7 +75,9 @@ if ( process.argv.includes( '--preload' ) ) {
     }
 }
 
-protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
+protocol.registerStandardSchemes( buildConfig.protocols.schemes, {
+    secure: true
+} );
 
 if ( isRunningPackaged ) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
@@ -154,6 +159,11 @@ app.on( 'ready', async () => {
     await setupBackground();
 
     mainWindow = openWindow( store );
+
+    if ( app.whenReady() ) {
+    // eslint-disable-next-line no-new
+        new AppUpdater( store );
+    }
 } );
 
 app.on( 'open-url', ( e, url ) => {

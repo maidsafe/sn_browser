@@ -78,7 +78,10 @@ export const handleNotifications = (
                             {latestNotification.reactNode ? (
                                 reactNodeToElement( latestNotification.reactNode )
                             ) : (
-                                <p className={CLASSES.NOTIFIER_TEXT}>latestNotification.body</p>
+                                <p className={CLASSES.NOTIFIER_TEXT}>
+                                    {' '}
+                                    {latestNotification.body}
+                                </p>
                             )}
                         </Col>
                     </Row>

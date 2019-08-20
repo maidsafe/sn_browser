@@ -1,3 +1,5 @@
+env: 
+  - secure: 
 matrix:
   # allow_failures:
   #   - os: windows
@@ -8,6 +10,8 @@ matrix:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
         - NODE_ENV=dev
+        - RELEASE_PROD_DIR = osx-prod
+        - RELEASE_DEV_DIR = osx-dev
 
     - os: linux
       language: node_js
@@ -15,6 +19,8 @@ matrix:
         - xvfb
       env:
         - NODE_ENV=dev
+        - RELEASE_PROD_DIR = linux-prod
+        - RELEASE_DEV_DIR = linux-dev
       addons:
         apt:
           sources:
@@ -97,40 +103,56 @@ after_failure:
 
 
 before_deploy:
+  - yarn package
+  - rm -rf node_modules/@maidsafe/safe-node-app/src/native/mock
+  - rm -rf app/extensions/safe/dist/mock/
+  - NODE_ENV=prod yarn package
+  - cd release;
+  # don't fail if nothing to do.
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\* || true;
+    fi
+  - cd ..
+  - ls release
+  - export RELEASE_DEV_EXE="$(ls release/safe-browser-dev/*-dev.exe)";
+  - export RELEASE_PROD_EXE="$(ls release/safe-browser-production/*-production.exe)";
+  - export RELEASE_DEV_ZIP="$(ls release/safe-browser-dev/*.zip)";
+  - export RELEASE_PROD_ZIP="$(ls release/safe-browser-production/*.zip)";
+  - export RELEASE_DEV_YML="$(ls release/safe-browser-dev/latest.yaml)";
+  - export RELEASE_PROD_YML="$(ls release/safe-browser-production/latest.yaml)";
+  - export RELEASE_DEV_BLOCKMAP="$(ls release/safe-browser-dev/*1-dev.exe.blockmap)";
+  - export RELEASE_PROD_BLOCKMAP="$(ls release/safe-browser-production/*-production.exe.blockmap)";
+  - echo "deploying ${RELEASE_DEV_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
+  - ls release
 
-- yarn package
-- rm -rf node_modules/@maidsafe/safe-node-app/src/native/mock
-- rm -rf app/extensions/safe/dist/mock/
-- NODE_ENV=prod yarn package
-- cd release;
-- |
-  ls . | grep safe | while read RELEASE; do
-  echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}";
-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ditto -c -k --sequesterRsrc --keepParent ${RELEASE} ${RELEASE}.zip;
-  fi
-  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
-  fi
-  done
-# don't fail if nothing to do.
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\* || true;
-  fi
-- cd ..
-- ls release
-- export RELEASE_PROD_ZIP="$(ls release/*-x64.zip)";
-- export RELEASE_DEV_ZIP="$(ls release/*-dev.zip)";
-- echo "deploying ${RELEASE_PROD_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
-- echo "deploying ${RELEASE_DEV_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
-- ls release
 
 deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key: $GITHUB_ACCESS_TOKEN
-  file:
-    - "${RELEASE_PROD_ZIP}"
-    - "${RELEASE_DEV_ZIP}"
-  draft: true
-  tag_name: $TRAVIS_TAG
-  on:
-    tags: true
-    branch: dev
+  - provider: s3
+    access_key_id: "AKIAVVODCRMSO7KD57BA"
+    secret_access_key: "KdkokhthUg6E9MPkda/goz7hrvicoBBDCFVr8ypNsCkwPpZbTzTAyE5eHveDQSMmZaBmtHAUCCegeQmEudkojuiK2arUrIpYkDlxrIq9+vhIfme4R/2d7hcEZakagdQ6ns8dtG1moo5vpijN0ghkch4g/+7jVhRIE7PxHRAVYKkdlOzwLVOuHcoBk9l6+Wl4Tw2XIhs0YKoo+Bhg4wI2yQz/CEfCT4EhCAFiNVVm2PDS3ndOA4vIqth86t+EFDFCxpEeo3lBUb1rJMiXrNxJ6WA18PXhPWzK6jvuiqXMYL6U4QuTOP/YtBExyCNuDXK+2pmimzyzYiGwBI29jqkZe1DePaJs1q6o9Cq+OFjAGUb/8GAxE7PkhREguyhv4d8avcMCZu6uLhYU037CyDyiC34kLp75UleYeEc8wUXcC21+RC/3EP6NPuKlDSQm2WW8y3m/6+r2/yKHf07ak+Gx5dAKhE5Q9r5eDO7VoEiHElgeUVWegZM+/aMacWdz86BKX/FDCevVbyq+XuGiysPV42zyNe4gqjSuJfzA3B0NoBUdlbgKHUR+/ZXaGLbQTzOYz43l4422uDTrP0/ASRnPOktct+ekkGtydIZdr2f+gYnJDd07UAHZ85GYSv7NTR0S8D8LCU1Ugy02fRy6wV1gRkI/h5DanM6KM8KDajynvIM="
+    bucket: "safe-browser"
+    file:
+      - "${RELEASE_PROD_EXE}"
+      - "${RELEASE_PROD_ZIP}"
+      - "${RELEASE_PROD_YML}"
+      - "${RELEASE_PROD_BLOCKMAP}"
+    upload-dir: $RELEASE_PROD_DIR
+    skip_cleanup: true
+    acl: public_read
+    on:
+      tags: true
+      branch: dev
+  - provider: s3
+    access_key_id: "AKIAVVODCRMSO7KD57BA"
+    secret_access_key: "KdkokhthUg6E9MPkda/goz7hrvicoBBDCFVr8ypNsCkwPpZbTzTAyE5eHveDQSMmZaBmtHAUCCegeQmEudkojuiK2arUrIpYkDlxrIq9+vhIfme4R/2d7hcEZakagdQ6ns8dtG1moo5vpijN0ghkch4g/+7jVhRIE7PxHRAVYKkdlOzwLVOuHcoBk9l6+Wl4Tw2XIhs0YKoo+Bhg4wI2yQz/CEfCT4EhCAFiNVVm2PDS3ndOA4vIqth86t+EFDFCxpEeo3lBUb1rJMiXrNxJ6WA18PXhPWzK6jvuiqXMYL6U4QuTOP/YtBExyCNuDXK+2pmimzyzYiGwBI29jqkZe1DePaJs1q6o9Cq+OFjAGUb/8GAxE7PkhREguyhv4d8avcMCZu6uLhYU037CyDyiC34kLp75UleYeEc8wUXcC21+RC/3EP6NPuKlDSQm2WW8y3m/6+r2/yKHf07ak+Gx5dAKhE5Q9r5eDO7VoEiHElgeUVWegZM+/aMacWdz86BKX/FDCevVbyq+XuGiysPV42zyNe4gqjSuJfzA3B0NoBUdlbgKHUR+/ZXaGLbQTzOYz43l4422uDTrP0/ASRnPOktct+ekkGtydIZdr2f+gYnJDd07UAHZ85GYSv7NTR0S8D8LCU1Ugy02fRy6wV1gRkI/h5DanM6KM8KDajynvIM="
+    bucket: "safe-browser"
+    file:
+      - "${RELEASE_DEV_EXE}"
+      - "${RELEASE_DEV_ZIP}"
+      - "${RELEASE_DEV_YML}"
+      - "${RELEASE_DEV_BLOCKMAP}"
+    upload-dir: $RELEASE_DEV_DIR
+    skip_cleanup: true
+    acl: public_read
+    on:
+      tags: true
+      branch: dev

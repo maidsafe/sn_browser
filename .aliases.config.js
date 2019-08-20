@@ -6,6 +6,7 @@ module.exports = {
     $Extensions: './app/extensions',
     $Reducers: './app/reducers',
     $Logger: './app/logger.ts',
+    $BuilderConfig: './builderConfig.js',
     $Components: './app/components',
     $Constants: './app/constants.ts',
     $Package: './package.json',

@@ -27,12 +27,13 @@
     "prepush": "yarn test",
     "prelint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,ts,tsx,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "prerelease": "standard-version --prerelease rc",
-    "package": "yarn build && electron-builder build --publish never && yarn post-pack",
+    "package": "yarn build && electron-builder build --config ./builderConfig.js --publish never && yarn post-pack",
     "post-pack": "node ./post-pack.js",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
-    "package-linux": "yarn build && electron-builder build --linux",
-    "package-win": "yarn build && electron-builder build --win --x64",
+    "package-osx": "yarn build && electron-builder --publish always",
+    "package-linux": "yarn build && electron-builder build --linux --publish always",
+    "package-win": "yarn build && electron-builder build --win --x64 --publish always",
     "put-live-net-files-for-osx": "cp ./resources/crust.config node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/MacOS/Electron\\ Helper.crust.config && cp resources/log.toml ./node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron\\ Helper.app/Contents/log.toml",
     "put-live-net-files-for-linux": "cp ./resources/crust.config node_modules/electron/dist/electron.crust.config && cp resources/log.toml node_modules/electron/dist/log.toml",
     "put-live-net-files-for-windows": "powershell.exe cp ./resources/crust.config node_modules/electron/dist/electron.crust.config; if ($?) { cp resources/log.toml node_modules/electron/dist/log.toml}",
@@ -84,82 +85,6 @@
     ]
   },
   "main": "./app/main.prod.js",
-  "build": {
-    "productName": "SAFE Browser",
-    "files": [
-      "app/dist/",
-      "locales",
-      "app/locales",
-      "app/app.html",
-      "app/bg.html",
-      "app/background.prod.js",
-      "app/background.prod.js.map",
-      "app/webPreload.prod.js",
-      "app/webPreload.prod.js.map",
-      "app/main.prod.js",
-      "app/main.prod.js.map",
-      "package.json"
-    ],
-    "extraFiles": [],
-    "extraResources": [
-      {
-        "from": "resources/log.toml",
-        "to": "log.toml"
-      },
-      {
-        "from": "resources/favicon.ico",
-        "to": "favicon.ico"
-      },
-      {
-        "from": "resources/PreloadDevVault",
-        "to": "PreloadDevVault"
-      },
-      {
-        "from": "resources/locales",
-        "to": "locales"
-      },
-      {
-        "from": "resources/crust.config",
-        "to": "${productName}.crust.config"
-      },
-      {
-        "from": "app/extensions/safe/dist",
-        "to": "extensions/safe/dist"
-      },
-      {
-        "from": "app/extensions/safe/iconfont",
-        "to": "extensions/safe/iconfont"
-      },
-      {
-        "from": "app/extensions/safe/auth-web-app/dist",
-        "to": "extensions/safe/auth-web-app/dist"
-      },
-      {
-        "from": "node_modules/nessie-ui/dist/styles.css",
-        "to": "nessie-styles.css"
-      }
-    ],
-    "protocols": {
-      "name": "SAFE Network URL",
-      "schemes": [
-        "safe",
-        "safe-auth"
-      ]
-    },
-    "win": {
-      "target": "dir"
-    },
-    "linux": {
-      "target": "dir"
-    },
-    "mac": {
-      "target": "dir"
-    },
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maidsafe/safe_browser"

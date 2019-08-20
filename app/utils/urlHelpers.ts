@@ -2,6 +2,7 @@ import { parse } from 'url';
 import path from 'path';
 import pkg from '$Package';
 import { logger } from '$Logger';
+import buildConfig from '$BuilderConfig';
 import { PROTOCOLS } from '$Constants';
 
 export const isInternalPage = ( tab ) => {
@@ -129,7 +130,7 @@ export const makeValidAddressBarUrl = ( input ) => {
         return 'about:blank';
     }
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = buildConfig.protocols.schemes || ['http'];
     const parsedURL = parse( input );
     const inputProtocol = parsedURL.protocol
         ? parsedURL.protocol.replace( ':', '' )

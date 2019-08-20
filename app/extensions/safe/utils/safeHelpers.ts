@@ -1,5 +1,6 @@
 import url from 'url';
 import pkg from '$Package';
+import buildConfig from '$BuilderConfig';
 import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
 
@@ -10,7 +11,7 @@ export const urlIsAllowedBySafe = ( testUrl ) => {
     logger.info( 'Checking urlIsAllowedBySafe', testUrl );
     const urlObject = url.parse( testUrl );
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = buildConfig.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( ( proto ) => `${proto}:` );
 
     if ( testUrl === 'about:blank' ) return true;
