@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { uniq } from 'lodash';
+import { uniqBy } from 'lodash';
 import { logger } from '$Logger';
 // import styles from './filesContainer.css';
 
@@ -24,35 +24,59 @@ FilesContainerProps,
         const { filesMap, currentLocation } = this.props;
 
         const targetFilesArray = Object.keys( filesMap );
+        const [locationWithoutQuery, version] = currentLocation.split( '?v=' );
 
         const filteredTargetFilesArray = targetFilesArray.filter( ( thePath ) =>
-            thePath.startsWith( currentLocation )
+            thePath.startsWith( locationWithoutQuery )
         );
 
-        const theList: Array<string> = filteredTargetFilesArray.map(
-            ( filesMapPath ): string => {
-                let linkToNextChild = filesMapPath.split( currentLocation )[1];
+        const theList: Array<{
+            link: string;
+            text: string;
+        }> = filteredTargetFilesArray.map( ( filesMapPath ): {
+            link: string;
+            text: string;
+        } => {
+            // get the base url out of the way
+            let theLink = filesMapPath.split( locationWithoutQuery )[1];
 
-                linkToNextChild = linkToNextChild.split( '/' )[0];
-
-                return linkToNextChild;
+            if ( theLink.includes( '/' ) ) {
+                // only get the next part of the tree
+                theLink = theLink.split( '/' )[1];
             }
-        );
 
-        const uniqList = uniq( theList );
+            const startLocation = locationWithoutQuery.endsWith( '/' )
+                ? locationWithoutQuery
+                : `${locationWithoutQuery}/`;
+            const href = `${startLocation}${theLink}${
+                version ? `?v=${version}` : ''
+            }`;
+
+            return {
+                link: href,
+                text: theLink
+            };
+        } );
+
+        const uniqList = uniqBy( theList, ( item ) => item.link );
 
         return (
             <React.Fragment>
-                <h2>{`${currentLocation} contains:`}</h2>
-                <ul>
-                    {uniqList.map( ( link ) => {
-                        return (
-                            <li>
-                                <a href={link}>{link}</a>
-                            </li>
-                        );
-                    } )}
-                </ul>
+                {uniqList.length > 0 && (
+                    <React.Fragment>
+                        <h2>{`${locationWithoutQuery} contains:`}</h2>
+                        <ul>
+                            {uniqList.map( ( linkObject ) => {
+                                return (
+                                    <li key={linkObject.link}>
+                                        <a href={linkObject.link}>{linkObject.text}</a>
+                                    </li>
+                                );
+                            } )}
+                        </ul>
+                    </React.Fragment>
+                )}
+                {uniqList.length < 1 && <span>No content found at this path</span>}
             </React.Fragment>
         );
     }

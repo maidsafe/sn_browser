@@ -16,7 +16,6 @@ export const registerSafeProtocol = () => {
         ( req, cb ) => {
             logger.info( `safe:// req url being parsed: ${req.url}` );
             const parsedUrl = url.parse( req.url );
-            console.log( 'pppppppppppppppppppppppppp', parsedUrl );
 
             const { host, query } = parsedUrl;
 
@@ -33,7 +32,9 @@ export const registerSafeProtocol = () => {
 
             // Allow localhost to be served as safe://
             if ( parsedUrl.hostname === 'localhost' && parsedUrl.port ) {
-                newUrl = `http://localhost:${parsedUrl.port}${path}`;
+                newUrl = `http://localhost:${parsedUrl.port}${path}${
+                    query ? `?${query}` : ''
+                }`;
             }
 
             cb( { url: newUrl } );

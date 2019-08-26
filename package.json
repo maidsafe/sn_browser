@@ -294,7 +294,7 @@
     "redux-mock-store": "1.5.3",
     "resolve-url-loader": "3.1.0",
     "rimraf": "^3.0.0",
-    "safe_nodejs": "https://github.com/joshuef/neon-bridge.git#0.3.0",
+    "safe_nodejs": "https://github.com/joshuef/neon-bridge.git#0.4.0",
     "sass-loader": "^7.1.0",
     "should": "13.2.3",
     "sinon": "^7.3.2",
