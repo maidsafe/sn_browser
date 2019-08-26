@@ -65,10 +65,6 @@ describe( 'History Component', () => {
                 history: {
                     [date]: [
                         {
-                            url: 'safe-auth://lalala',
-                            timeStamp: new Date().toLocaleTimeString()
-                        },
-                        {
                             url: 'safe://somethingreal',
                             timeStamp: new Date().toLocaleTimeString()
                         },

@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
+// import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
 import { APP_INFO, CONFIG } from '$Constants';
 

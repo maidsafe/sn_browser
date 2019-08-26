@@ -1,7 +1,6 @@
 import { Safe } from 'safe_nodejs';
 import { logger } from '$Logger';
 import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
-import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 // import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
 export const initAnon = async ( options? ) => {

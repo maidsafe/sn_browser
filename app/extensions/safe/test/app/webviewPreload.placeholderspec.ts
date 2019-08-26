@@ -21,7 +21,7 @@ describe( 'SAFE manageWebIdUpdates', () => {
     };
 
     beforeEach( () => {
-        webviewPreload.onPreload( store, win );
+        // webviewPreload.onPreload( store, win );
     } );
 
     test( 'webIdEventEmitter should not exist with experiments disabled', () => {
@@ -32,7 +32,7 @@ describe( 'SAFE manageWebIdUpdates', () => {
             } ) )
         };
 
-        webviewPreload.onPreload( noExpStore, win );
+        // webviewPreload.onPreload( noExpStore, win );
 
         expect( win.webIdEventEmitter ).toBeNull();
     } );

@@ -1,7 +1,6 @@
 import { parse as parseURL } from 'url';
 import { logger } from '$Logger';
 import { updateRemoteCall } from '$Actions/remoteCall_actions';
-import { parseSafeAuthUrl } from '$Extensions/safe/utils/safeHelpers';
 import { getCurrentStore } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { PROTOCOLS } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
