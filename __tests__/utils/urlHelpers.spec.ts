@@ -37,6 +37,21 @@ describe( 'makeValidAddressBarUrl', () => {
         );
     } );
 
+    it( 'should not strip the query params', () => {
+        expect( makeValidAddressBarUrl( 'hello.world/lalalala?v=2' ) ).toBe(
+            'safe://hello.world/lalalala?v=2'
+        );
+        expect( makeValidAddressBarUrl( 'hello.world/?v=2' ) ).toBe(
+            'safe://hello.world/?v=2'
+        );
+        expect( makeValidAddressBarUrl( 'hello.world?v=2' ) ).toBe(
+            'safe://hello.world?v=2'
+        );
+        expect( makeValidAddressBarUrl( 'hello.world/index.md?v=2' ) ).toBe(
+            'safe://hello.world/index.md?v=2'
+        );
+    } );
+
     it( 'should not strip the index.html', () => {
         expect( makeValidAddressBarUrl( 'hello.world/boom/index.html' ) ).toBe(
             'safe://hello.world/boom/index.html'

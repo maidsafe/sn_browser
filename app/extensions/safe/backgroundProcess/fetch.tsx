@@ -16,11 +16,7 @@ const PUB_IMMUTABLE = 'PublishedImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
 
 export const getHTTPFriendlyData = ( data: {}, url: string ) => {
-    logger.info( 'Building a HTTP response for data from: ', url );
-
-    const parsed = parse( url );
-
-    const currentLocation = parsed.path;
+    logger.info( 'Building a HTTP response for data from: ', url, data );
 
     const response = {
         headers: {
@@ -35,6 +31,10 @@ export const getHTTPFriendlyData = ( data: {}, url: string ) => {
     }
 
     if ( data[FILES_CONTAINER] ) {
+        const parsed = parse( url );
+
+        const currentLocation = parsed.path || '/';
+
         const filesMap = data[FILES_CONTAINER].files_map;
 
         response.body = ReactDOMServer.renderToStaticMarkup(

@@ -33,7 +33,12 @@ export const safeRoute = ( store ) => ( {
             );
 
         try {
-            const link = request.url.substr( 1 ); // remove initial /
+            let link = request.url;
+            link = link.substring( 1 ); // remove initial slash
+
+            if ( link.endsWith( '/' ) ) {
+                link = link.substring( 0, link.length - 1 );
+            }
 
             const app = ( await getSafeBrowserAppObject() ) || {};
             const { headers } = request;
@@ -67,24 +72,41 @@ export const safeRoute = ( store ) => ( {
             }
 
             let data = null;
+            const parseTheQueryString = true;
+            const parsed = parse( link, parseTheQueryString );
+            const targetVersion = parsed.query ? parsed.query.v : undefined;
+
             try {
+                logger.verbose( 'before fetch' );
                 data = await app.fetch( link );
                 data = getHTTPFriendlyData( data, link );
+                logger.verbose( 'after fetch' );
             } catch ( error ) {
                 const message = cleanupNeonError( error );
-                logger.error( message, error.code );
+                logger.warn( message, error.code );
+
+                if ( targetVersion && message.includes( `Content not found at ${link}` ) ) {
+                    return sendErrResponse( 'No content found at this version' );
+                }
 
                 //  ContentError("No data found for path \"/testfolder/\"
                 if ( message.includes( 'ContentError("No data found for path' ) ) {
-                    logger.error(
+                    logger.warn(
                         'Failed to find path, attempting to retrieve root container.',
                         link
                     );
-                    const parsed = parse( link );
                     logger.info( 'link info', parsed );
 
-                    data = await app.fetch( `safe://${parsed.host}` );
-                    data = getHTTPFriendlyData( data, link );
+                    try {
+                        data = await app.fetch( `safe://${parsed.host}` );
+
+                        data = getHTTPFriendlyData( data, link );
+                    } catch ( e ) {
+                        logger.error( `No data at root of ${link}, either...` );
+                        return sendErrResponse(
+                            `No data could be found for the Public Name ${parsed.host}`
+                        );
+                    }
                 }
 
                 // return;
