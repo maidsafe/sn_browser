@@ -1,4 +1,7 @@
 export const initialAppState = {
+    pWeb: {
+        versionedUrls: {}
+    },
     safeBrowserApp: {
         appStatus: null,
         networkStatus: null,

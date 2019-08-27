@@ -33,7 +33,9 @@ export const TYPES = {
     RESET_STORE: 'RESET_STORE',
 
     // UI actions.
-    SHOW_WEB_ID_DROPDOWN: 'SHOW_WEB_ID_DROPDOWN'
+    SHOW_WEB_ID_DROPDOWN: 'SHOW_WEB_ID_DROPDOWN',
+
+    SET_KNOWN_VERSIONS_FOR_URL: 'SET_KNOWN_VERSIONS_FOR_URL'
 };
 
 export const {
@@ -56,7 +58,9 @@ export const {
 
     resetStore,
 
-    showWebIdDropdown
+    showWebIdDropdown,
+
+    setKnownVersionsForUrl
 } = createActions(
     TYPES.SET_APP_STATUS,
     TYPES.SET_NETWORK_STATUS,
@@ -76,7 +80,9 @@ export const {
     TYPES.RECONNECT_SAFE_APP,
     TYPES.RESET_STORE,
 
-    TYPES.SHOW_WEB_ID_DROPDOWN
+    TYPES.SHOW_WEB_ID_DROPDOWN,
+
+    TYPES.SET_KNOWN_VERSIONS_FOR_URL
 );
 
 export const getAvailableWebIds = createAliasedAction(

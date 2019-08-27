@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { logger } from '$Logger';
 import { Error } from '$Components/PerusePages/Error';
-import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
+import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { addTab } from '$Actions/tabs_actions';
 import { errConsts } from '$Extensions/safe/err-constants';
 
@@ -79,7 +79,7 @@ export const safeRoute = ( store ) => ( {
             try {
                 logger.verbose( 'before fetch' );
                 data = await app.fetch( link );
-                data = getHTTPFriendlyData( data, link );
+                data = getHTTPFriendlyData( data, link, store );
                 logger.verbose( 'after fetch' );
             } catch ( error ) {
                 const message = cleanupNeonError( error );
@@ -100,7 +100,7 @@ export const safeRoute = ( store ) => ( {
                     try {
                         data = await app.fetch( `safe://${parsed.host}` );
 
-                        data = getHTTPFriendlyData( data, link );
+                        data = getHTTPFriendlyData( data, link, store );
                     } catch ( e ) {
                         logger.error( `No data at root of ${link}, either...` );
                         return sendErrResponse(
