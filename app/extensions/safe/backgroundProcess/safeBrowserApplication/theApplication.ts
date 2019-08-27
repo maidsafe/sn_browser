@@ -1,6 +1,11 @@
 import { SAFE } from '$Extensions/safe/constants';
 import { logger } from '$Logger';
 
+/*
+    Handle and maintain the safe browser application object.
+    Provide handlers to retrieve this from other bg process files.
+ */
+
 let safeBrowserAppObject;
 let currentStore;
 let isAuthing = false;
@@ -10,13 +15,13 @@ export const getIsAuthing = () => isAuthing;
 //
 export const getSafeBrowserAppObject = () => safeBrowserAppObject;
 export const getCurrentStore = () => currentStore;
-export const setCurrentStore = passedStore => {
+export const setCurrentStore = ( passedStore ) => {
     currentStore = passedStore;
 };
-export const setIsAuthing = state => {
+export const setIsAuthing = ( state ) => {
     isAuthing = state;
 };
-export const setSafeBrowserAppObject = passedApp => {
+export const setSafeBrowserAppObject = ( passedApp ) => {
     safeBrowserAppObject = passedApp;
 };
 

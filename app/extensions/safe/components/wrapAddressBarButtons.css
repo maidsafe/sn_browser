@@ -7,3 +7,10 @@
     flex-wrap: nowrap;
     padding: 2%;
 }
+
+.versionButton {
+    cursor: pointer;
+}
+.versionButton:disabled {
+    cursor: default;
+}

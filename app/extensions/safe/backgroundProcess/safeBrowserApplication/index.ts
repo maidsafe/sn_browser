@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
-// import {
-//     setCurrentStore,
-//     setSafeBrowserAppObject,
-//     getSafeBrowserAppObject,
-//     getIsAuthing,
-//     setIsAuthing,
-//     safeBrowserAppIsAuthed
-// } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/__theApplication';
+import {
+    // setCurrentStore,
+    setSafeBrowserAppObject,
+    getSafeBrowserAppObject
+    // getIsAuthing,
+    // setIsAuthing,
+    // safeBrowserAppIsAuthed
+} from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 //
 // import {
 //     manageReadStateActions,
@@ -44,19 +44,20 @@ let prevSafeBrowserAppAuthState;
 let prevSafeBrowserAppExperimentalState;
 const urisUnderAuth = [];
 
-export const getSafeBrowserAppObject = () => {
-    if ( !safeBrowserAppObject ) {
-        logger.error( 'SafeBrowserApp Object not ready yet.' );
-    }
-
-    return safeBrowserAppObject;
-};
+// export const getSafeBrowserAppObject = () => {
+//     if ( !safeBrowserAppObject ) {
+//         logger.error( 'SafeBrowserApp Object not ready yet.' );
+//     }
+//
+//     return safeBrowserAppObject;
+// };
 
 export const setupUnauthedConnection = () => {
     logger.info( 'Setting up unauthed connection' );
 
     // step one. Get app going.
     safeBrowserAppObject = initAnon();
+    setSafeBrowserAppObject( safeBrowserAppObject );
 };
 
 /**
