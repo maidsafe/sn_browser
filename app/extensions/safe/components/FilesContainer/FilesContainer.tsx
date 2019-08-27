@@ -26,19 +26,18 @@ FilesContainerProps,
         const targetFilesArray = Object.keys( filesMap );
         const [locationWithoutQuery, version] = currentLocation.split( '?v=' );
 
-        const filteredTargetFilesArray = targetFilesArray.filter( ( thePath ) =>
-            thePath.startsWith( locationWithoutQuery )
-        );
-
         const theList: Array<{
             link: string;
             text: string;
-        }> = filteredTargetFilesArray.map( ( filesMapPath ): {
+        }> = targetFilesArray.map( ( filesMapPath ): {
             link: string;
             text: string;
         } => {
             // get the base url out of the way
-            let theLink = filesMapPath.split( locationWithoutQuery )[1];
+            let theLink = filesMapPath;
+            if ( filesMapPath.includes( locationWithoutQuery ) ) {
+              theLink = filesMapPath.split( locationWithoutQuery )[1];
+            }
 
             if ( theLink.includes( '/' ) ) {
                 // only get the next part of the tree
@@ -59,7 +58,6 @@ FilesContainerProps,
         } );
 
         const uniqList = uniqBy( theList, ( item ) => item.link );
-
         return (
             <React.Fragment>
                 {uniqList.length > 0 && (

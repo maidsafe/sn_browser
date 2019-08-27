@@ -89,25 +89,10 @@ export const safeRoute = ( store ) => ( {
                     return sendErrResponse( 'No content found at this version' );
                 }
 
-                //  ContentError("No data found for path \"/testfolder/\"
-                if ( message.includes( 'ContentError("No data found for path' ) ) {
-                    logger.warn(
-                        'Failed to find path, attempting to retrieve root container.',
-                        link
-                    );
-                    logger.info( 'link info', parsed );
-
-                    try {
-                        data = await app.fetch( `safe://${parsed.host}` );
-
-                        data = getHTTPFriendlyData( data, link, store );
-                    } catch ( e ) {
-                        logger.error( `No data at root of ${link}, either...` );
-                        return sendErrResponse(
-                            `No data could be found for the Public Name ${parsed.host}`
-                        );
-                    }
-                }
+                logger.error( `No data could be found for the Public Name ${parsed.host}` );
+                return sendErrResponse(
+                    `No data could be found for the Public Name ${parsed.host}`
+                );
 
                 // return;
                 //       const shouldTryAgain =

@@ -25,6 +25,9 @@ export const initAnon = async ( options? ) => {
 
         safeBrowserAppObject = new Safe();
 
+        // TODO: the following code might be needed if we need to get connection info
+        // from the IPC response (auth credentials). To be confirmed soon in a few days.
+        /*
         logger.info( 'Authorising application...' );
         const authCredentials = safeBrowserAppObject.auth_app(
             APP_ID,
@@ -32,9 +35,10 @@ export const initAnon = async ( options? ) => {
             APP_VENDOR,
             41805
         );
+        */
 
         logger.info( 'Connecting to the Network...' );
-        safeBrowserAppObject.connect( 'net.maidsafe.safe_nodejs', authCredentials );
+        safeBrowserAppObject.connect( APP_ID );
 
         return safeBrowserAppObject;
     } catch ( e ) {
