@@ -34,26 +34,20 @@ FilesContainerProps,
             text: string;
         } => {
             // get the base url out of the way
-            let theLink = filesMapPath;
-            if ( filesMapPath.includes( locationWithoutQuery ) ) {
-              theLink = filesMapPath.split( locationWithoutQuery )[1];
+            let theLinkText = filesMapPath;
+
+            // only get the next part of the tree
+            if ( theLinkText.startsWith( '/' ) ) {
+                theLinkText = `/${theLinkText.split( '/' )[1]}`;
+            } else {
+                theLinkText = theLinkText.split( '/' )[0];
             }
 
-            if ( theLink.includes( '/' ) ) {
-                // only get the next part of the tree
-                theLink = theLink.split( '/' )[1];
-            }
-
-            const startLocation = locationWithoutQuery.endsWith( '/' )
-                ? locationWithoutQuery
-                : `${locationWithoutQuery}/`;
-            const href = `${startLocation}${theLink}${
-                version ? `?v=${version}` : ''
-            }`;
+            const href = `${theLinkText}${version ? `?v=${version}` : ''}`;
 
             return {
                 link: href,
-                text: theLink
+                text: theLinkText
             };
         } );
 
