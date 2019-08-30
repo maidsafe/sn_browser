@@ -22,7 +22,6 @@ module.exports = {
             jsx: true
         },
         useJSXTextNode: false,
-        project: './tsconfig.json',
         tsconfigRootDir: '.',
         sourceType: 'module',
         allowImportExportEverywhere: false,

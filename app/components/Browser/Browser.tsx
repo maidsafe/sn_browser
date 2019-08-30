@@ -11,6 +11,7 @@ import styles from './browser.css';
 import { handleNotifications, Notification } from '$Utils/handleNotificiations';
 
 interface BrowserProps {
+    address: string;
     bookmarks?: Array<any>;
     notifications: Array<Notification>;
     tabs: object;
@@ -72,8 +73,8 @@ class Browser extends Component<BrowserProps, {}> {
             tabForwards,
             tabBackwards
         } = this.props;
-        const addressBar = this.address;
-        const theBrowser = this;
+
+        // const addressBar = this.address;
         const body = document.querySelector( 'body' );
         const div = document.createElement( 'div' );
         div.setAttribute( 'class', 'no_display' );
