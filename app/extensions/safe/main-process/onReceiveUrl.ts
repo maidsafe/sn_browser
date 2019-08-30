@@ -5,8 +5,6 @@ import { openWindow } from '$App/openWindow';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 
 import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
-
-import { getSafeBrowserUnauthedReqUri } from '$Extensions/safe/safeBrowserApplication/init/initAnon';
 import { addTab } from '$Actions/tabs_actions';
 import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 

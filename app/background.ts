@@ -1,4 +1,4 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
+/* eslint global-require: 1 */
 import i18n from 'i18n';
 import { logger } from '$Logger';
 import { configureStore } from '$Store/configureStore';

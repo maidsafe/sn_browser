@@ -4,7 +4,7 @@ import { TYPES } from '$Actions/notification_actions';
 import { SAFE } from '$Extensions/safe/constants';
 
 // Some mocks to negate FFI and native libs we dont care about
-
+const onNetworkStateChange = jest.fn();
 //
 
 describe( 'Network callback', () => {
