@@ -1185,13 +1185,6 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.10.1.tgz#dec28ee02c3fc51da46d53ce4da9d5787312fbd7"
   integrity sha512-PYncBhgN1l02mwHmczukexmu4yRTjRDAAdcK62jdWSAW8epcnZ9K2win/7rMrffiv/c7XLVDA8vD+yi6WyvbGQ==
 
-"@grumpy/webpack-node-loader@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@grumpy/webpack-node-loader/-/webpack-node-loader-1.1.0.tgz#0a1c2f1e37738d69695b3f6011fa1a10b5387345"
-  integrity sha512-irdZHHcmFTlGiGuFpy9cFpWAgPWricqowQM0BxtTtfkwvYzABPrsVc34zsfjthAAw2J1IFCg7rMo0wVlO4BOfQ==
-  dependencies:
-    loader-utils "^1.1.0"
-
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
@@ -10669,10 +10662,9 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-native-ext-loader@2.3.0:
+"native-ext-loader@https://github.com/joshuef/node-native-ext-loader.git#resource":
   version "2.3.0"
-  resolved "https://registry.yarnpkg.com/native-ext-loader/-/native-ext-loader-2.3.0.tgz#85404be1f2ffa6b301856ade9e91d9d3d6675f53"
-  integrity sha512-awBQEfD25+YLi1voefLbjHiUt0yfm3Z4mBOLqbzFVR8ZOVv0MebeN9fhNiY0fxVEFiyBYtr/hF2VWfuMSCfFlw==
+  resolved "https://github.com/joshuef/node-native-ext-loader.git#de9253de1466e7d32f469b55b4e1f62aaf5bfe9f"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -10835,13 +10827,6 @@ node-ipc@^9.1.0:
     url "^0.11.0"
     util "^0.11.0"
     vm-browserify "^1.0.1"
-
-"node-loader@git+https://github.com/joshuef/node-loader.git#relative2":
-  version "0.6.0"
-  resolved "git+https://github.com/joshuef/node-loader.git#0efee5583b5092852e0772f1c45ec7b4f36dfbe2"
-  dependencies:
-    loader-utils "1.2.3"
-    schema-utils "^0.4.5"
 
 node-modules-regexp@^1.0.0:
   version "1.0.0"
@@ -14363,14 +14348,6 @@ scheduler@^0.15.0:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-
-schema-utils@^0.4.5:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.7.tgz#ba74f597d2be2ea880131746ee17d0a093c68187"
-  integrity sha512-v/iwU6wvwGK8HbU9yi3/nhGzP0yGSuhQMzL6ySiec1FSrZZDkhm4noOSWzrNFo/jEc+SJY6jRTwuwbSXJPDUnQ==
-  dependencies:
-    ajv "^6.1.0"
-    ajv-keywords "^3.1.0"
 
 schema-utils@^1.0.0:
   version "1.0.0"
