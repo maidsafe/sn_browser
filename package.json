@@ -26,7 +26,7 @@
     "prepush": "yarn test",
     "prelint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,ts,tsx,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "prerelease": "standard-version --prerelease rc",
-    "package": "yarn build && electron-builder build --publish never && yarn post-pack",
+    "package": "PACKAGING=true yarn build && electron-builder build --publish never && yarn post-pack",
     "post-pack": "node ./post-pack.js",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -126,7 +126,12 @@
       {
         "from": "node_modules/nessie-ui/dist/styles.css",
         "to": "nessie-styles.css"
-      }
+    },
+    {
+        "from" : "app/dist/index.node",
+        "to" : "index.node"
+    }
+
     ],
     "protocols": {
       "name": "SAFE Network URL",
@@ -214,6 +219,7 @@
     "@babel/register": "^7.4.4",
     "@commitlint/cli": "8.1.0",
     "@commitlint/config-conventional": "8.1.0",
+    "@grumpy/webpack-node-loader": "1.1.0",
     "@types/jest": "24.0.17",
     "@types/node": "12.7.2",
     "@types/react": "16.9.2",
@@ -275,6 +281,7 @@
     "less-loader": "5.0.0",
     "lint-staged": "^9.2.1",
     "mini-css-extract-plugin": "^0.8.0",
+    "native-ext-loader": "2.3.0",
     "node-sass": "^4.12.0",
     "opencollective-postinstall": "^2.0.1",
     "opensans-npm-webfont": "1.0.0",

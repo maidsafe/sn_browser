@@ -1185,6 +1185,13 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.10.1.tgz#dec28ee02c3fc51da46d53ce4da9d5787312fbd7"
   integrity sha512-PYncBhgN1l02mwHmczukexmu4yRTjRDAAdcK62jdWSAW8epcnZ9K2win/7rMrffiv/c7XLVDA8vD+yi6WyvbGQ==
 
+"@grumpy/webpack-node-loader@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@grumpy/webpack-node-loader/-/webpack-node-loader-1.1.0.tgz#0a1c2f1e37738d69695b3f6011fa1a10b5387345"
+  integrity sha512-irdZHHcmFTlGiGuFpy9cFpWAgPWricqowQM0BxtTtfkwvYzABPrsVc34zsfjthAAw2J1IFCg7rMo0wVlO4BOfQ==
+  dependencies:
+    loader-utils "^1.1.0"
+
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
@@ -10661,6 +10668,11 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+native-ext-loader@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/native-ext-loader/-/native-ext-loader-2.3.0.tgz#85404be1f2ffa6b301856ade9e91d9d3d6675f53"
+  integrity sha512-awBQEfD25+YLi1voefLbjHiUt0yfm3Z4mBOLqbzFVR8ZOVv0MebeN9fhNiY0fxVEFiyBYtr/hF2VWfuMSCfFlw==
 
 natural-compare@^1.4.0:
   version "1.4.0"
