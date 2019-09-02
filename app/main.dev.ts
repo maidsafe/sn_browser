@@ -41,14 +41,12 @@ import {
     onAppReady
 } from '$Extensions/main-process-extensions';
 
-// import { createSafeInfoWindow, createTray } from './setupTray';
-
 const initialState = {};
 const store = configureStore( initialState );
 
 logger.info( 'Main process starting.' );
 
-global.mainProcessStore = store;
+// global.mainProcessStore = store;
 
 // Needed for windows w/ SAFE browser app login
 ipcMain.on( 'open', ( event, data ) => {
