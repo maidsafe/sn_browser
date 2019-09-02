@@ -1,5 +1,7 @@
 /* eslint global-require: 1 */
 import i18n from 'i18n';
+import { remote } from 'electron';
+import path from 'path';
 import { logger } from '$Logger';
 import { configureStore } from '$Store/configureStore';
 import { I18N_CONFIG } from '$Constants';

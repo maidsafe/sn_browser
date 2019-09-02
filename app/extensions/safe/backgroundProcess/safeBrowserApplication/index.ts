@@ -32,9 +32,9 @@ import { initAuthedApplication } from '$Extensions/safe/backgroundProcess/safeBr
 
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
 
-export {
-    getWebIds
-} from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
+// export {
+//     getWebIds
+// } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
 
 let safeBrowserAppObject;
 let tempSafeBrowserObjectUntilAuthed;

@@ -129,7 +129,7 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
 let safeNodeAppPathModifier = '..';
 
 if ( isRunningPackaged && !isRunningNodeEnvTest ) {
-    safeNodeAppPathModifier = '../../app.asar.unpacked/';
+    safeNodeAppPathModifier = '../../safe_nodejs/';
 }
 
 // HACK: Prevent jest dying due to no electron globals

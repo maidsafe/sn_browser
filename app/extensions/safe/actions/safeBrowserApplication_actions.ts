@@ -2,7 +2,7 @@ import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
 import { logger } from '$Logger';
 import { inBgProcess } from '$Constants';
-import { getWebIds } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
+import { getWebIds } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
 
 export const TYPES = {
     ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP:

@@ -1,6 +1,15 @@
 import { Safe } from 'safe_nodejs';
+
+import path from 'path';
+import { remote, app } from 'electron';
 import { logger } from '$Logger';
-import { APP_INFO, CONFIG, PROTOCOLS } from '$Constants';
+import {
+    APP_INFO,
+    CONFIG,
+    PROTOCOLS,
+    isRunningPackaged,
+    inBgProcess
+} from '$Constants';
 // import { onNetworkStateChange } from '$Extensions/safe/safeBrowserApplication/init/networkStateChange';
 
 export const initAnon = async ( options? ) => {
