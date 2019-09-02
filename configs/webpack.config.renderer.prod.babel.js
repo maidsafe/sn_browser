@@ -30,6 +30,19 @@ export default merge.smart( baseConfig, {
 
     module: {
         rules: [
+            // NODE Files (override location for renderer)
+            {
+                test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
+                use: {
+                    loader: 'native-ext-loader',
+                    options: {
+                        basePath: process.env.PACKAGING
+                            ? ['..', '..']
+                            : ['dist'],
+                        checkResourcesPath: true
+                    }
+                }
+            },
             // Extract all .global.css to style.css as is
             {
                 test: /\.global\.css$/,

@@ -23,7 +23,14 @@ export default {
             // NODE Files
             {
                 test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
-                use: 'node-loader'
+                use: {
+                    loader: 'native-ext-loader',
+                    options: {
+                        basePath: process.env.PACKAGING
+                            ? ['..', '..']
+                            : ['dist']
+                    }
+                }
             }
         ]
     },
