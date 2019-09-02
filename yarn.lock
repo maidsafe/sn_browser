@@ -10824,10 +10824,12 @@ node-ipc@^9.1.0:
     util "^0.11.0"
     vm-browserify "^1.0.1"
 
-node-loader@0.6.0:
+"node-loader@git+https://github.com/joshuef/node-loader.git#relative2":
   version "0.6.0"
-  resolved "https://registry.yarnpkg.com/node-loader/-/node-loader-0.6.0.tgz#c797ef51095ed5859902b157f6384f6361e05ae8"
-  integrity sha1-x5fvUQle1YWZArFX9jhPY2HgWug=
+  resolved "git+https://github.com/joshuef/node-loader.git#0efee5583b5092852e0772f1c45ec7b4f36dfbe2"
+  dependencies:
+    loader-utils "1.2.3"
+    schema-utils "^0.4.5"
 
 node-modules-regexp@^1.0.0:
   version "1.0.0"
@@ -14349,6 +14351,14 @@ scheduler@^0.15.0:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+schema-utils@^0.4.5:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.7.tgz#ba74f597d2be2ea880131746ee17d0a093c68187"
+  integrity sha512-v/iwU6wvwGK8HbU9yi3/nhGzP0yGSuhQMzL6ySiec1FSrZZDkhm4noOSWzrNFo/jEc+SJY6jRTwuwbSXJPDUnQ==
+  dependencies:
+    ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
 
 schema-utils@^1.0.0:
   version "1.0.0"

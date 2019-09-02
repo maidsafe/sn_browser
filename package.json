@@ -342,7 +342,7 @@
     "lodash": ">=4.17.13",
     "moment": "^2.24.0",
     "nessie-ui": "7.0.4",
-    "node-loader": "git+https://github.com/joshuef/node-loader.git#relative",
+    "node-loader": "git+https://github.com/joshuef/node-loader.git#relative2",
     "open": "^6.3.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
