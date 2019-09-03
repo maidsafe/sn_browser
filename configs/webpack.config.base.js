@@ -26,6 +26,7 @@ export default {
                 use: {
                     loader: 'native-ext-loader',
                     options: {
+                        emit: false,
                         basePath: process.env.PACKAGING
                             ? ['..', '..']
                             : ['dist']

@@ -10664,7 +10664,7 @@ nanomatch@^1.2.9:
 
 "native-ext-loader@https://github.com/joshuef/node-native-ext-loader.git#resource":
   version "2.3.0"
-  resolved "https://github.com/joshuef/node-native-ext-loader.git#de9253de1466e7d32f469b55b4e1f62aaf5bfe9f"
+  resolved "https://github.com/joshuef/node-native-ext-loader.git#272a8c9cd309fd3c800bf3c58946769aafd0db17"
 
 natural-compare@^1.4.0:
   version "1.4.0"

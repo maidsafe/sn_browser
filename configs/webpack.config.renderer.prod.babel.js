@@ -36,9 +36,8 @@ export default merge.smart( baseConfig, {
                 use: {
                     loader: 'native-ext-loader',
                     options: {
-                        basePath: process.env.PACKAGING
-                            ? ['..', '..']
-                            : ['dist'],
+                        basePath: process.env.PACKAGING ? [] : ['dist'],
+                        emit: false,
                         checkResourcesPath: true
                     }
                 }
