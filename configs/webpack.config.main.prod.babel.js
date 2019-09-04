@@ -38,6 +38,22 @@ export default merge.smart( baseConfig, {
             ]
     },
 
+    module: {
+        rules: [
+            // NODE Files
+            {
+                test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
+                use: {
+                    loader: 'native-ext-loader',
+                    options: {
+                        emit: false,
+                        checkResourcesPath: true
+                    }
+                }
+            }
+        ]
+    },
+
     plugins: [
         new BundleAnalyzerPlugin( {
             analyzerMode:

@@ -22,7 +22,7 @@ import {
     ignoreAppLocation,
     isRunningUnpacked,
     isRunningDebug,
-    isRunningSpectronTestProcess,
+    isRunningTestCafeProcess,
     isRunningPackaged,
     isCI,
     CONFIG
@@ -77,7 +77,7 @@ if ( isRunningPackaged ) {
 }
 
 if (
-    ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked ) ||
+    ( !isCI && !isRunningTestCafeProcess && isRunningUnpacked ) ||
   isRunningDebug
 ) {
     /* eslint-disable @typescript-eslint/no-var-requires,global-require */
@@ -102,7 +102,7 @@ const installExtensions = async (): Promise<void> => {
 };
 
 app.on( 'ready', async () => {
-    if ( !ignoreAppLocation ) {
+    if ( !ignoreAppLocation && !isRunningTestCafeProcess ) {
         enforceMacOSAppLocation();
     }
 
@@ -132,7 +132,7 @@ app.on( 'ready', async () => {
     logger.info( 'App Ready' );
 
     onAppReady( store );
-    if ( ( !isRunningSpectronTestProcess && isRunningUnpacked ) || isRunningDebug ) {
+    if ( ( !isRunningTestCafeProcess && isRunningUnpacked ) || isRunningDebug ) {
         await installExtensions();
     }
 

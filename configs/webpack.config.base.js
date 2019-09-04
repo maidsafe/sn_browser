@@ -29,7 +29,7 @@ export default {
                         emit: false,
                         basePath: process.env.PACKAGING
                             ? ['..', '..']
-                            : ['dist']
+                            : ['../node_modules/safe_nodejs/native']
                     }
                 }
             }

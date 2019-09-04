@@ -16,7 +16,7 @@ const pkgName = pkg.name;
 let PLATFORM_NAME;
 
 if ( platform === OSX ) {
-    PLATFORM_NAME = 'osx';
+    PLATFORM_NAME = 'mac';
 }
 
 if ( platform === LINUX ) {

@@ -4,7 +4,7 @@ import { remote } from 'electron';
 import path from 'path';
 import { logger } from '$Logger';
 import { configureStore } from '$Store/configureStore';
-import { I18N_CONFIG } from '$Constants';
+import { I18N_CONFIG, isRunningTestCafeProcess } from '$Constants';
 import { manageRemoteCalls } from './background.manageRemoteCalls';
 import { setCurrentStore } from '$Actions/resetStore_action';
 import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';

@@ -47,10 +47,11 @@
     "test-all": "yarn lint && yarn check-types && yarn build && yarn test && yarn build-e2e && yarn test-e2e",
     "test-exts": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node_modules/.bin/electron node_modules/jest/bin/jest.js extensions --testPathIgnorePatterns=e2e --notify --detectOpenHandles",
     "test-watch": "yarn test --watch",
-    "cafe-e2e": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/*.spec.ts",
     "reset": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/resetStore.spec.ts",
-    "cafe-e2e-safe": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true TEST_CAFE_TEST_AUTH=true testcafe electron:. ./__testcafe__/safe/*.spec*",
-    "cafe-e2e-live": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe-live electron:. ./__testcafe__/atest.spec.ts"
+    "test-e2e": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_UNPACKED=true TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/*.spec.ts",
+    "test-e2e-packed": "node ./runE2ETests.js",
+    "test-e2e-safe": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true TEST_CAFE_TEST_AUTH=true testcafe electron:. ./__testcafe__/safe/*.spec*",
+    "test-e2e-live": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe-live electron:. ./__testcafe__/atest.spec.ts"
   },
   "standard-version": {
     "scripts": {
@@ -79,6 +80,7 @@
   },
   "main": "./app/main.prod.js",
   "build": {
+    "artifactName": "SAFE Network App-v${version}-${os}-x64",
     "productName": "SAFE Browser",
     "files": [
       "app/dist/",
@@ -125,7 +127,7 @@
         "to": "nessie-styles.css"
       },
       {
-        "from": "app/dist/index.node",
+        "from": "node_modules/safe_nodejs/native/index.node",
         "to": "index.node"
       }
     ],
@@ -276,7 +278,7 @@
     "less-loader": "5.0.0",
     "lint-staged": "^9.2.5",
     "mini-css-extract-plugin": "^0.8.0",
-    "native-ext-loader": "https://github.com/joshuef/node-native-ext-loader.git#resource",
+    "native-ext-loader": "https://github.com/joshuef/node-native-ext-loader.git#Electron",
     "node-sass": "^4.12.0",
     "opencollective-postinstall": "^2.0.1",
     "opensans-npm-webfont": "1.0.0",
@@ -302,10 +304,10 @@
     "stylelint-config-prettier": "^5.2.0",
     "stylelint-config-standard": "^18.3.0",
     "terser-webpack-plugin": "^1.3.0",
-    "testcafe": "1.2.1",
+    "testcafe": "1.4.3",
     "testcafe-browser-provider-electron": "https://github.com/joshuef/testcafe-browser-provider-electron.git#AddRCFileInJSWithBuild2",
     "testcafe-live": "^0.1.4",
-    "testcafe-react-selectors": "3.1.0",
+    "testcafe-react-selectors": "3.2.0",
     "typescript": "3.5.3",
     "url-loader": "^2.1.0",
     "webpack": "^4.39.3",

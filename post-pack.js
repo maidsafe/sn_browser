@@ -121,13 +121,13 @@ removalArray.forEach( ( file ) => {
     fs.removeSync( `${CONTAINING_FOLDER}/${file}` );
 } );
 
-console.info(
-    'Renaming package to:',
-    path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` )
-);
-// rename release folder
-fs.moveSync(
-    CONTAINING_FOLDER,
-    path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` ),
-    { overwrite: true }
-);
+// console.info(
+//     'Renaming package to:',
+//     path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` )
+// );
+// // rename release folder
+// fs.moveSync(
+//     CONTAINING_FOLDER,
+//     path.resolve( targetDir, `${RELEASE_FOLDER_NAME}` ),
+//     { overwrite: true }
+// );

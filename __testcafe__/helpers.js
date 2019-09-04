@@ -6,6 +6,8 @@ import {
     clickOnMainMenuItem
 } from 'testcafe-browser-provider-electron';
 
+import { addressBarInput } from './selectors';
+
 export const getPageUrl = ClientFunction( () => window.location.href );
 export const resetStore = async ( t ) => {
     await clickOnMainMenuItem( ['&Tests', 'Reset the store'] );
@@ -23,13 +25,12 @@ export const selectPreviousTab = async ( t ) => {
 export const getPageTitle = ClientFunction( () => document.title );
 
 export const navigateTo = async ( t, address ) => {
-    const input = ReactSelector( 'Input' ).find( 'input' );
     return (
         t
-            .selectText( input )
+            .selectText( await addressBarInput )
             .pressKey( 'backspace' )
             // .debug()
-            .typeText( input, address )
+            .typeText( await addressBarInput, address )
             .pressKey( 'enter' )
     );
 };
