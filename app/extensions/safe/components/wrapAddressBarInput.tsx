@@ -11,7 +11,6 @@ import { bindActionCreators } from 'redux';
 import styles from './wrapAddressBarButtons.css';
 import { CLASSES } from '$Constants';
 import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
-import * as TabActions from '$Actions/tabs_actions';
 
 import { logger } from '$Logger';
 
@@ -24,8 +23,7 @@ function mapStateToProps( state ) {
 
 function mapDispatchToProps( dispatch ) {
     const actions = {
-        ...SafeBrowserAppActions,
-        ...TabActions
+        ...SafeBrowserAppActions
     };
     return bindActionCreators( actions, dispatch );
 }
@@ -193,7 +191,7 @@ export const wrapAddressBarInput = (
     const hookedUpInput = connect(
         mapStateToProps,
         mapDispatchToProps
-    )( WrappedAddressBarInput );
+    )( AddressBarInput );
 
     return hookedUpInput;
 };
