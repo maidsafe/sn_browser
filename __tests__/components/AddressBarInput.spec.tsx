@@ -7,11 +7,7 @@ import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 const mockStore = configureStore();
 
 jest.mock( '$Logger' );
-
-// Some mocks to negate FFI and native libs we dont care about
-
-//
-
+// jest.mock('/Users/josh/Projects/safe/forks/browser/node_modules/safe_nodejs/native/index.node');
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'AddressBarInput', () => {
@@ -42,6 +38,9 @@ describe( 'AddressBarInput', () => {
             safeBrowserApp: {
                 isMock: false,
                 experimentsEnabled: false
+            },
+            pWeb: {
+                versionedUrls: {}
             }
         };
     } );
@@ -120,6 +119,9 @@ describe( 'AddressBarInput', () => {
 
         it( 'check on onKeyPress if updateTab is called', () => {
             const input = wrapper.find( 'Input' );
+
+            console.log( '===========>', input.props() );
+            input.simulate( 'keyPress', { which: 'a' } );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
             expect( props.updateTabUrl ).toHaveBeenCalled();
         } );

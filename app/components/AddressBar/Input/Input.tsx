@@ -98,6 +98,8 @@ AddressBarInputState
 
     handleKeyPress( event ) {
         const { tabId } = this.props;
+
+        console.log( 'udpatetabbb??', this.props.updateTabUrl() );
         if ( event.key !== 'Enter' ) {
             return;
         }
