@@ -177,7 +177,7 @@ ipcMain.on( 'command:close-window', (): void => {
 } );
 
 ipcMain.on( 'closeWindows', ( event, data ) => {
-    logger.info( 'resetStore IPC received...', data );
+    logger.info( 'closeWindows IPC received...', data );
 
     if ( data.length === 0 ) {
         logger.error( 'No windowIds passed to closeWindows.' );

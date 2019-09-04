@@ -1,69 +1,60 @@
-const spawn = require( 'cross-spawn' );
+const { spawn } = require( 'child_process' );
 const path = require( 'path' );
 
+let appResources = 'safe-browser/resources';
+
+// override all tests
+const targetTests = process.argv[2] || './__testcafe__/*.spec.ts';
+
 const { platform } = process;
+const MAC_OS = 'darwin';
+const LINUX = 'linux';
 const WINDOWS = 'win32';
 
-const s = `\\${path.sep}`;
-let pattern;
-const arg = process.argv[2];
-const argsArray = ['--notify'];
+let PLATFORM_NAME;
 
-if ( process.argv.includes( '--watch' ) ) {
-    argsArray.push( '--watch' );
+if ( platform === MAC_OS ) {
+    PLATFORM_NAME = 'mac';
+    appResources = 'SAFE Browser.app/Contents/Resources';
 }
 
-let testCommand = path.normalize( './node_modules/.bin/jest' );
-
-if ( process.platform === 'win32' ) {
-    testCommand = path.normalize( './node_modules/jest/bin/jest.js' );
+if ( platform === LINUX ) {
+    PLATFORM_NAME = 'linux-unpacked';
 }
 
-switch ( arg ) {
-    case 'e2e': {
-        pattern = `__e2e__${s}.+\\.spec\\.ts`;
-        argsArray.push( '--bail' );
-        argsArray.push( '--runInBand' );
-        break;
-    }
-    case 'exts-e2e': {
-        pattern = `app${s}extensions${s}[^${s}].+e2e${s}.+\\.spec\\.ts$`;
-
-        argsArray.push( '--bail' );
-        argsArray.push( '--runInBand' );
-        argsArray.push( '--testPathIgnorePatterns=network' );
-
-        break;
-    }
-    case 'exts-e2e-network': {
-        // These tests involve actual log in/out of the netowrk and saving data.
-        // eventually to be rolled against the live net (if that makes sense).
-        // Separated out for now to avoid runnin in prod against prod (only against mock in a packaged app version)
-        console.info(
-            'Running network specific tests (those that must be on mock)'
-        );
-        pattern = `app${s}extensions${s}[^${s}].+e2e${s}.+\\.network\\.spec\\.ts$`;
-
-        argsArray.push( '--bail' );
-        argsArray.push( '--runInBand' );
-
-        break;
-    }
-    default: {
-        pattern = `__e2e__${s}.+\\.spec\\.ts`;
-        argsArray.push( '--bail' );
-        argsArray.push( '--runInBand' );
-
-        break;
-    }
+if ( platform === WINDOWS ) {
+    PLATFORM_NAME = 'win-unpacked';
 }
-// should be first
-argsArray.unshift( pattern );
+
+const testCommand = `yarn`;
+
+const argsArray = ['testcafe', 'electron:.', targetTests];
 
 // eslint-disable-next-line no-console
 console.info( 'Running tests via:', testCommand, argsArray );
 
-const result = spawn.sync( testCommand, argsArray, { stdio: 'inherit' } );
+const result = spawn( testCommand, argsArray, {
+    env: {
+        ...process.env,
+        LIB_PATH: `${__dirname}/release/${PLATFORM_NAME}/${appResources}`,
+        NODE_ENV: 'test',
+        TEST_CAFE: true
+    }
+} );
 
-// eslint-disable-next-line unicorn/no-process-exit
-process.exit( result.status );
+result.stdout.on( 'data', ( data ) => {
+    // eslint-disable-next-line no-console
+    console.log( `stdout: ${data}` );
+} );
+
+result.stderr.on( 'data', ( data ) => {
+    // eslint-disable-next-line no-console
+    console.error( `stderr: ${data}` );
+} );
+
+result.on( 'close', ( code ) => {
+    // eslint-disable-next-line no-console
+    console.log( `child process exited with code ${code}` );
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit( result.status );
+} );

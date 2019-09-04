@@ -31,6 +31,13 @@ import {
     closeWindow
 } from '$Actions/windows_actions';
 
+const getWindowId = ( win ) => {
+    // if running testcafe, menu access window and actual window are different
+    // for some reason...
+    const windowId = isRunningTestCafeProcess ? 2 : win.id;
+
+    return windowId;
+};
 export class MenuBuilder {
     private mainWindow: AppWindow;
 
@@ -116,7 +123,8 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+N',
                     click: ( item, win ) => {
                         if ( this.openWindow && win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             this.openWindow( this.store, windowId );
                         }
                     }
@@ -126,7 +134,8 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+T',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
@@ -155,7 +164,8 @@ export class MenuBuilder {
                     accelerator: 'Ctrl+Tab',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const openTabs = store.getState().windows.openWindows[windowId]
                                 .tabs;
                             const { activeTab } = store.getState().windows.openWindows[
@@ -182,7 +192,7 @@ export class MenuBuilder {
                     accelerator: 'Ctrl+Shift+Tab',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
                             const openTabs = store.getState().windows.openWindows[windowId]
                                 .tabs;
                             const { activeTab } = store.getState().windows.openWindows[
@@ -209,7 +219,8 @@ export class MenuBuilder {
                     accelerator: 'CommandOrControl+W',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const tabId = store.getState().windows.openWindows[windowId]
                                 .activeTab;
                             const openTabs = store.getState().windows.openWindows[windowId]
@@ -227,7 +238,8 @@ export class MenuBuilder {
                     label: 'Close Window',
                     accelerator: 'CommandOrControl+Shift+W',
                     click: ( item, win ) => {
-                        const windowId = win.id;
+                        const windowId = getWindowId( win );
+
                         if ( win ) {
                             this.store.dispatch( closeWindow( { windowId } ) );
                             win.close();
@@ -239,7 +251,8 @@ export class MenuBuilder {
                     label: 'Reopen Last Tab',
                     accelerator: 'CommandOrControl+Shift+T',
                     click: ( item, win ) => {
-                        const windowId = win.id;
+                        const windowId = getWindowId( win );
+
                         // need to figure this one out
                         store.dispatch( reopenTab( { windowId } ) );
                     }
@@ -249,8 +262,10 @@ export class MenuBuilder {
                     label: 'Open Location',
                     accelerator: 'CommandOrControl+L',
                     click: ( item, win ) => {
+                        const windowId = getWindowId( win );
+
                         const thisWindowActiveTabId = store.getState().windows.openWindows[
-                            win.id
+                            windowId
                         ].activeTab;
 
                         this.store.dispatch(
@@ -305,7 +320,8 @@ export class MenuBuilder {
             process.platform === 'darwin' ? 'Alt+Shift+B' : 'Control+Shift+O',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
@@ -335,7 +351,8 @@ export class MenuBuilder {
             process.platform === 'darwin' ? 'CommandOrControl+R' : 'F5',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const tabId = store.getState().windows.openWindows[windowId]
                                 .activeTab;
                             this.store.dispatch(
@@ -360,7 +377,8 @@ export class MenuBuilder {
                 : 'Control+Shift+I',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const tabId = store.getState().windows.openWindows[windowId]
                                 .activeTab;
                             store.dispatch(
@@ -380,7 +398,8 @@ export class MenuBuilder {
             process.platform === 'darwin' ? 'CommandOrControl+Y' : 'Control+H',
                     click: ( item, win ) => {
                         if ( win ) {
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
+
                             const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
@@ -408,7 +427,8 @@ export class MenuBuilder {
                     label: 'Forward',
                     accelerator: 'CommandOrControl + ]',
                     click: ( item, win ) => {
-                        const windowId = win.id;
+                        const windowId = getWindowId( win );
+
                         const timeStamp = new Date().getTime();
                         const tabId = store.getState().windows.openWindows[windowId]
                             .activeTab;
@@ -421,7 +441,8 @@ export class MenuBuilder {
                     label: 'Backward',
                     accelerator: 'CommandOrControl + [',
                     click: ( item, win ) => {
-                        const windowId = win.id;
+                        const windowId = getWindowId( win );
+
                         const timeStamp = new Date().getTime();
                         const tabId = store.getState().windows.openWindows[windowId]
                             .activeTab;
@@ -499,7 +520,7 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             // TODO: Refactor and DRY this out w/ handleRemoteCalls
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
 
                             const resetStoreActionObject = getResetStoreActionObject(
                                 store.getState(),
@@ -515,7 +536,7 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         if ( win ) {
                             // TODO: Refactor and DRY this out w/ handleRemoteCalls
-                            const windowId = win.id;
+                            const windowId = getWindowId( win );
 
                             const state = store.getState();
 

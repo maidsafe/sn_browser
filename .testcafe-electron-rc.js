@@ -1,31 +1,42 @@
-const RELEASE_FOLDER_NAME = require('./releaseName');
+// const RELEASE_FOLDER_NAME = require('./releaseName');
+let TEST_UNPACKED = process.env.TEST_UNPACKED;
 
-let appString = 'SAFE Browser.app';
+let appString = 'safe-browser';
 
-if (process.platform === 'linux') {
-    appString = 'safe-browser';
+const { platform } = process;
+const MAC_OS = 'darwin';
+const LINUX = 'linux';
+const WINDOWS = 'win32';
+
+if (platform === MAC_OS) {
+    PLATFORM_NAME = 'mac';
+    appString = 'SAFE Browser.app';
 }
 
-if (process.platform === 'windows') {
-    appString = 'safe-browser';
+if (platform === LINUX) {
+    PLATFORM_NAME = 'linux-unpacked';
 }
 
-const allArgs = ['--mock'];
-
-const testAuthenticator = process.env.TEST_CAFE_TEST_AUTH;
-
-if (testAuthenticator) {
-    // TODO setup proper app structure for testing of webpages using SAFE BROWSER
-    // this check can act like a placeholder for now
-    allArgs.push('--testCafeURL');
-    allArgs.push(AUTH_TAB);
+if (platform === WINDOWS) {
+    PLATFORM_NAME = 'win-unpacked';
 }
+
+const allArgs = ['--mock', '--ignoreAppLocation'];
 
 // Changing mainWindowURl to that of a tab gets us the browser UI going too.
-module.exports = {
+const config = {
     mainWindowUrl: './app/app.html',
     appPath: '.',
-    // electronPath: `./release/${RELEASE_FOLDER_NAME}/${appString}`,
+    // electronPath: TEST_UNPACKED ? 'undefined' : `./release/${RELEASE_FOLDER_NAME}/${appString}`,
     appArgs: allArgs
     // openDevTools: true
 };
+
+if (!TEST_UNPACKED) {
+    console.log('Testing packaged app. \n');
+    config.electronPath = `./release/${PLATFORM_NAME}/${appString}`;
+} else {
+    console.log('Testing unpackaged app. \n');
+}
+
+module.exports = config;

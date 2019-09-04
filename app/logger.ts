@@ -110,6 +110,15 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
     process.on( 'uncaughtException', ( error: NodeError ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
         log.error( 'whoops! there was an uncaught error:' );
+
+        if ( inMainProcess ) {
+            log.error( 'In the main process' );
+        }
+
+        if ( inBgProcess ) {
+            log.error( 'In the bg process' );
+        }
+
         log.error(
             JSON.stringify( error, [
                 'message',

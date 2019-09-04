@@ -3,6 +3,13 @@ import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
 import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
 
 import { CLASSES } from '../app/constants/classes';
+import {
+    bookmarkPage,
+    closeTab,
+    addTab,
+    tab,
+    addressBarInput
+} from './selectors';
 
 const assertNoConsoleErrors = async ( t ) => {
     const { error } = await t.getBrowserConsoleMessages();
@@ -16,7 +23,9 @@ const assertNoConsoleErrors = async ( t ) => {
 
 fixture`Settings Menu`
     .page( '../app/app.html' )
-    .afterEach( resetStore )
+    .afterEach( async ( t ) => {
+        await resetStore( t );
+    } )
     .beforeEach( async () => {
         await waitForReact();
     } );
@@ -73,7 +82,7 @@ test( 'can open settings menu and go to bookmarks', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__BOOKMARKS}` )
-        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .expect( addressBarInput.value )
         .eql( 'safe-browser://bookmarks' );
 } );
 
@@ -81,6 +90,6 @@ test( 'can open settings menu and go to history', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` )
-        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .expect( addressBarInput.value )
         .eql( 'safe-browser://history' );
 } );
