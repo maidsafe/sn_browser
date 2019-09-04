@@ -120,8 +120,6 @@ describe( 'AddressBarInput', () => {
         it( 'check on onKeyPress if updateTab is called', () => {
             const input = wrapper.find( 'Input' );
 
-            console.log( '===========>', input.props() );
-            input.simulate( 'keyPress', { which: 'a' } );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
             expect( props.updateTabUrl ).toHaveBeenCalled();
         } );
