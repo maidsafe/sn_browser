@@ -1,16 +1,20 @@
 matrix:
-  # allow_failures:
-  #   - os: windows
+  allow_failures:
+    - os: windows
   include:
     - os: osx
-      language: node_js
+      language:
+        - node_js
+        - rust
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
         - NODE_ENV=dev
 
     - os: linux
-      language: node_js
+      language:
+        - node_js
+        - rust
       services:
         - xvfb
       env:
@@ -29,14 +33,15 @@ matrix:
             - xorriso
             - rpm
 
-    # - os: windows
-    #   language: node_js
-    #   node_js:
-    #     - 8
-    #   env:
-    #     - ELECTRON_CACHE=$HOME/.cache/electron
-    #     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-    #     - NODE_ENV=dev
+    - os: windows
+      language:
+        - node_js
+        - rust
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - NODE_ENV=dev
+        - YARN_GPG=no # otherwise this starts gpg-agent that never exits
 
 
 before_cache:
