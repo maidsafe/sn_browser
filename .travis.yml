@@ -56,6 +56,7 @@ before_install:
   - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.rs
   - chmod +x ./rustup.rs
   - ./rustup.rs -y
+  - source $HOME/.cargo/env
   # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs  | sh -y; fi
   # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then export CXX="g++-8"; fi
 
