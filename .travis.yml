@@ -62,7 +62,7 @@ before_install:
 
 
 install:
-  - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
+  - travis_wait 50 yarn --ignore-engines --network-timeout 800000;
   # On Linux, initialize "virtual display". See before_script
 
 
