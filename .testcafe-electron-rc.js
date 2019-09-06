@@ -2,6 +2,7 @@
 let TEST_UNPACKED = process.env.TEST_UNPACKED;
 
 let appString = 'safe-browser';
+let appResources = 'resources/app.asar';
 
 const { platform } = process;
 const MAC_OS = 'darwin';
@@ -11,6 +12,7 @@ const WINDOWS = 'win32';
 if (platform === MAC_OS) {
     PLATFORM_NAME = 'mac';
     appString = 'SAFE Browser.app';
+    appResources = 'Contents/Resources/app.asar';
 }
 
 if (platform === LINUX) {
@@ -34,6 +36,9 @@ const config = {
 
 if (!TEST_UNPACKED) {
     console.log('Testing packaged app. \n');
+
+    config.mainWindowUrl = `./release/${PLATFORM_NAME}/${appString}/${appResources}/app/app.html`;
+    config.appPath = `./release/${PLATFORM_NAME}/${appString}/${appResources}`;
     config.electronPath = `./release/${PLATFORM_NAME}/${appString}`;
 } else {
     console.log('Testing unpackaged app. \n');

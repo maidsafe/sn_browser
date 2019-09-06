@@ -10,10 +10,12 @@ import {
 
 import { addFileMenus } from '$Extensions/safe/menus';
 
-export { onRemoteCallInBgProcess } from '$Extensions/safe/handleRemoteCalls';
+// export { onRemoteCallInBgProcess } from '$Extensions/safe/backgroundProcess/handleRemoteCalls';
 
 export { additionalReducers } from '$Extensions/safe/reducers';
-export { onWebviewPreload } from '$Extensions/safe/webviewPreload';
+export {
+    onWebviewPreload
+} from '$Extensions/safe/webviewProcess/webviewPreload';
 export { urlIsValid } from '$Extensions/safe/utils/safeHelpers';
 
 export { setupRoutes } from './server-routes';

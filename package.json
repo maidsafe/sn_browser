@@ -49,8 +49,8 @@
     "test-watch": "yarn test --watch",
     "reset": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/resetStore.spec.ts",
     "test-e2e": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_UNPACKED=true TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/*.spec.ts",
-    "test-e2e-packed": "node ./runE2ETests.js",
-    "test-e2e-safe": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true TEST_CAFE_TEST_AUTH=true testcafe electron:. ./__testcafe__/safe/*.spec*",
+    "test-e2e-packed": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/*.spec.ts",
+    "test-e2e-safe": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/safe/*.spec*",
     "test-e2e-live": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe-live electron:. ./__testcafe__/atest.spec.ts"
   },
   "standard-version": {
@@ -125,10 +125,6 @@
       {
         "from": "node_modules/nessie-ui/dist/styles.css",
         "to": "nessie-styles.css"
-      },
-      {
-        "from": "node_modules/safe_nodejs/native/index.node",
-        "to": "index.node"
       }
     ],
     "protocols": {
@@ -278,7 +274,7 @@
     "less-loader": "5.0.0",
     "lint-staged": "^9.2.5",
     "mini-css-extract-plugin": "^0.8.0",
-    "native-ext-loader": "https://github.com/joshuef/node-native-ext-loader.git#Electron",
+    "native-ext-loader": "2.3.0",
     "node-sass": "^4.12.0",
     "opencollective-postinstall": "^2.0.1",
     "opensans-npm-webfont": "1.0.0",
@@ -294,7 +290,6 @@
     "redux-mock-store": "1.5.3",
     "resolve-url-loader": "3.1.0",
     "rimraf": "^3.0.0",
-    "safe_nodejs": "https://github.com/joshuef/neon-bridge.git#0.7.0",
     "sass-loader": "^8.0.0",
     "should": "13.2.3",
     "sinon": "^7.4.2",
@@ -361,6 +356,7 @@
     "redux-promise": "0.6.0",
     "redux-promise-middleware": "6.1.1",
     "redux-thunk": "^2.3.0",
+    "safe_nodejs": "https://github.com/joshuef/safe-nodejs.git#WindowsWork",
     "source-map-support": "^0.5.12",
     "tslint": "5.19.0"
   },
