@@ -24,13 +24,7 @@ export default {
             {
                 test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
                 use: {
-                    loader: 'native-ext-loader',
-                    options: {
-                        emit: false,
-                        basePath: process.env.PACKAGING
-                            ? ['..', '..']
-                            : ['../node_modules/safe_nodejs/native']
-                    }
+                    loader: 'native-ext-loader'
                 }
             }
         ]

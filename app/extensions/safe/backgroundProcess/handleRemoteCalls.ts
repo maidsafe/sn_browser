@@ -24,19 +24,19 @@ export const getResetStoreActionObject = ( state, windowId ) => {
     return { fromWindow: windowId, tabId, windowsToBeClosed };
 };
 
-export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => {
-    theStore = store;
-
-    logger.info( 'Handling remote call in extension', theCall );
-    if ( theCall && theCall.isListener ) {
-        allAPICalls[theCall.name]( ( error, args ) => {
-            store.dispatch(
-                remoteCallActions.updateRemoteCall( {
-                    ...theCall,
-                    done: true,
-                    response: args
-                } )
-            );
-        } );
-    }
-};
+// export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => {
+//     theStore = store;
+//
+//     logger.info( 'Handling remote call in extension', theCall );
+//     if ( theCall && theCall.isListener ) {
+//         allAPICalls[theCall.name]( ( error, args ) => {
+//             store.dispatch(
+//                 remoteCallActions.updateRemoteCall( {
+//                     ...theCall,
+//                     done: true,
+//                     response: args
+//                 } )
+//             );
+//         } );
+//     }
+// };

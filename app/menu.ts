@@ -20,7 +20,7 @@ import { AppWindow } from '$App/definitions/globals.d';
 import { getExtensionMenuItems } from '$Extensions';
 
 // TODO: Properly abstract this
-import { getResetStoreActionObject } from '$Extensions/safe/handleRemoteCalls';
+import { getResetStoreActionObject } from '$App/extensions/safe/backgroundProcess/handleRemoteCalls';
 
 import {
     addTabEnd,

@@ -84,9 +84,10 @@ script:
   - travis_retry yarn run test-peruse --forceExit
   - travis_retry yarn run test-exts --forceExit
   - yarn package
-  - travis_retry yarn test-e2e-packed ./__testcafe__/peruse.spec.ts
-  - travis_retry yarn test-e2e-packed  ./__testcafe__/navigation.spec.ts
-  - travis_retry yarn test-e2e-packed  ./__testcafe__/settingsMenu.spec.ts
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.ts
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.ts
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/settingsMenu.spec.ts
+  - travis_retry yarn cafe-e2e-safe;
   # TODO: reenable safe tests
   # - travis_retry yarn cafe-e2e-safe;
 

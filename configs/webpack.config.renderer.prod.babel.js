@@ -34,12 +34,7 @@ export default merge.smart( baseConfig, {
             {
                 test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
                 use: {
-                    loader: 'native-ext-loader',
-                    options: {
-                        basePath: process.env.PACKAGING ? [] : ['dist'],
-                        emit: false,
-                        checkResourcesPath: true
-                    }
+                    loader: 'native-ext-loader'
                 }
             },
             // Extract all .global.css to style.css as is
