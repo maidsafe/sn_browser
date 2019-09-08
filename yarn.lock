@@ -302,10 +302,10 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-syntax-decorators" "^7.2.0"
 
-"@babel/plugin-proposal-do-expressions@^7.0.0":
-  version "7.5.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-do-expressions/-/plugin-proposal-do-expressions-7.5.0.tgz#ceb594d4a618545b00aa0b5cd61cad4aaaeb7a5a"
-  integrity sha512-xe0QQrhm+DGj6H23a6XtwkJNimy1fo71O/YVBfrfvfSl0fsq9T9dfoQBIY4QceEIdUo7u9s7OPEdsWEuizfGeg==
+"@babel/plugin-proposal-do-expressions@^7.6.0":
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-do-expressions/-/plugin-proposal-do-expressions-7.6.0.tgz#192953fed8620d13d12a61f68defd26f41059193"
+  integrity sha512-qJDaoBDbLySwU1tG0jbAomOwz8W1PEiiiK0iLQAnHLr4PYIMVX4ltDGkj3uAKx4HDs1WJ0tozGW1zAQjuTIiWg==
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-syntax-do-expressions" "^7.2.0"
@@ -10688,9 +10688,10 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-"native-ext-loader@https://github.com/joshuef/node-native-ext-loader.git#resource":
+"native-ext-loader@https://github.com/joshuef/node-native-ext-loader.git#Electron":
   version "2.3.0"
-  resolved "https://github.com/joshuef/node-native-ext-loader.git#272a8c9cd309fd3c800bf3c58946769aafd0db17"
+  uid e39c091056d362688855e16ff1f967caab893da2
+  resolved "https://github.com/joshuef/node-native-ext-loader.git#e39c091056d362688855e16ff1f967caab893da2"
 
 natural-compare@^1.4.0:
   version "1.4.0"
