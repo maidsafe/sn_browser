@@ -320,7 +320,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-object-rest-spread": "7.5.5",
-    "@babel/preset-typescript": "7.3.3",
+    "@babel/preset-typescript": "7.6.0",
     "@fortawesome/fontawesome-free": "^5.10.2",
     "@types/redux": "3.6.0",
     "antd": "3.21.4",
