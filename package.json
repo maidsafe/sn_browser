@@ -50,7 +50,6 @@
     "reset": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/resetStore.spec.ts",
     "test-e2e": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_UNPACKED=true TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/*.spec.ts",
     "test-e2e-packed": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/*.spec.ts",
-    "test-e2e-safe": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true IS_UNPACKED=true testcafe electron:. ./__testcafe__/safe/*.spec*",
     "test-e2e-live": "node -r babel-register-ts ./internals/scripts/CheckBuiltsExist.ts && cross-env NODE_ENV=test TEST_CAFE=true testcafe-live electron:. ./__testcafe__/atest.spec.ts"
   },
   "standard-version": {
