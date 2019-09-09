@@ -35,16 +35,15 @@ const config = {
 };
 
 if (!TEST_UNPACKED) {
-    console.log('Testing packaged app. \n');
-
     if (platform === MAC_OS) {
         config.mainWindowUrl = `./release/${PLATFORM_NAME}/${appString}/${appResources}/app/app.html`;
         config.appPath = `./release/${PLATFORM_NAME}/${appString}/${appResources}`;
     }
 
     config.electronPath = `./release/${PLATFORM_NAME}/${appString}`;
+    console.log('Testing packaged app.', config, ' \n');
 } else {
-    console.log('Testing unpackaged app. \n');
+    console.log('Testing unpackaged app. ', config, ' \n');
 }
 
 module.exports = config;
