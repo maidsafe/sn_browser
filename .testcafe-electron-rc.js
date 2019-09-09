@@ -37,8 +37,11 @@ const config = {
 if (!TEST_UNPACKED) {
     console.log('Testing packaged app. \n');
 
-    config.mainWindowUrl = `./release/${PLATFORM_NAME}/${appString}/${appResources}/app/app.html`;
-    config.appPath = `./release/${PLATFORM_NAME}/${appString}/${appResources}`;
+    if (platform === MAC_OS) {
+        config.mainWindowUrl = `./release/${PLATFORM_NAME}/${appString}/${appResources}/app/app.html`;
+        config.appPath = `./release/${PLATFORM_NAME}/${appString}/${appResources}`;
+    }
+
     config.electronPath = `./release/${PLATFORM_NAME}/${appString}`;
 } else {
     console.log('Testing unpackaged app. \n');
