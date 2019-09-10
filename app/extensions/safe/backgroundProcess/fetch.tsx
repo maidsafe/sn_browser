@@ -7,6 +7,10 @@ import { FilesContainer } from '$Extensions/safe/components/FilesContainer';
 import { logger } from '$Logger';
 import { setKnownVersionsForUrl } from '$Extensions/safe/actions/pWeb_actions';
 import { SafeData } from '$Extensions/safe/safe.d';
+import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
+
+const DEFAULT_PAGE = '/index.html';
+// const DEFAULT_PAGES = ['index','index.html'];
 
 const MIME_TYPE_BYTERANGES = 'multipart/byteranges';
 const MIME_TYPE_OCTET_STREAM = 'application/octet-stream';
@@ -19,18 +23,11 @@ const HEADERS_CONTENT_RANGE = 'Content-Range';
 const PUB_IMMUTABLE = 'PublishedImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
 
-export const getHTTPFriendlyData = (
-    data: { [dataType: string]: SafeData },
+export const getHTTPFriendlyData = async (
     url: string,
     store: Store
 ): { headers: {}; body: Buffer | string } => {
-    logger.info( 'Building a HTTP response for data from: ', url, data );
-
-    let theSafeDataObject;
-
-    // TODO: check if we're on a versioned url here...
-    const parsed = parse( url );
-
+    // setup response object
     const response = {
         headers: {
             // lets default to html
@@ -39,17 +36,52 @@ export const getHTTPFriendlyData = (
         body: Buffer.from( [] )
     };
 
+    // grab app
+    const app = ( await getSafeBrowserAppObject() ) || {};
+
+    if ( !app ) {
+        response.body = Buffer.from( 'SAFE not connected yet' );
+
+        return response;
+    }
+
+    const data = await app.fetch( url );
+
+    logger.info( 'Building a HTTP response for data from: ', url );
+
+    let theSafeDataObject;
+
+    // TODO: check if we're on a versioned url here...
+    const parsed = parse( url, true );
+    const currentLocation = parsed.path || '/';
+
+    // temp method to display container, this could be a tab switch
+    // later on
+    const displayContainer = parsed.query ? parsed.query.container : undefined;
+
     if ( data[PUB_IMMUTABLE] ) {
+        logger.verbose( 'Handling Immutable data for location:', currentLocation );
         theSafeDataObject = data[PUB_IMMUTABLE];
         response.body = Buffer.from( theSafeDataObject.data );
     }
 
     if ( data[FILES_CONTAINER] ) {
-        const currentLocation = parsed.path || '/';
+        logger.verbose( 'Handling FilesContainer for location:', currentLocation );
 
         theSafeDataObject = data[FILES_CONTAINER];
 
         const filesMap = data[FILES_CONTAINER].files_map;
+
+        if ( filesMap[DEFAULT_PAGE] && !displayContainer ) {
+            logger.info(
+                'Default page found, loading',
+                parsed.host,
+                currentLocation,
+                filesMap[DEFAULT_PAGE]
+            );
+            const defaultTarget = filesMap[DEFAULT_PAGE].link;
+            return getHTTPFriendlyData( defaultTarget, store );
+        }
 
         response.body = ReactDOMServer.renderToStaticMarkup(
             <html lang="en">
@@ -57,6 +89,8 @@ export const getHTTPFriendlyData = (
             </html>
         );
     }
+
+    logger.verbose( 'Returning fetch result', response );
 
     // either use NRS version or the version on the container
     const { version } = theSafeDataObject.resolved_from || theSafeDataObject;

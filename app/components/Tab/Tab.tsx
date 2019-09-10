@@ -69,7 +69,7 @@ export class Tab extends Component<TabProps, TabState> {
 
     static defaultProps = {
         isActiveTab: false,
-        url: 'http://nowhere.com'
+        url: 'http://start.com'
     };
 
     static getDerivedStateFromError( error ) {
