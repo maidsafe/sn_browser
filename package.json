@@ -355,7 +355,7 @@
     "redux-promise": "0.6.0",
     "redux-promise-middleware": "6.1.1",
     "redux-thunk": "^2.3.0",
-    "safe_nodejs": "https://github.com/joshuef/safe-nodejs.git#WindowsWork",
+    "safe_nodejs": "https://github.com/joshuef/safe-nodejs.git#UseNeonBranch",
     "source-map-support": "^0.5.12",
     "tslint": "5.19.0"
   },
