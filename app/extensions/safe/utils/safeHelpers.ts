@@ -32,8 +32,9 @@ export const urlIsValid = ( testUrl ) => {
     urlObject.protocol === 'chrome-devtools:' ||
     urlObject.protocol === 'file:' ||
     urlObject.protocol === 'blob:' ||
-    urlObject.protocol === 'chrome-extension:' ||
-    urlObject.host === 'chrome-devtools-frontend.appspot.com'
+    urlObject.protocol === 'chrome-extension:'
+    // ||
+    // urlObject.host === 'chrome-devtools-frontend.appspot.com'
     ) {
         return true;
     }

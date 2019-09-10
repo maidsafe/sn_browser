@@ -19,6 +19,7 @@ const MIME_TYPE_JSON = 'application/json';
 const HEADERS_CONTENT_TYPE = 'Content-Type';
 const HEADERS_CONTENT_LENGTH = 'Content-Length';
 const HEADERS_CONTENT_RANGE = 'Content-Range';
+const HEADERS_CSP = 'Content-Security-Policy';
 
 const PUB_IMMUTABLE = 'PublishedImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
@@ -36,7 +37,17 @@ export const getHTTPFriendlyData = async (
     const response = {
         headers: {
             // lets default to html
-            [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML
+            [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML,
+            [HEADERS_CSP]: `
+	default-src 'none';
+	script-src 'self';
+	img-src 'self' data:;
+	style-src 'self';
+	font-src 'self';
+	base-uri 'none';
+	form-action 'none';
+	frame-ancestors 'none';
+`
         },
         body: Buffer.from( [] )
     };

@@ -10,17 +10,37 @@ import { urlIsValid } from './utils/safeHelpers';
 //     parsedUrlObject.protocol === 'localhost:' || parsedUrlObject.hostname === '127.0.0.1';
 
 export const blockNonSAFERequests = () => {
-    // const filter = {
-    //     urls: ['*:*']
-    // };
+    const filter = {
+        urls: ['*://*/*']
+    };
     const httpRegExp = new RegExp( '^http' );
 
     const safeSession = remote.session.fromPartition( CONFIG.SAFE_PARTITION );
 
-    safeSession.webRequest.onBeforeRequest( null, ( details, callback ): void => {
+    safeSession.webRequest.onBeforeRequest( filter, ( details, callback ): void => {
     //  testcafe needs access to inject code
         if ( isRunningTestCafeProcess ) {
             callback( {} );
+            return;
+        }
+
+        const parsed = parseURL( details.url );
+
+        // MacOS, devmode. Attempts are made to load from
+        // /Users... electron...map.js
+        let appLocation = remote.app.getPath( 'exe' );
+
+        if ( process.platform === 'darwin' ) {
+            const theSplit = appLocation.split( '.app' );
+            appLocation = `${theSplit[0]}.app`;
+        }
+
+        if ( parsed.path.includes( appLocation ) ) {
+            const fileLocation = details.url.split( appLocation )[1];
+            const redirectURL = `file://${appLocation}.app/${fileLocation}`;
+            logger.verbose( 'Permitting app dep url', redirectURL );
+            callback( { redirectURL } );
+
             return;
         }
 
@@ -42,7 +62,7 @@ export const blockNonSAFERequests = () => {
             }
         }
 
-        logger.error( 'Blocked URL:', details.url );
+        logger.warn( 'Blocked URL:', details.url );
         callback( { cancel: true } );
     } );
 };
