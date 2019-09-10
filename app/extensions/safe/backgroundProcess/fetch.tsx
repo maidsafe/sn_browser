@@ -26,7 +26,12 @@ const FILES_CONTAINER = 'FilesContainer';
 export const getHTTPFriendlyData = async (
     url: string,
     store: Store
-): { headers: {}; body: Buffer | string } => {
+): Promise<{
+    headers: {
+        [HEADERS_CONTENT_TYPE]: string;
+    };
+    body: Buffer | string;
+}> => {
     // setup response object
     const response = {
         headers: {
@@ -80,27 +85,33 @@ export const getHTTPFriendlyData = async (
                 filesMap[DEFAULT_PAGE]
             );
             const defaultTarget = filesMap[DEFAULT_PAGE].link;
-            return getHTTPFriendlyData( defaultTarget, store );
+            const defaultResponse = await getHTTPFriendlyData( defaultTarget, store );
+
+            response.body = defaultResponse.body;
+            response.headers = defaultResponse.headers;
+        } else {
+            response.body = ReactDOMServer.renderToStaticMarkup(
+                <html lang="en">
+                    <FilesContainer
+                        filesMap={filesMap}
+                        currentLocation={currentLocation}
+                    />
+                </html>
+            );
         }
 
-        response.body = ReactDOMServer.renderToStaticMarkup(
-            <html lang="en">
-                <FilesContainer filesMap={filesMap} currentLocation={currentLocation} />
-            </html>
+        // either use NRS version or the version on the container
+        const { version } = theSafeDataObject.resolved_from || theSafeDataObject;
+
+        store.dispatch(
+            setKnownVersionsForUrl( {
+                url: `${parsed.protocol}//${parsed.host}`,
+                version
+            } )
         );
     }
 
     logger.verbose( 'Returning fetch result', response );
-
-    // either use NRS version or the version on the container
-    const { version } = theSafeDataObject.resolved_from || theSafeDataObject;
-
-    store.dispatch(
-        setKnownVersionsForUrl( {
-            url: `${parsed.protocol}//${parsed.host}`,
-            version
-        } )
-    );
 
     return response;
 };

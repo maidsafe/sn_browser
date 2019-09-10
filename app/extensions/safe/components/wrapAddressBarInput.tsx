@@ -191,7 +191,7 @@ export const wrapAddressBarInput = (
     const hookedUpInput = connect(
         mapStateToProps,
         mapDispatchToProps
-    )( AddressBarInput );
+    )( WrappedAddressBarInput );
 
     return hookedUpInput;
 };
