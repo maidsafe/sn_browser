@@ -21,6 +21,7 @@ if (platform === LINUX) {
 
 if (platform === WINDOWS) {
     PLATFORM_NAME = 'win-unpacked';
+    appString = 'SAFE Browser.exe';
 }
 
 const allArgs = ['--mock', '--ignoreAppLocation'];

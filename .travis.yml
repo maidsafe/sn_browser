@@ -1,6 +1,6 @@
 matrix:
-  # allow_failures:
-  #   - os: windows
+  allow_failures:
+    - os: windows
   include:
     - os: osx
       language: node_js
@@ -31,14 +31,14 @@ matrix:
             - xorriso
             - rpm
 
-    # - os: windows
-    #   language: node_js
-    #   rust: 1.3.7
-    #   env:
-    #     - ELECTRON_CACHE=$HOME/.cache/electron
-    #     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-    #     - NODE_ENV=dev
-    #     - YARN_GPG=no # otherwise this starts gpg-agent that never exits
+    - os: windows
+      language: node_js
+      rust: 1.3.7
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - NODE_ENV=dev
+        - YARN_GPG=no # otherwise this starts gpg-agent that never exits
 
 
 before_cache:
@@ -63,7 +63,7 @@ before_install:
 
 
 install:
-  - travis_wait 50 yarn --ignore-engines --network-timeout 800000;
+  - travis_wait 110 yarn --ignore-engines --network-timeout 800000;
   # On Linux, initialize "virtual display". See before_script
 
 
