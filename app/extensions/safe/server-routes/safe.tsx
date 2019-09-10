@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { logger } from '$Logger';
 import { Error } from '$Components/PerusePages/Error';
-import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { addTab } from '$Actions/tabs_actions';
 import { errConsts } from '$Extensions/safe/err-constants';
 
@@ -40,7 +39,6 @@ export const safeRoute = ( store ) => ( {
                 link = link.substring( 0, link.length - 1 );
             }
 
-            const app = ( await getSafeBrowserAppObject() ) || {};
             const { headers } = request;
             let isRangeReq = false;
             let multipartReq = false;
@@ -50,10 +48,6 @@ export const safeRoute = ( store ) => ( {
             let rangeArray;
 
             logger.info( `Handling SAFE req: ${link}` );
-
-            if ( !app ) {
-                return res.send( 'SAFE not connected yet' );
-            }
 
             if ( headers.range ) {
                 isRangeReq = true;
@@ -77,10 +71,7 @@ export const safeRoute = ( store ) => ( {
             const targetVersion = parsed.query ? parsed.query.v : undefined;
 
             try {
-                logger.verbose( 'before fetch' );
-                data = await app.fetch( link );
-                data = getHTTPFriendlyData( data, link, store );
-                logger.verbose( 'after fetch' );
+                data = await getHTTPFriendlyData( link, store );
             } catch ( error ) {
                 const message = cleanupNeonError( error );
                 logger.warn( message, error.code );

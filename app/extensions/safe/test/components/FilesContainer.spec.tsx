@@ -33,7 +33,7 @@ describe( 'FilesContainer', () => {
                     link: 'safe://lalalalalala'
                 }
             },
-            currentLocation: 'safe://nowhere'
+            currentLocation: 'safe://start'
         };
 
         wrapper = shallow( <FilesContainer {...props} /> );
@@ -87,7 +87,7 @@ describe( 'FilesContainer', () => {
                         link: 'safe://lalalalalala'
                     }
                 },
-                currentLocation: 'safe://nowhere/testfolder'
+                currentLocation: 'safe://start/testfolder'
             };
             wrapper = shallow( <FilesContainer {...newProps} /> );
 
