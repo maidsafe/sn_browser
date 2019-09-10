@@ -37,20 +37,25 @@ export const getHTTPFriendlyData = async (
     const response = {
         headers: {
             // lets default to html
-            [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML,
-            [HEADERS_CSP]: `
-	default-src 'none';
-	script-src 'self';
-	img-src 'self' data:;
-	style-src 'self';
-	font-src 'self';
-	base-uri 'none';
-	form-action 'none';
-	frame-ancestors 'none';
-`
+            [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML
+            //             [HEADERS_CSP]: `
+            // 	default-src 'none';
+            // 	script-src 'self';
+            // 	img-src 'self' data:;
+            // 	style-src 'self';
+            // 	font-src 'self';
+            // 	base-uri 'none';
+            // 	form-action 'none';
+            // 	frame-ancestors 'none';
+            // `
         },
         body: Buffer.from( [] )
     };
+
+    // hack to check CSS source for page is in effect. Remove w/ mimetype
+    if ( url.endsWith( '.css' ) ) {
+        response.headers[HEADERS_CONTENT_TYPE] = 'text/css';
+    }
 
     // grab app
     const app = ( await getSafeBrowserAppObject() ) || {};
@@ -88,6 +93,7 @@ export const getHTTPFriendlyData = async (
 
         const filesMap = data[FILES_CONTAINER].files_map;
 
+        // TODO: compare filesMap url with default proper so /sub/index also renders
         if ( filesMap[DEFAULT_PAGE] && !displayContainer ) {
             logger.info(
                 'Default page found, loading',
@@ -121,8 +127,6 @@ export const getHTTPFriendlyData = async (
             } )
         );
     }
-
-    logger.verbose( 'Returning fetch result', response );
 
     return response;
 };
