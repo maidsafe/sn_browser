@@ -80,12 +80,8 @@ export const safeRoute = ( store ) => ( {
                     return sendErrResponse( 'No content found at this version' );
                 }
 
-                logger.error(
-                    `No data could be found for the Public Name ${parsed.host}`
-                );
-                return sendErrResponse(
-                    `No data could be found for the Public Name ${parsed.host}`
-                );
+                logger.error( `No data found ${parsed.host}` );
+                return sendErrResponse( `No data found ${parsed.host}` );
 
                 // return;
                 //       const shouldTryAgain =

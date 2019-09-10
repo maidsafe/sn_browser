@@ -218,13 +218,13 @@ const appInfo = {
     // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
     }
 };
-
-// OSX: Add bundle for electron in dev mode
-if ( isRunningUnpacked && process.platform === 'darwin' ) {
-    appInfo.info.bundle = 'com.github.electron';
-} else if ( process.platform === 'darwin' ) {
-    appInfo.info.bundle = 'com.electron.safe-browser';
-}
+//
+// // OSX: Add bundle for electron in dev mode
+// if ( isRunningUnpacked && process.platform === 'darwin' ) {
+//     appInfo.info.bundle = 'com.github.electron';
+// } else if ( process.platform === 'darwin' ) {
+//     appInfo.info.bundle = 'com.electron.safe-browser';
+// }
 
 export const APP_INFO = appInfo;
 
