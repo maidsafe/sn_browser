@@ -26,31 +26,31 @@ class WebIdEvents extends EventEmitter {}
 
 const webIdEventEmitter = new WebIdEvents();
 
-const createRemoteCall = ( functionName, passedStore ) => {
-    if ( !functionName ) {
-        throw new Error( 'Remote calls must have a functionName to call.' );
-    }
-
-    const remoteCall = ( ...args ) =>
-        new Promise( ( resolve, reject ) => {
-            const callId = Math.random().toString( 36 );
-
-            const theCall = {
-                id: callId,
-                name: functionName,
-                args
-            };
-
-            passedStore.dispatch( remoteCallActions.addRemoteCall( theCall ) );
-
-            pendingCalls[theCall.id] = {
-                resolve,
-                reject
-            };
-        } );
-
-    return remoteCall;
-};
+// const createRemoteCall = ( functionName, passedStore ) => {
+//     if ( !functionName ) {
+//         throw new Error( 'Remote calls must have a functionName to call.' );
+//     }
+//
+//     const remoteCall = ( ...args ) =>
+//         new Promise( ( resolve, reject ) => {
+//             const callId = Math.random().toString( 36 );
+//
+//             const theCall = {
+//                 id: callId,
+//                 name: functionName,
+//                 args
+//             };
+//
+//             passedStore.dispatch( remoteCallActions.addRemoteCall( theCall ) );
+//
+//             pendingCalls[theCall.id] = {
+//                 resolve,
+//                 reject
+//             };
+//         } );
+//
+//     return remoteCall;
+// };
 
 /**
  * Set the window var for experimentsEnabled for Tab api import.

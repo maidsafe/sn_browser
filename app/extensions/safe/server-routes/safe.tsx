@@ -13,6 +13,7 @@ import {
 } from '../utils/safeHelpers';
 
 import { getHTTPFriendlyData } from '$Extensions/safe/backgroundProcess';
+import { setUrlAvailability } from '$Extensions/safe/actions/pWeb_actions';
 import { SAFE } from '../constants';
 import {
     windowCloseTab,
@@ -80,8 +81,30 @@ export const safeRoute = ( store ) => ( {
                     return sendErrResponse( 'No content found at this version' );
                 }
 
-                logger.error( `No data found ${parsed.host}` );
-                return sendErrResponse( `No data found ${parsed.host}` );
+                if (
+                    message.includes( `Content not found at ${link}` ) &&
+          parsed.path !== '/'
+                ) {
+                    const safeHost = `safe://${parsed.host}`;
+
+                    try {
+                        // we had a path, lets try the root domain...
+                        data = await getHTTPFriendlyData( safeHost, store );
+                    } catch ( newError ) {
+                        const newMessage = cleanupNeonError( newError );
+                        logger.warn(
+                            `Attempted to source root domain safe://${parsed.host}`,
+                            newMessage
+                        );
+                        const isAvailable = true;
+                        store.dispatch( setUrlAvailability( { url: safeHost, isAvailable } ) );
+                    }
+
+                    return sendErrResponse( 'No content found at this version' );
+                }
+
+                logger.error( `No data found at: ${link}` );
+                return sendErrResponse( `No data found for ${link}` );
 
                 // return;
                 //       const shouldTryAgain =

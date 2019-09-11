@@ -32,6 +32,24 @@ export function pWeb( state = initialState, action ) {
                 versionedUrls: newVersionedUrls
             };
         }
+        case TYPES.SET_URL_AVAILABILITY: {
+            const { url, isAvailable } = payload;
+            let newAvailableNrsUrls = [...state.availableNrsUrls];
+
+            // if its avialable, add it if we dont already have it
+            if ( isAvailable && !newAvailableNrsUrls.includes( url ) ) {
+                newAvailableNrsUrls.push( url );
+            } else if ( !isAvailable ) {
+                newAvailableNrsUrls = newAvailableNrsUrls.filter(
+                    ( link ) => link !== url
+                );
+            }
+
+            return {
+                ...state,
+                availableNrsUrls: newAvailableNrsUrls
+            };
+        }
 
         default:
             return state;

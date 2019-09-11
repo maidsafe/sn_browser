@@ -40,7 +40,8 @@ describe( 'AddressBarInput', () => {
                 experimentsEnabled: false
             },
             pWeb: {
-                versionedUrls: {}
+                versionedUrls: {},
+                availableNrsUrls: []
             }
         };
     } );
@@ -50,10 +51,11 @@ describe( 'AddressBarInput', () => {
             store = mockStore( props );
 
             wrapper = shallow( <AddressBarInput {...props} /> );
-            instance = wrapper.instance();
         } );
 
         it( 'should have name AddressBarInput', () => {
+            instance = wrapper.instance();
+
             expect( instance.constructor.name ).toMatch( 'Input' );
         } );
     } );
@@ -67,7 +69,6 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} />
                 </Provider>
             );
-            instance = wrapper.instance();
         } );
 
         afterEach( () => {
@@ -81,6 +82,7 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} onBlur={handleBlur} />
                 </Provider>
             );
+
             const input = wrapper.find( 'Input' );
             input.simulate( 'blur' );
             expect( handleBlur ).toHaveBeenCalled();
@@ -99,7 +101,6 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} onFocus={handleFocus} />
                 </Provider>
             );
-            instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
             expect( handleFocus ).toHaveBeenCalled();
@@ -111,7 +112,6 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} />
                 </Provider>
             );
-            instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
             expect( props.onFocus ).toHaveBeenCalled();

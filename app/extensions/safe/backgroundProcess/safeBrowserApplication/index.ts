@@ -1,100 +1,66 @@
-import _ from 'lodash';
-
 import {
-    // setCurrentStore,
     setSafeBrowserAppObject,
-    getSafeBrowserAppObject
-    // getIsAuthing,
-    // setIsAuthing,
-    // safeBrowserAppIsAuthed
+    getSafeBrowserAppObject,
+    getCurrentStore,
+    safeIsAuthorised
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
-//
-// import {
-//     manageReadStateActions,
-//     manageSaveStateActions
-// } from '$Extensions/safe/safeBrowserApplication/manageBrowserConfig';
 
-import {
-    isCI,
-    startedRunningMock,
-    isRunningSpectronTestProcessingPackagedApp
-} from '$Constants';
-
-import { SAFE } from '$Extensions/safe/constants';
-// import {
-//     setAppStatus,
-//     receivedAuthResponse
-// } from '$Extensions/safe/actions/safeBrowserApplication_actions';
-
-// import { addNotification } from '$Actions/notification_actions';
 import { logger } from '$Logger';
-import { initAuthedApplication } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
 
+import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
+import { setUrlAvailability } from '$Extensions/safe/actions/pWeb_actions';
 
-// export {
-//     getWebIds
-// } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
+export const setupUnauthedConnection = async (): Promise<void> => {
+    logger.verbose( 'Setting up unauthed connection' );
 
-let safeBrowserAppObject;
-let tempSafeBrowserObjectUntilAuthed;
-
-let debouncedPassAuthUriToStore;
-let prevSafeBrowserAppAuthState;
-let prevSafeBrowserAppExperimentalState;
-const urisUnderAuth = [];
-
-// export const getSafeBrowserAppObject = () => {
-//     if ( !safeBrowserAppObject ) {
-//         logger.error( 'SafeBrowserApp Object not ready yet.' );
-//     }
-//
-//     return safeBrowserAppObject;
-// };
-
-export const setupUnauthedConnection = () => {
-    logger.info( 'Setting up unauthed connection' );
-
-    // step one. Get app going.
-    safeBrowserAppObject = initAnon();
-    setSafeBrowserAppObject( safeBrowserAppObject );
+    const safe = await initAnon();
+    setSafeBrowserAppObject( safe );
 };
 
-/**
- * Everything we need to do to start the SafeBrowser App for fetching at least.
- * @param  {object} passedStore redux store
- */
-// export const initSafeBrowserApp = async ( passedStore, authorise = false ) => {
-//     const defaultOptions = {
-//         enableExperimentalApis: false,
-//         forceUseMock: startedRunningMock
-//     };
-//
-//     const safeBrowserAppState = passedStore.getState().safeBrowserApp;
-//     const { isMock } = safeBrowserAppState;
-//     const { experimentsEnabled } = safeBrowserAppState;
-//
-//     const options = {
-//         ...defaultOptions,
-//         forceUseMock: isMock,
-//         enableExperimentalApis: experimentsEnabled
-//     };
-//
-//     // TODO: here check store and what is desired from a connection!
-//     logger.info( 'Initialising Safe Browser App with options:', options );
-//     try {
-//         if ( authorise ) {
-//             tempSafeBrowserObjectUntilAuthed = await initAuthedApplication(
-//                 passedStore,
-//                 options
-//             );
-//         } else {
-//             tempSafeBrowserObjectUntilAuthed = await initAnon( passedStore, options );
-//         }
-//     } catch ( e ) {
-//     // denied authentication is handled in `authFromStoreResponse`
-//
-//         console.error( e );
-//         throw new Error( 'Safe Browser init failed' );
-//     }
-// };
+export const setupAuthorisedConnection = async (): Promise<void> => {
+    logger.verbose( 'Setting up authorised connection' );
+
+    const safe = await initAuthed();
+    const isAuthed = true;
+    setSafeBrowserAppObject( safe, isAuthed );
+};
+
+export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
+    logger.verbose( 'Attempting to register NRS Name', address );
+
+    if ( !safeIsAuthorised() ) await setupAuthorisedConnection();
+
+    const safe = await getSafeBrowserAppObject();
+
+    // First we need some data to put on it... so we'll link to immutable placeholder..
+
+    try {
+        logger.verbose( 'Putting PublishedImmutableData...' );
+
+        const enc = new TextEncoder(); // always utf-8
+
+        const buffer = enc.encode(
+            'This is a placeholder page. Use the Safe CLI to upload files and update the NRS container.'
+        );
+
+        const idUrl = safe.files_put_published_immutable( buffer.buffer );
+        const nrsMapData = safe.nrs_map_container_create(
+            address,
+            idUrl,
+            true,
+            true,
+            false
+        );
+        logger.info( 'NRS Map Container created: ', nrsMapData );
+
+        // Now update the store...
+        const store = getCurrentStore();
+
+        const isAvailable = false;
+        store.dispatch( setUrlAvailability( { url: address, isAvailable } ) );
+    } catch ( error ) {
+    // TODO: handle error
+        logger.error( error );
+    }
+};

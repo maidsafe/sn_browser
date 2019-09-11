@@ -79,7 +79,7 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "artifactName": "SAFE Network App-v${version}-${os}-x64",
+    "artifactName": "SAFE Browser-v${version}-${os}-x64",
     "productName": "SAFE Browser",
     "files": [
       "app/dist/",

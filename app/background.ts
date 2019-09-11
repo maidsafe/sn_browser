@@ -25,9 +25,9 @@ const initBgProcess = async () => {
     i18n.configure( I18N_CONFIG );
     i18n.setLocale( 'en' );
 
-    store.subscribe( () => {
-        manageRemoteCalls( store );
-    } );
+    // store.subscribe( () => {
+    //     manageRemoteCalls( store );
+    // } );
 };
 
 initBgProcess();
