@@ -8,9 +8,10 @@ import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import {
     showWebIdDropdown,
-    getAvailableWebIds,
     setAppStatus
-} from '../actions/safeBrowserApplication_actions';
+} from '$Extensions/safe/actions/safeBrowserApplication_actions';
+import { getAvailableWebIds } from '$Extensions/safe/actions/aliased';
+
 // import styles from './wrapAddressBarButtons.css';
 
 function mapStateToProps( state ) {

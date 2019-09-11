@@ -5,7 +5,10 @@ import ReactDOMServer from 'react-dom/server';
 
 import { FilesContainer } from '$Extensions/safe/components/FilesContainer';
 import { logger } from '$Logger';
-import { setKnownVersionsForUrl } from '$Extensions/safe/actions/pWeb_actions';
+import {
+    setKnownVersionsForUrl,
+    setUrlAvailability
+} from '$Extensions/safe/actions/pWeb_actions';
 import { SafeData } from '$Extensions/safe/safe.d';
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
@@ -79,6 +82,12 @@ export const getHTTPFriendlyData = async (
     // temp method to display container, this could be a tab switch
     // later on
     const displayContainer = parsed.query ? parsed.query.container : undefined;
+
+    // if here we found it, so its not available
+    const isAvailable = false;
+    store.dispatch(
+        setUrlAvailability( { url: `safe://${parsed.host}`, isAvailable } )
+    );
 
     if ( data[PUB_IMMUTABLE] ) {
         logger.verbose( 'Handling Immutable data for location:', currentLocation );

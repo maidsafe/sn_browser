@@ -48,4 +48,54 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
             } );
         } );
     } );
+
+    describe( 'SET_URL_AVAILABILITY', () => {
+        it( 'should set a url as available', () => {
+            const payload = { url: 'safe://lalalala', isAvailable: true };
+
+            expect(
+                pWeb( safeInitialState, {
+                    type: TYPES.SET_URL_AVAILABILITY,
+                    payload
+                } )
+            ).toMatchObject( {
+                availableNrsUrls: ['safe://lalalala']
+            } );
+        } );
+
+        it( 'should remove a url when not available', () => {
+            const payload = { url: 'safe://unavailable-link', isAvailable: false };
+
+            const initialState = {
+                ...safeInitialState,
+                availableNrsUrls: ['safe://unavailable-link']
+            };
+
+            expect(
+                pWeb( initialState, {
+                    type: TYPES.SET_URL_AVAILABILITY,
+                    payload
+                } )
+            ).toMatchObject( {
+                availableNrsUrls: []
+            } );
+        } );
+
+        it( 'should not set the same URL as avilable twice', () => {
+            const payload = { url: 'safe://only-one', isAvailable: true };
+            const initialState = {
+                ...safeInitialState,
+                availableNrsUrls: ['safe://only-one']
+            };
+
+            expect(
+                pWeb( initialState, {
+                    type: TYPES.SET_URL_AVAILABILITY,
+                    payload
+                } )
+            ).toMatchObject( {
+                availableNrsUrls: ['safe://only-one']
+            } );
+        } );
+    } );
 } );

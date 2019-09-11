@@ -3,7 +3,7 @@ import { logger } from '$Logger';
 import {
     getCurrentStore,
     getSafeBrowserAppObject,
-    safeBrowserAppIsAuthed
+    safeIsAuthorised
 } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
 /**
@@ -18,8 +18,7 @@ export const getWebIds = async () => {
 
     if ( !safeBrowserApp ) throw new Error( 'SafeBrowserApp should be initiated.' );
 
-    if ( !safeBrowserAppIsAuthed() )
-        throw new Error( 'SafeBrowserApp is not authorised' );
+    if ( !safeIsAuthorised() ) throw new Error( 'SafeBrowserApp is not authorised' );
 
     let webIds = [];
 

@@ -1,8 +1,5 @@
 import { createActions } from 'redux-actions';
-import { createAliasedAction } from 'electron-redux';
 import { logger } from '$Logger';
-import { inBgProcess } from '$Constants';
-import { getWebIds } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
 
 export const TYPES = {
     ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP:
@@ -35,7 +32,15 @@ export const TYPES = {
     // UI actions.
     SHOW_WEB_ID_DROPDOWN: 'SHOW_WEB_ID_DROPDOWN',
 
-    SET_KNOWN_VERSIONS_FOR_URL: 'SET_KNOWN_VERSIONS_FOR_URL'
+    // SAFE connection...
+    ALIAS_CONNECT_ANONYMOUS: 'ALIAS_CONNECT_ANONYMOUS',
+    CONNECT_ANONYMOUS: 'CONNECT_ANONYMOUS',
+    ALIAS_CONNECT_AUTHORISED: 'ALIAS_CONNECT_AUTHORISED',
+    CONNECT_AUTHORISED: 'CONNECT_AUTHORISED',
+
+    // SAFE NRS
+    ALIAS_REGISTER_NRS_NAME: 'ALIAS_REGISTER_NRS_NAME',
+    REGISTER_NRS_NAME: 'REGISTER_NRS_NAME'
 };
 
 export const {
@@ -58,9 +63,7 @@ export const {
 
     resetStore,
 
-    showWebIdDropdown,
-
-    setKnownVersionsForUrl
+    showWebIdDropdown
 } = createActions(
     TYPES.SET_APP_STATUS,
     TYPES.SET_NETWORK_STATUS,
@@ -82,25 +85,6 @@ export const {
 
     TYPES.SHOW_WEB_ID_DROPDOWN,
 
-    TYPES.SET_KNOWN_VERSIONS_FOR_URL
+    TYPES.ALIAS_CONNECT_ANONYMOUS,
+    TYPES.CONNECT_ANONYMOUS
 );
-
-export const getAvailableWebIds = createAliasedAction(
-    TYPES.ALIAS_GET_AVAILABLE_WEB_IDS,
-    // TODO: there is a complaint about not having middleware, despite redux-promise.
-    () => ( {
-    // the real action
-        type: TYPES.GET_AVAILABLE_WEB_IDS,
-        payload: getWebIds()
-    } )
-);
-
-// export const triggerConnectUnauthorised = createAliasedAction(
-//     TYPES.ALIAS_CONNECT_UNAUTHORISED_BROWSER_APP,
-//     // TODO: there is a complaint about not having middleware, despite redux-promise.
-//     () => ( {
-//     // the real action
-//         type: TYPES.CONNECT_UNAUTHORISED_BROWSER_APP,
-//         payload: triggerGetWebIds()
-//     } )
-// );
