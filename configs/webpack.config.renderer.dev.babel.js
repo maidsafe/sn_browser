@@ -113,47 +113,6 @@ export default merge.smart( baseConfig, {
                     }
                 ]
             },
-            // SASS support - compile all .global.scss files and pipe it to style.css
-            {
-                test: /\.global\.(scss|sass)$/,
-                use: [
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                    {
-                        loader: 'sass-loader'
-                    }
-                ]
-            },
-            // SASS support - compile all other .scss files and pipe it to style.css
-            {
-                test: /^((?!\.global).)*\.(scss|sass)$/,
-                use: [
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            modules: {
-                                mode: 'local',
-                                localIdentName: '[name]__[local]'
-                            },
-                            sourceMap: true,
-                            importLoaders: 1
-                        }
-                    },
-                    {
-                        loader: 'sass-loader'
-                    }
-                ]
-            },
             // Add LESS support  - compile all other .less files and pipe it to style.css
             {
                 test: /^((?!\.global).)*\.less/,

@@ -1,4 +1,4 @@
-import { Safe } from 'safe_nodejs';
+import { Safe } from 'safe-nodejs';
 import { logger } from '$Logger';
 
 export const initAnon = async (): Safe => {

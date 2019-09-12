@@ -6,7 +6,7 @@
   "vendor": "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "scripts": {
-    "build": "electron-build-env neon build safe_nodejs --release && concurrently \"yarn run build-main\" \"yarn run build-renderer\" \"yarn run build-webPreload\" \"yarn run build-bg\" ",
+    "build": "concurrently \"yarn run build-main\" \"yarn run build-renderer\" \"yarn run build-webPreload\" \"yarn run build-bg\" ",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
     "build-e2e": "cross-env E2E_BUILD=true yarn build",
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
@@ -274,7 +274,6 @@
     "lint-staged": "^9.2.5",
     "mini-css-extract-plugin": "^0.8.0",
     "native-ext-loader": "2.3.0",
-    "node-sass": "^4.12.0",
     "opencollective-postinstall": "^2.0.1",
     "opensans-npm-webfont": "1.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
@@ -289,7 +288,6 @@
     "redux-mock-store": "1.5.3",
     "resolve-url-loader": "3.1.0",
     "rimraf": "^3.0.0",
-    "sass-loader": "^8.0.0",
     "should": "13.2.3",
     "sinon": "^7.4.2",
     "standard-version": "7.0.0",
@@ -355,14 +353,14 @@
     "redux-promise": "0.6.0",
     "redux-promise-middleware": "6.1.1",
     "redux-thunk": "^2.3.0",
-    "safe_nodejs": "https://github.com/joshuef/safe-nodejs.git#UseNeonBranch",
+    "safe-nodejs": "https://github.com/maidsafe/safe-nodejs.git#0.2.0",
     "source-map-support": "^0.5.12",
     "tslint": "5.19.0"
   },
   "devEngines": {
-    "node": ">=7.x",
-    "npm": ">=4.x",
-    "yarn": ">=0.21.3"
+    "node": "=10.x",
+    "npm": ">=5.x",
+    "yarn": ">=1.x"
   },
   "browserslist": "electron 1.6"
 }

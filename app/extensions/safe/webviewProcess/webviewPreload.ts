@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { Safe } from 'safe_nodejs';
+import { Safe } from 'safe-nodejs';
 
 import pkg from '$Package';
 import { logger } from '$Logger';
