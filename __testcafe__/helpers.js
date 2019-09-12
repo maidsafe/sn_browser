@@ -1,10 +1,6 @@
-import { ClientFunction, Selector } from 'testcafe';
-import { ReactSelector } from 'testcafe-react-selectors';
+import { ClientFunction } from 'testcafe';
 
-import {
-    getMainMenuItem,
-    clickOnMainMenuItem
-} from 'testcafe-browser-provider-electron';
+import { clickOnMainMenuItem } from 'testcafe-browser-provider-electron';
 
 import { addressBarInput } from './selectors';
 
@@ -27,10 +23,10 @@ export const getPageTitle = ClientFunction( () => document.title );
 export const navigateTo = async ( t, address ) => {
     return (
         t
-            .selectText( await addressBarInput )
+            .selectText( addressBarInput )
             .pressKey( 'backspace' )
             // .debug()
-            .typeText( await addressBarInput, address )
+            .typeText( addressBarInput, address )
             .pressKey( 'enter' )
     );
 };
