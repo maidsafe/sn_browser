@@ -9,6 +9,9 @@ pids
 *.pid
 *.seed
 
+# TODO
+TODO
+
 # packaging license files
 *.js.LICENSE
 
