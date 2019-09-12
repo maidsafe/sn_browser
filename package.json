@@ -42,7 +42,7 @@
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
     "start-main-dev": "cross-env HOT=1 IS_UNPACKED=true electron -r babel-register-ts ./app/main.dev.ts",
     "start-renderer-dev": "cross-env webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
-    "test": "yarn lint && yarn test-peruse && yarn test-exts",
+    "test": "yarn lint --quiet && yarn test-peruse && yarn test-exts",
     "test-peruse": "cross-env SAFE_MOCK_IN_MEMORY_STORAGE=true ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node_modules/.bin/electron node_modules/jest/bin/jest.js __tests__ --notify --detectOpenHandles",
     "test-all": "yarn lint && yarn check-types && yarn build && yarn test && yarn build-e2e && yarn test-e2e",
     "test-exts": "cross-env ELECTRON_RUN_AS_NODE=true NODE_ENV=test IS_UNPACKED=true BABEL_DISABLE_CACHE=1 node_modules/.bin/electron node_modules/jest/bin/jest.js extensions --testPathIgnorePatterns=e2e --notify --detectOpenHandles",
