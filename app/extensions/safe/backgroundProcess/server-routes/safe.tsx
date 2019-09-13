@@ -2,7 +2,7 @@ import { parse } from 'url';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { logger } from '$Logger';
-import { Error } from '$Components/PerusePages/Error';
+import { Error, ERROR_TYPES } from '$Components/PerusePages/Error';
 import { addTab } from '$Actions/tabs_actions';
 import { errConsts } from '$Extensions/safe/err-constants';
 
@@ -10,11 +10,10 @@ import {
     rangeStringToArray,
     generateResponseStr,
     cleanupNeonError
-} from '../utils/safeHelpers';
+} from '$Extensions/safe/utils/safeHelpers';
 
 import { getHTTPFriendlyData } from '$Extensions/safe/backgroundProcess';
-import { setUrlAvailability } from '$Extensions/safe/actions/pWeb_actions';
-import { SAFE } from '../constants';
+import { SAFE } from '$Extensions/safe/constants';
 import {
     windowCloseTab,
     addTabEnd,
@@ -25,10 +24,20 @@ export const safeRoute = ( store ) => ( {
     method: 'GET',
     path: /safe:\//,
     handler: async ( request, res ) => {
-        const sendErrResponse = ( error, errSubHeader? ) =>
+        const sendErrResponse = (
+            type: string,
+            address?: string,
+            badVersion?: string,
+            latestVersion?: string
+        ) =>
             res.send(
                 ReactDOMServer.renderToStaticMarkup(
-                    <Error error={{ header: error, subHeader: errSubHeader }} />
+                    <Error
+                        type={type}
+                        address={address}
+                        badVersin={badVersion}
+                        latestVersion={latestVersion}
+                    />
                 )
             );
 
@@ -78,7 +87,14 @@ export const safeRoute = ( store ) => ( {
                 logger.warn( message, error.code );
 
                 if ( targetVersion && message.includes( `Content not found at ${link}` ) ) {
-                    return sendErrResponse( 'No content found at this version' );
+                    return sendErrResponse( ERROR_TYPES.NO_CONTENT_FOUND );
+                }
+
+                if (
+                    targetVersion &&
+          message.includes( 'Failed to authorise application' )
+                ) {
+                    return sendErrResponse( ERROR_TYPES.AUTH_FAILED );
                 }
 
                 if (
@@ -96,15 +112,15 @@ export const safeRoute = ( store ) => ( {
                             `Attempted to source root domain safe://${parsed.host}`,
                             newMessage
                         );
-                        const isAvailable = true;
-                        store.dispatch( setUrlAvailability( { url: safeHost, isAvailable } ) );
+
+                        return sendErrResponse( ERROR_TYPES.UNKNOWN_NAME, link );
                     }
 
-                    return sendErrResponse( 'No content found at this version' );
+                    return sendErrResponse( ERROR_TYPES.INVALID_VERSION, link );
                 }
 
                 logger.error( `No data found at: ${link}` );
-                return sendErrResponse( `No data found for ${link}` );
+                return sendErrResponse( ERROR_TYPES.NO_CONTENT_FOUND );
 
                 // return;
                 //       const shouldTryAgain =
@@ -164,13 +180,16 @@ export const safeRoute = ( store ) => ( {
         } catch ( error ) {
             logger.error( error );
 
+            const problemLink = request.url;
+
             if ( error.code && error.code === -302 ) {
                 return res.status( 416 ).send( 'Requested Range Not Satisfiable' );
             }
 
             const message = cleanupNeonError( error );
 
-            return sendErrResponse( message || error );
+            logger.error( message );
+            return sendErrResponse( ERROR_TYPES.BAD_REQUEST, problemLink );
         }
     }
 } );

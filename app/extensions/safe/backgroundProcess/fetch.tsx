@@ -5,12 +5,11 @@ import ReactDOMServer from 'react-dom/server';
 
 import { FilesContainer } from '$Extensions/safe/components/FilesContainer';
 import { logger } from '$Logger';
-import {
-    setKnownVersionsForUrl,
-    setUrlAvailability
-} from '$Extensions/safe/actions/pWeb_actions';
+import { setKnownVersionsForUrl } from '$Extensions/safe/actions/pWeb_actions';
 import { SafeData } from '$Extensions/safe/safe.d';
+import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
+import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
 
 const DEFAULT_PAGE = '/index.html';
 // const DEFAULT_PAGES = ['index','index.html'];
@@ -61,7 +60,16 @@ export const getHTTPFriendlyData = async (
     }
 
     // grab app
-    const app = ( await getSafeBrowserAppObject() ) || {};
+    let app;
+    try {
+        app = await getSafeBrowserAppObject();
+    } catch ( error ) {
+        const message = cleanupNeonError( error );
+        if ( message.includes( 'Failed to authorise application' ) ) {
+            // try to init unaauthed...
+            app = await initAnon();
+        }
+    }
 
     if ( !app ) {
         response.body = Buffer.from( 'SAFE not connected yet' );
@@ -82,12 +90,6 @@ export const getHTTPFriendlyData = async (
     // temp method to display container, this could be a tab switch
     // later on
     const displayContainer = parsed.query ? parsed.query.container : undefined;
-
-    // if here we found it, so its not available
-    const isAvailable = false;
-    store.dispatch(
-        setUrlAvailability( { url: `safe://${parsed.host}`, isAvailable } )
-    );
 
     if ( data[PUB_IMMUTABLE] ) {
         logger.verbose( 'Handling Immutable data for location:', currentLocation );

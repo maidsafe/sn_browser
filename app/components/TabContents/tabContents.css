@@ -1,7 +1,22 @@
-.container
- {
+/* @import '../Tab/tab.css' */
+
+.page {
+    background-color: #fff;
+    min-height: auto; /* override nessie 100vh */
+}
+
+.tab {
+    /* stylelint-disable-next-line property-no-unknown  */
+    composes: tab from '../Tab/tab.css';
+}
+
+.activeTab {
+    /* stylelint-disable-next-line property-no-unknown  */
+    composes: activeTab from '../Tab/tab.css';
+}
+
+.container {
     flex: auto;
     position: relative;
     overflow: hidden;
-
 }

@@ -65,6 +65,16 @@ module.exports = {
             }
         ],
         'react/prefer-stateless-function': 'off',
+        'jsx-a11y/label-has-for': [
+            2,
+            {
+                components: ['Label'],
+                required: {
+                    every: ['id']
+                },
+                allowChildren: true
+            }
+        ],
         'jest/no-jasmine-globals': 'off',
         'jest/valid-describe': 'off',
         'react/destructuring-assignment': 'off',

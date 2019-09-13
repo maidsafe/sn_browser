@@ -633,7 +633,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
                 oldWebId_Id = window.currentWebId["@id"];
               }
               window.currentWebId = ${JSON.stringify( theWebId )};
-              if( 
+              if(
                     typeof webIdEventEmitter !== 'undefined' &&
                     window.currentWebId !== undefined &&
                     oldWebId_Id !== window.currentWebId["@id"] )

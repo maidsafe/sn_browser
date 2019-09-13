@@ -9,15 +9,31 @@ import { logger } from '$Logger';
 let safeBrowserAppObject;
 let currentStore;
 let connectionIsAuthorised = false;
+let hasError = false;
+let theError = null;
 
 export const safeIsAuthorised = () => connectionIsAuthorised;
 
-export const setSafeBrowserAppObject = ( passedApp, isAuthed = false ) => {
+export const setSafeBrowserAppObject = (
+    passedApp,
+    meta: { isAuthed: boolean; error?: Error }
+) => {
     safeBrowserAppObject = passedApp;
-    connectionIsAuthorised = isAuthed;
+    connectionIsAuthorised = meta.isAuthed;
+    hasError = false;
+    theError = null;
+
+    if ( meta.error ) {
+        hasError = true;
+        theError = meta.error;
+    }
 };
 
-export const getSafeBrowserAppObject = () => safeBrowserAppObject;
+export const getSafeBrowserAppObject = () => {
+    if ( hasError ) throw theError;
+
+    return safeBrowserAppObject;
+};
 
 export const getCurrentStore = () => currentStore;
 

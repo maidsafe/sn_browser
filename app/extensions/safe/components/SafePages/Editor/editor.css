@@ -1,0 +1,13 @@
+.uploadArea {
+    width: 100%;
+    height: auto;
+    margin-top: 4rem;
+
+    /* background-color: grey; */
+}
+
+.uploadAreaButton,
+.targetDir {
+    display: block;
+    margin-bottom: 1rem;
+}

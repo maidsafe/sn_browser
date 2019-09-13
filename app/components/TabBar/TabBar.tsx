@@ -8,6 +8,7 @@ import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import { I18n } from 'react-redux-i18n';
 import styles from './tabBar.css';
+import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
 // import { logger } from '$Logger';
 import { isInternalPage } from '$Utils/urlHelpers';
@@ -49,10 +50,20 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
         return tabs.map(
             ( tab ): React.ReactNode => {
                 let { title } = tab;
+                let additionalStyles = {};
+                let showIcon = true;
                 const { tabId } = tab;
                 if ( isInternalPage( tab ) ) {
+                    const parseQuery = true;
+                    const urlObj: Url = url.parse( tab.url, parseQuery );
+                    const extensionPage = resolveExtensionInternalPages(
+                        urlObj,
+                        urlObj.query,
+                        tab,
+                        this.props
+                    );
+
                     // TODO: DRY this out with TabContents.jsx
-                    const urlObj = url.parse( tab.url );
                     switch ( urlObj.host ) {
                         case INTERNAL_PAGES.HISTORY: {
                             title = 'History';
@@ -66,6 +77,13 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                             title = null;
                             break;
                         }
+                    }
+
+                    if ( extensionPage ) {
+                        showIcon = false;
+                        // eslint-disable-next-line prefer-destructuring
+                        title = extensionPage.title;
+                        additionalStyles = extensionPage.tabButtonStyles;
                     }
                 }
                 if ( tab.isClosed ) {
@@ -84,6 +102,7 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                         role="tab"
                         key={tab.tabId}
                         className={`${tabStyleClass} ${CLASSES.TAB}`}
+                        style={additionalStyles}
                         onClick={( event ) => {
                             this.handleTabClick( tabId, event );
                         }}
@@ -97,21 +116,23 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                             justify="space-between"
                             type="flex"
                         >
-                            <Col>
-                                <div className={styles.faviconContainer}>
-                                    {tab.isLoading && (
-                                        <Icon type="loading" className={styles.loadingIcon} />
-                                    )}
-                                    {!tab.isLoading && tab.favicon && (
-                                        <img
-                                            alt=""
-                                            className={styles.favicon}
-                                            id="favicon-img"
-                                            src={tab.favicon}
-                                        />
-                                    )}
-                                </div>
-                            </Col>
+                            {showIcon && (
+                                <Col>
+                                    <div className={styles.faviconContainer}>
+                                        {tab.isLoading && (
+                                            <Icon type="loading" className={styles.loadingIcon} />
+                                        )}
+                                        {!tab.isLoading && tab.favicon && (
+                                            <img
+                                                alt=""
+                                                className={styles.favicon}
+                                                id="favicon-img"
+                                                src={tab.favicon}
+                                            />
+                                        )}
+                                    </div>
+                                </Col>
+                            )}
                             <Col className={styles.tabText}>{title || 'New Tab'}</Col>
                             <Col>
                                 <Icon

@@ -1,5 +1,6 @@
 import { Safe } from 'safe-nodejs';
 import { logger } from '$Logger';
+import { setSafeBrowserAppObject } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
 export const initAnon = async (): Safe => {
     let safeBrowserAppObject;
@@ -16,10 +17,13 @@ export const initAnon = async (): Safe => {
         logger.info( 'Connecting to the Network...' );
         await safeBrowserAppObject.connect( APP_ID );
 
+        const isAuthed = false;
+        setSafeBrowserAppObject( safeBrowserAppObject, { isAuthed } );
+
         return safeBrowserAppObject;
-    } catch ( e ) {
-        logger.error( e );
-        logger.error( e.message );
-        throw e;
+    } catch ( error ) {
+        logger.error( error );
+        setSafeBrowserAppObject( safeBrowserAppObject, { error } );
+        return safeBrowserAppObject;
     }
 };

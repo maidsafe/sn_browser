@@ -19,15 +19,15 @@ describe( 'pWeb actions', () => {
         expect( pWeb.setKnownVersionsForUrl( payload ) ).toEqual( expectedAction );
     } );
 
-    it( 'should set url availability', () => {
+    it( 'should set url as owned', () => {
         const payload = {
-            url: 'x',
-            isAvailable: true
+            url: 'x'
         };
+
         const expectedAction = {
-            type: pWeb.TYPES.SET_URL_AVAILABILITY,
+            type: pWeb.TYPES.SET_NAME_AS_MY_SITE,
             payload
         };
-        expect( pWeb.setUrlAvailability( payload ) ).toEqual( expectedAction );
+        expect( pWeb.setNameAsMySite( payload ) ).toEqual( expectedAction );
     } );
 } );

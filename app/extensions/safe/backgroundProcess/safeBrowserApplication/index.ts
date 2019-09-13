@@ -1,3 +1,6 @@
+import path from 'path';
+
+import { CONFIG } from '$Constants';
 import {
     setSafeBrowserAppObject,
     getSafeBrowserAppObject,
@@ -6,48 +9,51 @@ import {
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
 import { logger } from '$Logger';
-
 import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
-import { setUrlAvailability } from '$Extensions/safe/actions/pWeb_actions';
+import { setNameAsMySite } from '$Extensions/safe/actions/pWeb_actions';
 
-export const setupUnauthedConnection = async (): Promise<void> => {
-    logger.verbose( 'Setting up unauthed connection' );
-
-    const safe = await initAnon();
-    setSafeBrowserAppObject( safe );
-};
-
-export const setupAuthorisedConnection = async (): Promise<void> => {
-    logger.verbose( 'Setting up authorised connection' );
-
-    const safe = await initAuthed();
-    const isAuthed = true;
-    setSafeBrowserAppObject( safe, isAuthed );
-};
+export {
+    uploadFilesToSafe
+} from '$Extensions/safe/backgroundProcess/safeBrowserApplication/uploadFiles';
 
 export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
     logger.verbose( 'Attempting to register NRS Name', address );
 
-    if ( !safeIsAuthorised() ) await setupAuthorisedConnection();
+    if ( !address.startsWith( 'safe://' ) ) {
+        throw new Error(
+            'To register NRS address the url must start with "safe://"'
+        );
+    }
+
+    if ( !safeIsAuthorised() ) await initAuthed();
 
     const safe = await getSafeBrowserAppObject();
 
-    // First we need some data to put on it... so we'll link to immutable placeholder..
-
     try {
-        logger.verbose( 'Putting PublishedImmutableData...' );
+        logger.verbose( 'Creating files container..' );
 
-        const enc = new TextEncoder(); // always utf-8
-
-        const buffer = enc.encode(
-            'This is a placeholder page. Use the Safe CLI to upload files and update the NRS container.'
+        const defaultSiteFolder = path.resolve(
+            path.dirname( CONFIG.APP_HTML_PATH ),
+            'extensions/safe/defaultNewSite/'
         );
 
-        const idUrl = safe.files_put_published_immutable( buffer.buffer );
+        logger.info( 'Grabbing default site from ', defaultSiteFolder );
+        const recursive = true;
+        const dryRun = false;
+
+        const filesContainer = safe.files_container_create(
+            `${defaultSiteFolder}/`,
+            '',
+            recursive,
+            dryRun
+        );
+        const containerUrl = filesContainer[0]; // container url is first in array
+        logger.info( 'Files container created:', containerUrl );
+
         const nrsMapData = safe.nrs_map_container_create(
             address,
-            idUrl,
+            `${containerUrl}?v=0`,
             true,
             true,
             false
@@ -58,7 +64,7 @@ export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
         const store = getCurrentStore();
 
         const isAvailable = false;
-        store.dispatch( setUrlAvailability( { url: address, isAvailable } ) );
+        store.dispatch( setNameAsMySite( { url: address } ) );
     } catch ( error ) {
     // TODO: handle error
         logger.error( error );

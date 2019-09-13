@@ -1,3 +1,4 @@
+import { parse } from 'url';
 import { TYPES } from '$Extensions/safe/actions/pWeb_actions';
 import { logger } from '$Logger';
 import { initialAppState } from './initialAppState';
@@ -32,22 +33,25 @@ export function pWeb( state = initialState, action ) {
                 versionedUrls: newVersionedUrls
             };
         }
-        case TYPES.SET_URL_AVAILABILITY: {
-            const { url, isAvailable } = payload;
-            let newAvailableNrsUrls = [...state.availableNrsUrls];
+        case TYPES.SET_NAME_AS_MY_SITE: {
+            const { url } = payload;
+            const newMySites = [...state.mySites];
+            let host;
+            try {
+                // eslint-disable-next-line prefer-destructuring
+                host = parse( url ).hostname;
+            } catch ( error ) {
+                logger.error( 'There was an error parsing the url: ', error );
+            }
 
             // if its avialable, add it if we dont already have it
-            if ( isAvailable && !newAvailableNrsUrls.includes( url ) ) {
-                newAvailableNrsUrls.push( url );
-            } else if ( !isAvailable ) {
-                newAvailableNrsUrls = newAvailableNrsUrls.filter(
-                    ( link ) => link !== url
-                );
+            if ( !newMySites.includes( host ) ) {
+                newMySites.push( host );
             }
 
             return {
                 ...state,
-                availableNrsUrls: newAvailableNrsUrls
+                mySites: newMySites
             };
         }
 

@@ -41,7 +41,8 @@ describe( 'AddressBarInput', () => {
             },
             pWeb: {
                 versionedUrls: {},
-                availableNrsUrls: []
+                availableNrsUrls: [],
+                mySites: []
             }
         };
     } );

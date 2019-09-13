@@ -34,10 +34,6 @@ describe( 'Bookmarks', () => {
             wrapper = shallow( <Bookmarks {...props} /> );
         } );
 
-        it( 'should have a safeBrowser__page class', () => {
-            expect( wrapper.find( `.${CLASSES.SAFE_BROWSER_PAGE}` ).length ).toBe( 1 );
-        } );
-
         it( 'should have one url list', () => {
             expect( wrapper.find( UrlList ).length ).toBe( 1 );
         } );
