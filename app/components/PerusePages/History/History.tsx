@@ -3,7 +3,7 @@ import moment from 'moment';
 import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
-import { Page, PageHeader, H1, TableRow, TableCell, Table } from 'nessie-ui';
+import { PageHeader, H1, TableRow, TableCell, Table } from 'nessie-ui';
 import { logger } from '$Logger';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
@@ -11,7 +11,6 @@ import { urlIsValid } from '$Extensions';
 
 interface HistoryProps {
     history: Record<string, any>;
-    isActiveTab: boolean;
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
 }
@@ -28,7 +27,7 @@ export class History extends Component<HistoryProps, {}> {
     };
 
     render() {
-        const { history, isActiveTab, windowId, addTabEnd } = this.props;
+        const { history, windowId, addTabEnd } = this.props;
 
         const ignoreList = [
             'about:blank',
@@ -94,32 +93,21 @@ export class History extends Component<HistoryProps, {}> {
                 } );
             }
         } );
-        let moddedClass = styles.tab;
 
-        if ( isActiveTab ) {
-            moddedClass = styles.activeTab;
-        }
         return (
-            <div className={moddedClass}>
-                <div className={`${styles.container} js-history`}>
-                    <Page
-                        className={`${CLASSES.SAFE_BROWSER_PAGE} ${styles.page}`}
-                        overflow="auto"
-                    >
-                        <PageHeader>
-                            <H1 title="History" />
-                        </PageHeader>
-                    </Page>
-                    <Table className={styles.table}>
-                        {parsedList}
-                        {!parsedList.length && (
-                            <TableRow>
-                                <TableCell>Nothing to see here yet.</TableCell>
-                            </TableRow>
-                        )}
-                    </Table>
-                </div>
-            </div>
+            <React.Fragment>
+                <PageHeader className="js-history">
+                    <H1 title="History" />
+                </PageHeader>
+                <Table className={styles.table}>
+                    {parsedList}
+                    {!parsedList.length && (
+                        <TableRow>
+                            <TableCell>Nothing to see here yet.</TableCell>
+                        </TableRow>
+                    )}
+                </Table>
+            </React.Fragment>
         );
     }
 }

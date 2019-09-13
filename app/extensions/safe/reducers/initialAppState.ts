@@ -1,7 +1,8 @@
 export const initialAppState = {
     pWeb: {
         versionedUrls: {},
-        availableNrsUrls: []
+        availableNrsUrls: [],
+        mySites: []
     },
     safeBrowserApp: {
     // appStatus: null,

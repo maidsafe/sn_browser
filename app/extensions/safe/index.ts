@@ -8,42 +8,13 @@ import {
     PROTOCOLS
 } from '$Constants';
 
-import { addFileMenus } from '$Extensions/safe/menus';
-
 // export { onRemoteCallInBgProcess } from '$Extensions/safe/backgroundProcess/handleRemoteCalls';
 
 export { additionalReducers } from '$Extensions/safe/reducers';
 export {
     onWebviewPreload
 } from '$Extensions/safe/webviewProcess/webviewPreload';
-export { urlIsValid } from '$Extensions/safe/utils/safeHelpers';
-
-export { setupRoutes } from './server-routes';
-export { onInitBgProcess } from '$Extensions/safe/backgroundProcess';
-
-/**
- * Adds menu items to the main peruse menus.
- * @param  {Object} store redux store
- * @param {Array} menusArray Array of menu objects to be parsed by electron.
- */
-export const addExtensionMenuItems = ( store, menusArray ) => {
-    logger.info( 'Adding SAFE menus to browser' );
-
-    const newMenuArray = [];
-
-    menusArray.forEach( ( menu ) => {
-        const { label } = menu;
-        let newMenu = menu;
-
-        if ( label.includes( 'File' ) ) {
-            newMenu = addFileMenus( store, newMenu );
-        }
-
-        newMenuArray.push( newMenu );
-    } );
-
-    return newMenuArray;
-};
+export { urlIsValid } from '$Extensions/safe/utils/urlIsValid';
 
 /**
  * add actions to the peruse browser container
@@ -52,19 +23,6 @@ export const addExtensionMenuItems = ( store, menusArray ) => {
 export const actionsForBrowser = {
     ...safeBrowserAppActions
 };
-
-/**
- * onOpenLoadExtensions
- * on open of peruse application
- * @param  {Object} store redux store
- */
-export const onOpen = ( store ) =>
-    new Promise( ( resolve, reject ) => {
-        logger.info( 'OnOpen: Setting mock in store. ', startedRunningMock );
-        store.dispatch( safeBrowserAppActions.setIsMock( startedRunningMock ) );
-
-        resolve();
-    } );
 
 /**
  * Add middleware to Peruse redux store

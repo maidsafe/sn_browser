@@ -1,13 +1,12 @@
 html,
 body,
 .app,
-#root
-{
+#root {
     height: 100%;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-                 "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-                 "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+        'Helvetica Neue', Arial, sans-serif;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -15,27 +14,24 @@ body,
 
 .tabBar__tabBox,
 .tabBar__addTab {
-  -webkit-app-region: no-drag;
+    -webkit-app-region: no-drag;
 }
 
 .tabBar__tabBar {
-  -webkit-app-region: drag;
+    -webkit-app-region: drag;
 }
 
-html
-{
-    font-size: 62.5%;
+html {
+    font-size: 16px;
     line-height: 1.2em;
 }
 
-.info_box_details
-{
+.info_box_details {
     display: none;
     margin-top: 5%;
 }
 
-.info_box_expander:hover + .info_box_details
-{
+.info_box_expander:hover + .info_box_details {
     display: block;
 }
 

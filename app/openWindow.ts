@@ -4,7 +4,7 @@ import os, { type } from 'os';
 import windowStateKeeper from 'electron-window-state';
 import { logger } from '$Logger';
 import { MenuBuilder } from './menu';
-import { onOpenLoadExtensions } from './extensions';
+import { onOpenLoadExtensions } from './extensions/mainProcess';
 import {
     isRunningTestCafeProcess,
     isRunningSpectronTestProcess,
@@ -79,6 +79,45 @@ export const openWindow = ( store ): BrowserWindow => {
 
     thisWindow.loadURL( `file://${__dirname}/app.html` );
 
+    if ( isRunningDebug && !isRunningSpectronTestProcess ) {
+        thisWindow.on( 'did-frame-finish-load', () => {
+            thisWindow.openDevTools( { mode: 'undocked' } );
+        } );
+    }
+    thisWindow.webContents.once(
+        'did-finish-load',
+        async (): Promise<void> => {
+            // have to add a tab here now
+            const thisWindowId = thisWindow.id;
+            logger.info( 'state-thisWindowId', thisWindowId );
+            if ( browserWindowArray.length === 1 ) {
+                const tabId = Math.random().toString( 36 );
+                store.dispatch( addWindow( { windowId: thisWindowId } ) );
+                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
+
+                if ( !testCafeURL ) {
+                    store.dispatch( addTab( { url: 'safe-browser://my-sites', tabId } ) );
+                } else {
+                    store.dispatch(
+                        addTab( {
+                            url: testCafeURL,
+                            tabId
+                        } )
+                    );
+                }
+
+                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
+            } else {
+                const tabId = Math.random().toString( 36 );
+                store.dispatch( addWindow( { windowId: thisWindowId } ) );
+                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
+                store.dispatch( addTab( { url: 'about:blank', tabId } ) );
+                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
+                store.dispatch( selectAddressBar( { tabId } ) );
+            }
+        }
+    );
+
     thisWindow.webContents.on(
         'did-finish-load',
         async (): Promise<void> => {
@@ -91,40 +130,6 @@ export const openWindow = ( store ): BrowserWindow => {
             // before show lets load state
             thisWindow.show();
             thisWindow.focus();
-
-            if ( isRunningDebug && !isRunningSpectronTestProcess ) {
-                thisWindow.openDevTools( { mode: 'undocked' } );
-            }
-            // have to add a tab here now
-            const thisWindowId = thisWindow.id;
-            logger.info( 'state-thisWindowId', thisWindowId );
-
-            if ( browserWindowArray.length === 1 ) {
-                const tabId = Math.random().toString( 36 );
-                store.dispatch( addWindow( { windowId: thisWindowId } ) );
-                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
-
-                if ( !testCafeURL ) {
-                    store.dispatch( addTab( { url: 'safe://newstart', tabId } ) );
-                } else {
-                    store.dispatch(
-                        addTab( {
-                            url: testCafeURL,
-                            tabId
-                        } )
-                    );
-                }
-
-                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
-            } else {
-                logger.info( 'SO WERE IN THE OTTTHHHEERRR ONE' );
-                const tabId = Math.random().toString( 36 );
-                store.dispatch( addWindow( { windowId: thisWindowId } ) );
-                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
-                store.dispatch( addTab( { url: 'about:blank', tabId } ) );
-                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
-                store.dispatch( selectAddressBar( { tabId } ) );
-            }
         }
     );
 

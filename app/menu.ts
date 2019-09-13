@@ -17,7 +17,7 @@ import pkg from '$Package';
 
 import { AppWindow } from '$App/definitions/globals.d';
 
-import { getExtensionMenuItems } from '$Extensions';
+import { getExtensionMenuItems } from '$Extensions/mainProcess';
 
 // TODO: Properly abstract this
 import { getResetStoreActionObject } from '$App/extensions/safe/backgroundProcess/handleRemoteCalls';
@@ -65,7 +65,10 @@ export class MenuBuilder {
     }
 
     private setupDevelopmentEnvironment() {
-        this.mainWindow.openDevTools();
+        this.mainWindow.webContents.on( 'did-frame-finish-load', () => {
+            this.mainWindow.webContents.openDevTools( { mode: 'undocked' } );
+        } );
+
         this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
             const { x, y } = properties;
 
@@ -326,6 +329,36 @@ export class MenuBuilder {
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://bookmarks',
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                addTabEnd( {
+                                    windowId,
+                                    tabId
+                                } )
+                            );
+                            this.store.dispatch(
+                                setActiveTab( {
+                                    windowId,
+                                    tabId
+                                } )
+                            );
+                        }
+                    }
+                },
+                {
+                    label: 'My Sites',
+                    accelerator:
+            process.platform === 'darwin' ? 'Alt+Shift+U' : 'Control+Shift+U',
+                    click: ( item, win ) => {
+                        if ( win ) {
+                            const windowId = getWindowId( win );
+
+                            const tabId = Math.random().toString( 36 );
+                            this.store.dispatch(
+                                addTab( {
+                                    url: 'safe-browser://my-sites',
                                     tabId
                                 } )
                             );

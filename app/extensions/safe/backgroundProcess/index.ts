@@ -7,6 +7,8 @@ import { setCurrentStore as setCurrentStoreForSafe } from '$Extensions/safe/back
 
 import { connectUnauthorised } from '$Extensions/safe/actions/aliased';
 
+export { setupRoutes } from '$Extensions/safe/backgroundProcess/server-routes';
+
 export {
     getHTTPFriendlyData
 } from '$App/extensions/safe/backgroundProcess/fetch';

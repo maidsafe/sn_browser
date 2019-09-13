@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { ReactNode, Component } from 'react';
 import { remote } from 'electron';
 import { I18n } from 'react-redux-i18n';
 import { Input } from 'antd';
@@ -17,6 +17,9 @@ interface AddressBarInputProps {
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
     updateTabUrl: ( ...args: Array<any> ) => any;
+    extensionStyles: {};
+    addonBefore: Array<ReactNode>;
+    addonAfter: Array<ReactNode>;
 }
 interface AddressBarInputState {
     address: any;
@@ -115,7 +118,7 @@ AddressBarInputState
     };
 
     render() {
-        const { isSelected, addonBefore, addonAfter } = this.props;
+        const { isSelected, addonBefore, addonAfter, extensionStyles } = this.props;
         const { address } = this.state;
         return (
             <Input

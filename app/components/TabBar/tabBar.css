@@ -53,6 +53,7 @@
     outline: none;
     border-bottom: none;
     border-left: none;
+    font-size: 0.8rem;
 }
 
 .tab .tabRow {

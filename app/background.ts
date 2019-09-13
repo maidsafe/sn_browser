@@ -7,7 +7,8 @@ import { configureStore } from '$Store/configureStore';
 import { I18N_CONFIG, isRunningTestCafeProcess } from '$Constants';
 import { manageRemoteCalls } from './background.manageRemoteCalls';
 import { setCurrentStore } from '$Actions/resetStore_action';
-import { onInitBgProcess, getExtensionReduxMiddleware } from './extensions';
+import { getExtensionReduxMiddleware } from './extensions';
+import { onInitBgProcess } from './extensions/backgroundProcess';
 import { setupServer } from './server';
 
 const initSafeServer = ( store ) => {

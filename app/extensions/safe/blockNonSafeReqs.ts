@@ -4,7 +4,7 @@ import { parse as parseURL } from 'url';
 import path from 'path';
 import { CONFIG, isRunningTestCafeProcess, allowedHttp } from '$Constants';
 import { logger } from '$Logger';
-import { urlIsValid } from './utils/safeHelpers';
+import { urlIsValid } from '$Extensions';
 
 // const isForLocalServer = ( parsedUrlObject ) =>
 //     parsedUrlObject.protocol === 'localhost:' || parsedUrlObject.hostname === '127.0.0.1';

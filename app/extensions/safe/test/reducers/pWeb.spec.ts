@@ -49,52 +49,45 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
         } );
     } );
 
-    describe( 'SET_URL_AVAILABILITY', () => {
-        it( 'should set a url as available', () => {
-            const payload = { url: 'safe://lalalala', isAvailable: true };
+    describe( 'setNameAsMySite', () => {
+        it( 'should handle store only host of url', () => {
+            const payload = { url: 'safe://x.lalalala/blaa' };
 
             expect(
                 pWeb( safeInitialState, {
-                    type: TYPES.SET_URL_AVAILABILITY,
+                    type: TYPES.SET_NAME_AS_MY_SITE,
                     payload
                 } )
             ).toMatchObject( {
-                availableNrsUrls: ['safe://lalalala']
+                mySites: ['x.lalalala']
+            } );
+        } );
+        it( 'should handle setting ownership of public name', () => {
+            const payload = { url: 'safe://lalalala' };
+
+            expect(
+                pWeb( safeInitialState, {
+                    type: TYPES.SET_NAME_AS_MY_SITE,
+                    payload
+                } )
+            ).toMatchObject( {
+                mySites: ['lalalala']
             } );
         } );
 
-        it( 'should remove a url when not available', () => {
-            const payload = { url: 'safe://unavailable-link', isAvailable: false };
-
-            const initialState = {
-                ...safeInitialState,
-                availableNrsUrls: ['safe://unavailable-link']
-            };
+        it( 'should not add a site twice ownership of public name', () => {
+            const payload = { url: 'safe://lalalala' };
 
             expect(
-                pWeb( initialState, {
-                    type: TYPES.SET_URL_AVAILABILITY,
-                    payload
-                } )
+                pWeb(
+                    { mySites: ['lalalala'] },
+                    {
+                        type: TYPES.SET_NAME_AS_MY_SITE,
+                        payload
+                    }
+                )
             ).toMatchObject( {
-                availableNrsUrls: []
-            } );
-        } );
-
-        it( 'should not set the same URL as avilable twice', () => {
-            const payload = { url: 'safe://only-one', isAvailable: true };
-            const initialState = {
-                ...safeInitialState,
-                availableNrsUrls: ['safe://only-one']
-            };
-
-            expect(
-                pWeb( initialState, {
-                    type: TYPES.SET_URL_AVAILABILITY,
-                    payload
-                } )
-            ).toMatchObject( {
-                availableNrsUrls: ['safe://only-one']
+                mySites: ['lalalala']
             } );
         } );
     } );

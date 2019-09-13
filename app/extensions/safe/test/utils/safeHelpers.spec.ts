@@ -1,9 +1,9 @@
 import {
-    urlIsValid,
     generateBoundaryStr,
     generateResponseStr,
     rangeStringToArray
 } from '$Extensions/safe/utils/safeHelpers';
+import { urlIsValid } from '$Extensions/safe/utils/urlIsValid';
 
 describe( 'Safe Extension', () => {
     describe( 'URL is allowed', () => {
