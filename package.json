@@ -323,7 +323,7 @@
     "electron-build-env": "0.2.0",
     "electron-context-menu": "0.15.0",
     "electron-debug": "^3.0.1",
-    "electron-log": "3.0.7",
+    "electron-log": "3.0.8",
     "electron-redux": "1.4.0",
     "electron-updater": "4.1.2",
     "electron-util": "0.12.1",
