@@ -10,7 +10,7 @@ import './wrapAddressBarInput.less';
 import { bindActionCreators } from 'redux';
 import styles from './wrapAddressBarButtons.css';
 import { CLASSES, PROTOCOLS } from '$Constants';
-import { inEditor } from '$Extensions/safe/utils/safeHelpers';
+import { inEditor } from '$Extensions/safe/utils/isInEditor';
 import { SAFE_PAGES } from '$Extensions/safe/rendererProcess/internalPages';
 import { STYLE_CONSTANTS } from '$Extensions/safe/rendererProcess/styleConstants';
 
