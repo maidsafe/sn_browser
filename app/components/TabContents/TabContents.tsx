@@ -101,6 +101,10 @@ export class TabContents extends Component<{}, {}> {
                 }
             }
 
+            if ( isRunningTestCafeProcess ) {
+                return <div>No _real_ tab for testcafe, please</div>;
+            }
+
             return (
                 <Tab
                     addNotification={addNotification}
