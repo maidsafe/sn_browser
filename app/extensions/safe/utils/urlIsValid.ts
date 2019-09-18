@@ -1,13 +1,12 @@
-import { parse } from 'url';
+import { parse, Url } from 'url';
 import pkg from '$Package';
-import { CONFIG, PROTOCOLS } from '$Constants';
-import { SAFE_PAGES } from '$Extensions/safe/rendererProcess/internalPages';
+import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
 
-const isForSafeServer = ( parsedUrlObject ) =>
+const isForSafeServer = ( parsedUrlObject: Url ): boolean =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
 
-export const urlIsValid = ( testUrl ) => {
+export const urlIsValid = ( testUrl ): boolean => {
     logger.info( 'Checking urlIsValid', testUrl );
     const urlObject = parse( testUrl );
 

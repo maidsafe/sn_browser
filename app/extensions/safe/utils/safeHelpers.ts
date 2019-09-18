@@ -1,17 +1,3 @@
-import { parse } from 'url';
-import pkg from '$Package';
-import { CONFIG, PROTOCOLS } from '$Constants';
-import { SAFE_PAGES } from '$Extensions/safe/rendererProcess/internalPages';
-import { logger } from '$Logger';
-
-export const inEditor = ( address ) => {
-    const parsedAddress = parse( address );
-
-    return (
-        parsedAddress.protocol === `${PROTOCOLS.INTERNAL_PAGES}:` &&
-    parsedAddress.host === SAFE_PAGES.EDIT_SITE
-    );
-};
 export const cleanupNeonError = ( error: Error ): string => {
     const neonError = 'internal error in Neon module:';
     let { message } = error;
