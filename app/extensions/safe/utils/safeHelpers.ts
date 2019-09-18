@@ -1,7 +1,7 @@
 import url from 'url';
-import pkg from '$Package';
 import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
+import buildConfig from '$BuilderConfig';
 
 export const cleanupNeonError = ( error: Error ): string => {
     const neonError = 'internal error in Neon module:';
@@ -20,7 +20,7 @@ export const urlIsValid = ( testUrl ) => {
     logger.info( 'Checking urlIsValid', testUrl );
     const urlObject = url.parse( testUrl );
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = buildConfig.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( ( proto ) => `${proto}:` );
 
     if ( testUrl === 'about:blank' ) return true;

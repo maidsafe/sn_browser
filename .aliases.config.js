@@ -2,6 +2,7 @@ module.exports = {
     $App: './app',
     $Test: './__tests__',
     $Actions: './app/actions',
+    $BuilderConfig: './builderConfig.js',
     $Store: './app/store',
     $Extensions: './app/extensions',
     $Reducers: './app/reducers',

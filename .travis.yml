@@ -1,8 +1,12 @@
+env:
+  global:
+    - secure: "G+hQbK2+8f6XFDopDJNddw3D8pEYx8OcWS4HAPpdXWY3Uo1mOFMObQsK7PjKoVKU7+n/ScL6t1FmRPuqCaxzEZa4jztgtViyVlb04mUI331f0xnuURiSOwHNwkEXpYAOXjmA79UFkSw4BTDVH+A4cJr5wxep+Xr85wGUwRscyDMjNg4DFQHmkNYK+JluquZ2+31yDI/Rl8qgM6vOQAhf4hV72UGKNpjGknPtFqiwnf/j2Q8IT3QiUeOLaEQbgOFAQ/ad7YGt9B0vhRBkh7X3vUMrSU5JXtsZZwETpfOzE6rDUg5d+YJpwhmIlPgqg/o7hL0gyZm+mk5fY/fdWoKAoHSa2/OkMyRN0UXopg5ZDDq1NQb5Pt1a1ndgWH9tlJXRfjXaurtip+ExEamXhr+bMISqbFHyQkLHCnyC1O3LQOLbIHOv6kjNqPYLAHIE/ysagkXg6iZ9k7WOv4Rw436GoMNS1rEL0a2iacC9+X3w770QZ1mlSxYqXsswxtJLvI7kHNN+2vwJb563FJxaaaTYm66T2dYFpZhG0/o0IIM8BPTEGDit8mIBFjzZtbMP1DVRjfZhoX6zc9hXggFr8PdWBHIy6MC3dl23f84X74NnBf6RgDF6EnlQRA5D4YnB8hMHbyzwpl+Zu1ACnKfmdn7Q8QoKOC8bS9Fb/nBr7svqguo="
 matrix:
   # allow_failures:
   #   - os: windows
   include:
     - os: osx
+      osx_image: xcode11
       language: node_js
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
@@ -75,6 +79,14 @@ script:
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/settingsMenu.spec.ts
+  - rm -rf release
+  # The reason I have done this instead of adding them as env variables to prevent windows from picking up the code signing key and trying to sign the app.
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_LINK="can be a secure hash encrypted using travis-cli"; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_KEY_PASSWORD="can be a secure hash encrypted using travis-cli"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-win/; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-linux/; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-osx/; fi
+  - yarn release
 
 
 
@@ -106,10 +118,13 @@ before_deploy:
   fi
 - cd ..
 - ls release
-- export RELEASE_PROD_ZIP="$(ls release/*-x64.zip)";
-- export RELEASE_DEV_ZIP="$(ls release/*-dev.zip)";
-- echo "deploying ${RELEASE_PROD_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
-- echo "deploying ${RELEASE_DEV_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PROD_EXE="$(ls release/*-mac-x64.dmg)";
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PROD_EXE="$(ls release/*-linux-x64.AppImage)";
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "win" ]]; then export RELEASE_PROD_EXE="$(ls release/*-win-x64.exe)";
+  fi
+- echo "deploying ${RELEASE_PROD_EXE} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - ls release
 
 deploy:
@@ -117,8 +132,7 @@ deploy:
   skip_cleanup: true
   api_key: $GITHUB_ACCESS_TOKEN
   file:
-    - "${RELEASE_PROD_ZIP}"
-    - "${RELEASE_DEV_ZIP}"
+    - "${RELEASE_PROD_EXE}"
   draft: true
   tag_name: $TRAVIS_TAG
   on:

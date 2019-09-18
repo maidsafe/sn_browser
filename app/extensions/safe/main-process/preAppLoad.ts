@@ -2,11 +2,12 @@ import { Store } from 'redux';
 import { app, protocol } from 'electron';
 import { isRunningUnpacked } from '$Constants';
 import { logger } from '$Logger';
+// import buildConfig from '$BuilderConfig';
 
 export const preAppLoad = ( _store: Store ) => {
     if ( isRunningUnpacked && process.platform === 'win32' ) return;
 
-    // protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
+    // protocol.registerStandardSchemes( buildConfig.protocols.schemes, { secure: true } );
     protocol.registerSchemesAsPrivileged( [
         {
             scheme: 'safe',
