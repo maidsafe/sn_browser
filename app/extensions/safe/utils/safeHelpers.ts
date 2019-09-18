@@ -1,3 +1,4 @@
+
 export const cleanupNeonError = ( error: Error ): string => {
     const neonError = 'internal error in Neon module:';
     let { message } = error;
