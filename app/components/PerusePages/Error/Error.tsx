@@ -10,6 +10,16 @@ export const ERROR_TYPES = {
     AUTH_FAILED: 'AUTH_FAILED'
 };
 
+export const ERROR_CODES = {
+    BAD_REQUEST: 400,
+    NO_CONTENT_FOUND: 404,
+    INVALID_VERSION: 404,
+    UNKNOWN_NAME: 404,
+    AUTH_FAILED: 401
+};
+
+// SAFE Error code space? 1000?
+
 const ERROR_PAGES = {
     AUTH_FAILED: {
         superTitle: 'Authorisation Failed',
@@ -57,13 +67,20 @@ const ERROR_PAGES = {
                 ctaText: `Register ${address}`,
                 targetUrl: registerThis
             };
-        }
+        },
+        errorCode: 404
     }
 };
 export const Error = ( props ) => {
     const { address, badVersion, latestVersion, type } = props;
 
-    const { superTitle, title, getMessage, getCallToAction } = ERROR_PAGES[type];
+    const {
+        superTitle,
+        title,
+        getMessage,
+        getCallToAction,
+        errorCode
+    } = ERROR_PAGES[type];
 
     const pageStyle = {
         width: '100%',

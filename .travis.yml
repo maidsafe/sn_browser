@@ -68,7 +68,7 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
     fi
-  - yarn lint
+  - yarn lint --quiet
   - travis_retry yarn run test-peruse --forceExit
   - travis_retry yarn run test-exts --forceExit
   - yarn package
