@@ -26,7 +26,9 @@
     "prepush": "yarn test",
     "prelint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,ts,tsx,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "prerelease": "standard-version --prerelease rc",
-    "package": "cross-env PACKAGING=true yarn build && electron-builder build --publish never && yarn post-pack",
+    "package": "cross-env PACKAGING=true yarn build && electron-builder build --config ./builderConfig.js --publish never && yarn post-pack",
+    "release": "cross-env PACKAGING=true yarn build && electron-builder build --config ./builderConfig.js --publish onTag && yarn post-pack",
+    "deploy": "cross-env PACKAGING=true yarn build && electron-builder build --config ./builderConfig.js --publish always && yarn post-pack",
     "post-pack": "node ./post-pack.js",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -78,74 +80,6 @@
     ]
   },
   "main": "./app/main.prod.js",
-  "build": {
-    "artifactName": "SAFE Browser-v${version}-${os}-x64",
-    "productName": "SAFE Browser",
-    "files": [
-      "app/dist/",
-      "locales",
-      "app/locales",
-      "app/app.html",
-      "app/bg.html",
-      "app/background.prod.js",
-      "app/background.prod.js.map",
-      "app/webPreload.prod.js",
-      "app/webPreload.prod.js.map",
-      "app/main.prod.js",
-      "app/main.prod.js.map",
-      "package.json"
-    ],
-    "extraFiles": [],
-    "extraResources": [
-      {
-        "from": "resources/log.toml",
-        "to": "log.toml"
-      },
-      {
-        "from": "resources/favicon.ico",
-        "to": "favicon.ico"
-      },
-      {
-        "from": "resources/PreloadDevVault",
-        "to": "PreloadDevVault"
-      },
-      {
-        "from": "resources/locales",
-        "to": "locales"
-      },
-      {
-        "from": "resources/crust.config",
-        "to": "${productName}.crust.config"
-      },
-      {
-        "from": "app/extensions/safe/iconfont",
-        "to": "extensions/safe/iconfont"
-      },
-      {
-        "from": "node_modules/nessie-ui/dist/styles.css",
-        "to": "nessie-styles.css"
-      }
-    ],
-    "protocols": {
-      "name": "SAFE Network URL",
-      "schemes": [
-        "safe"
-      ]
-    },
-    "win": {
-      "target": "dir"
-    },
-    "linux": {
-      "target": "dir"
-    },
-    "mac": {
-      "target": "dir"
-    },
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maidsafe/safe_browser"

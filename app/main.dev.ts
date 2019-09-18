@@ -35,7 +35,12 @@ import { setupBackground } from './setupBackground';
 
 import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
-import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions/mainProcess';
+import {
+    onReceiveUrl,
+    preAppLoad,
+    onAppReady
+} from '$Extensions/main-process-extensions';
+import { AppUpdater } from './autoUpdate';
 
 const initialState = {};
 const store = configureStore( initialState );
@@ -146,6 +151,11 @@ app.on( 'ready', async () => {
     await setupBackground();
 
     mainWindow = openWindow( store );
+
+    if ( !isRunningTestCafeProcess && !isRunningUnpacked && app.whenReady() ) {
+    // eslint-disable-next-line no-new
+        new AppUpdater( store );
+    }
 } );
 
 app.on( 'open-url', ( e, url ) => {

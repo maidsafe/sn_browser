@@ -1,7 +1,7 @@
 import { parse, Url } from 'url';
-import pkg from '$Package';
 import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
+import buildConfig from '$BuilderConfig';
 
 const isForSafeServer = ( parsedUrlObject: Url ): boolean =>
     parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
@@ -10,7 +10,7 @@ export const urlIsValid = ( testUrl ): boolean => {
     logger.info( 'Checking urlIsValid', testUrl );
     const urlObject = parse( testUrl );
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = buildConfig.protocols.schemes || ['http'];
     const adaptedProtocols = validProtocols.map( ( proto ) => `${proto}:` );
 
     if ( testUrl === 'about:blank' ) return true;
