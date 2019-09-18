@@ -2,7 +2,8 @@ import { parse } from 'url';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { logger } from '$Logger';
-import { Error, ERROR_TYPES } from '$Components/PerusePages/Error';
+import { Error, ERROR_TYPES, ERROR_CODES } from '$Components/PerusePages/Error';
+
 import { addTab } from '$Actions/tabs_actions';
 import { errConsts } from '$Extensions/safe/err-constants';
 
@@ -29,17 +30,20 @@ export const safeRoute = ( store ) => ( {
             address?: string,
             badVersion?: string,
             latestVersion?: string
-        ) =>
-            res.send(
-                ReactDOMServer.renderToStaticMarkup(
-                    <Error
-                        type={type}
-                        address={address}
-                        badVersin={badVersion}
-                        latestVersion={latestVersion}
-                    />
-                )
-            );
+        ): void => {
+            res
+                .status( ERROR_CODES[type] )
+                .send(
+                    ReactDOMServer.renderToStaticMarkup(
+                        <Error
+                            type={type}
+                            address={address}
+                            badVersin={badVersion}
+                            latestVersion={latestVersion}
+                        />
+                    )
+                );
+        };
 
         try {
             let link = request.url;
