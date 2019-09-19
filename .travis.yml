@@ -80,9 +80,8 @@ script:
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/settingsMenu.spec.ts
   - rm -rf release
-  # The reason I have done this instead of adding them as env variables to prevent windows from picking up the code signing key and trying to sign the app.
-  # - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_LINK="can be a secure hash encrypted using travis-cli"; fi
-  # - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_KEY_PASSWORD="can be a secure hash encrypted using travis-cli"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_LINK="can be a secure hash encrypted using travis-cli"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_KEY_PASSWORD="can be a secure hash encrypted using travis-cli"; fi
   - if [[ "$TRAVIS_OS_NAME" == "windows" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-win/; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-linux/; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-osx/; fi
