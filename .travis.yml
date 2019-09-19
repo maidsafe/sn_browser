@@ -86,7 +86,6 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "windows" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-win/; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-linux/; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-osx/; fi
-  - yarn release
 
 
 
@@ -102,7 +101,7 @@ after_failure:
 
 before_deploy:
 
-- yarn package
+- yarn release
 - NODE_ENV=prod yarn package
 - cd release;
 - |

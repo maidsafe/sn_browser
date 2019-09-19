@@ -38,6 +38,7 @@ const LOGS = 'log.toml';
 
 const buildConfig = {
     artifactName: `safe-browser-v\${version}-\${os}-x64.\${ext}`,
+    afterPack: './afterPack.js',
     productName: 'SAFE Browser',
     files: [
         'app/dist/',
