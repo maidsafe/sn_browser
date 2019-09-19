@@ -54,7 +54,6 @@ MySitesProps,
     constructor( props ) {
         super( props );
 
-        console.log( 'Mysites props', props );
         this.state = {
             // files: [],
             hasError: false,

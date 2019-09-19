@@ -52,14 +52,11 @@ export const setupBackground = async () =>
                         isRunningDebug ||
             ( isRunningUnpacked && !isRunningSpectronTestProcess )
                     ) {
-                        backgroundProcessWindow.webContents.on(
-                            'did-frame-finish-load',
-                            () => {
-                                backgroundProcessWindow.webContents.openDevTools( {
-                                    mode: 'undocked'
-                                } );
-                            }
-                        );
+                        backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
+                            backgroundProcessWindow.webContents.openDevTools( {
+                                mode: 'undocked'
+                            } );
+                        } );
                     }
                     return resolve( backgroundProcessWindow );
                 } );

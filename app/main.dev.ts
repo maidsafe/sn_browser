@@ -35,11 +35,7 @@ import { setupBackground } from './setupBackground';
 
 import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
-import {
-    onReceiveUrl,
-    preAppLoad,
-    onAppReady
-} from '$Extensions/main-process-extensions';
+import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions/mainProcess';
 import { AppUpdater } from './autoUpdate';
 
 const initialState = {};

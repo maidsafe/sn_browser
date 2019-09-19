@@ -11,7 +11,12 @@ import {
     selectAddressBar
 } from '$Actions/tabs_actions';
 import { resetStore } from '$Actions/resetStore_action';
-import { isHot, isRunningTestCafeProcess, isRunningPackaged } from '$Constants';
+import {
+    isHot,
+    isRunningTestCafeProcess,
+    isRunningPackaged,
+    isRunningDebug
+} from '$Constants';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
 import pkg from '$Package';
@@ -55,7 +60,7 @@ export class MenuBuilder {
     }
 
     public buildMenu() {
-        if ( isHot ) {
+        if ( isHot || isRunningDebug ) {
             this.setupDevelopmentEnvironment();
         }
 
