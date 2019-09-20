@@ -84,9 +84,9 @@ script:
   - rm -rf release
   - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_LINK="can be a secure hash encrypted using travis-cli"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then export CSC_KEY_PASSWORD="can be a secure hash encrypted using travis-cli"; fi
-  - if [[ "$TRAVIS_OS_NAME" == "windows" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-win/; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-linux/; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-network-app/safe-network-app-osx/; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-browser/safe-browser-win/; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-browser/safe-browser-linux/; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" && ${TRAVIS_TAG} != "" ]]; then aws s3 rm --recursive s3://safe-browser/safe-browser-osx/; fi
 
 
 
