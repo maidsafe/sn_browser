@@ -2,7 +2,6 @@ import path from 'path';
 
 import { CONFIG } from '$Constants';
 import {
-    setSafeBrowserAppObject,
     getSafeBrowserAppObject,
     getCurrentStore,
     safeIsAuthorised
@@ -26,7 +25,13 @@ export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
         );
     }
 
-    if ( !safeIsAuthorised() ) await initAuthed();
+    try {
+        if ( !safeIsAuthorised() ) await initAuthed();
+    } catch ( error ) {
+        logger.error( 'Error authorising app in NRS register.' );
+        logger.error( error );
+        return;
+    }
 
     const safe = await getSafeBrowserAppObject();
 

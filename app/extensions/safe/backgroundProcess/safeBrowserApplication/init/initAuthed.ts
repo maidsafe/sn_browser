@@ -1,6 +1,11 @@
 import { Safe } from 'safe-nodejs';
 import { logger } from '$Logger';
-import { setSafeBrowserAppObject } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
+import {
+    setSafeBrowserAppObject,
+    getCurrentStore
+} from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
+import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
+import { addNotification } from '$Actions/notification_actions';
 
 export const initAuthed = async (): Safe => {
     let safeBrowserAppObject;
@@ -14,6 +19,7 @@ export const initAuthed = async (): Safe => {
 
         safeBrowserAppObject = new Safe();
 
+        logger.info( 'Connecting (authed) to the Network...' );
         const authCredentials = await safeBrowserAppObject.auth_app(
             APP_ID,
             APP_NAME,
@@ -21,7 +27,6 @@ export const initAuthed = async (): Safe => {
             41805
         );
 
-        logger.info( 'Connecting (authed) to the Network...' );
         await safeBrowserAppObject.connect( APP_ID, authCredentials );
         logger.info( 'Connected.' );
 
@@ -30,8 +35,19 @@ export const initAuthed = async (): Safe => {
 
         return safeBrowserAppObject;
     } catch ( error ) {
-        logger.error( error );
-        setSafeBrowserAppObject( safeBrowserAppObject, { error } );
+        const message = cleanupNeonError( error );
+        if ( message.includes( 'Failed to send request to Authenticator' ) ) {
+            const store = getCurrentStore();
+
+            store.dispatch(
+                addNotification( {
+                    title: 'Authentication Failed. Check an authenticator is running.',
+                    acceptText: 'Dismiss'
+                } )
+            );
+        }
+        logger.error( message );
+        setSafeBrowserAppObject( safeBrowserAppObject, { isAuthed: false, error } );
         return safeBrowserAppObject;
     }
 };

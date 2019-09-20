@@ -95,13 +95,6 @@ export const safeRoute = ( store ) => ( {
                 }
 
                 if (
-                    targetVersion &&
-          message.includes( 'Failed to authorise application' )
-                ) {
-                    return sendErrResponse( ERROR_TYPES.AUTH_FAILED );
-                }
-
-                if (
                     message.includes( `Content not found at ${link}` ) &&
           parsed.path !== '/'
                 ) {

@@ -1,6 +1,11 @@
 import { Safe } from 'safe-nodejs';
 import { logger } from '$Logger';
-import { setSafeBrowserAppObject } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
+import {
+    setSafeBrowserAppObject,
+    getCurrentStore
+} from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
+import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
+import { addNotification } from '$Actions/notification_actions';
 
 export const initAnon = async (): Safe => {
     let safeBrowserAppObject;
@@ -22,7 +27,20 @@ export const initAnon = async (): Safe => {
 
         return safeBrowserAppObject;
     } catch ( error ) {
-        logger.error( error );
+        const message = cleanupNeonError( error );
+        if ( message.includes( 'Request has timed out' ) ) {
+            const store = getCurrentStore();
+
+            // TODO: Try again
+            store.dispatch(
+                addNotification( {
+                    title:
+            'Network Connection Failed. There was a timeout. Try restarting the browser.',
+                    acceptText: 'Dismiss'
+                } )
+            );
+        }
+        logger.error( message );
         setSafeBrowserAppObject( safeBrowserAppObject, { error } );
         return safeBrowserAppObject;
     }
