@@ -21,15 +21,15 @@ const logFilePath = () => {
 // eslint-disable-next-line consistent-return, @typescript-eslint/explicit-function-return-type
 const publishedFilePath = () => {
     if ( platform === OSX ) {
-        return `safe-browser-osx-prod`;
+        return `safe-browser-osx`;
         // return `safe-browser-osx-${env}`;
     }
     if ( platform === LINUX ) {
-        return `safe-browser-linux-prod`;
+        return `safe-browser-linux`;
         // return `safe-browser-linux-${env}`;
     }
     if ( platform === WINDOWS ) {
-        return `safe-browser-win-prod`;
+        return `safe-browser-win`;
         // return `safe-browser-win-${env}`;
     }
 };
