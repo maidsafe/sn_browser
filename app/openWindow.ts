@@ -7,7 +7,6 @@ import { MenuBuilder } from './menu';
 import { onOpenLoadExtensions } from './extensions/mainProcess';
 import {
     isRunningTestCafeProcess,
-    isRunningSpectronTestProcess,
     isRunningDebug,
     testCafeURL
 } from '$Constants';
@@ -79,11 +78,6 @@ export const openWindow = ( store ): BrowserWindow => {
 
     thisWindow.loadURL( `file://${__dirname}/app.html` );
 
-    if ( isRunningDebug && !isRunningSpectronTestProcess ) {
-        thisWindow.on( 'did-frame-finish-load', () => {
-            thisWindow.openDevTools( { mode: 'undocked' } );
-        } );
-    }
     thisWindow.webContents.once(
         'did-finish-load',
         async (): Promise<void> => {
@@ -104,6 +98,12 @@ export const openWindow = ( store ): BrowserWindow => {
                             tabId
                         } )
                     );
+                }
+
+                if ( isRunningDebug && !isRunningTestCafeProcess ) {
+                    // thisWindow.webContents.on( 'did-finish-load', () => {
+                    thisWindow.webContents.openDevTools( { mode: 'undocked' } );
+                    // } );
                 }
 
                 store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );

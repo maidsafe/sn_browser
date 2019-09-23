@@ -78,7 +78,7 @@ if (
   isRunningDebug
 ) {
     /* eslint-disable @typescript-eslint/no-var-requires,global-require */
-    require( 'electron-debug' )();
+    // require( 'electron-debug' )();
     const p = path.join( __dirname, '..', 'app', 'node_modules' );
     require( 'module' ).globalPaths.push( p );
     /* eslint-enable @typescript-eslint/no-var-requires,global-require */

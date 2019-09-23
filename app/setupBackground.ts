@@ -4,7 +4,7 @@ import { logger } from '$Logger';
 import {
     isRunningUnpacked,
     isRunningDebug,
-    isRunningSpectronTestProcess,
+    isRunningTestCafeProcess,
     isCI
 } from '$Constants';
 
@@ -22,11 +22,11 @@ export const setupBackground = async () =>
                 backgroundProcessWindow = new BrowserWindow( {
                     width: 300,
                     height: 450,
-                    show: true,
-                    frame: true,
+                    show: false,
+                    frame: false,
                     fullscreenable: false,
                     resizable: false,
-                    transparent: false,
+                    transparent: true,
                     webPreferences: {
                         // partition               : 'persist:safe-tab', // TODO make safe?
                         nodeIntegration: true,
@@ -34,6 +34,14 @@ export const setupBackground = async () =>
                         backgroundThrottling: false
                     }
                 } );
+
+                if ( isRunningDebug && !isRunningTestCafeProcess ) {
+                    backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
+                        backgroundProcessWindow.webContents.openDevTools( {
+                            mode: 'undocked'
+                        } );
+                    } );
+                }
 
                 // Hide the window when it loses focus
                 //   backgroundProcessWindow.on('blur', () => {
@@ -45,20 +53,20 @@ export const setupBackground = async () =>
                 backgroundProcessWindow.webContents.on( 'did-finish-load', (): void => {
                     logger.info( 'Background process renderer loaded.' );
 
-                    if ( isRunningSpectronTestProcess || isCI )
-                        return resolve( backgroundProcessWindow );
+                    // if ( isRunningTestCafeProcess || isCI )
+                    //     return resolve( backgroundProcessWindow );
 
-                    if (
-                        isRunningDebug ||
-            ( isRunningUnpacked && !isRunningSpectronTestProcess )
-                    ) {
-                        logger.info( 'SHOULD be loading BR process devvvvvv' );
-                        // backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
-                        backgroundProcessWindow.webContents.openDevTools( {
-                            mode: 'undocked'
-                        } );
-                        // } );
-                    }
+                    //         if (
+                    //             isRunningDebug ||
+                    // ( isRunningUnpacked && !isRunningTestCafeProcess )
+                    //         ) {
+                    //             logger.info( 'SHOULD be loading BR process devvvvvv' );
+                    //             backgroundProcessWindow.webContents.on( 'did-frame-finish-load', () => {
+                    //             backgroundProcessWindow.openDevTools( {
+                    //                 mode: 'undocked'
+                    //             } );
+                    //             } );
+                    //         }
                     return resolve( backgroundProcessWindow );
                 } );
 
