@@ -22,11 +22,11 @@ export const setupBackground = async () =>
                 backgroundProcessWindow = new BrowserWindow( {
                     width: 300,
                     height: 450,
-                    show: false,
-                    frame: false,
+                    show: true,
+                    frame: true,
                     fullscreenable: false,
                     resizable: false,
-                    transparent: true,
+                    transparent: false,
                     webPreferences: {
                         // partition               : 'persist:safe-tab', // TODO make safe?
                         nodeIntegration: true,
@@ -52,11 +52,12 @@ export const setupBackground = async () =>
                         isRunningDebug ||
             ( isRunningUnpacked && !isRunningSpectronTestProcess )
                     ) {
-                        backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
-                            backgroundProcessWindow.webContents.openDevTools( {
-                                mode: 'undocked'
-                            } );
+                        logger.info( 'SHOULD be loading BR process devvvvvv' );
+                        // backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
+                        backgroundProcessWindow.webContents.openDevTools( {
+                            mode: 'undocked'
                         } );
+                        // } );
                     }
                     return resolve( backgroundProcessWindow );
                 } );
