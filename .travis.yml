@@ -53,11 +53,6 @@ install:
   - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
   # Change vars for windows signing
   - export CSC_IDENTITY_AUTO_DISCOVERY=true
-  # Windows install for cert signing
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y windows-sdk-10.0; fi
-  # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then Powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine; fi
-  # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then PowerShell -File internals\\scripts\\windows_presign.ps1; fi;
-
   # On Linux, initialize "virtual display". See before_script
 
 
@@ -115,8 +110,6 @@ before_deploy:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PROD_EXE="$(ls release/*-mac-x64.dmg)";
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PROD_EXE="$(ls release/*-linux-x64.AppImage)";
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "win" ]]; then export RELEASE_PROD_EXE="release/safe-browser-${TRAVIS_TAG}-win-x64.exe)";
   fi
 - echo "deploying ${RELEASE_PROD_EXE} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - ls release
