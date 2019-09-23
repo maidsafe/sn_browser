@@ -35,40 +35,23 @@ export const setupBackground = async () =>
                     }
                 } );
 
-                if ( isRunningDebug && !isRunningTestCafeProcess ) {
-                    backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
-                        backgroundProcessWindow.webContents.openDevTools( {
-                            mode: 'undocked'
-                        } );
-                    } );
-                }
+                backgroundProcessWindow.webContents.on(
+                    'did-frame-finish-load',
+                    (): void => {
+                        logger.info( 'Background process renderer loaded.' );
 
-                // Hide the window when it loses focus
-                //   backgroundProcessWindow.on('blur', () => {
-                //     if (!backgroundProcessWindow.webContents.isDevToolsOpened()) {
-                //       backgroundProcessWindow.hide()
-                //     }
-                // });
+                        if ( isRunningTestCafeProcess || isCI )
+                            return resolve( backgroundProcessWindow );
 
-                backgroundProcessWindow.webContents.on( 'did-finish-load', (): void => {
-                    logger.info( 'Background process renderer loaded.' );
+                        if ( isRunningDebug ) {
+                            backgroundProcessWindow.webContents.openDevTools( {
+                                mode: 'undocked'
+                            } );
+                        }
 
-                    // if ( isRunningTestCafeProcess || isCI )
-                    //     return resolve( backgroundProcessWindow );
-
-                    //         if (
-                    //             isRunningDebug ||
-                    // ( isRunningUnpacked && !isRunningTestCafeProcess )
-                    //         ) {
-                    //             logger.info( 'SHOULD be loading BR process devvvvvv' );
-                    //             backgroundProcessWindow.webContents.on( 'did-frame-finish-load', () => {
-                    //             backgroundProcessWindow.openDevTools( {
-                    //                 mode: 'undocked'
-                    //             } );
-                    //             } );
-                    //         }
-                    return resolve( backgroundProcessWindow );
-                } );
+                        return resolve( backgroundProcessWindow );
+                    }
+                );
 
                 backgroundProcessWindow.webContents.on(
                     'did-fail-load',

@@ -79,7 +79,7 @@ export const openWindow = ( store ): BrowserWindow => {
     thisWindow.loadURL( `file://${__dirname}/app.html` );
 
     thisWindow.webContents.once(
-        'did-finish-load',
+        'did-frame-finish-load',
         async (): Promise<void> => {
             // have to add a tab here now
             const thisWindowId = thisWindow.id;
@@ -101,9 +101,7 @@ export const openWindow = ( store ): BrowserWindow => {
                 }
 
                 if ( isRunningDebug && !isRunningTestCafeProcess ) {
-                    // thisWindow.webContents.on( 'did-finish-load', () => {
                     thisWindow.webContents.openDevTools( { mode: 'undocked' } );
-                    // } );
                 }
 
                 store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
