@@ -6,7 +6,7 @@ describe( 'Error Component', () => {
     let wrapper;
     let props = {
         address: 'safe://ups',
-        type: 'AUTH_FAILED'
+        type: 'CONNECTION_FAILED'
     };
 
     describe( 'render()', () => {
