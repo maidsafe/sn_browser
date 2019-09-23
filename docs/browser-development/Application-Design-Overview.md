@@ -160,10 +160,6 @@ The js code to hook up the authentication FFI to the native auth libs.
 
 This handles receiving / decoding / authorising requests etc.
 
-#### `iconfont`
-
-This should be removed soon.
-
 #### `safeBrowserApplication`
 
 What do you call a SAFE application, within the SAFE browser that performs `webfetch` and/or saves the SAFE Browser Application state to the network?

@@ -74,10 +74,6 @@ const buildConfig = {
             to: 'locales'
         },
         {
-            from: 'app/extensions/safe/iconfont',
-            to: 'extensions/safe/iconfont'
-        },
-        {
             from: 'node_modules/nessie-ui/dist/styles.css',
             to: 'nessie-styles.css'
         }

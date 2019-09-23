@@ -7,7 +7,7 @@ export const ERROR_TYPES = {
     NO_CONTENT_FOUND: 'NO_CONTENT_FOUND',
     INVALID_VERSION: 'INVALID_VERSION',
     UNKNOWN_NAME: 'UNKNOWN_NAME',
-    AUTH_FAILED: 'AUTH_FAILED'
+    CONNECTION_FAILED: 'CONNECTION_FAILED'
 };
 
 export const ERROR_CODES = {
@@ -15,16 +15,16 @@ export const ERROR_CODES = {
     NO_CONTENT_FOUND: 404,
     INVALID_VERSION: 404,
     UNKNOWN_NAME: 404,
-    AUTH_FAILED: 401
+    CONNECTION_FAILED: 500
 };
 
 // SAFE Error code space? 1000?
 
 const ERROR_PAGES = {
-    AUTH_FAILED: {
-        superTitle: 'Authorisation Failed',
-        title: 'Could not authorise on the network',
-        getMessage: () => 'There was an problem with network authentication. '
+    CONNECTION_FAILED: {
+        superTitle: 'Connection Failed',
+        title: 'Could not connect to the network',
+        getMessage: () => 'There was an problem with the network connection. '
     },
     BAD_REQUEST: {
         superTitle: 'Bad Request',

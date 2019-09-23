@@ -17,6 +17,7 @@ const initSafeServer = ( store ) => {
 };
 
 const initBgProcess = async () => {
+    logger.info( 'Background process init.' );
     // Add middleware from extensions here. TODO: this should be be unified somewhere.
     const loadMiddlewarePackages = getExtensionReduxMiddleware() || [];
     const store = configureStore( undefined, loadMiddlewarePackages, true );

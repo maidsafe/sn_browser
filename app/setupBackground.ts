@@ -4,7 +4,7 @@ import { logger } from '$Logger';
 import {
     isRunningUnpacked,
     isRunningDebug,
-    isRunningSpectronTestProcess,
+    isRunningTestCafeProcess,
     isCI
 } from '$Constants';
 
@@ -35,31 +35,23 @@ export const setupBackground = async () =>
                     }
                 } );
 
-                // Hide the window when it loses focus
-                //   backgroundProcessWindow.on('blur', () => {
-                //     if (!backgroundProcessWindow.webContents.isDevToolsOpened()) {
-                //       backgroundProcessWindow.hide()
-                //     }
-                // });
+                backgroundProcessWindow.webContents.on(
+                    'did-frame-finish-load',
+                    (): void => {
+                        logger.info( 'Background process renderer loaded.' );
 
-                backgroundProcessWindow.webContents.on( 'did-finish-load', (): void => {
-                    logger.info( 'Background process renderer loaded.' );
+                        if ( isRunningTestCafeProcess || isCI )
+                            return resolve( backgroundProcessWindow );
 
-                    if ( isRunningSpectronTestProcess || isCI )
-                        return resolve( backgroundProcessWindow );
-
-                    if (
-                        isRunningDebug ||
-            ( isRunningUnpacked && !isRunningSpectronTestProcess )
-                    ) {
-                        backgroundProcessWindow.webContents.on( 'did-finish-load', () => {
+                        if ( isRunningDebug ) {
                             backgroundProcessWindow.webContents.openDevTools( {
                                 mode: 'undocked'
                             } );
-                        } );
+                        }
+
+                        return resolve( backgroundProcessWindow );
                     }
-                    return resolve( backgroundProcessWindow );
-                } );
+                );
 
                 backgroundProcessWindow.webContents.on(
                     'did-fail-load',

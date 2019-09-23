@@ -73,10 +73,6 @@ export class MenuBuilder {
     }
 
     private setupDevelopmentEnvironment() {
-        this.mainWindow.webContents.on( 'did-frame-finish-load', () => {
-            this.mainWindow.webContents.openDevTools( { mode: 'undocked' } );
-        } );
-
         this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
             const { x, y } = properties;
 
