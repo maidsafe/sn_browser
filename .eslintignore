@@ -39,7 +39,6 @@ app/style.css
 app/style.css.map
 dist
 dll
-app/extensions/safe/iconfont/iconfont.js
 
 .idea
 npm-debug.log.*
