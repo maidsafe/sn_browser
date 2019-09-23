@@ -98,7 +98,8 @@ const buildConfig = {
         artifactName: `${RELEASE_PACKAGE_NAME}.\${ext}`
     },
     win: {
-        target: ['nsis', 'msi']
+        target: ['nsis', 'msi'],
+        publisherName: 'MaidSafe.net Limited'
     },
     nsis: {
         artifactName: `${RELEASE_PACKAGE_NAME}.\${ext}`

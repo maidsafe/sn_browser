@@ -55,7 +55,6 @@ install:
   - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
   # Change vars for windows signing
   - export CSC_IDENTITY_AUTO_DISCOVERY=true
-  - export DEBUG=electron-builder
   # Windows install for cert signing
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y windows-sdk-10.0; fi
   # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then Powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine; fi
