@@ -117,7 +117,7 @@ before_deploy:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PROD_EXE="$(ls release/*-linux-x64.AppImage)";
   fi
-- if [[ "$TRAVIS_OS_NAME" == "win" ]]; then export RELEASE_PROD_EXE="$(ls release/*-win-x64.exe)";
+- if [[ "$TRAVIS_OS_NAME" == "win" ]]; then export RELEASE_PROD_EXE="release/safe-browser-${TRAVIS_TAG}-win-x64.exe)";
   fi
 - echo "deploying ${RELEASE_PROD_EXE} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - ls release
@@ -126,8 +126,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key: $GITHUB_ACCESS_TOKEN
-  file:
-    - "${RELEASE_PROD_EXE}"
+  file: $RELEASE_PROD_EXE
   draft: true
   tag_name: $TRAVIS_TAG
   on:
