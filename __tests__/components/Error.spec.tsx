@@ -6,7 +6,7 @@ describe( 'Error Component', () => {
     let wrapper;
     let props = {
         address: 'safe://ups',
-        type: 'AUTH_FAILED'
+        type: 'CONNECTION_FAILED'
     };
 
     describe( 'render()', () => {
@@ -18,7 +18,7 @@ describe( 'Error Component', () => {
             wrapper = mount( <Error {...props} /> );
             expect( wrapper.find( 'h1' ).length ).toBe( 1 );
             expect( wrapper.find( 'h1' ).text() ).toBe(
-                'Could not authorise on the network'
+                'Could not connect to the network'
             );
         } );
 
