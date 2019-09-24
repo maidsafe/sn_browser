@@ -1,7 +1,7 @@
 module.exports = {
     testURL: 'http://localhost/',
     verbose: true,
-    moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
+    moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx', 'node'],
     setupFiles: ['raf/polyfill', '<rootDir>/tests_setup.js'],
     testPathIgnorePatterns: ['node_modules'],
     moduleDirectories: ['app', 'test', 'node_modules'],
