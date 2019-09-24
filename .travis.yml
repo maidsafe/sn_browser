@@ -1,5 +1,4 @@
-env:
- matrix:
+matrix:
   include:
     - os: osx
       osx_image: xcode11
