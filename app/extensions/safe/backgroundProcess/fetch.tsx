@@ -11,6 +11,8 @@ import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplicat
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
 
+import { Error, ERROR_TYPES, ERROR_CODES } from '$Components/PerusePages/Error';
+
 const DEFAULT_PAGE = '/index.html';
 // const DEFAULT_PAGES = ['index','index.html'];
 
@@ -72,7 +74,12 @@ export const getHTTPFriendlyData = async (
     }
 
     if ( !app ) {
-        response.body = Buffer.from( 'SAFE not connected yet' );
+        const errorPage = ReactDOMServer.renderToStaticMarkup(
+            <Error type={ERROR_TYPES.CONNECTION_FAILED} address={url} />
+        );
+        response.body = Buffer.from(
+            'The SAFE Browser was not able to connected the network.'
+        );
 
         return response;
     }
