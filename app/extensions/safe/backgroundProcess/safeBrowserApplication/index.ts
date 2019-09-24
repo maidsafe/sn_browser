@@ -1,5 +1,7 @@
 import path from 'path';
 
+import { readFileSync, writeFileSync } from 'fs';
+import os from 'os';
 import { CONFIG } from '$Constants';
 import {
     getSafeBrowserAppObject,
@@ -36,20 +38,31 @@ export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
     const safe = await getSafeBrowserAppObject();
 
     try {
-        logger.verbose( 'Creating files container..' );
+        logger.info( 'Creating files container..' );
 
         const defaultSiteFolder = path.resolve(
             path.dirname( CONFIG.APP_HTML_PATH ),
-            'extensions/safe/defaultNewSite/'
+            'extensions/safe/defaultNewSite/index.html'
         );
 
-        logger.info( 'Grabbing default site from ', defaultSiteFolder );
-        const recursive = true;
+        logger.verbose( 'Grabbing default site from ', defaultSiteFolder );
+
+        const defaultSiteContent = readFileSync( defaultSiteFolder );
+
+        const extractedSiteFolder = path.join(
+            os.tmpdir(),
+            'defaultNewSite.html'
+        );
+        logger.verbose( 'Copying site to /tmp location for uploading to network ', extractedSiteFolder );
+
+        writeFileSync( extractedSiteFolder, defaultSiteContent );
+
+        const recursive = false;
         const dryRun = false;
 
         const filesContainer = safe.files_container_create(
-            `${defaultSiteFolder}/`,
-            '',
+            `${extractedSiteFolder}`,
+            '/index.html',
             recursive,
             dryRun
         );

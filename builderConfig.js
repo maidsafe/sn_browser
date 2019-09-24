@@ -52,7 +52,8 @@ const buildConfig = {
         'app/webPreload.prod.js.map',
         'app/main.prod.js',
         'app/main.prod.js.map',
-        'package.json'
+        'package.json',
+        'app/extensions/safe/defaultNewSite/index.html'
     ],
     extraFiles: [
         {
