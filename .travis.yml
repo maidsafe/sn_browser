@@ -1,3 +1,8 @@
+env:
+  global:
+    - RUST_BACKTRACE=1
+    - PATH=$PATH:$HOME/.cargo/bin
+
 matrix:
   include:
     - os: osx
@@ -80,7 +85,7 @@ before_install:
   - echo $TRAVIS_NODE_VERSION
 
 install:
-  - travis-wait-enhanced --timeout 120m yarn --ignore-engines --network-timeout 800000;
+  - travis-wait-enhanced --timeout 120m -- yarn --ignore-engines --network-timeout 800000;
   # Change vars for windows signing
   - export CSC_IDENTITY_AUTO_DISCOVERY=true
   # On Linux, initialize "virtual display". See before_script
