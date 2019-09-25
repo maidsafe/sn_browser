@@ -110,7 +110,7 @@ script:
   - travis_retry yarn run test-exts --forceExit
   # disable signging on windows for now.
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then unset CSC_LINK || unset CSC_KEY_PASSWORD; fi
-  - yarn package
+  - travis-wait-enhanced --timeout 120m -- yarn package
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/settingsMenu.spec.ts
