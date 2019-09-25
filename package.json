@@ -267,7 +267,7 @@
     "express": "4.17.1",
     "fs-extra": "8.1.0",
     "get-port": "5.0.0",
-    "history": "4.9.0",
+    "history": "4.10.1",
     "i18n": "0.8.3",
     "jest-tobetype": "git+https://github.com/joshuef/jest-tobetype.git#master",
     "lodash": ">=4.17.13",
