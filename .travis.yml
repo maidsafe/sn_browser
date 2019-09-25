@@ -48,8 +48,39 @@ cache:
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
+before_install:
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -qO- "https://github.com/crazy-max/travis-wait-enhanced/releases/download/v0.2.0/travis-wait-enhanced_0.2.0_linux_x86_64.tar.gz" | tar -zxvf - travis-wait-enhanced
+    mv travis-wait-enhanced /home/travis/bin/
+    travis-wait-enhanced --version; fi;
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -qO- "https://github.com/crazy-max/travis-wait-enhanced/releases/download/v0.2.0/travis-wait-enhanced_0.2.0_darwin_x86_64.tar.gz" | tar -zxvf - travis-wait-enhanced
+    ls -l /Users/travis
+    mkdir -p /Users/travis/bin
+    mv travis-wait-enhanced /Users/travis/bin/
+    export PATH="/Users/travis/bin:${PATH}"
+    travis-wait-enhanced --version; fi;
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then curl -LfsS -o /tmp/travis-wait-enhanced.zip "https://github.com/crazy-max/travis-wait-enhanced/releases/download/v0.2.0/travis-wait-enhanced_0.2.0_windows_x86_64.zip"
+    7z x /tmp/travis-wait-enhanced.zip -y -o/usr/bin/ travis-wait-enhanced.exe -r
+    travis-wait-enhanced --version; fi;
+  - |
+    if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.rs
+    chmod +x ./rustup.rs
+    ./rustup.rs -y
+    yarn global add neon-cli
+    fi;
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'; fi;
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then PowerShell -File scripts\\install_rustup.ps1; fi;
+  - rustup -V
+  - rustc -V
+  - node -v
+  - npm -v
+  - echo $TRAVIS_NODE_VERSION
+
 install:
-  - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
+  - travis-wait-enhanced --timeout 120m yarn --ignore-engines --network-timeout 800000;
   # Change vars for windows signing
   - export CSC_IDENTITY_AUTO_DISCOVERY=true
   # On Linux, initialize "virtual display". See before_script
