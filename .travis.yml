@@ -127,7 +127,7 @@ after_failure:
 
 
 before_deploy:
-- NODE_ENV=prod yarn deploy
+- NODE_ENV=prod travis-wait-enhanced --timeout 120m -- yarn deploy
 - cd release;
 - |
   ls . | grep safe | while read RELEASE; do
