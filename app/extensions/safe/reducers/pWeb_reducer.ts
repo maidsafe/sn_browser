@@ -18,12 +18,12 @@ export function pWeb( state = initialState, action ) {
             const newVersionedUrls = { ...state.versionedUrls };
 
             const newVersion = payload.version;
-            const previousEntry = newVersionedUrls[payload.url];
+            const previousVersion = newVersionedUrls[payload.url];
 
             // no entry, or prev version was higher...
             if (
-                !previousEntry ||
-        ( previousEntry && previousEntry.verision < payload.version )
+                !previousVersion ||
+        ( previousVersion && previousVersion < payload.version )
             ) {
                 newVersionedUrls[payload.url] = payload.version;
             }
