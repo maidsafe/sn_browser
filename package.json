@@ -290,7 +290,7 @@
     "redux-thunk": "^2.3.0",
     "safe-nodejs": "https://github.com/maidsafe/safe-nodejs.git#0.2.4",
     "source-map-support": "^0.5.12",
-    "tslint": "5.19.0"
+    "tslint": "5.20.0"
   },
   "devEngines": {
     "node": "=10.x",
