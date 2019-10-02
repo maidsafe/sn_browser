@@ -38,14 +38,15 @@ export const preAppLoad = ( store: Store ) => {
     logger.info( 'HACK: mysites local location', storeMySitesLocation );
 
     fs.readJson( storeMySitesLocation, ( err, mySites ) => {
-        if ( err ) logger.error( 'error reading mySites data.', err );
-
-        logger.info( 'Local mysites info found.', mySites );
-        mySites.forEach( ( site ) => {
-            if ( site && site.length > 0 ) {
-                store.dispatch( setNameAsMySite( { url: `safe://${site}` } ) );
-            }
-        } );
+        if ( err ) logger.warn( 'No content found for mySites data.', err );
+        if ( mySites != null ) {
+            logger.info( 'Local mysites info found.', mySites );
+            mySites.forEach( ( site ) => {
+                if ( site && site.length > 0 ) {
+                    store.dispatch( setNameAsMySite( { url: `safe://${site}` } ) );
+                }
+            } );
+        }
     } );
 
     // Listen and update the file
