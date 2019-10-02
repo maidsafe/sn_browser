@@ -9,8 +9,6 @@ import { logger } from '$Logger';
 import { setNameAsMySite } from '$Extensions/safe/actions/pWeb_actions';
 
 export const preAppLoad = ( store: Store ) => {
-    if ( isRunningUnpacked && process.platform === 'win32' ) return;
-
     protocol.registerSchemesAsPrivileged( [
         {
             scheme: 'safe',
@@ -37,15 +35,20 @@ export const preAppLoad = ( store: Store ) => {
 
     logger.info( 'HACK: mysites local location', storeMySitesLocation );
 
+    let isReadingMySites = true;
     fs.readJson( storeMySitesLocation, ( err, mySites ) => {
+        isReadingMySites = false;
         if ( err ) logger.error( 'error reading mySites data.', err );
 
         logger.info( 'Local mysites info found.', mySites );
-        mySites.forEach( ( site ) => {
-            if ( site && site.length > 0 ) {
-                store.dispatch( setNameAsMySite( { url: `safe://${site}` } ) );
-            }
-        } );
+
+        if ( mySites && mySites.length > 1 ) {
+            mySites.forEach( ( site ) => {
+                if ( site && site.length > 0 ) {
+                    store.dispatch( setNameAsMySite( { url: `safe://${site}` } ) );
+                }
+            } );
+        }
     } );
 
     // Listen and update the file
@@ -55,11 +58,15 @@ export const preAppLoad = ( store: Store ) => {
 
         if ( pWeb.mySites !== prevSites ) {
             prevSites = pWeb.mySites;
+
+            // prevent windows FS errors
+            if ( isReadingMySites ) return;
             // With async/await:
             try {
                 await fs.outputJson( storeMySitesLocation, prevSites );
+                logger.info( 'HACK: Written mysites.json to', storeMySitesLocation );
             } catch ( err ) {
-                logger.error( err );
+                logger.error( 'HACK, error writing mysites.json ', err );
             }
         }
     } );
