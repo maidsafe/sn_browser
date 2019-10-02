@@ -42,7 +42,7 @@ export const preAppLoad = ( store: Store ) => {
 
         logger.info( 'Local mysites info found.', mySites );
 
-        if ( mySites && mySites.length > 1 ) {
+        if ( mySites != null ) {
             mySites.forEach( ( site ) => {
                 if ( site && site.length > 0 ) {
                     store.dispatch( setNameAsMySite( { url: `safe://${site}` } ) );
