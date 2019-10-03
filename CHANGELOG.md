@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
+- **mimetypes:** fix(mimetypes): Add in mimtypes for ImmutaData from xorurls ([36770d0](https://github.com/maidsafe/safe_browser/commit/36770d0))
 - **mysites:** prevent from iterating through mysites list if the content was not found ([2a03264](https://github.com/maidsafe/safe_browser/commit/2a03264))
 - **Windows MySites:** Dont write until mysites has been read. ([03ebb8c](https://github.com/maidsafe/safe_browser/commit/03ebb8c)), closes [#1008](https://github.com/maidsafe/safe_browser/issues/1008)
 
