@@ -102,6 +102,7 @@ export const getHTTPFriendlyData = async (
         logger.verbose( 'Handling Immutable data for location:', currentLocation );
         theSafeDataObject = data[PUB_IMMUTABLE];
         response.body = Buffer.from( theSafeDataObject.data );
+        response.headers[HEADERS_CONTENT_TYPE] = theSafeDataObject.media_type;
     }
 
     if ( data[FILES_CONTAINER] ) {
