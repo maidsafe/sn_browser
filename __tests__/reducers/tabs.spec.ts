@@ -421,6 +421,28 @@ describe( 'tabs reducer', () => {
             } );
         } );
     } );
+    describe( 'UPDATE_TAB_WEB_CONTENTS_ID', () => {
+        it( "should update the tab's webContentsId", () => {
+            const state = {
+                [tabId]: { ...basicTab },
+                [tabId1]: { ...basicTab, tabId: tabId1 }
+            };
+
+            const newState = tabs( state, {
+                type: TYPES.UPDATE_TAB_WEB_CONTENTS_ID,
+                payload: { webContentsId: 3, tabId }
+            } );
+
+            expect( newState ).not.toStrictEqual( state );
+            expect( newState[tabId] ).not.toStrictEqual( state[tabId] );
+            expect( newState[tabId1] ).toStrictEqual( state[tabId1] );
+
+            expect( newState[tabId] ).toMatchObject( {
+                ...basicTab,
+                webContentsId: 3
+            } );
+        } );
+    } );
 
     describe( 'TOGGLE_DEV_TOOLS', () => {
         it( "should update the tab's properties", () => {

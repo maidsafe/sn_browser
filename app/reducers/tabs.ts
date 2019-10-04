@@ -46,6 +46,7 @@ const addTab = ( state, tab ) => {
         },
         shouldToggleDevTools: false,
         webId: undefined,
+        webContentsId: undefined,
         history: [tabUrl],
         favicon: faviconPath
     };
@@ -151,6 +152,20 @@ const updateTabWebId = ( state, payload ) => {
         return newState;
     }
     logger.error( 'No WebId to Update' );
+    return state;
+};
+
+const updateTabWebContentsId = ( state, payload ) => {
+    const { tabId, tabToMerge } = handleTabPayload( state, payload );
+    if ( tabId === undefined && tabToMerge === undefined ) {
+        logger.error( 'Tab does not exist' );
+        return state;
+    }
+    if ( payload.webContentsId ) {
+        const newState = updateTab( tabId, tabToMerge, payload, state );
+        return newState;
+    }
+    logger.error( 'No WebContentsId provided to update' );
     return state;
 };
 
@@ -331,6 +346,9 @@ export function tabs( state: object = initialState, action ) {
         }
         case TYPES.UPDATE_TAB_WEB_ID: {
             return updateTabWebId( state, payload );
+        }
+        case TYPES.UPDATE_TAB_WEB_CONTENTS_ID: {
+            return updateTabWebContentsId( state, payload );
         }
         case TYPES.TOGGLE_DEV_TOOLS: {
             return toggleDevTools( state, payload );
