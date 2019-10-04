@@ -30,6 +30,7 @@ export class TabContents extends Component<{}, {}> {
             history,
             addNotification,
             updateTabUrl,
+            updateTabWebContentsId,
             updateTabWebId,
             toggleDevTools,
             tabShouldReload,
@@ -114,6 +115,7 @@ export class TabContents extends Component<{}, {}> {
                     closeTab={closeTab}
                     updateTabUrl={updateTabUrl}
                     updateTabWebId={updateTabWebId}
+                    updateTabWebContentsId={updateTabWebContentsId}
                     toggleDevTools={toggleDevTools}
                     tabShouldReload={tabShouldReload}
                     updateTabTitle={updateTabTitle}

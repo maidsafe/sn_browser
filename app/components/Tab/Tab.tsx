@@ -24,6 +24,7 @@ interface TabProps {
     closeTab: ( ...args: Array<any> ) => any;
     updateTabUrl: ( ...args: Array<any> ) => any;
     updateTabWebId: ( ...args: Array<any> ) => any;
+    updateTabWebContentsId: ( ...args: Array<any> ) => any;
     toggleDevTools: ( ...args: Array<any> ) => any;
     tabShouldReload: ( ...args: Array<any> ) => any;
     updateTabTitle: ( ...args: Array<any> ) => any;
@@ -198,6 +199,7 @@ export class Tab extends Component<TabProps, TabState> {
 
     componentDidMount() {
         const { webview } = this;
+        const { tabId, updateTabWebContentsId } = this.props;
         const callbackSetup = () => {
             if ( !webview ) {
                 logger.info(
@@ -205,6 +207,18 @@ export class Tab extends Component<TabProps, TabState> {
                 );
                 return;
             }
+
+            // We set the webContents here, and add it to the user agent
+            // to be able to modify _all_ requests from a domain to pull
+            // the correct version of site...
+            const webContents = webview.getWebContents();
+            const userAgent = webContents.getUserAgent();
+
+            const webContentsId = webContents.id;
+
+            webContents.setUserAgent( `${userAgent}; webContentsId:${webContentsId}` );
+            updateTabWebContentsId( { tabId, webContentsId } );
+
             webview.addEventListener(
                 'did-start-loading',
                 this.didStartLoading.bind( this )

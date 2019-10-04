@@ -20,7 +20,7 @@ export const onInitBgProcess = async ( store: Store ): Promise<void> => {
 
     try {
         registerSafeProtocol();
-        blockNonSAFERequests();
+        blockNonSAFERequests( store );
 
         store.dispatch( connectUnauthorised() );
     } catch ( e ) {
