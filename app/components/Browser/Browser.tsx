@@ -32,6 +32,7 @@ interface BrowserProps {
     addTab: ( ...args: Array<any> ) => any;
     updateTabUrl: ( ...args: Array<any> ) => any;
     updateTabWebId: ( ...args: Array<any> ) => any;
+    updateTabWebContentsId: ( ...args: Array<any> ) => any;
     toggleDevTools: ( ...args: Array<any> ) => any;
     tabShouldReload: ( ...args: Array<any> ) => any;
     updateTabTitle: ( ...args: Array<any> ) => any;
@@ -167,6 +168,7 @@ class Browser extends Component<BrowserProps, {}> {
             tabs,
             updateTabUrl,
             updateTabWebId,
+            updateTabWebContentsId,
             toggleDevTools,
             tabShouldReload,
             updateTabTitle,
@@ -264,6 +266,7 @@ class Browser extends Component<BrowserProps, {}> {
                     activeTabId={activeTabId}
                     activeTab={activeTab}
                     updateTabUrl={updateTabUrl}
+                    updateTabWebContentsId={updateTabWebContentsId}
                     updateTabWebId={updateTabWebId}
                     toggleDevTools={toggleDevTools}
                     tabShouldReload={tabShouldReload}
