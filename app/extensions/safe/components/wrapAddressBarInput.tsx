@@ -120,6 +120,7 @@ export const wrapAddressBarInput = (
       typeof urlVersion !== 'undefined' ? urlVersion : knownLatestVersion;
 
         logger.verbose( 'Version determined from URL query: ', urlVersion );
+        logger.verbose( 'Latest known version: ', knownLatestVersion );
 
         const baseUrl = `safe://${parsedAddress.host}${
             parsedAddress.pathname ? parsedAddress.pathname : ''

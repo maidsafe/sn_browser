@@ -28,6 +28,46 @@ const HEADERS_CSP = 'Content-Security-Policy';
 const PUB_IMMUTABLE = 'PublishedImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
 
+const getAndSetKnownVersionsForUrl = async (
+    store: Store,
+    url: string,
+    theSafeDataObject: SafeData
+) => {
+    let versionedDataObject = theSafeDataObject;
+    const parseQuery = true;
+    const parsed = parse( url, parseQuery );
+
+    // version
+    const { v } = parsed.query;
+
+    if ( v ) {
+    // we should only be working on FilesContainers here, as ID is avoided
+    // in getHTTPFriendlyData
+        const app = await getSafeBrowserAppObject();
+
+        const data = await app.fetch( `safe://${parsed.host}${parsed.pathname}` );
+        logger.info(
+            'Getting data for latest version of: ',
+            `safe://${parsed.host}${parsed.pathname}`
+        );
+        if ( !data[FILES_CONTAINER] ) {
+            logger.error( 'Trying to set known version for non-FilesContainer data.' );
+        }
+
+        versionedDataObject = data[FILES_CONTAINER];
+    }
+
+    // either use NRS version or the version on the container
+    const { version } = versionedDataObject.resolved_from || versionedDataObject;
+
+    store.dispatch(
+        setKnownVersionsForUrl( {
+            url: `${parsed.protocol}//${parsed.host}`,
+            version
+        } )
+    );
+};
+
 export const getHTTPFriendlyData = async (
     url: string,
     store: Store
@@ -55,11 +95,6 @@ export const getHTTPFriendlyData = async (
         },
         body: Buffer.from( [] )
     };
-
-    // hack to check CSS source for page is in effect. Remove w/ mimetype
-    if ( url.endsWith( '.css' ) ) {
-        response.headers[HEADERS_CONTENT_TYPE] = 'text/css';
-    }
 
     // grab app
     let app;
@@ -92,6 +127,7 @@ export const getHTTPFriendlyData = async (
 
     // TODO: check if we're on a versioned url here...
     const parsed = parse( url, true );
+
     const currentLocation = parsed.path || '/';
 
     // temp method to display container, this could be a tab switch
@@ -103,6 +139,8 @@ export const getHTTPFriendlyData = async (
         theSafeDataObject = data[PUB_IMMUTABLE];
         response.body = Buffer.from( theSafeDataObject.data );
         response.headers[HEADERS_CONTENT_TYPE] = theSafeDataObject.media_type;
+
+        return response; // no need for versioning here..
     }
 
     if ( data[FILES_CONTAINER] ) {
@@ -135,17 +173,9 @@ export const getHTTPFriendlyData = async (
                 </html>
             );
         }
-
-        // either use NRS version or the version on the container
-        const { version } = theSafeDataObject.resolved_from || theSafeDataObject;
-
-        store.dispatch(
-            setKnownVersionsForUrl( {
-                url: `${parsed.protocol}//${parsed.host}`,
-                version
-            } )
-        );
     }
+
+    getAndSetKnownVersionsForUrl( store, url, theSafeDataObject );
 
     return response;
 };

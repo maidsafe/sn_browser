@@ -7,7 +7,7 @@ import { CONFIG, isRunningTestCafeProcess, allowedHttp } from '$Constants';
 import { logger } from '$Logger';
 import { urlIsValid } from '$Extensions';
 
-export const blockNonSAFERequests = ( store: Store ) => {
+export const manageAndModifyRequests = ( store: Store ) => {
     const filter = {
         urls: ['*://*/*']
     };
@@ -28,12 +28,6 @@ export const blockNonSAFERequests = ( store: Store ) => {
             ? parseInt( userAgent.split( 'webContentsId:' )[1], 10 )
             : undefined;
 
-        logger.info(
-            'checking url webcontent id ================>>>',
-            details.url,
-            targetWebContentsId
-        );
-
         // HACK, w/ ?v=x query params we need another way to get the current
         // content version. So we use webContentsIds to do this.
         const state = store.getState();
@@ -53,11 +47,6 @@ export const blockNonSAFERequests = ( store: Store ) => {
             );
 
             if ( targetTab ) {
-                logger.info(
-                    'targetTabbbb actual url issssss === ????  >>>',
-                    targetTab.url,
-                    targetTab.webContentsId
-                );
                 const targetVersion = targetTab.url;
 
                 const parsedTabUrl = parseURL( targetTab.url, parseQuery );
