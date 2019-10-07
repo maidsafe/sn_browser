@@ -22,6 +22,12 @@ describe( 'SAFE Webpreload', () => {
         expect( typeof win.Safe ).toBe( 'function' );
         done();
     } );
+    test( 'SAFE XorUrlEncoder added to the DOM', async ( done ) => {
+        webviewPreload.setupSafeAPIs( store, win );
+
+        expect( typeof win.XorUrlEncoder ).toBe( 'function' );
+        done();
+    } );
 } );
 
 // describe( 'SAFE manageWebIdUpdates', () => {

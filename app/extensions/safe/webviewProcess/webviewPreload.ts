@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { Safe } from 'safe-nodejs';
+import { Safe, XorUrlEncoder } from 'safe-nodejs';
 
 import pkg from '$Package';
 import { logger } from '$Logger';
@@ -106,6 +106,7 @@ export const setupSafeAPIs = ( passedStore, win = window ) => {
 
     // use from passed object if present (for testing)
     theWindow.Safe = theWindow.Safe || Safe;
+    theWindow.XorUrlEncoder = theWindow.XorUrlEncoder || XorUrlEncoder;
 };
 
 export const onWebviewPreload = ( passedStore, win = window ) => {
