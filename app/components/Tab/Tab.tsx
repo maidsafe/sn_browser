@@ -315,6 +315,7 @@ export class Tab extends Component<TabProps, TabState> {
 
         // update url in tab if new
         if ( prevProps.url && prevProps.url !== url ) {
+            console.log( 'seeing', prevProps.url, url );
             if ( !webview ) return;
             const webviewSource = parseURL( webview.src );
             if (
