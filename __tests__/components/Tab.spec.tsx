@@ -9,7 +9,7 @@ describe( 'Tab', () => {
 
     beforeEach( () => {
         props = {
-            url: '',
+            url: 'about:blank',
             index: 1,
             updateTab: jest.fn(),
             setActiveTab: jest.fn(),
@@ -30,28 +30,32 @@ describe( 'Tab', () => {
         } );
     } );
 
-    describe( 'componentWillReceiveProps( nextProps )', () => {
+    describe( 'componentDidUpdate( prevProps )', () => {
+    // these tests are somewhat backwards as `prevProps` is taken.
+    // Still the comparison is valid, as long as there's a change, we should
+    // see updates called
         it( 'should not call loadUrl with the same url without a slash', () => {
-            instance.webview = { src: 'hello/' };
+            instance.webview = { src: 'about:blank' };
             instance.loadURL = jest.fn();
             instance.state = {
                 browserState: { mountedAndReady: true }
             };
 
-            instance.componentWillReceiveProps( { url: 'hello' } );
+            instance.componentDidUpdate( { url: 'about:blank' } );
             expect( instance.loadURL.mock.calls.length ).toBe( 0 );
         } );
 
         it( 'should call loadUrl with a different url ', () => {
-            instance.webview = { src: 'hello/' };
+            instance.webview = { src: 'about:blank' };
             instance.loadURL = jest.fn();
             instance.state = {
                 browserState: { mountedAndReady: true }
             };
 
-            instance.componentWillReceiveProps( { url: 'hello' } );
+            instance.componentDidUpdate( { url: 'about:blank' } );
             expect( instance.loadURL.mock.calls.length ).toBe( 0 );
-            instance.componentWillReceiveProps( { url: 'helllllllo' } );
+
+            instance.componentDidUpdate( { url: 'previousHello' } );
             expect( instance.loadURL.mock.calls.length ).toBe( 1 );
         } );
     } );
