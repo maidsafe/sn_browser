@@ -26,6 +26,7 @@ export const actionsForBrowser = {
  * Add middleware to Peruse redux store
  * @param  {Object} store redux store
  */
+// eslint-disable-next-line unicorn/consistent-function-scoping
 export const middleware = ( store ) => ( next ) => ( action ) => {
     if ( isRunningSpectronTestProcess ) {
         logger.info( 'ACTION:', action );

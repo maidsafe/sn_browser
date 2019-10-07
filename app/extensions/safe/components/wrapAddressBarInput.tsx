@@ -133,7 +133,7 @@ export const wrapAddressBarInput = (
         let siteUnderEdit = null;
 
         if ( isEditingPage ) {
-            siteUnderEdit = parsedAddress.path.substring( 1 );
+            siteUnderEdit = parsedAddress.path.slice( 1 );
             updatedAddress = `${PROTOCOLS.SAFE}://${siteUnderEdit}`;
         }
 

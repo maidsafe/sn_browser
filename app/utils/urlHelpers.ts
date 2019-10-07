@@ -143,7 +143,7 @@ export const makeValidAddressBarUrl = ( input ) => {
     if ( validProtocols.includes( inputProtocol ) ) {
         finalProtocol = inputProtocol;
 
-        everythingAfterProtocol = input.substring( protocolPos, input.length );
+        everythingAfterProtocol = input.slice( protocolPos, input.length );
     } else if ( !inputProtocol ) {
     // eslint-disable-next-line prefer-destructuring
         finalProtocol = validProtocols[0];
@@ -154,7 +154,7 @@ export const makeValidAddressBarUrl = ( input ) => {
 
         finalProtocol = 'http';
 
-        everythingAfterProtocol = input.substring(
+        everythingAfterProtocol = input.slice(
             protocolPos + port.length + lengthOfSemiColon,
             input.length
         );

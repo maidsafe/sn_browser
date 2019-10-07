@@ -52,7 +52,7 @@ export const manageAndModifyRequests = ( store: Store ) => {
                 const parsedTabUrl = parseURL( targetTab.url, parseQuery );
 
                 // we need to check if the req comes from the same site...
-                const requestedSite = parseURL( parsedUrl.path.substring( 1 ) ); // remove localhost:port
+                const requestedSite = parseURL( parsedUrl.path.slice( 1 ) ); // remove localhost:port
                 const siteVersion = parsedTabUrl.query.v;
 
                 if ( requestedSite.host === parsedTabUrl.host && !parsedUrl.query.v ) {

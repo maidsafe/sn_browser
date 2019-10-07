@@ -22,7 +22,7 @@ export const addInternalPages = (
 ): null | { pageComponent: ReactNode; title: string; tabButtonStyles?: {} } => {
     switch ( urlObj.host ) {
         case SAFE_PAGES.EDIT_SITE: {
-            const targetName = urlObj.path.substring( 1 );
+            const targetName = urlObj.path.slice( 1 );
             return {
                 title: `Edit ${targetName}`,
                 tabButtonStyles: {

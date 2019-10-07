@@ -47,10 +47,10 @@ export const safeRoute = ( store ) => ( {
 
         try {
             let link = request.url;
-            link = link.substring( 1 ); // remove initial slash
+            link = link.slice( 1 ); // remove initial slash
 
             if ( link.endsWith( '/' ) ) {
-                link = link.substring( 0, link.length - 1 );
+                link = link.slice( 0, link.length - 1 );
             }
 
             const { headers } = request;
