@@ -78,6 +78,7 @@ module.exports = {
         'jest/no-jasmine-globals': 'off',
         'jest/valid-describe': 'off',
         'react/destructuring-assignment': 'off',
+        'react/static-property-placement': 'off',
         'react/sort-comp': [
             1,
             {

@@ -269,8 +269,8 @@ export class Tab extends Component<TabProps, TabState> {
         } );
     }
 
-    componentWillReceiveProps( nextProperties ) {
-        if ( JSON.stringify( nextProperties ) === JSON.stringify( this.props ) ) return;
+    componentDidUpdate( prevProps ) {
+        if ( JSON.stringify( prevProps ) === JSON.stringify( this.props ) ) return;
         if ( !this.state.browserState.mountedAndReady ) return;
         const {
             focusWebview,
@@ -280,45 +280,56 @@ export class Tab extends Component<TabProps, TabState> {
             toggleDevTools,
             tabId,
             shouldToggleDevTools,
-            shouldReload
+            shouldReload,
+            webId
         } = this.props;
         const { webview } = this;
         logger.info( 'Tab: did receive updated props' );
-        if ( nextProperties.shouldFocusWebview && isActiveTab ) {
+
+        // focus webview
+        if ( this.props.shouldFocusWebview && isActiveTab ) {
             this.with( ( theWebview: WebviewTag, webContents ) => {
                 theWebview.focus();
                 webContents.focus();
             } );
             focusWebview( { tabId, shouldFocus: false } );
         }
+
+        // if activeTab and not prefocussed webview, focus
         if (
             !this.props.shouldFocusWebview &&
-      !nextProperties.shouldFocusWebview &&
-      nextProperties.isActiveTab
+      !prevProps.shouldFocusWebview &&
+      this.props.isActiveTab
         ) {
             focusWebview( { tabId, shouldFocus: true } );
         }
-        const nextId = nextProperties.webId || {};
-        const currentId = this.props.webId || {};
+
+        // update webId if needed
+        const currentId = prevProps.webId || {};
+        const nextId = webId || {};
         if ( nextId['@id'] !== currentId['@id'] ) {
             if ( !webview ) return;
-            logger.info( 'New WebID set for ', nextProperties.url );
-            this.setCurrentWebId( nextProperties.webId );
+            logger.info( 'New WebID set for ', this.props.url );
+            this.setCurrentWebId( nextId );
         }
-        if ( nextProperties.url && nextProperties.url !== url ) {
+
+        // update url in tab if new
+        if ( prevProps.url && prevProps.url !== url ) {
             if ( !webview ) return;
             const webviewSource = parseURL( webview.src );
             if (
                 webviewSource.href === '' ||
         `${webviewSource.protocol}${webviewSource.hostname}` ===
           'about:blank' ||
-        urlHasChanged( webview.src, nextProperties.url )
+        urlHasChanged( webview.src, url )
             ) {
-                this.loadURL( nextProperties.url );
+                this.loadURL( url );
             }
         }
-        if ( !shouldReload && nextProperties.shouldReload ) {
-            logger.verbose( 'Should reload URL: ', nextProperties.url );
+
+        // reload if needed
+        if ( shouldReload && !prevProps.shouldReload ) {
+            logger.verbose( 'Should reload URL: ', url );
             this.reload();
             const tabUpdate = {
                 tabId,
@@ -326,7 +337,9 @@ export class Tab extends Component<TabProps, TabState> {
             };
             tabShouldReload( tabUpdate );
         }
-        if ( !shouldToggleDevTools && nextProperties.shouldToggleDevTools ) {
+
+        // toggle devtools
+        if ( shouldToggleDevTools && !prevProps.shouldToggleDevTools ) {
             if ( this.isDevToolsOpened() ) {
                 this.closeDevTools();
             } else {
@@ -347,7 +360,7 @@ export class Tab extends Component<TabProps, TabState> {
             return;
         }
         if ( !webview.partition || webview.partition === '' ) {
-            console.warn( `${this.props.tabId}: webview has empty partition` );
+            logger.warn( `${this.props.tabId}: webview has empty partition` );
         }
 
         const currentState = this.state.browserState;
@@ -371,19 +384,17 @@ export class Tab extends Component<TabProps, TabState> {
         }
         this.updateBrowserState( { loading: false, mountedAndReady: true } );
         if ( url && url !== 'about:blank' ) {
-            this.loadURL( url ).catch( ( error ) => console.info( 'err in loadurl', error ) );
+            this.loadURL( url ).catch( ( error ) => logger.error( 'err in loadurl', error ) );
             this.setCurrentWebId( null );
             this.addWindowIdToTab();
         }
     }
 
     onCrash = ( e ) => {
-        console.error( e );
         logger.error( 'The webview crashed', e );
     };
 
     onGpuCrash = ( e ) => {
-        console.error( e );
         logger.error( 'The webview GPU crashed', e );
     };
 
