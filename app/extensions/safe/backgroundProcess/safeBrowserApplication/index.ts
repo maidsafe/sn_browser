@@ -49,11 +49,11 @@ export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
 
         const defaultSiteContent = readFileSync( defaultSiteFolder );
 
-        const extractedSiteFolder = path.join(
-            os.tmpdir(),
-            'defaultNewSite.html'
+        const extractedSiteFolder = path.join( os.tmpdir(), 'defaultNewSite.html' );
+        logger.verbose(
+            'Copying site to /tmp location for uploading to network ',
+            extractedSiteFolder
         );
-        logger.verbose( 'Copying site to /tmp location for uploading to network ', extractedSiteFolder );
 
         writeFileSync( extractedSiteFolder, defaultSiteContent );
 

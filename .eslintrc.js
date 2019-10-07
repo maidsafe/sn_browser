@@ -96,6 +96,8 @@ module.exports = {
         'react/jsx-filename-extension': 'off',
         'no-shadow': 'error',
         'react/prefer-stateless-function': 'error',
+        'react/jsx-fragments': ['error', 'element'],
+        'react/jsx-props-no-spreading': 'warn',
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/array-type': ['error', { default: 'generic' }],
         indent: 'off',

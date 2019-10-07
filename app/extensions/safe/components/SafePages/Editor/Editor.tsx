@@ -106,7 +106,7 @@ EditorProps,
                                 // className={styles.button}
                                 onClick={this.handleUploadFiles}
                             >
-                                {`Upload`}
+                Upload
                             </Button>
                         </div>
                     )}

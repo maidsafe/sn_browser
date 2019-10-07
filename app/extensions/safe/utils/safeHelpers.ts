@@ -1,4 +1,3 @@
-
 export const cleanupNeonError = ( error: Error ): string => {
     const neonError = 'internal error in Neon module:';
     let { message } = error;
@@ -23,7 +22,7 @@ export const generateBoundaryStr = () => {
 export const rangeStringToArray = ( rangeString ) => {
     const BYTES = 'bytes=';
     return rangeString
-        .substring( BYTES.length, rangeString.length )
+        .slice( BYTES.length, rangeString.length )
         .split( ',' )
         .map( ( part ) => {
             const partObject = {};
