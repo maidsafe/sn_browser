@@ -98,7 +98,7 @@ after_failure:
 
 
 before_deploy:
-- NODE_ENV=prod yarn deploy
+- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then NODE_ENV=prod yarn deploy; fi
 - cd release;
 - |
   ls . | grep safe | while read RELEASE; do
