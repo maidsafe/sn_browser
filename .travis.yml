@@ -98,7 +98,11 @@ after_failure:
 
 
 before_deploy:
-- if [[ "$TRAVIS_OS_NAME" != "windows" && "$TRAVIS_TAG" != *"RC"* && "$TRAVIS_TAG" != *"rc"* ]]; then NODE_ENV=prod yarn deploy; fi
+- |
+  if [[ $TRAVIS_TAG == *"RC"* || $TRAVIS_TAG == *"rc"* ]]; then
+    export IS_RC=yes
+  fi
+- if [[ "$TRAVIS_OS_NAME" != "windows" && "$IS_RC" != "yes" ]]; then NODE_ENV=prod yarn deploy; fi
 - cd release;
 - |
   ls . | grep safe | while read RELEASE; do
