@@ -150,7 +150,7 @@
     "@types/react-router-dom": "4.3.5",
     "@types/webpack-env": "1.14.0",
     "@types/window-or-global": "1.0.0",
-    "@typescript-eslint/eslint-plugin": "2.1.0",
+    "@typescript-eslint/eslint-plugin": "2.3.3",
     "@typescript-eslint/parser": "2.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
