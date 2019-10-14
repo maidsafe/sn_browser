@@ -3,7 +3,13 @@ import moment from 'moment';
 import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
-import { PageHeader, H1, TableRow, TableCell, Table } from 'nessie-ui';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Toolbar from '@material-ui/core/Toolbar';
+import Box from '@material-ui/core/Box';
 import { logger } from '$Logger';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
@@ -14,6 +20,7 @@ interface HistoryProps {
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
 }
+
 export class History extends Component<HistoryProps, {}> {
     static defaultProps = {
         history: []
@@ -96,9 +103,15 @@ export class History extends Component<HistoryProps, {}> {
 
         return (
             <React.Fragment>
-                <PageHeader className="js-history">
-                    <H1 title="History" />
-                </PageHeader>
+                <Box className={styles.historyHeader}>
+                    <Grid item xs={12} className={styles.titleBar}>
+                        <Toolbar>
+                            <Typography variant="h6" className={styles.title}>
+                History
+                            </Typography>
+                        </Toolbar>
+                    </Grid>
+                </Box>
                 <Table className={styles.table}>
                     {parsedList}
                     {!parsedList.length && (

@@ -1,8 +1,9 @@
 /* @import '../Tab/tab.css' */
 
 .page {
+    width: 100%;
     background-color: #fff;
-    min-height: auto; /* override nessie 100vh */
+    min-height: auto;
 }
 
 .tab {

@@ -73,10 +73,6 @@ const buildConfig = {
         {
             from: 'resources/locales',
             to: 'locales'
-        },
-        {
-            from: 'node_modules/nessie-ui/dist/styles.css',
-            to: 'nessie-styles.css'
         }
     ],
     protocols: {

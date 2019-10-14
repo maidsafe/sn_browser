@@ -5,16 +5,6 @@
     <title>SAFE Browser</title>
     <script>
       (function() {
-          const nessie = document.createElement('link');
-         nessie.rel = 'stylesheet';
-         nessie.href = '../node_modules/nessie-ui/dist/styles.css';
-
-         if (!process.env.IS_UNPACKED ) {
-             nessie.href = '../../nessie-styles.css';
-         }
-
-         document.getElementsByTagName('head')[0].appendChild(nessie);
-
         if (!process.env.HOT) {
           const link = document.createElement('link');
           link.rel = 'stylesheet';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import { IconButton } from 'nessie-ui';
+import IconButton from '@material-ui/core/IconButton';
 import _ from 'lodash';
 // import { logger } from '$Logger';
 import { Icon } from 'antd';

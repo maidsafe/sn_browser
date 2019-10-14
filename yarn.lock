@@ -11025,11 +11025,6 @@ neon-cli@^0.3.1:
     validate-npm-package-license "^3.0.1"
     validate-npm-package-name "^3.0.0"
 
-nessie-ui@7.0.4:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/nessie-ui/-/nessie-ui-7.0.4.tgz#9b2327d68ecf1f887bc8bb1eb7d18bf342376b96"
-  integrity sha512-djME3jjauhaxPqHZT2BFYOgi2ZAma7sGR8J+I+1JCED9LVgszpQORddqNz+U1euJ2VlDDgyKFYaeVpD3/wf2Ig==
-
 new-github-issue-url@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/new-github-issue-url/-/new-github-issue-url-0.2.1.tgz#e17be1f665a92de465926603e44b9f8685630c1d"

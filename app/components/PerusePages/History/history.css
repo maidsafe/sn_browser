@@ -20,6 +20,19 @@
     padding-left: 15px;
 }
 
+.historyHeader {
+    flex: 1;
+}
+
+.titleBar {
+    background-color: #1976d2;
+}
+
+.title {
+    flex-grow: 1;
+    color: white;
+}
+
 .timeStamp {
     opacity: 0.5;
 }

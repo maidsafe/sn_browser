@@ -1,7 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { Table, TableRow } from 'nessie-ui';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
 import { UrlList } from '$Components/UrlList';
 
 describe( 'UrlList', () => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import url, { Url } from 'url';
-import { Page } from 'nessie-ui';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import { Tab } from '$Components/Tab';
 import { INTERNAL_PAGES, isRunningTestCafeProcess, CLASSES } from '$Constants';
 import { isInternalPage } from '$Utils/urlHelpers';
@@ -152,11 +153,9 @@ export class TabContents extends Component<{}, {}> {
                     const ThisTab = tabComponents[i];
 
                     return (
-                        <div className={moddedClass} key={tab.tabId}>
-                            <Page className={`${styles.page}`} overflow="auto">
-                                {tabComponents[i]}
-                            </Page>
-                        </div>
+                        <Box className={moddedClass} key={tab.tabId}>
+                            <Paper className={`${styles.page}`}>{tabComponents[i]}</Paper>
+                        </Box>
                     );
                 } )}
             </div>

@@ -7,7 +7,6 @@ import { logger } from '$Logger';
 
 import { configureStore } from './store/configureStore';
 import { BrowserWindow } from './containers/BrowserWindow';
-import { App } from './containers/App';
 import './app.global.css';
 
 logger.info( 'Starting render process' );
@@ -39,18 +38,16 @@ window.peruseStore = store;
 render(
     <AppContainer>
         <Provider store={store}>
-            <App>
-                <BrowserWindow />
-            </App>
+            <BrowserWindow />
         </Provider>
     </AppContainer>,
     document.getElementById( 'root' )
 );
 
 if ( module.hot ) {
-    module.hot.accept( './containers/App', () => {
+    module.hot.accept( './containers/BrowserWindow', () => {
     // eslint-disable-next-line global-require
-        const NextRoot = require( './containers/App' ).default;
+        const NextRoot = require( './containers/BrowserWindow' ).default;
         render(
             <AppContainer>
                 <NextRoot store={store} />

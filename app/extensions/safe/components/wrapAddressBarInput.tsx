@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { parse } from 'url';
 import { connect } from 'react-redux';
-import { Column, Grid } from 'nessie-ui';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import _ from 'lodash';
 import { Tag, Icon } from 'antd';
 import 'antd/lib/tag/style';
@@ -228,20 +230,22 @@ export const wrapAddressBarInput = (
             );
         }
         return (
-            <Grid gutters="M">
-                <Column align="center" verticalAlign="middle">
-                    <AddressBarInput
-                        // className={ styles.addressBar }
-                        {...props}
-                        address={updatedAddress}
-                        addonBefore={addOnsBefore}
-                        addonAfter={addOnsAfter}
-                        extensionStyles={{
-                            backgroundColor: STYLE_CONSTANTS.editBgColor
-                        }}
-                    />
-                </Column>
-            </Grid>
+            <Table>
+                <TableRow>
+                    <TableCell align="center" padding="none">
+                        <AddressBarInput
+                            // className={ styles.addressBar }
+                            {...props}
+                            address={updatedAddress}
+                            addonBefore={addOnsBefore}
+                            addonAfter={addOnsAfter}
+                            extensionStyles={{
+                                backgroundColor: STYLE_CONSTANTS.editBgColor
+                            }}
+                        />
+                    </TableCell>
+                </TableRow>
+            </Table>
         );
     };
 
