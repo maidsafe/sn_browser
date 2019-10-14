@@ -37,8 +37,10 @@ const publishedFilePath = () => {
 const LOGS = 'log.toml';
 
 const buildConfig = {
+    appId: 'maidsafe.safe.browser.app',
     artifactName: `safe-browser-v\${version}-\${os}-x64.\${ext}`,
     afterPack: './afterPack.js',
+    afterSign: './afterSignHook.js',
     productName: 'SAFE Browser',
     files: [
         'app/dist/',
@@ -112,7 +114,10 @@ const buildConfig = {
         artifactName: `${RELEASE_PACKAGE_NAME}.\${ext}`
     },
     mac: {
-        target: ['dmg', 'pkg', 'zip']
+        target: ['dmg', 'pkg', 'zip'],
+        hardenedRuntime: true,
+        entitlements: 'resources/entitlements.mac.plist',
+        entitlementsInherit: 'resources/entitlements.mac.plist'
     },
     directories: {
         buildResources: 'resources',
