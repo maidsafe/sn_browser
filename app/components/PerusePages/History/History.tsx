@@ -82,13 +82,12 @@ export class History extends Component<HistoryProps, {}> {
                         } );
                     };
                     const listItem = (
-                        <TableRow
-                            align="left"
-                            verticalAlign="middle"
-                            gutters="S"
-                            key={Math.random().toString( 10 )}
-                        >
-                            <TableCell className={styles.item}>
+                        <TableRow key={Math.random().toString( 10 )}>
+                            <TableCell
+                                className={styles.item}
+                                align="left"
+                                aria-label="historyListItem"
+                            >
                                 <span className={styles.timeStamp}>{newTimeStamp}</span>
                                 <a onClick={handleClick} href={item.url} className={styles.url}>
                                     {item.url}
@@ -116,7 +115,9 @@ export class History extends Component<HistoryProps, {}> {
                     {parsedList}
                     {!parsedList.length && (
                         <TableRow>
-                            <TableCell>Nothing to see here yet.</TableCell>
+                            <TableCell aria-label="no-history">
+                Nothing to see here yet.
+                            </TableCell>
                         </TableRow>
                     )}
                 </Table>

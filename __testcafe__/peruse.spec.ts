@@ -98,14 +98,14 @@ test( 'can type in the address bar and get safe: automatically', async ( t ) => 
     await navigateTo( t, 'safe-browser:bookmarks' );
 
     await t
-        .expect( Selector( 'h1' ).withText( 'Bookmarks' ) )
+        .expect( Selector( 'h6' ).withText( 'Bookmarks' ) )
         .ok()
         .expect( Selector( '.urlList__table' ).exists )
         .ok()
         .expect(
-            Selector( '.tableCell__default' ).withText(
-                'safe://shouldappearinbookmarks.com'
-            ).exists
+            Selector( '.MuiTableCell-root' )
+                .withAttribute( 'aria-label', 'listItem' )
+                .withText( 'safe://shouldappearinbookmarks.com' ).exists
         )
         .ok();
 } );

@@ -47,15 +47,28 @@ test( 'check history items', async ( t ) => {
         .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` );
 
     await t
-        .expect( Selector( 'h1' ).withText( 'History' ).exists )
+        .expect( Selector( 'h6' ).withText( 'History' ).exists )
         .ok()
         .expect( Selector( '.history__table' ).exists )
         .ok()
-        .expect( Selector( '.tableCell__default' ).count )
-        .eql( 3 )
-        .expect( Selector( '.tableCell__default' ).withText( 'safe://cat.ashi' ).exists )
+        .expect(
+            Selector( '.MuiTableCell-root' ).withAttribute(
+                'aria-label',
+                'historyListItem'
+            ).count
+        )
+        .eql( 2 )
+        .expect(
+            Selector( '.MuiTableCell-root' )
+                .withAttribute( 'aria-label', 'historyListItem' )
+                .withText( 'safe://cat.ashi' ).exists
+        )
         .ok()
-        .expect( Selector( '.tableCell__default' ).withText( 'safe://eye.eye' ).exists )
+        .expect(
+            Selector( '.MuiTableCell-root' )
+                .withAttribute( 'aria-label', 'historyListItem' )
+                .withText( 'safe://eye.eye' ).exists
+        )
         .ok();
 } );
 
@@ -65,5 +78,10 @@ test( 'Check if on reset store history reset to InitialState', async ( t ) => {
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` );
-    await t.expect( Selector( '.tableCell__default' ).count ).eql( 1 );
+    await t
+        .expect(
+            Selector( '.MuiTableCell-root' ).withAttribute( 'aria-label', 'no-history' )
+                .count
+        )
+        .eql( 1 );
 } );

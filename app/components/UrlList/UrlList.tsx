@@ -26,8 +26,8 @@ export const UrlList = ( props: UrlListProps = { list: [] } ) => {
             } );
         };
         const listItem = (
-            <TableRow align="left" verticalAlign="middle" gutters="S" key={item}>
-                <TableCell>
+            <TableRow key={item}>
+                <TableCell align="left" aria-label="listItem">
                     <a onClick={handleClick} href={item}>
                         {item}
                     </a>
