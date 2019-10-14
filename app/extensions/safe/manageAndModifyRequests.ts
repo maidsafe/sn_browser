@@ -53,14 +53,23 @@ export const manageAndModifyRequests = ( store: Store ) => {
 
                 // we need to check if the req comes from the same site...
                 const requestedSite = parseURL( parsedUrl.path.slice( 1 ) ); // remove localhost:port
-                const siteVersion = parsedTabUrl.query.v;
+                const tabSiteVersion = parsedTabUrl.query.v;
 
                 if ( requestedSite.host === parsedTabUrl.host && !parsedUrl.query.v ) {
                     logger.verbose(
                         'On a versioned site, updated resource req, to: ',
-                        `${targetUrl}?v=${siteVersion}`
+                        `${targetUrl}?v=${tabSiteVersion}`
                     );
-                    targetUrl = `${targetUrl}?v=${siteVersion}`;
+                    targetUrl = `${targetUrl}?v=${tabSiteVersion}`;
+                }
+
+                // requesting unversioned resource from another page... block
+                if ( requestedSite.host !== parsedTabUrl.host && !tabSiteVersion ) {
+                    logger.warn(
+                        'Unversioned External Resource Request Blocked @ URL:',
+                        targetUrl
+                    );
+                    callback( { cancel: true } );
                 }
             }
         }
