@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
+import { Box, Grid } from '@material-ui/core';
 import { CLASSES } from '$Constants';
 import { ButtonsLHS } from '$Components/AddressBar/ButtonsLHS';
 import { ButtonsRHS } from '$Components/AddressBar/ButtonsRHS';
 import { Input } from '$Components/AddressBar/Input';
 // import { logger } from '$Logger';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
 import styles from './addressBar.css';
 
 interface AddressBarProps {
@@ -37,6 +35,7 @@ interface AddressBarProps {
     focusWebview: ( ...args: Array<any> ) => any;
     setActiveTab: ( ...args: Array<any> ) => any;
 }
+
 export class AddressBar extends Component<AddressBarProps, {}> {
     static defaultProps = {
         address: '',
@@ -71,28 +70,38 @@ export class AddressBar extends Component<AddressBarProps, {}> {
             addTabEnd( { url: `safe-browser://${tab}`, windowId, tabId } );
         };
         return [
-            <Row key="menuItem-bookmarks" type="flex" justify="start" align="middle">
-                <div
-                    role="menuitem"
-                    tabIndex={0}
-                    className={`${styles.menuItem} ${CLASSES.SETTINGS_MENU__BOOKMARKS}`}
-                    onClick={() => addATab( 'bookmarks' )}
-                    onKeyPress={() => addATab( 'bookmarks' )}
-                >
-          Bookmarks
-                </div>
-            </Row>,
-            <Row key="menuItem-history" type="flex" justify="start" align="middle">
-                <div
-                    role="menuitem"
-                    tabIndex={0}
-                    className={`${styles.menuItem} ${CLASSES.SETTINGS_MENU__HISTORY}`}
-                    onClick={() => addATab( 'history' )}
-                    onKeyPress={() => addATab( 'history' )}
-                >
-          History
-                </div>
-            </Row>
+            <Grid
+                container
+                direction="column"
+                alignItems="flex-start"
+                spacing={1}
+                className={styles.itemContainer}
+            >
+                <Grid item>
+                    <div
+                        role="menuitem"
+                        tabIndex={0}
+                        key="Bookmarks"
+                        className={`${styles.menuItem} ${CLASSES.SETTINGS_MENU__BOOKMARKS}`}
+                        onClick={() => addATab( 'bookmarks' )}
+                        onKeyPress={() => addATab( 'bookmarks' )}
+                    >
+            Bookmarks
+                    </div>
+                </Grid>
+                <Grid item>
+                    <div
+                        role="menuitem"
+                        tabIndex={0}
+                        key="History"
+                        className={`${styles.menuItem} ${CLASSES.SETTINGS_MENU__HISTORY}`}
+                        onClick={() => addATab( 'history' )}
+                        onKeyPress={() => addATab( 'history' )}
+                    >
+            History
+                    </div>
+                </Grid>
+            </Grid>
         ];
     };
 
@@ -121,15 +130,9 @@ export class AddressBar extends Component<AddressBarProps, {}> {
             ? activeTab.historyIndex < activeTab.history.length - 1
             : false;
         return (
-            <div className={`${styles.container} js-address`}>
-                <Row
-                    className={styles.addressBar}
-                    type="flex"
-                    justify="start"
-                    align="middle"
-                    gutter={{ xs: 4, sm: 8, md: 12 }}
-                >
-                    <Col>
+            <Box className={`${styles.container} js-address`}>
+                <Grid container alignItems="center" spacing={1} justify="space-around">
+                    <Grid item>
                         <ButtonsLHS
                             addTabEnd={addTabEnd}
                             activeTab={activeTab}
@@ -141,11 +144,11 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                             handleRefresh={this.handleRefresh}
                             {...props}
                         />
-                    </Col>
-                    <Col className={styles.addressBarCol}>
+                    </Grid>
+                    <Grid item className={styles.addressBarCol}>
                         <Input {...this.props} />
-                    </Col>
-                    <Col>
+                    </Grid>
+                    <Grid item>
                         <ButtonsRHS
                             address={address}
                             addTabEnd={addTabEnd}
@@ -161,9 +164,9 @@ export class AddressBar extends Component<AddressBarProps, {}> {
                             windowId={windowId}
                             setActiveTab={setActiveTab}
                         />
-                    </Col>
-                </Row>
-            </div>
+                    </Grid>
+                </Grid>
+            </Box>
         );
     }
 }

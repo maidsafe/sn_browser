@@ -3,13 +3,7 @@ import moment from 'moment';
 import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
+import { Grid, Box, Typography, Toolbar } from '@material-ui/core';
 import { logger } from '$Logger';
 import styles from './history.css';
 import { CLASSES } from '$Constants';
@@ -58,11 +52,11 @@ export class History extends Component<HistoryProps, {}> {
 
             if ( list.length >= 1 ) {
                 const dateHeader = (
-                    <TableRow align="left" verticalAlign="middle" gutters="S" key={date}>
-                        <TableCell className={styles.date}>
+                    <Grid container alignItems="center" justify="flex-start">
+                        <Grid item className={styles.date}>
                             <h1>{date}</h1>
-                        </TableCell>
-                    </TableRow>
+                        </Grid>
+                    </Grid>
                 );
                 parsedList.push( dateHeader );
                 list.forEach( ( item ) => {
@@ -82,18 +76,18 @@ export class History extends Component<HistoryProps, {}> {
                         } );
                     };
                     const listItem = (
-                        <TableRow key={Math.random().toString( 10 )}>
-                            <TableCell
-                                className={styles.item}
-                                align="left"
-                                aria-label="historyListItem"
-                            >
+                        <Grid
+                            container
+                            key={Math.random().toString( 10 )}
+                            justify="flex-start"
+                        >
+                            <Grid item className={styles.item} aria-label="historyListItem">
                                 <span className={styles.timeStamp}>{newTimeStamp}</span>
                                 <a onClick={handleClick} href={item.url} className={styles.url}>
                                     {item.url}
                                 </a>
-                            </TableCell>
-                        </TableRow>
+                            </Grid>
+                        </Grid>
                     );
                     parsedList.push( listItem );
                 } );
@@ -111,16 +105,14 @@ export class History extends Component<HistoryProps, {}> {
                         </Toolbar>
                     </Grid>
                 </Box>
-                <Table className={styles.table}>
-                    {parsedList}
+                <Grid container className={styles.table}>
+                    <Grid item>{parsedList}</Grid>
                     {!parsedList.length && (
-                        <TableRow>
-                            <TableCell aria-label="no-history">
-                Nothing to see here yet.
-                            </TableCell>
-                        </TableRow>
+                        <Grid item aria-label="no-history">
+              Nothing to see here yet.
+                        </Grid>
                     )}
-                </Table>
+                </Grid>
             </React.Fragment>
         );
     }

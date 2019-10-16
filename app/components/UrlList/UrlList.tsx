@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 // import { logger } from '$Logger';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+import Grid from '@material-ui/core/Grid';
 import styles from './urlList.css';
 
 interface UrlListProps {
@@ -26,24 +24,20 @@ export const UrlList = ( props: UrlListProps = { list: [] } ) => {
             } );
         };
         const listItem = (
-            <TableRow key={item}>
-                <TableCell align="left" aria-label="listItem">
+            <Grid container key={item} justify="flex-start">
+                <Grid item aria-label="listItem">
                     <a onClick={handleClick} href={item}>
                         {item}
                     </a>
-                </TableCell>
-            </TableRow>
+                </Grid>
+            </Grid>
         );
         parsedList.push( listItem );
     } );
     return (
-        <Table className={styles.table}>
-            {parsedList}
-            {!parsedList.length && (
-                <TableRow>
-                    <TableCell>Nothing to see here yet.</TableCell>
-                </TableRow>
-            )}
-        </Table>
+        <Grid container className={styles.table}>
+            <Grid item>{parsedList}</Grid>
+            {!parsedList.length && <Grid item>Nothing to see here yet.</Grid>}
+        </Grid>
     );
 };

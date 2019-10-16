@@ -1,11 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col } from 'antd';
+import Grid from '@material-ui/core/Grid';
 import { WebIdDropdown } from '$Extensions/safe/components/webIdDropdown';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
-import 'antd/lib/button/style';
 import {
     showWebIdDropdown,
     setAppStatus
@@ -35,21 +32,14 @@ export const wrapAddressBarButtonsLHS = (
         const { safeBrowserApp } = props;
         const { experimentsEnabled } = safeBrowserApp;
         return (
-            <Row
-                type="flex"
-                justify="end"
-                align="middle"
-                gutter={{ xs: 2, sm: 4, md: 6 }}
-            >
-                <Col>
+            <Grid container alignItems="center">
+                <Grid item>
                     <AddressBarButtons {...props} />
-                </Col>
-                {experimentsEnabled && (
-                    <Col>
-                        <WebIdDropdown {...props} />
-                    </Col>
-                )}
-            </Row>
+                </Grid>
+                <Grid item>
+                    <WebIdDropdown {...props} />
+                </Grid>
+            </Grid>
         );
     };
 

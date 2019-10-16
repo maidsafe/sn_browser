@@ -1,4 +1,8 @@
-.placeholder
-{
+.placeholder {
     /* width: 20px; */
+}
+
+.addonBefore {
+    display: flex;
+    align-items: center;
 }

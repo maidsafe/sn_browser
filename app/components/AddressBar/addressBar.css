@@ -1,12 +1,14 @@
-.container
-{
+.container {
+    min-width: 300px;
     width: 100%;
     padding-top: 3px;
     padding-bottom: 3px;
-    background-color: rgba( 246, 246, 246, 1);
-    border:             1px solid rgba( 127, 127, 127, 1);
-    display:            flex;
-    flex:  none;
+    background-color: rgba(246, 246, 246, 1);
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: rgba(127, 127, 127, 1);
+    display: flex;
+    flex: none;
     align-content: center;
     justify-content: space-around;
     box-sizing: border-box;
@@ -15,46 +17,41 @@
     z-index: 3;
 }
 
-.addressBar
-{
+.addressBar {
     width: 100%;
 }
 
 /* let it grow */
-.addressBarCol
-{
+.addressBarCol {
     flex: 1;
 }
 
-.input
-{
+.itemContainer {
+    padding-bottom: 5%;
+}
+
+.input {
     display: block;
-    border:             1px solid rgba( 127, 127, 127, 1);
+    border: 1px solid rgba(127, 127, 127, 1);
     padding: 5px;
-    border-radius:         4px;
+    border-radius: 4px;
     font-size: 14px;
     max-width: 800px;
     width: 100%;
     height: 20px;
-
 }
 
-
-.buttonBlock
-{
+.buttonBlock {
     display: flex;
-
 }
 
 .rightButtons,
-.leftButtons
-{
+.leftButtons {
+    /* stylelint-disable-next-line */
     composes: buttonBlock;
 }
 
-
-.button
-{
+.button {
     display: block;
     width: 32px;
     height: 32px;
@@ -62,29 +59,23 @@
     margin-left: 2px;
 }
 
-.button.disabled
-{
+.button.disabled {
     cursor: default;
 }
 
-.addressBarColumn
-{
+.addressBarColumn {
     flex-grow: 1;
 }
-.buttonIcon
-{
+.buttonIcon {
     display: block;
     width: 25px;
     height: 100%;
     padding-left: 0;
-    fill:  rgba( 127, 127, 127, 1);
+    fill: rgba(127, 127, 127, 1);
     padding-right: 1rem;
-
-
 }
 
-.buttonIcon:hover
-{
+.buttonIcon:hover {
     fill: black;
 }
 
@@ -97,10 +88,8 @@
     composes: button;
 } */
 
-
-
 /*  settings menu item */
-.menuItem{
+.menuItem {
     cursor: pointer;
     padding: 2%;
 }

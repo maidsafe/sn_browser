@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Row, Col, Button } from 'antd';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
-import 'antd/lib/button/style';
+import { Grid, IconButton } from '@material-ui/core';
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
+import ArrowForwardRoundedIcon from '@material-ui/icons/ArrowForwardRounded';
+import RefreshRoundedIcon from '@material-ui/icons/RefreshRounded';
 import { I18n } from 'react-redux-i18n';
 import { parse } from 'url';
 
@@ -29,38 +29,34 @@ const ButtonsLHS = ( props ) => {
     activeTab && activeTab.url ? parse( activeTab.url ) : undefined;
 
     return (
-        <Row
-            type="flex"
-            justify="end"
-            align="middle"
-            gutter={{ xs: 2, sm: 4, md: 6 }}
-        >
-            <Col>
-                <Button
+    // label={I18n.t( 'aria.navigate_back' )}
+        <Grid container spacing={1} direction="row" justify="space-evenly">
+            <Grid item>
+                <IconButton
+                    size="small"
+                    aria-label={I18n.t( 'aria.navigate_back' )}
                     className={CLASSES.BACKWARDS}
                     disabled={!canGoBackwards}
-                    icon="left"
-                    shape="circle"
-                    label={I18n.t( 'aria.navigate_back' )}
-                    aria-label={I18n.t( 'aria.navigate_back' )}
                     onClick={handleBack}
-                />
-            </Col>
-            <Col>
-                <Button
+                >
+                    <ArrowBackRoundedIcon />
+                </IconButton>
+            </Grid>
+            <Grid item>
+                <IconButton
+                    size="small"
                     className={CLASSES.FORWARDS}
                     disabled={!canGoForwards}
-                    shape="circle"
-                    icon="right"
                     aria-label={I18n.t( 'aria.navigate_forward' )}
                     onClick={handleForward}
-                />
-            </Col>
-            <Col>
-                <Button
+                >
+                    <ArrowForwardRoundedIcon />
+                </IconButton>
+            </Grid>
+            <Grid item>
+                <IconButton
+                    size="small"
                     className={CLASSES.REFRESH}
-                    shape="circle"
-                    icon="reload"
                     aria-label={I18n.t( 'aria.reload_page' )}
                     disabled={
                         ( activeTab && activeTab.isLoading ) ||
@@ -69,9 +65,11 @@ const ButtonsLHS = ( props ) => {
                             : false
                     }
                     onClick={handleRefresh}
-                />
-            </Col>
-        </Row>
+                >
+                    <RefreshRoundedIcon />
+                </IconButton>
+            </Grid>
+        </Grid>
     );
 };
 

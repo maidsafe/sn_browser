@@ -1,12 +1,20 @@
 import React, { ReactNode, Component } from 'react';
 import { remote } from 'electron';
 import { I18n } from 'react-redux-i18n';
-import { Input } from 'antd';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import {
+    createStyles,
+    fade,
+    Theme,
+    withStyles
+} from '@material-ui/core/styles';
+import InputBase from '@material-ui/core/InputBase';
 import { CLASSES } from '$Constants';
 // import { logger } from '$Logger';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarInput } from '$Extensions/components';
-import 'antd/lib/input/style';
+import styles from './input.css';
 
 interface AddressBarInputProps {
     address?: string;
@@ -29,6 +37,35 @@ interface AddressBarInputState {
     address: any;
     editingUrl: boolean;
 }
+
+const BootstrapInput = withStyles( ( theme: Theme ) =>
+    createStyles( {
+        input: {
+            fontSize: 16,
+            paddingLeft: '10px',
+            transition: theme.transitions.create( ['border-color', 'box-shadow'] ),
+            // Use the system font instead of the default Roboto font.
+            fontFamily: [
+                '-apple-system',
+                'BlinkMacSystemFont',
+                '"Segoe UI"',
+                'Roboto',
+                '"Helvetica Neue"',
+                'Arial',
+                'sans-serif',
+                '"Apple Color Emoji"',
+                '"Segoe UI Emoji"',
+                '"Segoe UI Symbol"'
+            ].join( ',' ),
+            '&:focus': {
+                boxShadow: `${fade( theme.palette.primary.main, 0.25 )} 0 0 0 0.2rem`,
+                borderColor: theme.palette.primary.main,
+                borderRadius: '2px'
+            }
+        }
+    } )
+)( InputBase );
+
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component
@@ -57,15 +94,7 @@ AddressBarInputState
             nextProps.address !== this.props.address &&
       nextProps.address !== this.state.address
         ) {
-            this.setState( { address: nextProps.address, editingUrl: false } );
-        }
-        if (
-            nextProps.isSelected &&
-      !this.props.isSelected &&
-      !this.state.editingUrl &&
-      this.addressInput
-        ) {
-            this.addressInput.select();
+            this.setState( { address: nextProps.address } );
         }
     }
 
@@ -82,7 +111,7 @@ AddressBarInputState
 
     handleChange( event ) {
         const { onSelect, tabId } = this.props;
-        this.setState( { editingUrl: true, address: event.target.value } );
+        this.setState( { address: event.target.value } );
         if ( onSelect ) {
             onSelect( { tabId } );
         }
@@ -112,43 +141,35 @@ AddressBarInputState
     handleClick = () => {
         const { onSelect, isSelected, tabId } = this.props;
         if ( isSelected ) {
-            this.setState( { editingUrl: true } );
             onSelect();
         }
     };
 
     render() {
-        const { isSelected, addonBefore, addonAfter, extensionStyles } = this.props;
+        const { isSelected, addonBefore, addonAfter } = this.props;
         const { address } = this.state;
         return (
-            <Input
-                className={CLASSES.ADDRESS_INPUT}
-                aria-label={I18n.t( 'aria.address_bar' )}
-                addonBefore={
-                    addonBefore && addonBefore.length !== 0 ? addonBefore : undefined
-                }
-                addonAfter={
-                    addonAfter && addonAfter.length !== 0 ? addonAfter : undefined
-                }
-                size="large"
-                value={address}
-                type="text"
-                ref={( input ) => {
-                    this.addressInput = input;
-                    if (
-                        isSelected &&
-            !this.state.editingUrl &&
-            this.isInFocussedWindow() &&
-            input
-                    ) {
-                        input.select();
-                    }
-                }}
-                onFocus={this.handleFocus}
-                onBlur={this.handleBlur}
-                onChange={this.handleChange}
-                onKeyPress={this.handleKeyPress}
-            />
+            <Paper className={CLASSES.ADDRESS_INPUT} square={false}>
+                <Grid container>
+                    <Grid item className={styles.addonBefore}>
+                        {addonBefore}
+                    </Grid>
+                    <Grid item>
+                        <BootstrapInput
+                            fullWidth
+                            aria-label={I18n.t( 'aria.address_bar' )}
+                            value={address}
+                            type="text"
+                            onFocus={this.handleFocus}
+                            onBlur={this.handleBlur}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                        />
+                    </Grid>
+                    {// comment hiding this as we don't need to show beaker icon for now as toggle Experimental has been disabled
+                        false && <Grid item>{addonAfter}</Grid>}
+                </Grid>
+            </Paper>
         );
     }
 }

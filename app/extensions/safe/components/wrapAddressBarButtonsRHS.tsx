@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Switch } from 'antd';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
-import 'antd/lib/switch/style';
+import Grid from '@material-ui/core/Grid';
+import Switch from '@material-ui/core/Switch';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { CLASSES } from '$Constants';
@@ -65,40 +63,39 @@ export const wrapAddressBarButtonsRHS = (
             const { safeBrowserApp } = this.props;
             const { experimentsEnabled } = safeBrowserApp;
             const itemsToAdd = [
-                <Row
+                <Grid
+                    item
                     key="menuItem-experimental-toggle"
-                    type="flex"
-                    justify="space-between"
-                    align="middle"
                     className={`${styles.toggleRow} ${CLASSES.SETTINGS_MENU__TOGGLE}`}
+                    justify="space-evenly"
                 >
-                    <Col span={6}>
-                        <span
-                            className={`${styles.toggleText} ${CLASSES.SETTINGS_MENU__TOGGLE_TEXT}`}
-                        >
-              Toggle Experiments
-                        </span>
-                    </Col>
-                    <Col span={6} offset={6}>
-                        <Switch
-                            className={CLASSES.SETTINGS_MENU__TOGGLE_BUTTON}
-                            size="small"
-                            aria-label="settings-menu"
-                            tabIndex={0}
-                            style={{ float: 'right' }}
-                            checked={experimentsEnabled}
-                            onChange={this.handleExperimentalToggleClick}
-                        />
-                    </Col>
-                </Row>
+                    <span
+                        className={`${styles.toggleText} ${CLASSES.SETTINGS_MENU__TOGGLE_TEXT}`}
+                    >
+            Toggle Experiments
+                    </span>
+                    <Switch
+                        className={CLASSES.SETTINGS_MENU__TOGGLE_BUTTON}
+                        size="small"
+                        color="primary"
+                        aria-label="settings-menu"
+                        style={{ float: 'right' }}
+                        checked={experimentsEnabled}
+                        onChange={this.handleExperimentalToggleClick}
+                    />
+                </Grid>
             ];
             return [].concat( menuItems, itemsToAdd );
         };
 
         render() {
+            // Commented out to disable toggle Experimental
+            /*
             return (
                 <AddressBarButtons {...this.props} menuItems={this.getNewMenuItems()} />
             );
+            */
+            return <AddressBarButtons {...this.props} />;
         }
     }
     const hookedUpInput = connect(

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import styles from './browser.css';
-import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@material-ui/core/Avatar';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import _ from 'lodash';
 // import { logger } from '$Logger';
 import { Icon } from 'antd';
@@ -190,13 +191,14 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.handleMouseLeave}
             >
-                <IconButton
-                    onClick={this.handleIdButtonClick}
-                    iconTheme="navigation"
-                    iconType="account"
-                    size="S"
-                    style={{ cursor: 'pointer' }}
-                />
+                {false && (
+                    <Avatar
+                        onClick={this.handleIdButtonClick}
+                        clasName={styles.WebIdButton}
+                    >
+                        <AccountCircleIcon />
+                    </Avatar>
+                )}
                 {showingWebIdDropdown && (
                     <ul className={styles.webIdList}>
                         {webIdDropdownContents}

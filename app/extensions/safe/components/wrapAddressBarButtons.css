@@ -8,13 +8,33 @@
     padding: 2%;
 }
 
-.editSiteButton {
+.editSiteWrapper .editSiteButton {
     cursor: pointer;
+    color: #4caf50;
+    background-color: white;
+    margin-left: 3px;
+    height: 25px;
+    width: 25px;
 }
 
-.versionButton {
+.editSiteWrapper .editSiteButtonClicked {
     cursor: pointer;
+    color: #aaa;
+    background-color: white;
+    margin-left: 3px;
+    height: 25px;
+    width: 25px;
 }
+
+.versionButtonWrapper .versionButton {
+    cursor: pointer;
+    color: #aaa;
+}
+
+.versionButtonWrapper .versionButton svg {
+    height: 20px;
+}
+
 .versionButton:disabled {
     cursor: default;
 }

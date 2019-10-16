@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { I18n } from 'react-redux-i18n';
-import { Row, Col, Icon, Button } from 'antd';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
-import 'antd/lib/button/style';
-import 'antd/lib/icon/style';
+import { Grid, IconButton } from '@material-ui/core';
+import BookmarkBorderRoundedIcon from '@material-ui/icons/BookmarkBorderRounded';
+import BookmarkRoundedIcon from '@material-ui/icons/BookmarkRounded';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarButtonsRHS } from '$Extensions/components';
 import { CustomMenu } from '$Components/CustomMenu';
@@ -57,18 +55,12 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
             tabId
         } = this.props;
         return (
-            <Row
-                type="flex"
-                justify="end"
-                align="middle"
-                gutter={{ xs: 2, sm: 4, md: 6 }}
-            >
-                <Col>
-                    <Button
+            <Grid container direction="row" justify="space-evenly" spacing={1}>
+                <Grid item>
+                    <IconButton
+                        size="small"
                         className={`${CLASSES.BOOKMARK_PAGE}`}
-                        shape="circle"
                         onClick={this.handleBookmarking}
-                        tabIndex="0"
                         aria-label={
                             isBookmarked
                                 ? I18n.t( 'aria.is_bookmarked' )
@@ -80,22 +72,25 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
                             }
                         }}
                     >
-                        <Icon type="star" theme={isBookmarked ? 'filled' : 'outlined'} />
-                    </Button>
-                </Col>
-                <Col>
+                        {isBookmarked ? (
+                            <BookmarkRoundedIcon />
+                        ) : (
+                            <BookmarkBorderRoundedIcon />
+                        )}
+                    </IconButton>
+                </Grid>
+                <Grid item>
                     <CustomMenu
                         isVisible={settingsMenuIsVisible}
                         menuItems={menuItems}
                         showMenu={showSettingsMenu}
                         hideMenu={hideSettingsMenu}
-                        tabIndex="0"
                         windowId={windowId}
                         aria-label={I18n.t( 'aria.settings_menu' )}
                         onBlur={() => focusWebview( { tabId, shouldFocus: true } )}
                     />
-                </Col>
-            </Row>
+                </Grid>
+            </Grid>
         );
     }
 }

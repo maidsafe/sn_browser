@@ -1,11 +1,9 @@
 import { remote } from 'electron';
 import url from 'url';
 import React, { Component } from 'react';
-import { Row, Col, Icon } from 'antd';
-import 'antd/lib/icon/style';
-import 'antd/lib/button/style';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
+import { Grid, IconButton, Icon, Typography, Button } from '@material-ui/core';
+import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 import { I18n } from 'react-redux-i18n';
 import styles from './tabBar.css';
 import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
@@ -90,63 +88,56 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                     return null;
                 }
 
-                let tabStyleClass = styles.tab;
+                let tabStyleClass = styles.aTabBox;
 
                 if ( tabId === activeTabId ) {
-                    tabStyleClass = `${styles.activeTab} ${CLASSES.ACTIVE_TAB}`;
+                    tabStyleClass = `${styles.aTabBox} ${styles.aTabBoxSelected} ${CLASSES.ACTIVE_TAB}`;
                 }
-
                 return (
-                    <button
-                        type="button"
-                        role="tab"
-                        key={tab.tabId}
-                        className={`${tabStyleClass} ${CLASSES.TAB}`}
-                        style={additionalStyles}
-                        onClick={( event ) => {
-                            this.handleTabClick( tabId, event );
-                        }}
-                        onKeyPress={( event ) => {
-                            this.handleTabClick( tabId, event );
-                        }}
-                    >
-                        <Row
-                            className={styles.tabRow}
-                            align="middle"
-                            justify="space-between"
-                            type="flex"
+                    <Grid item className={`${tabStyleClass}`}>
+                        <Button
+                            fullWidth
+                            type="button"
+                            role="tab"
+                            key={tab.tabId}
+                            className={`${styles.atab} ${CLASSES.TAB}`}
+                            style={additionalStyles}
+                            onClick={( event ) => {
+                                this.handleTabClick( tabId, event );
+                            }}
+                            onKeyPress={( event ) => {
+                                this.handleTabClick( tabId, event );
+                            }}
                         >
                             {showIcon && (
-                                <Col>
-                                    <div className={styles.faviconContainer}>
-                                        {tab.isLoading && (
-                                            <Icon type="loading" className={styles.loadingIcon} />
-                                        )}
-                                        {!tab.isLoading && tab.favicon && (
-                                            <img
-                                                alt=""
-                                                className={styles.favicon}
-                                                id="favicon-img"
-                                                src={tab.favicon}
-                                            />
-                                        )}
-                                    </div>
-                                </Col>
+                                <div className={styles.faviconContainer}>
+                                    {tab.isLoading && <Icon className={styles.loadingIcon} />}
+                                    {!tab.isLoading && tab.favicon && (
+                                        <img
+                                            alt=""
+                                            className={styles.afavicon}
+                                            id="favicon-img"
+                                            src={tab.favicon}
+                                        />
+                                    )}
+                                </div>
                             )}
-                            <Col className={styles.tabText}>{title || 'New Tab'}</Col>
-                            <Col>
-                                <Icon
-                                    className={`${CLASSES.CLOSE_TAB} ${styles.closeTab}`}
-                                    type="close"
-                                    title={I18n.t( 'close-tab' )}
-                                    aria-label={I18n.t( 'aria.close-tab' )}
-                                    onClick={( event ) => {
-                                        this.handleTabClose( tabId, event );
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                    </button>
+                            <Typography className={styles.tabText} id={styles.tabFont}>
+                                {title || 'New Tab'}
+                            </Typography>
+                            <IconButton
+                                size="small"
+                                className={`${CLASSES.CLOSE_TAB} ${styles.closeTab}`}
+                                title={I18n.t( 'close-tab' )}
+                                aria-label={I18n.t( 'aria.close-tab' )}
+                                onClick={( event ) => {
+                                    this.handleTabClose( tabId, event );
+                                }}
+                            >
+                                <ClearRoundedIcon />
+                            </IconButton>
+                        </Button>
+                    </Grid>
                 );
             }
         );
@@ -183,23 +174,27 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
 
     render() {
         return (
-            <div
+            <Grid
+                container
                 className={[
                     styles.container,
                     process.platform === 'darwin' ? styles.containerMac : ''
                 ].join( ' ' )}
+                wrap="nowrap"
             >
-                <div className={styles.tabBar}>
-                    {this.getTabs()}
-                    <Icon
+                {this.getTabs()}
+                <Grid item>
+                    <IconButton
+                        size="small"
                         className={`${CLASSES.ADD_TAB} ${styles.addTab}`}
-                        type="plus"
                         title={I18n.t( 'add-tab' )}
                         aria-label={I18n.t( 'aria.add-tab' )}
                         onClick={this.handleAddTabClick}
-                    />
-                </div>
-            </div>
+                    >
+                        <AddRoundedIcon />
+                    </IconButton>
+                </Grid>
+            </Grid>
         );
     }
 }
