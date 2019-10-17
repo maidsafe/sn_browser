@@ -59,6 +59,13 @@ install:
   - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
   # Change vars for windows signing
   - export CSC_IDENTITY_AUTO_DISCOVERY=true
+  # is this actually installed?
+  - ls node_modules/safe-nodejs/native
+  # HACK: Temporarily manually install safe-nodejs until travis-wait-enhanced
+  # prerequisite is modified
+  - cd node_modules/safe-nodejs
+  - yarn run download-node-abi
+  - cd ../..
   # On Linux, initialize "virtual display". See before_script
 
 
