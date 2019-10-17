@@ -2,6 +2,9 @@ env:
   global:
     - secure: "sDQ/Ai7CWofxj203YwmMQhGlfDhCnDQn8ti3rTPk9tVxbqR8uYYbSBJw46xxdzcVfwCXN6z+6ZG1Xp9DXYSn5tGMW+JiSMY0gaSI0/fuL3GqBlOGRMCljJEQNb8dHeXjVqbWfviymx5QT8ATF4xRR9jslLLAQkiqFqqNanB6A2pAZqYo9OVWg8+K5wN+/kpKevYkMFw0Bg2bZxVte8r/TTMN6aHmy8uCFCZ1jdjdZquaG/qu89jwFDriJXGUFqzyqa+j1Lp2HDEf9FsaapXLzrj3q6H7ykfYYoFcHo/6MO46YGBFvbyd0yFy4Ipca+gRUR6p4U74+rL0BQfj5JfM0Ekjnz9KwvbGH178oY02CN2KG+OeLkRpaom94ncibZR7WvbBi050EZpkbpqW9H9e5UqQQI3wL+YqWjD6rqjA2L5MxBSSi5Na3L7m2UdXlXQd7yBQK9uCywcCpHWoihNLC8GJ1DVD2EUBReW0YQatBdmlsP8XoElOngILA72+p7bjJ5aJugxSc1gZejy4P0suYVSdYm1k6+Og0PojH38gaqWunOCA+fb5bxGIsB/dFfTkEzp/G/NGNl6b8KwTXCCbS5E6qWI0/NHinCLGNQoovEgFwdVjF6+zOmroCwSSx23xgG1Fr1TY4GIcw1Td73ibGtJU1B6UyoBaaOQ9WpDxEes="
 matrix:
+  fast_finish: true
+  allow_failures:
+    - os: windows
   include:
     - os: osx
       osx_image: xcode11
