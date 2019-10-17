@@ -14668,9 +14668,9 @@ safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1,
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.0.tgz#b74daec49b1148f88c64b68d49b1e815c1f2f519"
   integrity sha512-fZEwUGbVl7kouZs1jCdMLdt95hdIv0ZeHg6L7qPeciMZhZ+/gdesW4wgTARkrFWEpspjEATAzUGPG8N2jJiwbg==
 
-"safe-nodejs@https://github.com/maidsafe/safe-nodejs.git#0.2.4":
-  version "0.2.4"
-  resolved "https://github.com/maidsafe/safe-nodejs.git#d18c9e61f0f0d61460b9bd972622efc2c5add9fd"
+"safe-nodejs@https://github.com/maidsafe/safe-nodejs.git#0.3.1":
+  version "0.3.1"
+  resolved "https://github.com/maidsafe/safe-nodejs.git#c4ba58bd03b0b1fa6e13c71b754176470a6c0ec5"
   dependencies:
     add "^2.0.6"
     neon-cli "^0.3.1"
