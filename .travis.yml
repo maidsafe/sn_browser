@@ -108,6 +108,7 @@ after_failure:
 
 
 before_deploy:
+- export SHOULD_NOTARIZE=true
 - |
   if [[ $TRAVIS_TAG == *"RC"* || $TRAVIS_TAG == *"rc"* ]]; then
     export IS_RC=yes
