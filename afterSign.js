@@ -2,12 +2,13 @@
 
 const fs = require( 'fs' );
 const path = require( 'path' );
-const buildConfig = require( 'builderConfig' );
 const electronNotarize = require( 'electron-notarize' );
+const buildConfig = require( './builderConfig' );
 
+const isCI = process.env.CI;
 module.exports = async function( params ) {
-    // Only notarize the app on Mac OS only.
-    if ( process.platform !== 'darwin' ) {
+    // Only notarize the app on Mac OS only & on CI.
+    if ( process.platform !== 'darwin' || !isCI ) {
         return;
     }
 

@@ -26,7 +26,7 @@
     "prepush": "yarn test",
     "prelint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,ts,tsx,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "prerelease": "standard-version --prerelease rc",
-    "package": "cross-env PACKAGING=true yarn build && electron-builder build --config ./builderConfig.js --publish never ",
+    "package": "cross-env PACKAGING=true yarn build && electron-builder build --config ./builderConfig.js --publish never",
     "deploy": "cross-env PACKAGING=true yarn build && electron-builder build --config ./builderConfig.js --publish always ",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
