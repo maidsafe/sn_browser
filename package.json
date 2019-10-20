@@ -148,7 +148,7 @@
     "@types/node": "12.7.12",
     "@types/react": "16.9.5",
     "@types/react-router-dom": "5.1.0",
-    "@types/webpack-env": "1.14.0",
+    "@types/webpack-env": "1.14.1",
     "@types/window-or-global": "1.0.0",
     "@typescript-eslint/eslint-plugin": "2.3.3",
     "@typescript-eslint/parser": "2.3.3",
