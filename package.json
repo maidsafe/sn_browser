@@ -151,7 +151,7 @@
     "@types/webpack-env": "1.14.0",
     "@types/window-or-global": "1.0.0",
     "@typescript-eslint/eslint-plugin": "2.3.3",
-    "@typescript-eslint/parser": "2.3.3",
+    "@typescript-eslint/parser": "2.4.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
