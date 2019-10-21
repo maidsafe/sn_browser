@@ -13,7 +13,7 @@ matrix:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
         - NODE_ENV=dev
-
+        - DEBUG=electron-notarize
     - os: linux
       dist: bionic
       language: node_js
