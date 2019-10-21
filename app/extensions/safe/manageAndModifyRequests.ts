@@ -45,7 +45,7 @@ export const manageAndModifyRequests = ( store: Store ) => {
                 ( tab: { webContentsId: number; url: string } ) =>
                     tab.webContentsId === targetWebContentsId
             );
-
+            logger.info( 'ssssdadaddd', details.url );
             if ( targetTab ) {
                 const targetVersion = targetTab.url;
 
