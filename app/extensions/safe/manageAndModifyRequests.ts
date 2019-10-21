@@ -39,11 +39,10 @@ export const manageAndModifyRequests = ( store: Store ) => {
 
         const parseQuery = true;
         const parsedUrl = parseURL( targetUrl, parseQuery );
-
         if ( tabsArray.length > 0 ) {
             const targetTab = tabsArray.find(
                 ( tab: { webContentsId: number; url: string } ) =>
-                    tab.webContentsId === targetWebContentsId
+                    tab.webContentsId && tab.webContentsId === targetWebContentsId
             );
 
             if ( targetTab ) {
@@ -52,13 +51,18 @@ export const manageAndModifyRequests = ( store: Store ) => {
                 const parsedTabUrl = parseURL( targetTab.url, parseQuery );
 
                 // we need to check if the req comes from the same site...
-                const requestedSite = parseURL( parsedUrl.path.slice( 1 ) ); // remove localhost:port
+                const requestedSiteParsed = parseURL(
+                    parsedUrl.path.slice( 1 ),
+                    parseQuery
+                ); // remove localhost:port
                 const tabSiteVersion = parsedTabUrl.query.v;
-                const requestedSiteParsed = parseURL( requestedSite, parseQuery );
                 const requestedSiteVersion = requestedSiteParsed.query
                     ? requestedSiteParsed.query.v
                     : null;
-                if ( requestedSite.host === parsedTabUrl.host && !parsedUrl.query.v ) {
+                if (
+                    requestedSiteParsed.host === parsedTabUrl.host &&
+          !parsedUrl.query.v
+                ) {
                     logger.verbose(
                         'On a versioned site, updated resource req, to: ',
                         `${targetUrl}?v=${tabSiteVersion}`
@@ -67,12 +71,16 @@ export const manageAndModifyRequests = ( store: Store ) => {
                 }
 
                 // requesting unversioned resource from another page... which is not versioned block
-                if ( requestedSite.host !== parsedTabUrl.host && !requestedSiteVersion ) {
+                if (
+                    requestedSiteParsed.host !== parsedTabUrl.host &&
+          !requestedSiteVersion
+                ) {
                     logger.warn(
                         'Unversioned External Resource Request Blocked @ URL:',
                         targetUrl
                     );
                     callback( { cancel: true } );
+                    return;
                 }
             }
         }
