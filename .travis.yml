@@ -7,7 +7,7 @@ matrix:
     - os: windows
   include:
     - os: osx
-      osx_image: xcode10.3
+      osx_image: xcode11.2
       language: node_js
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
