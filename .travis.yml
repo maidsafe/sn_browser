@@ -96,6 +96,7 @@ script:
   # - export CSC_IDENTITY_AUTO_DISCOVERY=false
   - export SHOULD_NOTARIZE=true
   - yarn package
+
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/settingsMenu.spec.ts
