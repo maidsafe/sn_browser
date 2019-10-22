@@ -575,7 +575,8 @@ export class MenuBuilder {
                             autoUpdater.removeAllListeners( 'update-not-available' );
                         } );
                         // eslint-disable-next-line no-new
-                        new AppUpdater( store );
+                        const browserUpdater = new AppUpdater( store );
+                        browserUpdater.checkForUpdate();
                     }
                 }
             ]

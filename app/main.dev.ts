@@ -16,12 +16,12 @@ import fs from 'fs';
 import { enforceMacOSAppLocation } from 'electron-util';
 
 import { app, ipcMain, BrowserWindow } from 'electron';
-import { logger } from '$Logger';
 
 import {
     ignoreAppLocation,
     isRunningUnpacked,
     isRunningDebug,
+    shouldTriggerForceUpdate,
     isRunningTestCafeProcess,
     isRunningPackaged,
     isCI,
@@ -37,9 +37,12 @@ import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
 import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions/mainProcess';
 import { AppUpdater } from './autoUpdate';
+import { openSnappWithArgs, checkIfSnappIsRunning } from './snappHelperFuncs';
+import { logger } from '$Logger';
 
 const initialState = {};
 const store = configureStore( initialState );
+const browserUpdater = new AppUpdater( store );
 
 logger.info( 'Main process starting.' );
 
@@ -123,6 +126,10 @@ app.on( 'ready', async () => {
             if ( commandLine.length >= 2 && uri ) {
                 onReceiveUrl( store, uri );
             }
+
+            if ( commandLine.includes( '--trigger-update' ) ) {
+                browserUpdater.checkForUpdate();
+            }
         } );
     }
 
@@ -144,13 +151,25 @@ app.on( 'ready', async () => {
         }
     }
 
-    await setupBackground();
+    if ( !shouldTriggerForceUpdate ) {
+        await setupBackground();
 
-    mainWindow = openWindow( store );
+        mainWindow = openWindow( store );
+    }
+
+    if ( await checkIfSnappIsRunning() ) {
+        if ( process.platform === 'linux' || process.platform === 'win32' ) {
+            openSnappWithArgs( [
+                `--version-number:${pkg.version}`,
+                `--appId:safe.browser`
+            ] );
+        } else {
+            openSnappWithArgs( `--version-number:${pkg.version} --appId:safe.browser` );
+        }
+    }
 
     if ( !isRunningTestCafeProcess && !isRunningUnpacked && app.whenReady() ) {
-    // eslint-disable-next-line no-new
-        new AppUpdater( store );
+        browserUpdater.checkForUpdate();
     }
 } );
 
