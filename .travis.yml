@@ -93,6 +93,7 @@ script:
   # disable signging on windows for now.
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then unset CSC_LINK || unset CSC_KEY_PASSWORD; fi
   # - export SHOULD_NOTARIZE=true
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export TEST_UNPACKED=true; fi
   - yarn package
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.ts
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.ts
