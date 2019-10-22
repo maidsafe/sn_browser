@@ -275,6 +275,7 @@
     "moment": "^2.24.0",
     "nessie-ui": "7.0.4",
     "open": "^6.3.0",
+    "ps-list": "^6.3.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.12.15",
