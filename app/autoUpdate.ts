@@ -16,10 +16,26 @@ const clearNotification = ( payload: { id: string } ) =>
 
 // Thow error incase there is an issue in updating
 autoUpdater.on( 'error', ( error ) => {
-    dialog.showErrorBox(
-        'Error: ',
-        error == null ? 'unknown' : ( error.stack || error ).toString()
-    );
+    logger.error( error );
+
+    const notificationId = Math.random().toString( 36 );
+    const title = 'SAFE BROWSER Update Error';
+    const body = error.message || error || '';
+
+    const ignoreRequest = () => {
+        clearNotification( { id: notificationId } );
+    };
+
+    const theNotification = {
+        id: notificationId,
+        type: 'error',
+        body,
+        isPrompt: false,
+        title,
+        duration: 0
+    };
+
+    addNotification( theNotification );
 } );
 
 // Check for update and ask if user wants to download it
