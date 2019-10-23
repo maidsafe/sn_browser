@@ -73,4 +73,13 @@ describe( 'tab actions', () => {
         };
         expect( actions.deselectAddressBar( payload ) ).toEqual( expectedAction );
     } );
+
+    it( 'should update webContentsId', () => {
+        const payload = { tabId: Math.random().toString( 36 ) };
+        const expectedAction = {
+            type: actions.TYPES.UPDATE_TAB_WEB_CONTENTS_ID,
+            payload
+        };
+        expect( actions.updateTabWebContentsId( payload ) ).toEqual( expectedAction );
+    } );
 } );

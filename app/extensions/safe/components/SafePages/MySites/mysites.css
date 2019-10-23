@@ -1,0 +1,27 @@
+.dropzone {
+    width: 100%;
+    height: 400px;
+    background-color: grey;
+}
+
+.createSiteBar {
+    display: block;
+    height: 90px;
+    width: 100%;
+}
+
+.createSiteBar .theBar {
+    background-color: #fafafa;
+}
+
+.mySitesPage {
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    position: relative;
+}
+
+.sitesList {
+    max-width: 400px;
+}

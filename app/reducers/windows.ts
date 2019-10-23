@@ -1,7 +1,7 @@
+import { cloneDeep } from 'lodash';
 import { TYPES } from '$Actions/windows_actions';
 import { logger } from '$Logger';
 import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
-import { cloneDeep } from 'lodash';
 import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.windows;

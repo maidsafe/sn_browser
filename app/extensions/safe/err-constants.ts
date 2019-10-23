@@ -1,4 +1,4 @@
-module.exports = {
+export const errConsts = {
     ERR_ROUTING_INTERFACE_ERROR: {
         code: -11,
         msg:
@@ -12,17 +12,17 @@ module.exports = {
     },
     ERR_CONNECT_INFO: {
         code: 1,
-        msg: e => `Unable to get connection information: ${e}`
+        msg: ( e ) => `Unable to get connection information: ${e}`
     },
 
     ERR_AUTH_APP: {
         code: 2,
-        msg: e => `Unable to authorise the application: ${e}`
+        msg: ( e ) => `Unable to authorise the application: ${e}`
     },
 
     INVALID_HANDLE: {
         code: 3,
-        msg: handle => `Invalid handle: ${handle}`
+        msg: ( handle ) => `Invalid handle: ${handle}`
     },
 
     INVALID_LISTENER: {
@@ -52,18 +52,18 @@ module.exports = {
 
     AUTH_DECISION_RESP: {
         code: 8,
-        msg: e => `Encoded response after authorisation decision was made: ${e}`
+        msg: ( e ) => `Encoded response after authorisation decision was made: ${e}`
     },
 
     CONTAINER_DECISION_RESP: {
         code: 9,
-        msg: e =>
+        msg: ( e ) =>
             `Encoded response after container authorisation decision was made: ${e}`
     },
 
     SHAREMD_DECISION_RESP: {
         code: 10,
-        msg: e =>
+        msg: ( e ) =>
             `Encoded response after share MD authorisation decision was made: ${e}`
     }
 };

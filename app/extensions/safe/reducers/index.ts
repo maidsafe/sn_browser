@@ -1,9 +1,7 @@
-import { authenticator } from './authenticator';
 import { safeBrowserApp } from './safeBrowserApp';
-import { webFetch } from './webFetch';
+import { pWeb } from './pWeb_reducer';
 
-export const safeReducers = {
-    authenticator,
+export const additionalReducers = {
     safeBrowserApp,
-    webFetch
+    pWeb
 };

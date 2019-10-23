@@ -1,16 +1,17 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
+import { isEqual } from 'lodash';
 import { AddressBar } from '$Components/AddressBar';
 import { TabBar } from '$Components/TabBar';
 import { TabContents } from '$Components/TabContents';
 // import { logger } from '$Logger';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
-import { isEqual } from 'lodash';
 import styles from './browser.css';
 import { handleNotifications, Notification } from '$Utils/handleNotificiations';
 
 interface BrowserProps {
+    address: string;
     bookmarks?: Array<any>;
     notifications: Array<Notification>;
     tabs: object;
@@ -31,6 +32,7 @@ interface BrowserProps {
     addTab: ( ...args: Array<any> ) => any;
     updateTabUrl: ( ...args: Array<any> ) => any;
     updateTabWebId: ( ...args: Array<any> ) => any;
+    updateTabWebContentsId: ( ...args: Array<any> ) => any;
     toggleDevTools: ( ...args: Array<any> ) => any;
     tabShouldReload: ( ...args: Array<any> ) => any;
     updateTabTitle: ( ...args: Array<any> ) => any;
@@ -72,8 +74,8 @@ class Browser extends Component<BrowserProps, {}> {
             tabForwards,
             tabBackwards
         } = this.props;
-        const addressBar = this.address;
-        const theBrowser = this;
+
+        // const addressBar = this.address;
         const body = document.querySelector( 'body' );
         const div = document.createElement( 'div' );
         div.setAttribute( 'class', 'no_display' );
@@ -166,6 +168,7 @@ class Browser extends Component<BrowserProps, {}> {
             tabs,
             updateTabUrl,
             updateTabWebId,
+            updateTabWebContentsId,
             toggleDevTools,
             tabShouldReload,
             updateTabTitle,
@@ -263,6 +266,7 @@ class Browser extends Component<BrowserProps, {}> {
                     activeTabId={activeTabId}
                     activeTab={activeTab}
                     updateTabUrl={updateTabUrl}
+                    updateTabWebContentsId={updateTabWebContentsId}
                     updateTabWebId={updateTabWebId}
                     toggleDevTools={toggleDevTools}
                     tabShouldReload={tabShouldReload}

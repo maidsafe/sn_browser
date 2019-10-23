@@ -1,41 +1,11 @@
-import pkg from '$Package';
-import { CONFIG } from '$Constants';
-import url from 'url';
-import { logger } from '$Logger';
+export const cleanupNeonError = ( error: Error ): string => {
+    const neonError = 'internal error in Neon module:';
+    let { message } = error;
 
-export const isForSafeServer = parsedUrlObject =>
-    parsedUrlObject.host === `localhost:${CONFIG.PORT}`;
-
-export const urlIsAllowedBySafe = testUrl => {
-    logger.info( 'Checking urlIsAllowedBySafe', testUrl );
-    const urlObject = url.parse( testUrl );
-
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
-    const adaptedProtocols = validProtocols.map( proto => `${proto}:` );
-
-    if ( testUrl === 'about:blank' ) return true;
-
-    // TODO: locally server appspot files to avoid reqs thereto.
-    if (
-        adaptedProtocols.includes( urlObject.protocol ) ||
-    isForSafeServer( urlObject ) ||
-    urlObject.protocol === 'chrome-devtools:' ||
-    urlObject.protocol === 'file:' ||
-    urlObject.protocol === 'blob:' ||
-    urlObject.protocol === 'chrome-extension:' ||
-    urlObject.host === 'chrome-devtools-frontend.appspot.com'
-    ) {
-        return true;
+    if ( message && message.startsWith( neonError ) ) {
+        message = message.replace( neonError, '' );
     }
-
-    if (
-        urlObject.hostname === '127.0.0.1' ||
-    urlObject.hostname === 'localhost'
-    ) {
-        return true;
-    }
-
-    return false;
+    return message;
 };
 
 export const generateBoundaryStr = () => {
@@ -49,12 +19,12 @@ export const generateBoundaryStr = () => {
     return text;
 };
 
-export const rangeStringToArray = rangeString => {
+export const rangeStringToArray = ( rangeString ) => {
     const BYTES = 'bytes=';
     return rangeString
-        .substring( BYTES.length, rangeString.length )
+        .slice( BYTES.length, rangeString.length )
         .split( ',' )
-        .map( part => {
+        .map( ( part ) => {
             const partObject = {};
             part.split( '-' ).forEach( ( int, i ) => {
                 if ( i === 0 ) {
@@ -75,13 +45,13 @@ export const rangeStringToArray = rangeString => {
         } );
 };
 
-export const generateResponseStr = data => {
+export const generateResponseStr = ( data ) => {
     const boundaryString = generateBoundaryStr();
     const crlf = '\r\n';
     let responseString = `HTTP/1.1 206 Partial Content${crlf}`;
     responseString += `Content-Type: multipart/byteranges; boundary=${boundaryString}${crlf}`;
     responseString += `Content-Length:${data.headers['Content-Length']}${crlf}`;
-    data.parts.forEach( part => {
+    data.parts.forEach( ( part ) => {
         responseString += `--${boundaryString}${crlf}`;
         responseString += `Content-Type:${part.headers['Content-Type']}${crlf}`;
         responseString += `Content-Range: ${part.headers['Content-Range']}${crlf}`;
@@ -90,41 +60,3 @@ export const generateResponseStr = data => {
     responseString += `--${boundaryString}--`;
     return responseString;
 };
-
-export function parseSafeAuthUrl( safeUrl, isClient? ) {
-    if ( typeof safeUrl !== 'string' ) {
-        throw new Error( 'URl should be a string to parse' );
-    }
-
-    const safeAuthUrl: {
-        protocol?: string;
-        action?: string;
-        appId?: string;
-        payload?: string;
-        search?: string;
-    } = {};
-    const parsedUrl = url.parse( safeUrl );
-
-    if (
-        !/^(\/\/)*(bundle.js|home|bundle.js.map)(\/)*$/.test( parsedUrl.hostname )
-    ) {
-        return { action: 'auth' };
-    }
-
-    safeAuthUrl.protocol = parsedUrl.protocol;
-    safeAuthUrl.action = parsedUrl.hostname;
-
-    const data = parsedUrl.pathname ? parsedUrl.pathname.split( '/' ) : null;
-    if ( !isClient && !!data ) {
-    // eslint-disable-next-line prefer-destructuring
-        safeAuthUrl.appId = data[1];
-        // eslint-disable-next-line prefer-destructuring
-        safeAuthUrl.payload = data[2];
-    } else {
-    // eslint-disable-next-line prefer-destructuring
-        safeAuthUrl.appId = parsedUrl.protocol.split( '-' ).slice( -1 )[0];
-        safeAuthUrl.payload = null;
-    }
-    safeAuthUrl.search = parsedUrl.search;
-    return safeAuthUrl;
-}

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import url from 'url';
+import url, { Url } from 'url';
+import { Page } from 'nessie-ui';
 import { Tab } from '$Components/Tab';
-import { INTERNAL_PAGES, isRunningTestCafeProcess } from '$Constants';
+import { INTERNAL_PAGES, isRunningTestCafeProcess, CLASSES } from '$Constants';
 import { isInternalPage } from '$Utils/urlHelpers';
 import { History } from '$Components/PerusePages/History';
 import { Bookmarks } from '$Components/PerusePages/Bookmarks';
 import { logger } from '$Logger';
 import styles from './tabContents.css';
+import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
 export class TabContents extends Component<{}, {}> {
     static getDerivedStateFromError( error ) {
@@ -28,6 +30,7 @@ export class TabContents extends Component<{}, {}> {
             history,
             addNotification,
             updateTabUrl,
+            updateTabWebContentsId,
             updateTabWebId,
             toggleDevTools,
             tabShouldReload,
@@ -57,22 +60,28 @@ export class TabContents extends Component<{}, {}> {
 
         const tabComponents = tabs.map( ( tab, i ) => {
             const isActiveTab = tab.tabId === activeTabId;
+
             if ( isInternalPage( tab ) ) {
-                const urlObj = url.parse( tab.url );
+                const parseQuery = true;
+                const urlObj: Url = url.parse( tab.url, parseQuery );
+                const extensionPage = resolveExtensionInternalPages(
+                    urlObj,
+                    urlObj.query,
+                    tab,
+                    this.props
+                );
+
+                if ( extensionPage ) {
+                    return extensionPage.pageComponent;
+                }
+
                 switch ( urlObj.host ) {
                     case INTERNAL_PAGES.HISTORY: {
                         return (
                             <History
                                 addTabEnd={addTabEnd}
                                 history={history}
-                                key={tab.tabId}
-                                isActiveTab={isActiveTab}
                                 windowId={windowId}
-                                ref={( c ) => {
-                                    if ( isActiveTab ) {
-                                        this.activeTab = c;
-                                    }
-                                }}
                             />
                         );
                     }
@@ -82,28 +91,22 @@ export class TabContents extends Component<{}, {}> {
                                 addTabEnd={addTabEnd}
                                 windowId={windowId}
                                 bookmarks={bookmarks}
-                                key={tab.tabId}
-                                isActiveTab={isActiveTab}
-                                ref={( c ) => {
-                                    if ( isActiveTab ) {
-                                        this.activeTab = c;
-                                    }
-                                }}
                             />
                         );
                     }
                     default: {
-                        return <div key="sorry">Sorry what?</div>;
+                        return (
+                            <div key="sorry">{`Internal page "${urlObj.host}" does not exist.`}</div>
+                        );
                     }
                 }
             }
 
             if ( isRunningTestCafeProcess ) {
-                // tab contents cant be parsed atm.
-                return <div>no tab for testcafe UI tests.</div>;
+                return <div>No _real_ tab for testcafe, please</div>;
             }
 
-            const TheTab = (
+            return (
                 <Tab
                     addNotification={addNotification}
                     webId={tab.webId}
@@ -112,6 +115,7 @@ export class TabContents extends Component<{}, {}> {
                     closeTab={closeTab}
                     updateTabUrl={updateTabUrl}
                     updateTabWebId={updateTabWebId}
+                    updateTabWebContentsId={updateTabWebContentsId}
                     toggleDevTools={toggleDevTools}
                     tabShouldReload={tabShouldReload}
                     updateTabTitle={updateTabTitle}
@@ -120,7 +124,6 @@ export class TabContents extends Component<{}, {}> {
                     addTabNext={addTabNext}
                     addTabEnd={addTabEnd}
                     setActiveTab={setActiveTab}
-                    key={tab.tabId}
                     tabId={tab.tabId}
                     windowId={windowId}
                     safeExperimentsEnabled={safeExperimentsEnabled}
@@ -136,8 +139,29 @@ export class TabContents extends Component<{}, {}> {
                     }}
                 />
             );
-            return TheTab;
         } );
-        return <div className={styles.container}>{tabComponents}</div>;
+
+        return (
+            <div className={styles.container}>
+                {tabs.map( ( tab, i ) => {
+                    let moddedClass = styles.tab;
+                    const isActiveTab = tab.tabId === activeTabId;
+
+                    if ( isActiveTab ) {
+                        moddedClass = styles.activeTab;
+                    }
+
+                    const ThisTab = tabComponents[i];
+
+                    return (
+                        <div className={moddedClass} key={tab.tabId}>
+                            <Page className={`${styles.page}`} overflow="auto">
+                                {tabComponents[i]}
+                            </Page>
+                        </div>
+                    );
+                } )}
+            </div>
+        );
     }
 }

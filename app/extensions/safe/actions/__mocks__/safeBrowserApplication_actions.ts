@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { createAliasedAction } from 'electron-redux';
-import { getWebIds as getWebIdsFromSafe } from '$Extensions/safe/safeBrowserApplication/webIds';
+import { getWebIds as getWebIdsFromSafe } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
 import { logger } from '$Logger';
 import { inBgProcess } from '$Constants';
 

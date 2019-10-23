@@ -1,33 +1,50 @@
-const RELEASE_FOLDER_NAME = require('./releaseName');
+// const RELEASE_FOLDER_NAME = require('./releaseName');
+let TEST_UNPACKED = process.env.TEST_UNPACKED;
 
-const AUTH_TAB = './app/extensions/safe/auth-web-app/dist/app.html';
+let appString = 'safe-browser';
+let appResources = 'resources/app.asar';
 
-let appString = 'SAFE Browser.app';
+const { platform } = process;
+const MAC_OS = 'darwin';
+const LINUX = 'linux';
+const WINDOWS = 'win32';
 
-if (process.platform === 'linux') {
-    appString = 'safe-browser';
+if (platform === MAC_OS) {
+    PLATFORM_NAME = 'mac';
+    appString = 'SAFE Browser.app';
+    appResources = 'Contents/Resources/app.asar';
 }
 
-if (process.platform === 'windows') {
-    appString = 'safe-browser';
+if (platform === LINUX) {
+    PLATFORM_NAME = 'linux-unpacked';
 }
 
-const allArgs = ['--mock'];
-
-const testAuthenticator = process.env.TEST_CAFE_TEST_AUTH;
-
-if (testAuthenticator) {
-    // TODO setup proper app structure for testing of webpages using SAFE BROWSER
-    // this check can act like a placeholder for now
-    allArgs.push('--testCafeURL');
-    allArgs.push(AUTH_TAB);
+if (platform === WINDOWS) {
+    PLATFORM_NAME = 'win-unpacked';
+    appString = 'SAFE Browser.exe';
 }
+
+const allArgs = ['--mock', '--ignoreAppLocation'];
 
 // Changing mainWindowURl to that of a tab gets us the browser UI going too.
-module.exports = {
+const config = {
     mainWindowUrl: './app/app.html',
     appPath: '.',
-    // electronPath: `./release/${RELEASE_FOLDER_NAME}/${appString}`,
+    // electronPath: TEST_UNPACKED ? 'undefined' : `./release/${RELEASE_FOLDER_NAME}/${appString}`,
     appArgs: allArgs
     // openDevTools: true
 };
+
+if (!TEST_UNPACKED) {
+    if (platform === MAC_OS) {
+        config.mainWindowUrl = `./release/${PLATFORM_NAME}/${appString}/${appResources}/app/app.html`;
+        config.appPath = `./release/${PLATFORM_NAME}/${appString}/${appResources}`;
+    }
+
+    config.electronPath = `./release/${PLATFORM_NAME}/${appString}`;
+    console.log('Testing packaged app.', config, ' \n');
+} else {
+    console.log('Testing unpackaged app. ', config, ' \n');
+}
+
+module.exports = config;

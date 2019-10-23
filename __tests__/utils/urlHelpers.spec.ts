@@ -25,12 +25,6 @@ describe( 'makeValidAddressBarUrl', () => {
         );
     } );
 
-    it( 'should NOT convert a url with a valid protocol to safe://', () => {
-        expect( makeValidAddressBarUrl( 'safe-auth://hello' ) ).toBe(
-            'safe-auth://hello'
-        );
-    } );
-
     it( 'should NOT convert a url with a protocol to safe://', () => {
         expect( makeValidAddressBarUrl( 'http://hello' ) ).toBe( 'http://hello' );
         expect( makeValidAddressBarUrl( 'file://hello' ) ).toBe( 'file://hello' );
@@ -40,6 +34,21 @@ describe( 'makeValidAddressBarUrl', () => {
     it( 'should strip the final slash', () => {
         expect( makeValidAddressBarUrl( 'hello.world/lalalala/' ) ).toBe(
             'safe://hello.world/lalalala'
+        );
+    } );
+
+    it( 'should not strip the query params', () => {
+        expect( makeValidAddressBarUrl( 'hello.world/lalalala?v=2' ) ).toBe(
+            'safe://hello.world/lalalala?v=2'
+        );
+        expect( makeValidAddressBarUrl( 'hello.world/?v=2' ) ).toBe(
+            'safe://hello.world/?v=2'
+        );
+        expect( makeValidAddressBarUrl( 'hello.world?v=2' ) ).toBe(
+            'safe://hello.world?v=2'
+        );
+        expect( makeValidAddressBarUrl( 'hello.world/index.md?v=2' ) ).toBe(
+            'safe://hello.world/index.md?v=2'
         );
     } );
 

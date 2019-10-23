@@ -1,36 +1,147 @@
 import React from 'react';
+import { parse } from 'url';
+// js style as we're building from SSR, no CSS file as yet
+// import styles from './error.css';
+export const ERROR_TYPES = {
+    BAD_REQUEST: 'BAD_REQUEST',
+    NO_CONTENT_FOUND: 'NO_CONTENT_FOUND',
+    INVALID_VERSION: 'INVALID_VERSION',
+    UNKNOWN_NAME: 'UNKNOWN_NAME',
+    CONNECTION_FAILED: 'CONNECTION_FAILED'
+};
 
-export const Error = props => {
-    const { error } = props;
+export const ERROR_CODES = {
+    BAD_REQUEST: 400,
+    NO_CONTENT_FOUND: 404,
+    INVALID_VERSION: 404,
+    UNKNOWN_NAME: 404,
+    CONNECTION_FAILED: 500
+};
+
+// SAFE Error code space? 1000?
+
+const ERROR_PAGES = {
+    CONNECTION_FAILED: {
+        superTitle: 'Connection Failed',
+        title: 'Could not connect to the network',
+        getMessage: () => 'There was an problem with the network connection. '
+    },
+    BAD_REQUEST: {
+        superTitle: 'Bad Request',
+        title: 'Invalid address',
+        getMessage: ( address ) =>
+            `${address} is not a valid URL, please check it and try again.`
+    },
+    NO_CONTENT_FOUND: {
+        superTitle: '404',
+        title: 'Not Found',
+        getMessage: () =>
+            'Nothing has been published at this address, no page or file can be found'
+    },
+    INVALID_VERSION: {
+        superTitle: 'Invalid version',
+        title: 'This page version does not exist',
+        getMessage: ( badVersion, latest ) =>
+            `Version ${badVersion} does not exist.${
+                latest ? ` ${latest} is the latest` : ''
+            }`,
+        getCallToAction: ( address ) => {
+            const parsed = parse( address );
+            const latestVersion = `safe://${parsed.host}${parsed.path}`;
+
+            return {
+                text: 'Go to latest',
+                targetUrl: latestVersion
+            };
+        }
+    },
+    UNKNOWN_NAME: {
+        superTitle: 'Unknown Public Name',
+        title: 'Nobody owns this address yet',
+        getMessage: ( address ) => `${address} has not been registered yet.`,
+        getCallToAction: ( address ) => {
+            const parsed = parse( address );
+            const registerThis = `safe-browser://my-sites?register=${parsed.host}`;
+
+            return {
+                ctaText: `Register ${address}`,
+                targetUrl: registerThis
+            };
+        },
+        errorCode: 404
+    }
+};
+export const Error = ( props ) => {
+    const { address, badVersion, latestVersion, type } = props;
+
+    const {
+        superTitle,
+        title,
+        getMessage,
+        getCallToAction,
+        errorCode
+    } = ERROR_PAGES[type];
+
     const pageStyle = {
         width: '100%',
-        paddingTop: '3px',
-        paddingBottom: '3px',
+        height: '100%',
         display: 'flex',
-        flex: 'none',
-        alignContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
         boxSizing: 'border-box',
         borderRight: '0',
-        overflow: 'auto'
+        overflow: 'auto',
+        margin: '0',
+        fontFamily: 'system-ui'
     };
-    const constainerStyle = {
-        margin: '0 auto'
+
+    const containerStyle = {
+        width: '500px',
+        display: 'flex',
+        alignItems: 'start',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        boxSizing: 'border-box',
+        margin: '0'
     };
-    const contentStyle = {
-        textAlign: 'center'
+
+    const callToActionStyle = {
+        display: 'block',
+        backgroundColor: '#4054B2',
+        color: '#FFFFFF',
+        padding: '12px',
+        borderRadius: '200px',
+        textDecoration: 'none'
     };
+
+    const superTitleStyle = {
+        display: 'block',
+        textTransform: 'uppercase'
+    };
+
+    const { ctaText, targetUrl } = getCallToAction
+        ? getCallToAction( address )
+        : { ctaText: null, targetUrl: null };
+
     return (
-        <div style={pageStyle}>
-            <div style={constainerStyle}>
-                <h3 key="header" style={contentStyle}>
-                    {error.header}
-                </h3>
-                {error.subHeader && (
-                    <h4 key="subHeader" style={contentStyle}>
-                        {error.subHeader}
-                    </h4>
-                )}
-            </div>
-        </div>
+        <html lang="en">
+            <body style={pageStyle}>
+                <div style={containerStyle}>
+                    <div style={superTitleStyle}>{superTitle}</div>
+                    <h1 key="title" style={{ fontWeight: 'normal' }}>
+                        {title}
+                    </h1>
+                    <p key="message" style={{}}>
+                        {getMessage( address )}
+                    </p>
+                    {ctaText && (
+                        <a href={targetUrl} style={callToActionStyle}>
+                            {ctaText}
+                        </a>
+                    )}
+                </div>
+            </body>
+        </html>
     );
 };

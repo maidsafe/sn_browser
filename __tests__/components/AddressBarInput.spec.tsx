@@ -1,24 +1,13 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
+import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 
 const mockStore = configureStore();
 
 jest.mock( '$Logger' );
-
-// Some mocks to negate FFI and native libs we dont care about
-jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
-jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
-jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
-
-jest.mock( 'ref-array', () => jest.fn() );
-//
-jest.mock( 'ffi', () => jest.fn() );
-jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
-
-jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
+// jest.mock('/Users/josh/Projects/safe/forks/browser/node_modules/safe_nodejs/native/index.node');
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'AddressBarInput', () => {
@@ -49,6 +38,11 @@ describe( 'AddressBarInput', () => {
             safeBrowserApp: {
                 isMock: false,
                 experimentsEnabled: false
+            },
+            pWeb: {
+                versionedUrls: {},
+                availableNrsUrls: [],
+                mySites: []
             }
         };
     } );
@@ -58,10 +52,11 @@ describe( 'AddressBarInput', () => {
             store = mockStore( props );
 
             wrapper = shallow( <AddressBarInput {...props} /> );
-            instance = wrapper.instance();
         } );
 
         it( 'should have name AddressBarInput', () => {
+            instance = wrapper.instance();
+
             expect( instance.constructor.name ).toMatch( 'Input' );
         } );
     } );
@@ -75,7 +70,6 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} />
                 </Provider>
             );
-            instance = wrapper.instance();
         } );
 
         afterEach( () => {
@@ -89,6 +83,7 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} onBlur={handleBlur} />
                 </Provider>
             );
+
             const input = wrapper.find( 'Input' );
             input.simulate( 'blur' );
             expect( handleBlur ).toHaveBeenCalled();
@@ -107,7 +102,6 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} onFocus={handleFocus} />
                 </Provider>
             );
-            instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
             expect( handleFocus ).toHaveBeenCalled();
@@ -119,7 +113,6 @@ describe( 'AddressBarInput', () => {
                     <AddressBarInput {...props} />
                 </Provider>
             );
-            instance = wrapper.instance();
             const input = wrapper.find( 'Input' );
             input.simulate( 'focus' );
             expect( props.onFocus ).toHaveBeenCalled();
@@ -127,6 +120,7 @@ describe( 'AddressBarInput', () => {
 
         it( 'check on onKeyPress if updateTab is called', () => {
             const input = wrapper.find( 'Input' );
+
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
             expect( props.updateTabUrl ).toHaveBeenCalled();
         } );
@@ -134,12 +128,12 @@ describe( 'AddressBarInput', () => {
         it( 'check on onKeyPress if updateTab is called with params', () => {
             const input = wrapper.find( 'Input' );
             input.simulate( 'keyPress', { key: 'Enter', keyCode: 13, which: 13 } );
-            const timeStamp = new Date().getTime();
-            expect( props.updateTabUrl ).toHaveBeenCalledWith( {
-                url: 'about:blank',
-                timeStamp,
-                tabId
-            } );
+            expect( props.updateTabUrl ).toHaveBeenCalledWith(
+                expect.objectContaining( {
+                    url: 'about:blank',
+                    tabId
+                } )
+            );
         } );
 
         it( 'check on onChange, if onSelect() is called', () => {

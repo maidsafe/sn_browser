@@ -12,13 +12,16 @@ import {
     resetStore
 } from './helpers';
 
+import { addressBar, addressBarInput, addTab, tab } from './selectors';
 import { CLASSES } from '../app/constants/classes';
 
 fixture`Browser UI Navigation`
     .page( '../app/app.html' )
-    .afterEach( resetStore )
+    .afterEach( async ( t ) => {
+        await resetStore( t );
+    } )
     .beforeEach( async () => {
-        await waitForReact();
+    // await waitForReact();
     } );
 // .afterEach(assertNoConsoleErrors);
 
@@ -32,80 +35,83 @@ test( 'should open window', async ( t ) => {
 // );
 
 test( 'add tab should exist', async ( t ) => {
-    await t.expect( Selector( `.${CLASSES.ADD_TAB}` ).exists ).ok();
+    await t.expect( addTab.exists ).ok();
 } );
 
 test( 'openLocation should select the address bar', async ( t ) => {
-    await openLocation();
-    await t.expect( ReactSelector( 'Input' ).find( 'input' ).exists ).ok();
-    await t.expect( ReactSelector( 'Input' ).find( 'input' ).focused ).ok();
+    await openLocation( t );
+
+    await t.expect( await addressBar.exists ).ok();
+    await t.expect( Selector( `.${CLASSES.ADDRESS_BAR}:focus` ) ).ok();
 } );
 
 // Blocked until we can see webview.
 // test( 'can show a UI error if an invalid URL is passed', async t => {
 //     await t
-//         .click( `.${CLASSES.ADD_TAB}` )
-//         .expect( Selector( `.${CLASSES.TAB}` ).count )
+//         .click( addTab )
+//         .expect( tab.count )
 //         .eql( 2 );
 //
 //         navigateTo( t, 'http://:invalid-url');
 //
-//     // await t.expect( ReactSelector('Input').find('input').value )
+//     // await t.expect( ReactSelector('AddressBarInput').find('input').value )
 //
 //
 // } );
 
 test( 'can go backwards', async ( t ) => {
     await t
-        .click( `.${CLASSES.ADD_TAB}` )
-        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .click( addTab )
+        .expect( tab.count )
         .eql( 2 );
 
-    navigateTo( t, 'example.com' );
-    navigateTo( t, 'google.com' );
+    await t.wait( 3000 );
+
+    await navigateTo( t, 'example.com' );
+    await navigateTo( t, 'google.com' );
     await t
         .click( `.${CLASSES.BACKWARDS}` )
-        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .expect( addressBarInput.value )
         .eql( 'safe://example.com' );
 } );
 
 test( 'can go backwards to about:blank', async ( t ) => {
     await t
-        .click( `.${CLASSES.ADD_TAB}` )
-        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .click( addTab )
+        .expect( tab.count )
         .eql( 2 );
 
-    navigateTo( t, 'example.com' );
+    await navigateTo( t, 'example.com' );
     await t
         .click( `.${CLASSES.BACKWARDS}` )
-        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .expect( addressBarInput.value )
         .eql( 'about:blank' );
 } );
 
 test( 'can load about:blank', async ( t ) => {
     await t
-        .click( `.${CLASSES.ADD_TAB}` )
-        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .click( addTab )
+        .expect( tab.count )
         .eql( 2 );
 
-    navigateTo( t, 'example.com' );
-    navigateTo( t, 'about:blank' );
-    await t.expect( ReactSelector( 'Input' ).find( 'input' ).value ).eql( 'about:blank' );
+    await navigateTo( t, 'example.com' );
+    await navigateTo( t, 'about:blank' );
+    await t.expect( addressBarInput.value ).eql( 'about:blank' );
 } );
 
 test( 'can go forwards', async ( t ) => {
     await t
-        .click( `.${CLASSES.ADD_TAB}` )
-        .expect( Selector( `.${CLASSES.TAB}` ).count )
+        .click( addTab )
+        .expect( tab.count )
         .eql( 2 );
 
-    navigateTo( t, 'example.com' );
-    navigateTo( t, 'google.com' );
+    await navigateTo( t, 'example.com' );
+    await navigateTo( t, 'google.com' );
     await t
         .click( `.${CLASSES.BACKWARDS}` )
-        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .expect( addressBarInput.value )
         .eql( 'safe://example.com' )
         .click( `.${CLASSES.FORWARDS}` )
-        .expect( ReactSelector( 'Input' ).find( 'input' ).value )
+        .expect( addressBarInput.value )
         .eql( 'safe://google.com' );
 } );

@@ -103,50 +103,13 @@ export default merge.smart( baseConfig, {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[name]__[local]'
+                            },
                             sourceMap: true,
-                            importLoaders: 1,
-                            localIdentName: '[name]__[local]'
+                            importLoaders: 1
                         }
-                    }
-                ]
-            },
-            // SASS support - compile all .global.scss files and pipe it to style.css
-            {
-                test: /\.global\.(scss|sass)$/,
-                use: [
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                    {
-                        loader: 'sass-loader'
-                    }
-                ]
-            },
-            // SASS support - compile all other .scss files and pipe it to style.css
-            {
-                test: /^((?!\.global).)*\.(scss|sass)$/,
-                use: [
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            modules: true,
-                            sourceMap: true,
-                            importLoaders: 1,
-                            localIdentName: '[name]__[local]'
-                        }
-                    },
-                    {
-                        loader: 'sass-loader'
                     }
                 ]
             },
@@ -206,6 +169,7 @@ export default merge.smart( baseConfig, {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
                 use: 'file-loader'
             },
+
             // SVG Font
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
@@ -310,8 +274,8 @@ export default merge.smart( baseConfig, {
                     env: process.env,
                     stdio: 'inherit'
                 } )
-                    .on( 'close', code => process.exit( code ) )
-                    .on( 'error', spawnError => console.error( spawnError ) );
+                    .on( 'close', ( code ) => process.exit( code ) )
+                    .on( 'error', ( spawnError ) => console.error( spawnError ) );
             }
         }
     }

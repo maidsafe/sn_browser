@@ -22,13 +22,22 @@ module.exports = {
             jsx: true
         },
         useJSXTextNode: false,
-        project: './tsconfig.json',
         tsconfigRootDir: '.',
         sourceType: 'module',
         allowImportExportEverywhere: false,
         codeFrame: true
     },
     rules: {
+        'prefer-destructuring': [
+            'error',
+            {
+                array: false,
+                object: true
+            },
+            {
+                enforceForRenamedProperties: false
+            }
+        ],
         'unicorn/prevent-abbreviations': 'off',
         'unicorn/catch-error-name': 'off',
         'unicorn/filename-case': 'off',
@@ -56,9 +65,20 @@ module.exports = {
             }
         ],
         'react/prefer-stateless-function': 'off',
+        'jsx-a11y/label-has-for': [
+            2,
+            {
+                components: ['Label'],
+                required: {
+                    every: ['id']
+                },
+                allowChildren: true
+            }
+        ],
         'jest/no-jasmine-globals': 'off',
         'jest/valid-describe': 'off',
         'react/destructuring-assignment': 'off',
+        'react/static-property-placement': 'off',
         'react/sort-comp': [
             1,
             {
@@ -76,8 +96,10 @@ module.exports = {
         'react/jsx-filename-extension': 'off',
         'no-shadow': 'error',
         'react/prefer-stateless-function': 'error',
+        'react/jsx-fragments': ['error', 'element'],
+        'react/jsx-props-no-spreading': 'warn',
         '@typescript-eslint/interface-name-prefix': 'off',
-        '@typescript-eslint/array-type': ['error', 'generic'],
+        '@typescript-eslint/array-type': ['error', { default: 'generic' }],
         indent: 'off',
         '@typescript-eslint/indent': ['error', 4]
     },

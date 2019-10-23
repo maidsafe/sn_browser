@@ -13,6 +13,7 @@
             "$App/*": ["app/*"],
             "$Tests/*": ["__tests__/*"],
             "spectron-lib/*": ["__e2e__/lib"],
+            "$BuilderConfig": ["builderConfig.js"],
             "$Actions/*": ["app/actions/*"],
             "$Store/*": ["app/store/*"],
             "$Extensions/*": ["app/extensions/*"],
@@ -30,7 +31,6 @@
         "app/*.prod.js",
         "app/dist",
         "node_modules",
-        "release",
-        "extensions/safe/auth-web-app"
+        "release"
     ]
 }

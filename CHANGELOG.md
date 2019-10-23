@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.2](https://github.com/maidsafe/safe_browser/compare/v0.15.1...v0.15.2) (2019-10-23)
+
+### Bug Fixes
+
+- notarize permissions for mac ([b9c12b5](https://github.com/maidsafe/safe_browser/commit/b9c12b5))
+- **mimetypes:** Add in mimtypes for ImmutaData from xorurls ([7df5b11](https://github.com/maidsafe/safe_browser/commit/7df5b11)), closes [#1012](https://github.com/maidsafe/safe_browser/issues/1012)
+- **pWeb:** Block non versioned external site requests. ([6a1c5cb](https://github.com/maidsafe/safe_browser/commit/6a1c5cb)), closes [#1029](https://github.com/maidsafe/safe_browser/issues/1029)
+- **pWeb:** Versioned sites now request relative resources from same version. ([1889365](https://github.com/maidsafe/safe_browser/commit/1889365)), closes [#1010](https://github.com/maidsafe/safe_browser/issues/1010)
+- **react:** Update lifecycle methods for upgrading react ([aec5b18](https://github.com/maidsafe/safe_browser/commit/aec5b18))
+- **resolution:** External NRS resolution fix. ([0e1f691](https://github.com/maidsafe/safe_browser/commit/0e1f691)), closes [#1052](https://github.com/maidsafe/safe_browser/issues/1052)
+- **resolution:** Tweak to parse version of req url direct ([796d99e](https://github.com/maidsafe/safe_browser/commit/796d99e)), closes [#1052](https://github.com/maidsafe/safe_browser/issues/1052) [#1050](https://github.com/maidsafe/safe_browser/issues/1050)
+- **versioning:** Hitting versioned url now reports proper latest v ([006502d](https://github.com/maidsafe/safe_browser/commit/006502d))
+
+### Features
+
+- **deps:** Update electron to 6.1.0 ([ef77f59](https://github.com/maidsafe/safe_browser/commit/ef77f59))
+- **safe:** Update safe-nodejs to 0.3.1 ([bd13d86](https://github.com/maidsafe/safe_browser/commit/bd13d86))
+- **XorUrl:** Expose XorUrlEncoder functionlaity. ([b21fe2f](https://github.com/maidsafe/safe_browser/commit/b21fe2f)), closes [#1022](https://github.com/maidsafe/safe_browser/issues/1022)
+
+### [0.15.1](https://github.com/maidsafe/safe_browser/compare/v0.15.0...v0.15.1) (2019-10-03)
+
+### Bug Fixes
+
+- **mimetypes:** fix(mimetypes): Add in mimtypes for ImmutaData from xorurls ([7df5b11](https://github.com/maidsafe/safe_browser/commit/7df5b11))
+- **mysites:** prevent from iterating through mysites list if the content was not found ([2a03264](https://github.com/maidsafe/safe_browser/commit/2a03264))
+- **Windows MySites:** Dont write until mysites has been read. ([03ebb8c](https://github.com/maidsafe/safe_browser/commit/03ebb8c)), closes [#1008](https://github.com/maidsafe/safe_browser/issues/1008)
+
 ### [0.14.1](https://github.com/maidsafe/safe_browser/compare/v0.14.0...v0.14.1) (2019-07-10)
 
 ### Bug Fixes

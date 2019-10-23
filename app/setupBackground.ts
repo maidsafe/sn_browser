@@ -4,7 +4,7 @@ import { logger } from '$Logger';
 import {
     isRunningUnpacked,
     isRunningDebug,
-    isRunningSpectronTestProcess,
+    isRunningTestCafeProcess,
     isCI
 } from '$Constants';
 
@@ -35,29 +35,20 @@ export const setupBackground = async () =>
                     }
                 } );
 
-                // Hide the window when it loses focus
-                //   backgroundProcessWindow.on('blur', () => {
-                //     if (!backgroundProcessWindow.webContents.isDevToolsOpened()) {
-                //       backgroundProcessWindow.hide()
-                //     }
-                // });
-
                 backgroundProcessWindow.webContents.on(
-                    'did-finish-load',
+                    'did-frame-finish-load',
                     (): void => {
                         logger.info( 'Background process renderer loaded.' );
 
-                        if ( isRunningSpectronTestProcess || isCI )
+                        if ( isRunningTestCafeProcess || isCI )
                             return resolve( backgroundProcessWindow );
 
-                        if (
-                            isRunningDebug ||
-              ( isRunningUnpacked && !isRunningSpectronTestProcess )
-                        ) {
+                        if ( isRunningDebug ) {
                             backgroundProcessWindow.webContents.openDevTools( {
                                 mode: 'undocked'
                             } );
                         }
+
                         return resolve( backgroundProcessWindow );
                     }
                 );

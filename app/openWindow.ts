@@ -4,10 +4,9 @@ import os, { type } from 'os';
 import windowStateKeeper from 'electron-window-state';
 import { logger } from '$Logger';
 import { MenuBuilder } from './menu';
-import { onOpenLoadExtensions } from './extensions';
+import { onOpenLoadExtensions } from './extensions/mainProcess';
 import {
     isRunningTestCafeProcess,
-    isRunningSpectronTestProcess,
     isRunningDebug,
     testCafeURL
 } from '$Constants';
@@ -67,7 +66,9 @@ export const openWindow = ( store ): BrowserWindow => {
         icon: appIcon,
         webPreferences: {
             partition: 'persist:safe-tab',
-            preload: testCafeURL ? path.join( __dirname, 'webPreload.prod.js' ) : ''
+            webviewTag: true,
+            nodeIntegration: true,
+            backgroundThrottling: false
         }
     };
 
@@ -76,6 +77,44 @@ export const openWindow = ( store ): BrowserWindow => {
     thisWindowState.manage( thisWindow );
 
     thisWindow.loadURL( `file://${__dirname}/app.html` );
+
+    thisWindow.webContents.once(
+        'did-frame-finish-load',
+        async (): Promise<void> => {
+            // have to add a tab here now
+            const thisWindowId = thisWindow.id;
+            logger.info( 'state-thisWindowId', thisWindowId );
+            if ( browserWindowArray.length === 1 ) {
+                const tabId = Math.random().toString( 36 );
+                store.dispatch( addWindow( { windowId: thisWindowId } ) );
+                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
+
+                if ( !testCafeURL ) {
+                    store.dispatch( addTab( { url: 'safe-browser://my-sites', tabId } ) );
+                } else {
+                    store.dispatch(
+                        addTab( {
+                            url: testCafeURL,
+                            tabId
+                        } )
+                    );
+                }
+
+                if ( isRunningDebug && !isRunningTestCafeProcess ) {
+                    thisWindow.webContents.openDevTools( { mode: 'undocked' } );
+                }
+
+                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
+            } else {
+                const tabId = Math.random().toString( 36 );
+                store.dispatch( addWindow( { windowId: thisWindowId } ) );
+                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
+                store.dispatch( addTab( { url: 'about:blank', tabId } ) );
+                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
+                store.dispatch( selectAddressBar( { tabId } ) );
+            }
+        }
+    );
 
     thisWindow.webContents.on(
         'did-finish-load',
@@ -89,40 +128,6 @@ export const openWindow = ( store ): BrowserWindow => {
             // before show lets load state
             thisWindow.show();
             thisWindow.focus();
-
-            if ( isRunningDebug && !isRunningSpectronTestProcess ) {
-                thisWindow.openDevTools( { mode: 'undocked' } );
-            }
-            // have to add a tab here now
-            const thisWindowId = thisWindow.id;
-            logger.info( 'state-thisWindowId', thisWindowId );
-
-            if ( browserWindowArray.length === 1 ) {
-                const tabId = Math.random().toString( 36 );
-                store.dispatch( addWindow( { windowId: thisWindowId } ) );
-                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
-
-                if ( !testCafeURL ) {
-                    store.dispatch( addTab( { url: 'safe-auth://home/', tabId } ) );
-                } else {
-                    store.dispatch(
-                        addTab( {
-                            url: testCafeURL,
-                            tabId
-                        } )
-                    );
-                }
-
-                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
-            } else {
-                logger.info( 'SO WERE IN THE OTTTHHHEERRR ONE' );
-                const tabId = Math.random().toString( 36 );
-                store.dispatch( addWindow( { windowId: thisWindowId } ) );
-                store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
-                store.dispatch( addTab( { url: 'about:blank', tabId } ) );
-                store.dispatch( setActiveTab( { windowId: thisWindowId, tabId } ) );
-                store.dispatch( selectAddressBar( { tabId } ) );
-            }
         }
     );
 
@@ -164,21 +169,18 @@ export const openWindow = ( store ): BrowserWindow => {
     return thisWindow;
 };
 
-ipcMain.on(
-    'command:close-window',
-    (): void => {
-        const win = BrowserWindow.getFocusedWindow();
-        if ( win ) {
-            win.close();
-        }
-        if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
-            app.quit();
-        }
+ipcMain.on( 'command:close-window', (): void => {
+    const win = BrowserWindow.getFocusedWindow();
+    if ( win ) {
+        win.close();
     }
-);
+    if ( process.platform !== 'darwin' && browserWindowArray.length === 0 ) {
+        app.quit();
+    }
+} );
 
 ipcMain.on( 'closeWindows', ( event, data ) => {
-    logger.info( 'resetStore IPC received...', data );
+    logger.info( 'closeWindows IPC received...', data );
 
     if ( data.length === 0 ) {
         logger.error( 'No windowIds passed to closeWindows.' );

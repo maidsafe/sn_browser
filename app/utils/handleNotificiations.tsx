@@ -1,7 +1,7 @@
 import React from 'react';
+import { notification, Row, Col, Button } from 'antd';
 import { CLASSES } from '$Constants';
 import { reactNodeToElement, NodeObject } from '$Utils/reactNodeToElement';
-import { notification, Row, Col, Button } from 'antd';
 import 'antd/lib/notification/style';
 import 'antd/lib/button/style';
 import 'antd/lib/row/style';
@@ -78,7 +78,9 @@ export const handleNotifications = (
                             {latestNotification.reactNode ? (
                                 reactNodeToElement( latestNotification.reactNode )
                             ) : (
-                                <p className={CLASSES.NOTIFIER_TEXT}>latestNotification.body</p>
+                                <p className={CLASSES.NOTIFIER_TEXT}>
+                                    {latestNotification.body}
+                                </p>
                             )}
                         </Col>
                     </Row>

@@ -1,10 +1,8 @@
-import { ClientFunction, Selector } from 'testcafe';
-import { ReactSelector } from 'testcafe-react-selectors';
+import { ClientFunction } from 'testcafe';
 
-import {
-    getMainMenuItem,
-    clickOnMainMenuItem
-} from 'testcafe-browser-provider-electron';
+import { clickOnMainMenuItem } from 'testcafe-browser-provider-electron';
+
+import { addressBarInput } from './selectors';
 
 export const getPageUrl = ClientFunction( () => window.location.href );
 export const resetStore = async ( t ) => {
@@ -23,13 +21,12 @@ export const selectPreviousTab = async ( t ) => {
 export const getPageTitle = ClientFunction( () => document.title );
 
 export const navigateTo = async ( t, address ) => {
-    const input = ReactSelector( 'Input' ).find( 'input' );
     return (
         t
-            .selectText( input )
+            .selectText( addressBarInput )
             .pressKey( 'backspace' )
             // .debug()
-            .typeText( input, address )
+            .typeText( addressBarInput, address )
             .pressKey( 'enter' )
     );
 };

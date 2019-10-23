@@ -1,6 +1,6 @@
 import React from 'react';
-import { handleNotifications } from '$Utils/handleNotificiations';
 import { notification } from 'antd';
+import { handleNotifications } from '$Utils/handleNotificiations';
 import { reactNodeToElement } from '$Utils/reactNodeToElement';
 
 jest.mock( '$Utils/reactNodeToElement', () => ( {

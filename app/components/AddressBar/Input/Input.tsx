@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { ReactNode, Component } from 'react';
 import { remote } from 'electron';
-import { CLASSES } from '$Constants';
 import { I18n } from 'react-redux-i18n';
-// import { logger } from '$Logger';
+import { Input } from 'antd';
+import { CLASSES } from '$Constants';
+import { logger } from '$Logger';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarInput } from '$Extensions/components';
-import { Input } from 'antd';
 import 'antd/lib/input/style';
 
 interface AddressBarInputProps {
@@ -17,6 +17,9 @@ interface AddressBarInputProps {
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
     updateTabUrl: ( ...args: Array<any> ) => any;
+    extensionStyles: {};
+    addonBefore: Array<ReactNode>;
+    addonAfter: Array<ReactNode>;
 }
 interface AddressBarInputState {
     address: any;
@@ -49,20 +52,23 @@ AddressBarInputState
         };
     }
 
-    componentWillReceiveProps( nextProps ) {
+    componentDidUpdate( prevProps, prevState ) {
         if (
-            nextProps.address !== this.props.address &&
-      nextProps.address !== this.state.address
-        ) {
-            this.setState( { address: nextProps.address, editingUrl: false } );
-        }
-        if (
-            nextProps.isSelected &&
-      !this.props.isSelected &&
+            this.props.isSelected &&
+      !prevProps.isSelected &&
       !this.state.editingUrl &&
       this.addressInput
         ) {
             this.addressInput.select();
+        }
+
+        // update address input if props have been changed from elsewhwere
+        if (
+            prevProps.address !== this.props.address &&
+      this.props.address !== this.state.address
+        ) {
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState( { address: this.props.address, editingUrl: false } );
         }
     }
 
@@ -115,8 +121,9 @@ AddressBarInputState
     };
 
     render() {
-        const { isSelected, addonBefore, addonAfter } = this.props;
+        const { isSelected, addonBefore, addonAfter, extensionStyles } = this.props;
         const { address } = this.state;
+
         return (
             <Input
                 className={CLASSES.ADDRESS_INPUT}

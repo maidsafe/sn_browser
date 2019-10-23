@@ -1,6 +1,7 @@
 import path from 'path';
 import os from 'os';
 
+import log from 'electron-log';
 import {
     currentWindowId,
     env,
@@ -17,7 +18,6 @@ import {
     inMainProcess,
     isCI
 } from '$Constants';
-import log from 'electron-log';
 
 if ( log.transports ) {
     // Log level
@@ -99,14 +99,26 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
             ] )
         );
         log.error( error );
-        log.error( error.file );
-        log.error( error.line );
+
+        if ( error && error.line ) log.error( error.line );
+
+        if ( error && error.file ) log.error( error.file );
+
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 
     process.on( 'uncaughtException', ( error: NodeError ) => {
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
         log.error( 'whoops! there was an uncaught error:' );
+
+        if ( inMainProcess ) {
+            log.error( 'In the main process' );
+        }
+
+        if ( inBgProcess ) {
+            log.error( 'In the bg process' );
+        }
+
         log.error(
             JSON.stringify( error, [
                 'message',
@@ -117,7 +129,10 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
                 'line'
             ] )
         );
-        log.error( error, error.line );
+        if ( error && error.line ) log.error( error.line );
+
+        if ( error && error.file ) log.error( error.file );
+
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 
@@ -135,8 +150,10 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
             ] )
         );
 
-        log.error( error.line );
-        log.error( error.file );
+        if ( error && error.line ) log.error( error.line );
+
+        if ( error && error.file ) log.error( error.file );
+
         log.error( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     } );
 }

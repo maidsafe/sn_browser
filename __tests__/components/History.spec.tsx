@@ -48,10 +48,6 @@ describe( 'History Component', () => {
             wrapper = shallow( <History {...props} /> );
         } );
 
-        it( 'should have a safeBrowser__page class', () => {
-            expect( wrapper.find( `.${CLASSES.SAFE_BROWSER_PAGE}` ).length ).toBe( 1 );
-        } );
-
         it( 'should have one link', () => {
             wrapper = mount( <History {...props} /> );
             expect( wrapper.find( 'a' ).length ).toBe( 1 );
@@ -64,10 +60,6 @@ describe( 'History Component', () => {
                 ...props,
                 history: {
                     [date]: [
-                        {
-                            url: 'safe-auth://lalala',
-                            timeStamp: new Date().toLocaleTimeString()
-                        },
                         {
                             url: 'safe://somethingreal',
                             timeStamp: new Date().toLocaleTimeString()

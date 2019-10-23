@@ -1,0 +1,26 @@
+.textField {
+    border-radius: 200px;
+    width: 400px;
+    margin-right: 4rem;
+}
+
+/* TODO move other theBar in here */
+
+.barLayout {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
+.buttonSpacer {
+    display: block;
+    width: 2rem;
+    height: 100%;
+}
+.inputArea {
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    position: relative;
+}

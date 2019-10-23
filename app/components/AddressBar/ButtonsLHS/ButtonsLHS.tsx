@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { logger } from '$Logger';
-import { CLASSES, PROTOCOLS } from '$Constants';
 import { Row, Col, Button } from 'antd';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import { I18n } from 'react-redux-i18n';
+import { parse } from 'url';
+
+import { logger } from '$Logger';
+import { CLASSES, PROTOCOLS } from '$Constants';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarButtonsLHS } from '$Extensions/components';
-import { parse } from 'url';
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component

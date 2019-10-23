@@ -35,14 +35,11 @@ declare module '*.css' {
 export interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: Function;
     eval: Function | boolean;
-    safe: object;
+    Safe: Function;
     safeAppGroupId: number;
     webIdEventEmitter: EventEmitter;
     peruseStore: Store;
     safeExperimentsEnabled: boolean | null;
-    safeAuthenticator: {
-        isAuthorised: () => boolean;
-    };
 }
 
 export interface AppWindow extends BrowserWindow {

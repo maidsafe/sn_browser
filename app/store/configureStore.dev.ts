@@ -6,15 +6,15 @@ import {
     Reducer,
     StoreEnhancer
 } from 'redux';
-import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
-
-import { addMiddlewares } from '$Store/addMiddlewares';
-
 import {
     getInitialStateRenderer,
     replayActionMain,
     replayActionRenderer
 } from 'electron-redux';
+import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
+
+import { addMiddlewares } from '$Store/addMiddlewares';
+
 import * as bookmarkActions from '../actions/bookmarks_actions';
 
 import { createRootReducer } from '../reducers';

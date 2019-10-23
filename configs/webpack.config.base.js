@@ -19,6 +19,13 @@ export default {
                         cacheDirectory: true
                     }
                 }
+            },
+            // NODE Files
+            {
+                test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
+                use: {
+                    loader: 'native-ext-loader'
+                }
             }
         ]
     },

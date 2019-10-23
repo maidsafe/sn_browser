@@ -1,32 +1,3 @@
-.container
-{
-    width: 100%;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    display:            flex;
-    flex:  none;
-    align-content: center;
-    box-sizing: border-box;
-    border-right: 0;
-    overflow: auto;
-
-}
-
-.page
-{
-    background-color: #fff;
-    min-height: auto; /* override nessie 100vh */
-
-}
-
-
-.tab
-{
-    composes: tab from '../../Tab/tab.css';
-
-}
-
-.activeTab
-{
-    composes: activeTab from '../../Tab/tab.css';
+.placeholder {
+    /* placeholder */
 }

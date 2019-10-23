@@ -3,14 +3,15 @@ import path from 'path';
 import pkg from '$Package';
 import { logger } from '$Logger';
 import { PROTOCOLS } from '$Constants';
+import buildConfig from '$BuilderConfig';
 
-export const isInternalPage = tab => {
+export const isInternalPage = ( tab ) => {
     const urlObj = parse( tab.url );
 
     return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
 };
 
-export const removeTrailingSlash = url => {
+export const removeTrailingSlash = ( url ) => {
     if ( url ) {
         return url.replace( /\/$/, '' );
     }
@@ -18,7 +19,7 @@ export const removeTrailingSlash = url => {
     return url;
 };
 
-export const removeLeadingSlash = url => {
+export const removeLeadingSlash = ( url ) => {
     if ( url ) {
         return url.replace( /^\//, '' );
     }
@@ -26,13 +27,13 @@ export const removeLeadingSlash = url => {
     return url;
 };
 
-export const trimSlashes = url => {
+export const trimSlashes = ( url ) => {
     let newUrl = removeLeadingSlash( url );
     newUrl = removeTrailingSlash( newUrl );
     return newUrl;
 };
 
-export const addTrailingSlashIfNeeded = url => {
+export const addTrailingSlashIfNeeded = ( url ) => {
     const urlObj = parse( url );
     const urlPath = urlObj.path;
     let extName;
@@ -50,9 +51,9 @@ export const addTrailingSlashIfNeeded = url => {
     return slashedUrl;
 };
 
-export const removeTrailingHash = url => url.replace( /#$/, '' );
+export const removeTrailingHash = ( url ) => url.replace( /#$/, '' );
 
-export const removeTrailingRedundancies = url => {
+export const removeTrailingRedundancies = ( url ) => {
     let newUrl = removeTrailingSlash( url );
     newUrl = removeTrailingHash( newUrl );
 
@@ -123,13 +124,13 @@ const getProtocolPosition = ( url, inputProtocol ) => {
  * @param  {String} input address bar input
  * @return {String}       full url with protocol and any trailing (eg: http:// / .com)
  */
-export const makeValidAddressBarUrl = input => {
+export const makeValidAddressBarUrl = ( input ) => {
     if ( !input ) {
         logger.warn( 'url must be a string' );
         return 'about:blank';
     }
 
-    const validProtocols = pkg.build.protocols.schemes || ['http'];
+    const validProtocols = buildConfig.protocols.schemes || ['http'];
     const parsedURL = parse( input );
     const inputProtocol = parsedURL.protocol
         ? parsedURL.protocol.replace( ':', '' )
@@ -142,7 +143,7 @@ export const makeValidAddressBarUrl = input => {
     if ( validProtocols.includes( inputProtocol ) ) {
         finalProtocol = inputProtocol;
 
-        everythingAfterProtocol = input.substring( protocolPos, input.length );
+        everythingAfterProtocol = input.slice( protocolPos, input.length );
     } else if ( !inputProtocol ) {
     // eslint-disable-next-line prefer-destructuring
         finalProtocol = validProtocols[0];
@@ -153,14 +154,12 @@ export const makeValidAddressBarUrl = input => {
 
         finalProtocol = 'http';
 
-        everythingAfterProtocol = input.substring(
+        everythingAfterProtocol = input.slice(
             protocolPos + port.length + lengthOfSemiColon,
             input.length
         );
 
-        everythingAfterProtocol = `localhost:${
-            parsedURL.hostname
-        }/${everythingAfterProtocol}`;
+        everythingAfterProtocol = `localhost:${parsedURL.hostname}/${everythingAfterProtocol}`;
     } else if ( inputProtocol ) {
     // TODO: Show error page for bad urls.
         return removeTrailingRedundancies( input );

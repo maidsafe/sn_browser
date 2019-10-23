@@ -1,7 +1,9 @@
-import { logger } from '$Logger';
 import { Store } from 'redux';
+import { ReactNode } from 'react';
+import { Url } from 'url';
+import { logger } from '$Logger';
 // TODO: This should load all packages either from here or from node_modules etc...
-import { safeBrowsing } from './safe';
+import * as safeBrowsing from './safe';
 
 // here add your packages for extensibility.
 // const allPackages = [ ];
@@ -87,8 +89,8 @@ export const getActionsForBrowser = () => {
 export const getExtensionReducers = () => {
     let reducersToAdd = {};
     allPackages.forEach( ( extension ) => {
-        if ( extension.addReducersToPeruse ) {
-            const extReducers = extension.addReducersToPeruse();
+        if ( extension.additionalReducers ) {
+            const extReducers = extension.additionalReducers;
 
             if ( typeof extReducers !== 'object' ) {
                 throw new Error(
@@ -131,14 +133,12 @@ export const onInitBgProcess = ( server, store ) => {
 };
 
 export const onOpenLoadExtensions = async ( store: Store ): Promise<any> => {
-    const allExtensionLoading = allPackages.map(
-        ( extension ): any => {
-            if ( extension.onOpen ) {
-                return extension.onOpen( store );
-            }
-            return null;
+    const allExtensionLoading = allPackages.map( ( extension ): any => {
+        if ( extension.onOpen ) {
+            return extension.onOpen( store );
         }
-    );
+        return null;
+    } );
 
     return Promise.all( allExtensionLoading );
 };

@@ -1,0 +1,1 @@
+export { NrsRegistryBar } from './NrsRegistryBar';

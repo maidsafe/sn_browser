@@ -1,0 +1,15 @@
+.page {
+    width: '100%';
+    padding-top: '30px';
+    padding-bottom: '3px';
+    display: 'flex';
+    flex: 'none';
+    align-content: 'center';
+    box-sizing: 'border-box';
+    border-right: '0';
+    overflow: 'auto';
+}
+
+.content {
+    text-align: center;
+}

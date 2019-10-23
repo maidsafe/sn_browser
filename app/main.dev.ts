@@ -15,14 +15,14 @@ import path from 'path';
 import fs from 'fs';
 import { enforceMacOSAppLocation } from 'electron-util';
 
-import { app, protocol, ipcMain, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
 import { logger } from '$Logger';
 
 import {
     ignoreAppLocation,
     isRunningUnpacked,
     isRunningDebug,
-    isRunningSpectronTestProcess,
+    isRunningTestCafeProcess,
     isRunningPackaged,
     isCI,
     CONFIG
@@ -35,20 +35,15 @@ import { setupBackground } from './setupBackground';
 
 import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
-import {
-    onReceiveUrl,
-    preAppLoad,
-    onAppReady
-} from '$Extensions/main-process-extensions';
-
-// import { createSafeInfoWindow, createTray } from './setupTray';
+import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions/mainProcess';
+import { AppUpdater } from './autoUpdate';
 
 const initialState = {};
 const store = configureStore( initialState );
 
 logger.info( 'Main process starting.' );
 
-global.mainProcessStore = store;
+// global.mainProcessStore = store;
 
 // Needed for windows w/ SAFE browser app login
 ipcMain.on( 'open', ( event, data ) => {
@@ -72,8 +67,6 @@ if ( process.argv.includes( '--preload' ) ) {
     }
 }
 
-protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
-
 if ( isRunningPackaged ) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
     const sourceMapSupport = require( 'source-map-support' );
@@ -81,7 +74,7 @@ if ( isRunningPackaged ) {
 }
 
 if (
-    ( !isCI && !isRunningSpectronTestProcess && isRunningUnpacked ) ||
+    ( !isCI && !isRunningTestCafeProcess && isRunningUnpacked ) ||
   isRunningDebug
 ) {
     /* eslint-disable @typescript-eslint/no-var-requires,global-require */
@@ -106,7 +99,7 @@ const installExtensions = async (): Promise<void> => {
 };
 
 app.on( 'ready', async () => {
-    if ( !ignoreAppLocation ) {
+    if ( !ignoreAppLocation && !isRunningTestCafeProcess ) {
         enforceMacOSAppLocation();
     }
 
@@ -136,7 +129,7 @@ app.on( 'ready', async () => {
     logger.info( 'App Ready' );
 
     onAppReady( store );
-    if ( ( !isRunningSpectronTestProcess && isRunningUnpacked ) || isRunningDebug ) {
+    if ( ( !isRunningTestCafeProcess && isRunningUnpacked ) || isRunningDebug ) {
         await installExtensions();
     }
 
@@ -154,6 +147,11 @@ app.on( 'ready', async () => {
     await setupBackground();
 
     mainWindow = openWindow( store );
+
+    if ( !isRunningTestCafeProcess && !isRunningUnpacked && app.whenReady() ) {
+    // eslint-disable-next-line no-new
+        new AppUpdater( store );
+    }
 } );
 
 app.on( 'open-url', ( e, url ) => {

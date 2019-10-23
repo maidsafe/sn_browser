@@ -16,7 +16,8 @@ export const registerSafeProtocol = () => {
         ( req, cb ) => {
             logger.info( `safe:// req url being parsed: ${req.url}` );
             const parsedUrl = url.parse( req.url );
-            const { host } = parsedUrl;
+
+            const { host, query } = parsedUrl;
 
             if ( !host ) {
                 return;
@@ -25,16 +26,20 @@ export const registerSafeProtocol = () => {
             const path = parsedUrl.pathname || '';
 
             // TODO. Sort out when/where with slash
-            let newUrl = `http://localhost:${CONFIG.PORT}/safe://${host}${path}`;
+            let newUrl = `http://localhost:${CONFIG.PORT}/safe://${host}${path}${
+                query ? `?${query}` : ''
+            }`;
 
             // Allow localhost to be served as safe://
             if ( parsedUrl.hostname === 'localhost' && parsedUrl.port ) {
-                newUrl = `http://localhost:${parsedUrl.port}${path}`;
+                newUrl = `http://localhost:${parsedUrl.port}${path}${
+                    query ? `?${query}` : ''
+                }`;
             }
 
             cb( { url: newUrl } );
         },
-        err => {
+        ( err ) => {
             if ( !err ) return;
 
             if ( err.message === 'The scheme has been registered' ) {

@@ -7,3 +7,14 @@
     flex-wrap: nowrap;
     padding: 2%;
 }
+
+.editSiteButton {
+    cursor: pointer;
+}
+
+.versionButton {
+    cursor: pointer;
+}
+.versionButton:disabled {
+    cursor: default;
+}

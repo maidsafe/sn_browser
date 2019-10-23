@@ -8,7 +8,7 @@ import { SAFE } from '$Extensions/safe/constants';
 const safeInitialState = initialAppState.safeBrowserApp;
 
 // https://github.com/facebook/jest/issues/3552
-jest.mock( 'extensions/safe/safeBrowserApplication', () => ( {
+jest.mock( 'extensions/safe/backgroundProcess/safeBrowserApplication', () => ( {
     getWebIds: () => []
 } ) );
 

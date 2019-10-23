@@ -3,10 +3,8 @@ import { BrowserWindow } from 'electron';
 import { logger } from '$Logger';
 import { openWindow } from '$App/openWindow';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
-import { handleAuthUrl } from '$Extensions/safe/actions/authenticator_actions';
-import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
 
-import { getSafeBrowserUnauthedReqUri } from '$Extensions/safe/safeBrowserApplication/init/initAnon';
+import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
 import { addTab } from '$Actions/tabs_actions';
 import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 
@@ -48,21 +46,6 @@ export const onReceiveUrl = async ( store, url ) => {
 
     logger.info( 'Did get a parsed url on the go', parsedUrl );
 
-    if ( parsedUrl.protocol === 'safe-auth:' ) {
-        logger.info(
-            'this is a parsed url for auth',
-            url,
-            getSafeBrowserUnauthedReqUri()
-        );
-
-        // 'Waiting on basic connection....
-        // otherwise EVERYTHING waits for basic connection...
-        // so we know the libs are ready/ loaded
-        // (and we assume, _that_ happens at the correc time due to browser hooks)
-        await waitForBasicConnection( store );
-
-        store.dispatch( handleAuthUrl( url ) );
-    }
     if ( parsedUrl.protocol === 'safe:' ) {
         await waitForBasicConnection( store );
 
