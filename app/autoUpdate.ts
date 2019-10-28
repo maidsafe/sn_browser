@@ -16,11 +16,12 @@ const clearNotification = ( payload: { id: string } ) =>
 
 // Thow error incase there is an issue in updating
 autoUpdater.on( 'error', ( error ) => {
-    logger.error( 'Autoupdate error: ',error );
+    logger.error( 'Autoupdate error: ', error );
     const message = 'There was an error updating the Safe Browser';
-    dialog.showErrorBox('Safe Update Error',
-                        'There was an error updating the Safe Browser, check browser logs for more information'
-                       )
+    dialog.showErrorBox(
+        'Safe Update Error',
+        'There was an error updating the Safe Browser, check browser logs for more information'
+    );
 } );
 
 // Check for update and ask if user wants to download it
