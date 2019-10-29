@@ -37,7 +37,7 @@ const publishedFilePath = () => {
 const LOGS = 'log.toml';
 
 const buildConfig = {
-    appId: 'maidsafe.safe.browser.app',
+    appId: 'com.electron.safe-browser',
     artifactName: `safe-browser-v\${version}-\${os}-x64.\${ext}`,
     afterPack: './afterPack.js',
     afterSign: './afterSign.js',
