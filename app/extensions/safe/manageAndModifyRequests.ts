@@ -19,11 +19,7 @@ export const shouldBlockRequestForPage = (
         return false;
     }
 
-    if ( requestUrl === INVALID_URL ) {
-        return true;
-    }
-    // first thing lets allow valid urls...
-    if ( !urlIsValid( requestUrl ) ) {
+    if ( requestUrl === INVALID_URL || !urlIsValid( requestUrl ) ) {
         logger.info( `Blocking url ${requestUrl}` );
         return true;
     }
@@ -52,7 +48,8 @@ export const getSourcePageUrl = (
     details: { headers: { 'User-Agent': string } },
     store: Store
 ): string => {
-    const userAgent = details.headers['User-Agent'];
+    const userAgent =
+    details && details.headers ? details.headers['User-Agent'] : null;
     const targetWebContentsId = userAgent
         ? parseInt( userAgent.split( 'webContentsId:' )[1], 10 )
         : undefined;
@@ -145,10 +142,15 @@ export const manageAndModifyRequests = ( store: Store ) => {
         const parseQuery = true;
         const sourcePageUrl = getSourcePageUrl( details, store );
 
+        const fullServerUrl = parseURL( details.url );
         let finalUrl = details.url;
 
-        const parsedFullServerReq = parseURL( finalUrl );
-        const requestedSite = parsedFullServerReq.path.slice( 1 ); // remove localhost:port
+        // remove localhost:port is safe:// present.
+        // Otherwise keep it for block checking
+        if ( details.url.includes( 'safe://' ) ) {
+            const requestedSite = fullServerUrl.path.slice( 1 );
+            finalUrl = requestedSite;
+        }
 
         const appLocation = remote.app.getPath( 'exe' );
 

@@ -19,7 +19,7 @@ describe( 'shouldBlockRequestForPage', () => {
 
     it( ' does not block requests from the browser itself', () => {
         expect(
-            shouldBlockRequestForPage( 'safe://elsewhere/thing.png', '' )
+            shouldBlockRequestForPage( 'https://localhost:3132/thing.png', '' )
         ).toBeFalsy();
     } );
 
