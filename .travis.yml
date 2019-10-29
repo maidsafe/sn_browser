@@ -115,6 +115,7 @@ before_deploy:
   if [[ $TRAVIS_TAG == *"RC"* || $TRAVIS_TAG == *"rc"* ]]; then
     export IS_RC=yes
   fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" && "$IS_RC" != "yes" ]]; then yarn deploy; fi
 - cd release;
 - |
   ls . | grep safe | while read RELEASE; do
