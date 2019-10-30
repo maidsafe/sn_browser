@@ -81,18 +81,6 @@ describe( 'tabs reducer', () => {
     } );
 
     describe( 'UPDATE_TAB_URL', () => {
-        it( 'should throw if no tabId is passed', () => {
-            try {
-                const state = { [tabId]: { ...basicTab }, [tabId1]: { ...basicTab } };
-                const newState = tabs( state, {
-                    type: TYPES.UPDATE_TAB_URL,
-                    payload: { url: 'changed!' }
-                } );
-            } catch ( e ) {
-                expect( e.message ).toMatch( /tabId/ );
-            }
-        } );
-
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
