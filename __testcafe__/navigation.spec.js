@@ -21,7 +21,7 @@ fixture`Browser UI Navigation`
         await resetStore( t );
     } )
     .beforeEach( async () => {
-    // await waitForReact();
+        // await waitForReact();
     } );
 // .afterEach(assertNoConsoleErrors);
 

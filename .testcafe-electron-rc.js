@@ -24,7 +24,7 @@ if (platform === WINDOWS) {
     appString = 'SAFE Browser.exe';
 }
 
-const allArgs = ['--mock', '--ignoreAppLocation'];
+const allArgs = ['--ignoreAppLocation'];
 
 // Changing mainWindowURl to that of a tab gets us the browser UI going too.
 const config = {

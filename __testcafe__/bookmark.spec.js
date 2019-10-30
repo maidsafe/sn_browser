@@ -16,7 +16,7 @@ import { CLASSES } from '../app/constants/classes';
 
 import { bookmarkPage, closeTab, addTab, tab } from './selectors';
 
-fixture`history successfully reset w/ reset store`
+fixture`bookmarks successfully reset w/ reset store`
     .page( '../app/app.html' )
     .afterEach( async ( t ) => {
         await resetStore( t );
@@ -25,45 +25,41 @@ fixture`history successfully reset w/ reset store`
         await waitForReact();
     } );
 
-// test( 'navigate to various pages', async ( t ) => {
-//     await t
-//         .click( addTab )
-//         .expect( tab.count )
-//         .eql( 2 );
-//     await navigateTo( t, 'cat.ashi' );
-//     await navigateTo( t, 'eye.eye' );
-// } );
-
-test( 'check history items', async ( t ) => {
+test( 'check bookmark items', async ( t ) => {
     await t
         .click( addTab )
         .expect( tab.count )
         .eql( 2 );
     await navigateTo( t, 'cat.ashi' );
+    await t.click( `.${CLASSES.BOOKMARK_PAGE}` );
     await navigateTo( t, 'eye.eye' );
+    await t.click( `.${CLASSES.BOOKMARK_PAGE}` );
 
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
-        .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` );
-
+        .click( `.${CLASSES.SETTINGS_MENU__BOOKMARKS}` );
     await t
-        .expect( Selector( 'h1' ).withText( 'History' ).exists )
+        .expect( Selector( 'h1' ).withText( 'Bookmarks' ).exists )
         .ok()
-        .expect( Selector( '.history__table' ).exists )
+        .expect( Selector( '.urlList__table' ).exists )
         .ok()
         .expect( Selector( '.tableCell__default' ).count )
         .eql( 3 )
-        .expect( Selector( '.tableCell__default' ).withText( 'safe://cat.ashi' ).exists )
+        .expect(
+            Selector( '.tableCell__default' ).withText( 'safe://cat.ashi' ).exists
+        )
         .ok()
-        .expect( Selector( '.tableCell__default' ).withText( 'safe://eye.eye' ).exists )
+        .expect(
+            Selector( '.tableCell__default' ).withText( 'safe://eye.eye' ).exists
+        )
         .ok();
 } );
 
-test( 'Check if on reset store history reset to InitialState', async ( t ) => {
-    resetStore();
+test( 'Check if on reset store bookmarks reset to InitialState', async ( t ) => {
+    await resetStore();
 
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
-        .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` );
+        .click( `.${CLASSES.SETTINGS_MENU__BOOKMARKS}` );
     await t.expect( Selector( '.tableCell__default' ).count ).eql( 1 );
 } );
