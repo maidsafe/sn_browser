@@ -16,17 +16,15 @@ describe( 'SAFE Webpreload', () => {
     // webviewPreload.onPreload( store, win );
     } );
 
-    test( 'SAFE API added to the DOM', async ( done ) => {
+    test( 'SAFE API added to the DOM', async () => {
         webviewPreload.setupSafeAPIs( store, win );
 
         expect( typeof win.Safe ).toBe( 'function' );
-        done();
     } );
-    test( 'SAFE XorUrlEncoder added to the DOM', async ( done ) => {
+    test( 'SAFE XorUrlEncoder added to the DOM', async () => {
         webviewPreload.setupSafeAPIs( store, win );
 
         expect( typeof win.XorUrlEncoder ).toBe( 'function' );
-        done();
     } );
 } );
 

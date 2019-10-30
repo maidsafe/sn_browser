@@ -62,7 +62,7 @@ test( 'can open settings menu to check options exist', async ( t ) => {
         .ok()
         .expect( Selector( `.${CLASSES.SETTINGS_MENU__TOGGLE}` ).exists )
         .ok()
-    // close that settings menu. As reset store doesnt do enough yet
+        // close that settings menu. As reset store doesnt do enough yet
         .click( `.${CLASSES.ADDRESS_BAR}` );
 } );
 
