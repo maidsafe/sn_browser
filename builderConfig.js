@@ -1,6 +1,7 @@
 const RELEASE_PACKAGE_NAME = require( './releaseName' );
 
 const { platform } = process;
+const allPassedArguments = process.argv;
 const OSX = 'darwin';
 const LINUX = 'linux';
 const WINDOWS = 'win32';
@@ -20,16 +21,26 @@ const logFilePath = () => {
 
 // eslint-disable-next-line consistent-return, @typescript-eslint/explicit-function-return-type
 const publishedFilePath = () => {
+    let buildTestPackages = false;
+    if (
+        allPassedArguments.includes( `--testPackages` ) ||
+        process.env.TEST_PACKAGES
+    ) {
+        buildTestPackages = true;
+    }
+
     if ( platform === OSX ) {
-        return `safe-browser-osx`;
+        return buildTestPackages ? `safe-browser-osx-test` : `safe-browser-osx`;
         // return `safe-browser-osx-${env}`;
     }
     if ( platform === LINUX ) {
-        return `safe-browser-linux`;
+        return buildTestPackages
+            ? `safe-browser-linux-test`
+            : `safe-browser-linux`;
         // return `safe-browser-linux-${env}`;
     }
     if ( platform === WINDOWS ) {
-        return `safe-browser-win`;
+        return buildTestPackages ? `safe-browser-win-test` : `safe-browser-win`;
         // return `safe-browser-win-${env}`;
     }
 };

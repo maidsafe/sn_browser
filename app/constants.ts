@@ -17,6 +17,7 @@ let shouldRunMockNetwork = fs.existsSync(
 
 let hasDebugFlag = false;
 let triggerUpdate = false;
+let shouldBuildTestPackages = false;
 
 export const isRunningTestCafeProcess =
   remote && remote.getGlobal
@@ -68,6 +69,14 @@ if ( allPassedArguments.includes( '--trigger-update' ) ) {
     triggerUpdate = true;
 }
 
+if (
+    allPassedArguments.includes( `--testPackages` ) ||
+  process.env.TEST_PACKAGES
+) {
+    shouldBuildTestPackages = true;
+}
+
+export const useTestPackages = shouldBuildTestPackages;
 let testCafeUrlString = null;
 
 if ( allPassedArguments.includes( '--testCafeURL' ) ) {
