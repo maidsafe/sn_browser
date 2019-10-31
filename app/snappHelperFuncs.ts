@@ -90,7 +90,7 @@ export const openSnappWithArgs = ( arg ) => {
     logger.warn( 'Opening app via path: ', command );
 
     if ( platform === MAC_OS ) {
-        command = `open "${command}" ${arg}`;
+        command = `open "${command}" -- --args ${arg}`;
 
         exec( command, {
             // eslint-disable-next-line unicorn/prevent-abbreviations
@@ -98,7 +98,7 @@ export const openSnappWithArgs = ( arg ) => {
         } );
     }
     if ( platform === WINDOWS ) {
-        execFile( command, [...arg, '--debug'], {
+        execFile( command, [...arg], {
             // eslint-disable-next-line unicorn/prevent-abbreviations
             env: newEnvironment
         } );
@@ -108,7 +108,7 @@ export const openSnappWithArgs = ( arg ) => {
         logger.warn( 'Opening on linux via spawn command: ', command );
         // exec on linux doesnt give us a new process, so closing SNAPP
         // will close the spawned app :|
-        spawn( command, [...arg, '--debug'], {
+        spawn( command, [...arg], {
             // eslint-disable-next-line unicorn/prevent-abbreviations
             env: newEnvironment,
             detached: true
