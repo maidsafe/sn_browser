@@ -26,6 +26,7 @@ const publishedFilePath = () => {
         allPassedArguments.includes( `--testPackages` ) ||
         process.env.TEST_PACKAGES
     ) {
+        console.log( 'Building test package' );
         buildTestPackages = true;
     }
 

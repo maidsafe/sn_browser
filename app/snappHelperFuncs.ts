@@ -31,6 +31,7 @@ const getAppInstallDir = () => {
 const getApplicationExecutable = ( application ): string => {
     // https://github.com/joshuef/electron-typescript-react-boilerplate/releases/tag/v0.1.0
     // TODO ensure name conformity with download, or if different, note how.
+    logger.info( 'Snapp: Getting installed location' );
 
     let applicationExecutable: string;
 
@@ -67,7 +68,7 @@ const getInstalledLocation = ( application ): string => {
     return installedPath;
 };
 
-export const openSnappWithArgs = ( arg ) => {
+export const openSnappWithArgs = ( theArgArray: Array<string> ) => {
     // We could pass the app object as an arg also if needed
     // To enable more cross app communication
     const application = {
@@ -87,10 +88,16 @@ export const openSnappWithArgs = ( arg ) => {
     // needs to be actually deleted.
     delete newEnvironment.HOT;
 
-    logger.warn( 'Opening app via path: ', command );
+    logger.info( 'Opening snapp via path and args: ', command, theArgArray );
 
     if ( platform === MAC_OS ) {
-        command = `open "${command}" -- --args ${arg}`;
+        command = `open "${command}" -- --args  --appId:safe.browser`;
+
+        if ( theArgArray.length > 0 ) {
+            theArgArray.forEach( ( newArg ) => {
+                command = `${command} ${newArg}`;
+            } );
+        }
 
         exec( command, {
             // eslint-disable-next-line unicorn/prevent-abbreviations
@@ -98,17 +105,16 @@ export const openSnappWithArgs = ( arg ) => {
         } );
     }
     if ( platform === WINDOWS ) {
-        execFile( command, [...arg], {
+        execFile( command, [...theArgArray], {
             // eslint-disable-next-line unicorn/prevent-abbreviations
             env: newEnvironment
         } );
         return;
     }
     if ( platform === LINUX ) {
-        logger.warn( 'Opening on linux via spawn command: ', command );
-        // exec on linux doesnt give us a new process, so closing SNAPP
-        // will close the spawned app :|
-        spawn( command, [...arg], {
+    // exec on linux doesnt give us a new process, so closing SNAPP
+    // will close the spawned app :|
+        spawn( command, [...theArgArray], {
             // eslint-disable-next-line unicorn/prevent-abbreviations
             env: newEnvironment,
             detached: true
@@ -117,6 +123,7 @@ export const openSnappWithArgs = ( arg ) => {
 };
 
 export const checkIfSnappIsRunning = async () => {
+    let snappIsRunning = false;
     // We could pass the app object as an arg also if needed
     // To enable more cross app communication
     const application = {
@@ -124,9 +131,12 @@ export const checkIfSnappIsRunning = async () => {
         packageName: 'safe-network-app'
     };
     const appList = await psList();
-    const appIsRunning = appList.find(
-        ( element ) => element.name === `${application.name}.exe`
+    const appIsRunning = appList.find( ( element ) =>
+        element.name.includes( application.name )
     );
-    if ( appIsRunning !== undefined ) return true;
-    return false;
+    if ( appIsRunning !== undefined ) {
+        snappIsRunning = true;
+    }
+    logger.info( 'Checking if SNAPP is running?', snappIsRunning );
+    return snappIsRunning;
 };
