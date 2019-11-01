@@ -158,14 +158,7 @@ app.on( 'ready', async () => {
     }
 
     if ( await checkIfSnappIsRunning() ) {
-        if ( process.platform === 'linux' || process.platform === 'win32' ) {
-            openSnappWithArgs( [
-                `--version-number:${pkg.version}`,
-                `--appId:safe.browser`
-            ] );
-        } else {
-            openSnappWithArgs( `--version-number:${pkg.version} --appId:safe.browser` );
-        }
+        openSnappWithArgs( [`--version-number:${pkg.version}`] );
     }
 
     if ( !isRunningTestCafeProcess && !isRunningUnpacked && app.whenReady() ) {
