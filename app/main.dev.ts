@@ -37,7 +37,6 @@ import { openWindow } from './openWindow';
 import { configureStore } from './store/configureStore';
 import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions/mainProcess';
 import { AppUpdater } from './autoUpdate';
-import { openSnappWithArgs, checkIfSnappIsRunning } from './snappHelperFuncs';
 import { logger } from '$Logger';
 
 const initialState = {};
@@ -155,10 +154,6 @@ app.on( 'ready', async () => {
         await setupBackground();
 
         mainWindow = openWindow( store );
-    }
-
-    if ( await checkIfSnappIsRunning() ) {
-        openSnappWithArgs( [`--version-number:${pkg.version}`] );
     }
 
     if ( !isRunningTestCafeProcess && !isRunningUnpacked && app.whenReady() ) {
