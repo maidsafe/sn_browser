@@ -4,7 +4,6 @@ import { dialog } from 'electron';
 import { logger } from '$Logger';
 import * as notificationActions from '$Actions/notification_actions';
 import { shouldTriggerForceUpdate } from '$Constants';
-import { openSnappWithArgs } from './snappHelperFuncs';
 
 autoUpdater.autoDownload = false;
 
@@ -18,15 +17,15 @@ const clearNotification = ( payload: { id: string } ) =>
 
 // Thow error incase there is an issue in updating
 autoUpdater.on( 'error', ( error ) => {
-    if ( process.platform === 'linux' || process.platform === 'win32' ) {
-        openSnappWithArgs( [
-            `--update-failed`,
-            `--appId:safe.browser`,
-            `--error:${error}`
-        ] );
-    } else {
-        openSnappWithArgs( `--update-failed --appId:safe.browser --error:${error}` );
-    }
+    // if ( process.platform === 'linux' || process.platform === 'win32' ) {
+    //     openSnappWithArgs( [
+    //         `--update-failed`,
+    //         `--appId:safe.browser`,
+    //         `--error:${error}`
+    //     ] );
+    // } else {
+    //     openSnappWithArgs( `--update-failed --appId:safe.browser --error:${error}` );
+    // }
     dialog.showErrorBox(
         'There was an issue updating SAFE Browser. The update failed due to the following error:',
         error == null ? 'unknown' : ( error.stack || error ).toString()
