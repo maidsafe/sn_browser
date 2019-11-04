@@ -1,12 +1,13 @@
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { app , dialog } from 'electron';
+import { app, dialog } from 'electron';
 
 import { logger } from '$Logger';
 import * as notificationActions from '$Actions/notification_actions';
 import { isHandlingSilentUpdate } from '$Constants';
 
 autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 let store;
 
@@ -159,8 +160,12 @@ autoUpdater.on( 'update-downloaded', () => {
                 stopListening();
             }
         } );
-    } else {
+    } else if ( process.platform === 'darwin' ) {
         app.quit();
+    } else {
+        const isSilent = true;
+        const forceRunAfter = false;
+        autoUpdater.quitAndInstall( isSilent, forceRunAfter );
     }
 } );
 
