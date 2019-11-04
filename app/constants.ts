@@ -128,7 +128,7 @@ export const startedRunningMock =
 export const startedRunningProduction = !startedRunningMock;
 export const isRunningNodeEnvTest = env.startsWith( 'test' );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
-export const shouldTriggerForceUpdate = triggerUpdate;
+export const isHandlingSilentUpdate = triggerUpdate;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = typeof remote === 'undefined';
 const currentWindow =

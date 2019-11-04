@@ -31,7 +31,7 @@ const publishedFilePath = () => {
     }
 
     if ( platform === OSX ) {
-        return buildTestPackages ? `safe-browser-osx-test` : `safe-browser-osx`;
+        return buildTestPackages ? `safe-browser-mac-test` : `safe-browser-mac`;
         // return `safe-browser-osx-${env}`;
     }
     if ( platform === LINUX ) {
@@ -129,7 +129,11 @@ const buildConfig = {
         target: ['dmg', 'pkg', 'zip'],
         hardenedRuntime: true,
         entitlements: 'resources/entitlements.mac.plist',
-        entitlementsInherit: 'resources/entitlements.mac.plist'
+        entitlementsInherit: 'resources/entitlements.mac.plist',
+        extendInfo: {
+            // hide dock icon by default for auto updating
+            LSUIElement: 1
+        }
     },
     directories: {
         buildResources: 'resources',
