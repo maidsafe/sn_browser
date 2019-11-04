@@ -21,7 +21,7 @@ import {
     ignoreAppLocation,
     isRunningUnpacked,
     isRunningDebug,
-    shouldTriggerForceUpdate,
+    isHandlingSilentUpdate,
     isRunningTestCafeProcess,
     isRunningPackaged,
     isCI,
@@ -150,7 +150,11 @@ app.on( 'ready', async () => {
         }
     }
 
-    if ( !shouldTriggerForceUpdate ) {
+    if ( !isHandlingSilentUpdate ) {
+        if ( app.dock ) {
+            app.dock.show();
+        }
+
         await setupBackground();
 
         mainWindow = openWindow( store );

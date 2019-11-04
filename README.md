@@ -93,7 +93,7 @@ On Linux, the packaged application gets generated as a `Shared Library` file and
 
 On macOS, the application should be located in the 'Applications' for [security reasons](https://github.com/potionfactory/LetsMove/issues/56). By default the packaged application will prompt to move the application. To override this, you can pass `--ignoreAppLocation`:
 
-`open release/safe-browser-<version>-osx-x64/SAFE\ Browser.app --args --ignoreAppLocation`
+`open release/safe-browser-<version>-mac-x64/SAFE\ Browser.app --args --ignoreAppLocation`
 
 #### Development commands
 
