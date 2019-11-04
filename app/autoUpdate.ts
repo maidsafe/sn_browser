@@ -1,9 +1,10 @@
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { dialog } from 'electron';
+import { app , dialog } from 'electron';
+
 import { logger } from '$Logger';
 import * as notificationActions from '$Actions/notification_actions';
-import { shouldTriggerForceUpdate } from '$Constants';
+import { isHandlingSilentUpdate } from '$Constants';
 
 autoUpdater.autoDownload = false;
 
@@ -17,15 +18,6 @@ const clearNotification = ( payload: { id: string } ) =>
 
 // Thow error incase there is an issue in updating
 autoUpdater.on( 'error', ( error ) => {
-    // if ( process.platform === 'linux' || process.platform === 'win32' ) {
-    //     openSnappWithArgs( [
-    //         `--update-failed`,
-    //         `--appId:safe.browser`,
-    //         `--error:${error}`
-    //     ] );
-    // } else {
-    //     openSnappWithArgs( `--update-failed --appId:safe.browser --error:${error}` );
-    // }
     dialog.showErrorBox(
         'There was an issue updating SAFE Browser. The update failed due to the following error:',
         error == null ? 'unknown' : ( error.stack || error ).toString()
@@ -34,7 +26,7 @@ autoUpdater.on( 'error', ( error ) => {
 
 // Check for update and ask if user wants to download it
 autoUpdater.on( 'update-available', () => {
-    if ( !shouldTriggerForceUpdate ) {
+    if ( !isHandlingSilentUpdate ) {
         const notificationId = Math.random().toString( 36 );
         const title = 'Update SAFE BROWSER';
         const body = 'Download Latest Version?';
@@ -98,8 +90,16 @@ autoUpdater.on( 'update-available', () => {
     }
 } );
 
+autoUpdater.on( 'update-not-available', () => {
+    if ( isHandlingSilentUpdate ) {
+        logger.info( 'No update avaiable, closing after silent update attempt' );
+
+        app.quit();
+    }
+} );
+
 autoUpdater.on( 'update-downloaded', () => {
-    if ( !shouldTriggerForceUpdate ) {
+    if ( !isHandlingSilentUpdate ) {
         const notificationId = Math.random().toString( 36 );
         const title = 'Update Downloaded';
         const message = 'Update ready to be Installed';
@@ -160,7 +160,7 @@ autoUpdater.on( 'update-downloaded', () => {
             }
         } );
     } else {
-        autoUpdater.quitAndInstall();
+        app.quit();
     }
 } );
 
