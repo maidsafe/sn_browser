@@ -13,7 +13,7 @@ import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
 
 import { Error, ERROR_TYPES, ERROR_CODES } from '$Components/PerusePages/Error';
 
-const DEFAULT_PAGE = '/index.html';
+const DEFAULT_PAGE = 'index.html';
 // const DEFAULT_PAGES = ['index','index.html'];
 
 const MIME_TYPE_BYTERANGES = 'multipart/byteranges';
@@ -150,15 +150,17 @@ export const getHTTPFriendlyData = async (
 
         const filesMap = data[FILES_CONTAINER].files_map;
 
+        const theIndexPage = filesMap[`/${DEFAULT_PAGE}`] || filesMap[DEFAULT_PAGE];
+
         // TODO: compare filesMap url with default proper so /sub/index also renders
-        if ( filesMap[DEFAULT_PAGE] && !displayContainer ) {
+        if ( !displayContainer && theIndexPage ) {
             logger.info(
                 'Default page found, loading',
                 parsed.host,
                 currentLocation,
-                filesMap[DEFAULT_PAGE]
+                theIndexPage
             );
-            const defaultTarget = filesMap[DEFAULT_PAGE].link;
+            const defaultTarget = theIndexPage.link;
             const defaultResponse = await getHTTPFriendlyData( defaultTarget, store );
 
             response.body = defaultResponse.body;
