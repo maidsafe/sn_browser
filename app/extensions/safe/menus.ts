@@ -6,7 +6,7 @@ import { SAFE } from '$Extensions/safe/constants';
 
 // import { logger } from '$Logger';
 
-const safeSave = store => ( {
+const safeSave = ( store ) => ( {
     label: 'Save Browser State to SAFE',
     accelerator: 'CommandOrControl+Shift+E',
     click: ( _item, win ) => {
@@ -16,7 +16,7 @@ const safeSave = store => ( {
     }
 } );
 
-const safeRead = store => ( {
+const safeRead = ( store ) => ( {
     label: 'Read Browser State from SAFE',
     accelerator: 'CommandOrControl+Alt+F',
     click: ( item, win ) => {
@@ -41,7 +41,7 @@ export const addFileMenus = ( store, menu ) => {
     const newMenu = { ...menu };
 
     newMenu.submenu.push( { type: 'separator' } );
-    newMenu.submenu.push( safeSave( store ) );
-    newMenu.submenu.push( safeRead( store ) );
+    // newMenu.submenu.push( safeSave( store ) );
+    // newMenu.submenu.push( safeRead( store ) );
     return newMenu;
 };
