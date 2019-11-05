@@ -1,7 +1,7 @@
 import { Store } from 'redux';
 import { logger } from '$Logger';
 
-import { manageAndModifyRequests } from '$Extensions/safe/manageAndModifyRequests';
+import { requestManagement } from '$Extensions/safe/requestManagement';
 import { registerSafeProtocol } from '$Extensions/safe/protocols/safe';
 import { setCurrentStore as setCurrentStoreForSafe } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
@@ -20,7 +20,7 @@ export const onInitBgProcess = async ( store: Store ): Promise<void> => {
 
     try {
         registerSafeProtocol();
-        manageAndModifyRequests( store );
+        requestManagement( store );
 
         store.dispatch( connectUnauthorised() );
     } catch ( e ) {

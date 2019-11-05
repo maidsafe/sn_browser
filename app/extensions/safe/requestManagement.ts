@@ -72,30 +72,26 @@ export const getSourcePageUrl = (
     const url = targetTab ? targetTab.url : '';
     return url;
 };
+
 export const redirectUrlIfNeeded = (
-    requestUrl: string,
-    appLocation: string,
-    platform?: string
-) => {
+    requestUrl: string
+): { shouldRedirect: boolean; redirectURL?: string } => {
+    const appLocation = remote.app.getPath( 'exe' );
+    const appName = path.basename( appLocation );
+
     let redirectURL = requestUrl;
     const parsedUrl = parseURL( requestUrl );
-    let theAppLocation = appLocation;
-    // MacOS, devmode. Attempts are made to load from
-    // /Users... electron...map.js
-    if ( platform === 'darwin' ) {
-        const theSplit = theAppLocation.split( '.app' );
-        theAppLocation = `${theSplit[0]}.app`;
-    }
 
-    if ( parsedUrl.path && parsedUrl.path.includes( appLocation ) ) {
-        const fileLocation = requestUrl.split( appLocation )[1];
-        redirectURL = `file://${appLocation}.app/${fileLocation}`;
+    // On Mac Devtools makes many requests to the app via webpage for some reason
+    if ( parsedUrl.path && parsedUrl.path.includes( appName ) ) {
+        const desiredFileInApp = requestUrl.split( appName )[1];
+
+        redirectURL = `file://${appLocation}${desiredFileInApp}`;
         logger.verbose( 'Permitting app dep url', redirectURL );
-
-        return redirectURL;
+        return { shouldRedirect: true, redirectURL };
     }
 
-    return redirectURL;
+    return { shouldRedirect: false };
 };
 
 export const mapPageResourceToPageVersion = (
@@ -107,9 +103,6 @@ export const mapPageResourceToPageVersion = (
     const parsedTabUrl = parseURL( sourcePageUrl, parseQuery );
     let versionedUrl = requestUrl;
 
-    // we need to check if the req comes from the same site...
-    // const requegstedSiteParsed = parseURL( parsedRequestUrl.path.slice( 1 ), parseQuery ); // remove localhost:port
-
     const tabSiteVersion = parsedTabUrl.query.v;
 
     const requestedSiteVersion = parsedRequestUrl.query
@@ -118,7 +111,7 @@ export const mapPageResourceToPageVersion = (
 
     if (
         parsedRequestUrl.host === parsedTabUrl.host &&
-    !parsedRequestUrl.query.v
+    ( !parsedRequestUrl.query.v && parsedTabUrl.query.v )
     ) {
         logger.verbose(
             'On a versioned site, updated resource req, to: ',
@@ -129,7 +122,51 @@ export const mapPageResourceToPageVersion = (
     return versionedUrl;
 };
 
-export const manageAndModifyRequests = ( store: Store ) => {
+/*
+ Actual filter mechanism for modifying or blocking URLs.
+ URLs arrive from safe:// protocol modification with localhost: url set.
+ should return localhost:<port>/safe:// url for serving from internal
+ server for HTTP responses, for those that need it. And strip portions of other
+ URL reqs (eg devtools).
+
+ The callback should be called, cancelled or redirected
+ */
+export const manageAndModifyRequest = ( details, callback, store ) => {
+    logger.verbose( 'Request to modify', details.url );
+
+    // First lets get the page URL for comparing request
+    const parseQuery = true;
+    const sourcePageUrl = getSourcePageUrl( details, store );
+
+    const fullServerUrl = parseURL( details.url );
+    let finalUrl = details.url;
+
+    // remove localhost:port is safe:// present.
+    // Otherwise keep it for block checking
+    if ( details.url.includes( 'safe://' ) ) {
+        const requestedSite = fullServerUrl.path.slice( 1 );
+        finalUrl = requestedSite;
+    }
+
+    finalUrl = mapPageResourceToPageVersion( sourcePageUrl, finalUrl );
+    const { shouldRedirect, redirectURL } = redirectUrlIfNeeded( finalUrl );
+
+    if ( shouldRedirect ) {
+        callback( { redirectURL } );
+        return;
+    }
+    if ( shouldBlockRequestForPage( finalUrl, sourcePageUrl ) ) {
+        callback( { cancel: true } );
+    } else {
+        callback( {} );
+    }
+};
+
+/**
+ * Bound to preflight requests from webviews, binds a filter to modify
+ * or block requests.
+ */
+export const requestManagement = ( store: Store ) => {
     const filter = {
         urls: ['*://*/*']
     };
@@ -137,29 +174,6 @@ export const manageAndModifyRequests = ( store: Store ) => {
     const safeSession = remote.session.fromPartition( CONFIG.SAFE_PARTITION );
 
     safeSession.webRequest.onBeforeRequest( filter, ( details, callback ): void => {
-    // First lets get the page URL for comparing request
-
-        const parseQuery = true;
-        const sourcePageUrl = getSourcePageUrl( details, store );
-
-        const fullServerUrl = parseURL( details.url );
-        let finalUrl = details.url;
-
-        // remove localhost:port is safe:// present.
-        // Otherwise keep it for block checking
-        if ( details.url.includes( 'safe://' ) ) {
-            const requestedSite = fullServerUrl.path.slice( 1 );
-            finalUrl = requestedSite;
-        }
-
-        const appLocation = remote.app.getPath( 'exe' );
-
-        finalUrl = mapPageResourceToPageVersion( sourcePageUrl, finalUrl );
-        finalUrl = redirectUrlIfNeeded( finalUrl, appLocation, process.platform );
-        if ( shouldBlockRequestForPage( finalUrl, sourcePageUrl ) ) {
-            callback( { cancel: true } );
-        } else {
-            callback( {} );
-        }
+        manageAndModifyRequest( details, callback, store );
     } );
 };
