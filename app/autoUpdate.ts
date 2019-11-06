@@ -29,8 +29,8 @@ autoUpdater.on( 'error', ( error ) => {
 autoUpdater.on( 'update-available', () => {
     if ( !isHandlingSilentUpdate ) {
         const notificationId = Math.random().toString( 36 );
-        const title = 'Update SAFE BROWSER';
-        const body = 'Download Latest Version?';
+        const title = 'Update Safe Browser';
+        const body = 'An update for the Safe Browser is available.';
 
         const ignoreRequest = () => {
             logger.info( 'replace these ipcRenderer.send calls' );
@@ -51,6 +51,8 @@ autoUpdater.on( 'update-available', () => {
             id: notificationId,
             type: 'warning',
             body,
+            denyText: 'Later',
+            acceptText: 'Download',
             isPrompt: true,
             title,
             duration: 0
