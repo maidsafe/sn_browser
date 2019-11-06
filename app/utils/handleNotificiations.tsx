@@ -88,6 +88,15 @@ export const handleNotifications = (
                         <Col span={12}>
                             <Button
                                 tabIndex={0}
+                                onClick={handleOnDeny}
+                                className={CLASSES.NOTIFICATION__REJECT}
+                            >
+                                {latestNotification.denyText}
+                            </Button>
+                        </Col>
+                        <Col span={12}>
+                            <Button
+                                tabIndex={0}
                                 className={CLASSES.NOTIFICATION__ACCEPT}
                                 type="primary"
                                 // eslint-disable-next-line jsx-a11y/aria-role
@@ -95,15 +104,6 @@ export const handleNotifications = (
                                 onClick={handleOnAccept}
                             >
                                 {latestNotification.acceptText}
-                            </Button>
-                        </Col>
-                        <Col span={12}>
-                            <Button
-                                tabIndex={0}
-                                onClick={handleOnDeny}
-                                className={CLASSES.NOTIFICATION__REJECT}
-                            >
-                                {latestNotification.denyText}
                             </Button>
                         </Col>
                     </Row>
