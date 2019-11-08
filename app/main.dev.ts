@@ -58,17 +58,6 @@ let mainWindow: BrowserWindow;
 // Do any pre app extension work
 preAppLoad( store );
 
-// Apply MockVault if wanted for prealod
-if ( process.argv.includes( '--preload' ) ) {
-    try {
-        const data = fs.readFileSync( CONFIG.PRELOADED_MOCK_VAULT_PATH );
-
-        fs.writeFileSync( path.join( os.tmpdir(), 'MockVault' ), data );
-    } catch ( error ) {
-        logger.error( 'Error preloading MockVault' );
-    }
-}
-
 if ( isRunningPackaged ) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
     const sourceMapSupport = require( 'source-map-support' );
