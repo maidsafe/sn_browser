@@ -29,9 +29,9 @@ const allArgs = ['--ignoreAppLocation'];
 // Changing mainWindowURl to that of a tab gets us the browser UI going too.
 const config = {
     mainWindowUrl: './app/app.html',
-    appPath: '.',
+    appPath: '.'
     // electronPath: TEST_UNPACKED ? 'undefined' : `./release/${RELEASE_FOLDER_NAME}/${appString}`,
-    appArgs: allArgs
+    // , appArgs: allArgs
     // openDevTools: true
 };
 
