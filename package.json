@@ -276,7 +276,7 @@
     "open": "^7.0.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-hot-loader": "^4.12.15",
+    "react-hot-loader": "^4.12.16",
     "react-redux": "^7.1.1",
     "react-redux-i18n": "1.9.3",
     "react-router": "^5.1.2",
