@@ -19,7 +19,7 @@ matrix:
       services:
         - xvfb
       env:
-        - NODE_ENV=dev
+        - NODE_ENV=prod
       addons:
         apt:
           sources:
@@ -40,7 +40,7 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-        - NODE_ENV=dev
+        - NODE_ENV=prod
         - YARN_GPG=no # otherwise this starts gpg-agent that never exits
 
 
