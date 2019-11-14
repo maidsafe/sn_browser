@@ -50,6 +50,7 @@ const LOGS = 'log.toml';
 
 const buildConfig = {
     appId: 'com.electron.safe-browser',
+    generateUpdatesFilesForAllChannels: true,
     artifactName: `safe-browser-v\${version}-\${os}-x64.\${ext}`,
     afterPack: './afterPack.js',
     afterSign: './afterSign.js',
