@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.3](https://github.com/maidsafe/safe_browser/compare/v0.15.2...v0.15.3) (2019-11-14)
+
+### Bug Fixes
+
+- **blocking:** Updates to url blocking ([78591f1](https://github.com/maidsafe/safe_browser/commit/78591f1f5c6a52bd2f723ee8b7406fc515971842))
+- **ci:** notarize w/ travis in package stage. ([da8fb9e](https://github.com/maidsafe/safe_browser/commit/da8fb9efd12f06b82392e159881c30ebacd2dadc))
+- **resolution:** Default pages, slash or no ([5ca0b33](https://github.com/maidsafe/safe_browser/commit/5ca0b33751a40f1c732ce972c37693f13ba7eb7e)), closes [#1061](https://github.com/maidsafe/safe_browser/issues/1061)
+- **resolution:** Pweb resolution tweaks. ([7276b5a](https://github.com/maidsafe/safe_browser/commit/7276b5a03750802a32339d8fcce4eb35cc1e26bb)), closes [#1061](https://github.com/maidsafe/safe_browser/issues/1061)
+- **updates:** Fix SNAPP calls. ([e0bbeae](https://github.com/maidsafe/safe_browser/commit/e0bbeae0b87f3d24744cd6ccb286fabae0f74fd0))
+- **updates:** Improve silent update behaviour ([2e138e4](https://github.com/maidsafe/safe_browser/commit/2e138e42d8a30a91ff5931fda0e2eabe0c306f6f))
+- **winux:** Install on quit, but dont restart when silently updating ([fb40ad0](https://github.com/maidsafe/safe_browser/commit/fb40ad04554aedb50f7d09193c5a5b87ca011896))
+
 ### [0.15.2](https://github.com/maidsafe/safe_browser/compare/v0.15.1...v0.15.2) (2019-10-23)
 
 ### Bug Fixes
