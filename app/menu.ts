@@ -521,6 +521,10 @@ export class MenuBuilder {
             label: '&Help',
             submenu: [
                 {
+                    label: `Safe Browser version: ${app.getVersion()}`,
+                    enabled: false
+                },
+                {
                     label: 'Learn More about the Safe Network',
                     click() {
                         open( 'https://safenetwork.tech/' );
@@ -556,12 +560,11 @@ export class MenuBuilder {
                 {
                     label: 'Check for Updates...',
                     click() {
-                        logger.info( 'Checking for updates' );
                         autoUpdater.autoDownload = false;
                         autoUpdater.on( 'update-not-available', () => {
                             const title = 'No Updates';
                             const notificationId = Math.random().toString( 36 );
-                            const message = 'Current version is up-to-date.';
+                            const message = 'Current version is up to date.';
                             const theNotification = {
                                 id: notificationId,
                                 type: 'warning',
@@ -569,8 +572,6 @@ export class MenuBuilder {
                                 body: message,
                                 duration: 2
                             };
-                            console.log( 'addNotification' );
-                            console.log( 'theNotification', theNotification );
                             store.dispatch( addNotification( theNotification ) );
                             autoUpdater.removeAllListeners( 'update-not-available' );
                         } );

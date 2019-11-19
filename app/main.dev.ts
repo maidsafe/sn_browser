@@ -97,7 +97,9 @@ app.on( 'ready', async () => {
     const obtainedInstanceLock = app.requestSingleInstanceLock();
 
     if ( !obtainedInstanceLock ) {
-        console.error( 'Unable to obtain instance lock. Quitting...' );
+        logger.info(
+            'Another process already exists. Cannot obtain instance lock. Quitting.'
+        );
         app.quit();
     } else {
         app.on( 'second-instance', ( event, commandLine ) => {
@@ -149,7 +151,7 @@ app.on( 'ready', async () => {
         mainWindow = openWindow( store );
     }
 
-    if ( !isRunningTestCafeProcess && !isRunningUnpacked && app.whenReady() ) {
+    if ( !isRunningTestCafeProcess && !isRunningUnpacked ) {
         browserUpdater.checkForUpdate();
     }
 } );

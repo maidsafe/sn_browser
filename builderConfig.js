@@ -1,4 +1,4 @@
-const RELEASE_PACKAGE_NAME = require( './releaseName' );
+const pkg = require( './package.json' );
 
 const { platform } = process;
 const allPassedArguments = process.argv;
@@ -7,54 +7,41 @@ const LINUX = 'linux';
 const WINDOWS = 'win32';
 
 // eslint-disable-next-line consistent-return, @typescript-eslint/explicit-function-return-type
-const logFilePath = () => {
-    if ( platform === OSX ) {
-        return '../../Frameworks/SAFE Browser Helper.app/Contents/MacOS/log.toml';
-    }
+const publishedFilePath = () => {
+    const { name } = pkg;
+
     if ( platform === LINUX ) {
-        return 'log.toml';
+        return `${name}-linux`;
     }
     if ( platform === WINDOWS ) {
-        return 'log.toml';
+        return `${name}-win`;
     }
+
+    return `${name}-mac`;
 };
 
 // eslint-disable-next-line consistent-return, @typescript-eslint/explicit-function-return-type
-const publishedFilePath = () => {
-    let buildTestPackages = false;
-    if (
-        allPassedArguments.includes( `--testPackages` ) ||
-        process.env.TEST_PACKAGES
-    ) {
-        console.log( 'Building test package' );
-        buildTestPackages = true;
+const getProductName = () => {
+    let { productName } = pkg;
+
+    if ( pkg.version.includes( '-alpha' ) ) {
+        productName = `${productName} Alpha`;
     }
 
-    if ( platform === OSX ) {
-        return buildTestPackages ? `safe-browser-mac-test` : `safe-browser-mac`;
-        // return `safe-browser-osx-${env}`;
+    if ( pkg.version.includes( '-beta' ) ) {
+        productName = `${productName} Beta`;
     }
-    if ( platform === LINUX ) {
-        return buildTestPackages
-            ? `safe-browser-linux-test`
-            : `safe-browser-linux`;
-        // return `safe-browser-linux-${env}`;
-    }
-    if ( platform === WINDOWS ) {
-        return buildTestPackages ? `safe-browser-win-test` : `safe-browser-win`;
-        // return `safe-browser-win-${env}`;
-    }
+
+    return productName;
 };
-
-const LOGS = 'log.toml';
 
 const buildConfig = {
     appId: 'com.electron.safe-browser',
     generateUpdatesFilesForAllChannels: true,
-    artifactName: `safe-browser-v\${version}-\${os}-x64.\${ext}`,
+    artifactName: `${pkg.name}-v\${version}-\${os}-x64.\${ext}`,
     afterPack: './afterPack.js',
     afterSign: './afterSign.js',
-    productName: 'SAFE Browser',
+    productName: getProductName(),
     files: [
         'app/dist/',
         'locales',
@@ -70,17 +57,7 @@ const buildConfig = {
         'package.json',
         'app/extensions/safe/defaultNewSite/index.html'
     ],
-    extraFiles: [
-        {
-            from: 'resources/log.toml',
-            to: `${logFilePath()}`
-        }
-    ],
     extraResources: [
-        {
-            from: 'resources/log.toml',
-            to: 'log.toml'
-        },
         {
             from: 'resources/favicon.ico',
             to: 'favicon.ico'
@@ -110,21 +87,15 @@ const buildConfig = {
                 type: 'link',
                 path: '/Applications'
             }
-        ],
-        artifactName: `${RELEASE_PACKAGE_NAME}.\${ext}`
+        ]
     },
     win: {
         target: ['nsis', 'msi']
     },
-    nsis: {
-        artifactName: `${RELEASE_PACKAGE_NAME}.\${ext}`
-    },
+
     linux: {
         target: ['AppImage', 'zip'],
         category: 'Development'
-    },
-    appImage: {
-        artifactName: `${RELEASE_PACKAGE_NAME}.\${ext}`
     },
     mac: {
         target: ['dmg', 'pkg', 'zip'],
@@ -143,7 +114,7 @@ const buildConfig = {
     publish: {
         provider: 's3',
         bucket: 'safe-browser',
-        path: `${publishedFilePath()}`
+        path: publishedFilePath()
     }
 };
 
