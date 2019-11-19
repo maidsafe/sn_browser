@@ -1,5 +1,6 @@
 // const RELEASE_FOLDER_NAME = require('./releaseName');
 let TEST_UNPACKED = process.env.TEST_UNPACKED;
+const pkg = require('./package.json');
 
 let appString = 'safe-browser';
 let appResources = 'resources/app.asar';
@@ -9,9 +10,18 @@ const MAC_OS = 'darwin';
 const LINUX = 'linux';
 const WINDOWS = 'win32';
 
+let appChannel = '';
+if (pkg.version.includes('-alpha')) {
+    appChannel = ' Alpha';
+}
+
+if (pkg.version.includes('-beta')) {
+    appChannel = ' Beta';
+}
+
 if (platform === MAC_OS) {
     PLATFORM_NAME = 'mac';
-    appString = 'SAFE Browser.app';
+    appString = `SAFE Browser${appChannel}.app`;
     appResources = 'Contents/Resources/app.asar';
 }
 
@@ -21,7 +31,7 @@ if (platform === LINUX) {
 
 if (platform === WINDOWS) {
     PLATFORM_NAME = 'win-unpacked';
-    appString = 'SAFE Browser.exe';
+    appString = `SAFE Browser${appChannel}.exe`;
 }
 
 const allArgs = ['--ignoreAppLocation'];
