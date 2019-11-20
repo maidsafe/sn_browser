@@ -64,11 +64,6 @@ install:
   - export CSC_IDENTITY_AUTO_DISCOVERY=true
   # is this actually installed?
   - ls node_modules/safe-nodejs/native
-  # HACK: Temporarily manually install safe-nodejs until travis-wait-enhanced
-  # prerequisite is modified
-  - cd node_modules/safe-nodejs
-  - yarn run download-node-abi
-  - cd ../..
   # On Linux, initialize "virtual display". See before_script
 
 
@@ -81,11 +76,6 @@ before_script:
 
 
 script:
-# update the xdg implementation on the machine. older version is buggy
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/open/xdg-open ~/bin/;
-    fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
-    fi
   - export SHOULD_NOTARIZE=true
   - yarn lint --quiet
   - travis_retry yarn run test-peruse --forceExit
