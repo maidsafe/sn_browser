@@ -12,7 +12,6 @@
             "*": ["app/definitions"],
             "$App/*": ["app/*"],
             "$Tests/*": ["__tests__/*"],
-            "spectron-lib/*": ["__e2e__/lib"],
             "$BuilderConfig": ["builderConfig.js"],
             "$Actions/*": ["app/actions/*"],
             "$Store/*": ["app/store/*"],
