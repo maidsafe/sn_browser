@@ -172,7 +172,7 @@
     "electron": "6.1.4",
     "electron-builder": "22.1.0",
     "electron-devtools-installer": "^2.2.4",
-    "electron-notarize": "0.2.0",
+    "electron-notarize": "0.2.1",
     "electron-window-state": "^5.0.3",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.15.1",
