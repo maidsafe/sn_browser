@@ -1,0 +1,143 @@
+name: 'Publish assets to s3'
+# Trigger the workflow on pull request activity
+on:
+  release:
+    # Only use the types keyword to narrow down the activity types that will trigger your workflow.
+    types: [published, edited]
+
+jobs:
+  asset_fetcher:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_USER_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: eu-west-2
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      APPLICATION: safe-browser
+    steps:
+      - name: Set tag as env
+        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      - name: lets check tag
+        run: echo ${{ env.RELEASE_VERSION }}
+      # set an env var to grab the correct yaml files
+      - name: set yaml file
+        shell: bash
+        run: |
+          echo ::set-env name=YAML_FILE::"$(echo "latest")"
+          if [[ $RELEASE_VERSION == *"-alpha"* ]]; then
+            echo ::set-env name=YAML_FILE::"$(echo "alpha")"
+          fi
+          if [[ $RELEASE_VERSION == *"-beta"* ]]; then
+            echo ::set-env name=YAML_FILE::"$(echo "beta")"
+          fi
+      - name: lets check yaml
+        run: echo ${{ env.YAML_FILE }}
+      # mac
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg'
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap'
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip'
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg'
+          path: release
+      # linux
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage'
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip'
+          path: release
+      # win
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe'
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap'
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.msi'
+          path: release
+      # yamls
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: ${{ env.YAML_FILE }}.yml
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: ${{ env.YAML_FILE }}-mac.yml
+          path: release
+      - uses: wyozi/download-gh-release-asset@master
+        with:
+          args: ${{ env.YAML_FILE }}-linux.yml
+          path: release
+      # do more...
+      - name: Check dlded assets
+        shell: bash
+        run: ls .
+
+      # Upload all the release archives to S3;
+      #
+      # mac
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+
+      # linux
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+
+      # win
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.msi" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+
+      # YAMLS
+
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp ${{ env.YAML_FILE }}.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp ${{ env.YAML_FILE }}-mac.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+      - uses: actions/aws/cli@master
+        with:
+          args: s3 cp ${{ env.YAML_FILE }}-linux.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
