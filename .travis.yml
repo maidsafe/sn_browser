@@ -76,6 +76,15 @@ before_script:
 
 
 script:
+  # bump version in package.json if on alpha/beta tag.
+  - yarn config set version-tag-prefix ""
+  - yarn config set version-git-tag false
+  - |
+    if [[ $TRAVIS_TAG == *"-alpha"* || $TRAVIS_TAG == *"-beta"* ]]; then
+      export IS_PRE_RELEASE=yes
+    fi
+  - if [[ "$IS_PRE_RELEASE" == "yes" ]]; then yarn version --new-version $TRAVIS_TAG; fi
+  # tests
   - export SHOULD_NOTARIZE=true
   - yarn lint --quiet
   - travis_retry yarn run test-peruse --forceExit
