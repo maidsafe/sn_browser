@@ -232,7 +232,7 @@
     "testcafe-browser-provider-electron": "https://github.com/joshuef/testcafe-browser-provider-electron.git#AddRCFileInJSWithBuild2",
     "testcafe-live": "^0.1.4",
     "testcafe-react-selectors": "3.3.0",
-    "typescript": "3.6.4",
+    "typescript": "3.7.3",
     "url-loader": "^2.2.0",
     "webpack": "^4.41.2",
     "webpack-bundle-analyzer": "^3.6.0",
