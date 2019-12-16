@@ -1,5 +1,7 @@
 import { parse } from 'url';
 import path from 'path';
+
+// eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { logger } from '$Logger';
 import { PROTOCOLS } from '$Constants';

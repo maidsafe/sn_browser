@@ -11,7 +11,7 @@ export default {
     module: {
         rules: [
             {
-                test: /\.[j|t]sx?$/,
+                test: /\.[jt|]sx?$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
