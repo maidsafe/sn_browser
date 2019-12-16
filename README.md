@@ -126,6 +126,12 @@ Logs are printed to both render console and stdout. Logs are also written to a l
 
 `yarn log-osx` will tail the file. Similar commands (as yet untested) exist for linux/windows.
 
+`electron-log`is used under the hood, and ouputs logs to:
+
+- on Linux: ~/.config/safe-browser/logs/{process type}.log
+- on macOS: ~/Library/Logs/Safe Browser/{process type}.log
+- on Windows: %USERPROFILE%\AppData\Roaming\Safe Browser\logs\{process type}.log
+
 ## Contributing
 
 As an open source project we're excited to accept contributions to the code from outside of MaidSafe, and are striving to make that as easy and clean as possible.
