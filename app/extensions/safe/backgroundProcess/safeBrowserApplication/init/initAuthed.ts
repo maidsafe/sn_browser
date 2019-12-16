@@ -23,8 +23,7 @@ export const initAuthed = async (): Safe => {
         const authCredentials = await safeBrowserAppObject.auth_app(
             APP_ID,
             APP_NAME,
-            APP_VENDOR,
-            41805
+            APP_VENDOR
         );
 
         await safeBrowserAppObject.connect( APP_ID, authCredentials );
