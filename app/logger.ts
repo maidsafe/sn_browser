@@ -22,8 +22,8 @@ import {
 if ( log.transports ) {
     // Log level
     // error, warn, log, log, debug, silly
-    // log.transports.console.level = 'silly';
     log.transports.file.level = 'silly';
+    log.transports.console.format = '[Renderer: {h}:{i}:{s}.{ms}] › {text}';
 
     if (
         isRunningSpectronTestProcess ||
@@ -34,22 +34,21 @@ if ( log.transports ) {
         log.transports.console.level = 'warn';
     }
 
-    log.transports.file.file = path.resolve( os.tmpdir(), 'safe-browser.log' );
-
-    log.transports.console.format = '[{label} {h}:{i}:{s}.{ms}] › {text}';
     if ( inTabProcess ) {
-        log.variables.label = `A Tab: `;
+        log.transports.file.fileName = 'tab.log';
+        log.transports.console.format = '[Tab: {h}:{i}:{s}.{ms}] › {text}';
     }
     if ( currentWindowId ) {
-        log.variables.label = `window ${currentWindowId}`;
+        log.transports.console.format = `[Window :${currentWindowId}: {h}:{i}:{s}.{ms}] › {text}`;
     }
     if ( inMainProcess ) {
         log.variables.label = 'main';
-        log.transports.console.format = '%c[{label} {h}:{i}:{s}.{ms}]%c › {text}';
+        log.transports.console.format = '%c{h}:{i}:{s}.{ms}%c › {text}';
     }
 
     if ( inBgProcess ) {
-        log.variables.label = 'background';
+        log.transports.file.fileName = 'background.log';
+        log.transports.console.format = '[Background: {h}:{i}:{s}.{ms}] › {text}';
     }
 
     log.transports.file.maxSize = 5 * 1024 * 1024;
