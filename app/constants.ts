@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { remote, app } from 'electron';
 import getPort from 'get-port';
+// eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { CLASSES, GET_DOM_EL_CLASS } from './constants/classes';
 

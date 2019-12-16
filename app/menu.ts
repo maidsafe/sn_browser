@@ -19,6 +19,7 @@ import {
 } from '$Constants';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
+// eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { AppUpdater } from './autoUpdate';
 import { addNotification } from '$Actions/notification_actions';

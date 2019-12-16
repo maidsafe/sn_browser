@@ -27,7 +27,7 @@ import {
     isCI,
     CONFIG
 } from '$Constants';
-
+// eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
 
