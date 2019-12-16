@@ -13,7 +13,9 @@ jest.mock( 'electron', () => {
     const app = {
         getPath: jest.fn( () => {
             return '/Somewhere/Electron.app';
-        } )
+        } ),
+        getName: jest.fn( () => 'Safe Browser' ),
+        getVersion: jest.fn( () => 'v0.42.0' )
     };
 
     return {
