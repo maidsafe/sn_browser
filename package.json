@@ -164,7 +164,7 @@
     "circular-dependency-plugin": "5.2.0",
     "concurrently": "^5.0.1",
     "copy-webpack-plugin": "5.1.1",
-    "core-js": "3.5.0",
+    "core-js": "3.6.1",
     "cross-env": "^6.0.3",
     "cross-spawn": "^7.0.1",
     "css-loader": "^3.3.2",
