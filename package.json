@@ -13,7 +13,7 @@
     "build-bg": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.background.prod.babel.js --colors",
     "build-webPreload": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.web-preload.prod.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
-    "bump": "git fetch upstream --tags -f || git fetch --tags -f; standard-version -a",
+    "bump": "git fetch upstream --tags -f || git fetch --tags -f; git tag -d $(git tag -l | grep alpha ); git tag -d $(git tag -l | grep beta ); standard-version -a",
     "check-types": "tsc",
     "prod-dev": "cross-env START_HOT=1 node -r babel-register-ts ./internals/scripts/CheckPortInUse.ts && cross-env NODE_ENV=production START_HOT=1 yarn start-renderer-dev",
     "dev": "yarn mock-dev",
