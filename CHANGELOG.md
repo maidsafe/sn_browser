@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.4-beta.2...v0.15.4) (2020-01-21)
+### [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.3...v0.15.4) (2020-01-21)
+
+### Features
+
+- **deps:** Electron and safe-nodejs updates ([800aabd](https://github.com/maidsafe/safe_browser/commit/800aabda32fe788ea3597ee693c2d1def3186253))
+- **releases:** use release channels ([79cb0fc](https://github.com/maidsafe/safe_browser/commit/79cb0fc22522cfc40b0cd605b55293c7d95456e8))
+- **safe:** update safe-nodejs to 0.6.0 ([fc9a9f5](https://github.com/maidsafe/safe_browser/commit/fc9a9f5476e2bc32fa68b5cc8be39958170f4f80))
+
+### Bug Fixes
+
+- electron-log updates for v4 ([afc5f2a](https://github.com/maidsafe/safe_browser/commit/afc5f2aa709188ba2872cd8b0fe3dd500e175056))
+- Update auth_app params. ([611e7d5](https://github.com/maidsafe/safe_browser/commit/611e7d59707b4e6b97c57d7ee89ee26a64253ec1)), closes [#1119](https://github.com/maidsafe/safe_browser/issues/1119)
+- **e2e:** update app naming for tests on channel builds ([8062980](https://github.com/maidsafe/safe_browser/commit/8062980ddb04ed28b9f37daab31063da830082f7))
 
 ### [0.15.3](https://github.com/maidsafe/safe_browser/compare/v0.15.2...v0.15.3) (2019-11-14)
 
