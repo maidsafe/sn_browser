@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.4-beta.2...v0.15.4) (2020-01-21)
+
 ### [0.15.3](https://github.com/maidsafe/safe_browser/compare/v0.15.2...v0.15.3) (2019-11-14)
 
 ### Bug Fixes
