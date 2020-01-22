@@ -2,6 +2,9 @@ import open from 'open';
 import { Store } from 'redux';
 import { app, Menu, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+
+import { AppUpdater } from './autoUpdate';
+
 import {
     addTab,
     tabForwards,
@@ -21,16 +24,10 @@ import {
 import { logger } from '$Logger';
 // eslint-disable-next-line import/extensions
 import pkg from '$Package';
-import { AppUpdater } from './autoUpdate';
 import { addNotification } from '$Actions/notification_actions';
-
 import { AppWindow } from '$App/definitions/globals.d';
-
 import { getExtensionMenuItems } from '$Extensions/mainProcess';
-
-// TODO: Properly abstract this
 import { getResetStoreActionObject } from '$App/extensions/safe/backgroundProcess/handleRemoteCalls';
-
 import {
     addTabEnd,
     addTabNext,
@@ -74,7 +71,7 @@ export class MenuBuilder {
     }
 
     private setupDevelopmentEnvironment() {
-        this.mainWindow.webContents.on( 'context-menu', ( e, properties ) => {
+        this.mainWindow.webContents.on( 'context-menu', ( _error, properties ) => {
             const { x, y } = properties;
 
             Menu.buildFromTemplate( [

@@ -7,10 +7,10 @@ import 'antd/lib/button/style';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import { I18n } from 'react-redux-i18n';
-import styles from './tabBar.css';
-import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
-// import { logger } from '$Logger';
+import styles from './tabBar.css';
+
+import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 import { isInternalPage } from '$Utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from '$Constants';
 
@@ -55,16 +55,16 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
                 const { tabId } = tab;
                 if ( isInternalPage( tab ) ) {
                     const parseQuery = true;
-                    const urlObj: Url = url.parse( tab.url, parseQuery );
+                    const urlObject = url.parse( tab.url, parseQuery );
                     const extensionPage = resolveExtensionInternalPages(
-                        urlObj,
-                        urlObj.query,
+                        urlObject,
+                        urlObject.query,
                         tab,
                         this.props
                     );
 
                     // TODO: DRY this out with TabContents.jsx
-                    switch ( urlObj.host ) {
+                    switch ( urlObject.host ) {
                         case INTERNAL_PAGES.HISTORY: {
                             title = 'History';
                             break;

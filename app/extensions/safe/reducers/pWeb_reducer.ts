@@ -1,7 +1,9 @@
 import { parse } from 'url';
+
+import { initialAppState } from './initialAppState';
+
 import { TYPES } from '$Extensions/safe/actions/pWeb_actions';
 import { logger } from '$Logger';
-import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.pWeb;
 

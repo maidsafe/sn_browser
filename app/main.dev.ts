@@ -14,8 +14,12 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import { enforceMacOSAppLocation } from 'electron-util';
-
 import { app, ipcMain, BrowserWindow } from 'electron';
+
+import { setupBackground } from './setupBackground';
+import { openWindow } from './openWindow';
+import { configureStore } from './store/configureStore';
+import { AppUpdater } from './autoUpdate';
 
 import {
     ignoreAppLocation,
@@ -30,13 +34,7 @@ import {
 // eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow';
-
-import { setupBackground } from './setupBackground';
-
-import { openWindow } from './openWindow';
-import { configureStore } from './store/configureStore';
 import { onReceiveUrl, preAppLoad, onAppReady } from '$Extensions/mainProcess';
-import { AppUpdater } from './autoUpdate';
 import { logger } from '$Logger';
 
 const initialState = {};
@@ -131,9 +129,13 @@ app.on( 'ready', async () => {
     }
 
     if ( process.platform === 'linux' || process.platform === 'win32' ) {
-        const uriArg = process.argv[process.argv.length - 1];
-        if ( process.argv.length >= 2 && uriArg && uriArg.indexOf( 'safe' ) === 0 ) {
-            onReceiveUrl( store, uriArg );
+        const uriArgument = process.argv[process.argv.length - 1];
+        if (
+            process.argv.length >= 2 &&
+      uriArgument &&
+      uriArgument.indexOf( 'safe' ) === 0
+        ) {
+            onReceiveUrl( store, uriArgument );
 
             if ( mainWindow ) {
                 mainWindow.show();
@@ -156,7 +158,7 @@ app.on( 'ready', async () => {
     }
 } );
 
-app.on( 'open-url', ( e, url ) => {
+app.on( 'open-url', ( error, url ) => {
     const target = getMostRecentlyActiveWindow( store );
 
     if ( target ) {

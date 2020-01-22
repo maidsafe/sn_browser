@@ -1,5 +1,6 @@
 import { ClientFunction, Selector } from 'testcafe';
 import { waitForReact } from 'testcafe-react-selectors';
+
 import {
     getPageUrl,
     getPageTitle,
@@ -8,7 +9,6 @@ import {
     addTabNext,
     selectPreviousTab
 } from './helpers';
-
 import {
     bookmarkPage,
     closeTab,

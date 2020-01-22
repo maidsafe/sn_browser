@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { Url } from 'url';
+
 import { Editor } from '$Extensions/safe/components/SafePages/Editor';
 import { MySites } from '$Extensions/safe/components/SafePages/MySites';
-
 import { STYLE_CONSTANTS } from '$Extensions/safe/rendererProcess/styleConstants';
 
 export const SAFE_PAGES = {
@@ -11,7 +11,7 @@ export const SAFE_PAGES = {
 };
 
 export const addInternalPages = (
-    urlObj: Url,
+    urlObject,
     query: {
         register?: string;
     },
@@ -20,9 +20,9 @@ export const addInternalPages = (
     },
     props: {}
 ): null | { pageComponent: ReactNode; title: string; tabButtonStyles?: {} } => {
-    switch ( urlObj.host ) {
+    switch ( urlObject.host ) {
         case SAFE_PAGES.EDIT_SITE: {
-            const targetName = urlObj.path.slice( 1 );
+            const targetName = urlObject.path.slice( 1 );
             return {
                 title: `Edit ${targetName}`,
                 tabButtonStyles: {

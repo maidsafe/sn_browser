@@ -1,18 +1,16 @@
 import { parse } from 'url';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+
 import { logger } from '$Logger';
 import { Error, ERROR_TYPES, ERROR_CODES } from '$Components/PerusePages/Error';
-
 import { addTab } from '$Actions/tabs_actions';
-import { errConsts } from '$Extensions/safe/err-constants';
-
+import { errorConstants } from '$Extensions/safe/err-constants';
 import {
     rangeStringToArray,
-    generateResponseStr,
+    generateResponseString,
     cleanupNeonError
 } from '$Extensions/safe/utils/safeHelpers';
-
 import { getHTTPFriendlyData } from '$Extensions/safe/backgroundProcess';
 import { SAFE } from '$Extensions/safe/constants';
 import {
@@ -24,14 +22,14 @@ import {
 export const safeRoute = ( store ) => ( {
     method: 'GET',
     path: /safe:\//,
-    handler: async ( request, res ) => {
-        const sendErrResponse = (
+    handler: async ( request, response ) => {
+        const sendErrorResponse = (
             type: string,
             address?: string,
             badVersion?: string,
             latestVersion?: string
         ): void => {
-            res
+            response
                 .status( ERROR_CODES[type] )
                 .send(
                     ReactDOMServer.renderToStaticMarkup(
@@ -54,8 +52,8 @@ export const safeRoute = ( store ) => ( {
             }
 
             const { headers } = request;
-            let isRangeReq = false;
-            let multipartReq = false;
+            let isRangeRequest = false;
+            let multipartRequest = false;
 
             let start;
             let end;
@@ -64,18 +62,18 @@ export const safeRoute = ( store ) => ( {
             logger.info( `Handling SAFE req: ${link}` );
 
             if ( headers.range ) {
-                isRangeReq = true;
+                isRangeRequest = true;
                 rangeArray = rangeStringToArray( headers.range );
 
                 if ( rangeArray.length > 1 ) {
-                    multipartReq = true;
+                    multipartRequest = true;
                 }
             }
 
             // setup opts object
             const options = { headers };
 
-            if ( isRangeReq ) {
+            if ( isRangeRequest ) {
                 options.range = rangeArray;
             }
 
@@ -91,7 +89,7 @@ export const safeRoute = ( store ) => ( {
                 logger.warn( message, error.code );
 
                 if ( targetVersion && message.includes( `Content not found at ${link}` ) ) {
-                    return sendErrResponse( ERROR_TYPES.NO_CONTENT_FOUND );
+                    return sendErrorResponse( ERROR_TYPES.NO_CONTENT_FOUND );
                 }
 
                 if (
@@ -110,20 +108,20 @@ export const safeRoute = ( store ) => ( {
                             newMessage
                         );
 
-                        return sendErrResponse( ERROR_TYPES.UNKNOWN_NAME, link );
+                        return sendErrorResponse( ERROR_TYPES.UNKNOWN_NAME, link );
                     }
 
-                    return sendErrResponse( ERROR_TYPES.INVALID_VERSION, link );
+                    return sendErrorResponse( ERROR_TYPES.INVALID_VERSION, link );
                 }
 
                 logger.error( `No data found at: ${link}` );
-                return sendErrResponse( ERROR_TYPES.NO_CONTENT_FOUND );
+                return sendErrorResponse( ERROR_TYPES.NO_CONTENT_FOUND );
 
                 // return;
                 //       const shouldTryAgain =
-                // error.code === errConsts.ERR_OPERATION_ABORTED.code ||
-                // error.code === errConsts.ERR_ROUTING_INTERFACE_ERROR.code ||
-                // error.code === errConsts.ERR_REQUEST_TIMEOUT.code;
+                // error.code === errorConstants.ERR_OPERATION_ABORTED.code ||
+                // error.code === errorConstants.ERR_ROUTING_INTERFACE_ERROR.code ||
+                // error.code === errorConstants.ERR_REQUEST_TIMEOUT.code;
                 //       if ( shouldTryAgain ) {
                 //           const { safeBrowserApp } = store.getState();
                 //           if ( safeBrowserApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED ) {
@@ -145,18 +143,18 @@ export const safeRoute = ( store ) => ( {
                 //               store.dispatch( addTabEnd( { tabId, windowId } ) );
                 //           }
                 //
-                //           error.message = errConsts.ERR_ROUTING_INTERFACE_ERROR.msg;
+                //           error.message = errorConstants.ERR_ROUTING_INTERFACE_ERROR.msg;
                 //           return sendErrResponse( error.message );
                 //       }
                 //       return sendErrResponse( message );
             }
 
-            if ( isRangeReq && multipartReq ) {
-                const responseStr = generateResponseStr( data );
-                return res.send( responseStr );
+            if ( isRangeRequest && multipartRequest ) {
+                const responseString = generateResponseString( data );
+                return response.send( responseString );
             }
-            if ( isRangeReq ) {
-                return res
+            if ( isRangeRequest ) {
+                return response
                     .status( 206 )
                     .set( {
                         'Content-Type': data.headers['Content-Type'],
@@ -166,7 +164,7 @@ export const safeRoute = ( store ) => ( {
                     .send( data.body );
             }
 
-            return res
+            return response
                 .set( {
                     'Content-Type': data.headers['Content-Type'],
                     'Content-Range': data.headers['Content-Range'],
@@ -180,13 +178,13 @@ export const safeRoute = ( store ) => ( {
             const problemLink = request.url;
 
             if ( error.code && error.code === -302 ) {
-                return res.status( 416 ).send( 'Requested Range Not Satisfiable' );
+                return response.status( 416 ).send( 'Requested Range Not Satisfiable' );
             }
 
             const message = cleanupNeonError( error );
 
             logger.error( message );
-            return sendErrResponse( ERROR_TYPES.BAD_REQUEST, problemLink );
+            return sendErrorResponse( ERROR_TYPES.BAD_REQUEST, problemLink );
         }
     }
 } );

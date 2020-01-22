@@ -1,4 +1,5 @@
 import { Selector } from 'testcafe';
+
 import { CLASSES } from '../app/constants/classes';
 
 export const addressBar = Selector( `.${CLASSES.ADDRESS_BAR}` );

@@ -13,6 +13,7 @@ import webpack from 'webpack';
 import chalk from 'chalk';
 import merge from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
+
 import baseConfig from './webpack.config.base';
 // import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
@@ -274,6 +275,7 @@ export default merge.smart( baseConfig, {
                     env: process.env,
                     stdio: 'inherit'
                 } )
+                    // eslint-disable-next-line unicorn/no-process-exit
                     .on( 'close', ( code ) => process.exit( code ) )
                     .on( 'error', ( spawnError ) => console.error( spawnError ) );
             }

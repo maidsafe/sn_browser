@@ -8,7 +8,7 @@ export const cleanupNeonError = ( error: Error ): string => {
     return message;
 };
 
-export const generateBoundaryStr = () => {
+export const generateBoundaryString = () => {
     let text = '';
     const charSet = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -45,8 +45,8 @@ export const rangeStringToArray = ( rangeString ) => {
         } );
 };
 
-export const generateResponseStr = ( data ) => {
-    const boundaryString = generateBoundaryStr();
+export const generateResponseString = ( data ) => {
+    const boundaryString = generateBoundaryString();
     const crlf = '\r\n';
     let responseString = `HTTP/1.1 206 Partial Content${crlf}`;
     responseString += `Content-Type: multipart/byteranges; boundary=${boundaryString}${crlf}`;

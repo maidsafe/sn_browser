@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import { Button, Input } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { logger } from '$Logger';
-import { uploadFiles as uploadFilesOnNetwork } from '$Extensions/safe/actions/aliased';
 import styles from './editor.css';
 
-function mapStateToProps( state ) {
+import { logger } from '$Logger';
+import { uploadFiles as uploadFilesOnNetwork } from '$Extensions/safe/actions/aliased';
+
+function mapStateToProperties( state ) {
     return {
         tabs: state.tabs
     };
 }
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const actions = {
         uploadFiles: uploadFilesOnNetwork
     };
@@ -52,14 +51,14 @@ EditorProps,
 
     render() {
         if ( this.state && this.state.hasError ) {
-            const err = this.state.theError;
+            const error = this.state.theError;
 
             // You can render any custom fallback UI
             return (
                 <div>
                     <h4>Something went wrong in Editor.tsx</h4>
                     <span>
-                        {JSON.stringify( err, ['message', 'arguments', 'type', 'name'] )}
+                        {JSON.stringify( error, ['message', 'arguments', 'type', 'name'] )}
                     </span>
                 </div>
             );
@@ -155,6 +154,6 @@ EditorProps,
 }
 
 export const Editor = connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProperties,
+    mapDispatchToProperties
 )( EditorComponent );

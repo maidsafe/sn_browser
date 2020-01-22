@@ -1,9 +1,11 @@
 import { remote, webContents } from 'electron';
+
+import { initialAppState } from './initialAppState';
+
 import { TYPES } from '$Actions/tabs_actions';
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
 import { isRunningUnpacked } from '$Constants';
 import { logger } from '$Logger';
-import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.tabs;
 
@@ -169,7 +171,7 @@ const updateTabWebContentsId = ( state, payload ) => {
     return state;
 };
 
-const toggleDevTools = ( state, payload ) => {
+const toggleDevelopmentTools = ( state, payload ) => {
     const { tabId, tabToMerge } = handleTabPayload( state, payload );
     if ( tabId === undefined && tabToMerge === undefined ) {
         logger.error( 'tab  Does not exist' );
@@ -351,7 +353,7 @@ export function tabs( state: object = initialState, action ) {
             return updateTabWebContentsId( state, payload );
         }
         case TYPES.TOGGLE_DEV_TOOLS: {
-            return toggleDevTools( state, payload );
+            return toggleDevelopmentTools( state, payload );
         }
         case TYPES.TAB_SHOULD_RELOAD: {
             return tabShouldReload( state, payload );

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
+
+import styles from './addressBar.css';
+
 import { CLASSES } from '$Constants';
-// import { Column, Grid } from 'nessie-ui';
 import { ButtonsLHS } from '$Components/AddressBar/ButtonsLHS';
 import { ButtonsRHS } from '$Components/AddressBar/ButtonsRHS';
 import { Input } from '$Components/AddressBar/Input';
-// import { logger } from '$Logger';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
-import styles from './addressBar.css';
 
 interface AddressBarProps {
     address?: string;

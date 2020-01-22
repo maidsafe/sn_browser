@@ -1,6 +1,5 @@
 import { logger } from '$Logger';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
-
 import {
     startedRunningMock,
     isRunningSpectronTestProcess,
@@ -11,9 +10,7 @@ import {
 // export { onRemoteCallInBgProcess } from '$Extensions/safe/backgroundProcess/handleRemoteCalls';
 
 export { additionalReducers } from '$Extensions/safe/reducers';
-export {
-    onWebviewPreload
-} from '$Extensions/safe/webviewProcess/webviewPreload';
+export { onWebviewPreload } from '$Extensions/safe/webviewProcess/webviewPreload';
 export { urlIsValid } from '$Extensions/safe/utils/urlIsValid';
 
 /**

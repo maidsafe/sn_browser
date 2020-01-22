@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-
 import { Provider } from 'react-redux';
-import { logger } from '$Logger';
 
 import { configureStore } from './store/configureStore';
 import { BrowserWindow } from './containers/BrowserWindow';
 import { App } from './containers/App';
+
+import { logger } from '$Logger';
 import './app.global.css';
 
 logger.info( 'Starting render process' );

@@ -5,16 +5,18 @@ import 'antd/lib/col/style';
 import 'antd/lib/switch/style';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { CLASSES } from '$Constants';
-import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
+
 import styles from './wrapAddressBarButtons.css';
 
-function mapStateToProps( state ) {
+import { CLASSES } from '$Constants';
+import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
+
+function mapStateToProperties( state ) {
     return {
         safeBrowserApp: state.safeBrowserApp
     };
 }
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const actions = {
         ...SafeBrowserAppActions
     };
@@ -102,8 +104,8 @@ export const wrapAddressBarButtonsRHS = (
         }
     }
     const hookedUpInput = connect(
-        mapStateToProps,
-        mapDispatchToProps
+        mapStateToProperties,
+        mapDispatchToProperties
     )( WrappedAddressBarButtonsRHS );
     return hookedUpInput;
 };

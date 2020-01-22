@@ -4,10 +4,8 @@ import {
     APP_INFO,
     PROTOCOLS
 } from '$Constants';
-
 import { setIsMock } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { addFileMenus } from '$Extensions/safe/menus';
-
 import { logger } from '$Logger';
 
 export { onReceiveUrl } from './onReceiveUrl';

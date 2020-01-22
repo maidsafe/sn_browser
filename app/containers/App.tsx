@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { SpriteMap } from 'nessie-ui';
 
 interface Props {

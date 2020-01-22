@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { Safe, XorUrlEncoder } from 'safe-nodejs';
+
 // eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { logger } from '$Logger';

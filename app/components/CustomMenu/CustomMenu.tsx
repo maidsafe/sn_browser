@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-// import { logger } from '$Logger';
 import { Icon, Button } from 'antd';
+
+import styles from './customMenu.css';
+
 import { CLASSES } from '$Constants';
+
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import 'antd/lib/icon/style';
-import styles from './customMenu.css';
 
 const Meatball = () => (
     <svg

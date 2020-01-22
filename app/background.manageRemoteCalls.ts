@@ -39,7 +39,7 @@ export const manageRemoteCalls = async ( store ) => {
                             inProgress: true
                         } )
                     );
-                    const theArgs = theCall.args;
+                    const theArguments = theCall.args;
 
                     onRemoteCallInBgProcess( store, allApiCalls, theCall );
 
@@ -49,10 +49,12 @@ export const manageRemoteCalls = async ( store ) => {
 
                     try {
                         // call the API.
-                        const argsForCalling = theArgs || [];
+                        const argumentsForCalling = theArguments || [];
 
                         // TODO: Refactor APIs to expect store as first arg?
-                        const response = await allApiCalls[theCall.name]( ...argsForCalling );
+                        const response = await allApiCalls[theCall.name](
+                            ...argumentsForCalling
+                        );
                         store.dispatch(
                             remoteCallActions.updateRemoteCall( {
                                 ...theCall,
@@ -60,11 +62,11 @@ export const manageRemoteCalls = async ( store ) => {
                                 response
                             } )
                         );
-                    } catch ( e ) {
+                    } catch ( error ) {
                         store.dispatch(
                             remoteCallActions.updateRemoteCall( {
                                 ...theCall,
-                                error: e.message || e
+                                error: error.message || error
                             } )
                         );
                     }

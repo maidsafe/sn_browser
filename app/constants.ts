@@ -2,9 +2,11 @@ import path from 'path';
 import fs from 'fs-extra';
 import { remote, app } from 'electron';
 import getPort from 'get-port';
+
 // eslint-disable-next-line import/extensions
-import pkg from '$Package';
 import { CLASSES, GET_DOM_EL_CLASS } from './constants/classes';
+
+import pkg from '$Package';
 
 export const { platform } = process;
 
@@ -82,7 +84,9 @@ let testCafeUrlString = null;
 
 if ( allPassedArguments.includes( '--testCafeURL' ) ) {
     const cafeUrlIndex =
-    allPassedArguments.findIndex( ( arg ): boolean => arg === '--testCafeURL' ) + 1;
+    allPassedArguments.findIndex(
+        ( argument ): boolean => argument === '--testCafeURL'
+    ) + 1;
 
     testCafeUrlString = allPassedArguments[cafeUrlIndex];
 }
@@ -106,6 +110,7 @@ if ( allPassedArguments.includes( '--port' ) ) {
 
 export const shouldStartAsMockFromFlagsOrPackage = shouldRunMockNetwork;
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
 export const env = shouldStartAsMockFromFlagsOrPackage
     ? 'development'
     : process.env.NODE_ENV || 'production';
@@ -127,6 +132,7 @@ export const startedRunningMock =
       ? remote.getGlobal( 'startedRunningMock' )
       : startAsMockNetwork || env.startsWith( 'dev' );
 export const startedRunningProduction = !startedRunningMock;
+// eslint-disable-next-line unicorn/prevent-abbreviations
 export const isRunningNodeEnvTest = env.startsWith( 'test' );
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess;
 export const isHandlingSilentUpdate = triggerUpdate;

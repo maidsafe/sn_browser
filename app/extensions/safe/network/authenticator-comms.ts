@@ -1,20 +1,21 @@
 import { parse as parseURL } from 'url';
+
 import { logger } from '$Logger';
 import { updateRemoteCall } from '$Actions/remoteCall_actions';
 import { getCurrentStore } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { PROTOCOLS } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
 
-export const attemptReconnect = ( passedStore, appObj ) => {
+export const attemptReconnect = ( passedStore, appObject ) => {
     setTimeout( () => {
         logger.info( 'Attempting reconnect...' );
-        appObj.reconnect();
+        appObject.reconnect();
 
         if (
             passedStore.getState().safeBrowserApp.networkStatus ===
       SAFE.NETWORK_STATE.DISCONNECTED
         ) {
-            attemptReconnect( passedStore, appObj );
+            attemptReconnect( passedStore, appObject );
         }
     }, 5000 );
 };

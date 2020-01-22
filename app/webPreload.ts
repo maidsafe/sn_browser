@@ -1,11 +1,13 @@
 // following @pfrazee's beaker pattern again here.
 // import setModuleImportLocations from 'setModuleImportLocations';
 import { ipcRenderer } from 'electron';
+
+import { configureStore } from './store/configureStore';
+
 import { triggerOnWebviewPreload } from '$Extensions';
 import { logger } from '$Logger';
 import { removeRemoteCall } from '$Actions/remoteCall_actions';
 import { isRunningTestCafeProcess } from '$Constants';
-import { configureStore } from './store/configureStore';
 
 // TODO This handling needs to be imported via extension apis more seemlessly
 const store = configureStore();

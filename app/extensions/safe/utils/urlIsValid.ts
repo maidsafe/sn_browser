@@ -1,4 +1,5 @@
 import { parse, Url } from 'url';
+
 import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore

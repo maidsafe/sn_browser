@@ -1,4 +1,5 @@
 import { initialAppState } from './initialAppState';
+
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
 import { TYPES } from '$Actions/history_actions';
 import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';

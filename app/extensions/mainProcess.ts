@@ -1,9 +1,11 @@
 import { Store } from 'redux';
 import { ReactNode } from 'react';
 import { Url } from 'url';
-import { logger } from '$Logger';
 
 import * as safeBrowsingMainProcesses from './safe/main-process';
+
+import { logger } from '$Logger';
+
 // here add your packages for extensibility.
 
 const allPackages = [safeBrowsingMainProcesses];

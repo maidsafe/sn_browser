@@ -1,6 +1,6 @@
 // const RELEASE_FOLDER_NAME = require('./releaseName');
 let TEST_UNPACKED = process.env.TEST_UNPACKED;
-const pkg = require('./package.json');
+const pkg = require('./package');
 
 let appString = 'safe-browser';
 let appResources = 'resources/app.asar';

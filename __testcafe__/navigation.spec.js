@@ -4,6 +4,7 @@ import {
     getMainMenuItem,
     clickOnMainMenuItem
 } from 'testcafe-browser-provider-electron';
+
 import {
     getPageUrl,
     getPageTitle,
@@ -11,7 +12,6 @@ import {
     navigateTo,
     resetStore
 } from './helpers';
-
 import { addressBar, addressBarInput, addTab, tab } from './selectors';
 import { CLASSES } from '../app/constants/classes';
 

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import url, { Url } from 'url';
 import { Page } from 'nessie-ui';
+
+import styles from './tabContents.css';
+
 import { Tab } from '$Components/Tab';
 import { INTERNAL_PAGES, isRunningTestCafeProcess, CLASSES } from '$Constants';
 import { isInternalPage } from '$Utils/urlHelpers';
 import { History } from '$Components/PerusePages/History';
 import { Bookmarks } from '$Components/PerusePages/Bookmarks';
 import { logger } from '$Logger';
-import styles from './tabContents.css';
 import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
 export class TabContents extends Component<{}, {}> {
@@ -45,14 +47,14 @@ export class TabContents extends Component<{}, {}> {
         } = this.props;
 
         if ( this.state && this.state.hasError ) {
-            const err = this.state.theError;
+            const error = this.state.theError;
 
             // You can render any custom fallback UI
             return (
                 <div>
                     <h4>Something went wrong in TabContents.tsx</h4>
                     <span>
-                        {JSON.stringify( err, ['message', 'arguments', 'type', 'name'] )}
+                        {JSON.stringify( error, ['message', 'arguments', 'type', 'name'] )}
                     </span>
                 </div>
             );
@@ -63,10 +65,10 @@ export class TabContents extends Component<{}, {}> {
 
             if ( isInternalPage( tab ) ) {
                 const parseQuery = true;
-                const urlObj: Url = url.parse( tab.url, parseQuery );
+                const urlObject = url.parse( tab.url, parseQuery );
                 const extensionPage = resolveExtensionInternalPages(
-                    urlObj,
-                    urlObj.query,
+                    urlObject,
+                    urlObject.query,
                     tab,
                     this.props
                 );
@@ -75,7 +77,7 @@ export class TabContents extends Component<{}, {}> {
                     return extensionPage.pageComponent;
                 }
 
-                switch ( urlObj.host ) {
+                switch ( urlObject.host ) {
                     case INTERNAL_PAGES.HISTORY: {
                         return (
                             <History
@@ -96,7 +98,7 @@ export class TabContents extends Component<{}, {}> {
                     }
                     default: {
                         return (
-                            <div key="sorry">{`Internal page "${urlObj.host}" does not exist.`}</div>
+                            <div key="sorry">{`Internal page "${urlObject.host}" does not exist.`}</div>
                         );
                     }
                 }

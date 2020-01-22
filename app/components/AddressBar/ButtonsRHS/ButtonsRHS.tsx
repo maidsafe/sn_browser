@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { I18n } from 'react-redux-i18n';
 import { Row, Col, Icon, Button } from 'antd';
+
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 import 'antd/lib/button/style';
@@ -74,7 +75,7 @@ class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
                                 ? I18n.t( 'aria.is_bookmarked' )
                                 : I18n.t( 'aria.not_bookmarked' )
                         }
-                        onKeyDown={( e ) => {
+                        onKeyDown={( error ) => {
                             if ( e.keyCode === 13 ) {
                                 this.handleBookmarking();
                             }

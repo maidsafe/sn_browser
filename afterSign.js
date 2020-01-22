@@ -3,23 +3,24 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const electronNotarize = require( 'electron-notarize' );
+
 const buildConfig = require( './builderConfig' );
 
 const shouldNotarize = process.env.SHOULD_NOTARIZE;
-module.exports = async function( params ) {
+module.exports = async function( parameters ) {
     // Only notarize the app on Mac OS only & on CI.
     if ( process.platform !== 'darwin' || !shouldNotarize ) {
         return;
     }
 
-    console.log( 'afterSign hook triggered', params );
+    console.log( 'afterSign hook triggered', parameters );
 
     // Same appId in electron-builder.
     const { appId } = buildConfig;
 
     const appPath = path.join(
-        params.appOutDir,
-        `${params.packager.appInfo.productFilename}.app`
+        parameters.appOutDir,
+        `${parameters.packager.appInfo.productFilename}.app`
     );
     if ( !fs.existsSync( appPath ) ) {
         throw new Error( `Cannot find application at: ${appPath}` );

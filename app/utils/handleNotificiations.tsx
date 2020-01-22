@@ -1,5 +1,6 @@
 import React from 'react';
 import { notification, Row, Col, Button } from 'antd';
+
 import { CLASSES } from '$Constants';
 import { reactNodeToElement, NodeObject } from '$Utils/reactNodeToElement';
 import 'antd/lib/notification/style';
@@ -26,18 +27,18 @@ interface BrowserProps {
     updateNotification: Function;
 }
 
-export const handleNotifications = (
-    prevProps: BrowserProps,
-    currentProps: BrowserProps
-) => {
-    const prevNotifyLen = prevProps.notifications.length;
-    const currNotifyLen = currentProps.notifications.length;
-    if ( prevNotifyLen !== currNotifyLen && currNotifyLen - prevNotifyLen > 0 ) {
+export const handleNotifications = ( previousProperties, currentProperties ) => {
+    const previousNotifyLength = previousProperties.notifications.length;
+    const currentNotifyLength = currentProperties.notifications.length;
+    if (
+        previousNotifyLength !== currentNotifyLength &&
+    currentNotifyLength - previousNotifyLength > 0
+    ) {
         const {
             notifications,
             clearNotification,
             updateNotification
-        } = currentProps;
+        } = currentProperties;
         let latestNotification = notifications[notifications.length - 1];
 
         const defaultProps = {

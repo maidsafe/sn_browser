@@ -8,24 +8,24 @@ import 'antd/lib/tag/style';
 import 'antd/lib/icon/style';
 import './wrapAddressBarInput.less';
 import { bindActionCreators } from 'redux';
+
 import styles from './wrapAddressBarButtons.css';
+
 import { CLASSES, PROTOCOLS } from '$Constants';
 import { inEditor } from '$Extensions/safe/utils/isInEditor';
 import { SAFE_PAGES } from '$Extensions/safe/rendererProcess/internalPages';
 import { STYLE_CONSTANTS } from '$Extensions/safe/rendererProcess/styleConstants';
-
 import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
-
 import { logger } from '$Logger';
 
-function mapStateToProps( state ) {
+function mapStateToProperties( state ) {
     return {
         safeBrowserApp: state.safeBrowserApp,
         pWeb: state.pWeb
     };
 }
 
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const actions = {
         ...SafeBrowserAppActions
     };
@@ -247,8 +247,8 @@ export const wrapAddressBarInput = (
     };
 
     const hookedUpInput = connect(
-        mapStateToProps,
-        mapDispatchToProps
+        mapStateToProperties,
+        mapDispatchToProperties
     )( WrappedAddressBarInput );
 
     return hookedUpInput;

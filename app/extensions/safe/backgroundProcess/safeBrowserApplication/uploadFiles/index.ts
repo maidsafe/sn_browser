@@ -1,15 +1,14 @@
 import { parse } from 'url';
+
 import {
     setSafeBrowserAppObject,
     getSafeBrowserAppObject,
     getCurrentStore,
     safeIsAuthorised
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
-
 import { registerNrsNameOnNetwork } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
 import { updateTabUrl } from '$Actions/tabs_actions';
 import { logger } from '$Logger';
-
 import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
 
 export const uploadFilesToSafe = async (

@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+
 import { Error } from '$Components/PerusePages/Error';
 
 describe( 'Error Component', () => {

@@ -1,4 +1,4 @@
-export const errConsts = {
+export const errorConstants = {
     ERR_ROUTING_INTERFACE_ERROR: {
         code: -11,
         msg:
@@ -12,12 +12,12 @@ export const errConsts = {
     },
     ERR_CONNECT_INFO: {
         code: 1,
-        msg: ( e ) => `Unable to get connection information: ${e}`
+        msg: ( error ) => `Unable to get connection information: ${error}`
     },
 
     ERR_AUTH_APP: {
         code: 2,
-        msg: ( e ) => `Unable to authorise the application: ${e}`
+        msg: ( error ) => `Unable to authorise the application: ${error}`
     },
 
     INVALID_HANDLE: {
@@ -52,18 +52,19 @@ export const errConsts = {
 
     AUTH_DECISION_RESP: {
         code: 8,
-        msg: ( e ) => `Encoded response after authorisation decision was made: ${e}`
+        msg: ( error ) =>
+            `Encoded response after authorisation decision was made: ${error}`
     },
 
     CONTAINER_DECISION_RESP: {
         code: 9,
-        msg: ( e ) =>
-            `Encoded response after container authorisation decision was made: ${e}`
+        msg: ( error ) =>
+            `Encoded response after container authorisation decision was made: ${error}`
     },
 
     SHAREMD_DECISION_RESP: {
         code: 10,
-        msg: ( e ) =>
-            `Encoded response after share MD authorisation decision was made: ${e}`
+        msg: ( error ) =>
+            `Encoded response after share MD authorisation decision was made: ${error}`
     }
 };

@@ -2,10 +2,9 @@ import { Store } from 'redux';
 import { app, protocol } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
+
 import { isRunningUnpacked } from '$Constants';
 import { logger } from '$Logger';
-// import buildConfig from '$BuilderConfig';
-
 import { setNameAsMySite } from '$Extensions/safe/actions/pWeb_actions';
 
 export const preAppLoad = ( store: Store ) => {
@@ -36,9 +35,9 @@ export const preAppLoad = ( store: Store ) => {
     logger.info( 'HACK: mysites local location', storeMySitesLocation );
 
     let isReadingMySites = true;
-    fs.readJson( storeMySitesLocation, ( err, mySites ) => {
+    fs.readJson( storeMySitesLocation, ( error, mySites ) => {
         isReadingMySites = false;
-        if ( err ) logger.error( 'error reading mySites data.', err );
+        if ( error ) logger.error( 'error reading mySites data.', error );
 
         logger.info( 'Local mysites info found.', mySites );
 
@@ -52,21 +51,21 @@ export const preAppLoad = ( store: Store ) => {
     } );
 
     // Listen and update the file
-    let prevSites = [];
+    let previousSites = [];
     store.subscribe( async () => {
         const { pWeb } = store.getState();
 
-        if ( pWeb.mySites !== prevSites ) {
-            prevSites = pWeb.mySites;
+        if ( pWeb.mySites !== previousSites ) {
+            previousSites = pWeb.mySites;
 
             // prevent windows FS errors
             if ( isReadingMySites ) return;
             // With async/await:
             try {
-                await fs.outputJson( storeMySitesLocation, prevSites );
+                await fs.outputJson( storeMySitesLocation, previousSites );
                 logger.info( 'HACK: Written mysites.json to', storeMySitesLocation );
-            } catch ( err ) {
-                logger.error( 'HACK, error writing mysites.json ', err );
+            } catch ( error ) {
+                logger.error( 'HACK, error writing mysites.json ', error );
             }
         }
     } );

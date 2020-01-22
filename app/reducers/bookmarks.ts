@@ -1,9 +1,11 @@
 import { remote, shell, webContents } from 'electron';
 import _ from 'lodash';
+
+import { initialAppState } from './initialAppState';
+
 import { TYPES } from '$Actions/bookmarks_actions';
 import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
 import { makeValidAddressBarUrl } from '$Utils/urlHelpers';
-import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.bookmarks;
 

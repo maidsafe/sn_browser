@@ -4,9 +4,11 @@ import { IconButton } from 'nessie-ui';
 import _ from 'lodash';
 // import { logger } from '$Logger';
 import { Icon } from 'antd';
+
+import styles from './webIdButtons.css';
+
 import { SAFE } from '$Extensions/safe/constants';
 import { startedRunningMock } from '$Constants';
-import styles from './webIdButtons.css';
 import 'antd/lib/icon/style';
 
 const hideDropdownTimeout = 0.15; // seconds

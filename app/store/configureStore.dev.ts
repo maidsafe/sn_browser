@@ -11,13 +11,12 @@ import {
     replayActionMain,
     replayActionRenderer
 } from 'electron-redux';
-import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
-
-import { addMiddlewares } from '$Store/addMiddlewares';
 
 import * as bookmarkActions from '../actions/bookmarks_actions';
-
 import { createRootReducer } from '../reducers';
+
+import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
+import { addMiddlewares } from '$Store/addMiddlewares';
 
 const initialStateFromMain: {} = inRendererProcess
     ? getInitialStateRenderer()

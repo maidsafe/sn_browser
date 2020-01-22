@@ -1,12 +1,8 @@
 /* eslint global-require: off */
 const developmentEnvironments = ['development', 'test'];
-
 const developmentPlugins = [require( 'react-hot-loader/babel' )];
-
 const productionPlugins = [
     require( 'babel-plugin-dev-expression' ),
-
-    // babel-preset-react-optimize
     require( '@babel/plugin-transform-react-constant-elements' ),
     require( '@babel/plugin-transform-react-inline-elements' ),
     require( 'babel-plugin-transform-react-remove-prop-types' )
@@ -14,7 +10,7 @@ const productionPlugins = [
 
 const aliases = require( './.aliases.config' );
 
-module.exports = api => {
+module.exports = ( api ) => {
     // see docs about api at https://babeljs.io/docs/en/config-files#apicache
 
     const development = api.env( developmentEnvironments );
@@ -26,7 +22,7 @@ module.exports = api => {
                 require( '@babel/preset-env' ),
                 {
                     targets: {
-                        electron: require( 'electron/package.json' ).version
+                        electron: require( 'electron/package' ).version
                     },
                     useBuiltIns: 'usage',
                     corejs: 3
