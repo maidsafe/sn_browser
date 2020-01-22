@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 import { createAliasedAction } from 'electron-redux';
+
 import * as tabActions from '$Actions/tabs_actions';
 
 export const TYPES = {

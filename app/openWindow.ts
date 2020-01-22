@@ -2,15 +2,17 @@ import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import os, { type } from 'os';
 import windowStateKeeper from 'electron-window-state';
-import { logger } from '$Logger';
+
 import { MenuBuilder } from './menu';
 import { onOpenLoadExtensions } from './extensions/mainProcess';
+import { addTab, selectAddressBar } from './actions/tabs_actions';
+
 import {
     isRunningTestCafeProcess,
     isRunningDebug,
     testCafeURL
 } from '$Constants';
-import { addTab, selectAddressBar } from './actions/tabs_actions';
+import { logger } from '$Logger';
 import {
     windowCloseTab,
     addTabEnd,

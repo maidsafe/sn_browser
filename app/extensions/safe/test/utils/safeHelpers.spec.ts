@@ -1,6 +1,6 @@
 import {
-    generateBoundaryStr,
-    generateResponseStr,
+    generateBoundaryString,
+    generateResponseString,
     rangeStringToArray
 } from '$Extensions/safe/utils/safeHelpers';
 import { urlIsValid } from '$Extensions/safe/utils/urlIsValid';
@@ -40,11 +40,11 @@ describe( 'Safe Extension', () => {
 
     describe( 'Generate boundary string for multirange server response header', () => {
         test( 'it exists', () => {
-            expect( generateBoundaryStr ).not.toBeNull();
+            expect( generateBoundaryString ).not.toBeNull();
         } );
 
         test( 'it generates 13 character string', () => {
-            const testValue = generateBoundaryStr();
+            const testValue = generateBoundaryString();
             expect( testValue.length ).toBe( 13 );
             expect( typeof testValue ).toBe( 'string' );
         } );
@@ -52,7 +52,7 @@ describe( 'Safe Extension', () => {
 
     describe( 'Generate response string for multirange server response', () => {
         test( 'it exists', () => {
-            expect( generateResponseStr ).not.toBeNull();
+            expect( generateResponseString ).not.toBeNull();
         } );
 
         test( 'returns response string', () => {
@@ -89,7 +89,7 @@ describe( 'Safe Extension', () => {
                 },
                 parts
             };
-            const testValue = generateResponseStr( data );
+            const testValue = generateResponseString( data );
             expect( typeof testValue ).toBe( 'string' );
         } );
     } );

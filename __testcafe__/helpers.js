@@ -1,5 +1,4 @@
 import { ClientFunction } from 'testcafe';
-
 import { clickOnMainMenuItem } from 'testcafe-browser-provider-electron';
 
 import { addressBarInput } from './selectors';

@@ -2,7 +2,7 @@
 const path = require( 'path' );
 const fs = require( 'fs-extra' );
 
-const pkg = require( './package.json' );
+const thePackage = require( './package' );
 
 const { platform } = process;
 const MAC = 'darwin';
@@ -21,7 +21,7 @@ const WINDOWS = 'win32';
 // }
 
 module.exports = async ( AfterPackContext ) => {
-    const targetDir = path.resolve( __dirname, 'release' );
+    // const targetDir = path.resolve( __dirname, 'release' );
 
     const CONTAINING_FOLDER = AfterPackContext.appOutDir;
 
@@ -34,7 +34,10 @@ module.exports = async ( AfterPackContext ) => {
         );
 
     // add version file
-    fs.outputFileSync( path.resolve( APP_ITSELF_DIR, 'version' ), pkg.version );
+    fs.outputFileSync(
+        path.resolve( APP_ITSELF_DIR, 'version' ),
+        thePackage.version
+    );
 
     // remove licenses
     const removalArray = [

@@ -10,9 +10,9 @@ import { PROTOCOLS } from '$Constants';
 import buildConfig from '$BuilderConfig';
 
 export const isInternalPage = ( tab ) => {
-    const urlObj = parse( tab.url );
+    const urlObject = parse( tab.url );
 
-    return urlObj.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
+    return urlObject.protocol === `${PROTOCOLS.INTERNAL_PAGES}:`;
 };
 
 export const removeTrailingSlash = ( url ) => {
@@ -38,17 +38,17 @@ export const trimSlashes = ( url ) => {
 };
 
 export const addTrailingSlashIfNeeded = ( url ) => {
-    const urlObj = parse( url );
-    const urlPath = urlObj.path;
-    let extName;
+    const urlObject = parse( url );
+    const urlPath = urlObject.path;
+    let extensionName;
 
     if ( urlPath ) {
-        extName = path.extname( urlPath );
+        extensionName = path.extname( urlPath );
     }
 
     let slashedUrl = url;
 
-    if ( urlPath && !urlObj.hash && !extName && !urlPath.endsWith( '/' ) ) {
+    if ( urlPath && !urlObject.hash && !extensionName && !urlPath.endsWith( '/' ) ) {
         slashedUrl += '/';
     }
 
@@ -69,37 +69,38 @@ export const removeTrailingRedundancies = ( url ) => {
     return removeTrailingRedundancies( newUrl );
 };
 
-export const urlHasChanged = ( src, newUrl ) => {
-    const strippedSrcUrl = removeTrailingRedundancies( src );
+export const urlHasChanged = ( source, newUrl ) => {
+    const strippedSourceUrl = removeTrailingRedundancies( source );
     const strippedNewUrl = removeTrailingRedundancies( newUrl );
 
-    const parsedSrc = parse( src );
+    const parsedSource = parse( source );
     const parsedNew = parse( newUrl );
 
     // console.info('parsedSrc', parsedSrc)
     // console.info('parsedNew', parsedNew)
 
-    if ( strippedNewUrl === strippedSrcUrl ) {
+    if ( strippedNewUrl === strippedSourceUrl ) {
         return false;
     }
 
     if (
-        parsedSrc.protocol !== parsedNew.protocol ||
-    parsedSrc.host !== parsedNew.host ||
-    removeTrailingSlash( parsedSrc.path ) !== removeTrailingSlash( parsedNew.path )
+        parsedSource.protocol !== parsedNew.protocol ||
+    parsedSource.host !== parsedNew.host ||
+    removeTrailingSlash( parsedSource.path ) !==
+      removeTrailingSlash( parsedNew.path )
     ) {
         return true;
     }
 
     // here we leave the slashes on hashes up to the app/user
-    const srcHash = parsedSrc.hash
-        ? trimSlashes( parsedSrc.hash.replace( '#', '' ) )
+    const sourceHash = parsedSource.hash
+        ? trimSlashes( parsedSource.hash.replace( '#', '' ) )
         : '';
     const newHash = parsedNew.hash
         ? trimSlashes( parsedNew.hash.replace( '#', '' ) )
         : '';
 
-    if ( srcHash !== newHash ) {
+    if ( sourceHash !== newHash ) {
         return true;
     }
 

@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+
 import { logger } from '$Logger';
 // import path from 'path';
 import {

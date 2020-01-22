@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 import stdUrl, { parse as parseURL } from 'url';
+
+import styles from './tab.css';
+
 import {
     addTrailingSlashIfNeeded,
     removeTrailingSlash,
@@ -10,7 +13,6 @@ import {
 } from '$Utils/urlHelpers';
 import { Error } from '$Components/PerusePages/Error';
 import { logger } from '$Logger';
-import styles from './tab.css';
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
@@ -118,7 +120,7 @@ export class Tab extends Component<TabProps, TabState> {
 
         contextMenu( {
             window: webview,
-            append: ( e, params ) => [
+            append: ( _event, parameters ) => [
                 {
                     label: 'Inspect element',
                     accelerator:
@@ -166,14 +168,14 @@ export class Tab extends Component<TabProps, TabState> {
                 },
                 {
                     type: 'separator',
-                    visible: !!( params.linkURL && params.linkURL.length > 0 )
+                    visible: !!( parameters.linkURL && parameters.linkURL.length > 0 )
                 },
                 {
                     label: 'Open Link in New Tab',
-                    visible: params.linkURL && params.linkURL.length > 0,
+                    visible: parameters.linkURL && parameters.linkURL.length > 0,
                     click() {
                         addTabNext( {
-                            url: params.linkURL,
+                            url: parameters.linkURL,
                             windowId,
                             tabId: Math.random().toString( 36 )
                         } );
@@ -269,8 +271,9 @@ export class Tab extends Component<TabProps, TabState> {
         } );
     }
 
-    componentDidUpdate( prevProps ) {
-        if ( JSON.stringify( prevProps ) === JSON.stringify( this.props ) ) return;
+    componentDidUpdate( previousProperties ) {
+        if ( JSON.stringify( previousProperties ) === JSON.stringify( this.props ) )
+            return;
         if ( !this.state.browserState.mountedAndReady ) return;
         const {
             focusWebview,
@@ -298,14 +301,14 @@ export class Tab extends Component<TabProps, TabState> {
         // if activeTab and not prefocussed webview, focus
         if (
             !this.props.shouldFocusWebview &&
-      !prevProps.shouldFocusWebview &&
+      !previousProperties.shouldFocusWebview &&
       this.props.isActiveTab
         ) {
             focusWebview( { tabId, shouldFocus: true } );
         }
 
         // update webId if needed
-        const currentId = prevProps.webId || {};
+        const currentId = previousProperties.webId || {};
         const nextId = webId || {};
         if ( nextId['@id'] !== currentId['@id'] ) {
             if ( !webview ) return;
@@ -314,8 +317,8 @@ export class Tab extends Component<TabProps, TabState> {
         }
 
         // update url in tab if new
-        if ( prevProps.url && prevProps.url !== url ) {
-            console.log( 'seeing', prevProps.url, url );
+        if ( previousProperties.url && previousProperties.url !== url ) {
+            console.log( 'seeing', previousProperties.url, url );
             if ( !webview ) return;
             const webviewSource = parseURL( webview.src );
             if (
@@ -329,7 +332,7 @@ export class Tab extends Component<TabProps, TabState> {
         }
 
         // reload if needed
-        if ( shouldReload && !prevProps.shouldReload ) {
+        if ( shouldReload && !previousProperties.shouldReload ) {
             logger.verbose( 'Should reload URL: ', url );
             this.reload();
             const tabUpdate = {
@@ -340,7 +343,7 @@ export class Tab extends Component<TabProps, TabState> {
         }
 
         // toggle devtools
-        if ( shouldToggleDevTools && !prevProps.shouldToggleDevTools ) {
+        if ( shouldToggleDevTools && !previousProperties.shouldToggleDevTools ) {
             if ( this.isDevToolsOpened() ) {
                 this.closeDevTools();
             } else {
@@ -391,12 +394,12 @@ export class Tab extends Component<TabProps, TabState> {
         }
     }
 
-    onCrash = ( e ) => {
-        logger.error( 'The webview crashed', e );
+    onCrash = ( event ) => {
+        logger.error( 'The webview crashed', event );
     };
 
-    onGpuCrash = ( e ) => {
-        logger.error( 'The webview GPU crashed', e );
+    onGpuCrash = ( event ) => {
+        logger.error( 'The webview GPU crashed', event );
     };
 
     didStartLoading() {
@@ -527,9 +530,9 @@ export class Tab extends Component<TabProps, TabState> {
         }
     }
 
-    pageTitleUpdated( e ) {
+    pageTitleUpdated( event ) {
         logger.info( 'Webview: page title updated' );
-        const { title } = e;
+        const { title } = event;
         const { updateTabTitle, tabId } = this.props;
         const tabUpdate = {
             title,
@@ -538,8 +541,8 @@ export class Tab extends Component<TabProps, TabState> {
         updateTabTitle( tabUpdate );
     }
 
-    pageFaviconUpdated( e ) {
-        logger.info( 'Webview: page favicon updated: ', e );
+    pageFaviconUpdated( event ) {
+        logger.info( 'Webview: page favicon updated: ', event );
         const { updateTabFavicon, tabId } = this.props;
         const tabUpdate = {
             tabId,
@@ -548,9 +551,9 @@ export class Tab extends Component<TabProps, TabState> {
         updateTabFavicon( tabUpdate );
     }
 
-    didNavigate( e ) {
+    didNavigate( event ) {
         const { updateTabUrl, tabId } = this.props;
-        const { url } = e;
+        const { url } = event;
         logger.info( 'webview did navigate' );
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
@@ -562,9 +565,9 @@ export class Tab extends Component<TabProps, TabState> {
         }
     }
 
-    didNavigateInPage( e ) {
+    didNavigateInPage( event ) {
         const { updateTabUrl, tabId } = this.props;
-        const { url } = e;
+        const { url } = event;
         logger.info(
             'Webview: did navigate in page',
             url,
@@ -582,8 +585,8 @@ export class Tab extends Component<TabProps, TabState> {
         }
     }
 
-    didGetRedirectRequest( e ) {
-        const { oldURL, newURL } = e;
+    didGetRedirectRequest( event ) {
+        const { oldURL, newURL } = event;
         const previous = oldURL;
         const next = newURL;
         logger.info( 'Webview: did get redirect request' );
@@ -592,13 +595,13 @@ export class Tab extends Component<TabProps, TabState> {
         }
     }
 
-    willNavigate( e ) {
-        logger.info( 'webview will navigate', e );
+    willNavigate( event ) {
+        logger.info( 'webview will navigate', event );
         if ( this.isFrozen() ) {
             logger.verbose( 'Webview is frozen.' );
             return;
         }
-        const { url } = e;
+        const { url } = event;
         const { webview } = this;
         const { windowId } = this.props;
         if (
@@ -680,16 +683,16 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     // }
     }
 
-    newWindow( e ) {
+    newWindow( event ) {
         const { addTabEnd, windowId } = this.props;
-        const { url } = e;
+        const { url } = event;
         logger.info( 'Tab: NewWindow event triggered for url: ', url );
         const tabId = Math.random().toString( 36 );
         addTabEnd( { url, windowId, tabId } );
         this.goForward();
     }
 
-    isFrozen( e ) {
+    isFrozen( event ) {
         logger.info( 'Webview is frozen...' );
         const { tabId } = this.props;
         const frozen = !tabId;

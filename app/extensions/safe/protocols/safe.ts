@@ -1,5 +1,6 @@
 import { remote } from 'electron';
 import url from 'url';
+
 import { logger } from '$Logger';
 import { CONFIG, PROTOCOLS } from '$Constants';
 
@@ -13,9 +14,9 @@ export const registerSafeProtocol = () => {
     // Would ports automatically routing locally make things simpler?
     ses.protocol.registerHttpProtocol(
         PROTOCOLS.SAFE,
-        ( req, cb ) => {
-            logger.info( `safe:// req url being parsed: ${req.url}` );
-            const parsedUrl = url.parse( req.url );
+        ( request, callback ) => {
+            logger.info( `safe:// req url being parsed: ${request.url}` );
+            const parsedUrl = url.parse( request.url );
 
             const { host, query } = parsedUrl;
 
@@ -37,15 +38,15 @@ export const registerSafeProtocol = () => {
                 }`;
             }
 
-            cb( { url: newUrl } );
+            callback( { url: newUrl } );
         },
-        ( err ) => {
-            if ( !err ) return;
+        ( error ) => {
+            if ( !error ) return;
 
-            if ( err.message === 'The scheme has been registered' ) {
+            if ( error.message === 'The scheme has been registered' ) {
                 logger.info( 'SAFE protocol already registered, so dont worry' );
             } else {
-                throw err;
+                throw error;
             }
         }
     );

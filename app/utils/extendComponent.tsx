@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { logger } from '$Logger';
 
 export const extendComponent = ( WrappedComponent, extensionWrapperApi ) => {
@@ -24,14 +25,14 @@ export const extendComponent = ( WrappedComponent, extensionWrapperApi ) => {
 
         render() {
             if ( this.state && this.state.hasError ) {
-                const err = this.state.theError;
+                const error = this.state.theError;
 
                 // You can render any custom fallback UI
                 return (
                     <div>
                         <h2>Something went wrong extending {componentClassName}</h2>
                         <span>
-                            {JSON.stringify( err, ['message', 'arguments', 'type', 'name'] )}
+                            {JSON.stringify( error, ['message', 'arguments', 'type', 'name'] )}
                         </span>
                     </div>
                 );

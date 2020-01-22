@@ -187,7 +187,7 @@ describe( 'manageAndModifyRequest', () => {
             }
         } ) )
     };
-    let cb = jest.fn();
+    let callback = jest.fn();
     const details = {
         url: `${SERVER}/safe://same/main.42ea068a.js`,
         headers: {
@@ -196,42 +196,42 @@ describe( 'manageAndModifyRequest', () => {
     };
 
     beforeEach( () => {
-        cb = jest.fn();
+        callback = jest.fn();
     } );
 
     it( 'should allow javascript files from same site', () => {
-        manageAndModifyRequest( details, cb, store );
-        expect( cb ).not.toHaveBeenCalledWith( { cancel: true } );
-        expect( cb ).not.toHaveBeenCalledWith( { redirect: true } );
+        manageAndModifyRequest( details, callback, store );
+        expect( callback ).not.toHaveBeenCalledWith( { cancel: true } );
+        expect( callback ).not.toHaveBeenCalledWith( { redirect: true } );
     } );
 
     it( 'should allow css files from same site', () => {
         details.url = `${SERVER}/safe://same/main.bla.css`;
 
-        manageAndModifyRequest( details, cb, store );
-        expect( cb ).not.toHaveBeenCalledWith( { cancel: true } );
-        expect( cb ).not.toHaveBeenCalledWith( { redirect: true } );
+        manageAndModifyRequest( details, callback, store );
+        expect( callback ).not.toHaveBeenCalledWith( { cancel: true } );
+        expect( callback ).not.toHaveBeenCalledWith( { redirect: true } );
     } );
 
     it( 'should block css files from different site', () => {
         details.url = `${SERVER}/safe://other/main.bla.js`;
-        manageAndModifyRequest( details, cb, store );
-        expect( cb ).toHaveBeenCalledWith( { cancel: true } );
-        expect( cb ).not.toHaveBeenCalledWith( { redirect: true } );
+        manageAndModifyRequest( details, callback, store );
+        expect( callback ).toHaveBeenCalledWith( { cancel: true } );
+        expect( callback ).not.toHaveBeenCalledWith( { redirect: true } );
     } );
     it( 'should block javascript files from different site', () => {
         details.url = `${SERVER}/safe://other/main.bla.css`;
-        manageAndModifyRequest( details, cb, store );
-        expect( cb ).toHaveBeenCalledWith( { cancel: true } );
-        expect( cb ).not.toHaveBeenCalledWith( { redirect: true } );
+        manageAndModifyRequest( details, callback, store );
+        expect( callback ).toHaveBeenCalledWith( { cancel: true } );
+        expect( callback ).not.toHaveBeenCalledWith( { redirect: true } );
     } );
 
     it( 'should redirect app url', () => {
         details.url = `${SERVER}/safe://dweb/Users/josh/Projects/safe/forks/browser/node_modules/electron/dist/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map`;
 
-        manageAndModifyRequest( details, cb, store );
-        expect( cb ).not.toHaveBeenCalledWith( { cancel: true } );
-        expect( cb ).toHaveBeenCalledWith( {
+        manageAndModifyRequest( details, callback, store );
+        expect( callback ).not.toHaveBeenCalledWith( { cancel: true } );
+        expect( callback ).toHaveBeenCalledWith( {
             redirectURL:
         'file:///Somewhere/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map'
         } );

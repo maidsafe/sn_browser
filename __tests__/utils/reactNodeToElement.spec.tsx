@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import { reactNodeToElement } from '$Utils/reactNodeToElement';
 
 describe( 'reactNodeToElement', () => {

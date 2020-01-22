@@ -1,4 +1,5 @@
 import { Safe } from 'safe-nodejs';
+
 import { logger } from '$Logger';
 import {
     setSafeBrowserAppObject,

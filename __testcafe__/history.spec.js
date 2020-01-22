@@ -4,6 +4,7 @@ import {
     getMainMenuItem,
     clickOnMainMenuItem
 } from 'testcafe-browser-provider-electron';
+
 import {
     getPageUrl,
     getPageTitle,
@@ -11,9 +12,7 @@ import {
     navigateTo,
     resetStore
 } from './helpers';
-
 import { CLASSES } from '../app/constants/classes';
-
 import { bookmarkPage, closeTab, addTab, tab } from './selectors';
 
 fixture`history successfully reset w/ reset store`

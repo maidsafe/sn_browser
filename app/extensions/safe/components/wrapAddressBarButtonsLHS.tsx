@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'antd';
+
 import { WebIdDropdown } from '$Extensions/safe/components/webIdDropdown';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
@@ -14,12 +15,12 @@ import { getAvailableWebIds } from '$Extensions/safe/actions/aliased';
 
 // import styles from './wrapAddressBarButtons.css';
 
-function mapStateToProps( state ) {
+function mapStateToProperties( state ) {
     return {
         safeBrowserApp: state.safeBrowserApp
     };
 }
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const actions = {
         showWebIdDropdown,
         getAvailableWebIds,
@@ -54,8 +55,8 @@ export const wrapAddressBarButtonsLHS = (
     };
 
     const hookedUpInput = connect(
-        mapStateToProps,
-        mapDispatchToProps
+        mapStateToProperties,
+        mapDispatchToProperties
     )( WrappedAddressBarButtonsLHS );
     return hookedUpInput;
 };

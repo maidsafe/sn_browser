@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-
 import configureStore from 'redux-mock-store';
+
 import { AddressBar } from '$Components/AddressBar';
 
 const mockStore = configureStore();

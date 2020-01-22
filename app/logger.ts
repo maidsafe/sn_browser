@@ -1,7 +1,7 @@
 import path from 'path';
 import os from 'os';
-
 import log from 'electron-log';
+
 import {
     currentWindowId,
     env,

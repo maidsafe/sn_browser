@@ -4,8 +4,10 @@ import { remote } from 'electron';
 import { parse } from 'url';
 import _ from 'lodash';
 import { PageHeader, H1, TableRow, TableCell, Table } from 'nessie-ui';
-import { logger } from '$Logger';
+
 import styles from './history.css';
+
+import { logger } from '$Logger';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
 
@@ -40,9 +42,9 @@ export class History extends Component<HistoryProps, {}> {
         dates.forEach( ( date ) => {
             list = [...history[date]];
             list = _.uniq( list );
-            list = list.filter( ( listObj ) => {
-                const { url } = listObj;
-                const urlObj = parse( url );
+            list = list.filter( ( listObject ) => {
+                const { url } = listObject;
+                const urlObject = parse( url );
                 if ( ignoreList.includes( url ) ) {
                     return false;
                 }

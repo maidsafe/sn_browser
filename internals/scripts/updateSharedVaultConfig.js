@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-
 const path = require( 'path' );
+// eslint-disable-next-line import/order
 const fs = require( 'fs' );
 
 const { platform } = process;
@@ -33,10 +33,10 @@ const getContent = function( url ) {
     // return new pending promise
     return new Promise( ( resolve, reject ) => {
         // select http or https module, depending on reqested url
-        const lib = url.startsWith( 'https' )
+        const library = url.startsWith( 'https' )
             ? require( 'https' )
             : require( 'http' );
-        const request = lib.get( url, ( response ) => {
+        const request = library.get( url, ( response ) => {
             // handle http errors
             console.log( 'status:', response.statusCode );
 
@@ -69,7 +69,7 @@ const getContent = function( url ) {
             response.on( 'end', () => resolve( body.join( '' ) ) );
         } );
         // handle connection errors of the request
-        request.on( 'error', ( err ) => reject( err ) );
+        request.on( 'error', ( error ) => reject( error ) );
     } );
 };
 
@@ -86,9 +86,9 @@ const downloadVaultConfig = async () => {
 
     console.log( 'Config downloaded...' );
 
-    fs.writeFile( targetPath, config, function( err ) {
-        if ( err ) {
-            console.log( 'Error writing file', err );
+    fs.writeFile( targetPath, config, function( error ) {
+        if ( error ) {
+            console.log( 'Error writing file', error );
             process.exit( 1 );
         }
 

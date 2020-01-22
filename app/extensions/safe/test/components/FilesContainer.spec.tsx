@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { Provider } from 'react-redux';
+
 // import configureStore from 'redux-mock-store';
 import { FilesContainer } from '$Extensions/safe/components/FilesContainer';
 
@@ -72,7 +73,7 @@ describe( 'FilesContainer', () => {
         } );
 
         it( 'should display only next level folders / files, when already at a location', () => {
-            const newProps = {
+            const newProperties = {
                 filesMap: {
                     'subfolder/subfile': {
                         link: 'safe://lalalalalala'
@@ -89,7 +90,7 @@ describe( 'FilesContainer', () => {
                 },
                 currentLocation: 'safe://start/testfolder'
             };
-            wrapper = shallow( <FilesContainer {...newProps} /> );
+            wrapper = shallow( <FilesContainer {...newProperties} /> );
 
             expect( wrapper.find( 'li' ).length ).toBe( 2 );
             expect(

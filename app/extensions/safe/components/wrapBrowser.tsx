@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import { CLASSES, isRunningSpectronTestProcess } from '$Constants';
 import { SAFE } from '$Extensions/safe/constants';
 import { logger } from '$Logger';
 import * as SafeBrowserActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
 
-function mapStateToProps( state ) {
+function mapStateToProperties( state ) {
     return {
         safeBrowserApp: state.safeBrowserApp
     };
 }
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const actions = {
         ...SafeBrowserActions
     };
@@ -93,8 +94,8 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => 
         }
     }
     const hookedUpInput = connect(
-        mapStateToProps,
-        mapDispatchToProps
+        mapStateToProperties,
+        mapDispatchToProperties
     )( WrappedSafeBrowser );
     return hookedUpInput;
 };

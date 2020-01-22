@@ -10,7 +10,6 @@ import { SafeData } from '$Extensions/safe/safe.d';
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
-
 import { Error, ERROR_TYPES, ERROR_CODES } from '$Components/PerusePages/Error';
 
 const DEFAULT_PAGE = 'index.html';

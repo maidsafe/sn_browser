@@ -1,5 +1,6 @@
 import React from 'react';
 import { notification } from 'antd';
+
 import { handleNotifications } from '$Utils/handleNotificiations';
 import { reactNodeToElement } from '$Utils/reactNodeToElement';
 
@@ -20,28 +21,28 @@ describe( 'handleNotifications', () => {
     } );
 
     it( 'opens antd error notification by default', () => {
-        const prevBrowserProps = { notifications: [] };
-        const currBrowserProps = {
+        const previousBrowserProperties = { notifications: [] };
+        const currentBrowserProperties = {
             notifications: [{ id: 'ie93dk203', body: 'Error notification body' }]
         };
-        handleNotifications( prevBrowserProps, currBrowserProps );
+        handleNotifications( previousBrowserProperties, currentBrowserProperties );
         expect( notification.error ).toHaveBeenCalled();
         expect( reactNodeToElement ).not.toHaveBeenCalled();
     } );
 
     it( 'opens antd notification with ReactNode', () => {
-        const prevBrowserProps = { notifications: [] };
+        const previousBrowserProperties = { notifications: [] };
         const reactElement = (
             <div>
                 <i>Warning notification body</i>
             </div>
         );
-        const currBrowserProps = {
+        const currentBrowserProperties = {
             notifications: [
                 { id: 'ie93dk203', type: 'warning', reactNode: reactElement }
             ]
         };
-        handleNotifications( prevBrowserProps, currBrowserProps );
+        handleNotifications( previousBrowserProperties, currentBrowserProperties );
         expect( notification.warning ).toHaveBeenCalled();
         expect( reactNodeToElement ).toHaveBeenCalled();
     } );

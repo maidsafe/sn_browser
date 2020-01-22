@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { CONFIG } from '$Constants';
 import { logger } from '$Logger';
 

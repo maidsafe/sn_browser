@@ -1,13 +1,15 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
+
+import styles from './browser.css';
+
 import { AddressBar } from '$Components/AddressBar';
 import { TabBar } from '$Components/TabBar';
 import { TabContents } from '$Components/TabContents';
 // import { logger } from '$Logger';
 import { extendComponent } from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
-import styles from './browser.css';
 import { handleNotifications, Notification } from '$Utils/handleNotificiations';
 
 interface BrowserProps {
@@ -150,9 +152,9 @@ class Browser extends Component<BrowserProps, {}> {
         };
     }
 
-    componentDidUpdate = ( prevProps: BrowserProps ) => {
-        const currentProps = { ...this.props };
-        handleNotifications( prevProps, currentProps );
+    componentDidUpdate = ( previousProperties ) => {
+        const currentProperties = { ...this.props };
+        handleNotifications( previousProperties, currentProperties );
     };
 
     render() {

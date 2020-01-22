@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Page, H1, PageHeader } from 'nessie-ui';
-import { UrlList } from '$Components/UrlList';
+
 import styles from './bookmarks.css';
+
+import { UrlList } from '$Components/UrlList';
 
 interface BookmarksProps {
     bookmarks: Array<any>;

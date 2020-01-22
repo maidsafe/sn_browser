@@ -1,7 +1,7 @@
 import { ClientFunction, Selector } from 'testcafe';
 import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
-import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
 
+import { getPageUrl, getPageTitle, navigateTo, resetStore } from './helpers';
 import { CLASSES } from '../app/constants/classes';
 import {
     bookmarkPage,

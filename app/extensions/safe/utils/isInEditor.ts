@@ -1,4 +1,5 @@
 import { parse } from 'url';
+
 import { PROTOCOLS } from '$Constants';
 import { SAFE_PAGES } from '$Extensions/safe/rendererProcess/internalPages';
 

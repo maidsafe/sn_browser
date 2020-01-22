@@ -3,6 +3,7 @@ import { Store } from 'redux';
 import { remote } from 'electron';
 import { parse as parseURL } from 'url';
 import path from 'path';
+
 import { CONFIG, isRunningTestCafeProcess } from '$Constants';
 import { logger } from '$Logger';
 import { urlIsValid } from '$Extensions';
@@ -111,7 +112,7 @@ export const mapPageResourceToPageVersion = (
 
     if (
         parsedRequestUrl.host === parsedTabUrl.host &&
-    ( !parsedRequestUrl.query.v && parsedTabUrl.query.v )
+    !parsedRequestUrl.query.v && parsedTabUrl.query.v
     ) {
         logger.verbose(
             'On a versioned site, updated resource req, to: ',

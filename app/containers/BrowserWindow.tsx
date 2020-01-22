@@ -1,6 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
+
 import * as TabActions from '$Actions/tabs_actions';
 import * as NotificationActions from '$Actions/notification_actions';
 import * as BookmarksActions from '$Actions/bookmarks_actions';
@@ -9,7 +10,7 @@ import { Browser } from '$Components/Browser';
 import { getActionsForBrowser } from '$Extensions';
 
 const windowId = remote ? remote.getCurrentWindow().id : undefined;
-function mapStateToProps( state ) {
+function mapStateToProperties( state ) {
     return {
         bookmarks: state.bookmarks,
         notifications: state.notifications,
@@ -21,7 +22,7 @@ function mapStateToProps( state ) {
     };
 }
 
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const extensionActions = getActionsForBrowser();
     const actions = {
         ...BookmarksActions,
@@ -35,6 +36,6 @@ function mapDispatchToProps( dispatch ) {
 }
 
 export const BrowserWindow = connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProperties,
+    mapDispatchToProperties
 )( Browser );

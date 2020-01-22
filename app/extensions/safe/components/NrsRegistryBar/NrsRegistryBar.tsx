@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import AppBar from '@material-ui/core/AppBar';
 // import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import styles from './nrsRegistryBar.css';
+
 import { logger } from '$Logger';
 
 interface NrsRegistryBarProps {
@@ -37,9 +37,9 @@ export class NrsRegistryBar extends Component<NrsRegistryBarProps, {}> {
         } );
     };
 
-    handleInputChange = ( e ) => {
+    handleInputChange = ( error ) => {
         this.setState( {
-            input: e.target.value
+            input: error.target.value
         } );
     };
 

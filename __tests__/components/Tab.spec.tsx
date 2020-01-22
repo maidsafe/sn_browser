@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+
 import { Tab } from '$Components/Tab';
 
 describe( 'Tab', () => {

@@ -1,22 +1,19 @@
 import path from 'path';
-
 import { readFileSync, writeFileSync } from 'fs';
 import os from 'os';
+
 import { CONFIG } from '$Constants';
 import {
     getSafeBrowserAppObject,
     getCurrentStore,
     safeIsAuthorised
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
-
 import { logger } from '$Logger';
 import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
 import { setNameAsMySite } from '$Extensions/safe/actions/pWeb_actions';
 
-export {
-    uploadFilesToSafe
-} from '$Extensions/safe/backgroundProcess/safeBrowserApplication/uploadFiles';
+export { uploadFilesToSafe } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/uploadFiles';
 
 export const registerNrsNameOnNetwork = async ( address ): Promise<void> => {
     logger.verbose( 'Attempting to register NRS Name', address );

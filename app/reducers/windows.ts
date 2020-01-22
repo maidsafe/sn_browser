@@ -1,8 +1,10 @@
 import { cloneDeep } from 'lodash';
+
+import { initialAppState } from './initialAppState';
+
 import { TYPES } from '$Actions/windows_actions';
 import { logger } from '$Logger';
 import { TYPES as TABS_TYPES } from '$Actions/tabs_actions';
-import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.windows;
 
@@ -124,12 +126,12 @@ const closetab = ( state, tab ) => {
         activeTab: newActiveTab
     };
 
-    const closedTabObj = {
+    const closedTabObject = {
         tabId,
         lastTabIndex
     };
 
-    closedWindows[targetWindow].closedTabs.push( closedTabObj );
+    closedWindows[targetWindow].closedTabs.push( closedTabObject );
 
     const newState = {
         ...state,
@@ -181,11 +183,11 @@ const reOpenTab = ( state, tabs ) => {
         closedTabs: closedWindowTabs
     };
 
-    const lastTabObj = closedWindowTabs[closedWindowTabs.length - 1];
+    const lastTabObject = closedWindowTabs[closedWindowTabs.length - 1];
 
     closedWindowTabs.pop();
 
-    const { tabId, lastTabIndex } = lastTabObj;
+    const { tabId, lastTabIndex } = lastTabObject;
 
     newWindow.tabs.splice( lastTabIndex, 0, tabId );
 

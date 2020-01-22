@@ -1,6 +1,5 @@
 import { logger } from '$Logger';
 import * as safeBrowserAppActions from '$Extensions/safe/actions/safeBrowserApplication_actions';
-
 import {
     startedRunningMock,
     isRunningSpectronTestProcess,
@@ -10,9 +9,7 @@ import {
 
 export { additionalReducers } from '$Extensions/safe/reducers';
 
-export {
-    addInternalPages
-} from '$Extensions/safe/rendererProcess/internalPages';
+export { addInternalPages } from '$Extensions/safe/rendererProcess/internalPages';
 
 /**
  * add actions to the peruse browser container

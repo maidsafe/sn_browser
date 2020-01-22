@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron';
 import { Store } from 'redux';
+
 import { logger } from '$Logger';
 
 export const getMostRecentlyActiveWindow = ( aStore: Store ): BrowserWindow => {
@@ -20,7 +21,7 @@ export const getMostRecentlyActiveWindow = ( aStore: Store ): BrowserWindow => {
     // fallback (mostly for during boot)
     try {
         targetWindow = BrowserWindow.fromId( windowInFocusId );
-    } catch ( e ) {
+    } catch ( error ) {
         targetWindow = BrowserWindow.getAllWindows();
 
         targetWindow.forEach( ( w ) => logger.info( 'a window id:', w.id ) );

@@ -1,6 +1,7 @@
+import { initialAppState } from './initialAppState';
+
 import { TYPES } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { logger } from '$Logger';
-import { initialAppState } from './initialAppState';
 
 const initialState = initialAppState.safeBrowserApp;
 
@@ -62,11 +63,11 @@ export function safeBrowserApp( state = initialState, action ) {
         case TYPES.SET_AVAILABLE_WEB_IDS: {
             const ids = payload || [];
 
-            state.webIds.forEach( theId => {
+            state.webIds.forEach( ( theId ) => {
                 if ( !theId.isSelected ) return;
 
                 const foundIdIndex = payload.findIndex(
-                    payloadId => payloadId['@id'] === theId['@id']
+                    ( payloadId ) => payloadId['@id'] === theId['@id']
                 );
                 const foundId = payload[foundIdIndex];
                 foundId.isSelected = true;

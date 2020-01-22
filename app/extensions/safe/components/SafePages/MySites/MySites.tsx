@@ -1,33 +1,29 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Typography from '@material-ui/core/Typography';
 
+import styles from './mysites.css';
+
 import { NrsRegistryBar } from '$Extensions/safe/components/NrsRegistryBar';
 import { registerNrsName as registerNrsNameOnNetwork } from '$Extensions/safe/actions/aliased';
 import { setNameAsMySite as setNameAsMySiteOnNetwork } from '$Extensions/safe/actions/pWeb_actions';
-
 import { PROTOCOLS } from '$Constants';
 import { SAFE_PAGES } from '$Extensions/safe/rendererProcess/internalPages';
-
 import { logger } from '$Logger';
 
-import styles from './mysites.css';
-
-function mapStateToProps( state ) {
+function mapStateToProperties( state ) {
     return {
         mySites: state.pWeb.mySites
     };
 }
-function mapDispatchToProps( dispatch ) {
+function mapDispatchToProperties( dispatch ) {
     const actions = {
         registerNrsName: registerNrsNameOnNetwork,
         setNameAsMySite: setNameAsMySiteOnNetwork
@@ -72,14 +68,14 @@ MySitesProps,
         } = this.props;
 
         if ( this.state && this.state.hasError ) {
-            const err = this.state.theError;
+            const error = this.state.theError;
 
             // You can render any custom fallback UI
             return (
                 <div>
                     <h4>Something went wrong in MySites.tsx</h4>
                     <span>
-                        {JSON.stringify( err, ['message', 'arguments', 'type', 'name'] )}
+                        {JSON.stringify( error, ['message', 'arguments', 'type', 'name'] )}
                     </span>
                 </div>
             );
@@ -136,6 +132,6 @@ MySitesProps,
 }
 
 export const MySites = connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProperties,
+    mapDispatchToProperties
 )( MySitesComponent );

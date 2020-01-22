@@ -2,6 +2,7 @@ import React, { ReactNode, Component } from 'react';
 import { remote } from 'electron';
 import { I18n } from 'react-redux-i18n';
 import { Input } from 'antd';
+
 import { CLASSES } from '$Constants';
 import { logger } from '$Logger';
 import { extendComponent } from '$Utils/extendComponent';
@@ -52,10 +53,10 @@ AddressBarInputState
         };
     }
 
-    componentDidUpdate( prevProps, prevState ) {
+    componentDidUpdate( previousProperties, previousState ) {
         if (
             this.props.isSelected &&
-      !prevProps.isSelected &&
+      !previousProperties.isSelected &&
       !this.state.editingUrl &&
       this.addressInput
         ) {
@@ -64,7 +65,7 @@ AddressBarInputState
 
         // update address input if props have been changed from elsewhwere
         if (
-            prevProps.address !== this.props.address &&
+            previousProperties.address !== this.props.address &&
       this.props.address !== this.state.address
         ) {
             // eslint-disable-next-line react/no-did-update-set-state

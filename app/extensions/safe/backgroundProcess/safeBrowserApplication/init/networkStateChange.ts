@@ -1,8 +1,6 @@
 import { logger } from '$Logger';
 import { SAFE } from '$Extensions/safe/constants';
-
 import { attemptReconnect } from '$Extensions/safe/network';
-
 import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
     addNotification,
@@ -10,7 +8,9 @@ import {
 } from '$Actions/notification_actions';
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
-export const onNetworkStateChange = ( store, mockAttemptReconnect ) => state => {
+export const onNetworkStateChange = ( store, mockAttemptReconnect ) => (
+    state
+) => {
     logger.info( 'onNetworkStateChange' );
     const safeBrowserAppObject = getSafeBrowserAppObject();
 

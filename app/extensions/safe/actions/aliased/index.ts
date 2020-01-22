@@ -1,13 +1,12 @@
 import { createAliasedAction } from 'electron-redux';
+
 import { getWebIds } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
 import {
     registerNrsNameOnNetwork,
     uploadFilesToSafe
 } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
-
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
 import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
-
 import { logger } from '$Logger';
 import { TYPES } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 

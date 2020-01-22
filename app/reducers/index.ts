@@ -6,8 +6,8 @@ import { tabs } from './tabs';
 import { remoteCalls } from './remoteCalls';
 import { windows } from './windows';
 import { history } from './history';
-import { logger } from '$Logger';
 
+import { logger } from '$Logger';
 import { getExtensionReducers } from '$Extensions';
 
 const additionalReducers = getExtensionReducers();

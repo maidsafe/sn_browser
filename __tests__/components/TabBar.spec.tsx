@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { Icon } from 'antd';
+
 import { TabBar } from '$Components/TabBar';
 import { CLASSES } from '$Constants';
 

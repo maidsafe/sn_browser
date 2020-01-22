@@ -22,25 +22,25 @@ export const reactNodeToElement = ( nodeObject: NodeObject ) => {
     const nodeDescription: NodeDescription = {
         type: ''
     };
-    Object.keys( nodeObject ).forEach( key => {
+    Object.keys( nodeObject ).forEach( ( key ) => {
         if ( key === 'type' ) {
             nodeDescription[key] = nodeObject[key];
             return;
         }
         if ( key === 'props' ) {
-            Object.keys( nodeObject[key] ).forEach( prop => {
-                if ( prop === 'children' ) {
+            Object.keys( nodeObject[key] ).forEach( ( property ) => {
+                if ( property === 'children' ) {
                     nodeDescription.children = nodeObject.props.children;
                     return;
                 }
                 if ( nodeDescription.props ) {
                     nodeDescription.props = {
                         ...nodeDescription.props,
-                        [prop]: nodeObject[key][prop]
+                        [property]: nodeObject[key][property]
                     };
                 } else {
                     nodeDescription.props = {
-                        [prop]: nodeObject[key][prop]
+                        [property]: nodeObject[key][property]
                     };
                 }
             } );
@@ -54,8 +54,8 @@ export const reactNodeToElement = ( nodeObject: NodeObject ) => {
     } );
     if ( Array.isArray( nodeDescription.children ) ) {
         nodeDescription.children = nodeDescription.children
-            .reduce( ( acc, val ) => acc.concat( val ), [] )
-            .map( child => reactNodeToElement( child ) );
+            .reduce( ( accumulator, value ) => accumulator.concat( value ), [] )
+            .map( ( child ) => reactNodeToElement( child ) );
     } else if (
         nodeDescription.children instanceof Object &&
     !Array.isArray( nodeDescription.children )
@@ -63,7 +63,7 @@ export const reactNodeToElement = ( nodeObject: NodeObject ) => {
         nodeDescription.children = reactNodeToElement( nodeDescription.children );
     }
     const elementType = nodeDescription.type;
-    const elementProps = nodeDescription.props || [];
+    const elementProperties = nodeDescription.props || [];
     const elementChildren = nodeDescription.children || null;
-    return React.createElement( elementType, elementProps, elementChildren );
+    return React.createElement( elementType, elementProperties, elementChildren );
 };

@@ -1,9 +1,11 @@
 import { Store } from 'redux';
 import { ReactNode } from 'react';
 import { Url } from 'url';
+
+import * as safeBrowsing from './safe';
+
 import { logger } from '$Logger';
 // TODO: This should load all packages either from here or from node_modules etc...
-import * as safeBrowsing from './safe';
 
 // here add your packages for extensibility.
 // const allPackages = [ ];
@@ -47,14 +49,14 @@ export const getRemoteCallApis = () => {
     let apisToAdd = {};
     allPackages.forEach( ( extension ) => {
         if ( extension.getRemoteCallApis ) {
-            const extApis = extension.getRemoteCallApis();
-            if ( typeof extApis !== 'object' ) {
+            const extensionApis = extension.getRemoteCallApis();
+            if ( typeof extensionApis !== 'object' ) {
                 throw new Error(
                     'Extensions apis must be passed as an object containing relevant api functions.'
                 );
             }
 
-            apisToAdd = { ...apisToAdd, ...extApis };
+            apisToAdd = { ...apisToAdd, ...extensionApis };
         }
     } );
 
@@ -72,14 +74,14 @@ export const getActionsForBrowser = () => {
     let actionsToAdd = {};
     allPackages.forEach( ( extension ) => {
         if ( extension.actionsForBrowser ) {
-            const extActions = extension.actionsForBrowser;
-            if ( typeof extActions !== 'object' ) {
+            const extensionActions = extension.actionsForBrowser;
+            if ( typeof extensionActions !== 'object' ) {
                 throw new Error(
                     'Browser actions must be passed as an object containing relevant api functions.'
                 );
             }
 
-            actionsToAdd = { ...actionsToAdd, ...extActions };
+            actionsToAdd = { ...actionsToAdd, ...extensionActions };
         }
     } );
 
@@ -90,15 +92,15 @@ export const getExtensionReducers = () => {
     let reducersToAdd = {};
     allPackages.forEach( ( extension ) => {
         if ( extension.additionalReducers ) {
-            const extReducers = extension.additionalReducers;
+            const extensionReducers = extension.additionalReducers;
 
-            if ( typeof extReducers !== 'object' ) {
+            if ( typeof extensionReducers !== 'object' ) {
                 throw new Error(
                     'Extensions reducers must be passed as an object containing relevant reducers.'
                 );
             }
 
-            reducersToAdd = { ...reducersToAdd, ...extReducers };
+            reducersToAdd = { ...reducersToAdd, ...extensionReducers };
         }
     } );
 
