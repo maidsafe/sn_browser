@@ -6,7 +6,7 @@ on:
     types: [published, edited]
 
 jobs:
-  asset_fetcher:
+  get_release_assets:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
@@ -92,52 +92,52 @@ jobs:
       # Upload all the release archives to S3;
       #
       # mac
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
       # linux
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
 
       # win
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.msi" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.msi" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
 
       # YAMLS
 
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp ${{ env.YAML_FILE }}.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp ${{ env.YAML_FILE }}-mac.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
-      - uses: actions/aws/cli@master
-        with:
-          args: s3 cp ${{ env.YAML_FILE }}-linux.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp ${{ env.YAML_FILE }}.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp ${{ env.YAML_FILE }}-mac.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+      - name: Upload to s3
+        shell: bash
+        run: aws s3 cp ${{ env.YAML_FILE }}-linux.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
