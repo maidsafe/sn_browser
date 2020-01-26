@@ -606,7 +606,8 @@ export class Tab extends Component<TabProps, TabState> {
         const { windowId } = this.props;
         if (
             this.lastNavigationUrl === url &&
-      e.timeStamp - this.lastNavigationTimeStamp < WILL_NAVIGATE_GRACE_PERIOD
+      event.timeStamp - this.lastNavigationTimeStamp <
+        WILL_NAVIGATE_GRACE_PERIOD
         ) {
             this.with( () => {
                 webview.stop();
@@ -615,7 +616,7 @@ export class Tab extends Component<TabProps, TabState> {
             return;
         }
         this.lastNavigationUrl = url;
-        this.lastNavigationTimeStamp = e.timeStamp;
+        this.lastNavigationTimeStamp = event.timeStamp;
         const { tabId } = this.props;
         const timeStamp = new Date().getTime();
         this.props.updateTabUrl( { tabId, url, timeStamp } );
