@@ -193,7 +193,7 @@
     "file-loader": "^5.0.2",
     "husky": "^4.0.10",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "json-loader": "^0.5.7",
     "less": "3.10.3",
     "less-loader": "5.0.0",
