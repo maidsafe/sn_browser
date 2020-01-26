@@ -2516,7 +2516,7 @@ acorn-hammerhead@^0.3.0:
   dependencies:
     "@types/estree" "^0.0.39"
 
-acorn-jsx@^5.0.0, acorn-jsx@^5.1.0:
+acorn-jsx@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.1.0.tgz#294adb71b57398b0680015f0a38c563ee1db5384"
   integrity sha512-tMUqwBWfLFbJbizRmEcWSLw6HnFzfdJs2sOJEOwwtVPMoH/0Ay+E703oZz78VSXZiiDcZrQ5XKjPIUQixhmgVw==
@@ -7269,15 +7269,15 @@ eslint-module-utils@^2.4.1:
     debug "^2.6.9"
     pkg-dir "^2.0.0"
 
-eslint-plugin-autofix@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-autofix/-/eslint-plugin-autofix-0.0.6.tgz#79e93139491e989c6ce8eff5f3ef766c041e9655"
-  integrity sha512-Qc/RolBNO7KW9Us7rHqRgbRYSawlzFGQtWEMs2NTlqkUzN6bvHnbdtXtRXO30Vx3NS8ST+S6Rd59cONMuqMFKQ==
+eslint-plugin-autofix@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-autofix/-/eslint-plugin-autofix-0.0.9.tgz#956f4b2500737333199fa42884a968c54450be48"
+  integrity sha512-xnTw1fi9oV/8KAqSwOuhX0xBUL6B8MIm2ATl+TPrHWjwPse/60PqQxvmjlzCyGCVbXLHXn7psbLFtsGOyYq/sw==
   dependencies:
     eslint-rule-composer "^0.3.0"
-    espree "^5.0.1"
+    espree "^6.0.0"
     esutils "^2.0.2"
-    lodash "^4.17.11"
+    lodash "^4.17.15"
     string-similarity "^3.0.0"
 
 eslint-plugin-compat@^3.3.0:
@@ -7485,16 +7485,7 @@ esotope-hammerhead@^0.5.1:
   dependencies:
     "@types/estree" "^0.0.39"
 
-espree@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-5.0.1.tgz#5d6526fa4fc7f0788a5cf75b15f30323e2f81f7a"
-  integrity sha512-qWAZcWh4XE/RwzLJejfcofscgMc9CamR6Tn1+XRXNzrvUSSbiAjGOI/fggztjIi7y9VLPqnICMIPiGyr8JaZ0A==
-  dependencies:
-    acorn "^6.0.7"
-    acorn-jsx "^5.0.0"
-    eslint-visitor-keys "^1.0.0"
-
-espree@^6.1.1, espree@^6.1.2:
+espree@^6.0.0, espree@^6.1.1, espree@^6.1.2:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/espree/-/espree-6.1.2.tgz#6c272650932b4f91c3714e5e7b5f5e2ecf47262d"
   integrity sha512-2iUPuuPP+yW1PZaMSDM9eyVf8D5P0Hi8h83YtZ5bPc/zHYjII5khoixIUTMO794NOY8F/ThF1Bo8ncZILarUTA==
