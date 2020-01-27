@@ -78,14 +78,16 @@ export const redirectUrlIfNeeded = (
     requestUrl: string
 ): { shouldRedirect: boolean; redirectURL?: string } => {
     const appLocation = remote.app.getPath( 'exe' );
-    const appName = path.basename( appLocation );
+    const appExecutableName = path.basename( appLocation );
 
     let redirectURL = requestUrl;
+
     const parsedUrl = parseURL( requestUrl );
+    const decodedPath = decodeURIComponent( parsedUrl.path );
 
     // On Mac Devtools makes many requests to the app via webpage for some reason
-    if ( parsedUrl.path && parsedUrl.path.includes( appName ) ) {
-        const desiredFileInApp = requestUrl.split( appName )[1];
+    if ( decodedPath && decodedPath.includes( appExecutableName ) ) {
+        const desiredFileInApp = requestUrl.split( appExecutableName )[1];
 
         redirectURL = `file://${appLocation}${desiredFileInApp}`;
         logger.verbose( 'Permitting app dep url', redirectURL );
@@ -112,7 +114,8 @@ export const mapPageResourceToPageVersion = (
 
     if (
         parsedRequestUrl.host === parsedTabUrl.host &&
-    !parsedRequestUrl.query.v && parsedTabUrl.query.v
+    !parsedRequestUrl.query.v &&
+    parsedTabUrl.query.v
     ) {
         logger.verbose(
             'On a versioned site, updated resource req, to: ',

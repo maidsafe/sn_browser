@@ -129,6 +129,7 @@ describe( 'redirectUrlIfNeeded', () => {
 
         const appUrl =
       'safe://dweb/Users/josh/Projects/safe/forks/browser/node_modules/electron/dist/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map';
+
         expect( redirectUrlIfNeeded( appUrl ) ).toMatchObject( {
             shouldRedirect: true,
             redirectURL:
