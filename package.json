@@ -285,7 +285,7 @@
     "redux-promise": "0.6.0",
     "redux-promise-middleware": "6.1.2",
     "redux-thunk": "^2.3.0",
-    "safe-nodejs": "https://github.com/maidsafe/safe-nodejs.git#0.7.0",
+    "safe-nodejs": "https://github.com/maidsafe/safe-nodejs.git#0.8.0",
     "source-map-support": "^0.5.16",
     "tslint": "5.20.1"
   },
