@@ -15,7 +15,8 @@ export const preAppLoad = ( store: Store ) => {
                 standard: true,
                 secure: true,
                 allowServiceWorkers: true,
-                corsEnabled: true
+                corsEnabled: true,
+                supportFetchAPI: true
             }
         }
     ] );
