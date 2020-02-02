@@ -6821,10 +6821,10 @@ electron-builder@22.3.2:
     update-notifier "^4.0.0"
     yargs "^15.1.0"
 
-electron-context-menu@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-0.15.2.tgz#66f544a06d2099dafdecade2e9214a66e26b5764"
-  integrity sha512-r4Zv/NWKe6smezz66yIZSt0geRPx3wdfVlMYXNSGsPcN7LiyZXGlxWvCX9gsqN8Rg8nWC3Q2EcXzt8d9NQFUyg==
+electron-context-menu@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-0.16.0.tgz#4f53b4640e321f536415a625505a908518f5dff7"
+  integrity sha512-lGr1/nRlNGmU8THc0hl2dYEB5bwXJpsi7vCjjsnsNGJKPZZLY8nHY3xvtjdtwKocErvp1h8wUb19moWenzoGPw==
   dependencies:
     cli-truncate "^2.0.0"
     electron-dl "^1.2.0"
