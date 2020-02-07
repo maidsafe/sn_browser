@@ -546,7 +546,7 @@ export class Tab extends Component<TabProps, TabState> {
         const { updateTabFavicon, tabId } = this.props;
         const tabUpdate = {
             tabId,
-            favicon: e.favicons[0]
+            favicon: event.favicons[0]
         };
         updateTabFavicon( tabUpdate );
     }
