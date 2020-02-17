@@ -20,9 +20,15 @@ const MIME_TYPE_OCTET_STREAM = 'application/octet-stream';
 const MIME_TYPE_HTML = 'text/html';
 const MIME_TYPE_JSON = 'application/json';
 const HEADERS_CONTENT_TYPE = 'Content-Type';
+const HEADERS_ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
+const PERMISSIVE_ACCESS_CONTROL = '*';
 const HEADERS_CONTENT_LENGTH = 'Content-Length';
 const HEADERS_CONTENT_RANGE = 'Content-Range';
 const HEADERS_CSP = 'Content-Security-Policy';
+const TRANSFER_ENCODING = 'Transfer-Encoding';
+const TRANSFER_ENCODING_CHUNKED = 'chunked';
+const ACCEPT_RANGES = 'Accept-Ranges';
+const ACCEPT_RANGES_BYTES = 'bytes';
 
 const PUB_IMMUTABLE = 'PublishedImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
@@ -80,7 +86,10 @@ export const getHTTPFriendlyData = async (
     const response = {
         headers: {
             // lets default to html
-            [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML
+            [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML,
+            [HEADERS_ACCESS_CONTROL_ALLOW_ORIGIN]: PERMISSIVE_ACCESS_CONTROL,
+            [TRANSFER_ENCODING]: TRANSFER_ENCODING_CHUNKED,
+            [ACCEPT_RANGES]: ACCEPT_RANGES_BYTES
             //             [HEADERS_CSP]: `
             // 	default-src 'none';
             // 	script-src 'self';
