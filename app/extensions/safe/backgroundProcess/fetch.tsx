@@ -29,11 +29,9 @@ const HEADERS_CSP = 'Content-Security-Policy';
 const TRANSFER_ENCODING = 'Transfer-Encoding';
 const CONTENT_ENCODING = 'Content-Encoding';
 const CONTENT_LENGTH = 'Content-Length';
-
 const TRANSFER_ENCODING_CHUNKED = 'chunked';
 const ACCEPT_RANGES = 'Accept-Ranges';
 const ACCEPT_RANGES_BYTES = 'bytes';
-
 const PUBLIC_IMMUTABLE = 'PublicImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
 
