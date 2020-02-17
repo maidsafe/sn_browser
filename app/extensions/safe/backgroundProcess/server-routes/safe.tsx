@@ -164,14 +164,7 @@ export const safeRoute = ( store ) => ( {
                     .send( data.body );
             }
 
-            return response
-                .set( {
-                    'Content-Type': data.headers['Content-Type'],
-                    'Content-Range': data.headers['Content-Range'],
-                    'Transfer-Encoding': 'chunked',
-                    'Accept-Ranges': 'bytes'
-                } )
-                .send( data.body );
+            return response.set( data.headers ).send( data.body );
         } catch ( error ) {
             logger.error( error );
 
