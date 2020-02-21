@@ -25,11 +25,5 @@
             "$TestCafeHelpers": ["__testcafe__/helpers.js"]
         }
     },
-    "exclude": [
-        "*.config*?js",
-        "app/*.prod.js",
-        "app/dist",
-        "node_modules",
-        "release"
-    ]
+    "exclude": ["app/*.prod.js", "app/dist", "node_modules", "release"]
 }
