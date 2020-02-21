@@ -8,9 +8,6 @@ module.exports = {
         node: true
     },
     parser: '@typescript-eslint/parser',
-    parserOptions: {
-        project: `./tsconfig.json`
-    },
     extends: [
         'airbnb-typescript',
         'plugin:@typescript-eslint/recommended',
@@ -23,6 +20,7 @@ module.exports = {
         'plugin:testcafe/recommended'
     ],
     parserOptions: {
+        project: `./tsconfig.json`,
         ecmaFeatures: {
             jsx: true
         },
@@ -144,6 +142,7 @@ module.exports = {
     overrides: [
         {
             files: ['*config*js', 'internals/**/*'],
+            parserOptions: {},
             rules: {
                 'global-require': 'off',
                 'no-console': 'off',

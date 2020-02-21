@@ -16,7 +16,7 @@ const parseSafeUri = function( uri ) {
 const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
     new Promise( ( resolve ) => {
         let timeLeft = timeout;
-        const check = () => {
+        function check(): void {
             timeLeft -= 500;
             const netState = theStore.getState().safeBrowserApp.networkStatus;
             logger.info( 'Waiting for basic connection...', netState );
@@ -28,7 +28,7 @@ const waitForBasicConnection = ( theStore, timeout = 15000 ) =>
             } else {
                 setTimeout( check, 500 );
             }
-        };
+        }
 
         setTimeout( check, 500 );
     } );
