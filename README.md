@@ -1,8 +1,9 @@
 # SAFE Browser
 
-|                                                          Linux/macOS                                                          |
-| :---------------------------------------------------------------------------------------------------------------------------: |
-| [![Build Status](https://travis-ci.com/maidsafe/safe_browser.svg?branch=master)](https://travis-ci.com/maidsafe/safe_browser) | [![Build status] |
+|                                                           Linux/macOS                                                            |
+| :------------------------------------------------------------------------------------------------------------------------------: |
+|  [![Build Status](https://travis-ci.com/maidsafe/safe_browser.svg?branch=master)](https://travis-ci.com/maidsafe/safe_browser)   | [![Build status] |
+| [![Build](https://github.com/maidsafe/safe_browser/workflows/Build/badge.svg)](https://github.com/maidsafe/safe_browser/actions) | [![Build status] |
 
 ## Table of contents
 

@@ -1,0 +1,36 @@
+name: E2E Tests
+
+on: [push, pull_request]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # No CSC Keys etc as PRs dont have access to this.
+  NODE_ENV: prod
+jobs:
+  build:
+    name: E2E Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Install
+        run: yarn install --ignore-engines --network-timeout 800000;
+
+      - run: yarn package
+
+      - name: Run headless test
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: yarn test-e2e-packed
+      # - uses: DevExpress/testcafe-action@latest
+      #   with:
+      #     args: 'electron:. ./__testcafe__/*.spec.*'

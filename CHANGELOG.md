@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.3...v0.15.4) (2020-01-21)
+## [0.16.0](https://github.com/maidsafe/safe_browser/compare/v0.16.0-alpha.3...v0.16.0) (2020-02-27)
+
+## [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.3...v0.15.4) (2020-01-21)
 
 ### Features
 
@@ -16,7 +18,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Update auth_app params. ([611e7d5](https://github.com/maidsafe/safe_browser/commit/611e7d59707b4e6b97c57d7ee89ee26a64253ec1)), closes [#1119](https://github.com/maidsafe/safe_browser/issues/1119)
 - **e2e:** update app naming for tests on channel builds ([8062980](https://github.com/maidsafe/safe_browser/commit/8062980ddb04ed28b9f37daab31063da830082f7))
 
-### [0.15.3](https://github.com/maidsafe/safe_browser/compare/v0.15.2...v0.15.3) (2019-11-14)
+## [0.15.3](https://github.com/maidsafe/safe_browser/compare/v0.15.2...v0.15.3) (2019-11-14)
 
 ### Bug Fixes
 
@@ -28,7 +30,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **updates:** Improve silent update behaviour ([2e138e4](https://github.com/maidsafe/safe_browser/commit/2e138e42d8a30a91ff5931fda0e2eabe0c306f6f))
 - **winux:** Install on quit, but dont restart when silently updating ([fb40ad0](https://github.com/maidsafe/safe_browser/commit/fb40ad04554aedb50f7d09193c5a5b87ca011896))
 
-### [0.15.2](https://github.com/maidsafe/safe_browser/compare/v0.15.1...v0.15.2) (2019-10-23)
+## [0.15.2](https://github.com/maidsafe/safe_browser/compare/v0.15.1...v0.15.2) (2019-10-23)
 
 ### Bug Fixes
 
@@ -47,7 +49,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **safe:** Update safe-nodejs to 0.3.1 ([bd13d86](https://github.com/maidsafe/safe_browser/commit/bd13d86))
 - **XorUrl:** Expose XorUrlEncoder functionlaity. ([b21fe2f](https://github.com/maidsafe/safe_browser/commit/b21fe2f)), closes [#1022](https://github.com/maidsafe/safe_browser/issues/1022)
 
-### [0.15.1](https://github.com/maidsafe/safe_browser/compare/v0.15.0...v0.15.1) (2019-10-03)
+## [0.15.1](https://github.com/maidsafe/safe_browser/compare/v0.15.0...v0.15.1) (2019-10-03)
 
 ### Bug Fixes
 
@@ -55,7 +57,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **mysites:** prevent from iterating through mysites list if the content was not found ([2a03264](https://github.com/maidsafe/safe_browser/commit/2a03264))
 - **Windows MySites:** Dont write until mysites has been read. ([03ebb8c](https://github.com/maidsafe/safe_browser/commit/03ebb8c)), closes [#1008](https://github.com/maidsafe/safe_browser/issues/1008)
 
-### [0.14.1](https://github.com/maidsafe/safe_browser/compare/v0.14.0...v0.14.1) (2019-07-10)
+## [0.14.1](https://github.com/maidsafe/safe_browser/compare/v0.14.0...v0.14.1) (2019-07-10)
 
 ### Bug Fixes
 
@@ -100,7 +102,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **redux-devtools:** Trace actions calls ([7d4edea](https://github.com/maidsafe/safe_browser/commit/7d4edea))
 - **reload:** F5 for reload ([0e0a07b](https://github.com/maidsafe/safe_browser/commit/0e0a07b))
 
-# [0.13.0](https://github.com/maidsafe/safe_browser/compare/v0.12.0...v0.13.0) (2019-04-26)
+## [0.13.0](https://github.com/maidsafe/safe_browser/compare/v0.12.0...v0.13.0) (2019-04-26)
 
 ### Bug Fixes
 
@@ -117,7 +119,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 - **Testing:** Add testcafe for alternative e2e testing ([6ef3bea](https://github.com/maidsafe/safe_browser/commit/6ef3bea))
 
-# [0.12.0](https://github.com/maidsafe/safe_browser/compare/v0.11.2...v0.12.0) (2019-03-25)
+## [0.12.0](https://github.com/maidsafe/safe_browser/compare/v0.11.2...v0.12.0) (2019-03-25)
 
 ### Bug Fixes
 
