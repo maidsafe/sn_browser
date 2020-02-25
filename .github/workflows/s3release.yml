@@ -33,64 +33,17 @@ jobs:
       - name: lets check yaml
         run: echo ${{ env.YAML_FILE }}
       # mac
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg'
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap'
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip'
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg'
-          path: release
-      # linux
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage'
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip'
-          path: release
-      # win
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe'
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap'
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: '${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.msi'
-          path: release
-      # yamls
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: ${{ env.YAML_FILE }}.yml
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: ${{ env.YAML_FILE }}-mac.yml
-          path: release
-      - uses: wyozi/download-gh-release-asset@master
-        with:
-          args: ${{ env.YAML_FILE }}-linux.yml
-          path: release
+      - name: Download build from s3 for this tag
+        shell: bash
+        run: aws s3 cp s3://${{ env.APPLICATION }}/tag-builds/${{ env.RELEASE_VERSION }} . --recursive
+
       # do more...
       - name: Check dlded assets
         shell: bash
         run: ls .
 
       # Upload all the release archives to S3;
-      #
+
       # mac
       - name: Upload to s3
         shell: bash
@@ -109,7 +62,8 @@ jobs:
         run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
       # linux
-
+      - name: chmod
+        run: chmod +x ${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage
       - name: Upload to s3
         shell: bash
         run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
@@ -126,9 +80,6 @@ jobs:
       - name: Upload to s3
         shell: bash
         run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
-      - name: Upload to s3
-        shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.msi" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
 
       # YAMLS
 
@@ -141,3 +92,13 @@ jobs:
       - name: Upload to s3
         shell: bash
         run: aws s3 cp ${{ env.YAML_FILE }}-linux.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+
+      # Update the release with artifacts
+      - name: Release generation
+        uses: Xotl/cool-github-releases@v1
+        with:
+          mode: update
+          isPrerelease: contains(github.ref, "alpha") || contains(github.ref, "beta")
+          assets: ${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg;${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage|application/vnd.appimage;${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe;
+          github_token: ${{ github.token }}
+          tag_name: ${{ env.RELEASE_VERSION }}

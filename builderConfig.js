@@ -90,7 +90,7 @@ const buildConfig = {
         ]
     },
     win: {
-        target: ['nsis', 'msi']
+        target: ['nsis', 'zip']
     },
 
     linux: {
@@ -111,6 +111,7 @@ const buildConfig = {
         buildResources: 'resources',
         output: 'release'
     },
+    // publish part needed to generate correct release channel yml files
     publish: {
         provider: 's3',
         bucket: 'safe-browser',

@@ -3,8 +3,6 @@ env:
     - secure: "sDQ/Ai7CWofxj203YwmMQhGlfDhCnDQn8ti3rTPk9tVxbqR8uYYbSBJw46xxdzcVfwCXN6z+6ZG1Xp9DXYSn5tGMW+JiSMY0gaSI0/fuL3GqBlOGRMCljJEQNb8dHeXjVqbWfviymx5QT8ATF4xRR9jslLLAQkiqFqqNanB6A2pAZqYo9OVWg8+K5wN+/kpKevYkMFw0Bg2bZxVte8r/TTMN6aHmy8uCFCZ1jdjdZquaG/qu89jwFDriJXGUFqzyqa+j1Lp2HDEf9FsaapXLzrj3q6H7ykfYYoFcHo/6MO46YGBFvbyd0yFy4Ipca+gRUR6p4U74+rL0BQfj5JfM0Ekjnz9KwvbGH178oY02CN2KG+OeLkRpaom94ncibZR7WvbBi050EZpkbpqW9H9e5UqQQI3wL+YqWjD6rqjA2L5MxBSSi5Na3L7m2UdXlXQd7yBQK9uCywcCpHWoihNLC8GJ1DVD2EUBReW0YQatBdmlsP8XoElOngILA72+p7bjJ5aJugxSc1gZejy4P0suYVSdYm1k6+Og0PojH38gaqWunOCA+fb5bxGIsB/dFfTkEzp/G/NGNl6b8KwTXCCbS5E6qWI0/NHinCLGNQoovEgFwdVjF6+zOmroCwSSx23xgG1Fr1TY4GIcw1Td73ibGtJU1B6UyoBaaOQ9WpDxEes="
 matrix:
   fast_finish: true
-  allow_failures:
-    - os: windows
   include:
     - os: osx
       osx_image: xcode11.2
@@ -13,36 +11,6 @@ matrix:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
         - NODE_ENV=prod
-    - os: linux
-      dist: bionic
-      language: node_js
-      services:
-        - xvfb
-      env:
-        - NODE_ENV=prod
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-multilib
-            - g++-8
-            - g++-multilib
-            - icnsutils
-            - graphicsmagick
-            - xz-utils
-            - xorriso
-            - rpm
-
-
-    - os: windows
-      language: node_js
-      env:
-        - ELECTRON_CACHE=$HOME/.cache/electron
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-        - NODE_ENV=prod
-        - YARN_GPG=no # otherwise this starts gpg-agent that never exits
-
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
@@ -60,39 +28,18 @@ before_install:
 
 install:
   - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
-  # Change vars for windows signing
-  - export CSC_IDENTITY_AUTO_DISCOVERY=true
-  # is this actually installed?
   - ls node_modules/safe-nodejs/native
-  # On Linux, initialize "virtual display". See before_script
 
 
 before_script:
   # osx set window size
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
     fi
-  # On Linux, create a "virtual display". This allows browsers to work properly
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
 
 
 script:
-  # bump version in package.json if on alpha/beta tag.
-  - yarn config set version-tag-prefix ""
-  - yarn config set version-git-tag false
-  - |
-    if [[ $TRAVIS_TAG == *"-alpha"* || $TRAVIS_TAG == *"-beta"* ]]; then
-      export IS_PRE_RELEASE=yes
-    fi
-  - if [[ "$IS_PRE_RELEASE" == "yes" ]]; then yarn version --new-version $TRAVIS_TAG; fi
-  # tests
-  - export SHOULD_NOTARIZE=true
-  - yarn lint --quiet
-  - travis_retry yarn run test-peruse --forceExit
-  - travis_retry yarn run test-exts --forceExit
-  # disable signging on windows for now.
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then unset CSC_LINK || unset CSC_KEY_PASSWORD; fi
-  # - export SHOULD_NOTARIZE=true
-  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export TEST_UNPACKED=true; fi
+  - export SHOULD_NOTARIZE=false
+
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xattr -cr . ; fi
   - yarn package
   - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.*
@@ -101,25 +48,7 @@ script:
 
 
 after_failure:
-# - cat ~/.local/share/applications/mimeapps.list
-- which xdg-open
-- xdg-open --version
-# check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi
 
 
-before_deploy:
-  - ls release
-
-deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key: $GITHUB_ACCESS_TOKEN
-  file_glob: true
-  file: ./release/*
-  draft: true
-  tag_name: $TRAVIS_TAG
-  on:
-    tags: true
-    branch: master

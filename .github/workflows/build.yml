@@ -1,0 +1,175 @@
+name: Build
+
+on: [push, pull_request]
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+env:
+  AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_USER_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: eu-west-2
+  APPLICATION: safe-browser
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+  CSC_LINK: ${{ secrets.CSC_LINK }}
+  WIN_CSC_LINK: ${{ secrets.CSC_LINK }}
+  WIN_CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+  APPLE_ID: ${{ secrets.APPLE_ID }}
+  APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+  NODE_ENV: prod
+  SHOULD_NOTARIZE: true
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Install
+        run: yarn install --ignore-engines --network-timeout 800000;
+
+      # config for yarn set version
+      - run: yarn config set version-tag-prefix ""
+      - run: yarn config set version-git-tag false
+
+      # Get a handy tag
+      - name: Set tag as env
+        shell: bash
+        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+
+      - name: lets check tag
+        shell: bash
+        run: echo ${{ env.RELEASE_VERSION }}
+
+      # If we have a tag, lets do a release
+      - name: Release preparation
+        run: yarn version --new-version ${{ env.RELEASE_VERSION }}
+        if: startsWith(github.ref, 'refs/tags/')
+
+      - run: yarn package
+
+      - run: cp ./release/*.zip ./release/safe_browser-${{ matrix.os }}.zip
+        if: matrix.os != 'macos-latest'
+
+      - run: cp ./release/*.dmg ./release/safe_browser-${{ matrix.os }}.dmg
+        if: matrix.os == 'macos-latest'
+
+      - name: Archive Everything (we are on a tag build)!
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: safe_browser-${{ matrix.os }}
+          path: ./release
+
+      - name: Archive Artifact!
+        if: matrix.os != 'macos-latest' && !startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: safe_browser-${{ matrix.os }}-${{ github.sha }}
+          path: ./release/safe_browser-${{ matrix.os }}.zip
+
+      - name: Archive Artifact Mac!
+        if: matrix.os == 'macos-latest' && !startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: safe_browser-${{ matrix.os }}-${{ github.sha }}
+          path: ./release/safe_browser-${{ matrix.os }}.dmg
+
+  release:
+    # only if we have a tag
+    name: Release
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set tag as env
+        shell: bash
+        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+
+      - name: lets check tag
+        shell: bash
+        run: echo ${{ env.RELEASE_VERSION }}
+
+      - name: Generate Changelog
+        shell: bash
+        run: awk '/^## /{c++;p=1;next} p;{if(c==2){exit}}' CHANGELOG.md > ${{ github.workflow }}-CHANGELOG.txt
+
+      - name: Shasum Title for Changelog
+        run: echo '## SHA-256 checksum:' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      - name: Start Sha block for Changelog
+        run: echo '```' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      # Win release info
+      - name: Download win release
+        uses: actions/download-artifact@master
+        with:
+          name: safe_browser-windows-latest
+          path: release
+
+      - name: Win hash title
+        run: echo 'Windows' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      - name: Hash Windows
+        run: shasum -a 256 release/safe-browser-${{ env.RELEASE_VERSION }}-win-x64.exe | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      # Mac release info
+      - name: Download mac release
+        uses: actions/download-artifact@master
+        with:
+          name: safe_browser-macos-latest
+          path: release
+
+      - name: MacOs hash title
+        run: echo 'MacOS' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      - name: Hash mac
+        run: shasum -a 256 release/safe-browser-${{ env.RELEASE_VERSION }}-mac-x64.dmg | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      # Linux release info
+      - name: Download linux release
+        uses: actions/download-artifact@master
+        with:
+          name: safe_browser-ubuntu-latest
+          path: release
+
+      - run: ls release
+        shell: bash
+
+      - name: Linux hash title
+        run: echo 'Linux' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      - name: Hash linux
+        run: shasum -a 256 release/safe-browser-${{ env.RELEASE_VERSION }}-linux-x64.AppImage | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      - name: End Sha for Changelog
+        run: echo '```' >> ${{ github.workflow }}-CHANGELOG.txt
+
+      # s3
+      - name: Put all release files on s3
+        shell: bash
+        run: aws s3 cp release/ s3://${{ env.APPLICATION }}/tag-builds/${{ env.RELEASE_VERSION }} --acl public-read --recursive
+
+      - name: Release generation
+        uses: softprops/action-gh-release@91409e712cf565ce9eff10c87a8d1b11b81757ae
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body_path: ${{ github.workflow }}-CHANGELOG.txt
+          draft: '!contains(github.ref, "alpha") && !contains(github.ref, "beta")'
+          # prerelease: contains(github.ref, "alpha") || contains(github.ref, "beta")
