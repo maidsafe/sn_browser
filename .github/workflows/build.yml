@@ -1,11 +1,9 @@
 name: Build
 
-on: [push, pull_request]
-
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 
 env:
   AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
