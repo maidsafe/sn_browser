@@ -1,11 +1,10 @@
 import EventEmitter from 'events';
-import { Safe, XorUrlEncoder } from 'safe-nodejs';
+import { XorUrlEncoder } from 'safe-nodejs';
 
+import { SaferSafe } from '$Extensions/safe/webviewProcess/saferSafe';
 // eslint-disable-next-line import/extensions
 import pkg from '$Package';
 import { logger } from '$Logger';
-// import * as remoteCallActions from '$Actions/remoteCall_actions';
-import { PROTOCOLS, CONFIG, isRunningTestCafeProcess } from '$Constants';
 
 // shim for rdflib.js
 // eslint-disable-next-line no-underscore-dangle
@@ -103,10 +102,11 @@ export const setupWebIdEventEmitter = ( passedStore, win = window ) => {
 
 export const setupSafeAPIs = ( passedStore, win = window ) => {
     const theWindow = win;
-    logger.info( 'Setup up SAFE Dom API...' );
+    logger.info( 'Setup up SAFE Dom API... UPDATED' );
 
     // use from passed object if present (for testing)
-    theWindow.Safe = theWindow.Safe || Safe;
+    theWindow.Safe = theWindow.Safe || SaferSafe;
+
     theWindow.XorUrlEncoder = theWindow.XorUrlEncoder || XorUrlEncoder;
 };
 
