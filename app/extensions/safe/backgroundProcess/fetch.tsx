@@ -121,12 +121,10 @@ export const getHTTPFriendlyData = async (
     }
 
     if ( !app ) {
-    // const errorPage = ReactDOMServer.renderToStaticMarkup(
-    //     <Error type={ERROR_TYPES.CONNECTION_FAILED} address={url} />
-    // );
-        response.body = Buffer.from(
-            'The SAFE Browser was not able to connected the network.'
+        const errorPage = ReactDOMServer.renderToStaticMarkup(
+            <Error type={ERROR_TYPES.CONNECTION_FAILED} address={url} />
         );
+        response.body = Buffer.from( errorPage );
 
         return response;
     }
