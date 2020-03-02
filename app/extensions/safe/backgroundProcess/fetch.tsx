@@ -1,4 +1,5 @@
 import { parse } from 'url';
+import { extname } from 'path';
 import { Store } from 'redux';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -26,6 +27,9 @@ const HEADERS_CONTENT_LENGTH = 'Content-Length';
 const HEADERS_CONTENT_RANGE = 'Content-Range';
 const HEADERS_CSP = 'Content-Security-Policy';
 const TRANSFER_ENCODING = 'Transfer-Encoding';
+const CONTENT_ENCODING = 'Content-Encoding';
+const CONTENT_LENGTH = 'Content-Length';
+
 const TRANSFER_ENCODING_CHUNKED = 'chunked';
 const ACCEPT_RANGES = 'Accept-Ranges';
 const ACCEPT_RANGES_BYTES = 'bytes';
@@ -117,9 +121,9 @@ export const getHTTPFriendlyData = async (
     }
 
     if ( !app ) {
-        const errorPage = ReactDOMServer.renderToStaticMarkup(
-            <Error type={ERROR_TYPES.CONNECTION_FAILED} address={url} />
-        );
+    // const errorPage = ReactDOMServer.renderToStaticMarkup(
+    //     <Error type={ERROR_TYPES.CONNECTION_FAILED} address={url} />
+    // );
         response.body = Buffer.from(
             'The SAFE Browser was not able to connected the network.'
         );
@@ -127,14 +131,31 @@ export const getHTTPFriendlyData = async (
         return response;
     }
 
-    const data = await app.fetch( url );
+    let data;
+
+    // TODO: check if we're on a versioned url here...
+    const parsed = parse( url, true );
+
+    try {
+    // try the base url
+        data = await app.fetch( url );
+    } catch ( error ) {
+        logger.debug( 'Fetch error', error, parsed );
+
+        if ( !extname( parsed.path ) ) {
+            try {
+                data = await app.fetch( `${url}.html` );
+            } catch ( secondErrors ) {
+                logger.debug( 'Second attempt, fetch error', secondErrors, parsed );
+
+                data = app.fetch( `${url}/${DEFAULT_PAGE}` );
+            }
+        }
+    }
 
     logger.info( 'Building a HTTP response for data from: ', url );
 
     let theSafeDataObject;
-
-    // TODO: check if we're on a versioned url here...
-    const parsed = parse( url, true );
 
     const currentLocation = parsed.path || '/';
 
@@ -147,6 +168,8 @@ export const getHTTPFriendlyData = async (
         theSafeDataObject = data[PUB_IMMUTABLE];
         response.body = Buffer.from( theSafeDataObject.data );
         response.headers[HEADERS_CONTENT_TYPE] = theSafeDataObject.media_type;
+
+        response.headers[CONTENT_LENGTH] = theSafeDataObject.data.length;
 
         return response; // no need for versioning here..
     }

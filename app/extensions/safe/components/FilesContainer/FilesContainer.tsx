@@ -36,7 +36,6 @@ FilesContainerProps,
         } => {
             // get the base url out of the way
             let theLinkText = filesMapPath;
-
             // only get the next part of the tree
             if ( theLinkText.startsWith( '/' ) ) {
                 theLinkText = `/${theLinkText.split( '/' )[1]}`;
