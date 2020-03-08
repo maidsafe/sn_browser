@@ -15851,9 +15851,10 @@ safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1,
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.0.tgz#b74daec49b1148f88c64b68d49b1e815c1f2f519"
   integrity sha512-fZEwUGbVl7kouZs1jCdMLdt95hdIv0ZeHg6L7qPeciMZhZ+/gdesW4wgTARkrFWEpspjEATAzUGPG8N2jJiwbg==
 
-"safe-nodejs@https://github.com/maidsafe/safe-nodejs.git#0.8.0":
-  version "0.8.0"
-  resolved "https://github.com/maidsafe/safe-nodejs.git#f055398af394fedfc9a9b4767a1a0c6533f7d2ef"
+"safe-nodejs@https://github.com/maidsafe/safe-nodejs.git#0.9.0":
+  version "0.9.0"
+  uid "2e056483848d0f1defe845234cfb74889fe34284"
+  resolved "https://github.com/maidsafe/safe-nodejs.git#2e056483848d0f1defe845234cfb74889fe34284"
   dependencies:
     add "^2.0.6"
     neon-cli "^0.3.1"
@@ -18808,12 +18809,7 @@ yargs@^15.0.0, yargs@^15.1.0:
     y18n "^4.0.0"
     yargs-parser "^16.1.0"
 
-yarn@^1.17.3:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.19.1.tgz#14b92410dd1ba5bab87a12b4a3d807f4569bea97"
-  integrity sha512-gBnfbL9rYY05Gt0cjJhs/siqQXHYlZalTjK3nXn2QO20xbkIFPob+LlH44ML47GcR4VU9/2dYck1BWFM0Javxw==
-
-yarn@^1.22.0:
+yarn@^1.17.3, yarn@^1.22.0:
   version "1.22.0"
   resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.0.tgz#acf82906e36bcccd1ccab1cfb73b87509667c881"
   integrity sha512-KMHP/Jq53jZKTY9iTUt3dIVl/be6UPs2INo96+BnZHLKxYNTfwMmlgHTaMWyGZoO74RI4AIFvnWhYrXq2USJkg==
