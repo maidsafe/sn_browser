@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  create:
+    tags:
+      - v*
 
 env:
   AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
