@@ -184,6 +184,7 @@ export class Tab extends Component<TabProps, TabState> {
             ],
             saveImage: false,
             saveImageAs: false,
+            showInspectElement: false,
             showCopyImageAddress: true
         } );
     };
