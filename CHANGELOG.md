@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/maidsafe/safe_browser/compare/v0.15.4...v0.16.0) (2020-03-10)
+
+### Features
+
+- **fetch:** Add permissive access control origin header ([d9cac14](https://github.com/maidsafe/safe_browser/commit/d9cac14fd966e6b8f76d3c15331db6d648e5dcfc))
+- **fetch:** enable fetch(safe://urls) ([3a99cd4](https://github.com/maidsafe/safe_browser/commit/3a99cd4ab16448f3573e8d974a3d7dcc4598ad89))
+- **safe:** update safe-nodejs to 0.7.0 ([6bc55ad](https://github.com/maidsafe/safe_browser/commit/6bc55adf0ffaacc80d66c793fe93879dfad24a33))
+- **safe:** update safe-nodejs to 0.8.0 ([f95ee28](https://github.com/maidsafe/safe_browser/commit/f95ee285e69a56a4f55fd01f212f2789c5025af0))
+
+### Bug Fixes
+
+- **devtools:** Update devtools reqs for HTML encoding (and spaces). ([2befbf5](https://github.com/maidsafe/safe_browser/commit/2befbf50ba5205b5e17dbbd2976483070e246ca1)), closes [#992](https://github.com/maidsafe/safe_browser/issues/992)
+- **register-site:** fix refactor's missing e->event ([e6d6683](https://github.com/maidsafe/safe_browser/commit/e6d6683832487222a37d1247a035ca57bf0d0944))
+
 ## [0.16.0](https://github.com/maidsafe/safe_browser/compare/v0.16.0-alpha.3...v0.16.0) (2020-02-27)
 
 ## [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.3...v0.15.4) (2020-01-21)
