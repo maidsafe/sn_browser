@@ -16,8 +16,6 @@ All notable changes to this project will be documented in this file. See [standa
 - **devtools:** Update devtools reqs for HTML encoding (and spaces). ([2befbf5](https://github.com/maidsafe/safe_browser/commit/2befbf50ba5205b5e17dbbd2976483070e246ca1)), closes [#992](https://github.com/maidsafe/safe_browser/issues/992)
 - **register-site:** fix refactor's missing e->event ([e6d6683](https://github.com/maidsafe/safe_browser/commit/e6d6683832487222a37d1247a035ca57bf0d0944))
 
-## [0.16.0](https://github.com/maidsafe/safe_browser/compare/v0.16.0-alpha.3...v0.16.0) (2020-02-27)
-
 ## [0.15.4](https://github.com/maidsafe/safe_browser/compare/v0.15.3...v0.15.4) (2020-01-21)
 
 ### Features
