@@ -8,9 +8,9 @@
 ## Table of contents
 
 1. [About](#about)
-1. [Web App Development](#web-app-development)
-1. [Installation](#installation)
-1. [Design](#design)
+2. [Web App Development](#web-app-development)
+3. [Installation](#installation)
+4. [Design](#design)
    - [Build](#Build)
      - [Prerequisites](#prerequisites)
      - [Build steps](#build-steps)
@@ -19,13 +19,9 @@
    - [Testing](#Testing)
    - [Linting](#Linting)
    - [Logging](#Logging)
-1. [Contributing](#contributing)
-   - [Project board](#project-board)
-   - [Issues](#issues)
-   - [Commits and Pull Requests](#commits-and-pull-requests)
-   - [Releases and Changelog](#releases-and-changelog)
-   - [Copyrights](#copyrights)
-1. [License](#license)
+5. [Further help](#further-help)
+6. [License](#license)
+7. [Contributing](#contributing)
 
 ## About
 
@@ -132,10 +128,6 @@ Logs are printed to both render console and stdout. Logs are also written to a l
 - on Linux: ~/.config/safe-browser/logs/{process type}.log
 - on macOS: ~/Library/Logs/Safe Browser/{process type}.log
 - on Windows: %USERPROFILE%\AppData\Roaming\Safe Browser\logs\{process type}.log
-
-### Copyrights
-
-Copyrights in the SAFE Network are retained by their contributors. No copyright assignment is required to contribute to this project.
 
 ## Further Help
 
