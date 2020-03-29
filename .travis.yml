@@ -12,43 +12,34 @@ matrix:
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
         - NODE_ENV=prod
 
-before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
-
 cache:
   yarn: true
   directories:
     - node_modules
     - $(npm config get prefix)/lib/node_modules
     - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
 
 before_install:
   - echo $TRAVIS_NODE_VERSION
 
 install:
-  - travis_wait 30 yarn --ignore-engines --network-timeout 800000;
+  - yarn
   - ls node_modules/safe-nodejs/native
 
 
 before_script:
   # osx set window size
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
-    fi
+  - "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
 
 
 script:
-  - export SHOULD_NOTARIZE=false
-
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xattr -cr . ; fi
-  - yarn package
-  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/peruse.spec.*
-  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/navigation.spec.*
-  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true testcafe electron:. ./__testcafe__/settingsMenu.spec.*
+  - xattr -cr . ;
+  - yarn build-e2e
+  - travis_retry yarn cross-env NODE_ENV=test TEST_CAFE=true TEST_UNPACKED=true IS_UNPACKED=true t testcafe electron:. ./__testcafe__/peruse.spec.*
+  - travis_retry yarn cross-env NODE_ENV=test TEST_UNPACKED=true TEST_CAFE=true IS_UNPACKED=true t testcafe electron:. ./__testcafe__/navigation.spec.*
+  - travis_retry yarn cross-env NODE_ENV=test TEST_UNPACKED=true TEST_CAFE=true IS_UNPACKED=true t testcafe electron:. ./__testcafe__/settingsMenu.spec.*
 
 
 after_failure:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
-  fi
-
+- system_profiler SPDisplaysDataType | grep Resolution
 
