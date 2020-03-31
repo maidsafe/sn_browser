@@ -1,0 +1,30 @@
+name: Version Bump and Tag
+
+on:
+  # Trigger the workflow on push only for the master branch
+  push:
+    branches:
+      - master
+
+env:
+  NODE_ENV: 'development'
+  GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Setup git
+        run: |
+          git remote add github "$REPO"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Bump Version
+        run: npx standard-version -a
+      - name: Push changes & tags to master
+        run: git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:master --tags
