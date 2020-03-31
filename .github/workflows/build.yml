@@ -107,7 +107,7 @@ jobs:
 
       - name: Generate Changelog
         shell: bash
-        run: awk '/^## /{c++;p=1;next} p;{if(c==2){exit}}' CHANGELOG.md > ${{ github.workflow }}-CHANGELOG.txt
+        run: awk '/# \[/{c++;p=1}{if(c==2){exit}}p;' CHANGELOG.md > ${{ github.workflow }}-CHANGELOG.txt
 
       - name: Shasum Title for Changelog
         run: echo '## SHA-256 checksum:' >> ${{ github.workflow }}-CHANGELOG.txt
