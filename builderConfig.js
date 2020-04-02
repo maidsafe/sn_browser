@@ -120,7 +120,7 @@ const buildConfig = {
     }
 };
 
-// commented out for when we need to build dev
+// commented out for when we need to build dev if ever
 /*
 if ( isBuildingDev ) {
     buildConfig.extraResources.push( {
