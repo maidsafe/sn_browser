@@ -90,7 +90,8 @@ const buildConfig = {
         ]
     },
     win: {
-        target: ['nsis', 'zip']
+        target: ['nsis', 'zip'],
+        publisherName: 'MaidSafe.net Ltd'
     },
 
     linux: {
