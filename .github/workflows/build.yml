@@ -11,10 +11,6 @@ env:
   AWS_DEFAULT_REGION: eu-west-2
   APPLICATION: safe-browser
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-  CSC_LINK: ${{ secrets.CSC_LINK }}
-  WIN_CSC_LINK: ${{ secrets.CSC_LINK }}
-  WIN_CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
   NODE_ENV: prod
@@ -55,7 +51,23 @@ jobs:
         run: yarn version --new-version ${{ env.RELEASE_VERSION }}
         if: startsWith(github.ref, 'refs/tags/')
 
-      - run: yarn package
+      - name: Package win
+        if: matrix.os == 'windows-latest'
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+        run: yarn package
+
+      - name: Package Mac
+        if: matrix.os == 'macos-latest'
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+        run: yarn package
+
+      - name: Package Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: yarn package
 
       - run: cp ./release/*.zip ./release/safe_browser-${{ matrix.os }}.zip
         if: matrix.os != 'macos-latest'
