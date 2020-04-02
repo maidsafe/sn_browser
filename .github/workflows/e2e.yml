@@ -11,6 +11,7 @@ jobs:
   build:
     name: E2E Tests
     runs-on: ${{ matrix.os }}
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]

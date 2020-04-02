@@ -3,7 +3,7 @@ name: Build
 on:
   create:
     tags:
-      - v*
+      - 'v*'
 
 env:
   AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
@@ -166,8 +166,7 @@ jobs:
         uses: softprops/action-gh-release@91409e712cf565ce9eff10c87a8d1b11b81757ae
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_TOKEN: ${{ secrets.QA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
         with:
           body_path: ${{ github.workflow }}-CHANGELOG.txt
           draft: '!contains(github.ref, "alpha") && !contains(github.ref, "beta")'
-          # prerelease: contains(github.ref, "alpha") || contains(github.ref, "beta")

@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - master
+      - 'alpha*'
+      - 'beta*'
 
 env:
   NODE_ENV: 'development'
@@ -19,12 +21,39 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: Set branchname as env
+        shell: bash
+        run: echo ::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF:11})
+      - name: Check branch name
+        shell: bash
+        run: echo ${{ env.BRANCH_NAME }}
+
       - name: Setup git
         run: |
           git remote add github "$REPO"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+
+      - name: Alpha Bump
+        if: contains( github.ref, 'alpha' )
+        run: |
+          npx standard-version -a --prerelease alpha
+          echo ::set-env name=PRE_RELEASE::true
+
+      - name: Beta Bump
+        if: contains( github.ref, 'beta' )
+        run: |
+          npx standard-version -a --prerelease beta
+          echo ::set-env name=PRE_RELEASE::true
+
       - name: Bump Version
         run: npx standard-version -a
+        if: '! env.PRE_RELEASE '
+
       - name: Push changes & tags to master
+        if: '! env.PRE_RELEASE '
         run: git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:master --tags
+
+      - name: Push changes to current branch
+        if: env.PRE_RELEASE
+        run: git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:$BRANCH_NAME --tags
