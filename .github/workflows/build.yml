@@ -65,6 +65,18 @@ jobs:
           CSC_LINK: ${{ secrets.CSC_LINK }}
         run: yarn package
 
+      - name: Verify Mac Notarisation Alpha
+        if: matrix.os == 'macos-latest' && contains(github.ref, "alpha")
+        run: spctl -a -t install release/mac/SAFE\ Browser\ Alpha.app
+
+      - name: Verify Mac Notarisation Beta
+        if: matrix.os == 'macos-latest' && contains(github.ref, "beta")
+        run: spctl -a -t install release/mac/SAFE\ Browser\ Beta.app
+
+      - name: Verify Mac Notarisation Prod
+        if: matrix.os == 'macos-latest' && '!contains(github.ref, "alpha") && !contains(github.ref, "beta")'
+        run: spctl -a -t install release/mac/SAFE\ Browser.app
+
       - name: Package Linux
         if: matrix.os == 'ubuntu-latest'
         run: yarn package
