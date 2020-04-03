@@ -66,21 +66,22 @@ jobs:
         run: yarn package
 
       # set an env var to use instead of brittle 'contains' func
+      # space is needed
       - name: Channel Var
         if: contains( github.ref, 'alpha' )
         run: |
-          echo ::set-env name=RELEASE_CHANNEL::"\ Alpha"
+          echo ::set-env name=RELEASE_CHANNEL::" Alpha"
 
       # set an env var to use instead of brittle 'contains' func
       - name: Channel Var
         if: contains( github.ref, 'beta' )
         run: |
           npx standard-version -a --prerelease beta
-          echo ::set-env name=RELEASE_CHANNEL::"\ Beta"
+          echo ::set-env name=RELEASE_CHANNEL::" Beta"
 
       - name: Verify Mac Notarisation
         if: matrix.os == 'macos-latest'
-        run: spctl -a -t install release/mac/SAFE\ Browser$RELEASE_CHANNEL.app
+        run: spctl -a -t install "release/mac/SAFE Browser$RELEASE_CHANNEL.app"
 
       - name: Package Linux
         if: matrix.os == 'ubuntu-latest'
