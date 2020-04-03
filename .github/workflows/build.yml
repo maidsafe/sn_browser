@@ -65,17 +65,22 @@ jobs:
           CSC_LINK: ${{ secrets.CSC_LINK }}
         run: yarn package
 
-      - name: Verify Mac Notarisation Alpha
-        if: matrix.os == 'macos-latest' && contains(github.ref, "alpha")
-        run: spctl -a -t install release/mac/SAFE\ Browser\ Alpha.app
+      # set an env var to use instead of brittle 'contains' func
+      - name: Channel Var
+        if: contains( github.ref, 'alpha' )
+        run: |
+          echo ::set-env name=RELEASE_CHANNEL::"\ Alpha"
 
-      - name: Verify Mac Notarisation Beta
-        if: matrix.os == 'macos-latest' && contains(github.ref, "beta")
-        run: spctl -a -t install release/mac/SAFE\ Browser\ Beta.app
+      # set an env var to use instead of brittle 'contains' func
+      - name: Channel Var
+        if: contains( github.ref, 'beta' )
+        run: |
+          npx standard-version -a --prerelease beta
+          echo ::set-env name=RELEASE_CHANNEL::"\ Beta"
 
-      - name: Verify Mac Notarisation Prod
-        if: matrix.os == 'macos-latest' && '!contains(github.ref, "alpha") && !contains(github.ref, "beta")'
-        run: spctl -a -t install release/mac/SAFE\ Browser.app
+      - name: Verify Mac Notarisation
+        if: matrix.os == 'macos-latest'
+        run: spctl -a -t install release/mac/SAFE\ Browser$RELEASE_CHANNEL.app
 
       - name: Package Linux
         if: matrix.os == 'ubuntu-latest'

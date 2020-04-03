@@ -21,7 +21,7 @@ const publishedFilePath = () => {
 };
 
 // eslint-disable-next-line consistent-return, @typescript-eslint/explicit-function-return-type
-const getProductName = () => {
+export const getProductName = () => {
     let { productName } = thePackage;
 
     if ( thePackage.version.includes( '-alpha' ) ) {
