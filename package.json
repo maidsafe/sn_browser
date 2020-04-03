@@ -2,7 +2,7 @@
   "name": "safe-browser",
   "identifier": "net.maidsafe.safe-browser",
   "productName": "SAFE Browser",
-  "version": "0.17.0-alpha.9",
+  "version": "0.17.0-alpha.10",
   "vendor": "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
   "scripts": {
