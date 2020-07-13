@@ -219,7 +219,7 @@
     "rimraf": "^3.0.2",
     "should": "13.2.3",
     "sinon": "^9.0.0",
-    "standard-version": "7.1.0",
+    "standard-version": "8.0.1",
     "style-loader": "^1.1.3",
     "stylelint": "^13.2.0",
     "stylelint-config-prettier": "^8.0.1",
