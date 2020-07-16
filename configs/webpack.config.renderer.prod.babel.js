@@ -7,14 +7,14 @@ import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
 
 import baseConfig from './webpack.config.base';
 import CheckNodeEnvironment from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnvironment( 'production' );
-export default merge.smart( baseConfig, {
+export default merge( baseConfig, {
     devtool: 'source-map',
 
     mode: 'production',
@@ -26,7 +26,7 @@ export default merge.smart( baseConfig, {
     output: {
         path: path.join( __dirname, '..', 'app/dist' ),
         publicPath: './dist/',
-        filename: 'renderer.prod.js'
+        filename: 'renderer.prod.js',
     },
 
     module: {
@@ -35,8 +35,8 @@ export default merge.smart( baseConfig, {
             {
                 test: /\.node(\?v=\d+\.\d+\.\d+)?$/,
                 use: {
-                    loader: 'native-ext-loader'
-                }
+                    loader: 'native-ext-loader',
+                },
             },
             // Extract all .global.css to style.css as is
             {
@@ -45,53 +45,55 @@ export default merge.smart( baseConfig, {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            publicPath: './'
-                        }
+                            publicPath: './',
+                        },
                     },
                     {
                         loader: 'css-loader',
                         options: {
-                            sourceMap: true
-                        }
-                    }
-                ]
+                            sourceMap: true,
+                        },
+                    },
+                ],
             },
             // Pipe other styles through css modules and append to style.css
             {
                 test: /^((?!\.global).)*\.css$/,
                 use: [
                     {
-                        loader: MiniCssExtractPlugin.loader
+                        loader: MiniCssExtractPlugin.loader,
                     },
                     {
                         loader: 'css-loader',
                         options: {
                             modules: {
                                 mode: 'local',
-                                localIdentName: '[name]__[local]'
+                                localIdentName: '[name]__[local]',
                             },
-                            sourceMap: true
-                        }
-                    }
-                ]
+                            sourceMap: true,
+                        },
+                    },
+                ],
             },
             // Add LESS support  - compile all other .less files and pipe it to style.css
             {
                 test: /^((?!\.global).)*\.less/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
-                        loader: 'css-loader'
+                        loader: 'css-loader',
                     },
                     {
                         loader: 'less-loader',
                         options: {
-                            javascriptEnabled: true
-                        }
-                    }
-                ]
+                            lessOptions: {
+                                javascriptEnabled: true,
+                            },
+                        },
+                    },
+                ],
             },
             // WOFF Font
             {
@@ -100,9 +102,9 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'application/font-woff'
-                    }
-                }
+                        mimetype: 'application/font-woff',
+                    },
+                },
             },
             // WOFF2 Font
             {
@@ -111,9 +113,9 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'application/font-woff'
-                    }
-                }
+                        mimetype: 'application/font-woff',
+                    },
+                },
             },
             // TTF Font
             {
@@ -122,14 +124,14 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'application/octet-stream'
-                    }
-                }
+                        mimetype: 'application/octet-stream',
+                    },
+                },
             },
             // EOT Font
             {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                use: 'file-loader'
+                use: 'file-loader',
             },
             // SVG Font
             {
@@ -138,16 +140,16 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'image/svg+xml'
-                    }
-                }
+                        mimetype: 'image/svg+xml',
+                    },
+                },
             },
             // Common Image Formats
             {
                 test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-                use: 'url-loader'
-            }
-        ]
+                use: 'url-loader',
+            },
+        ],
     },
 
     optimization: {
@@ -157,17 +159,17 @@ export default merge.smart( baseConfig, {
                 new TerserPlugin( {
                     parallel: true,
                     sourceMap: true,
-                    cache: true
+                    cache: true,
                 } ),
                 new OptimizeCSSAssetsPlugin( {
                     cssProcessorOptions: {
                         map: {
                             inline: false,
-                            annotation: true
-                        }
-                    }
-                } )
-            ]
+                            annotation: true,
+                        },
+                    },
+                } ),
+            ],
     },
 
     plugins: [
@@ -181,17 +183,17 @@ export default merge.smart( baseConfig, {
          * development checks
          */
         new webpack.EnvironmentPlugin( {
-            NODE_ENV: 'production'
+            NODE_ENV: 'production',
         } ),
 
         new MiniCssExtractPlugin( {
-            filename: 'style.css'
+            filename: 'style.css',
         } ),
 
         new BundleAnalyzerPlugin( {
             analyzerMode:
                 process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-            openAnalyzer: process.env.OPEN_ANALYZER === 'true'
-        } )
-    ]
+            openAnalyzer: process.env.OPEN_ANALYZER === 'true',
+        } ),
+    ],
 } );
