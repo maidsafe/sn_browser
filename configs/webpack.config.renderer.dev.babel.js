@@ -11,7 +11,7 @@ import path from 'path';
 import fs from 'fs';
 import webpack from 'webpack';
 import chalk from 'chalk';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
 
 import baseConfig from './webpack.config.base';
@@ -41,7 +41,7 @@ if ( !requiredByDLLConfig && !( fs.existsSync( dll ) && fs.existsSync( manifest 
     execSync( 'yarn build-dll' );
 }
 
-export default merge.smart( baseConfig, {
+export default merge( baseConfig, {
     devtool: 'inline-source-map',
 
     mode: 'development',
@@ -53,14 +53,14 @@ export default merge.smart( baseConfig, {
         devserver: `webpack-dev-server/client?http://localhost:${port}/`,
         only: 'webpack/hot/only-dev-server',
         renderer: require.resolve( '../app/index.tsx' ),
-        background: require.resolve( '../app/background.ts' )
+        background: require.resolve( '../app/background.ts' ),
         // ,
         // browserPreload : require.resolve( '../app/browserPreload' )
     },
 
     output: {
         publicPath: `http://localhost:${port}/dist/`,
-        filename: '[name].dev.js'
+        filename: '[name].dev.js',
     },
 
     module: {
@@ -68,8 +68,8 @@ export default merge.smart( baseConfig, {
             {
                 test: /node_modules[/\\](iconv-lite)[/\\].+/,
                 resolve: {
-                    aliasFields: ['main']
-                }
+                    aliasFields: ['main'],
+                },
             },
             {
                 test: /\.jsx?$/,
@@ -77,60 +77,62 @@ export default merge.smart( baseConfig, {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        cacheDirectory: true
-                    }
-                }
+                        cacheDirectory: true,
+                    },
+                },
             },
             {
                 test: /\.global\.css$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
                         loader: 'css-loader',
                         options: {
-                            sourceMap: true
-                        }
-                    }
-                ]
+                            sourceMap: true,
+                        },
+                    },
+                ],
             },
             {
                 test: /^((?!\.global).)*\.css$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
                         loader: 'css-loader',
                         options: {
                             modules: {
                                 mode: 'local',
-                                localIdentName: '[name]__[local]'
+                                localIdentName: '[name]__[local]',
                             },
                             sourceMap: true,
-                            importLoaders: 1
-                        }
-                    }
-                ]
+                            importLoaders: 1,
+                        },
+                    },
+                ],
             },
             // Add LESS support  - compile all other .less files and pipe it to style.css
             {
                 test: /^((?!\.global).)*\.less/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
-                        loader: 'css-loader'
+                        loader: 'css-loader',
                     },
                     {
                         loader: 'less-loader',
                         options: {
-                            javascriptEnabled: true
-                        }
-                    }
-                ]
+                            lessOptions: {
+                                javascriptEnabled: true,
+                            },
+                        },
+                    },
+                ],
             },
             // WOFF Font
             {
@@ -139,9 +141,9 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'application/font-woff'
-                    }
-                }
+                        mimetype: 'application/font-woff',
+                    },
+                },
             },
             // WOFF2 Font
             {
@@ -150,9 +152,9 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'application/font-woff'
-                    }
-                }
+                        mimetype: 'application/font-woff',
+                    },
+                },
             },
             // TTF Font
             {
@@ -161,14 +163,14 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'application/octet-stream'
-                    }
-                }
+                        mimetype: 'application/octet-stream',
+                    },
+                },
             },
             // EOT Font
             {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                use: 'file-loader'
+                use: 'file-loader',
             },
 
             // SVG Font
@@ -178,16 +180,16 @@ export default merge.smart( baseConfig, {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        mimetype: 'image/svg+xml'
-                    }
-                }
+                        mimetype: 'image/svg+xml',
+                    },
+                },
             },
             // Common Image Formats
             {
                 test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-                use: 'url-loader'
-            }
-        ]
+                use: 'url-loader',
+            },
+        ],
     },
 
     plugins: [
@@ -196,11 +198,11 @@ export default merge.smart( baseConfig, {
             : new webpack.DllReferencePlugin( {
                 context: path.join( __dirname, '..', 'dll' ),
                 manifest: require( manifest ),
-                sourceType: 'var'
+                sourceType: 'var',
             } ),
 
         new webpack.HotModuleReplacementPlugin( {
-            multiStep: true
+            multiStep: true,
         } ),
 
         new webpack.NoEmitOnErrorsPlugin(),
@@ -219,11 +221,11 @@ export default merge.smart( baseConfig, {
          */
         new webpack.EnvironmentPlugin( {
             NODE_ENV: 'development',
-            IS_UNPACKED: true
+            IS_UNPACKED: true,
         } ),
 
         new webpack.LoaderOptionsPlugin( {
-            debug: true
+            debug: true,
         } ),
 
         new CircularDependencyPlugin( {
@@ -235,13 +237,13 @@ export default merge.smart( baseConfig, {
             // e.g. via import(/* webpackMode: "weak" */ './file.js')
             allowAsyncCycles: false,
             // set the current working directory for displaying module paths
-            cwd: process.cwd()
-        } )
+            cwd: process.cwd(),
+        } ),
     ],
 
     node: {
         __dirname: false,
-        __filename: false
+        __filename: false,
     },
 
     devServer: {
@@ -258,11 +260,11 @@ export default merge.smart( baseConfig, {
         watchOptions: {
             aggregateTimeout: 300,
             ignored: /node_modules/,
-            poll: 100
+            poll: 100,
         },
         historyApiFallback: {
             verbose: true,
-            disableDotRule: false
+            disableDotRule: false,
         },
         before() {
             if ( process.env.START_HOT ) {
@@ -273,12 +275,12 @@ export default merge.smart( baseConfig, {
                 spawn( 'npm', ['run', 'start-main-dev'], {
                     shell: true,
                     env: process.env,
-                    stdio: 'inherit'
+                    stdio: 'inherit',
                 } )
                     // eslint-disable-next-line unicorn/no-process-exit
                     .on( 'close', ( code ) => process.exit( code ) )
                     .on( 'error', ( spawnError ) => console.error( spawnError ) );
             }
-        }
-    }
+        },
+    },
 } );

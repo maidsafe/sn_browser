@@ -4,7 +4,7 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -13,7 +13,7 @@ import CheckNodeEnvironment from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnvironment( 'production' );
 
-export default merge.smart( baseConfig, {
+export default merge( baseConfig, {
     devtool: 'source-map',
 
     mode: 'development',
@@ -24,7 +24,7 @@ export default merge.smart( baseConfig, {
 
     output: {
         path: path.join( __dirname, '..' ),
-        filename: './app/webPreload.prod.js'
+        filename: './app/webPreload.prod.js',
     },
 
     optimization: {
@@ -34,16 +34,16 @@ export default merge.smart( baseConfig, {
                 new TerserPlugin( {
                     parallel: true,
                     sourceMap: true,
-                    cache: true
-                } )
-            ]
+                    cache: true,
+                } ),
+            ],
     },
 
     plugins: [
         new BundleAnalyzerPlugin( {
             analyzerMode:
                 process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-            openAnalyzer: process.env.OPEN_ANALYZER === 'true'
+            openAnalyzer: process.env.OPEN_ANALYZER === 'true',
         } ),
 
         /**
@@ -58,8 +58,8 @@ export default merge.smart( baseConfig, {
         new webpack.EnvironmentPlugin( {
             NODE_ENV: 'production',
             DEBUG_PROD: false,
-            START_MINIMIZED: false
-        } )
+            START_MINIMIZED: false,
+        } ),
     ],
 
     /**
@@ -69,6 +69,6 @@ export default merge.smart( baseConfig, {
      */
     node: {
         __dirname: false,
-        __filename: false
-    }
+        __filename: false,
+    },
 } );
