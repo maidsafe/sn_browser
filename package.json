@@ -226,7 +226,7 @@
     "stylelint-config-standard": "^20.0.0",
     "terser-webpack-plugin": "^2.3.5",
     "testcafe": "1.8.2",
-    "testcafe-browser-provider-electron": "https://github.com/joshuef/testcafe-browser-provider-electron.git#9c27d3a1b2c75a65f403fbb938616e505bc90bf0",
+    "testcafe-browser-provider-electron": "0.0.15",
     "testcafe-live": "^0.1.4",
     "testcafe-react-selectors": "4.0.0",
     "typescript": "3.8.2",
