@@ -2,7 +2,7 @@ import { Selector } from 'testcafe';
 import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
 import {
     getMainMenuItem,
-    clickOnMainMenuItem
+    clickOnMainMenuItem,
 } from 'testcafe-browser-provider-electron';
 
 import {
@@ -10,7 +10,7 @@ import {
     getPageTitle,
     openLocation,
     navigateTo,
-    resetStore
+    resetStore,
 } from './helpers';
 import { CLASSES } from '../app/constants/classes';
 import { bookmarkPage, closeTab, addTab, tab } from './selectors';
@@ -25,10 +25,7 @@ fixture`bookmarks successfully reset w/ reset store`
     } );
 
 test( 'check bookmark items', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
     await navigateTo( t, 'cat.ashi' );
     await t.click( `.${CLASSES.BOOKMARK_PAGE}` );
     await navigateTo( t, 'eye.eye' );
@@ -55,7 +52,7 @@ test( 'check bookmark items', async ( t ) => {
 } );
 
 test( 'Check if on reset store bookmarks reset to InitialState', async ( t ) => {
-    await resetStore();
+    await resetStore( t );
 
     await t
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )

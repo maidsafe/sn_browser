@@ -20,7 +20,7 @@ export const urlIsValid = ( testUrl ): boolean => {
     if (
         adaptedProtocols.includes( urlObject.protocol ) ||
     isForSafeServer( urlObject ) ||
-    urlObject.protocol === 'chrome-devtools:' ||
+    urlObject.protocol === 'devtools:' ||
     urlObject.protocol === 'file:' ||
     urlObject.protocol === 'blob:' ||
     urlObject.protocol === 'chrome-extension:'
