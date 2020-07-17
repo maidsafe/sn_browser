@@ -34,10 +34,10 @@ function mapDispatchToProperties( dispatch ) {
 interface MySitesProps {
     register: string;
     tabId: string;
-    tabLoad: Function;
-    updateTabUrl: Function;
-    registerNrsName: Function;
-    setNameAsMySite: Function;
+    tabLoad:() => void;
+    updateTabUrl:() => void;
+    registerNrsName:() => void;
+    setNameAsMySite: () => void;
 }
 export class MySitesComponent extends Component<
 MySitesProps,

@@ -110,6 +110,7 @@ export class TabContents extends Component<Record<string, unknown>, Record<strin
 
             return (
                 <Tab
+                    key={tab.tabId}
                     addNotification={addNotification}
                     webId={tab.webId}
                     url={tab.url}

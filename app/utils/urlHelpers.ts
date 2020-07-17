@@ -5,8 +5,6 @@ import path from 'path';
 import pkg from '$Package';
 import { logger } from '$Logger';
 import { PROTOCOLS } from '$Constants';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import buildConfig from '$BuilderConfig';
 
 export const isInternalPage = ( tab ) => {

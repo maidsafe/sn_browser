@@ -28,7 +28,7 @@ function mapDispatchToProperties( dispatch ) {
 interface EditorProps {
     targetName: string;
     isActiveTab: boolean;
-    uploadFiles: Function;
+    uploadFiles: () => void;
 }
 export class EditorComponent extends Component<
 EditorProps,

@@ -63,7 +63,7 @@ export const configureStore = ( initialState: Record<string, unknown> = initialS
     if ( module.hot ) {
         module.hot.accept(
             '../reducers',
-            // eslint-disable-next-line global-require
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             () => store.replaceReducer( require( '../reducers' ).default )
         );
     }

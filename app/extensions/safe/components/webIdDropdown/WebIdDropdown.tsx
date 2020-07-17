@@ -29,10 +29,10 @@ interface WebIdDropdownProps {
         webId: number;
         tabId: string;
     };
-    addTabEnd: Function;
-    getAvailableWebIds: Function;
-    updateTabWebId: Function;
-    showWebIdDropdown: Function;
+    addTabEnd: () => void;
+    getAvailableWebIds: () => void;
+    updateTabWebId: () => void;
+    showWebIdDropdown: () => void;
     windowId: number;
 }
 export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, unknown>> {
@@ -42,7 +42,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
         }
     };
 
-    private debouncedGetWebIds: Function;
+    private debouncedGetWebIds: () => void;
 
     private hoverTime: number;
 
@@ -163,7 +163,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
                     key="noAuth"
                     role="presentation"
                 >
-                    {/* eslint-disable-next-line  jsx-a11y/anchor-is-valid */}
+                    {/* esllint-disable-next-line  jsx-a11y/anchor-is-valid */}
                     <a href="#">Authorise to display your WebIds.</a>
                 </li>
             );
@@ -207,7 +207,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
                             className={styles.webIdManager}
                             role="presentation"
                         >
-                            {/* eslint-disable-next-line  jsx-a11y/anchor-is-valid */}
+                            {/* esllint-disable-next-line  jsx-a11y/anchor-is-valid */}
                             <a href="#">Launch WebIdManager</a>
                         </li>
                     </ul>
