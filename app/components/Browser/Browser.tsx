@@ -16,9 +16,9 @@ interface BrowserProps {
     address: string;
     bookmarks?: Array<any>;
     notifications: Array<Notification>;
-    tabs: object;
-    windows: object;
-    history: object;
+    tabs: Record<string, unknown>;
+    windows: Record<string, unknown>;
+    history: Record<string, unknown>;
     windowId: any;
     addBookmark: ( ...args: Array<any> ) => any;
     removeBookmark: ( ...args: Array<any> ) => any;
@@ -51,7 +51,7 @@ interface BrowserProps {
     clearNotification: ( ...args: Array<any> ) => any;
 }
 
-class Browser extends Component<BrowserProps, {}> {
+class Browser extends Component<BrowserProps, Record<string, unknown>> {
     static defaultProps = {
         addressBarIsSelected: false,
         tabs: {},

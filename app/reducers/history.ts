@@ -59,7 +59,7 @@ const updateHistoryState = ( state, payload ) => {
     return newState;
 };
 
-export function history( state: object = initialState, action ) {
+export function history( state: Record<string, unknown> = initialState, action ) {
     const { payload } = action;
 
     if ( action.error ) {

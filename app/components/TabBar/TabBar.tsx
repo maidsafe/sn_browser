@@ -24,7 +24,7 @@ interface TabBarProps {
     addTabEnd: ( ...args: Array<any> ) => any;
     closeTab: ( ...args: Array<any> ) => any;
     windowId: any;
-    windows: {};
+    windows: Record<string, unknown>;
     tabs: Array<any>;
 }
 

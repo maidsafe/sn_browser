@@ -16,7 +16,7 @@ interface HistoryProps {
     addTabEnd: ( ...args: Array<any> ) => any;
     windowId: number;
 }
-export class History extends Component<HistoryProps, {}> {
+export class History extends Component<HistoryProps, Record<string, unknown>> {
     static defaultProps = {
         history: []
     };

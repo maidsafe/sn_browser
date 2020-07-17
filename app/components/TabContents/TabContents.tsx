@@ -12,7 +12,7 @@ import { Bookmarks } from '$Components/PerusePages/Bookmarks';
 import { logger } from '$Logger';
 import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
-export class TabContents extends Component<{}, {}> {
+export class TabContents extends Component<Record<string, unknown>, Record<string, unknown>> {
     static getDerivedStateFromError( error ) {
     // Update state so the next render will show the fallback UI.
         return { hasError: true, theError: error };

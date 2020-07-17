@@ -18,13 +18,13 @@ import { createRootReducer } from '../reducers';
 import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
 import { addMiddlewares } from '$Store/addMiddlewares';
 
-const initialStateFromMain: {} = inRendererProcess
+const initialStateFromMain: Record<string, unknown> = inRendererProcess
     ? getInitialStateRenderer()
     : {};
 
 const rootReducer: Reducer = createRootReducer();
 
-export const configureStore = ( initialState: {} = initialStateFromMain ) => {
+export const configureStore = ( initialState: Record<string, unknown> = initialStateFromMain ) => {
     // Redux Configuration
     const middleware: Array<any> = [];
     const enhancers: Array<StoreEnhancer> = [];
