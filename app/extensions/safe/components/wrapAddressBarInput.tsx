@@ -21,13 +21,13 @@ import { logger } from '$Logger';
 function mapStateToProperties( state ) {
     return {
         safeBrowserApp: state.safeBrowserApp,
-        pWeb: state.pWeb
+        pWeb: state.pWeb,
     };
 }
 
 function mapDispatchToProperties( dispatch ) {
     const actions = {
-        ...SafeBrowserAppActions
+        ...SafeBrowserAppActions,
     };
 
     return bindActionCreators( actions, dispatch );
@@ -60,17 +60,19 @@ export const wrapAddressBarInput = (
         props: AddressBarInputProps = {
             safeBrowserApp: {
                 isMock: false,
-                experimentsEnabled: false
+                experimentsEnabled: false,
             },
             tabId: '',
             address: '',
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
             updateTabUrl: () => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
             registerNrsName: () => {},
             pWeb: {
                 versionedUrls: {},
                 availableNrsUrls: [],
-                mySites: []
-            }
+                mySites: [],
+            },
         }
     ) => {
         const {
@@ -79,7 +81,7 @@ export const wrapAddressBarInput = (
             safeBrowserApp,
             disableExperiments,
             updateTabUrl,
-            pWeb
+            pWeb,
         } = props;
         const { isMock, experimentsEnabled } = safeBrowserApp;
         const addOnsBefore = [];
@@ -155,7 +157,7 @@ export const wrapAddressBarInput = (
                         if ( isEditingPage ) {
                             updateTabUrl( {
                                 tabId,
-                                url: `${PROTOCOLS.SAFE}://${siteUnderEdit}`
+                                url: `${PROTOCOLS.SAFE}://${siteUnderEdit}`,
                             } );
 
                             return;
@@ -163,7 +165,7 @@ export const wrapAddressBarInput = (
 
                         updateTabUrl( {
                             tabId,
-                            url: `${PROTOCOLS.INTERNAL_PAGES}://${SAFE_PAGES.EDIT_SITE}/${parsedAddress.host}`
+                            url: `${PROTOCOLS.INTERNAL_PAGES}://${SAFE_PAGES.EDIT_SITE}/${parsedAddress.host}`,
                         } );
                     }}
                 >
@@ -188,7 +190,7 @@ export const wrapAddressBarInput = (
                         logger.info( 'Do something about prev version versions...' );
                         updateTabUrl( {
                             tabId,
-                            url: `${baseUrl}${currentVersion - 1}`
+                            url: `${baseUrl}${currentVersion - 1}`,
                         } );
                     }}
                 >
@@ -212,7 +214,7 @@ export const wrapAddressBarInput = (
                         logger.info( 'Do something about next version versions...' );
                         updateTabUrl( {
                             tabId,
-                            url: `${baseUrl}${currentVersion + 1}`
+                            url: `${baseUrl}${currentVersion + 1}`,
                         } );
                     }}
                 >
@@ -238,7 +240,7 @@ export const wrapAddressBarInput = (
                         addonBefore={addOnsBefore}
                         addonAfter={addOnsAfter}
                         extensionStyles={{
-                            backgroundColor: STYLE_CONSTANTS.editBgColor
+                            backgroundColor: STYLE_CONSTANTS.editBgColor,
                         }}
                     />
                 </Column>
