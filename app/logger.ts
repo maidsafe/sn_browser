@@ -12,21 +12,18 @@ import {
     inBgProcess,
     startedRunningProduction,
     startedRunningMock,
-    isRunningSpectronTestProcess,
-    isRunningSpectronTestProcessingPackagedApp,
     isRunningTestCafeProcess,
     inMainProcess,
-    isCI
+    isCI,
 } from '$Constants';
 
 if ( log.transports ) {
     // Log level
     // error, warn, log, log, debug, silly
     log.transports.file.level = 'silly';
-    log.transports.console.format = '[Renderer: {h}:{i}:{s}.{ms}] › {text}';
 
     if (
-        isRunningSpectronTestProcess ||
+        isRunningTestCafeProcess ||
     process.env.NODE_ENV === 'test' ||
     ( !isRunningDebug && isRunningPackaged )
     ) {
@@ -43,7 +40,6 @@ if ( log.transports ) {
     }
     if ( inMainProcess ) {
         log.variables.label = 'main';
-        log.transports.console.format = '%c{h}:{i}:{s}.{ms}%c › {text}';
     }
 
     if ( inBgProcess ) {
@@ -55,7 +51,7 @@ if ( log.transports ) {
 }
 
 // HACK: for jest
-if ( inMainProcess && !isRunningSpectronTestProcess ) {
+if ( inMainProcess && !isRunningTestCafeProcess ) {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
     log.info( '' );
     log.info( '' );
@@ -74,12 +70,9 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
     log.info( 'inMainProcess?', inMainProcess );
     log.info( 'startedRunningProduction?', startedRunningProduction );
     log.info( 'startedRunningMock?', startedRunningMock );
-    log.info( 'isRunningSpectronTestProcess?', isRunningSpectronTestProcess );
     log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
-    log.info(
-        'isRunningSpectronTestProcessingPackagedApp?',
-        isRunningSpectronTestProcessingPackagedApp
-    );
+    log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
+    log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
     log.info( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( '' );
@@ -94,7 +87,7 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
                 'type',
                 'name',
                 'file',
-                'line'
+                'line',
             ] )
         );
         log.error( error );
@@ -125,7 +118,7 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
                 'type',
                 'name',
                 'file',
-                'line'
+                'line',
             ] )
         );
         if ( error && error.line ) log.error( error.line );
@@ -145,7 +138,7 @@ if ( inMainProcess && !isRunningSpectronTestProcess ) {
                 'type',
                 'name',
                 'file',
-                'line'
+                'line',
             ] )
         );
 
