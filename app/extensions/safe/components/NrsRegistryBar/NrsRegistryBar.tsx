@@ -11,9 +11,9 @@ import { logger } from '$Logger';
 
 interface NrsRegistryBarProps {
     address: string;
-    registerNrsName: Function;
+    registerNrsName: () => void;
     tabId: string;
-    updateTabUrl: Function;
+    updateTabUrl: () => void;
 }
 export class NrsRegistryBar extends Component<NrsRegistryBarProps, Record<string, unknown>> {
     handleRegisterAddress = () => {

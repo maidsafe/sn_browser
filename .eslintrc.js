@@ -1,48 +1,35 @@
-const aliases = require('./.aliases.config');
+const aliases = require( './.aliases.config' );
 
-const aliasesArray = Object.keys(aliases);
+const aliasesArray = Object.keys( aliases );
 
 module.exports = {
     env: {
         browser: true,
         node: true
     },
-    parser: '@typescript-eslint/parser',
+
     extends: [
-        'airbnb-typescript',
-        'plugin:@typescript-eslint/recommended',
         'plugin:jest/recommended',
         'plugin:promise/recommended',
         'plugin:unicorn/recommended',
         'prettier',
         'prettier/react',
-        'prettier/@typescript-eslint',
         'plugin:testcafe/recommended'
     ],
-    parserOptions: {
-        project: `./tsconfig.json`,
-        ecmaFeatures: {
-            jsx: true
-        },
-        useJSXTextNode: false,
-        tsconfigRootDir: '.',
-        sourceType: 'module',
-        allowImportExportEverywhere: false,
-        codeFrame: true
-    },
+   
     rules: {
         'arrow-parens': ['error', 'always'],
         'autofix/no-unused-vars': 'off',
-        'jsx-a11y/label-has-for': [
-            2,
-            {
-                components: ['Label'],
-                required: {
-                    every: ['id']
-                },
-                allowChildren: true
-            }
-        ],
+        // 'jsx-a11y/label-has-for': [
+        //     2,
+        //     {
+        //         components: ['Label'],
+        //         required: {
+        //             every: ['id']
+        //         },
+        //         allowChildren: true
+        //     }
+        // ],
         'no-use-before-define': 'off',
         'no-unused-expressions': [
             'error',
@@ -119,14 +106,8 @@ module.exports = {
         'react/jsx-filename-extension': 'off',
         'no-shadow': 'error',
         'react/prefer-stateless-function': 'error',
-        '@typescript-eslint/interface-name-prefix': 'off',
-        '@typescript-eslint/no-namespace': 'off',
-        '@typescript-eslint/no-unused-expressions': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
-        '@typescript-eslint/ban-ts-ignore': 'off',
-        '@typescript-eslint/array-type': ['error', { default: 'generic' }],
+       
         indent: 'off',
-        '@typescript-eslint/indent': ['error', 4],
         'unicorn/prevent-abbreviations': [
             'error',
             {
@@ -140,9 +121,46 @@ module.exports = {
     },
 
     overrides: [
+         // typescript
+        {
+            parser: '@typescript-eslint/parser',
+            parserOptions: {
+                project: `./tsconfig.json`,
+                ecmaFeatures: {
+                    jsx: true
+                },
+                useJSXTextNode: false,
+                tsconfigRootDir: '.',
+                sourceType: 'module',
+                allowImportExportEverywhere: false,
+                codeFrame: true
+            },
+            files: ["*.ts", "*.tsx"],
+            excludedFiles: ["*.js"],
+            plugins: [
+                '@typescript-eslint',
+            // 'airbnb-typescript',
+            // 'prettier/@typescript-eslint'
+        ],
+            extends: [
+            'plugin:@typescript-eslint/eslint-recommended',
+            'plugin:@typescript-eslint/recommended',
+            'plugin:react/recommended',
+            ],
+            rules: {
+                '@typescript-eslint/interface-name-prefix': 'off',
+                '@typescript-eslint/no-namespace': 'off',
+                '@typescript-eslint/no-unused-expressions': 'off',
+                '@typescript-eslint/no-unused-vars': 'off',
+                '@typescript-eslint/ban-ts-ignore': 'off',
+                '@typescript-eslint/array-type': ['error', { default: 'generic' }],
+                '@typescript-eslint/indent': ['error', 4],
+
+            },
+            
+        },
         {
             files: ['*config*js', 'internals/**/*'],
-            parserOptions: {},
             rules: {
                 'global-require': 'off',
                 'no-console': 'off',
@@ -157,13 +175,6 @@ module.exports = {
             rules: {
                 'consistent-return': 'off',
                 '@typescript-eslint/explicit-function-return-type': 'off'
-            }
-        },
-        {
-            files: ['*.js'],
-            rules: {
-                '@typescript-eslint/tslint/config': 'off',
-                '@typescript-eslint/no-var-requires': 'off'
             }
         },
         {
@@ -183,7 +194,6 @@ module.exports = {
         }
     ],
     plugins: [
-        '@typescript-eslint',
         'jest',
         'promise',
         'import',
@@ -192,7 +202,6 @@ module.exports = {
         'autofix'
     ],
     settings: {
-        // 'import/ignore': '*config*.js',
         'import/core-modules': ['electron'],
         'import/resolver': {
             'babel-module': {

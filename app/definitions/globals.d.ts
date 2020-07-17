@@ -33,9 +33,9 @@ declare module '*.css' {
 }
 
 export interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: Function;
-    eval: Function | boolean;
-    Safe: Function;
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: () => void;
+    eval: () => void | boolean;
+    Safe: () => void;
     safeAppGroupId: number;
     webIdEventEmitter: EventEmitter;
     peruseStore: Store;
@@ -44,7 +44,7 @@ export interface Window {
 
 export interface AppWindow extends BrowserWindow {
     mainWindow: BrowserWindow;
-    openWindow: Function;
+    openWindow: () => void;
     store: Store;
-    openDevTools: Function;
+    openDevTools: () => void;
 }

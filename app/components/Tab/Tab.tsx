@@ -62,7 +62,7 @@ interface TabState {
 }
 
 export class Tab extends Component<TabProps, TabState> {
-    debouncedWebIdUpdateFunc: Function;
+    debouncedWebIdUpdateFunc: () => void;
 
     webview: WebviewTag;
 

@@ -36,8 +36,8 @@ function mapDispatchToProperties( dispatch ) {
 interface AddressBarInputProps {
     tabId: string;
     address: string;
-    updateTabUrl: Function;
-    registerNrsName: Function;
+    updateTabUrl: () => void;
+    registerNrsName: () => void;
     safeBrowserApp: {
         isMock: boolean;
         experimentsEnabled: boolean;
@@ -49,7 +49,7 @@ interface AddressBarInputProps {
         availableNrsUrls: Array<string>;
         mySites: Array<string>;
     };
-    disableExperiments?: Function;
+    disableExperiments?: () => void;
 }
 
 export const wrapAddressBarInput = (

@@ -47,7 +47,7 @@ const getWindowId = ( win ) => {
 export class MenuBuilder {
     private mainWindow: AppWindow;
 
-    private openWindow: Function;
+    private openWindow: () => void;
 
     public store: Store;
 

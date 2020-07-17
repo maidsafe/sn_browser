@@ -49,7 +49,7 @@ render(
 
 if ( module.hot ) {
     module.hot.accept( './containers/App', () => {
-    // eslint-disable-next-line global-require
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const NextRoot = require( './containers/App' ).default;
         render(
             <AppContainer>

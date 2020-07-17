@@ -23,8 +23,8 @@ export interface Notification {
 
 interface BrowserProps {
     notifications: Array<Notification>;
-    clearNotification: Function;
-    updateNotification: Function;
+    clearNotification: () => void;
+    updateNotification: () => void;
 }
 
 export const handleNotifications = ( previousProperties, currentProperties ) => {
@@ -100,7 +100,6 @@ export const handleNotifications = ( previousProperties, currentProperties ) => 
                                 tabIndex={0}
                                 className={CLASSES.NOTIFICATION__ACCEPT}
                                 type="primary"
-                                // eslint-disable-next-line jsx-a11y/aria-role
                                 role="promoted"
                                 onClick={handleOnAccept}
                             >

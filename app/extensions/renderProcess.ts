@@ -18,10 +18,10 @@ const allPackages = [safeRenderer];
  */
 export const resolveExtensionInternalPages = (
     urlObject,
-    query: {},
-    tab: {},
-    props: {}
-): { pageComponent: ReactNode; title: string; tabButtonStyles?: {} } => {
+    query: Record<string, unknown>,
+    tab: Record<string, unknown>,
+    props: Record<string, unknown>
+): { pageComponent: ReactNode; title: string; tabButtonStyles?: Record<string, unknown> } => {
     logger.info( 'Extensions: Checking addInternalPages via all extensions.' );
 
     let result = null;
