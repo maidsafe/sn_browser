@@ -18,8 +18,8 @@ export const addInternalPages = (
     tab: {
         tabId: string;
     },
-    props: {}
-): null | { pageComponent: ReactNode; title: string; tabButtonStyles?: {} } => {
+    props: Record<string, unknown>
+): null | { pageComponent: ReactNode; title: string; tabButtonStyles?: Record<string, unknown> } => {
     switch ( urlObject.host ) {
         case SAFE_PAGES.EDIT_SITE: {
             const targetName = urlObject.path.slice( 1 );

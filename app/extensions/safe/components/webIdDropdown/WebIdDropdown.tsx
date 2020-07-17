@@ -35,7 +35,7 @@ interface WebIdDropdownProps {
     showWebIdDropdown: Function;
     windowId: number;
 }
-export class WebIdDropdown extends Component<WebIdDropdownProps, {}> {
+export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, unknown>> {
     static defaultProps = {
         safeBrowserApp: {
             webIds: []

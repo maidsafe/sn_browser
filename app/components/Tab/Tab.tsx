@@ -20,7 +20,7 @@ const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
 
 interface TabProps {
     addNotification: ( ...args: Array<any> ) => any;
-    webId: object;
+    webId: Record<string, unknown>;
     url: string;
     isActiveTab: boolean;
     closeTab: ( ...args: Array<any> ) => any;

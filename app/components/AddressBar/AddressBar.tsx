@@ -38,7 +38,7 @@ interface AddressBarProps {
     focusWebview: ( ...args: Array<any> ) => any;
     setActiveTab: ( ...args: Array<any> ) => any;
 }
-export class AddressBar extends Component<AddressBarProps, {}> {
+export class AddressBar extends Component<AddressBarProps, Record<string, unknown>> {
     static defaultProps = {
         address: '',
         isSelected: false,

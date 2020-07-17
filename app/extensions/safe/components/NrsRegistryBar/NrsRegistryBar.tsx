@@ -15,7 +15,7 @@ interface NrsRegistryBarProps {
     tabId: string;
     updateTabUrl: Function;
 }
-export class NrsRegistryBar extends Component<NrsRegistryBarProps, {}> {
+export class NrsRegistryBar extends Component<NrsRegistryBarProps, Record<string, unknown>> {
     handleRegisterAddress = () => {
         const {
             address,

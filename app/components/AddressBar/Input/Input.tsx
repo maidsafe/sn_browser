@@ -18,7 +18,7 @@ interface AddressBarInputProps {
     onSelect: ( ...args: Array<any> ) => any;
     onFocus: ( ...args: Array<any> ) => any;
     updateTabUrl: ( ...args: Array<any> ) => any;
-    extensionStyles: {};
+    extensionStyles: Record<string, unknown>;
     addonBefore: Array<ReactNode>;
     addonAfter: Array<ReactNode>;
 }

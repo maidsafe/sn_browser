@@ -285,7 +285,7 @@ const resetStore = ( state, payload ) => {
     return newState;
 };
 
-export const windows = ( state: object = initialState, action ) => {
+export const windows = ( state: Record<string, unknown> = initialState, action ) => {
     const { payload } = action;
 
     if ( action.error ) {

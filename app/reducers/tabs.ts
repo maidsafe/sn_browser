@@ -331,7 +331,7 @@ const resetStore = ( payload ) => {
  * @param  { object } action action Object
  * @return { array }        updatd state object
  */
-export function tabs( state: object = initialState, action ) {
+export function tabs( state: Record<string, unknown> = initialState, action ) {
     const { payload } = action;
 
     if ( action.error ) {

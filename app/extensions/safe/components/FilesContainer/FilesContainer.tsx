@@ -19,7 +19,7 @@ interface FilesContainerProps {
 
 export class FilesContainer extends React.PureComponent<
 FilesContainerProps,
-{}
+Record<string, unknown>
 > {
     render() {
         const { filesMap, currentLocation } = this.props;

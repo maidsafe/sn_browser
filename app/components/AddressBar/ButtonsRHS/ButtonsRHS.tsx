@@ -30,7 +30,7 @@ interface ButtonsRHSProps {
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class ButtonsRHS extends Component<ButtonsRHSProps, {}> {
+class ButtonsRHS extends Component<ButtonsRHSProps, Record<string, unknown>> {
     static defaultProps = {
         address: '',
         isSelected: false,
