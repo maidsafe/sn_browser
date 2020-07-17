@@ -4,18 +4,19 @@ import {
     compose,
     Store,
     Reducer,
-    StoreEnhancer
+    StoreEnhancer,
 } from 'redux';
 import {
     getInitialStateRenderer,
     replayActionMain,
-    replayActionRenderer
+    replayActionRenderer,
 } from 'electron-redux';
 
 import * as bookmarkActions from '../actions/bookmarks_actions';
 import { createRootReducer } from '../reducers';
 
-import { inRendererProcess, isRunningSpectronTestProcess } from '$Constants';
+import { logger } from '$Logger';
+import { inRendererProcess, isRunningTestCafeProcess } from '$Constants';
 import { addMiddlewares } from '$Store/addMiddlewares';
 
 const initialStateFromMain: Record<string, unknown> = inRendererProcess
@@ -24,28 +25,40 @@ const initialStateFromMain: Record<string, unknown> = inRendererProcess
 
 const rootReducer: Reducer = createRootReducer();
 
-export const configureStore = ( initialState: Record<string, unknown> = initialStateFromMain ) => {
+// eslint-disable-next-line unicorn/consistent-function-scoping
+const reduxLogger = ( store ) => ( next ) => ( action ) => {
+    logger.log( 'Dispatching action', action );
+    const result = next( action );
+    return result;
+};
+
+export const configureStore = (
+    initialState: Record<string, unknown> = initialStateFromMain
+) => {
     // Redux Configuration
     const middleware: Array<any> = [];
     const enhancers: Array<StoreEnhancer> = [];
 
+    if ( isRunningTestCafeProcess ) {
+        middleware.push( reduxLogger );
+    }
     addMiddlewares( middleware );
 
     // Redux DevTools Configuration
     const actionCreators = {
-        ...bookmarkActions
+        ...bookmarkActions,
     // ...routerActions
     };
 
     let composeEnhancers;
 
-    if ( !isRunningSpectronTestProcess && inRendererProcess ) {
+    if ( !isRunningTestCafeProcess && inRendererProcess ) {
     // If Redux DevTools Extension is installed use it, otherwise use Redux compose
     /* eslint-disable no-underscore-dangle */
         composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
             ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( {
                 // Options: http://extension.remotedev.io/docs/API/Arguments.html
-                actionCreators
+                actionCreators,
             } )
             : compose;
     /* eslint-enable no-underscore-dangle */

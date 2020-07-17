@@ -11,14 +11,14 @@ import {
     tabBackwards,
     tabShouldReload,
     toggleDevTools,
-    selectAddressBar
+    selectAddressBar,
 } from '$Actions/tabs_actions';
 import { resetStore } from '$Actions/resetStore_action';
 import {
     isHot,
     isRunningTestCafeProcess,
     isRunningPackaged,
-    isRunningDebug
+    isRunningDebug,
 } from '$Constants';
 // import { getLastClosedTab } from '$Reducers/tabs';
 import { logger } from '$Logger';
@@ -34,7 +34,7 @@ import {
     windowCloseTab,
     setActiveTab,
     reopenTab,
-    closeWindow
+    closeWindow,
 } from '$Actions/windows_actions';
 
 const getWindowId = ( win ) => {
@@ -79,8 +79,8 @@ export class MenuBuilder {
                     label: 'Inspect Element',
                     click: () => {
                         this.mainWindow.inspectElement( x, y );
-                    }
-                }
+                    },
+                },
             ] ).popup( this.mainWindow );
         } );
     }
@@ -93,7 +93,7 @@ export class MenuBuilder {
             submenu: [
                 {
                     label: 'About SAFE Browser',
-                    selector: 'orderFrontStandardAboutPanel:'
+                    selector: 'orderFrontStandardAboutPanel:',
                 },
                 { type: 'separator' },
                 { label: 'Services', submenu: [] },
@@ -101,12 +101,12 @@ export class MenuBuilder {
                 {
                     label: `Hide ${pkg.productName}`,
                     accelerator: 'Command+H',
-                    selector: 'hide:'
+                    selector: 'hide:',
                 },
                 {
                     label: 'Hide Others',
                     accelerator: 'CommandOrControl+Shift+H',
-                    selector: 'hideOtherApplications:'
+                    selector: 'hideOtherApplications:',
                 },
                 { label: 'Show All', selector: 'unhideAllApplications:' },
                 { type: 'separator' },
@@ -115,9 +115,9 @@ export class MenuBuilder {
                     accelerator: 'Command+Q',
                     click: () => {
                         app.quit();
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
 
         const subMenuFile = {
@@ -132,7 +132,7 @@ export class MenuBuilder {
 
                             this.openWindow( this.store, windowId );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'New Tab',
@@ -145,24 +145,24 @@ export class MenuBuilder {
                             this.store.dispatch(
                                 addTab( {
                                     url: 'about:blank',
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 addTabEnd( {
                                     tabId,
-                                    windowId
+                                    windowId,
                                 } )
                             );
                             this.store.dispatch(
                                 setActiveTab( {
                                     tabId,
-                                    windowId
+                                    windowId,
                                 } )
                             );
                             this.store.dispatch( selectAddressBar( { tabId } ) );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'Select Next Tab',
@@ -190,7 +190,7 @@ export class MenuBuilder {
                             } );
                             this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'Select Previous Tab',
@@ -217,7 +217,7 @@ export class MenuBuilder {
                             } );
                             this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'Close Tab',
@@ -236,7 +236,7 @@ export class MenuBuilder {
                                 this.store.dispatch( windowCloseTab( { windowId, tabId } ) );
                             }
                         }
-                    }
+                    },
                 },
 
                 {
@@ -249,7 +249,7 @@ export class MenuBuilder {
                             this.store.dispatch( closeWindow( { windowId } ) );
                             win.close();
                         }
-                    }
+                    },
                 },
                 { type: 'separator' },
                 {
@@ -260,7 +260,7 @@ export class MenuBuilder {
 
                         // need to figure this one out
                         store.dispatch( reopenTab( { windowId } ) );
-                    }
+                    },
                 },
                 { type: 'separator' },
                 {
@@ -276,9 +276,9 @@ export class MenuBuilder {
                         this.store.dispatch(
                             selectAddressBar( { tabId: thisWindowActiveTabId } )
                         );
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
         const subMenuEdit = {
             label: '&Edit',
@@ -286,35 +286,35 @@ export class MenuBuilder {
                 {
                     label: 'Undo',
                     accelerator: 'CommandOrControl+Z',
-                    selector: 'undo:'
+                    selector: 'undo:',
                 },
                 {
                     label: 'Redo',
                     accelerator: 'Shift+CommandOrControl+Z',
-                    selector: 'redo:'
+                    selector: 'redo:',
                 },
                 { type: 'separator' },
                 {
                     label: 'Cut',
                     accelerator: 'CommandOrControl+X',
-                    selector: 'cut:'
+                    selector: 'cut:',
                 },
                 {
                     label: 'Copy',
                     accelerator: 'CommandOrControl+C',
-                    selector: 'copy:'
+                    selector: 'copy:',
                 },
                 {
                     label: 'Paste',
                     accelerator: 'CommandOrControl+V',
-                    selector: 'paste:'
+                    selector: 'paste:',
                 },
                 {
                     label: 'Select All',
                     accelerator: 'CommandOrControl+A',
-                    selector: 'selectAll:'
-                }
-            ]
+                    selector: 'selectAll:',
+                },
+            ],
         };
         const subMenuView = {
             label: '&View',
@@ -331,23 +331,23 @@ export class MenuBuilder {
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://bookmarks',
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 addTabEnd( {
                                     windowId,
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 setActiveTab( {
                                     windowId,
-                                    tabId
+                                    tabId,
                                 } )
                             );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'My Sites',
@@ -361,23 +361,23 @@ export class MenuBuilder {
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://my-sites',
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 addTabEnd( {
                                     windowId,
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 setActiveTab( {
                                     windowId,
-                                    tabId
+                                    tabId,
                                 } )
                             );
                         }
-                    }
+                    },
                 },
                 { type: 'separator' },
                 {
@@ -394,7 +394,7 @@ export class MenuBuilder {
                                 tabShouldReload( { tabId, shouldReload: true } )
                             );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'Toggle Full Screen',
@@ -402,7 +402,7 @@ export class MenuBuilder {
             process.platform === 'darwin' ? 'CommandOrControl+Shift+F' : 'F11',
                     click: ( item, win ) => {
                         win.setFullScreen( !win.isFullScreen() );
-                    }
+                    },
                 },
                 {
                     label: 'Toggle Developer Tools',
@@ -420,9 +420,9 @@ export class MenuBuilder {
                                 toggleDevTools( { tabId, shouldToggleDevTools: true } )
                             );
                         }
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
         const subMenuHistory = {
             label: 'Hi&story',
@@ -439,23 +439,23 @@ export class MenuBuilder {
                             this.store.dispatch(
                                 addTab( {
                                     url: 'safe-browser://history',
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 addTabEnd( {
                                     windowId,
-                                    tabId
+                                    tabId,
                                 } )
                             );
                             this.store.dispatch(
                                 setActiveTab( {
                                     windowId,
-                                    tabId
+                                    tabId,
                                 } )
                             );
                         }
-                    }
+                    },
                 },
                 { type: 'separator' },
                 {
@@ -470,7 +470,7 @@ export class MenuBuilder {
                         if ( win ) {
                             store.dispatch( tabForwards( { tabId, timeStamp } ) );
                         }
-                    }
+                    },
                 },
                 {
                     label: 'Backward',
@@ -484,9 +484,9 @@ export class MenuBuilder {
                         if ( win ) {
                             store.dispatch( tabBackwards( { tabId, timeStamp } ) );
                         }
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
 
         const subMenuWindow = {
@@ -495,12 +495,12 @@ export class MenuBuilder {
                 {
                     label: 'Minimise',
                     accelerator: 'CommandOrControl+M',
-                    role: 'minimize'
+                    role: 'minimize',
                 },
                 {
                     label: 'Close',
                     accelerator: 'CommandOrControl+Shift+W',
-                    role: 'close'
+                    role: 'close',
                 },
                 { type: 'separator' },
                 { label: 'Bring All to Front', role: 'front' },
@@ -511,22 +511,22 @@ export class MenuBuilder {
                         if ( win ) {
                             win.toggleDevTools();
                         }
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
         const subMenuHelp = {
             label: '&Help',
             submenu: [
                 {
                     label: `Safe Browser version: ${app.getVersion()}`,
-                    enabled: false
+                    enabled: false,
                 },
                 {
                     label: 'Learn More about the Safe Network',
                     click() {
                         open( 'https://safenetwork.tech/' );
-                    }
+                    },
                 },
                 {
                     label: 'Documentation',
@@ -534,21 +534,21 @@ export class MenuBuilder {
                         open(
                             'https://github.com/maidsafe/safe_browser/blob/master/README.md'
                         );
-                    }
+                    },
                 },
                 {
                     label: 'Community Discussions',
                     click() {
                         open( 'https://safenetforum.org' );
-                    }
+                    },
                 },
                 {
                     label: 'Search Issues',
                     click() {
                         open( 'https://github.com/maidsafe/safe_browser/issues' );
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
 
         const helpMenuPacked = {
@@ -568,7 +568,7 @@ export class MenuBuilder {
                                 type: 'warning',
                                 title,
                                 body: message,
-                                duration: 2
+                                duration: 2,
                             };
                             store.dispatch( addNotification( theNotification ) );
                             autoUpdater.removeAllListeners( 'update-not-available' );
@@ -576,9 +576,9 @@ export class MenuBuilder {
                         // eslint-disable-next-line no-new
                         const browserUpdater = new AppUpdater( store );
                         browserUpdater.checkForUpdate();
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
 
         const subMenuTest = {
@@ -587,65 +587,59 @@ export class MenuBuilder {
                 {
                     label: 'Reset the store',
                     click: ( item, win ) => {
-                        if ( win ) {
-                            // TODO: Refactor and DRY this out w/ handleRemoteCalls
-                            const windowId = getWindowId( win );
+                        const windowId = getWindowId( win );
 
-                            const resetStoreActionObject = getResetStoreActionObject(
-                                store.getState(),
-                                windowId
-                            );
+                        const resetStoreActionObject = getResetStoreActionObject(
+                            store.getState(),
+                            windowId
+                        );
 
-                            this.store.dispatch( resetStore( resetStoreActionObject ) );
-                        }
-                    }
+                        this.store.dispatch( resetStore( resetStoreActionObject ) );
+                    },
                 },
                 {
                     label: 'Add Tab Next',
                     click: ( item, win ) => {
-                        if ( win ) {
-                            // TODO: Refactor and DRY this out w/ handleRemoteCalls
-                            const windowId = getWindowId( win );
+                        // TODO: Refactor and DRY this out w/ handleRemoteCalls
+                        const windowId = getWindowId( win );
 
-                            const state = store.getState();
+                        const state = store.getState();
 
-                            const { windows } = state;
+                        const { windows } = state;
 
-                            const currentWindow = windows.openWindows[windowId]
-                                ? windows.openWindows[windowId]
-                                : {};
+                        const currentWindow = windows.openWindows[windowId]
+                            ? windows.openWindows[windowId]
+                            : {};
 
-                            const activeTabId =
-                currentWindow !== {} ? currentWindow.activeTab : null;
+                        const activeTabId =
+              currentWindow !== {} ? currentWindow.activeTab : null;
 
-                            const currentTabs =
-                currentWindow !== {} ? currentWindow.tabs : [];
-                            const tabIndex = currentTabs.findIndex(
-                                ( element ) => element === activeTabId
-                            );
+                        const currentTabs = currentWindow !== {} ? currentWindow.tabs : [];
+                        const tabIndex = currentTabs.findIndex(
+                            ( element ) => element === activeTabId
+                        );
 
-                            const tabId = Math.random().toString( 36 );
+                        const tabId = Math.random().toString( 36 );
 
-                            this.store.dispatch(
-                                addTab( {
-                                    url: 'safe://home.dgeddes',
-                                    tabId
-                                } )
-                            );
+                        this.store.dispatch(
+                            addTab( {
+                                url: 'safe://home.dgeddes',
+                                tabId,
+                            } )
+                        );
 
-                            this.store.dispatch(
-                                addTabNext( {
-                                    windowId,
-                                    tabId,
-                                    tabIndex
-                                } )
-                            );
+                        this.store.dispatch(
+                            addTabNext( {
+                                windowId,
+                                tabId,
+                                tabIndex,
+                            } )
+                        );
 
-                            this.store.dispatch( setActiveTab( { tabId, windowId } ) );
-                        }
-                    }
-                }
-            ]
+                        this.store.dispatch( setActiveTab( { tabId, windowId } ) );
+                    },
+                },
+            ],
         };
 
         const initialMenusArray = [
@@ -656,7 +650,7 @@ export class MenuBuilder {
             subMenuHistory,
             subMenuWindow,
             ...( isRunningPackaged ? [helpMenuPacked] : [subMenuHelp] ),
-            ...( isRunningTestCafeProcess ? [subMenuTest] : [] )
+            ...( isRunningTestCafeProcess ? [subMenuTest] : [] ),
         ];
 
         const extendedMenusArray = getExtensionMenuItems( store, initialMenusArray );
