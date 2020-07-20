@@ -19,6 +19,7 @@ fixture`history successfully reset w/ reset store`
     .page( '../app/app.html' )
     .afterEach( async ( t ) => {
         await resetStore( t );
+        await t.wait( 500 );
     } )
     .beforeEach( async () => {
         await waitForReact();

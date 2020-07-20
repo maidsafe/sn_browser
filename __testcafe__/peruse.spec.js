@@ -7,14 +7,14 @@ import {
     navigateTo,
     resetStore,
     addTabNext,
-    selectPreviousTab
+    selectPreviousTab,
 } from './helpers';
 import {
     bookmarkPage,
     closeTab,
     addTab,
     tab,
-    addressBarInput
+    addressBarInput,
 } from './selectors';
 
 const assertNoConsoleErrors = async ( t ) => {
@@ -31,6 +31,7 @@ fixture`Browser UI`
     .page( '../app/app.html' )
     .afterEach( async ( t ) => {
         await resetStore( t );
+        await t.wait( 500 );
     } )
     .beforeEach( async () => {
         await waitForReact();
@@ -51,17 +52,11 @@ test( 'add tab should exist', async ( t ) => {
 } );
 
 test( 'can add a tab', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 } );
 
 test( 'can add a tab next', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 
     await selectPreviousTab( t );
 
@@ -83,10 +78,7 @@ test( 'can close a tab', async ( t ) => {
 } );
 
 test( 'can type in the address bar and get safe: automatically', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 
     await navigateTo( t, 'shouldappearinbookmarks.com' );
 
