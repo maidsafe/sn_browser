@@ -8,7 +8,7 @@ import {
     closeTab,
     addTab,
     tab,
-    addressBarInput
+    addressBarInput,
 } from './selectors';
 
 const assertNoConsoleErrors = async ( t ) => {
@@ -25,6 +25,7 @@ fixture`Settings Menu`
     .page( '../app/app.html' )
     .afterEach( async ( t ) => {
         await resetStore( t );
+        await t.wait( 500 );
     } )
     .beforeEach( async () => {
         await waitForReact();

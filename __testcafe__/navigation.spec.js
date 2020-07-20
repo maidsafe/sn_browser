@@ -2,7 +2,7 @@ import { Selector } from 'testcafe';
 import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
 import {
     getMainMenuItem,
-    clickOnMainMenuItem
+    clickOnMainMenuItem,
 } from 'testcafe-browser-provider-electron';
 
 import {
@@ -10,7 +10,7 @@ import {
     getPageTitle,
     openLocation,
     navigateTo,
-    resetStore
+    resetStore,
 } from './helpers';
 import { addressBar, addressBarInput, addTab, tab } from './selectors';
 import { CLASSES } from '../app/constants/classes';
@@ -19,6 +19,7 @@ fixture`Browser UI Navigation`
     .page( '../app/app.html' )
     .afterEach( async ( t ) => {
         await resetStore( t );
+        await t.wait( 500 );
     } )
     .beforeEach( async () => {
         // await waitForReact();
@@ -60,10 +61,7 @@ test( 'openLocation should select the address bar', async ( t ) => {
 // } );
 
 test( 'can go backwards', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 
     await t.wait( 3000 );
 
@@ -76,10 +74,7 @@ test( 'can go backwards', async ( t ) => {
 } );
 
 test( 'can go backwards to about:blank', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 
     await navigateTo( t, 'example.com' );
     await t
@@ -89,10 +84,7 @@ test( 'can go backwards to about:blank', async ( t ) => {
 } );
 
 test( 'can load about:blank', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 
     await navigateTo( t, 'example.com' );
     await navigateTo( t, 'about:blank' );
@@ -100,10 +92,7 @@ test( 'can load about:blank', async ( t ) => {
 } );
 
 test( 'can go forwards', async ( t ) => {
-    await t
-        .click( addTab )
-        .expect( tab.count )
-        .eql( 2 );
+    await t.click( addTab ).expect( tab.count ).eql( 2 );
 
     await navigateTo( t, 'example.com' );
     await navigateTo( t, 'google.com' );
