@@ -1,5 +1,11 @@
 # SAFE Browser
 
+## Status.
+
+The Safe Browser is actively being developed against various iterations of The Safe Network. Both of which are still considered alpha software, so please be prepared to encounter and [report bugs](https://github.com/maidsafe/safe-browser/issues/new)!
+
+You currently (need the `Safe Authenticator` to be installed.)[https://github.com/maidsafe/safe-api#the-authenticator-daemon].
+
 |                                                           Linux/macOS                                                            |
 | :------------------------------------------------------------------------------------------------------------------------------: |
 |  [![Build Status](https://travis-ci.com/maidsafe/safe_browser.svg?branch=master)](https://travis-ci.com/maidsafe/safe_browser)   | [![Build status] |
@@ -96,14 +102,17 @@ On macOS, the application should be located in the 'Applications' for [security 
 
 There are a few build commands for various situations:
 
-- `yarn mock-dev` will run a developer version of the application using `MockVault`
 - `yarn prod-dev` will run a developer version of the application using the live network.
 - `yarn build` compiles all code, but you shouldn't need to use this
 - `yarn build-preload` will need to be run whenever you change the `preload.js` file for changes to show up in the browser.
 
 ### Release
 
-`yarn bump` is available for automatically updating versions and generating a changelog update based upon conventional-commits.
+Pushes to master will be automatically released, with changelog generated from conventional commits (enforced at commit time, and checked at CI), and verison bumped autmomatically.
+
+#### Alpha/Beta Channels
+
+To release alpha/beta versions of the browser, simply push to the `alpha` or `beta` channel branches and the release process will be done for that channel, as per master, but generating a `-<channel> post-fixed release and relevant electron-updater files.
 
 ### Testing
 
