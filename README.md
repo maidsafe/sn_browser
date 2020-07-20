@@ -108,7 +108,7 @@ There are a few build commands for various situations:
 
 ### Release
 
-Pushes to master will be automatically released, with changelog generated from conventional commits (enforced at commit time, and checked at CI), and verison bumped autmomatically.
+Pushes to master will be automatically released, with changelog generated from conventional commits (enforced at commit time, and checked at CI), and the version bumped autmomatically.
 
 #### Alpha/Beta Channels
 
