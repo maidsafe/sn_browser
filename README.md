@@ -112,7 +112,7 @@ Pushes to master will be automatically released, with changelog generated from c
 
 #### Alpha/Beta Channels
 
-To release alpha/beta versions of the browser, simply push to the `alpha` or `beta` channel branches and the release process will be done for that channel, as per master, but generating a `-<channel> post-fixed release and relevant electron-updater files.
+To release alpha/beta versions of the browser, simply create a version tag for the release you want, ie `v0.18.0-alpha.0` and push this to the repository to trigger a build of that alpha/beta version.
 
 ### Testing
 
