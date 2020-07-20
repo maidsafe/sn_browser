@@ -1,7 +1,7 @@
 import {
     generateBoundaryString,
     generateResponseString,
-    rangeStringToArray
+    rangeStringToArray,
 } from '$Extensions/safe/utils/safeHelpers';
 import { urlIsValid } from '$Extensions/safe/utils/urlIsValid';
 
@@ -20,7 +20,7 @@ describe( 'Safe Extension', () => {
 
             // actul devctools url
             const devtools =
-        'chrome-devtools://devtools/bundled/inspector.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@691bdb490962d4e6ae7f25c6ab1fdd0faaf19cd0/&can_dock=&toolbarColor=rgba(223,223,223,1)&textColor=rgba(0,0,0,1)&experiments=true';
+        'devtools://devtools/bundled/inspector.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@691bdb490962d4e6ae7f25c6ab1fdd0faaf19cd0/&can_dock=&toolbarColor=rgba(223,223,223,1)&textColor=rgba(0,0,0,1)&experiments=true';
             const localhost = 'http://localhost/';
             const home = 'http://127.0.0.1/';
             const homeBad = 'http://127.0.0.1.com/';
@@ -64,30 +64,30 @@ describe( 'Safe Extension', () => {
                     body: fileData.slice( 3, 9 ),
                     headers: {
                         'Content-Type': 'text/plain',
-                        'Content-Range': `bytes 3-8/${fileData.length}`
-                    }
+                        'Content-Range': `bytes 3-8/${fileData.length}`,
+                    },
                 },
                 {
                     body: fileData.slice( 11, 14 ),
                     headers: {
                         'Content-Type': 'text/plain',
-                        'Content-Range': `bytes 11-13/${fileData.length}`
-                    }
+                        'Content-Range': `bytes 11-13/${fileData.length}`,
+                    },
                 },
                 {
                     body: fileData.slice( 17, 19 ),
                     headers: {
                         'Content-Type': 'text/plain',
-                        'Content-Range': `bytes 17-18/${fileData.length}`
-                    }
-                }
+                        'Content-Range': `bytes 17-18/${fileData.length}`,
+                    },
+                },
             ];
             const data = {
                 headers: {
                     'Content-Type': 'multipart/byteranges',
-                    'Content-Length': JSON.stringify( parts ).length
+                    'Content-Length': JSON.stringify( parts ).length,
                 },
-                parts
+                parts,
             };
             const testValue = generateResponseString( data );
             expect( typeof testValue ).toBe( 'string' );
@@ -105,7 +105,7 @@ describe( 'Safe Extension', () => {
             const expectedValue = [
                 { start: 4, end: 6 },
                 { start: 14, end: 20 },
-                { start: 40, end: 53 }
+                { start: 40, end: 53 },
             ];
             expect( testValue ).toEqual( expectedValue );
         } );
