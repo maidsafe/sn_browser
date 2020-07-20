@@ -7,6 +7,8 @@ jobs:
     steps:
       - name: Check out code.
         uses: actions/checkout@v1
+      - name: Remove lockfiles to avoid spellcheck
+        run: rm ./*.lock
       - name: misspell
         uses: reviewdog/action-misspell@v1
         with:
