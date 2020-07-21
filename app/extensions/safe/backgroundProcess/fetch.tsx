@@ -147,7 +147,7 @@ export const getHTTPFriendlyData = async (
     } catch ( error ) {
         logger.debug( 'Fetch error', error, parsed );
 
-        if ( !extname( parsed.path ) ) {
+        if ( !parsed.path || !extname( parsed.path ) ) {
             try {
                 data = await app.fetch( `${url}.html` );
             } catch ( secondErrors ) {

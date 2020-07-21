@@ -37,8 +37,12 @@ export const safeRoute = ( store ) => ( {
                     latestVersion={latestVersion}
                 />
             );
-            logger.debug( 'Constructing error page:', page );
-            response.status( ERROR_CODES[type] ).send( page );
+            logger.debug( 'Constructing error page of type:', type, page );
+            response
+                // Commented out until electron stops swallowing response body:
+                // https://github.com/electron/electron/issues/21046
+                // .status( ERROR_CODES[type] )
+                .send( page );
         };
 
         try {
@@ -84,7 +88,7 @@ export const safeRoute = ( store ) => ( {
                 data = await getHTTPFriendlyData( link, store );
             } catch ( error ) {
                 const message = cleanupNeonError( error );
-                logger.warn( message, error.code );
+                logger.warn( 'error with http friendly data', message, error.code );
 
                 if ( targetVersion && message.includes( `Content not found at ${link}` ) ) {
                     return sendErrorResponse( ERROR_TYPES.NO_CONTENT_FOUND );
@@ -112,7 +116,7 @@ export const safeRoute = ( store ) => ( {
                     return sendErrorResponse( ERROR_TYPES.INVALID_VERSION, link );
                 }
 
-                logger.error( `No data found at: ${link}` );
+                logger.error( `Content not found at: ${link}` );
                 return sendErrorResponse( ERROR_TYPES.NO_CONTENT_FOUND );
 
                 // return;
