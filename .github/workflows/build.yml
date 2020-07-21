@@ -65,6 +65,13 @@ jobs:
       - run: cp ./release/*.dmg ./release/safe_browser-${{ matrix.os }}.dmg
         if: matrix.os == 'macos-latest'
 
+      - name: Archive Everything (we are on a tag build)!
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@v1
+        with:
+          name: safe_browser-${{ matrix.os }}
+          path: ./release
+
       - name: Archive Artifact!
         if: matrix.os != 'macos-latest' && !startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v1
