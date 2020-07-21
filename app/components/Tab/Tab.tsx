@@ -11,7 +11,7 @@ import {
     removeTrailingSlash,
     urlHasChanged,
 } from '$Utils/urlHelpers';
-import { Error } from '$Components/PerusePages/Error';
+import { Error, ERROR_TYPES } from '$Components/PerusePages/Error';
 import { logger } from '$Logger';
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
@@ -210,6 +210,7 @@ export class Tab extends Component<TabProps, TabState> {
                 );
                 return;
             }
+            this.buildMenu( webview );
 
             // We set the webContents here, and add it to the user agent
             // to be able to modify _all_ requests from a domain to pull
@@ -267,8 +268,8 @@ export class Tab extends Component<TabProps, TabState> {
         webview.src = 'about:blank';
         webview.addEventListener( 'dom-ready', callbackSetup );
         webview.addEventListener( 'dom-ready', () => {
-            this.buildMenu( webview );
             this.didStopLoading();
+            this.buildMenu( webview );
         } );
     }
 
@@ -319,7 +320,6 @@ export class Tab extends Component<TabProps, TabState> {
 
         // update url in tab if new
         if ( previousProperties.url && previousProperties.url !== url ) {
-            console.log( 'seeing', previousProperties.url, url );
             if ( !webview ) return;
             const webviewSource = parseURL( webview.src );
             if (
@@ -417,6 +417,11 @@ export class Tab extends Component<TabProps, TabState> {
                 webContents.focus();
             } );
         } );
+        const { webview } = this;
+
+        webview.executeJavaScript( `
+            console.log("started loading");
+        ` );
     }
 
     didFailLoad( error ) {
@@ -433,47 +438,25 @@ export class Tab extends Component<TabProps, TabState> {
         const urlObject = stdUrl.parse( url );
         const errorUrl = error.validatedURL;
 
-        logger.info( 'didfail load for url', urlObject, error );
-        const renderError = ( header, subHeader? ) => {
-            const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
-                <Error error={{ header, subHeader }} />
-            );
+        logger.info( 'didfail load', error );
 
-            logger.info( 'error should show: ', errorAsHtml );
+        const renderError = ( type, address ) => {
+            const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
+                <Error type={type} address={address} />
+            );
             webview.executeJavaScript( `
         try
-        {
+         {
           const body = document.querySelector('body');
           body.innerHTML = '${errorAsHtml}';
-        }
-        catch ( err )
-        {
-            console.error("error adding error info:");
-            console.error(err);
-        }
+         }
+         catch ( err )
+         {
+           console.error(err);
+         }
       ` );
         };
-        if (
-            urlObject.hostname === '127.0.0.1' ||
-      urlObject.hostname === 'localhost'
-        ) {
-            try {
-                renderError( 'Page Load Failed' );
-            } catch ( scriptError ) {
-                // not logger due to error contents
-                console.error( scriptError );
-            }
-            return;
-        }
-        if ( error && error.errorDescription === 'ERR_INVALID_URL' ) {
-            try {
-                renderError( `Invalid URL: ${url}` );
-            } catch ( scriptError ) {
-                // not logger due to error contents
-                console.error( scriptError );
-            }
-            return;
-        }
+
         if ( error && error.errorDescription === 'ERR_BLOCKED_BY_CLIENT' ) {
             const notification = {
                 title: 'Blocked URL',
@@ -492,7 +475,11 @@ export class Tab extends Component<TabProps, TabState> {
                 const newTabId = Math.random().toString( 36 );
                 addTabEnd( { tabId: newTabId, url: 'about:blank', windowId } );
             }
+            return;
         }
+
+        // backup as electron currently swallowing 404 body eg: https://github.com/electron/electron/issues/21046
+        renderError( ERROR_TYPES.BAD_REQUEST, url );
     }
 
     didStopLoading() {
