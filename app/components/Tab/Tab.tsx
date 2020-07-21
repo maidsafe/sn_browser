@@ -255,7 +255,7 @@ export class Tab extends Component<TabProps, TabState> {
                 this.pageFaviconUpdated.bind( this )
             );
             webview.addEventListener( 'new-window', this.newWindow.bind( this ) );
-            webview.addEventListener( 'did-fail-load', this.didFailLoad.bind( this ) );
+            // webview.addEventListener( 'did-fail-load', this.didFailLoad.bind( this ) );
             webview.addEventListener(
                 'update-target-url',
                 this.updateTargetUrl.bind( this )
@@ -438,6 +438,8 @@ export class Tab extends Component<TabProps, TabState> {
             const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
                 <Error error={{ header, subHeader }} />
             );
+
+            logger.info( 'error should show: ', errorAsHtml );
             webview.executeJavaScript( `
         try
         {
@@ -446,7 +448,8 @@ export class Tab extends Component<TabProps, TabState> {
         }
         catch ( err )
         {
-          console.error(err);
+            console.error("error adding error info:");
+            console.error(err);
         }
       ` );
         };
