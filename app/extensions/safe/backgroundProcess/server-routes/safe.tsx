@@ -9,14 +9,14 @@ import { errorConstants } from '$Extensions/safe/err-constants';
 import {
     rangeStringToArray,
     generateResponseString,
-    cleanupNeonError
+    cleanupNeonError,
 } from '$Extensions/safe/utils/safeHelpers';
 import { getHTTPFriendlyData } from '$Extensions/safe/backgroundProcess';
 import { SAFE } from '$Extensions/safe/constants';
 import {
     windowCloseTab,
     addTabEnd,
-    addTabNext
+    addTabNext,
 } from '$Actions/windows_actions';
 
 export const safeRoute = ( store ) => ( {
@@ -29,18 +29,16 @@ export const safeRoute = ( store ) => ( {
             badVersion?: string,
             latestVersion?: string
         ): void => {
-            response
-                .status( ERROR_CODES[type] )
-                .send(
-                    ReactDOMServer.renderToStaticMarkup(
-                        <Error
-                            type={type}
-                            address={address}
-                            badVersin={badVersion}
-                            latestVersion={latestVersion}
-                        />
-                    )
-                );
+            const page = ReactDOMServer.renderToStaticMarkup(
+                <Error
+                    type={type}
+                    address={address}
+                    badVersin={badVersion}
+                    latestVersion={latestVersion}
+                />
+            );
+            logger.debug( 'Constructing error page:', page );
+            response.status( ERROR_CODES[type] ).send( page );
         };
 
         try {
@@ -159,7 +157,7 @@ export const safeRoute = ( store ) => ( {
                     .set( {
                         'Content-Type': data.headers['Content-Type'],
                         'Content-Range': data.headers['Content-Range'],
-                        'Content-Length': data.headers['Content-Length']
+                        'Content-Length': data.headers['Content-Length'],
                     } )
                     .send( data.body );
             }
@@ -179,5 +177,5 @@ export const safeRoute = ( store ) => ( {
             logger.error( message );
             return sendErrorResponse( ERROR_TYPES.BAD_REQUEST, problemLink );
         }
-    }
+    },
 } );

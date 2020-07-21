@@ -4,7 +4,7 @@ import { XorUrlEncoder } from 'safe-nodejs';
 import { SaferSafe } from '$Extensions/safe/webviewProcess/saferSafe';
 // eslint-disable-next-line import/extensions
 import pkg from '$Package';
-import { logger } from '$Logger';
+// import { logger } from '$Logger';
 
 // shim for rdflib.js
 // eslint-disable-next-line no-underscore-dangle
@@ -25,32 +25,6 @@ const pendingCalls = {};
 class WebIdEvents extends EventEmitter {}
 
 const webIdEventEmitter = new WebIdEvents();
-
-// const createRemoteCall = ( functionName, passedStore ) => {
-//     if ( !functionName ) {
-//         throw new Error( 'Remote calls must have a functionName to call.' );
-//     }
-//
-//     const remoteCall = ( ...args ) =>
-//         new Promise( ( resolve, reject ) => {
-//             const callId = Math.random().toString( 36 );
-//
-//             const theCall = {
-//                 id: callId,
-//                 name: functionName,
-//                 args
-//             };
-//
-//             passedStore.dispatch( remoteCallActions.addRemoteCall( theCall ) );
-//
-//             pendingCalls[theCall.id] = {
-//                 resolve,
-//                 reject
-//             };
-//         } );
-//
-//     return remoteCall;
-// };
 
 /**
  * Set the window var for experimentsEnabled for Tab api import.
@@ -102,8 +76,6 @@ export const setupWebIdEventEmitter = ( passedStore, win = window ) => {
 
 export const setupSafeAPIs = ( passedStore, win = window ) => {
     const theWindow = win;
-    logger.info( 'Setup up SAFE Dom API... UPDATED' );
-
     // use from passed object if present (for testing)
     theWindow.Safe = theWindow.Safe || SaferSafe;
 

@@ -71,8 +71,6 @@ if ( inMainProcess && !isRunningTestCafeProcess ) {
     log.info( 'startedRunningProduction?', startedRunningProduction );
     log.info( 'startedRunningMock?', startedRunningMock );
     log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
-    log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
-    log.info( 'isRunningTestCafeProcess?', isRunningTestCafeProcess );
     log.info( '' );
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
     log.info( '' );

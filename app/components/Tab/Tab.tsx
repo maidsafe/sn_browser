@@ -255,7 +255,7 @@ export class Tab extends Component<TabProps, TabState> {
                 this.pageFaviconUpdated.bind( this )
             );
             webview.addEventListener( 'new-window', this.newWindow.bind( this ) );
-            // webview.addEventListener( 'did-fail-load', this.didFailLoad.bind( this ) );
+            webview.addEventListener( 'did-fail-load', this.didFailLoad.bind( this ) );
             webview.addEventListener(
                 'update-target-url',
                 this.updateTargetUrl.bind( this )
@@ -433,7 +433,7 @@ export class Tab extends Component<TabProps, TabState> {
         const urlObject = stdUrl.parse( url );
         const errorUrl = error.validatedURL;
 
-        logger.info( 'didfail load', error );
+        logger.info( 'didfail load for url', urlObject, error );
         const renderError = ( header, subHeader? ) => {
             const errorAsHtml = ReactDOMServer.renderToStaticMarkup(
                 <Error error={{ header, subHeader }} />
@@ -460,7 +460,8 @@ export class Tab extends Component<TabProps, TabState> {
             try {
                 renderError( 'Page Load Failed' );
             } catch ( scriptError ) {
-                logger.error( scriptError );
+                // not logger due to error contents
+                console.error( scriptError );
             }
             return;
         }
@@ -468,7 +469,8 @@ export class Tab extends Component<TabProps, TabState> {
             try {
                 renderError( `Invalid URL: ${url}` );
             } catch ( scriptError ) {
-                logger.error( scriptError );
+                // not logger due to error contents
+                console.error( scriptError );
             }
             return;
         }
