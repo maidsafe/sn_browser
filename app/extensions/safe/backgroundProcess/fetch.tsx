@@ -34,15 +34,19 @@ const TRANSFER_ENCODING_CHUNKED = 'chunked';
 const ACCEPT_RANGES = 'Accept-Ranges';
 const ACCEPT_RANGES_BYTES = 'bytes';
 
-const PUB_IMMUTABLE = 'PublishedImmutableData';
+const PUBLIC_IMMUTABLE = 'PublicImmutableData';
 const FILES_CONTAINER = 'FilesContainer';
 
+/// Inpsect a url to retrieve the version history of the _start_ point of resolution.
+/// For websites this will be the NRS container. Otherwise it could be some parent
+/// Files container eg.
 const getAndSetKnownVersionsForUrl = async (
     store: Store,
     url: string,
     theSafeDataObject: SafeData
 ) => {
     let versionedDataObject = theSafeDataObject;
+
     const parseQuery = true;
     const parsed = parse( url, parseQuery );
 
@@ -54,11 +58,13 @@ const getAndSetKnownVersionsForUrl = async (
     // in getHTTPFriendlyData
         const app = await getSafeBrowserAppObject();
 
-        const data = await app.fetch( `safe://${parsed.host}${parsed.pathname}` );
+        const data = await app.inspect( `safe://${parsed.host}${parsed.pathname}` );
         logger.info(
             'Getting data for latest version of: ',
             `safe://${parsed.host}${parsed.pathname}`
         );
+
+        // get resolution start point
         if ( !data[FILES_CONTAINER] ) {
             logger.error( 'Trying to set known version for non-FilesContainer data.' );
         }
@@ -68,13 +74,14 @@ const getAndSetKnownVersionsForUrl = async (
 
     // either use NRS version or the version on the container
     const { version } = versionedDataObject.resolved_from || versionedDataObject;
-
-    store.dispatch(
-        setKnownVersionsForUrl( {
-            url: `${parsed.protocol}//${parsed.host}`,
-            version
-        } )
-    );
+    if ( version ) {
+        store.dispatch(
+            setKnownVersionsForUrl( {
+                url: `${parsed.protocol}//${parsed.host}`,
+                version,
+            } )
+        );
+    }
 };
 
 export const getHTTPFriendlyData = async (
@@ -93,7 +100,7 @@ export const getHTTPFriendlyData = async (
             [HEADERS_CONTENT_TYPE]: MIME_TYPE_HTML,
             [HEADERS_ACCESS_CONTROL_ALLOW_ORIGIN]: PERMISSIVE_ACCESS_CONTROL,
             [TRANSFER_ENCODING]: TRANSFER_ENCODING_CHUNKED,
-            [ACCEPT_RANGES]: ACCEPT_RANGES_BYTES
+            [ACCEPT_RANGES]: ACCEPT_RANGES_BYTES,
             //             [HEADERS_CSP]: `
             // 	default-src 'none';
             // 	script-src 'self';
@@ -105,7 +112,7 @@ export const getHTTPFriendlyData = async (
             // 	frame-ancestors 'none';
             // `
         },
-        body: Buffer.from( [] )
+        body: Buffer.from( [] ),
     };
 
     // grab app
@@ -152,8 +159,8 @@ export const getHTTPFriendlyData = async (
     }
 
     logger.info( 'Building a HTTP response for data from: ', url );
-
-    let theSafeDataObject;
+    logger.info( '>>>>>>>initial data fetched: ', data );
+    let theSafeDataObject = data;
 
     const currentLocation = parsed.path || '/';
 
@@ -161,18 +168,16 @@ export const getHTTPFriendlyData = async (
     // later on
     const displayContainer = parsed.query ? parsed.query.container : undefined;
 
-    if ( data[PUB_IMMUTABLE] ) {
+    if ( data[PUBLIC_IMMUTABLE] ) {
         logger.verbose( 'Handling Immutable data for location:', currentLocation );
-        theSafeDataObject = data[PUB_IMMUTABLE];
+        theSafeDataObject = data[PUBLIC_IMMUTABLE];
         response.body = Buffer.from( theSafeDataObject.data );
         response.headers[HEADERS_CONTENT_TYPE] = theSafeDataObject.media_type;
 
         response.headers[CONTENT_LENGTH] = theSafeDataObject.data.length;
 
         return response; // no need for versioning here..
-    }
-
-    if ( data[FILES_CONTAINER] ) {
+    } else if ( data[FILES_CONTAINER] ) {
         logger.verbose( 'Handling FilesContainer for location:', currentLocation );
 
         theSafeDataObject = data[FILES_CONTAINER];
@@ -204,6 +209,8 @@ export const getHTTPFriendlyData = async (
                 </html>
             );
         }
+    } else {
+        logger.warn( 'Unknown data type, cannot make HTTP Friendly data', data );
     }
 
     getAndSetKnownVersionsForUrl( store, url, theSafeDataObject );

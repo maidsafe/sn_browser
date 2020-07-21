@@ -9,7 +9,7 @@ import styles from './tab.css';
 import {
     addTrailingSlashIfNeeded,
     removeTrailingSlash,
-    urlHasChanged
+    urlHasChanged,
 } from '$Utils/urlHelpers';
 import { Error } from '$Components/PerusePages/Error';
 import { logger } from '$Logger';
@@ -72,7 +72,7 @@ export class Tab extends Component<TabProps, TabState> {
 
     static defaultProps = {
         isActiveTab: false,
-        url: 'http://start.com'
+        url: 'http://start.com',
     };
 
     static getDerivedStateFromError( error ) {
@@ -90,8 +90,8 @@ export class Tab extends Component<TabProps, TabState> {
                 loading: true,
                 mountedAndReady: false,
                 url: '',
-                redirects: []
-            }
+                redirects: [],
+            },
         };
         // this.domReady = this.domReady.bind(this);
         this.goBack = this.goBack.bind( this );
@@ -129,7 +129,7 @@ export class Tab extends Component<TabProps, TabState> {
                 : 'Control+Shift+I',
                     click() {
                         toggleDevTools( { tabId, shouldToggleDevTools: true } );
-                    }
+                    },
                 },
                 { type: 'separator' },
                 {
@@ -138,37 +138,37 @@ export class Tab extends Component<TabProps, TabState> {
             process.platform === 'darwin' ? 'CommandOrControl+R' : 'F5',
                     click() {
                         webview.reload();
-                    }
+                    },
                 },
                 {
                     label: 'Hard Reload',
                     // accelerator: 'CommandOrControl+Shift+R',
                     click() {
                         webview.reloadIgnoringCache();
-                    }
+                    },
                 },
                 {
                     label: 'Forward',
                     accelerator: 'CommandOrControl + ]',
                     click() {
                         webview.goForward();
-                    }
+                    },
                 },
                 {
                     label: 'Backward',
                     accelerator: 'CommandOrControl + [',
                     click() {
                         webview.goBack();
-                    }
+                    },
                 },
                 // { type': seperator' },
                 {
                     label: 'Select All',
-                    selector: 'selectAll:'
+                    selector: 'selectAll:',
                 },
                 {
                     type: 'separator',
-                    visible: !!( parameters.linkURL && parameters.linkURL.length > 0 )
+                    visible: !!( parameters.linkURL && parameters.linkURL.length > 0 ),
                 },
                 {
                     label: 'Open Link in New Tab',
@@ -177,15 +177,15 @@ export class Tab extends Component<TabProps, TabState> {
                         addTabNext( {
                             url: parameters.linkURL,
                             windowId,
-                            tabId: Math.random().toString( 36 )
+                            tabId: Math.random().toString( 36 ),
                         } );
-                    }
-                }
+                    },
+                },
             ],
             saveImage: false,
             saveImageAs: false,
             showInspectElement: false,
-            showCopyImageAddress: true
+            showCopyImageAddress: true,
         } );
     };
 
@@ -195,7 +195,7 @@ export class Tab extends Component<TabProps, TabState> {
         const fakeClick = new MouseEvent( 'click', {
             view: window,
             bubbles: true,
-            cancelable: true
+            cancelable: true,
         } );
         window.dispatchEvent( fakeClick );
     }
@@ -264,10 +264,10 @@ export class Tab extends Component<TabProps, TabState> {
             this.domReady();
             webview.removeEventListener( 'dom-ready', callbackSetup );
         };
-        this.buildMenu( webview );
         webview.src = 'about:blank';
         webview.addEventListener( 'dom-ready', callbackSetup );
         webview.addEventListener( 'dom-ready', () => {
+            this.buildMenu( webview );
             this.didStopLoading();
         } );
     }
@@ -285,7 +285,7 @@ export class Tab extends Component<TabProps, TabState> {
             tabId,
             shouldToggleDevTools,
             shouldReload,
-            webId
+            webId,
         } = this.props;
         const { webview } = this;
         logger.info( 'Tab: did receive updated props' );
@@ -338,7 +338,7 @@ export class Tab extends Component<TabProps, TabState> {
             this.reload();
             const tabUpdate = {
                 tabId,
-                shouldReload: false
+                shouldReload: false,
             };
             tabShouldReload( tabUpdate );
         }
@@ -353,7 +353,7 @@ export class Tab extends Component<TabProps, TabState> {
 
             const tabUpdate = {
                 tabId,
-                shouldToggleDevTools: false
+                shouldToggleDevTools: false,
             };
             toggleDevTools( tabUpdate );
         }
@@ -374,7 +374,7 @@ export class Tab extends Component<TabProps, TabState> {
             ...currentState,
             canGoBack: webview.canGoBack(),
             canGoForward: webview.canGoForward(),
-            ...properties
+            ...properties,
         };
         this.setState( { browserState } );
     }
@@ -408,7 +408,7 @@ export class Tab extends Component<TabProps, TabState> {
         const { tabLoad, tabId } = this.props;
         const tabUpdate = {
             tabId,
-            isLoading: true
+            isLoading: true,
         };
         tabLoad( tabUpdate );
         this.updateBrowserState( { loading: true } );
@@ -427,7 +427,7 @@ export class Tab extends Component<TabProps, TabState> {
             closeTab,
             addNotification,
             tabBackwards,
-            windowId
+            windowId,
         } = this.props;
         const { webview } = this;
         const urlObject = stdUrl.parse( url );
@@ -472,7 +472,7 @@ export class Tab extends Component<TabProps, TabState> {
         if ( error && error.errorDescription === 'ERR_BLOCKED_BY_CLIENT' ) {
             const notification = {
                 title: 'Blocked URL',
-                body: errorUrl
+                body: errorUrl,
             };
 
             addNotification( notification );
@@ -495,7 +495,7 @@ export class Tab extends Component<TabProps, TabState> {
         const { tabLoad, tabId } = this.props;
         const tabUpdate = {
             tabId,
-            isLoading: false
+            isLoading: false,
         };
         this.updateBrowserState( { loading: false } );
         tabLoad( tabUpdate );
@@ -508,7 +508,7 @@ export class Tab extends Component<TabProps, TabState> {
         logger.info( 'Tab did finish loading' );
         const tabUpdate = {
             tabId,
-            isLoading: false
+            isLoading: false,
         };
         if ( url === 'about:blank' ) {
             tabUpdate.title = '';
@@ -537,7 +537,7 @@ export class Tab extends Component<TabProps, TabState> {
         const { updateTabTitle, tabId } = this.props;
         const tabUpdate = {
             title,
-            tabId
+            tabId,
         };
         updateTabTitle( tabUpdate );
     }
@@ -547,7 +547,7 @@ export class Tab extends Component<TabProps, TabState> {
         const { updateTabFavicon, tabId } = this.props;
         const tabUpdate = {
             tabId,
-            favicon: event.favicons[0]
+            favicon: event.favicons[0],
         };
         updateTabFavicon( tabUpdate );
     }
@@ -773,7 +773,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
                 'message',
                 'arguments',
                 'type',
-                'name'
+                'name',
             ] );
             logger.error( 'Error from Tab.jsx', error );
             logger.error( stringError );
