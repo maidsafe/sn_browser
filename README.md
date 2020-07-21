@@ -1,10 +1,16 @@
 # SAFE Browser
 
-## Status.
+## Notes!
 
 The Safe Browser is actively being developed against various iterations of The Safe Network. Both of which are still considered alpha software, so please be prepared to encounter and [report bugs](https://github.com/maidsafe/safe-browser/issues/new)!
 
 You currently (need the `Safe Authenticator` to be installed.)[https://github.com/maidsafe/safe-api#the-authenticator-daemon].
+
+### Known Issues
+
+Currently 404 pages renders are being swallowed by electron (https://github.com/electron/electron/issues/21046), so these errors / pages returned to browser will return a 200 error code, but a 404 page served by the browser's internal server.
+
+## Status
 
 |                                                           Linux/macOS                                                            |
 | :------------------------------------------------------------------------------------------------------------------------------: |
