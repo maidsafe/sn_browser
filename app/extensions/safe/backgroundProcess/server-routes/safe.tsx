@@ -39,9 +39,9 @@ export const safeRoute = ( store ) => ( {
             );
             logger.debug( 'Constructing error page of type:', type, page );
             response
-                // Commented out until electron stops swallowing response body:
-                // https://github.com/electron/electron/issues/21046
-                // .status( ERROR_CODES[type] )
+            // Commented out until electron stops swallowing response body:
+            // https://github.com/electron/electron/issues/21046
+            // .status( ERROR_CODES[type] )
                 .send( page );
         };
 
@@ -153,17 +153,10 @@ export const safeRoute = ( store ) => ( {
 
             if ( isRangeRequest && multipartRequest ) {
                 const responseString = generateResponseString( data );
-                return response.send( responseString );
+                return response.set( data.headers ).send( responseString );
             }
             if ( isRangeRequest ) {
-                return response
-                    .status( 206 )
-                    .set( {
-                        'Content-Type': data.headers['Content-Type'],
-                        'Content-Range': data.headers['Content-Range'],
-                        'Content-Length': data.headers['Content-Length'],
-                    } )
-                    .send( data.body );
+                return response.status( 206 ).set( data.headers ).send( data.body );
             }
 
             return response.set( data.headers ).send( data.body );
