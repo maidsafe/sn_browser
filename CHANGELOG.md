@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.1](https://github.com/maidsafe/safe_browser/compare/v0.17.0-alpha.0...v0.16.1) (2020-07-27)
+
+
+### Features
+
+* **electron:** update to electron 8.4.0 ([3a0dd8d](https://github.com/maidsafe/safe_browser/commit/3a0dd8d831c56109a84498dc7f2845699d16f5e1))
+* **fetch:** add permissive access control origin header ([0ef2a1d](https://github.com/maidsafe/safe_browser/commit/0ef2a1da24ca104c239c2792105c83d4415be0f2))
+
+
+### Bug Fixes
+
+* **fetch:** updates for api changes ([0a7ec15](https://github.com/maidsafe/safe_browser/commit/0a7ec15a2fe437616788df6a4c983b1eeb579550))
+* **fetch:** use permissive headers in responses from server ([a00cee4](https://github.com/maidsafe/safe_browser/commit/a00cee4074716f694cd218213784363a204169a4))
+* **logs:** tidy logging output ([1fd9a6f](https://github.com/maidsafe/safe_browser/commit/1fd9a6f63d2587dd2a5610e1dfd92082e8dfa462))
+* **security:** use context isolation for webviews ([3f87dd7](https://github.com/maidsafe/safe_browser/commit/3f87dd7e9965977b970cd93628e06123abb533b7))
+
 ## [0.16.0](https://github.com/maidsafe/safe_browser/compare/v0.15.4...v0.16.0) (2020-03-10)
 
 ### Features
