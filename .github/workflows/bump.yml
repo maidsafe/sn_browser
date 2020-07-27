@@ -28,5 +28,7 @@ jobs:
           git config --local user.name "GitHub Action"
       - name: Bump Version
         run: npx standard-version -a
-      - name: Push changes & tags to master
+      - name: Push changes
+        run: git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:master
+      - name: Push tags to master
         run: git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:master --tags
