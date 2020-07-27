@@ -229,7 +229,7 @@
     "testcafe-browser-provider-electron": "0.0.15",
     "testcafe-live": "^0.1.4",
     "testcafe-react-selectors": "4.0.0",
-    "typescript": "3.9.6",
+    "typescript": "3.9.7",
     "url-loader": "^4.1.0",
     "webpack": "^4.41.6",
     "webpack-bundle-analyzer": "^3.6.0",
