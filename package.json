@@ -139,7 +139,7 @@
     "@commitlint/cli": "9.1.1",
     "@commitlint/config-conventional": "9.1.1",
     "@types/jest": "26.0.4",
-    "@types/node": "14.0.23",
+    "@types/node": "14.0.26",
     "@types/react": "16.9.43",
     "@types/react-router-dom": "5.1.5",
     "@types/webpack-env": "1.15.2",
