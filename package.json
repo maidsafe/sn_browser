@@ -189,7 +189,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-testcafe": "^0.2.1",
-    "eslint-plugin-unicorn": "^16.1.1",
+    "eslint-plugin-unicorn": "^21.0.0",
     "express": "4.17.1",
     "fbjs-scripts": "^1.0.1",
     "file-loader": "^6.0.0",
