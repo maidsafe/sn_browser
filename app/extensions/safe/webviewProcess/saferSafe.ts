@@ -1,4 +1,4 @@
-import { Safe } from 'safe-nodejs';
+import { Safe } from 'sn_nodejs';
 
 /**
  * Override the nodejs filesystem API to prevent file system access byt apps, and require them to use the browser's File APIs.
@@ -30,7 +30,7 @@ export class SaferSafe extends Safe {
             null,
             del,
             updateNrs,
-            dryRun
+            dryRun,
         ] );
     };
 
@@ -60,7 +60,7 @@ export class SaferSafe extends Safe {
             null,
             del,
             updateNrs,
-            dryRun
+            dryRun,
         ] );
     };
 
@@ -88,7 +88,7 @@ export class SaferSafe extends Safe {
             destination,
             force,
             updateNrs,
-            dryRun
+            dryRun,
         ] );
     };
 }

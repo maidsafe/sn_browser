@@ -1,6 +1,6 @@
 import { SaferSafe } from '$App/extensions/safe/webviewProcess/saferSafe';
 
-// jest.mock('safe-nodejs');
+// jest.mock('sn_nodejs');
 
 describe( 'Filesystem safe SAFE', () => {
     let safe;
