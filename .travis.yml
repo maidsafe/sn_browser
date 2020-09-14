@@ -24,7 +24,7 @@ before_install:
 
 install:
   - yarn
-  - ls node_modules/safe-nodejs/native
+  - ls node_modules/sn_nodejs/native
 
 
 before_script:

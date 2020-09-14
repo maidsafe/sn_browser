@@ -2,9 +2,11 @@
 
 ## Table of contents
 
-1. [SAFE Network API](#safe-network-api)
-1. [XOR-URls](#xor-urls)
-1. [Debugging](#debugging)
+- [WebApp Development](#webapp-development)
+  - [Table of contents](#table-of-contents)
+  - [SAFE Network API](#safe-network-api)
+    - [XOR-URLs](#xor-urls)
+  - [Debugging](#debugging)
 
 ## SAFE Network API
 
@@ -12,7 +14,7 @@ SAFE Browser exposes a set of APIs in the DOM which webapps can make use to conn
 
 A webapp has direct access to this set of APIs through the DOM at `window.Safe`.
 
-The SAFE Network client API exposed by SAFE Browser is a simple wrapper on top of the API provided by the [`@maidsafe/safe-nodejs`](https://github.com/maidsafe/safe-nodejs) package.
+The SAFE Network client API exposed by SAFE Browser is a simple wrapper on top of the API provided by the [`@maidsafe/sn_nodejs`](https://github.com/maidsafe/sn_nodejs) package.
 
 The APIs available are currently very limited, as they are not final. As we get further into safe-api development, more will be exposed and with that we'll be writing more complete documentation.
 

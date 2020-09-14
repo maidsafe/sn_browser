@@ -1,9 +1,9 @@
-import { Safe } from 'safe-nodejs';
+import { Safe } from 'sn_nodejs';
 
 import { logger } from '$Logger';
 import {
     setSafeBrowserAppObject,
-    getCurrentStore
+    getCurrentStore,
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
 import { addNotification } from '$Actions/notification_actions';
@@ -37,7 +37,7 @@ export const initAnon = async (): Safe => {
                 addNotification( {
                     title:
             'Network Connection Failed. There was a timeout. Try restarting the browser.',
-                    acceptText: 'Dismiss'
+                    acceptText: 'Dismiss',
                 } )
             );
         }
