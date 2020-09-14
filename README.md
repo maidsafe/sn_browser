@@ -1,10 +1,10 @@
-# SAFE Browser
+# Safe Browser
 
 ## Notes!
 
 The Safe Browser is actively being developed against various iterations of The Safe Network. Both of which are still considered alpha software, so please be prepared to encounter and [report bugs](https://github.com/maidsafe/safe-browser/issues/new)!
 
-You currently (need the `Safe Authenticator` to be installed.)[https://github.com/maidsafe/safe-api#the-authenticator-daemon].
+You currently (need the `Safe Authenticator` to be installed.)[https://github.com/maidsafe/sn_api#the-authenticator-daemon].
 
 ### Known Issues
 
@@ -19,41 +19,49 @@ Currently 404 pages renders are being swallowed by electron (https://github.com/
 
 ## Table of contents
 
-1. [About](#about)
-2. [Web App Development](#web-app-development)
-3. [Installation](#installation)
-4. [Design](#design)
-   - [Build](#Build)
-     - [Prerequisites](#prerequisites)
-     - [Build steps](#build-steps)
-     - [Development Commands](#development-commands)
-   - [Release](#Release)
-   - [Testing](#Testing)
-   - [Linting](#Linting)
-   - [Logging](#Logging)
-5. [Further help](#further-help)
-6. [License](#license)
-7. [Contributing](#contributing)
+- [Safe Browser](#safe-browser)
+  - [Notes!](#notes)
+    - [Known Issues](#known-issues)
+  - [Status](#status)
+  - [Table of contents](#table-of-contents)
+  - [About](#about)
+  - [Web App Development](#web-app-development)
+  - [Installation](#installation)
+  - [Design](#design)
+    - [Build](#build)
+      - [Prerequisites](#prerequisites)
+      - [Build steps](#build-steps)
+        - [linux](#linux)
+        - [macOS](#macos)
+      - [Development commands](#development-commands)
+    - [Release](#release)
+      - [Alpha/Beta Channels](#alphabeta-channels)
+    - [Testing](#testing)
+    - [Linting](#linting)
+    - [Logging](#logging)
+  - [Further Help](#further-help)
+  - [License](#license)
+  - [Contributing](#contributing)
 
 ## About
 
-Built upon [peruse](https://github.com/joshuef/peruse), but using its baked in extensibility to add [SAFE Network](https://safenetwork.tech) functionality.
+Built upon [peruse](https://github.com/joshuef/peruse), but using its baked in extensibility to add [Safe Network](https://safenetwork.tech) functionality.
 
 ## Web App Development
 
-Looking for more information about developing websites/web apps _for_ the SAFE Network? [Take a look at the Web App Overview](https://github.com/maidsafe/safe_browser/blob/master/docs/web-app-development/SAFE-Web-App-Overview.md).
+Looking for more information about developing websites/web apps _for_ the Safe Network? [Take a look at the Web App Overview](https://github.com/maidsafe/safe_browser/blob/master/docs/web-app-development/SAFE-Web-App-Overview.md).
 
 ## Installation
 
-For normal SAFE Network browsing, you should download the latest version of the browser from [The SAFE Browser releases](https://github.com/maidsafe/safe_browser/releases/latest) page.
+For normal Safe Network browsing, you should download the latest version of the browser from [The Safe Browser releases](https://github.com/maidsafe/safe_browser/releases/latest) page.
 
-Application developers should use the same link, but choose the `-dev` postfixed version for their platform. This version uses a `mock` network to allow local development (without the need to pay PUT costs on a live SAFE Network).
+Application developers should use the same link, but choose the `-dev` postfixed version for their platform. This version uses a `mock` network to allow local development (without the need to pay PUT costs on a live Safe Network).
 
 We use a `dev` branch for development. And we keep `master` as a stable reference updated with each release.
 
 ## Design
 
-To find out more about the structure of Peruse and the SAFE functionality extending it, [read the Browser Application Design Overview](https://github.com/maidsafe/safe_browser/blob/master/docs/browser-development/Application-Design-Overview.md).
+To find out more about the structure of Peruse and the Safe functionality extending it, [read the Browser Application Design Overview](https://github.com/maidsafe/safe_browser/blob/master/docs/browser-development/Application-Design-Overview.md).
 
 ### Build
 
@@ -146,12 +154,12 @@ Logs are printed to both render console and stdout. Logs are also written to a l
 
 ## Further Help
 
-You can discuss development-related questions on the [SAFE Dev Forum](https://forum.safedev.org/).
-If you are just starting to develop an application for the SAFE Network, it's very advisable to visit the [SAFE Network Dev Hub](https://hub.safedev.org) where you will find a lot of relevant information, including a [tutorial to create an example SAFE web application](https://hub.safedev.org/platform/web/) which makes use of the API exposed by the SAFE Browser.
+You can discuss development-related questions on the [Safe Dev Forum](https://forum.safedev.org/).
+If you are just starting to develop an application for the Safe Network, it's very advisable to visit the [Safe Network Dev Hub](https://hub.safedev.org) where you will find a lot of relevant information, including a [tutorial to create an example Safe web application](https://hub.safedev.org/platform/web/) which makes use of the API exposed by the Safe Browser.
 
 ## License
 
-This SAFE Network library is dual-licensed under the Modified BSD ([LICENSE-BSD](LICENSE-BSD) https://opensource.org/licenses/BSD-3-Clause) or the MIT license ([LICENSE-MIT](LICENSE-MIT) https://opensource.org/licenses/MIT) at your option.
+This Safe Network library is dual-licensed under the Modified BSD ([LICENSE-BSD](LICENSE-BSD) https://opensource.org/licenses/BSD-3-Clause) or the MIT license ([LICENSE-MIT](LICENSE-MIT) https://opensource.org/licenses/MIT) at your option.
 
 ## Contributing
 
