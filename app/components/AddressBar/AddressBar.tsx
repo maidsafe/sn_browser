@@ -69,7 +69,7 @@ export class AddressBar extends Component<AddressBarProps, Record<string, unknow
         const { windowId, addTabEnd } = this.props;
         const tabId = Math.random().toString( 36 );
         const addATab = ( tab ) => {
-            addTabEnd( { url: `safe-browser://${tab}`, windowId, tabId } );
+            addTabEnd( { url: `sn_browser://${tab}`, windowId, tabId } );
         };
         return [
             <Row key="menuItem-bookmarks" type="flex" justify="start" align="middle">

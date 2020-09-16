@@ -174,7 +174,7 @@ export const I18N_CONFIG = {
 export const PROTOCOLS = {
     SAFE: 'safe',
     SAFE_LOGS: 'safe-logs',
-    INTERNAL_PAGES: 'safe-browser'
+    INTERNAL_PAGES: 'sn_browser'
 };
 
 export const INTERNAL_PAGES = {
@@ -245,7 +245,7 @@ const appInfo = {
 // if ( isRunningUnpacked && process.platform === 'darwin' ) {
 //     appInfo.info.bundle = 'com.github.electron';
 // } else if ( process.platform === 'darwin' ) {
-//     appInfo.info.bundle = 'com.electron.safe-browser';
+//     appInfo.info.bundle = 'com.electron.sn_browser';
 // }
 
 export const APP_INFO = appInfo;

@@ -9,7 +9,8 @@ env:
   AWS_ACCESS_KEY_ID: AKIAVVODCRMSJ5MV63VB
   AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_USER_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: eu-west-2
-  APPLICATION: safe-browser
+  BUCKET: sn-browser
+  APPLICATION: sn_browser
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
   CSC_LINK: ${{ secrets.CSC_LINK }}
@@ -59,32 +60,32 @@ jobs:
 
       - run: yarn package
 
-      - run: cp ./release/*.zip ./release/safe_browser-${{ matrix.os }}.zip
+      - run: cp ./release/*.zip ./release/sn_browser-${{ matrix.os }}.zip
         if: matrix.os != 'macos-latest'
 
-      - run: cp ./release/*.dmg ./release/safe_browser-${{ matrix.os }}.dmg
+      - run: cp ./release/*.dmg ./release/sn_browser-${{ matrix.os }}.dmg
         if: matrix.os == 'macos-latest'
 
       - name: Archive Everything (we are on a tag build)!
         if: startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v1
         with:
-          name: safe_browser-${{ matrix.os }}
+          name: sn_browser-${{ matrix.os }}
           path: ./release
 
       - name: Archive Artifact!
         if: matrix.os != 'macos-latest' && !startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v1
         with:
-          name: safe_browser-${{ matrix.os }}-${{ github.sha }}
-          path: ./release/safe_browser-${{ matrix.os }}.zip
+          name: sn_browser-${{ matrix.os }}-${{ github.sha }}
+          path: ./release/sn_browser-${{ matrix.os }}.zip
 
       - name: Archive Artifact Mac!
         if: matrix.os == 'macos-latest' && !startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v1
         with:
-          name: safe_browser-${{ matrix.os }}-${{ github.sha }}
-          path: ./release/safe_browser-${{ matrix.os }}.dmg
+          name: sn_browser-${{ matrix.os }}-${{ github.sha }}
+          path: ./release/sn_browser-${{ matrix.os }}.dmg
 
   release:
     # only if we have a tag
@@ -120,33 +121,33 @@ jobs:
       - name: Download win release
         uses: actions/download-artifact@master
         with:
-          name: safe_browser-windows-latest
+          name: sn_browser-windows-latest
           path: release
 
       - name: Win hash title
         run: echo 'Windows' >> ${{ github.workflow }}-CHANGELOG.txt
 
       - name: Hash Windows
-        run: shasum -a 256 release/safe-browser-${{ env.RELEASE_VERSION }}-win-x64.exe | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
+        run: shasum -a 256 release/${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
 
       # Mac release info
       - name: Download mac release
         uses: actions/download-artifact@master
         with:
-          name: safe_browser-macos-latest
+          name: sn_browser-macos-latest
           path: release
 
       - name: MacOs hash title
         run: echo 'MacOS' >> ${{ github.workflow }}-CHANGELOG.txt
 
       - name: Hash mac
-        run: shasum -a 256 release/safe-browser-${{ env.RELEASE_VERSION }}-mac-x64.dmg | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
+        run: shasum -a 256 release/${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
 
       # Linux release info
       - name: Download linux release
         uses: actions/download-artifact@master
         with:
-          name: safe_browser-ubuntu-latest
+          name: sn_browser-ubuntu-latest
           path: release
 
       - run: ls release
@@ -156,7 +157,7 @@ jobs:
         run: echo 'Linux' >> ${{ github.workflow }}-CHANGELOG.txt
 
       - name: Hash linux
-        run: shasum -a 256 release/safe-browser-${{ env.RELEASE_VERSION }}-linux-x64.AppImage | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
+        run: shasum -a 256 release/${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage | awk '{print $1;}' >> ${{ github.workflow }}-CHANGELOG.txt
 
       - name: End Sha for Changelog
         run: echo '```' >> ${{ github.workflow }}-CHANGELOG.txt
@@ -164,7 +165,7 @@ jobs:
       # s3
       - name: Put all release files on s3
         shell: bash
-        run: aws s3 cp release/ s3://${{ env.APPLICATION }}/tag-builds/${{ env.RELEASE_VERSION }} --acl public-read --recursive
+        run: aws s3 cp release/ s3://${{ env.BUCKET }}/tag-builds/${{ env.RELEASE_VERSION }} --acl public-read --recursive
 
       - name: Release generation
         uses: softprops/action-gh-release@91409e712cf565ce9eff10c87a8d1b11b81757ae

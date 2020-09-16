@@ -30,7 +30,7 @@ module.exports = async ( AfterPackContext ) => {
     if ( platform === MAC )
         APP_ITSELF_DIR = path.resolve(
             AfterPackContext.appOutDir,
-            'SAFE Browser.app/Contents/Resources'
+            'Safe Browser.app/Contents/Resources'
         );
 
     // add version file

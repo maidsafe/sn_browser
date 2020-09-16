@@ -21,7 +21,7 @@ export const attemptReconnect = ( passedStore, appObject ) => {
 };
 
 /**
- * Reconnect the application with SAFE Network when disconnected
+ * Reconnect the application with Safe Network when disconnected
  */
 export const reconnect = ( app ) => {
     if ( !app ) {

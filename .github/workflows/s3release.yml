@@ -13,7 +13,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_USER_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: eu-west-2
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      APPLICATION: safe-browser
+      BUCKET: sn-browser
+      APPLICATION: sn_browser
     steps:
       - name: Set tag as env
         run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
@@ -35,7 +36,7 @@ jobs:
       # mac
       - name: Download build from s3 for this tag
         shell: bash
-        run: aws s3 cp s3://${{ env.APPLICATION }}/tag-builds/${{ env.RELEASE_VERSION }} . --recursive
+        run: aws s3 cp s3://${{ env.BUCKET }}/tag-builds/${{ env.RELEASE_VERSION }} . --recursive
 
       # do more...
       - name: Check dlded assets
@@ -47,51 +48,51 @@ jobs:
       # mac
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.dmg.blockmap" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.zip" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-mac-x64.pkg" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-mac/ --acl public-read
 
       # linux
       - name: chmod
         run: chmod +x ${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.zip" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-linux/ --acl public-read
 
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-linux-x64.AppImage" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-linux/ --acl public-read
 
       # win
 
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-win/ --acl public-read
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap" s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+        run: aws s3 cp "${{ env.APPLICATION }}-${{ env.RELEASE_VERSION }}-win-x64.exe.blockmap" s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-win/ --acl public-read
 
       # YAMLS
 
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp ${{ env.YAML_FILE }}.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-win/ --acl public-read
+        run: aws s3 cp ${{ env.YAML_FILE }}.yml s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-win/ --acl public-read
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp ${{ env.YAML_FILE }}-mac.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-mac/ --acl public-read
+        run: aws s3 cp ${{ env.YAML_FILE }}-mac.yml s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-mac/ --acl public-read
       - name: Upload to s3
         shell: bash
-        run: aws s3 cp ${{ env.YAML_FILE }}-linux.yml s3://${{ env.APPLICATION }}/${{ env.APPLICATION }}-linux/ --acl public-read
+        run: aws s3 cp ${{ env.YAML_FILE }}-linux.yml s3://${{ env.BUCKET }}/${{ env.APPLICATION }}-linux/ --acl public-read
 
       # Update the release with artifacts
       - name: Release generation

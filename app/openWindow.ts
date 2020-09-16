@@ -92,7 +92,7 @@ export const openWindow = ( store ): BrowserWindow => {
                 store.dispatch( addTabEnd( { windowId: thisWindowId, tabId } ) );
 
                 if ( !testCafeURL ) {
-                    store.dispatch( addTab( { url: 'safe-browser://my-sites', tabId } ) );
+                    store.dispatch( addTab( { url: 'sn_browser://my-sites', tabId } ) );
                 } else {
                     store.dispatch(
                         addTab( {

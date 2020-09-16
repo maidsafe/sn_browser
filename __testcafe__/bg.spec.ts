@@ -13,5 +13,5 @@
 // //     // .afterEach(assertNoConsoleErrors);
 // //
 // // test('Bg page should exist', async t => {
-// //   await t.expect(getPageTitle()).eql('Background Process of SAFE Browser');
+// //   await t.expect(getPageTitle()).eql('Background Process of Safe Browser');
 // // });

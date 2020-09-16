@@ -4,7 +4,7 @@ import { APP_INFO, startedRunningProduction } from '$Constants';
 // avoid appveyour for its weak.ref issues right now.
 const { APPVEYOR } = process.env;
 
-describe( 'SAFE Webpreload', () => {
+describe( 'Safe Webpreload', () => {
     const win = {};
     const store = {
         subscribe: jest.fn(),
@@ -16,19 +16,19 @@ describe( 'SAFE Webpreload', () => {
     // webviewPreload.onPreload( store, win );
     } );
 
-    test( 'SAFE API added to the DOM', async () => {
+    test( 'Safe API added to the DOM', async () => {
         webviewPreload.setupSafeAPIs( store, win );
 
         expect( typeof win.Safe ).toBe( 'function' );
     } );
-    test( 'SAFE XorUrlEncoder added to the DOM', async () => {
+    test( 'Safe XorUrlEncoder added to the DOM', async () => {
         webviewPreload.setupSafeAPIs( store, win );
 
         expect( typeof win.XorUrlEncoder ).toBe( 'function' );
     } );
 } );
 
-// describe( 'SAFE manageWebIdUpdates', () => {
+// describe( 'Safe manageWebIdUpdates', () => {
 //     if ( APPVEYOR ) return;
 //
 //     const win = {};

@@ -36,7 +36,7 @@ const getProductName = () => {
 };
 
 const buildConfig = {
-    appId: 'com.electron.safe-browser',
+    appId: 'com.electron.sn_browser',
     generateUpdatesFilesForAllChannels: true,
     artifactName: `${thePackage.name}-v\${version}-\${os}-x64.\${ext}`,
     afterPack: './afterPack.js',
@@ -72,7 +72,7 @@ const buildConfig = {
         }
     ],
     protocols: {
-        name: 'SAFE Network URL',
+        name: 'Safe Network URL',
         schemes: ['safe']
     },
     dmg: {
@@ -114,7 +114,7 @@ const buildConfig = {
     // publish part needed to generate correct release channel yml files
     publish: {
         provider: 's3',
-        bucket: 'safe-browser',
+        bucket: 'sn-browser',
         path: publishedFilePath()
     }
 };

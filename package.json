@@ -1,7 +1,7 @@
 {
-  "name": "safe-browser",
-  "identifier": "net.maidsafe.safe-browser",
-  "productName": "SAFE Browser",
+  "name": "sn_browser",
+  "identifier": "net.maidsafe.sn_browser",
+  "productName": "Safe Browser",
   "version": "0.18.0",
   "vendor": "MaidSafe.net Ltd",
   "description": "Electron web browser. React/redux powered with an aim of extensiblity.",
@@ -21,9 +21,9 @@
     "lint-fix": "yarn --silent lint --fix; exit 0",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
-    "log-mac": "tail -f ~/Library/Logs/SAFE\\ Browser/*.log",
-    "log-linux": "tail -f ~/.config/SAFE\\ Browser/logs/*.log",
-    "log-win": "tail -f ~/%USERPROFILE%\\AppData\\Roaming\\SAFE\\ Browser\\logs*.log",
+    "log-mac": "tail -f ~/Library/Logs/Safe\\ Browser/*.log",
+    "log-linux": "tail -f ~/.config/Safe\\ Browser/logs/*.log",
+    "log-win": "tail -f ~/%USERPROFILE%\\AppData\\Roaming\\Safe\\ Browser\\logs*.log",
     "mock-dev": "cross-env START_HOT=1 node -r babel-register-ts ./internals/scripts/CheckPortInUse.ts && cross-env NODE_ENV=development START_HOT=1 yarn start-renderer-dev",
     "prelint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,ts,tsx,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "prerelease": "standard-version --prerelease rc",
@@ -74,7 +74,7 @@
   "main": "./app/main.prod.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maidsafe/safe_browser"
+    "url": "git+https://github.com/maidsafe/sn_browser"
   },
   "author": {
     "name": "Maidsafe.net Ltd",
@@ -83,7 +83,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maidsafe/safe_browser/issues"
+    "url": "https://github.com/maidsafe/sn_browser/issues"
   },
   "keywords": [
     "electron",
@@ -94,7 +94,7 @@
     "hot",
     "reload"
   ],
-  "homepage": "https://github.com//maidsafe/safe_browser/#readme",
+  "homepage": "https://github.com//maidsafe/sn_browser/#readme",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {

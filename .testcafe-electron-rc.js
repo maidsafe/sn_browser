@@ -2,7 +2,7 @@
 let TEST_UNPACKED = process.env.TEST_UNPACKED;
 const pkg = require('./package');
 
-let appString = 'safe-browser';
+let appString = 'sn_browser';
 let appResources = 'resources/app.asar';
 
 const { platform } = process;
@@ -21,7 +21,7 @@ if (pkg.version.includes('-beta')) {
 
 if (platform === MAC_OS) {
     PLATFORM_NAME = 'mac';
-    appString = `SAFE Browser${appChannel}.app`;
+    appString = `Safe Browser${appChannel}.app`;
     appResources = 'Contents/Resources/app.asar';
 }
 
@@ -31,7 +31,7 @@ if (platform === LINUX) {
 
 if (platform === WINDOWS) {
     PLATFORM_NAME = 'win-unpacked';
-    appString = `SAFE Browser${appChannel}.exe`;
+    appString = `Safe Browser${appChannel}.exe`;
 }
 
 const allArgs = ['--ignoreAppLocation'];

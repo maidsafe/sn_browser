@@ -291,7 +291,7 @@ All notable changes to this project will be documented in this file. See [standa
 - CI deployment credentials
 - Testing only packaged app in CI
 
-### SAFE libraries Dependencies
+### Safe libraries Dependencies
 
 - @maidsafe/safe-node-app: `338ec368e25eb2e258d2447413006d74ecc23a15`
 
@@ -369,7 +369,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Expose `window.safeApp.readGrantedPermissions` function in DOM API to read granted containers permissions from an auth URI without the need to connect
 - Expose `window.safeApp.getOwnContainerName` function in DOM API to get the app's own container name
 
-### SAFE libraries Dependencies
+### Safe libraries Dependencies
 
 - @maidsafe/safe-node-app: v0.8.0
 - system_uri: v0.4.0
@@ -390,7 +390,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Tests for url change abstraction. Improved Tab.jsx tests;
 - Tests for adding/removing slashes
 
-### SAFE libraries Dependencies
+### Safe libraries Dependencies
 
 - @maidsafe/safe-node-app: v0.7.0
 - system_uri: v0.4.0
@@ -418,7 +418,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Support for `options` in `webFetch` to enable fetching specific byte ranges.
 - Logout clears tab history / bookmark data etc (including open tabs).
 
-### SAFE libraries Dependencies
+### Safe libraries Dependencies
 
 - @maidsafe/safe-node-app: v0.7.0
 - system_uri: v0.4.0

@@ -33,7 +33,7 @@ fixture`Settings Menu`
 // .afterEach(assertNoConsoleErrors);
 
 test( 'should open window', async ( t ) => {
-    await t.expect( getPageTitle() ).eql( 'SAFE Browser' );
+    await t.expect( getPageTitle() ).eql( 'Safe Browser' );
 } );
 
 // Blocked until we can see webview.
@@ -84,7 +84,7 @@ test( 'can open settings menu and go to bookmarks', async ( t ) => {
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__BOOKMARKS}` )
         .expect( addressBarInput.value )
-        .eql( 'safe-browser://bookmarks' );
+        .eql( 'sn_browser://bookmarks' );
 } );
 
 test( 'can open settings menu and go to history', async ( t ) => {
@@ -92,5 +92,5 @@ test( 'can open settings menu and go to history', async ( t ) => {
         .click( `.${CLASSES.SETTINGS_MENU__BUTTON}` )
         .click( `.${CLASSES.SETTINGS_MENU__HISTORY}` )
         .expect( addressBarInput.value )
-        .eql( 'safe-browser://history' );
+        .eql( 'sn_browser://history' );
 } );

@@ -33,8 +33,8 @@ export class History extends Component<HistoryProps, Record<string, unknown>> {
 
         const ignoreList = [
             'about:blank',
-            'safe-browser://history',
-            'safe-browser://bookmarks'
+            'sn_browser://history',
+            'sn_browser://bookmarks'
         ];
         const dates = Object.keys( history );
         let list = [];

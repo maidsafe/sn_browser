@@ -11,12 +11,12 @@ import { addNotification } from '$Actions/notification_actions';
 export const initAnon = async (): Safe => {
     let safeBrowserAppObject;
 
-    const APP_ID = 'net.maidsafe.safe_browser';
-    const APP_NAME = 'SAFE Browser';
+    const APP_ID = 'net.maidsafe.sn_browser';
+    const APP_NAME = 'Safe Browser';
     const APP_VENDOR = 'MaidSafe.net Ltd';
 
     try {
-        logger.info( 'Initialising anonymous SAFE App' );
+        logger.info( 'Initialising anonymous Safe App' );
 
         safeBrowserAppObject = new Safe();
 

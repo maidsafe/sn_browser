@@ -18,7 +18,7 @@ export const ERROR_CODES = {
     CONNECTION_FAILED: 500
 };
 
-// SAFE Error code space? 1000?
+// Safe Error code space? 1000?
 
 const ERROR_PAGES = {
     CONNECTION_FAILED: {
@@ -61,7 +61,7 @@ const ERROR_PAGES = {
         getMessage: ( address ) => `${address} has not been registered yet.`,
         getCallToAction: ( address ) => {
             const parsed = parse( address );
-            const registerThis = `safe-browser://my-sites?register=${parsed.host}`;
+            const registerThis = `sn_browser://my-sites?register=${parsed.host}`;
 
             return {
                 ctaText: `Register ${address}`,
