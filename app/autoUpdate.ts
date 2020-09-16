@@ -20,7 +20,7 @@ const clearNotification = ( payload: { id: string } ) =>
 // Thow error incase there is an issue in updating
 autoUpdater.on( 'error', ( error ) => {
     dialog.showErrorBox(
-        'There was an issue updating SAFE Browser. The update failed due to the following error:',
+        'There was an issue updating Safe Browser. The update failed due to the following error:',
         error == null ? 'unknown' : ( error.stack || error ).toString()
     );
 } );

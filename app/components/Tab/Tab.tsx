@@ -642,10 +642,10 @@ export class Tab extends Component<TabProps, TabState> {
               if( ! safeExperimentsEnabled )
                   return;
               console.warn(
-                  \`%cSAFE Browser Experimental Feature
+                  \`%Safe Browser Experimental Feature
 %cThe webIdEventEmitter and window.currentWebId are experimental features.
 They may be deprecated or change in future.
-For updates or to submit ideas and suggestions, visit https://github.com/maidsafe/safe_browser\`,
+For updates or to submit ideas and suggestions, visit https://github.com/maidsafe/sn_browser\`,
               'font-weight: bold',
               'font-weight: normal'
               );

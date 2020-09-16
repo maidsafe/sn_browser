@@ -69,11 +69,11 @@ describe( 'History Component', () => {
                             timeStamp: new Date().toLocaleTimeString()
                         },
                         {
-                            url: 'safe-browser://history',
+                            url: 'sn_browser://history',
                             timeStamp: new Date().toLocaleTimeString()
                         },
                         {
-                            url: 'safe-browser://bookmarks',
+                            url: 'sn_browser://bookmarks',
                             timeStamp: new Date().toLocaleTimeString()
                         }
                     ]

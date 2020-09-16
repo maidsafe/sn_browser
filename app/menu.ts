@@ -89,10 +89,10 @@ export class MenuBuilder {
         const { store } = this;
 
         const subMenuAbout = {
-            label: 'SAFE &Browser',
+            label: 'Safe &Browser',
             submenu: [
                 {
-                    label: 'About SAFE Browser',
+                    label: 'About Safe Browser',
                     selector: 'orderFrontStandardAboutPanel:',
                 },
                 { type: 'separator' },
@@ -330,7 +330,7 @@ export class MenuBuilder {
                             const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
-                                    url: 'safe-browser://bookmarks',
+                                    url: 'sn_browser://bookmarks',
                                     tabId,
                                 } )
                             );
@@ -360,7 +360,7 @@ export class MenuBuilder {
                             const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
-                                    url: 'safe-browser://my-sites',
+                                    url: 'sn_browser://my-sites',
                                     tabId,
                                 } )
                             );
@@ -438,7 +438,7 @@ export class MenuBuilder {
                             const tabId = Math.random().toString( 36 );
                             this.store.dispatch(
                                 addTab( {
-                                    url: 'safe-browser://history',
+                                    url: 'sn_browser://history',
                                     tabId,
                                 } )
                             );
@@ -506,7 +506,7 @@ export class MenuBuilder {
                 { label: 'Bring All to Front', role: 'front' },
                 { type: 'separator' },
                 {
-                    label: 'Toggle SAFE Browser-shell Devtools (not for web dev debug)',
+                    label: 'Toggle Safe Browser-shell Devtools (not for web dev debug)',
                     click: ( item, win ) => {
                         if ( win ) {
                             win.toggleDevTools();
@@ -532,7 +532,7 @@ export class MenuBuilder {
                     label: 'Documentation',
                     click() {
                         open(
-                            'https://github.com/maidsafe/safe_browser/blob/master/README.md'
+                            'https://github.com/maidsafe/sn_browser/blob/master/README.md'
                         );
                     },
                 },
@@ -545,7 +545,7 @@ export class MenuBuilder {
                 {
                     label: 'Search Issues',
                     click() {
-                        open( 'https://github.com/maidsafe/safe_browser/issues' );
+                        open( 'https://github.com/maidsafe/sn_browser/issues' );
                     },
                 },
             ],

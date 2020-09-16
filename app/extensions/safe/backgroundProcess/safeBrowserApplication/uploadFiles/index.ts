@@ -48,7 +48,7 @@ export const uploadFilesToSafe = async (
         const uploadedHost = parse( target ).host;
 
         const editingTab = Object.values( tabs ).find(
-            ( tab ) => tab.url === `safe-browser://edit-site/${uploadedHost}`
+            ( tab ) => tab.url === `sn_browser://edit-site/${uploadedHost}`
         );
         logger.info( target, 'updated via tab', editingTab );
 

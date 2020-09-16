@@ -11,7 +11,7 @@ export { setupRoutes } from '$Extensions/safe/backgroundProcess/server-routes';
 export { getHTTPFriendlyData } from '$App/extensions/safe/backgroundProcess/fetch';
 
 export const onInitBgProcess = async ( store: Store ): Promise<void> => {
-    logger.info( 'Registering SAFE Network Protocols' );
+    logger.info( 'Registering Safe Network Protocols' );
 
     setCurrentStoreForSafe( store );
 

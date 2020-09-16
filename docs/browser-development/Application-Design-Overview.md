@@ -1,6 +1,6 @@
 # Application Design Overview
 
-The SAFE Browser is built using [electronjs](https://electronjs.org/) to provide a simple cross platform solution for accessing the SAFE Network. (It is built on top of a simple clearnet browser called [Peruse](https://github.com/joshuef/peruse).)
+The Safe Browser is built using [electronjs](https://electronjs.org/) to provide a simple cross platform solution for accessing the Safe Network. (It is built on top of a simple clearnet browser called [Peruse](https://github.com/joshuef/peruse).)
 
 The browser uses [React](https://reactjs.org/) and [Redux](https://redux.js.org/) to build the application user interface and manage its internal state.
 
@@ -19,7 +19,7 @@ Read on to get a deeper look into the application structure...
 1. [Building with Webpack](#building-with-webpack)
    - [Aliases](#aliases)
    - [DLL](#dll)
-1. [SAFE Specifics](#safe-specifics)
+1. [Safe Specifics](#safe-specifics)
 
 ---
 
@@ -51,9 +51,9 @@ The application uses Redux for managing the browser state. Thus there are many `
 
 ## The Codebase Structure
 
-An overview of the code. Extensions is probably the most interesting part here, as this is how we hook into the Peruse browser base and extend it to provide SAFE functionality.
+An overview of the code. Extensions is probably the most interesting part here, as this is how we hook into the Peruse browser base and extend it to provide Safe functionality.
 
-> NOTE: The SAFE functionality is not alllll in the extensions/safe folder, but _most of it is_. There's still some legacy code hanging around various parts of the main browser functionality which need to be moved into extensions via adding browser lifecycle hooks.
+> NOTE: The Safe functionality is not alllll in the extensions/safe folder, but _most of it is_. There's still some legacy code hanging around various parts of the main browser functionality which need to be moved into extensions via adding browser lifecycle hooks.
 
 ### `./app`
 
@@ -61,9 +61,9 @@ The browser `actions` and `reducers` etc are in the `app` folder... as is all th
 
 #### `webPreload`
 
-Electron provides a `webview` component which is used for the rendering of tabs. This can be given a js file to be executed in a controlled fashion in a tab _before_ the content is loaded. This is how we inject SAFE APIs into the dom, eg. This all happens in `webPreload`.
+Electron provides a `webview` component which is used for the rendering of tabs. This can be given a js file to be executed in a controlled fashion in a tab _before_ the content is loaded. This is how we inject Safe APIs into the dom, eg. This all happens in `webPreload`.
 
-It also sets up a more generic reducer, `remoteCalls`, which is used by SAFE or other browser APIs to register promises which can be executed in another process (`background`, eg) and then fulfilled via the redux store (responing to `remoteCall` actions!).
+It also sets up a more generic reducer, `remoteCalls`, which is used by Safe or other browser APIs to register promises which can be executed in another process (`background`, eg) and then fulfilled via the redux store (responing to `remoteCall` actions!).
 
 #### `background.process`
 
@@ -100,7 +100,7 @@ The redux reducers and store setup for the browser.
 
 ### `./app/server`
 
-An express server is set up to provide proper HTTP header handling for any extension which may wish to hijack this normal behaviour (_cough_ SAFE _cough_).
+An express server is set up to provide proper HTTP header handling for any extension which may wish to hijack this normal behaviour (_cough_ Safe _cough_).
 
 ### `./app/utils`
 
@@ -133,13 +133,13 @@ It may work. It doesn't help much though.
 
 Babel.js is also used for transpiling for getting the latest, coolest JS trendy functionality (and making dev life, much cleaner, lets be honest).
 
-## SAFE Specifics
+## Safe Specifics
 
-The main / only extension at the time of writing. This provides SAFE network functionality. Initiating applications to perform `webfetch`, hooking into various browser events to manage this in the background process, or update other portions of the browser (with extra UI elements eg).
+The main / only extension at the time of writing. This provides Safe network functionality. Initiating applications to perform `webfetch`, hooking into various browser events to manage this in the background process, or update other portions of the browser (with extra UI elements eg).
 
 #### `auth-web-app`
 
-Everyone's favourite portal to SAFE, this is a webapp, which is served on the `safe-auth://home` url from with the browser. It's a separate webapp, with its own config / build process etc, and those compiled files are served via the inbuilt express server
+Everyone's favourite portal to Safe, this is a webapp, which is served on the `safe-auth://home` url from with the browser. It's a separate webapp, with its own config / build process etc, and those compiled files are served via the inbuilt express server
 
 - APIs are located in `app/extensions/safe/api`;
 - APIs are located in `app/extensions/safe/auth-api`;
@@ -150,7 +150,7 @@ Extend the browser here!
 
 #### More redux (`actions` / `reducers`)
 
-The SAFE extension has more `actions` and `reducers`, which, via the handy dandy extension hooks, are pulled into the main application store and passed around the application with it.
+The Safe extension has more `actions` and `reducers`, which, via the handy dandy extension hooks, are pulled into the main application store and passed around the application with it.
 
 There's actions for the authenticator, the SafeBrowser application (more on this confusing name shortly) and web_fetch (though this is ready to be deprecated).
 
@@ -162,7 +162,7 @@ This handles receiving / decoding / authorising requests etc.
 
 #### `safeBrowserApplication`
 
-What do you call a SAFE application, within the SAFE browser that performs `webfetch` and/or saves the SAFE Browser Application state to the network?
+What do you call a Safe application, within the Safe browser that performs `webfetch` and/or saves the Safe Browser Application state to the network?
 
 This all happens in here. Setting up of the nodejs safe app, authentication trigger, registering of URIs, handling save/read of states. ALL OF IT.
 
@@ -172,4 +172,4 @@ These are routes that are passed to the `express` server, which we use for hijac
 
 #### `utils`
 
-Some helpers for SAFE functionality
+Some helpers for Safe functionality

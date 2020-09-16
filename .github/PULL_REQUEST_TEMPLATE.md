@@ -19,10 +19,10 @@ QA:
 Easiest way to test this PR would be to:
 - Run API playground
 - Initialise app
-- Copy the value from [authReqWithoutMockBit](https://github.com/maidsafe/safe_browser/compare/master...hunterlester:454?expand=1#diff-a003f29f7e2f9aeecfe6e3fbb39e3d2eR30)
+- Copy the value from [authReqWithoutMockBit](https://github.com/maidsafe/sn_browser/compare/master...hunterlester:454?expand=1#diff-a003f29f7e2f9aeecfe6e3fbb39e3d2eR30)
 - Paste value into `authorise` operation and run
 - Expect to see an error notification
-- Same steps for [encodedNonExistentShareMDataReq](https://github.com/maidsafe/safe_browser/compare/master...hunterlester:454?expand=1#diff-a003f29f7e2f9aeecfe6e3fbb39e3d2eR28)
+- Same steps for [encodedNonExistentShareMDataReq](https://github.com/maidsafe/sn_browser/compare/master...hunterlester:454?expand=1#diff-a003f29f7e2f9aeecfe6e3fbb39e3d2eR28)
 
 To QA with external app:
 - You could use my repo and [set `forceUseMock` to `false` here](https://github.com/hunterlester/safe-app-base/blob/master/renderer.js#L58), in order to get a `-208` error.

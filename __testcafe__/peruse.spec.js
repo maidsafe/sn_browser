@@ -39,7 +39,7 @@ fixture`Browser UI`
 // .afterEach(assertNoConsoleErrors);
 
 test( 'should open window', async ( t ) => {
-    await t.expect( getPageTitle() ).eql( 'SAFE Browser' );
+    await t.expect( getPageTitle() ).eql( 'Safe Browser' );
 } );
 
 // test(
@@ -87,7 +87,7 @@ test( 'can type in the address bar and get safe: automatically', async ( t ) => 
         .eql( 'safe://shouldappearinbookmarks.com' )
         .click( bookmarkPage );
 
-    await navigateTo( t, 'safe-browser:bookmarks' );
+    await navigateTo( t, 'sn_browser:bookmarks' );
 
     await t
         .expect( Selector( 'h1' ).withText( 'Bookmarks' ) )

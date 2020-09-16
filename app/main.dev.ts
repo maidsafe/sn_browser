@@ -45,7 +45,7 @@ logger.info( 'Main process starting.' );
 
 // global.mainProcessStore = store;
 
-// Needed for windows w/ SAFE browser app login
+// Needed for windows w/ Safe browser app login
 ipcMain.on( 'open', ( event, data ) => {
     logger.info( 'Opening link in system via open.' );
     open( data );

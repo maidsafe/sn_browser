@@ -18,7 +18,7 @@ export { onAppReady } from './onAppReady';
  * @param {Array} menusArray Array of menu objects to be parsed by electron.
  */
 export const addExtensionMenuItems = ( store, menusArray ) => {
-    logger.info( 'Adding SAFE menus to browser' );
+    logger.info( 'Adding Safe menus to browser' );
 
     const newMenuArray = [];
 
