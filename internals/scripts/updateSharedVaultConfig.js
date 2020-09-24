@@ -9,21 +9,21 @@ const MAC_OS = 'darwin';
 const LINUX = 'linux';
 const WINDOWS = 'win32';
 
-const CONFIG_FILE = 'vault_connection_info.config';
-const CONFIG_LINK = `https://github.com/maidsafe/safe_vault/releases/download/0.19.2/${CONFIG_FILE}`;
-let targetFolder = '.config/safe_vault/';
+const CONFIG_FILE = 'node_connection_info.config';
+const CONFIG_LINK = `https://github.com/maidsafe/sn_node/releases/download/0.19.2/${CONFIG_FILE}`;
+let targetFolder = '.config/sn_node/';
 
 const homedir = require( 'os' ).homedir();
 
 if ( platform === MAC_OS ) {
-    targetFolder = 'Library/Preferences/net.MaidSafe.safe_vault/';
+    targetFolder = 'Library/Preferences/net.MaidSafe.sn_node/';
 }
 
 // if (platform === LINUX) {
 // }
 
 if ( platform === WINDOWS ) {
-    targetFolder = 'AppData/Roaming/MaidSafe/safe_vault/config/';
+    targetFolder = 'AppData/Roaming/MaidSafe/sn_node/config/';
 }
 
 const targetPath = path.resolve( homedir, targetFolder, CONFIG_FILE );
@@ -73,7 +73,7 @@ const getContent = function( url ) {
     } );
 };
 
-const downloadVaultConfig = async () => {
+const downloadNodeConfig = async () => {
     console.log( 'Downloading to:', targetPath );
 
     let config;
@@ -98,4 +98,4 @@ const downloadVaultConfig = async () => {
     } );
 };
 
-downloadVaultConfig();
+downloadNodeConfig();
