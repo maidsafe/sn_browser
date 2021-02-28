@@ -163,7 +163,7 @@
     "core-js": "3.6.5",
     "cross-env": "^7.0.2",
     "cross-spawn": "^7.0.3",
-    "css-loader": "^3.6.0",
+    "css-loader": "^5.1.0",
     "devtron": "^1.4.0",
     "electron": "8.4.0",
     "electron-builder": "22.7.0",
