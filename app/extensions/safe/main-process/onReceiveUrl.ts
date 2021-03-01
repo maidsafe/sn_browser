@@ -75,9 +75,11 @@ export const onReceiveUrl = async ( store, url ) => {
         store.dispatch( safeBrowserAppActions.receivedAuthResponse( url ) );
     }
 
-    if ( process.platform === 'darwin' && global.macAllWindowsClosed ) {
-        if ( url.startsWith( 'safe-' ) ) {
-            openWindow( store );
-        }
+    if (
+        process.platform === 'darwin' &&
+    global.macAllWindowsClosed &&
+    url.startsWith( 'safe-' )
+    ) {
+        openWindow( store );
     }
 };

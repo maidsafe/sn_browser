@@ -46,7 +46,7 @@ module.exports = async ( AfterPackContext ) => {
         'LICENSE',
     ];
 
-    removalArray.forEach( ( file ) => {
+    for ( const file of removalArray ) {
         fs.removeSync( `${CONTAINING_FOLDER}/${file}` );
-    } );
+    }
 };

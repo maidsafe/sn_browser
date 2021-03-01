@@ -44,7 +44,7 @@ describe( 'shouldBlockRequestForPage', () => {
         ).toBeTruthy();
     } );
 
-    it( ' does not block requests from the browser itself', () => {
+    it( 'does not block requests from the browser itself', () => {
         expect(
             shouldBlockRequestForPage( 'https://localhost:3132/thing.png', '' )
         ).toBeFalsy();
@@ -154,7 +154,7 @@ describe( 'mapPageResourceToPageVersion', () => {
         ).toEqual( 'safe://mysite/jpg?v=100' );
     } );
 
-    it( 'should change version of an unversioned resource when same site and thats versioned ', () => {
+    it( 'should change version of an unversioned resource when same site and thats versioned', () => {
         expect(
             mapPageResourceToPageVersion(
                 'safe://mysite?v=2',

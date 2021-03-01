@@ -72,12 +72,12 @@ Record<string, unknown>
 
     handleIdButtonClick = () => {
         const { showWebIdDropdown } = this.props;
-        this.hoverTime = new Date().getTime();
+        this.hoverTime = Date.now();
         showWebIdDropdown( true );
     };
 
     handleMouseEnter = () => {
-        this.hoverTime = new Date().getTime();
+        this.hoverTime = Date.now();
         this.isMouseOverIdButton = true;
         const { getAvailableWebIds, safeBrowserApp } = this.props;
         const { isFetchingWebIds } = safeBrowserApp;
@@ -107,7 +107,7 @@ Record<string, unknown>
 
     closeIfNotOver = () => {
         const { showWebIdDropdown } = this.props;
-        const now = new Date().getTime();
+        const now = Date.now();
         const diff = ( now - this.hoverTime ) / 1000;
         if ( diff > hideDropdownTimeout ) {
             showWebIdDropdown( false );

@@ -10,7 +10,7 @@ const date = new Date().toLocaleDateString();
 describe( 'history reducer', () => {
     it( 'add an initial url', () => {
         const state = {};
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
@@ -38,7 +38,7 @@ describe( 'history reducer', () => {
                 },
             ],
         };
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
@@ -75,7 +75,7 @@ describe( 'history reducer', () => {
                 },
             ],
         };
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
@@ -119,7 +119,7 @@ describe( 'history reducer', () => {
             ],
         };
 
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {

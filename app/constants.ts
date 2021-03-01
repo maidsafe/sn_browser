@@ -83,10 +83,7 @@ export const useTestPackages = shouldBuildTestPackages;
 let testCafeUrlString = null;
 
 if ( allPassedArguments.includes( '--testCafeURL' ) ) {
-    const cafeUrlIndex =
-    allPassedArguments.findIndex(
-        ( argument ): boolean => argument === '--testCafeURL'
-    ) + 1;
+    const cafeUrlIndex = allPassedArguments.indexOf( '--testCafeURL' ) + 1;
 
     testCafeUrlString = allPassedArguments[cafeUrlIndex];
 }

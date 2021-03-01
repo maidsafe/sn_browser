@@ -9,7 +9,7 @@ describe( 'notification reducer', () => {
     } );
 
     describe( 'ADD_NOTIFICATION', () => {
-        it( 'should handle adding a notification ', () => {
+        it( 'should handle adding a notification', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,

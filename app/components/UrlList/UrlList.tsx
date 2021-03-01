@@ -13,7 +13,7 @@ interface UrlListProperties {
 export const UrlList = ( props: UrlListProperties = { list: [] } ) => {
     const { addTabEnd, list, windowId } = props;
     const parsedList = [];
-    list.forEach( ( item ) => {
+    for ( const item of list ) {
         const handleClick = ( event ) => {
             // required to prevent the app navigating by default.
             event.preventDefault();
@@ -34,11 +34,11 @@ export const UrlList = ( props: UrlListProperties = { list: [] } ) => {
             </TableRow>
         );
         parsedList.push( listItem );
-    } );
+    }
     return (
         <Table className={styles.table}>
             {parsedList}
-            {!parsedList.length && (
+            {parsedList.length === 0 && (
                 <TableRow>
                     <TableCell>Nothing to see here yet.</TableCell>
                 </TableRow>

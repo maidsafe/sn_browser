@@ -109,13 +109,9 @@ const getProtocolPosition = ( url, inputProtocol ) => {
     const fullProto = '://';
     const shortProto = ':';
 
-    let protocolPos;
-
-    if ( url.includes( fullProto ) ) {
-        protocolPos = url.indexOf( fullProto ) + 3;
-    } else {
-        protocolPos = url.indexOf( shortProto );
-    }
+    const protocolPos = url.includes( fullProto )
+        ? url.indexOf( fullProto ) + 3
+        : url.indexOf( shortProto );
 
     return protocolPos;
 };

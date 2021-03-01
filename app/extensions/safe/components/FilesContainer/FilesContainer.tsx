@@ -37,11 +37,9 @@ Record<string, unknown>
             // get the base url out of the way
             let theLinkText = filesMapPath;
             // only get the next part of the tree
-            if ( theLinkText.startsWith( '/' ) ) {
-                theLinkText = `/${theLinkText.split( '/' )[1]}`;
-            } else {
-                theLinkText = theLinkText.split( '/' )[0];
-            }
+            theLinkText = theLinkText.startsWith( '/' )
+                ? `/${theLinkText.split( '/' )[1]}`
+                : theLinkText.split( '/' )[0];
 
             const href = `${theLinkText}${version ? `?v=${version}` : ''}`;
 
@@ -68,7 +66,7 @@ Record<string, unknown>
                         </ul>
                     </React.Fragment>
                 )}
-                {uniqList.length < 1 && <span>No content found at this path</span>}
+                {uniqList.length === 0 && <span>No content found at this path</span>}
             </React.Fragment>
         );
     }

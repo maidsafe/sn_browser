@@ -99,19 +99,22 @@ const updateTabHistory = ( tabToMerge, payload ) => {
     let newHistory = [...ancientHistory];
     const currentIndex = tabToMerge.historyIndex;
 
-    if ( url && url !== tabToMerge.url ) {
-        if ( ancientHistory && ancientHistory[currentIndex] !== url ) {
-            updatedTab.historyIndex += 1;
+    if (
+        url &&
+    url !== tabToMerge.url &&
+    ancientHistory &&
+    ancientHistory[currentIndex] !== url
+    ) {
+        updatedTab.historyIndex += 1;
 
-            // if we're not at last index split array there.
-            if ( ancientHistory.length - 1 !== currentIndex ) {
-                newHistory = newHistory.slice( 0, currentIndex + 1 );
-            }
-
-            // else, a simple addition to array
-            updatedTab.history = newHistory;
-            updatedTab.history.push( url );
+        // if we're not at last index split array there.
+        if ( ancientHistory.length - 1 !== currentIndex ) {
+            newHistory = newHistory.slice( 0, currentIndex + 1 );
         }
+
+        // else, a simple addition to array
+        updatedTab.history = newHistory;
+        updatedTab.history.push( url );
     }
     updatedTab = {
         ...updatedTab,

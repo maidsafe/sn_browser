@@ -106,14 +106,14 @@ export const wrapAddressBarInput = (
         // VERSIONS
         const urlVersion =
       parsedAddress.query && parsedAddress.query.v
-          ? parseInt( parsedAddress.query.v, 10 )
+          ? Number.parseInt( parsedAddress.query.v, 10 )
           : undefined;
 
-        Object.keys( versionedUrls ).forEach( ( site ) => {
+        for ( const site of Object.keys( versionedUrls ) ) {
             if ( address.startsWith( site ) ) {
                 knownVersionedUrl = site;
             }
-        } );
+        }
 
         const knownLatestVersion = versionedUrls[knownVersionedUrl];
         const pageIsVersioned = !!knownLatestVersion;

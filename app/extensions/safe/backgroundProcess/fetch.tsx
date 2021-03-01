@@ -1,5 +1,5 @@
 import { parse } from 'url';
-import { extname } from 'path';
+import path from 'path';
 import { Store } from 'redux';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -145,7 +145,7 @@ export const getHTTPFriendlyData = async (
     } catch ( error ) {
         logger.debug( 'Fetch error', error, parsed );
 
-        if ( !parsed.path || !extname( parsed.path ) ) {
+        if ( !parsed.path || !path.extname( parsed.path ) ) {
             try {
                 data = await app.fetch( `${url}.html` );
             } catch ( secondErrors ) {

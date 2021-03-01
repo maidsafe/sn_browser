@@ -102,13 +102,13 @@ class Browser extends Component<BrowserProperties, Record<string, unknown>> {
       currentWindow && currentWindow.tabs ? currentWindow.tabs : [];
 
         const thisWindowOpenTabs = [];
-        windowsTabs.forEach( ( tabId ) => {
+        for ( const tabId of windowsTabs ) {
             const aTab = tabs[tabId];
 
-            if ( !aTab || !aTab.url ) return;
+            if ( !aTab || !aTab.url ) continue;
 
             thisWindowOpenTabs.push( tabs[tabId] );
-        } );
+        }
 
         const activeTabId =
       currentWindow && currentWindow.activeTab
@@ -328,9 +328,7 @@ class Browser extends Component<BrowserProperties, Record<string, unknown>> {
             ? windows.openWindows[windowId]
             : {};
         const currentTabs = currentWindow !== {} ? currentWindow.tabs : [];
-        const tabIndex = currentTabs.findIndex(
-            ( element ) => element === activeTabId
-        );
+        const tabIndex = currentTabs.indexOf( activeTabId );
         if ( tabIndex !== undefined ) {
             addTabNext( { tabId, tabIndex, windowId } );
         } else {

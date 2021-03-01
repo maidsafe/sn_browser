@@ -46,7 +46,7 @@ describe( 'Tab', () => {
             expect( instance.loadURL.mock.calls.length ).toBe( 0 );
         } );
 
-        it( 'should call loadUrl with a different url ', () => {
+        it( 'should call loadUrl with a different url', () => {
             instance.webview = { src: 'about:blank' };
             instance.loadURL = jest.fn();
             instance.state = {

@@ -75,7 +75,7 @@ Record<string, unknown>
                 {isVisible && (
                     <div className={`${styles.menuContainer} ${CLASSES.SETTINGS_MENU}`}>
                         <div className={styles.menu}>
-                            {menuItems.map( ( item, i ) => item )}
+                            {menuItems.map( ( item, index ) => item )}
                         </div>
                     </div>
                 )}

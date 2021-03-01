@@ -30,11 +30,11 @@ export const resolveExtensionInternalPages = (
 
     let result = null;
 
-    allPackages.forEach( ( extension ) => {
+    for ( const extension of allPackages ) {
         if ( extension.addInternalPages ) {
             result = extension.addInternalPages( urlObject, query, tab, props );
         }
-    } );
+    }
 
     return result;
 };

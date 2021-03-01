@@ -105,9 +105,7 @@ const closetab = ( state, tab ) => {
     const openWindows = { ...state.openWindows };
     const closedWindows = cloneDeep( state.closedWindows );
 
-    const lastTabIndex = openWindows[targetWindow].tabs.findIndex( ( Id ) => {
-        return Id === tabId;
-    } );
+    const lastTabIndex = openWindows[targetWindow].tabs.indexOf( tabId );
 
     const newOpenTabs = openWindows[targetWindow].tabs.filter(
         ( Id ) => Id !== tabId
@@ -146,12 +144,12 @@ const setWindowLastInFocus = ( state, aWindowId ) => {
 
     const newOpenWindows = {};
 
-    Object.keys( newState.openWindows ).forEach( ( someWindowId ) => {
+    for ( const someWindowId of Object.keys( newState.openWindows ) ) {
         newOpenWindows[someWindowId] = {
             ...newState.openWindows[someWindowId],
             wasLastInFocus: false,
         };
-    } );
+    }
 
     const newFocusWindow = {
         ...newOpenWindows[aWindowId],

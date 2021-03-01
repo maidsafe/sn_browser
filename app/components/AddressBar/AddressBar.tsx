@@ -51,13 +51,13 @@ Record<string, unknown>
 
     handleBack = () => {
         const { tabBackwards, tabId } = this.props;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         tabBackwards( { tabId, timeStamp } );
     };
 
     handleForward = () => {
         const { tabForwards, tabId } = this.props;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         tabForwards( { tabId, timeStamp } );
     };
 

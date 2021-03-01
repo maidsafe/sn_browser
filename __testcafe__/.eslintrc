@@ -3,6 +3,7 @@
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
         "jest/no-test-callback": "off",
+        "jest/no-done-callback": "off",
         "jest/no-identical-title": "error"
     }
 }

@@ -52,7 +52,7 @@ export const getSourcePageUrl = (
     const userAgent =
     details && details.headers ? details.headers['User-Agent'] : null;
     const targetWebContentsId = userAgent
-        ? parseInt( userAgent.split( 'webContentsId:' )[1], 10 )
+        ? Number.parseInt( userAgent.split( 'webContentsId:' )[1], 10 )
         : undefined;
 
     // HACK, w/ ?v=x query params we need another way to get the current

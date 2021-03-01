@@ -90,7 +90,7 @@ EditorProperties,
                     <div className={styles.uploadAreaButton}>
                         <Button variant="contained" color="primary">
                             <label htmlFor="raised-button-file">
-                                {files.length < 1 &&
+                                {files.length === 0 &&
                   'Click to choose a directory to upload for this site.'}
                                 {files.length > 0 && 'Change directory'}
                             </label>

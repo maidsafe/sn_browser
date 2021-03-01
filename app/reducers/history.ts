@@ -45,17 +45,13 @@ const updateHistoryState = ( state, payload ) => {
     let updateState;
     let newState = { ...state };
 
-    networkStateDates.forEach( ( date ) => {
-        if (
-            Object.keys( historyState ).length > 0 &&
-      historyState[date] !== undefined
-        ) {
-            updateState = [...historyState[date], ...networkHistoryState[date]];
-        } else {
-            updateState = [...networkHistoryState[date]];
-        }
+    for ( const date of networkStateDates ) {
+        updateState =
+      Object.keys( historyState ).length > 0 && historyState[date] !== undefined
+          ? [...historyState[date], ...networkHistoryState[date]]
+          : [...networkHistoryState[date]];
         newState = { ...newState, [date]: [...updateState] };
-    } );
+    }
     return newState;
 };
 

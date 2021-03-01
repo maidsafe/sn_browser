@@ -63,7 +63,7 @@ Record<string, unknown>
             );
         }
 
-        const tabComponents = tabs.map( ( tab, i ) => {
+        const tabComponents = tabs.map( ( tab, index ) => {
             const isActiveTab = tab.tabId === activeTabId;
 
             if ( isInternalPage( tab ) ) {
@@ -149,7 +149,7 @@ Record<string, unknown>
 
         return (
             <div className={styles.container}>
-                {tabs.map( ( tab, i ) => {
+                {tabs.map( ( tab, index ) => {
                     let moddedClass = styles.tab;
                     const isActiveTab = tab.tabId === activeTabId;
 
@@ -157,12 +157,12 @@ Record<string, unknown>
                         moddedClass = styles.activeTab;
                     }
 
-                    const ThisTab = tabComponents[i];
+                    const ThisTab = tabComponents[index];
 
                     return (
                         <div className={moddedClass} key={tab.tabId}>
                             <Page className={`${styles.page}`} overflow="auto">
-                                {tabComponents[i]}
+                                {tabComponents[index]}
                             </Page>
                         </div>
                     );

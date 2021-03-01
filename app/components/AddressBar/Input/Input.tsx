@@ -109,7 +109,7 @@ AddressBarInputState
             return;
         }
         const input = event.target.value;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         this.props.updateTabUrl( { tabId, url: input, timeStamp } );
     }
 
@@ -130,10 +130,10 @@ AddressBarInputState
                 className={CLASSES.ADDRESS_INPUT}
                 aria-label={I18n.t( 'aria.address_bar' )}
                 addonBefore={
-                    addonBefore && addonBefore.length !== 0 ? addonBefore : undefined
+                    addonBefore && addonBefore.length > 0 ? addonBefore : undefined
                 }
                 addonAfter={
-                    addonAfter && addonAfter.length !== 0 ? addonAfter : undefined
+                    addonAfter && addonAfter.length > 0 ? addonAfter : undefined
                 }
                 size="large"
                 value={address}

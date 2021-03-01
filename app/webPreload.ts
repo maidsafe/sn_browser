@@ -30,15 +30,15 @@ store.subscribe( async () => {
     const state = store.getState();
     const calls = state.remoteCalls;
 
-    calls.forEach( ( theCall ) => {
+    for ( const theCall of calls ) {
         if ( theCall === pendingCalls[theCall.id] ) {
-            return;
+            continue;
         }
 
         const callPromises = pendingCalls[theCall.id];
 
         if ( !callPromises ) {
-            return;
+            continue;
         }
 
         if ( theCall.done && callPromises.resolve ) {
@@ -69,7 +69,7 @@ store.subscribe( async () => {
             store.dispatch( removeRemoteCall( theCall ) );
             delete pendingCalls[theCall.id];
         }
-    } );
+    }
 } );
 
 triggerOnWebviewPreload( store );

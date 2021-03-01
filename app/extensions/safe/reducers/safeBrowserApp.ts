@@ -63,15 +63,15 @@ export function safeBrowserApp( state = initialState, action ) {
         case TYPES.SET_AVAILABLE_WEB_IDS: {
             const ids = payload || [];
 
-            state.webIds.forEach( ( theId ) => {
-                if ( !theId.isSelected ) return;
+            for ( const theId of state.webIds ) {
+                if ( !theId.isSelected ) continue;
 
                 const foundIdIndex = payload.findIndex(
                     ( payloadId ) => payloadId['@id'] === theId['@id']
                 );
                 const foundId = payload[foundIdIndex];
                 foundId.isSelected = true;
-            } );
+            }
             return {
                 ...state,
                 webIds: [...ids],

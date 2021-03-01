@@ -20,21 +20,19 @@ export const onNetworkStateChange = ( store, mockAttemptReconnect ) => (
     const isDisconnected = state === SAFE.NETWORK_STATE.DISCONNECTED;
     const notificationID = Math.random().toString( 36 );
 
-    if ( isDisconnected ) {
-        if ( store ) {
-            store.dispatch(
-                addNotification( {
-                    title: `Network state: ${state}`,
-                    body: 'Reconnecting...',
-                    id: notificationID,
-                } )
-            );
+    if ( isDisconnected && store ) {
+        store.dispatch(
+            addNotification( {
+                title: `Network state: ${state}`,
+                body: 'Reconnecting...',
+                id: notificationID,
+            } )
+        );
 
-            if ( mockAttemptReconnect ) {
-                mockAttemptReconnect( store );
-            } else {
-                attemptReconnect( store, safeBrowserAppObject );
-            }
+        if ( mockAttemptReconnect ) {
+            mockAttemptReconnect( store );
+        } else {
+            attemptReconnect( store, safeBrowserAppObject );
         }
     }
 

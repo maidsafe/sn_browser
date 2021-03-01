@@ -12,7 +12,7 @@ export const generateBoundaryString = () => {
     let text = '';
     const charSet = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-    for ( let i = 0; i < 13; i += 1 ) {
+    for ( let index = 0; index < 13; index += 1 ) {
         text += charSet.charAt( Math.floor( Math.random() * charSet.length ) );
     }
 
@@ -26,21 +26,21 @@ export const rangeStringToArray = ( rangeString ) => {
         .split( ',' )
         .map( ( part ) => {
             const partObject = {};
-            part.split( '-' ).forEach( ( int, i ) => {
-                if ( i === 0 ) {
-                    if ( Number.isInteger( parseInt( int, 10 ) ) ) {
-                        partObject.start = parseInt( int, 10 );
+            for ( const [index, int] of part.split( '-' ).entries() ) {
+                if ( index === 0 ) {
+                    if ( Number.isInteger( Number.parseInt( int, 10 ) ) ) {
+                        partObject.start = Number.parseInt( int, 10 );
                     } else {
                         partObject.start = null;
                     }
-                } else if ( i === 1 ) {
-                    if ( Number.isInteger( parseInt( int, 10 ) ) ) {
-                        partObject.end = parseInt( int, 10 );
+                } else if ( index === 1 ) {
+                    if ( Number.isInteger( Number.parseInt( int, 10 ) ) ) {
+                        partObject.end = Number.parseInt( int, 10 );
                     } else {
                         partObject.end = null;
                     }
                 }
-            } );
+            }
             return partObject;
         } );
 };
@@ -51,12 +51,12 @@ export const generateResponseString = ( data ) => {
     let responseString = `HTTP/1.1 206 Partial Content${crlf}`;
     responseString += `Content-Type: multipart/byteranges; boundary=${boundaryString}${crlf}`;
     responseString += `Content-Length:${data.headers['Content-Length']}${crlf}`;
-    data.parts.forEach( ( part ) => {
+    for ( const part of data.parts ) {
         responseString += `--${boundaryString}${crlf}`;
         responseString += `Content-Type:${part.headers['Content-Type']}${crlf}`;
         responseString += `Content-Range: ${part.headers['Content-Range']}${crlf}`;
         responseString += `${part.body}${crlf}`;
-    } );
+    }
     responseString += `--${boundaryString}--`;
     return responseString;
 };

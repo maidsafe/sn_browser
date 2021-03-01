@@ -34,27 +34,27 @@ Record<string, unknown>
     render() {
         const { history, windowId, addTabEnd } = this.props;
 
-        const ignoreList = [
+        const ignoreList = new Set( [
             'about:blank',
             'safe-browser://history',
             'safe-browser://bookmarks',
-        ];
+        ] );
         const dates = Object.keys( history );
         let list = [];
         const parsedList = [];
-        dates.forEach( ( date ) => {
+        for ( const date of dates ) {
             list = [...history[date]];
             list = _.uniq( list );
             list = list.filter( ( listObject ) => {
                 const { url } = listObject;
                 const urlObject = parse( url );
-                if ( ignoreList.includes( url ) ) {
+                if ( ignoreList.has( url ) ) {
                     return false;
                 }
                 return urlIsValid( url );
             } );
 
-            if ( list.length >= 1 ) {
+            if ( list.length > 0 ) {
                 const dateHeader = (
                     <TableRow align="left" verticalAlign="middle" gutters="S" key={date}>
                         <TableCell className={styles.date}>
@@ -63,7 +63,7 @@ Record<string, unknown>
                     </TableRow>
                 );
                 parsedList.push( dateHeader );
-                list.forEach( ( item ) => {
+                for ( const item of list ) {
                     const timeStamp = new Date( item.timeStamp );
                     const newTimeStamp = moment.utc( timeStamp ).local().format( 'LT' );
                     const handleClick = ( event ) => {
@@ -92,9 +92,9 @@ Record<string, unknown>
                         </TableRow>
                     );
                     parsedList.push( listItem );
-                } );
+                }
             }
-        } );
+        }
 
         return (
             <React.Fragment>
@@ -103,7 +103,7 @@ Record<string, unknown>
                 </PageHeader>
                 <Table className={styles.table}>
                     {parsedList}
-                    {!parsedList.length && (
+                    {parsedList.length === 0 && (
                         <TableRow>
                             <TableCell>Nothing to see here yet.</TableCell>
                         </TableRow>

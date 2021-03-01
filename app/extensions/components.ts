@@ -23,9 +23,9 @@ export const wrapBrowserComponent = ( Browser ) => {
 
         let WrappedBrowser = Browser;
 
-        allBrowserExtensions.forEach( ( wrapper ) => {
+        for ( const wrapper of allBrowserExtensions ) {
             WrappedBrowser = wrapper( Browser );
-        } );
+        }
 
         return WrappedBrowser;
     } catch ( error ) {
@@ -47,9 +47,9 @@ export const wrapAddressBarButtonsLHS = ( Buttons ) => {
         logger.info( 'Wrapping Address bar buttons LHS' );
         let WrappedAddressBarButtonsLHS = Buttons;
 
-        allAddressBarButtonLHSExtensions.forEach( ( wrapper ) => {
+        for ( const wrapper of allAddressBarButtonLHSExtensions ) {
             WrappedAddressBarButtonsLHS = wrapper( Buttons );
-        } );
+        }
 
         return WrappedAddressBarButtonsLHS;
     } catch ( error ) {
@@ -72,9 +72,9 @@ export const wrapAddressBarButtonsRHS = ( Buttons ) => {
         logger.info( 'Wrapping Address bar buttons RHS' );
         let WrappedAddressBarButtonsRHS = Buttons;
 
-        allAddressBarButtonRHSExtensions.forEach( ( wrapper ) => {
+        for ( const wrapper of allAddressBarButtonRHSExtensions ) {
             WrappedAddressBarButtonsRHS = wrapper( Buttons );
-        } );
+        }
 
         return WrappedAddressBarButtonsRHS;
     } catch ( error ) {
@@ -97,9 +97,9 @@ export const wrapAddressBarInput = ( AddressBarInput ) => {
         logger.info( 'Wrapping Address bar input' );
         let WrappedAddressBarInput = AddressBarInput;
 
-        allAddressBarInputExtensions.forEach( ( wrapper ) => {
+        for ( const wrapper of allAddressBarInputExtensions ) {
             WrappedAddressBarInput = wrapper( AddressBarInput );
-        } );
+        }
 
         return WrappedAddressBarInput;
     } catch ( error ) {
