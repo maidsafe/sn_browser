@@ -18,30 +18,30 @@ import { logger } from '$Logger';
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
 const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
 
-interface TabProps {
-    addNotification: ( ...args: Array<any> ) => any;
+interface TabProperties {
+    addNotification: ( ...arguments_: Array<any> ) => any;
     webId: Record<string, unknown>;
     url: string;
     isActiveTab: boolean;
-    closeTab: ( ...args: Array<any> ) => any;
-    updateTabUrl: ( ...args: Array<any> ) => any;
-    updateTabWebId: ( ...args: Array<any> ) => any;
-    updateTabWebContentsId: ( ...args: Array<any> ) => any;
-    toggleDevTools: ( ...args: Array<any> ) => any;
-    tabShouldReload: ( ...args: Array<any> ) => any;
-    updateTabTitle: ( ...args: Array<any> ) => any;
-    updateTabFavicon: ( ...args: Array<any> ) => any;
-    tabLoad: ( ...args: Array<any> ) => any;
-    addTabNext: ( ...args: Array<any> ) => any;
-    addTabEnd: ( ...args: Array<any> ) => any;
-    setActiveTab: ( ...args: Array<any> ) => any;
+    closeTab: ( ...arguments_: Array<any> ) => any;
+    updateTabUrl: ( ...arguments_: Array<any> ) => any;
+    updateTabWebId: ( ...arguments_: Array<any> ) => any;
+    updateTabWebContentsId: ( ...arguments_: Array<any> ) => any;
+    toggleDevTools: ( ...arguments_: Array<any> ) => any;
+    tabShouldReload: ( ...arguments_: Array<any> ) => any;
+    updateTabTitle: ( ...arguments_: Array<any> ) => any;
+    updateTabFavicon: ( ...arguments_: Array<any> ) => any;
+    tabLoad: ( ...arguments_: Array<any> ) => any;
+    addTabNext: ( ...arguments_: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
+    setActiveTab: ( ...arguments_: Array<any> ) => any;
     key?: string;
     tabId?: string;
     windowId: number;
     safeExperimentsEnabled: boolean;
-    focusWebview: ( ...args: Array<any> ) => any;
+    focusWebview: ( ...arguments_: Array<any> ) => any;
     shouldFocusWebview: boolean;
-    tabBackwards: ( ...args: Array<any> ) => any;
+    tabBackwards: ( ...arguments_: Array<any> ) => any;
     shouldReload: boolean;
     shouldToggleDevTools: boolean;
 }
@@ -61,7 +61,7 @@ interface TabState {
     };
 }
 
-export class Tab extends Component<TabProps, TabState> {
+export class Tab extends Component<TabProperties, TabState> {
     debouncedWebIdUpdateFunc: () => void;
 
     webview: WebviewTag;

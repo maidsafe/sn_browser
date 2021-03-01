@@ -11,12 +11,15 @@ import { logger } from '$Logger';
 import { CLASSES } from '$Constants';
 import { urlIsValid } from '$Extensions';
 
-interface HistoryProps {
+interface HistoryProperties {
     history: Record<string, any>;
-    addTabEnd: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
     windowId: number;
 }
-export class History extends Component<HistoryProps, Record<string, unknown>> {
+export class History extends Component<
+HistoryProperties,
+Record<string, unknown>
+> {
     static defaultProps = {
         history: [],
     };

@@ -24,11 +24,11 @@ const Meatball = () => (
         />
     </svg>
 );
-interface CustomMenuProps {
+interface CustomMenuProperties {
     isVisible?: boolean;
     menuItems?: Array<any>;
-    showMenu: ( ...args: Array<any> ) => any;
-    hideMenu: ( ...args: Array<any> ) => any;
+    showMenu: ( ...arguments_: Array<any> ) => any;
+    hideMenu: ( ...arguments_: Array<any> ) => any;
     windowId: number;
 }
 /**
@@ -36,7 +36,7 @@ interface CustomMenuProps {
  * An ordered array of menu items can be passed in as an array of nodes to be displayed, each within their own Row.
  */
 export class CustomMenu extends Component<
-CustomMenuProps,
+CustomMenuProperties,
 Record<string, unknown>
 > {
     static defaultProps = {

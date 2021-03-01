@@ -25,13 +25,13 @@ function mapDispatchToProperties( dispatch ) {
     return bindActionCreators( actions, dispatch );
 }
 
-interface EditorProps {
+interface EditorProperties {
     targetName: string;
     isActiveTab: boolean;
     uploadFiles: () => void;
 }
 export class EditorComponent extends Component<
-EditorProps,
+EditorProperties,
 { files: Array<string>; hasError: boolean; theError: string }
 > {
     static defaultProps = {

@@ -31,7 +31,7 @@ function mapDispatchToProperties( dispatch ) {
     return bindActionCreators( actions, dispatch );
 }
 
-interface MySitesProps {
+interface MySitesProperties {
     register: string;
     tabId: string;
     tabLoad: () => void;
@@ -40,7 +40,7 @@ interface MySitesProps {
     setNameAsMySite: () => void;
 }
 export class MySitesComponent extends Component<
-MySitesProps,
+MySitesProperties,
 { files: Array<string>; hasError: boolean; theError: string }
 > {
     static defaultProps = {

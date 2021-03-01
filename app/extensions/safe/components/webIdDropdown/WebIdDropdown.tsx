@@ -16,7 +16,7 @@ const webIdManagerUri = startedRunningMock
     ? 'http://localhost:1234'
     : 'safe://webidmgr.dapp';
 
-interface WebIdDropdownProps {
+interface WebIdDropdownProperties {
     safeBrowserApp: {
         webIds: Array<any>;
         showingWebIdDropdown: boolean;
@@ -36,7 +36,7 @@ interface WebIdDropdownProps {
     windowId: number;
 }
 export class WebIdDropdown extends Component<
-WebIdDropdownProps,
+WebIdDropdownProperties,
 Record<string, unknown>
 > {
     static defaultProps = {

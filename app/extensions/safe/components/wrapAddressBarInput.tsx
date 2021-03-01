@@ -33,7 +33,7 @@ function mapDispatchToProperties( dispatch ) {
     return bindActionCreators( actions, dispatch );
 }
 
-interface AddressBarInputProps {
+interface AddressBarInputProperties {
     tabId: string;
     address: string;
     updateTabUrl: () => void;
@@ -57,7 +57,7 @@ export const wrapAddressBarInput = (
     extensionFunctionality = {}
 ) => {
     const WrappedAddressBarInput = (
-        props: AddressBarInputProps = {
+        props: AddressBarInputProperties = {
             safeBrowserApp: {
                 isMock: false,
                 experimentsEnabled: false,

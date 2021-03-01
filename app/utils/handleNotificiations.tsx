@@ -21,7 +21,7 @@ export interface Notification {
     duration?: number;
 }
 
-interface BrowserProps {
+interface BrowserProperties {
     notifications: Array<Notification>;
     clearNotification: () => void;
     updateNotification: () => void;

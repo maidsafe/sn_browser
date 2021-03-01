@@ -4,13 +4,13 @@ import { TableRow, TableCell, Table } from 'nessie-ui';
 
 import styles from './urlList.css';
 
-interface UrlListProps {
+interface UrlListProperties {
     list: Array<any>;
-    onRemove?: ( ...args: Array<any> ) => any;
-    addTabEnd: ( ...args: Array<any> ) => any;
+    onRemove?: ( ...arguments_: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
     windowId: number;
 }
-export const UrlList = ( props: UrlListProps = { list: [] } ) => {
+export const UrlList = ( props: UrlListProperties = { list: [] } ) => {
     const { addTabEnd, list, windowId } = props;
     const parsedList = [];
     list.forEach( ( item ) => {

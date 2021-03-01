@@ -4,7 +4,7 @@ import { uniqBy } from 'lodash';
 import { logger } from '$Logger';
 // import styles from './filesContainer.css';
 
-interface FilesContainerProps {
+interface FilesContainerProperties {
     filesMap: {
         [path: string]: {
             created: string;
@@ -18,7 +18,7 @@ interface FilesContainerProps {
 }
 
 export class FilesContainer extends React.PureComponent<
-FilesContainerProps,
+FilesContainerProperties,
 Record<string, unknown>
 > {
     render() {

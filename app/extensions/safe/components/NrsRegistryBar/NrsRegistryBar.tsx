@@ -9,14 +9,14 @@ import styles from './nrsRegistryBar.css';
 
 import { logger } from '$Logger';
 
-interface NrsRegistryBarProps {
+interface NrsRegistryBarProperties {
     address: string;
     registerNrsName: () => void;
     tabId: string;
     updateTabUrl: () => void;
 }
 export class NrsRegistryBar extends Component<
-NrsRegistryBarProps,
+NrsRegistryBarProperties,
 Record<string, unknown>
 > {
     handleRegisterAddress = () => {

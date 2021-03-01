@@ -9,15 +9,15 @@ import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarInput } from '$Extensions/components';
 import 'antd/lib/input/style';
 
-interface AddressBarInputProps {
+interface AddressBarInputProperties {
     address?: string;
     isSelected?: boolean;
     windowId: number;
     tabId?: string;
-    onBlur: ( ...args: Array<any> ) => any;
-    onSelect: ( ...args: Array<any> ) => any;
-    onFocus: ( ...args: Array<any> ) => any;
-    updateTabUrl: ( ...args: Array<any> ) => any;
+    onBlur: ( ...arguments_: Array<any> ) => any;
+    onSelect: ( ...arguments_: Array<any> ) => any;
+    onFocus: ( ...arguments_: Array<any> ) => any;
+    updateTabUrl: ( ...arguments_: Array<any> ) => any;
     extensionStyles: Record<string, unknown>;
     addonBefore: Array<ReactNode>;
     addonAfter: Array<ReactNode>;
@@ -35,7 +35,7 @@ interface AddressBarInputState {
  * @extends Component
  */
 class AddressBarInput extends Component<
-AddressBarInputProps,
+AddressBarInputProperties,
 AddressBarInputState
 > {
     static defaultProps = {
