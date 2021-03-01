@@ -29,7 +29,7 @@ import {
     isRunningTestCafeProcess,
     isRunningPackaged,
     isCI,
-    CONFIG
+    CONFIG,
 } from '$Constants';
 // eslint-disable-next-line import/extensions
 import pkg from '$Package';
@@ -40,6 +40,8 @@ import { logger } from '$Logger';
 const initialState = {};
 const store = configureStore( initialState );
 const browserUpdater = new AppUpdater( store );
+
+app.allowRendererProcessReuse = false;
 
 logger.info( 'Main process starting.' );
 
