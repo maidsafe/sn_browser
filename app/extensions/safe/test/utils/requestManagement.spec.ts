@@ -4,7 +4,7 @@ import {
     redirectUrlIfNeeded,
     manageAndModifyRequest,
     mapPageResourceToPageVersion,
-    INVALID_URL
+    INVALID_URL,
 } from '$Extensions/safe/requestManagement';
 
 const SERVER = 'http://localhost:55155';
@@ -15,7 +15,7 @@ jest.mock( 'electron', () => {
             return '/Somewhere/Electron.app';
         } ),
         getName: jest.fn( () => 'Safe Browser' ),
-        getVersion: jest.fn( () => 'v0.42.0' )
+        getVersion: jest.fn( () => 'v0.42.0' ),
     };
 
     return {
@@ -24,12 +24,12 @@ jest.mock( 'electron', () => {
         app,
         remote: {
             process: {
-                execPath: process.execPath
+                execPath: process.execPath,
             },
             getGlobal: jest.fn(),
-            app
+            app,
         },
-        dialog: jest.fn()
+        dialog: jest.fn(),
     };
 } );
 
@@ -87,16 +87,16 @@ describe( 'getSourcePageUrl', () => {
                 tabs: {
                     aTab: {
                         webContentsId: 22,
-                        url: 'safe://mysite'
-                    }
-                }
-            } ) )
+                        url: 'safe://mysite',
+                    },
+                },
+            } ) ),
         };
 
         const mockDetails = {
             headers: {
-                'User-Agent': 'blabal; webContentsId: 22'
-            }
+                'User-Agent': 'blabal; webContentsId: 22',
+            },
         };
 
         expect( getSourcePageUrl( mockDetails, mockStore ) ).toBe( 'safe://mysite' );
@@ -107,16 +107,16 @@ describe( 'getSourcePageUrl', () => {
                 tabs: {
                     aTab: {
                         webContentsId: 22,
-                        url: 'safe://mysite'
-                    }
-                }
-            } ) )
+                        url: 'safe://mysite',
+                    },
+                },
+            } ) ),
         };
 
         const mockDetails = {
             headers: {
-                'User-Agent': 'blabal; webContentsId: 44'
-            }
+                'User-Agent': 'blabal; webContentsId: 44',
+            },
         };
 
         expect( getSourcePageUrl( mockDetails, mockStore ) ).toBe( '' );
@@ -133,13 +133,13 @@ describe( 'redirectUrlIfNeeded', () => {
         expect( redirectUrlIfNeeded( appUrl ) ).toMatchObject( {
             shouldRedirect: true,
             redirectURL:
-        'file:///Somewhere/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map'
+        'file:///Somewhere/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map',
         } );
     } );
 
     it( 'should return the same url if standard safe', () => {
         expect( redirectUrlIfNeeded( 'safe://hithere' ) ).toMatchObject( {
-            shouldRedirect: false
+            shouldRedirect: false,
         } );
     } );
 } );
@@ -183,17 +183,17 @@ describe( 'manageAndModifyRequest', () => {
             tabs: {
                 someTab: {
                     webContentsId: 1,
-                    url: 'safe://same'
-                }
-            }
-        } ) )
+                    url: 'safe://same',
+                },
+            },
+        } ) ),
     };
     let callback = jest.fn();
     const details = {
         url: `${SERVER}/safe://same/main.42ea068a.js`,
         headers: {
-            'User-Agent': 'blabla; webContentsId: 1'
-        }
+            'User-Agent': 'blabla; webContentsId: 1',
+        },
     };
 
     beforeEach( () => {
@@ -234,7 +234,7 @@ describe( 'manageAndModifyRequest', () => {
         expect( callback ).not.toHaveBeenCalledWith( { cancel: true } );
         expect( callback ).toHaveBeenCalledWith( {
             redirectURL:
-        'file:///Somewhere/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map'
+        'file:///Somewhere/Electron.app/Contents/Resources/electron.asar/browser/api/module-list.js.map',
         } );
     } );
 } );

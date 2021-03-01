@@ -16,9 +16,9 @@ export const preAppLoad = ( store: Store ) => {
                 secure: true,
                 allowServiceWorkers: true,
                 corsEnabled: true,
-                supportFetchAPI: true
-            }
-        }
+                supportFetchAPI: true,
+            },
+        },
     ] );
 
     app.setAsDefaultProtocolClient( 'safe' );

@@ -18,7 +18,7 @@ interface HistoryProps {
 }
 export class History extends Component<HistoryProps, Record<string, unknown>> {
     static defaultProps = {
-        history: []
+        history: [],
     };
 
     isInFocussedWindow = () => {
@@ -34,7 +34,7 @@ export class History extends Component<HistoryProps, Record<string, unknown>> {
         const ignoreList = [
             'about:blank',
             'safe-browser://history',
-            'safe-browser://bookmarks'
+            'safe-browser://bookmarks',
         ];
         const dates = Object.keys( history );
         let list = [];
@@ -62,10 +62,7 @@ export class History extends Component<HistoryProps, Record<string, unknown>> {
                 parsedList.push( dateHeader );
                 list.forEach( ( item ) => {
                     const timeStamp = new Date( item.timeStamp );
-                    const newTimeStamp = moment
-                        .utc( timeStamp )
-                        .local()
-                        .format( 'LT' );
+                    const newTimeStamp = moment.utc( timeStamp ).local().format( 'LT' );
                     const handleClick = ( event ) => {
                         // required to prevent the app navigating by default.
                         event.preventDefault();
@@ -73,7 +70,7 @@ export class History extends Component<HistoryProps, Record<string, unknown>> {
                         addTabEnd( {
                             url: item.url,
                             tabId,
-                            windowId
+                            windowId,
                         } );
                     };
                     const listItem = (

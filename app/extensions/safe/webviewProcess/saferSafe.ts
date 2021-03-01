@@ -30,7 +30,7 @@ export class SaferSafe extends Safe {
             null,
             del,
             updateNrs,
-            dryRun
+            dryRun,
         ] );
     };
 
@@ -60,7 +60,7 @@ export class SaferSafe extends Safe {
             null,
             del,
             updateNrs,
-            dryRun
+            dryRun,
         ] );
     };
 
@@ -88,7 +88,7 @@ export class SaferSafe extends Safe {
             destination,
             force,
             updateNrs,
-            dryRun
+            dryRun,
         ] );
     };
 }

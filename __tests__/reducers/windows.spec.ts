@@ -16,9 +16,9 @@ describe( 'windows reducer', () => {
         activeTab: null,
         wasLastInFocus: true,
         ui: {
-            settingsMenuIsVisible: false
+            settingsMenuIsVisible: false,
         },
-        tabs: []
+        tabs: [],
     };
     it( 'should return the initial state', () => {
         expect( windows( undefined, {} ) ).toEqual( initialAppState.windows );
@@ -27,61 +27,61 @@ describe( 'windows reducer', () => {
         it( 'should handle adding a window', () => {
             const addWindow = windows( IntialState, {
                 type: TYPES.ADD_WINDOW,
-                payload: { windowId: 1 }
+                payload: { windowId: 1 },
             } );
             expect( addWindow ).not.toStrictEqual( IntialState );
             expect( addWindow ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicWindow
-                    }
+                        ...basicWindow,
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should handle adding another window', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicWindow
-                    }
+                        ...basicWindow,
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addWindow = windows( state, {
                 type: TYPES.ADD_WINDOW,
-                payload: { windowId: 2 }
+                payload: { windowId: 2 },
             } );
             expect( addWindow ).not.toStrictEqual( state );
             expect( addWindow ).toEqual( {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicWindow
+                        ...basicWindow,
                     },
                     [secondWindowId]: {
-                        ...basicWindow
-                    }
+                        ...basicWindow,
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -91,19 +91,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: []
-                    }
+                        tabs: [],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabNext = windows( state, {
                 type: TYPES.ADD_TAB_NEXT,
-                payload: { windowId: 1, tabId }
+                payload: { windowId: 1, tabId },
             } );
             expect( addTabNext ).not.toStrictEqual( state );
             expect( addTabNext.openWindows ).not.toStrictEqual( state.openWindows );
@@ -118,15 +118,15 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should add another tab without passing the index', () => {
@@ -134,19 +134,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabNext = windows( state, {
                 type: TYPES.ADD_TAB_NEXT,
-                payload: { windowId: 1, tabId: tabId1 }
+                payload: { windowId: 1, tabId: tabId1 },
             } );
             expect( addTabNext ).not.toStrictEqual( state );
             expect( addTabNext.openWindows ).not.toStrictEqual( state.openWindows );
@@ -161,15 +161,15 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId]
-                    }
+                        tabs: [tabId1, tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should add another tab with passing the index', () => {
@@ -177,19 +177,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId]
-                    }
+                        tabs: [tabId1, tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabNext = windows( state, {
                 type: TYPES.ADD_TAB_NEXT,
-                payload: { windowId: 1, tabId: tabId2, tabIndex: 0 }
+                payload: { windowId: 1, tabId: tabId2, tabIndex: 0 },
             } );
             expect( addTabNext ).not.toStrictEqual( state );
             expect( addTabNext.openWindows ).not.toStrictEqual( state.openWindows );
@@ -204,15 +204,15 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId2, tabId]
-                    }
+                        tabs: [tabId1, tabId2, tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -221,19 +221,19 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicWindow
-                    }
+                        ...basicWindow,
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabEnd = windows( state, {
                 type: TYPES.ADD_TAB_END,
-                payload: { windowId: 1, tabId }
+                payload: { windowId: 1, tabId },
             } );
             expect( addTabEnd ).not.toStrictEqual( state );
             expect( addTabEnd.openWindows ).not.toStrictEqual( state.openWindows );
@@ -248,15 +248,15 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'add another tab at the end', () => {
@@ -265,19 +265,19 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabEnd = windows( state, {
                 type: TYPES.ADD_TAB_END,
-                payload: { windowId: 1, tabId: tabId1 }
+                payload: { windowId: 1, tabId: tabId1 },
             } );
             expect( addTabEnd ).not.toStrictEqual( state );
             expect( addTabEnd.openWindows ).not.toStrictEqual( state.openWindows );
@@ -293,15 +293,15 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId, tabId1]
-                    }
+                        tabs: [tabId, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'add tab at the end of another window', () => {
@@ -310,27 +310,27 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId, tabId1]
+                        tabs: [tabId, tabId1],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: []
-                    }
+                        tabs: [],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabEnd = windows( state, {
                 type: TYPES.ADD_TAB_END,
-                payload: { windowId: 2, tabId: tabId2 }
+                payload: { windowId: 2, tabId: tabId2 },
             } );
             expect( addTabEnd ).not.toStrictEqual( state );
             expect( addTabEnd.openWindows ).not.toStrictEqual( state.openWindows );
@@ -346,23 +346,23 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId, tabId1]
+                        tabs: [tabId, tabId1],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId2]
-                    }
+                        tabs: [tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'add one last tab at the end of the initial window', () => {
@@ -371,27 +371,27 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId, tabId1]
+                        tabs: [tabId, tabId1],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId2]
-                    }
+                        tabs: [tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const addTabEnd = windows( state, {
                 type: TYPES.ADD_TAB_END,
-                payload: { windowId: 1, tabId: tabId3 }
+                payload: { windowId: 1, tabId: tabId3 },
             } );
             expect( addTabEnd ).not.toStrictEqual( state );
             expect( addTabEnd.openWindows ).not.toStrictEqual( state.openWindows );
@@ -407,23 +407,23 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId, tabId1, tabId3]
+                        tabs: [tabId, tabId1, tabId3],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId2]
-                    }
+                        tabs: [tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -433,19 +433,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const setActiveTab = windows( state, {
                 type: TYPES.SET_ACTIVE_TAB,
-                payload: { windowId: 1, tabId }
+                payload: { windowId: 1, tabId },
             } );
             expect( setActiveTab ).not.toStrictEqual( state );
             expect( setActiveTab.openWindows ).not.toStrictEqual( state.openWindows );
@@ -466,15 +466,15 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should set another tab to active tab', () => {
@@ -482,19 +482,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId, tabId1]
-                    }
+                        tabs: [tabId, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const setActiveTab = windows( state, {
                 type: TYPES.SET_ACTIVE_TAB,
-                payload: { windowId: 1, tabId: tabId1 }
+                payload: { windowId: 1, tabId: tabId1 },
             } );
             expect( setActiveTab ).not.toStrictEqual( state );
             expect( setActiveTab.openWindows ).not.toStrictEqual( state.openWindows );
@@ -515,15 +515,15 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId, tabId1]
-                    }
+                        tabs: [tabId, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should set another new Tab to Active tab in new window', () => {
@@ -532,27 +532,27 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId]
+                        tabs: [tabId],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1]
-                    }
+                        tabs: [tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const setActiveTab = windows( state, {
                 type: TYPES.SET_ACTIVE_TAB,
-                payload: { windowId: 2, tabId: tabId1 }
+                payload: { windowId: 2, tabId: tabId1 },
             } );
             expect( setActiveTab ).not.toStrictEqual( state );
             expect( setActiveTab.openWindows ).not.toStrictEqual( state.openWindows );
@@ -585,24 +585,24 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId]
+                        tabs: [tabId],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId1]
-                    }
+                        tabs: [tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -612,19 +612,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId, tabId2, tabId1]
-                    }
+                        tabs: [tabId, tabId2, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const closeTab = windows( state, {
                 type: TYPES.WINDOW_CLOSE_TAB,
-                payload: { windowId: 1, tabId }
+                payload: { windowId: 1, tabId },
             } );
             expect( closeTab ).not.toStrictEqual( state );
             expect( closeTab.openWindows ).not.toStrictEqual( state.openWindows );
@@ -640,20 +640,20 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId2,
-                        tabs: [tabId2, tabId1]
-                    }
+                        tabs: [tabId2, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 0,
-                                tabId
-                            }
+                                tabId,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should close another tab', () => {
@@ -661,19 +661,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId, tabId2, tabId1]
-                    }
+                        tabs: [tabId, tabId2, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const closeTab = windows( state, {
                 type: TYPES.WINDOW_CLOSE_TAB,
-                payload: { windowId: 1, tabId: tabId2 }
+                payload: { windowId: 1, tabId: tabId2 },
             } );
             expect( closeTab ).not.toStrictEqual( state );
             expect( closeTab.openWindows ).not.toStrictEqual( state.openWindows );
@@ -689,20 +689,20 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId1,
-                        tabs: [tabId, tabId1]
-                    }
+                        tabs: [tabId, tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 1,
-                                tabId: tabId2
-                            }
+                                tabId: tabId2,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should close another tab in another window', () => {
@@ -711,33 +711,33 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId1]
+                        tabs: [tabId1],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
                         activeTab: tabId3,
-                        tabs: [tabId2, tabId3]
-                    }
+                        tabs: [tabId2, tabId3],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 0,
-                                tabId
-                            }
+                                tabId,
+                            },
                         ],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const closeTab = windows( state, {
                 type: TYPES.WINDOW_CLOSE_TAB,
-                payload: { windowId: 2, tabId: tabId2 }
+                payload: { windowId: 2, tabId: tabId2 },
             } );
             expect( closeTab ).not.toStrictEqual( state );
             expect( closeTab.openWindows ).not.toStrictEqual( state.openWindows );
@@ -759,34 +759,34 @@ describe( 'windows reducer', () => {
                     [firstWindowId]: {
                         ...basicWindow,
                         activeTab: tabId,
-                        tabs: [tabId1]
+                        tabs: [tabId1],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
                         activeTab: tabId3,
-                        tabs: [tabId3]
-                    }
+                        tabs: [tabId3],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 0,
-                                tabId
-                            }
+                                tabId,
+                            },
                         ],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 0,
-                                tabId: tabId2
-                            }
+                                tabId: tabId2,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -796,28 +796,28 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1]
-                    }
+                        tabs: [tabId1],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 1,
-                                tabId
+                                tabId,
                             },
                             {
                                 lastTabIndex: 1,
-                                tabId: tabId2
-                            }
+                                tabId: tabId2,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const reopenTab = windows( state, {
                 type: TYPES.REOPEN_TAB,
-                payload: { windowId: 1 }
+                payload: { windowId: 1 },
             } );
             expect( reopenTab ).not.toStrictEqual( state );
             expect( reopenTab.openWindows[firstWindowId] ).not.toStrictEqual(
@@ -845,20 +845,20 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId2]
-                    }
+                        tabs: [tabId1, tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 1,
-                                tabId
-                            }
+                                tabId,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should reopen another closed tab', () => {
@@ -866,24 +866,24 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId2]
-                    }
+                        tabs: [tabId1, tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 1,
-                                tabId
-                            }
+                                tabId,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const reopenTab = windows( state, {
                 type: TYPES.REOPEN_TAB,
-                payload: { windowId: 1 }
+                payload: { windowId: 1 },
             } );
             expect( reopenTab ).not.toStrictEqual( state );
             expect( reopenTab.openWindows[firstWindowId] ).not.toStrictEqual(
@@ -911,15 +911,15 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId, tabId2]
-                    }
+                        tabs: [tabId1, tabId, tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
         it( 'should reopen a closed tab in another window', () => {
@@ -927,32 +927,32 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId3]
+                        tabs: [tabId3],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId2]
-                    }
+                        tabs: [tabId1, tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [
                             {
                                 lastTabIndex: 1,
-                                tabId
-                            }
+                                tabId,
+                            },
                         ],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const reopenTab = windows( state, {
                 type: TYPES.REOPEN_TAB,
-                payload: { windowId: 2 }
+                payload: { windowId: 2 },
             } );
             expect( reopenTab ).not.toStrictEqual( state );
             expect( reopenTab.openWindows[firstWindowId] ).toStrictEqual(
@@ -987,23 +987,23 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId3]
+                        tabs: [tabId3],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId1, tabId, tabId2]
-                    }
+                        tabs: [tabId1, tabId, tabId2],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -1013,27 +1013,27 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId, tabId1, tabId2]
+                        tabs: [tabId, tabId1, tabId2],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId3]
-                    }
+                        tabs: [tabId3],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const closeWindow = windows( state, {
                 type: TYPES.CLOSE_WINDOW,
-                payload: { windowId: 1 }
+                payload: { windowId: 1 },
             } );
             expect( closeWindow ).not.toStrictEqual( state );
             expect( closeWindow.openWindows ).not.toStrictEqual( state.openWindows );
@@ -1045,19 +1045,19 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId3]
-                    }
+                        tabs: [tabId3],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: [tabId, tabId1, tabId2]
+                        lastActiveTabs: [tabId, tabId1, tabId2],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -1067,27 +1067,27 @@ describe( 'windows reducer', () => {
                 openWindows: {
                     [firstWindowId]: {
                         ...basicWindow,
-                        tabs: [tabId]
+                        tabs: [tabId],
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: []
-                    }
+                        tabs: [],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const showSettingsMenu = windows( state, {
                 type: TYPES.SHOW_SETTINGS_MENU,
-                payload: { windowId: 1 }
+                payload: { windowId: 1 },
             } );
             expect( showSettingsMenu ).not.toStrictEqual( state );
             expect( showSettingsMenu.openWindows[firstWindowId] ).not.toStrictEqual(
@@ -1114,24 +1114,24 @@ describe( 'windows reducer', () => {
                         ...basicWindow,
                         tabs: [tabId],
                         ui: {
-                            settingsMenuIsVisible: true
-                        }
+                            settingsMenuIsVisible: true,
+                        },
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: []
-                    }
+                        tabs: [],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -1144,28 +1144,28 @@ describe( 'windows reducer', () => {
                         ...basicWindow,
                         tabs: [tabId],
                         ui: {
-                            settingsMenuIsVisible: true
-                        }
+                            settingsMenuIsVisible: true,
+                        },
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: []
-                    }
+                        tabs: [],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const hideSettingsMenu = windows( state, {
                 type: TYPES.HIDE_SETTINGS_MENU,
-                payload: { windowId: 1 }
+                payload: { windowId: 1 },
             } );
             expect( hideSettingsMenu ).not.toStrictEqual( state );
             expect( hideSettingsMenu.openWindows[firstWindowId] ).not.toStrictEqual(
@@ -1192,24 +1192,24 @@ describe( 'windows reducer', () => {
                         ...basicWindow,
                         tabs: [tabId],
                         ui: {
-                            settingsMenuIsVisible: false
-                        }
+                            settingsMenuIsVisible: false,
+                        },
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        tabs: []
-                    }
+                        tabs: [],
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             } );
         } );
     } );
@@ -1219,27 +1219,27 @@ describe( 'windows reducer', () => {
             const state = {
                 openWindows: {
                     [firstWindowId]: {
-                        ...basicWindow
+                        ...basicWindow,
                     },
                     [secondWindowId]: {
                         ...basicWindow,
-                        wasLastInFocus: false
-                    }
+                        wasLastInFocus: false,
+                    },
                 },
                 closedWindows: {
                     [firstWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
+                        lastActiveTabs: [],
                     },
                     [secondWindowId]: {
                         closedTabs: [],
-                        lastActiveTabs: []
-                    }
-                }
+                        lastActiveTabs: [],
+                    },
+                },
             };
             const focusWindow = windows( state, {
                 type: TYPES.SET_LAST_FOCUSED_WINDOW,
-                payload: 2
+                payload: 2,
             } );
 
             expect( focusWindow ).not.toStrictEqual( state );
@@ -1255,12 +1255,12 @@ describe( 'windows reducer', () => {
             expect( focusWindow.openWindows ).toEqual( {
                 [firstWindowId]: {
                     ...basicWindow,
-                    wasLastInFocus: false
+                    wasLastInFocus: false,
                 },
                 [secondWindowId]: {
                     ...basicWindow,
-                    wasLastInFocus: true
-                }
+                    wasLastInFocus: true,
+                },
             } );
         } );
     } );

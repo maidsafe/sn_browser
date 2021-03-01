@@ -36,7 +36,7 @@ const initBgProcess = async () => {
 
 initBgProcess();
 
-window.addEventListener( 'error', function( error ) {
+window.addEventListener( 'error', function ( error ) {
     console.error( 'errorInBackgroundWindow', error );
     logger.error(
         'errorInBackgroundWindow',
@@ -46,7 +46,7 @@ window.addEventListener( 'error', function( error ) {
             'type',
             'name',
             'file',
-            'line'
+            'line',
         ] )
     );
 } );

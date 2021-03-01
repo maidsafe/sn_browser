@@ -9,12 +9,12 @@ import * as SafeBrowserActions from '$Extensions/safe/actions/safeBrowserApplica
 
 function mapStateToProperties( state ) {
     return {
-        safeBrowserApp: state.safeBrowserApp
+        safeBrowserApp: state.safeBrowserApp,
     };
 }
 function mapDispatchToProperties( dispatch ) {
     const actions = {
-        ...SafeBrowserActions
+        ...SafeBrowserActions,
     };
     return bindActionCreators( actions, dispatch );
 }
@@ -22,20 +22,20 @@ function mapDispatchToProperties( dispatch ) {
 const spectronAreaButton = {
     width: '10px',
     height: '10px',
-    display: 'inline-block'
+    display: 'inline-block',
 };
 const spectronArea = {
     backgroundColor: 'blue',
     display: 'block',
     width: '100%',
-    height: '40px'
+    height: '40px',
 };
 const browserContainer = {
     textAlign: 'center',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    position: 'relative'
+    position: 'relative',
 };
 export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => {
     class WrappedSafeBrowser extends Component {
@@ -48,7 +48,7 @@ export const wrapBrowser = ( BrowserComponent, extensionFunctionality = {} ) => 
             addressBarIsSelected: false,
             tabs: [],
             bookmarks: [],
-            notifications: []
+            notifications: [],
         };
 
         handleSpectronTestSaveState = () => {

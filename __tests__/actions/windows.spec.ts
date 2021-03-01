@@ -11,7 +11,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1 };
         const expectedAction = {
             type: actions.TYPES.ADD_WINDOW,
-            payload
+            payload,
         };
         expect( actions.addWindow( payload ) ).toEqual( expectedAction );
     } );
@@ -19,7 +19,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1, tabId };
         const expectedAction = {
             type: actions.TYPES.ADD_TAB_NEXT,
-            payload
+            payload,
         };
         expect( actions.addTabNext( payload ) ).toEqual( expectedAction );
     } );
@@ -27,7 +27,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1, tabId };
         const expectedAction = {
             type: actions.TYPES.ADD_TAB_END,
-            payload
+            payload,
         };
         expect( actions.addTabEnd( payload ) ).toEqual( expectedAction );
     } );
@@ -35,7 +35,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1, tabId };
         const expectedAction = {
             type: actions.TYPES.SET_ACTIVE_TAB,
-            payload
+            payload,
         };
         expect( actions.setActiveTab( payload ) ).toEqual( expectedAction );
     } );
@@ -43,7 +43,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1, tabId };
         const expectedAction = {
             type: actions.TYPES.WINDOW_CLOSE_TAB,
-            payload
+            payload,
         };
         expect( actions.windowCloseTab( payload ) ).toEqual( expectedAction );
     } );
@@ -51,7 +51,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1 };
         const expectedAction = {
             type: actions.TYPES.REOPEN_TAB,
-            payload
+            payload,
         };
         expect( actions.reopenTab( payload ) ).toEqual( expectedAction );
     } );
@@ -59,7 +59,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1 };
         const expectedAction = {
             type: actions.TYPES.CLOSE_WINDOW,
-            payload
+            payload,
         };
         expect( actions.closeWindow( payload ) ).toEqual( expectedAction );
     } );
@@ -67,7 +67,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1 };
         const expectedAction = {
             type: actions.TYPES.SHOW_SETTINGS_MENU,
-            payload
+            payload,
         };
         expect( actions.showSettingsMenu( payload ) ).toEqual( expectedAction );
     } );
@@ -75,7 +75,7 @@ describe( 'tab actions', () => {
         const payload = { windowId: 1 };
         const expectedAction = {
             type: actions.TYPES.HIDE_SETTINGS_MENU,
-            payload
+            payload,
         };
         expect( actions.hideSettingsMenu( payload ) ).toEqual( expectedAction );
     } );

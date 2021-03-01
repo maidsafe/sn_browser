@@ -34,7 +34,7 @@ class ButtonsRHS extends Component<ButtonsRHSProps, Record<string, unknown>> {
     static defaultProps = {
         address: '',
         isSelected: false,
-        editingUrl: false
+        editingUrl: false,
     };
 
     handleBookmarking = () => {
@@ -55,7 +55,7 @@ class ButtonsRHS extends Component<ButtonsRHSProps, Record<string, unknown>> {
             menuItems,
             focusWebview,
             windowId,
-            tabId
+            tabId,
         } = this.props;
         return (
             <Row

@@ -38,12 +38,15 @@ interface AddressBarProps {
     focusWebview: ( ...args: Array<any> ) => any;
     setActiveTab: ( ...args: Array<any> ) => any;
 }
-export class AddressBar extends Component<AddressBarProps, Record<string, unknown>> {
+export class AddressBar extends Component<
+AddressBarProps,
+Record<string, unknown>
+> {
     static defaultProps = {
         address: '',
         isSelected: false,
         settingsMenuIsVisible: false,
-        editingUrl: false
+        editingUrl: false,
     };
 
     handleBack = () => {
@@ -93,7 +96,7 @@ export class AddressBar extends Component<AddressBarProps, Record<string, unknow
                 >
           History
                 </div>
-            </Row>
+            </Row>,
         ];
     };
 
@@ -115,7 +118,7 @@ export class AddressBar extends Component<AddressBarProps, Record<string, unknow
             hideSettingsMenu,
             focusWebview,
             windowId,
-            setActiveTab
+            setActiveTab,
         } = this.props;
         const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
         const canGoForwards = activeTab

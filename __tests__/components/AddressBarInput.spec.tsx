@@ -38,13 +38,13 @@ describe( 'AddressBarInput', () => {
             updateTab: jest.fn(),
             safeBrowserApp: {
                 isMock: false,
-                experimentsEnabled: false
+                experimentsEnabled: false,
             },
             pWeb: {
                 versionedUrls: {},
                 availableNrsUrls: [],
-                mySites: []
-            }
+                mySites: [],
+            },
         };
     } );
 
@@ -132,7 +132,7 @@ describe( 'AddressBarInput', () => {
             expect( props.updateTabUrl ).toHaveBeenCalledWith(
                 expect.objectContaining( {
                     url: 'about:blank',
-                    tabId
+                    tabId,
                 } )
             );
         } );

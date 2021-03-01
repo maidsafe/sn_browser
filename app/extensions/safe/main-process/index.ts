@@ -2,7 +2,7 @@ import {
     startedRunningMock,
     isRunningSpectronTestProcess,
     APP_INFO,
-    PROTOCOLS
+    PROTOCOLS,
 } from '$Constants';
 import { setIsMock } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { addFileMenus } from '$Extensions/safe/menus';

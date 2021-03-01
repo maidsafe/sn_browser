@@ -20,7 +20,7 @@ interface NodeDescription {
 
 export const reactNodeToElement = ( nodeObject: NodeObject ) => {
     const nodeDescription: NodeDescription = {
-        type: ''
+        type: '',
     };
     Object.keys( nodeObject ).forEach( ( key ) => {
         if ( key === 'type' ) {
@@ -36,11 +36,11 @@ export const reactNodeToElement = ( nodeObject: NodeObject ) => {
                 if ( nodeDescription.props ) {
                     nodeDescription.props = {
                         ...nodeDescription.props,
-                        [property]: nodeObject[key][property]
+                        [property]: nodeObject[key][property],
                     };
                 } else {
                     nodeDescription.props = {
-                        [property]: nodeObject[key][property]
+                        [property]: nodeObject[key][property],
                     };
                 }
             } );

@@ -20,6 +20,6 @@ export function createRootReducer() {
         remoteCalls,
         tabs,
         windows,
-        ...additionalReducers
+        ...additionalReducers,
     } );
 }

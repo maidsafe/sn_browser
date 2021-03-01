@@ -6,7 +6,7 @@ import {
     isRunningUnpacked,
     isRunningDebug,
     isRunningTestCafeProcess,
-    isCI
+    isCI,
 } from '$Constants';
 
 const BACKGROUND_PROCESS = `file://${__dirname}/bg.html`;
@@ -32,8 +32,8 @@ export const setupBackground = async () =>
                         // partition               : 'persist:safe-tab', // TODO make safe?
                         nodeIntegration: true,
                         // Prevents renderer process code from not running when window is hidden
-                        backgroundThrottling: false
-                    }
+                        backgroundThrottling: false,
+                    },
                 } );
 
                 backgroundProcessWindow.webContents.on(
@@ -46,7 +46,7 @@ export const setupBackground = async () =>
 
                         if ( isRunningDebug ) {
                             backgroundProcessWindow.webContents.openDevTools( {
-                                mode: 'undocked'
+                                mode: 'undocked',
                             } );
                         }
 

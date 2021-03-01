@@ -74,7 +74,10 @@ const updateBookmark = ( state, payload ) => {
  * @param  { object } action action Object
  * @return { array }        updatd state object
  */
-export function bookmarks( state: Array<Record<string, unknown>> = initialState, action ): Array<Record<string, unknown>> {
+export function bookmarks(
+    state: Array<Record<string, unknown>> = initialState,
+    action
+): Array<Record<string, unknown>> {
     const { payload } = action;
 
     if ( action.error ) {

@@ -15,14 +15,17 @@ interface NrsRegistryBarProps {
     tabId: string;
     updateTabUrl: () => void;
 }
-export class NrsRegistryBar extends Component<NrsRegistryBarProps, Record<string, unknown>> {
+export class NrsRegistryBar extends Component<
+NrsRegistryBarProps,
+Record<string, unknown>
+> {
     handleRegisterAddress = () => {
         const {
             address,
             tabId,
             registerNrsName,
             setNameAsMySite,
-            updateTabUrl
+            updateTabUrl,
         } = this.props;
 
         // TODO Validate etc.
@@ -33,13 +36,13 @@ export class NrsRegistryBar extends Component<NrsRegistryBarProps, Record<string
 
         updateTabUrl( {
             tabId,
-            url: `${addressToRegister}/?v=0`
+            url: `${addressToRegister}/?v=0`,
         } );
     };
 
     handleInputChange = ( error ) => {
         this.setState( {
-            input: error.target.value
+            input: error.target.value,
         } );
     };
 
@@ -50,7 +53,7 @@ export class NrsRegistryBar extends Component<NrsRegistryBarProps, Record<string
             <React.Fragment>
                 <AppBar
                     classes={{
-                        colorPrimary: 'mysites__theBar'
+                        colorPrimary: 'mysites__theBar',
                     }}
                     // color="secondary"
                     position="absolute"

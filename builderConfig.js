@@ -55,47 +55,47 @@ const buildConfig = {
         'app/main.prod.js',
         'app/main.prod.js.map',
         'package',
-        'app/extensions/safe/defaultNewSite/index.html'
+        'app/extensions/safe/defaultNewSite/index.html',
     ],
     extraResources: [
         {
             from: 'resources/favicon.ico',
-            to: 'favicon.ico'
+            to: 'favicon.ico',
         },
         {
             from: 'resources/locales',
-            to: 'locales'
+            to: 'locales',
         },
         {
             from: 'node_modules/nessie-ui/dist/styles.css',
-            to: 'nessie-styles.css'
-        }
+            to: 'nessie-styles.css',
+        },
     ],
     protocols: {
         name: 'SAFE Network URL',
-        schemes: ['safe']
+        schemes: ['safe'],
     },
     dmg: {
         contents: [
             {
                 x: 130,
-                y: 220
+                y: 220,
             },
             {
                 x: 410,
                 y: 220,
                 type: 'link',
-                path: '/Applications'
-            }
-        ]
+                path: '/Applications',
+            },
+        ],
     },
     win: {
-        target: ['nsis', 'zip']
+        target: ['nsis', 'zip'],
     },
 
     linux: {
         target: ['AppImage', 'zip'],
-        category: 'Development'
+        category: 'Development',
     },
     mac: {
         target: ['dmg', 'pkg', 'zip'],
@@ -104,19 +104,19 @@ const buildConfig = {
         entitlementsInherit: 'resources/entitlements.mac.plist',
         extendInfo: {
             // hide dock icon by default for auto updating
-            LSUIElement: 1
-        }
+            LSUIElement: 1,
+        },
     },
     directories: {
         buildResources: 'resources',
-        output: 'release'
+        output: 'release',
     },
     // publish part needed to generate correct release channel yml files
     publish: {
         provider: 's3',
         bucket: 'safe-browser',
-        path: publishedFilePath()
-    }
+        path: publishedFilePath(),
+    },
 };
 
 // commented out for when we need to build dev

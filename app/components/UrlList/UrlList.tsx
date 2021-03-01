@@ -21,7 +21,7 @@ export const UrlList = ( props: UrlListProps = { list: [] } ) => {
             addTabEnd( {
                 url: item,
                 tabId,
-                windowId
+                windowId,
             } );
         };
         const listItem = (

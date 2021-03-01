@@ -5,7 +5,7 @@ const productionPlugins = [
     require( 'babel-plugin-dev-expression' ),
     require( '@babel/plugin-transform-react-constant-elements' ),
     require( '@babel/plugin-transform-react-inline-elements' ),
-    require( 'babel-plugin-transform-react-remove-prop-types' )
+    require( 'babel-plugin-transform-react-remove-prop-types' ),
 ];
 
 const aliases = require( './.aliases.config' );
@@ -22,14 +22,14 @@ module.exports = ( api ) => {
                 require( '@babel/preset-env' ),
                 {
                     targets: {
-                        electron: require( 'electron/package' ).version
+                        electron: require( 'electron/package' ).version,
                     },
                     useBuiltIns: 'usage',
-                    corejs: 3
+                    corejs: 3,
                     // modules     : 'umd'
-                }
+                },
             ],
-            [require( '@babel/preset-react' ), { development }]
+            [require( '@babel/preset-react' ), { development }],
         ],
         plugins: [
             require( '@babel/plugin-proposal-object-rest-spread' ),
@@ -38,8 +38,8 @@ module.exports = ( api ) => {
                 'import',
                 {
                     libraryName: 'antd',
-                    style: 'css'
-                }
+                    style: 'css',
+                },
             ],
             // Stage 0
             require( '@babel/plugin-proposal-function-bind' ),
@@ -49,15 +49,15 @@ module.exports = ( api ) => {
             require( '@babel/plugin-proposal-logical-assignment-operators' ),
             [
                 require( '@babel/plugin-proposal-optional-chaining' ),
-                { loose: false }
+                { loose: false },
             ],
             [
                 require( '@babel/plugin-proposal-pipeline-operator' ),
-                { proposal: 'minimal' }
+                { proposal: 'minimal' },
             ],
             [
                 require( '@babel/plugin-proposal-nullish-coalescing-operator' ),
-                { loose: false }
+                { loose: false },
             ],
             require( '@babel/plugin-proposal-do-expressions' ),
 
@@ -73,7 +73,7 @@ module.exports = ( api ) => {
             require( '@babel/plugin-syntax-import-meta' ),
             [
                 require( '@babel/plugin-proposal-class-properties' ),
-                { loose: true }
+                { loose: true },
             ],
             require( '@babel/plugin-proposal-json-strings' ),
 
@@ -81,11 +81,11 @@ module.exports = ( api ) => {
                 'module-resolver',
                 {
                     root: ['.'],
-                    alias: aliases
-                }
+                    alias: aliases,
+                },
             ],
 
-            ...( development ? developmentPlugins : productionPlugins )
-        ]
+            ...( development ? developmentPlugins : productionPlugins ),
+        ],
     };
 };

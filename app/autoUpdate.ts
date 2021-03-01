@@ -55,12 +55,12 @@ autoUpdater.on( 'update-available', () => {
             acceptText: 'Download',
             isPrompt: true,
             title,
-            duration: 0
+            duration: 0,
         };
         const responseMap = {
             allow: success,
             deny: denial,
-            ignore: ignoreRequest
+            ignore: ignoreRequest,
         };
 
         addNotification( theNotification );
@@ -128,13 +128,13 @@ autoUpdater.on( 'update-downloaded', () => {
             isPrompt: true,
             title,
             body: message,
-            duration: 0
+            duration: 0,
         };
 
         const responseMap = {
             allow: success,
             deny: denial,
-            ignore: ignoreRequest
+            ignore: ignoreRequest,
         };
 
         addNotification( theNotification );

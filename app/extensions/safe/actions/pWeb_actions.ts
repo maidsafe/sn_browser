@@ -4,7 +4,7 @@ import { logger } from '$Logger';
 
 export const TYPES = {
     SET_KNOWN_VERSIONS_FOR_URL: 'SET_KNOWN_VERSIONS_FOR_URL',
-    SET_NAME_AS_MY_SITE: 'SET_NAME_AS_MY_SITE'
+    SET_NAME_AS_MY_SITE: 'SET_NAME_AS_MY_SITE',
 };
 
 export const { setKnownVersionsForUrl, setNameAsMySite } = createActions(

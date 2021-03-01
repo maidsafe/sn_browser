@@ -172,7 +172,7 @@ export const manageAndModifyRequest = ( details, callback, store ) => {
  */
 export const requestManagement = ( store: Store ) => {
     const filter = {
-        urls: ['*://*/*']
+        urls: ['*://*/*'],
     };
 
     const safeSession = remote.session.fromPartition( CONFIG.SAFE_PARTITION );

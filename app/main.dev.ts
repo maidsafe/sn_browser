@@ -41,6 +41,7 @@ const initialState = {};
 const store = configureStore( initialState );
 const browserUpdater = new AppUpdater( store );
 
+// TODO: Remove this later on as we get something napi context aware
 app.allowRendererProcessReuse = false;
 
 logger.info( 'Main process starting.' );

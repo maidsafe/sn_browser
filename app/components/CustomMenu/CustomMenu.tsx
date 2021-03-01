@@ -35,10 +35,13 @@ interface CustomMenuProps {
  * A menu which will be displayed / hidden based upon isVisisble prop.
  * An ordered array of menu items can be passed in as an array of nodes to be displayed, each within their own Row.
  */
-export class CustomMenu extends Component<CustomMenuProps, Record<string, unknown>> {
+export class CustomMenu extends Component<
+CustomMenuProps,
+Record<string, unknown>
+> {
     static defaultProps = {
         isVisible: false,
-        menuItems: []
+        menuItems: [],
     };
 
     handleShowingMenu = ( event ) => {
@@ -52,7 +55,7 @@ export class CustomMenu extends Component<CustomMenuProps, Record<string, unknow
                 hideMenu( { windowId } );
             };
             window.addEventListener( 'click', windowClickListener, {
-                once: true
+                once: true,
             } );
         }
     };

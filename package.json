@@ -166,7 +166,6 @@
     "cross-env": "^7.0.2",
     "cross-spawn": "^7.0.3",
     "css-loader": "^5.1.0",
-    "devtron": "^1.4.0",
     "electron": "9.4.3",
     "electron-builder": "22.9.1",
     "electron-devtools-installer": "^3.1.0",

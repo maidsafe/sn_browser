@@ -20,13 +20,13 @@ import { logger } from '$Logger';
 
 function mapStateToProperties( state ) {
     return {
-        mySites: state.pWeb.mySites
+        mySites: state.pWeb.mySites,
     };
 }
 function mapDispatchToProperties( dispatch ) {
     const actions = {
         registerNrsName: registerNrsNameOnNetwork,
-        setNameAsMySite: setNameAsMySiteOnNetwork
+        setNameAsMySite: setNameAsMySiteOnNetwork,
     };
     return bindActionCreators( actions, dispatch );
 }
@@ -34,9 +34,9 @@ function mapDispatchToProperties( dispatch ) {
 interface MySitesProps {
     register: string;
     tabId: string;
-    tabLoad:() => void;
-    updateTabUrl:() => void;
-    registerNrsName:() => void;
+    tabLoad: () => void;
+    updateTabUrl: () => void;
+    registerNrsName: () => void;
     setNameAsMySite: () => void;
 }
 export class MySitesComponent extends Component<
@@ -44,7 +44,7 @@ MySitesProps,
 { files: Array<string>; hasError: boolean; theError: string }
 > {
     static defaultProps = {
-        mySites: []
+        mySites: [],
     };
 
     constructor( props ) {
@@ -53,7 +53,7 @@ MySitesProps,
         this.state = {
             // files: [],
             hasError: false,
-            theError: null
+            theError: null,
         };
     }
 
@@ -64,7 +64,7 @@ MySitesProps,
             registerNrsName,
             setNameAsMySite,
             updateTabUrl,
-            tabId
+            tabId,
         } = this.props;
 
         if ( this.state && this.state.hasError ) {
@@ -105,7 +105,7 @@ MySitesProps,
                             const handleEditClick = ( event ) => {
                                 updateTabUrl( {
                                     tabId,
-                                    url: `${PROTOCOLS.INTERNAL_PAGES}://${SAFE_PAGES.EDIT_SITE}/${site}`
+                                    url: `${PROTOCOLS.INTERNAL_PAGES}://${SAFE_PAGES.EDIT_SITE}/${site}`,
                                 } );
                             };
 

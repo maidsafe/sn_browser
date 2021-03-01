@@ -41,7 +41,7 @@ export function remoteCalls( state: Array = initialState, action ) {
 
             updatedState[callIndex] = {
                 ...callToUpdate,
-                ...theCall
+                ...theCall,
             };
 
             return updatedState;

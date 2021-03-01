@@ -196,10 +196,10 @@ export default merge( baseConfig, {
         requiredByDLLConfig
             ? null
             : new webpack.DllReferencePlugin( {
-                context: path.join( __dirname, '..', 'dll' ),
-                manifest: require( manifest ),
-                sourceType: 'var',
-            } ),
+                  context: path.join( __dirname, '..', 'dll' ),
+                  manifest: require( manifest ),
+                  sourceType: 'var',
+              } ),
 
         new webpack.HotModuleReplacementPlugin( {
             multiStep: true,

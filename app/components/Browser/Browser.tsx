@@ -57,7 +57,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
         tabs: {},
         windows: {},
         bookmarks: [],
-        notifications: []
+        notifications: [],
     };
 
     constructor( props ) {
@@ -74,7 +74,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             reopenTab,
             clearNotification,
             tabForwards,
-            tabBackwards
+            tabBackwards,
         } = this.props;
 
         // const addressBar = this.address;
@@ -148,7 +148,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             shouldFocusWebview,
             settingsMenuIsVisible,
             windowId,
-            experimentsEnabled
+            experimentsEnabled,
         };
     }
 
@@ -196,7 +196,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             showSettingsMenu,
             hideSettingsMenu,
             // TODO extend tab to not need this
-            safeBrowserApp
+            safeBrowserApp,
         } = props;
 
         const {
@@ -209,7 +209,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             settingsMenuIsVisible,
             windowId,
             openTabs,
-            experimentsEnabled
+            experimentsEnabled,
         } = this.state;
 
         return (
@@ -319,7 +319,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             setActiveTab,
             windowId,
             windows,
-            addTabNext
+            addTabNext,
         } = this.props;
         const { activeTabId } = this.state;
         const { tabId, url } = tab;

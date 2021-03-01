@@ -41,7 +41,7 @@ AddressBarInputState
     static defaultProps = {
         address: '',
         isSelected: false,
-        editingUrl: false
+        editingUrl: false,
     };
 
     constructor( props ) {
@@ -49,7 +49,7 @@ AddressBarInputState
         this.handleChange = this.handleChange.bind( this );
         this.handleKeyPress = this.handleKeyPress.bind( this );
         this.state = {
-            address: props.address
+            address: props.address,
         };
     }
 

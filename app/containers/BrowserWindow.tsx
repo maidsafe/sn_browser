@@ -18,7 +18,7 @@ function mapStateToProperties( state ) {
         history: state.history,
         windows: state.windows,
         windowId,
-        safeBrowserApp: state.safeBrowserApp
+        safeBrowserApp: state.safeBrowserApp,
     };
 }
 
@@ -30,7 +30,7 @@ function mapDispatchToProperties( dispatch ) {
         ...TabActions,
         ...WindowsActions,
 
-        ...extensionActions
+        ...extensionActions,
     };
     return bindActionCreators( actions, dispatch );
 }

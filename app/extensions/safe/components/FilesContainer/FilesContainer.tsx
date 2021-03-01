@@ -47,7 +47,7 @@ Record<string, unknown>
 
             return {
                 link: href,
-                text: theLinkText
+                text: theLinkText,
             };
         } );
 

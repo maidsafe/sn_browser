@@ -13,7 +13,7 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,
-                    payload: { title: 'hellohello' }
+                    payload: { title: 'hellohello' },
                 } )[0].title
             ).toEqual( 'hellohello' );
         } );
@@ -22,7 +22,7 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,
-                    payload: { title: 'hihi' }
+                    payload: { title: 'hihi' },
                 } )[0]
             ).toHaveProperty( 'id' );
         } );
@@ -31,7 +31,7 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [], {
                     type: TYPES.ADD_NOTIFICATION,
-                    payload: { title: 'hellooohello', id: 'boom' }
+                    payload: { title: 'hellooohello', id: 'boom' },
                 } )[0]
             ).toMatchObject( { title: 'hellooohello', id: 'boom' } );
         } );
@@ -43,7 +43,7 @@ describe( 'notification reducer', () => {
             expect(
                 notifications( [note], {
                     type: TYPES.UPDATE_NOTIFICATION,
-                    payload: { ...note, title: 'new!' }
+                    payload: { ...note, title: 'new!' },
                 } )[0].title
             ).toBe( 'new!' );
         } );
@@ -53,7 +53,7 @@ describe( 'notification reducer', () => {
             expect( () =>
                 notifications( [note], {
                     type: TYPES.UPDATE_NOTIFICATION,
-                    payload: { title: 'new!' }
+                    payload: { title: 'new!' },
                 } )
             ).toThrow( '"id"' );
         } );
@@ -63,7 +63,7 @@ describe( 'notification reducer', () => {
         it( 'should handle clearing the first notification', () => {
             expect(
                 notifications( [{ title: 'i should not  exist', id: 'ciao' }], {
-                    type: TYPES.CLEAR_NOTIFICATION
+                    type: TYPES.CLEAR_NOTIFICATION,
                 } )
             ).toEqual( [] );
         } );
@@ -73,16 +73,16 @@ describe( 'notification reducer', () => {
                     [
                         { title: 'hellooohello', id: 'boom' },
                         { title: 'i should not  exist', id: 'ciao' },
-                        { title: 'lastly', id: 'end' }
+                        { title: 'lastly', id: 'end' },
                     ],
                     {
                         type: TYPES.CLEAR_NOTIFICATION,
-                        payload: { id: 'ciao' }
+                        payload: { id: 'ciao' },
                     }
                 )
             ).toEqual( [
                 { title: 'hellooohello', id: 'boom' },
-                { title: 'lastly', id: 'end' }
+                { title: 'lastly', id: 'end' },
             ] );
         } );
     } );

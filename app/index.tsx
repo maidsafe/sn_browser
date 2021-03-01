@@ -12,7 +12,7 @@ import './app.global.css';
 
 logger.info( 'Starting render process' );
 
-window.addEventListener( 'error', function( error ) {
+window.addEventListener( 'error', function ( error ) {
     console.error( 'error in UI:', error );
     logger.error(
         'errorInUI',
@@ -22,7 +22,7 @@ window.addEventListener( 'error', function( error ) {
             'type',
             'name',
             'file',
-            'line'
+            'line',
         ] )
     );
 } );
@@ -49,7 +49,7 @@ render(
 
 if ( module.hot ) {
     module.hot.accept( './containers/App', () => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
         const NextRoot = require( './containers/App' ).default;
         render(
             <AppContainer>

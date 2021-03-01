@@ -168,18 +168,18 @@ const safeNodeAppPath = () => {
 export const I18N_CONFIG = {
     locales: ['en'],
     directory: path.resolve( __dirname, 'locales' ),
-    objectNotation: true
+    objectNotation: true,
 };
 
 export const PROTOCOLS = {
     SAFE: 'safe',
     SAFE_LOGS: 'safe-logs',
-    INTERNAL_PAGES: 'safe-browser'
+    INTERNAL_PAGES: 'safe-browser',
 };
 
 export const INTERNAL_PAGES = {
     HISTORY: 'history',
-    BOOKMARKS: 'bookmarks'
+    BOOKMARKS: 'bookmarks',
 };
 
 const getRandomPort = async () => {
@@ -201,7 +201,7 @@ export const CONFIG = {
     NET_STATUS_CONNECTED: 'Connected',
     STATE_KEY: 'safeBrowserState',
     BROWSER_TYPE_TAG: 8467,
-    PRELOADED_MOCK_VAULT_PATH: path.join( __dirname, '..', 'PreloadDevVault' )
+    PRELOADED_MOCK_VAULT_PATH: path.join( __dirname, '..', 'PreloadDevVault' ),
 };
 
 if ( inMainProcess ) {
@@ -230,15 +230,15 @@ const appInfo = {
         scope: null,
         name: pkg.productName,
         vendor: pkg.author.name,
-        customExecPath: safeNodeAppPath()
+        customExecPath: safeNodeAppPath(),
     },
     opts: {
-        own_container: true
+        own_container: true,
     },
     permissions: {
-        _public: ['Read', 'Insert', 'Update', 'Delete']
+        _public: ['Read', 'Insert', 'Update', 'Delete'],
     // _publicNames : ['Read', 'Insert', 'Update', 'Delete']
-    }
+    },
 };
 //
 // // OSX: Add bundle for electron in dev mode

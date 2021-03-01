@@ -9,6 +9,6 @@ if ( isRunningDevelopment ) {
     spawn( 'yarn', ['run', 'install-mock'], {
         shell: true,
         env: process.env,
-        stdio: 'inherit'
+        stdio: 'inherit',
     } );
 }

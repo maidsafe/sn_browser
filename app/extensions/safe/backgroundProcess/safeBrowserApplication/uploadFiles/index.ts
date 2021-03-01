@@ -4,7 +4,7 @@ import {
     setSafeBrowserAppObject,
     getSafeBrowserAppObject,
     getCurrentStore,
-    safeIsAuthorised
+    safeIsAuthorised,
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { registerNrsNameOnNetwork } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
 import { updateTabUrl } from '$Actions/tabs_actions';
@@ -55,7 +55,7 @@ export const uploadFilesToSafe = async (
         store.dispatch(
             updateTabUrl( {
                 tabId: editingTab.tabId,
-                url: target
+                url: target,
             } )
         );
     } else {

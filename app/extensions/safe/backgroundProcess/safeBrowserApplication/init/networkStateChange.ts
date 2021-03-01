@@ -4,7 +4,7 @@ import { attemptReconnect } from '$Extensions/safe/network';
 import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
     addNotification,
-    clearNotification
+    clearNotification,
 } from '$Actions/notification_actions';
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
@@ -26,7 +26,7 @@ export const onNetworkStateChange = ( store, mockAttemptReconnect ) => (
                 addNotification( {
                     title: `Network state: ${state}`,
                     body: 'Reconnecting...',
-                    id: notificationID
+                    id: notificationID,
                 } )
             );
 

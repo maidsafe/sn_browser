@@ -15,12 +15,12 @@ import { uploadFiles as uploadFilesOnNetwork } from '$Extensions/safe/actions/al
 
 function mapStateToProperties( state ) {
     return {
-        tabs: state.tabs
+        tabs: state.tabs,
     };
 }
 function mapDispatchToProperties( dispatch ) {
     const actions = {
-        uploadFiles: uploadFilesOnNetwork
+        uploadFiles: uploadFilesOnNetwork,
     };
     return bindActionCreators( actions, dispatch );
 }
@@ -36,7 +36,7 @@ EditorProps,
 > {
     static defaultProps = {
         history: [],
-        targetName: ''
+        targetName: '',
     };
 
     constructor( props ) {
@@ -45,7 +45,7 @@ EditorProps,
         this.state = {
             files: [],
             hasError: false,
-            theError: null
+            theError: null,
         };
     }
 

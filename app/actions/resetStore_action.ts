@@ -4,7 +4,7 @@ import { createAliasedAction } from 'electron-redux';
 import * as tabActions from '$Actions/tabs_actions';
 
 export const TYPES = {
-    RESET_STORE: 'RESET_STORE'
+    RESET_STORE: 'RESET_STORE',
 };
 
 let currentStore;
@@ -20,7 +20,7 @@ const getCurrentStore = () => currentStore;
 const triggerWindowClosingByIPC = ( {
     fromWindow,
     tabId,
-    windowsToBeClosed
+    windowsToBeClosed,
 } ) => {
     const store = getCurrentStore();
     store.dispatch(
@@ -36,6 +36,6 @@ export const resetStore = createAliasedAction(
     ( freshState ) => ( {
     // the real action
         type: TYPES.RESET_STORE,
-        payload: triggerWindowClosingByIPC( freshState )
+        payload: triggerWindowClosingByIPC( freshState ),
     } )
 );

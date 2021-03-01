@@ -32,7 +32,7 @@ export function pWeb( state = initialState, action ) {
 
             return {
                 ...state,
-                versionedUrls: newVersionedUrls
+                versionedUrls: newVersionedUrls,
             };
         }
         case TYPES.SET_NAME_AS_MY_SITE: {
@@ -53,7 +53,7 @@ export function pWeb( state = initialState, action ) {
 
             return {
                 ...state,
-                mySites: newMySites
+                mySites: newMySites,
             };
         }
 

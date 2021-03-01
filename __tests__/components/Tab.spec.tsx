@@ -18,7 +18,7 @@ describe( 'Tab', () => {
             tabBackwards: jest.fn(),
             closeTab: jest.fn(),
             addTab: jest.fn(),
-            addTabEnd: jest.fn()
+            addTabEnd: jest.fn(),
         };
 
         wrapper = mount( <Tab {...props} /> );
@@ -39,7 +39,7 @@ describe( 'Tab', () => {
             instance.webview = { src: 'about:blank' };
             instance.loadURL = jest.fn();
             instance.state = {
-                browserState: { mountedAndReady: true }
+                browserState: { mountedAndReady: true },
             };
 
             instance.componentDidUpdate( { url: 'about:blank' } );
@@ -50,7 +50,7 @@ describe( 'Tab', () => {
             instance.webview = { src: 'about:blank' };
             instance.loadURL = jest.fn();
             instance.state = {
-                browserState: { mountedAndReady: true }
+                browserState: { mountedAndReady: true },
             };
 
             instance.componentDidUpdate( { url: 'about:blank' } );
@@ -72,7 +72,7 @@ describe( 'Tab', () => {
                 tabBackwards: jest.fn(),
                 closeTab: jest.fn(),
                 addTab: jest.fn(),
-                addTabEnd: jest.fn()
+                addTabEnd: jest.fn(),
             };
 
             wrapper = mount( <Tab {...props} /> );
@@ -97,12 +97,12 @@ describe( 'Tab', () => {
 
         it( 'trigger tabBackwards() if tab canGoBack', () => {
             instance.state = {
-                browserState: { canGoBack: true }
+                browserState: { canGoBack: true },
             };
 
             instance.didFailLoad( {
                 errorDescription: 'ERR_BLOCKED_BY_CLIENT',
-                validatedURL: ''
+                validatedURL: '',
             } );
             expect( props.addNotification ).toHaveBeenCalled();
             expect( props.tabBackwards ).toHaveBeenCalled();

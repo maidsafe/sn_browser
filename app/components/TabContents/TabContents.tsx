@@ -12,7 +12,10 @@ import { Bookmarks } from '$Components/PerusePages/Bookmarks';
 import { logger } from '$Logger';
 import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
-export class TabContents extends Component<Record<string, unknown>, Record<string, unknown>> {
+export class TabContents extends Component<
+Record<string, unknown>,
+Record<string, unknown>
+> {
     static getDerivedStateFromError( error ) {
     // Update state so the next render will show the fallback UI.
         return { hasError: true, theError: error };
@@ -43,7 +46,7 @@ export class TabContents extends Component<Record<string, unknown>, Record<strin
             allTabs,
             bookmarks,
             windowId,
-            safeExperimentsEnabled
+            safeExperimentsEnabled,
         } = this.props;
 
         if ( this.state && this.state.hasError ) {

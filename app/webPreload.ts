@@ -84,7 +84,7 @@ window.addEventListener( 'error', ( error: Event ) => {
             'type',
             'name',
             'file',
-            'line'
+            'line',
         ] )
     );
 } );

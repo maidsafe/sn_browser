@@ -25,7 +25,7 @@ describe( 'TabBar', () => {
             addTab: jest.fn(),
             closeTab: jest.fn(),
             selectAddressBar: jest.fn(),
-            setActiveTab: jest.fn()
+            setActiveTab: jest.fn(),
         };
 
         wrapper = mount( <TabBar {...props} setActiveTab={jest.fn()} /> );
@@ -47,9 +47,9 @@ describe( 'TabBar', () => {
                         url: 'hello',
                         isActiveTab: true,
                         windowId: 1,
-                        favicon: '../../resources/favicon.ico'
-                    }
-                ]
+                        favicon: '../../resources/favicon.ico',
+                    },
+                ],
             };
             wrapper = mount( <TabBar {...props} /> );
         } );
@@ -78,9 +78,9 @@ describe( 'TabBar', () => {
                         url: 'hello',
                         isActiveTab: true,
                         windowId: 1,
-                        isLoading: true
-                    }
-                ]
+                        isLoading: true,
+                    },
+                ],
             };
             wrapper = shallow( <TabBar {...props} /> );
         } );

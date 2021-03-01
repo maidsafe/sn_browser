@@ -16,7 +16,7 @@ const updateHistory = ( state, payload ) => {
 
         const updateDate = {
             url,
-            timeStamp
+            timeStamp,
         };
         if (
             Object.keys( historyState ).length > 0 &&

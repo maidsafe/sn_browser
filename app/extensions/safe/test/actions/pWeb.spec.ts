@@ -10,23 +10,23 @@ describe( 'pWeb actions', () => {
     it( 'should set known version', () => {
         const payload = {
             url: 'x',
-            version: 2
+            version: 2,
         };
         const expectedAction = {
             type: pWeb.TYPES.SET_KNOWN_VERSIONS_FOR_URL,
-            payload
+            payload,
         };
         expect( pWeb.setKnownVersionsForUrl( payload ) ).toEqual( expectedAction );
     } );
 
     it( 'should set url as owned', () => {
         const payload = {
-            url: 'x'
+            url: 'x',
         };
 
         const expectedAction = {
             type: pWeb.TYPES.SET_NAME_AS_MY_SITE,
-            payload
+            payload,
         };
         expect( pWeb.setNameAsMySite( payload ) ).toEqual( expectedAction );
     } );

@@ -37,7 +37,7 @@ export const handleNotifications = ( previousProperties, currentProperties ) => 
         const {
             notifications,
             clearNotification,
-            updateNotification
+            updateNotification,
         } = currentProperties;
         let latestNotification = notifications[notifications.length - 1];
 
@@ -45,7 +45,7 @@ export const handleNotifications = ( previousProperties, currentProperties ) => 
             acceptText: 'Accept',
             denyText: 'Deny',
             title: 'Error',
-            type: 'error'
+            type: 'error',
         };
 
         latestNotification = { ...defaultProps, ...latestNotification };
@@ -59,7 +59,7 @@ export const handleNotifications = ( previousProperties, currentProperties ) => 
                 <p className={CLASSES.NOTIFIER_TEXT}>{latestNotification.body}</p>
             ),
             duration: latestNotification.duration,
-            onClose: () => clearNotification( { id: latestNotification.id } )
+            onClose: () => clearNotification( { id: latestNotification.id } ),
         };
 
         if ( latestNotification.isPrompt ) {

@@ -6,7 +6,7 @@ import { CONFIG } from '$Constants';
 import {
     getSafeBrowserAppObject,
     getCurrentStore,
-    safeIsAuthorised
+    safeIsAuthorised,
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { logger } from '$Logger';
 import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';

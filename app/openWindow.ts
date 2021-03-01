@@ -10,7 +10,7 @@ import { addTab, selectAddressBar } from './actions/tabs_actions';
 import {
     isRunningTestCafeProcess,
     isRunningDebug,
-    testCafeURL
+    testCafeURL,
 } from '$Constants';
 import { logger } from '$Logger';
 import {
@@ -19,7 +19,7 @@ import {
     setActiveTab,
     closeWindow,
     addWindow,
-    setLastFocusedWindow
+    setLastFocusedWindow,
 } from '$Actions/windows_actions';
 
 const browserWindowArray = [];
@@ -38,7 +38,7 @@ function getNewWindowPosition( thisWindowState ): { x: number; y: number } {
     } else {
         newWindowPosition = {
             x: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows,
-            y: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows
+            y: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows,
         };
     }
 
@@ -48,7 +48,7 @@ function getNewWindowPosition( thisWindowState ): { x: number; y: number } {
 export const openWindow = ( store ): BrowserWindow => {
     const thisWindowState = windowStateKeeper( {
         defaultWidth: 2048,
-        defaultHeight: 1024
+        defaultHeight: 1024,
     } );
 
     let appIcon = path.join( __dirname, '../resources/safeicon.png' );
@@ -70,8 +70,8 @@ export const openWindow = ( store ): BrowserWindow => {
             partition: 'persist:safe-tab',
             webviewTag: true,
             nodeIntegration: true,
-            backgroundThrottling: false
-        }
+            backgroundThrottling: false,
+        },
     };
 
     let thisWindow = new BrowserWindow( browserWindowConfig );
@@ -97,7 +97,7 @@ export const openWindow = ( store ): BrowserWindow => {
                     store.dispatch(
                         addTab( {
                             url: testCafeURL,
-                            tabId
+                            tabId,
                         } )
                     );
                 }
