@@ -10,7 +10,7 @@ import { addTab, selectAddressBar } from './actions/tabs_actions';
 import {
     isRunningTestCafeProcess,
     isRunningDebug,
-    testCafeURL
+    testCafeURL,
 } from '$Constants';
 import { logger } from '$Logger';
 import {
@@ -19,7 +19,7 @@ import {
     setActiveTab,
     closeWindow,
     addWindow,
-    setLastFocusedWindow
+    setLastFocusedWindow,
 } from '$Actions/windows_actions';
 
 const browserWindowArray = [];
@@ -31,16 +31,13 @@ function getNewWindowPosition( thisWindowState ): { x: number; y: number } {
     const noOfBrowserWindows = BrowserWindow.getAllWindows().length;
     const windowCascadeSpacing = 20;
 
-    let newWindowPosition;
-
-    if ( noOfBrowserWindows === 0 ) {
-        newWindowPosition = { x: thisWindowState.x, y: thisWindowState.y };
-    } else {
-        newWindowPosition = {
+    const newWindowPosition =
+    noOfBrowserWindows === 0
+        ? { x: thisWindowState.x, y: thisWindowState.y }
+        : {
             x: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows,
-            y: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows
+            y: defaultWindowPosition + windowCascadeSpacing * noOfBrowserWindows,
         };
-    }
 
     return newWindowPosition;
 }
@@ -48,7 +45,7 @@ function getNewWindowPosition( thisWindowState ): { x: number; y: number } {
 export const openWindow = ( store ): BrowserWindow => {
     const thisWindowState = windowStateKeeper( {
         defaultWidth: 2048,
-        defaultHeight: 1024
+        defaultHeight: 1024,
     } );
 
     let appIcon = path.join( __dirname, '../resources/safeicon.png' );
@@ -70,8 +67,8 @@ export const openWindow = ( store ): BrowserWindow => {
             partition: 'persist:safe-tab',
             webviewTag: true,
             nodeIntegration: true,
-            backgroundThrottling: false
-        }
+            backgroundThrottling: false,
+        },
     };
 
     let thisWindow = new BrowserWindow( browserWindowConfig );
@@ -97,7 +94,7 @@ export const openWindow = ( store ): BrowserWindow => {
                     store.dispatch(
                         addTab( {
                             url: testCafeURL,
-                            tabId
+                            tabId,
                         } )
                     );
                 }
@@ -188,9 +185,9 @@ ipcMain.on( 'closeWindows', ( event, data ) => {
         logger.error( 'No windowIds passed to closeWindows.' );
     }
 
-    data.forEach( ( element ) => {
-        const winId = parseInt( element, 10 );
+    for ( const element of data ) {
+        const winId = Number.parseInt( element, 10 );
         const win = BrowserWindow.fromId( winId );
         win.close();
-    } );
+    }
 } );

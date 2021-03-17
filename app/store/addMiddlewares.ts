@@ -4,7 +4,7 @@ import { forwardToRenderer, forwardToMain, triggerAlias } from 'electron-redux';
 
 import { inRendererProcess, inBgProcess } from '$Constants';
 
-export const addMiddlewares = ( middleware: Array<()=>void > ) => {
+export const addMiddlewares = ( middleware: Array<() => void> ) => {
     middleware.push( thunk );
 
     middleware.unshift( promiseMiddleware );

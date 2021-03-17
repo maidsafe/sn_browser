@@ -1,7 +1,7 @@
 import {
     addTrailingSlashIfNeeded,
     makeValidAddressBarUrl,
-    urlHasChanged
+    urlHasChanged,
 } from '$Utils/urlHelpers';
 
 describe( 'makeValidAddressBarUrl', () => {

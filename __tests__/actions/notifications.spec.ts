@@ -9,7 +9,7 @@ describe( 'notification actions', () => {
         const payload = { title: 'hi' };
         const expectedAction = {
             type: notifications.TYPES.ADD_NOTIFICATION,
-            payload
+            payload,
         };
         expect( notifications.addNotification( payload ) ).toEqual( expectedAction );
     } );
@@ -18,14 +18,14 @@ describe( 'notification actions', () => {
         const payload = { title: 'hi', id: 'A' };
         const expectedAction = {
             type: notifications.TYPES.UPDATE_NOTIFICATION,
-            payload
+            payload,
         };
         expect( notifications.updateNotification( payload ) ).toEqual( expectedAction );
     } );
 
     it( 'should clear a notification', () => {
         const expectedAction = {
-            type: notifications.TYPES.CLEAR_NOTIFICATION
+            type: notifications.TYPES.CLEAR_NOTIFICATION,
         };
         expect( notifications.clearNotification() ).toEqual( expectedAction );
     } );

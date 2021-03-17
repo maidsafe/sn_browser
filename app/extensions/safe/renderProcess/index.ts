@@ -4,7 +4,7 @@ import {
     startedRunningMock,
     isRunningSpectronTestProcess,
     APP_INFO,
-    PROTOCOLS
+    PROTOCOLS,
 } from '$Constants';
 
 export { additionalReducers } from '$Extensions/safe/reducers';
@@ -16,7 +16,7 @@ export { addInternalPages } from '$Extensions/safe/rendererProcess/internalPages
  * @type {Object}
  */
 export const actionsForBrowser = {
-    ...safeBrowserAppActions
+    ...safeBrowserAppActions,
 };
 
 /**

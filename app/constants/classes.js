@@ -28,15 +28,15 @@ export const CLASSES = {
     SETTINGS_MENU__TOGGLE: 'js-settingsMenu_toggle',
     SETTINGS_MENU__TOGGLE_BUTTON: 'js-settingsMenu_toggleButton',
     SETTINGS_MENU__TOGGLE_TEXT: 'js-settingsMenu_toggleText',
-    MOCK_TAG: 'js-addressBar_mockTag'
+    MOCK_TAG: 'js-addressBar_mockTag',
 };
 
 export const getDomClasses = () => {
     const domClasses = {};
 
-    Object.keys( CLASSES ).forEach( ( theClass ) => {
+    for ( const theClass of Object.keys( CLASSES ) ) {
         domClasses[theClass] = `.${CLASSES[theClass]}`;
-    } );
+    }
 
     return domClasses;
 };

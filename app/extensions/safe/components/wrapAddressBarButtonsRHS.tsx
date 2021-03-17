@@ -13,12 +13,12 @@ import * as SafeBrowserAppActions from '$Extensions/safe/actions/safeBrowserAppl
 
 function mapStateToProperties( state ) {
     return {
-        safeBrowserApp: state.safeBrowserApp
+        safeBrowserApp: state.safeBrowserApp,
     };
 }
 function mapDispatchToProperties( dispatch ) {
     const actions = {
-        ...SafeBrowserAppActions
+        ...SafeBrowserAppActions,
     };
     return bindActionCreators( actions, dispatch );
 }
@@ -44,15 +44,15 @@ export const wrapAddressBarButtonsRHS = (
         static defaultProps = {
             safeBrowserApp: {
                 isMock: false,
-                experimentsEnabled: false
-            }
+                experimentsEnabled: false,
+            },
         };
 
         handleExperimentalToggleClick = () => {
             const {
                 enableExperiments,
                 disableExperiments,
-                safeBrowserApp
+                safeBrowserApp,
             } = this.props;
             const { experimentsEnabled } = safeBrowserApp;
             if ( experimentsEnabled ) {
@@ -92,7 +92,7 @@ export const wrapAddressBarButtonsRHS = (
                             onChange={this.handleExperimentalToggleClick}
                         />
                     </Col>
-                </Row>
+                </Row>,
             ];
             return [].concat( menuItems, itemsToAdd );
         };

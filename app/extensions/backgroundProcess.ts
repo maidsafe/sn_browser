@@ -16,15 +16,15 @@ const allPackages = [safeBrowsing];
  * @param  {object} store redux store
  */
 export const onRemoteCallInBgProcess = ( store, allAPICalls, theCall ) => {
-    allPackages.forEach( ( extension ) => {
+    for ( const extension of allPackages ) {
         if ( extension.onRemoteCallInBgProcess ) {
             extension.onRemoteCallInBgProcess( store, allAPICalls, theCall );
         }
-    } );
+    }
 };
 
 export const onInitBgProcess = ( server, store ) => {
-    allPackages.forEach( ( extension ) => {
+    for ( const extension of allPackages ) {
         if ( extension.setupRoutes ) {
             extension.setupRoutes( server, store );
         }
@@ -32,5 +32,5 @@ export const onInitBgProcess = ( server, store ) => {
         if ( extension.onInitBgProcess ) {
             extension.onInitBgProcess( store );
         }
-    } );
+    }
 };

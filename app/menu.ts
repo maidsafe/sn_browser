@@ -177,17 +177,14 @@ export class MenuBuilder {
                                 windowId
                             ];
                             let tabId;
-                            openTabs.forEach( ( tab, i ) => {
+                            for ( const [index, tab] of openTabs.entries() ) {
                                 if ( tab === activeTab ) {
-                                    if ( i === openTabs.length - 1 ) {
-                                        // eslint-disable-next-line prefer-destructuring
-                                        tabId = openTabs[0];
-                                    } else {
-                                        // eslint-disable-next-line prefer-destructuring
-                                        tabId = openTabs[i + 1];
-                                    }
+                                    tabId =
+                    index === openTabs.length - 1
+                        ? openTabs[0]
+                        : openTabs[index + 1];
                                 }
-                            } );
+                            }
                             this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
                     },
@@ -204,17 +201,14 @@ export class MenuBuilder {
                                 windowId
                             ];
                             let tabId;
-                            openTabs.forEach( ( tab, i ) => {
+                            for ( const [index, tab] of openTabs.entries() ) {
                                 if ( tab === activeTab ) {
-                                    if ( i === 0 ) {
-                                        // eslint-disable-next-line prefer-destructuring
-                                        tabId = openTabs[openTabs.length - 1];
-                                    } else {
-                                        // eslint-disable-next-line prefer-destructuring
-                                        tabId = openTabs[i - 1];
-                                    }
+                                    tabId =
+                    index === 0
+                        ? openTabs[openTabs.length - 1]
+                        : openTabs[index - 1];
                                 }
-                            } );
+                            }
                             this.store.dispatch( setActiveTab( { tabId, windowId } ) );
                         }
                     },
@@ -464,7 +458,7 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         const windowId = getWindowId( win );
 
-                        const timeStamp = new Date().getTime();
+                        const timeStamp = Date.now();
                         const tabId = store.getState().windows.openWindows[windowId]
                             .activeTab;
                         if ( win ) {
@@ -478,7 +472,7 @@ export class MenuBuilder {
                     click: ( item, win ) => {
                         const windowId = getWindowId( win );
 
-                        const timeStamp = new Date().getTime();
+                        const timeStamp = Date.now();
                         const tabId = store.getState().windows.openWindows[windowId]
                             .activeTab;
                         if ( win ) {
@@ -615,9 +609,7 @@ export class MenuBuilder {
               currentWindow !== {} ? currentWindow.activeTab : null;
 
                         const currentTabs = currentWindow !== {} ? currentWindow.tabs : [];
-                        const tabIndex = currentTabs.findIndex(
-                            ( element ) => element === activeTabId
-                        );
+                        const tabIndex = currentTabs.indexOf( activeTabId );
 
                         const tabId = Math.random().toString( 36 );
 

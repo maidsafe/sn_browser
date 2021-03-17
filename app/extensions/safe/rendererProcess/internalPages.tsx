@@ -7,7 +7,7 @@ import { STYLE_CONSTANTS } from '$Extensions/safe/rendererProcess/styleConstants
 
 export const SAFE_PAGES = {
     EDIT_SITE: 'edit-site',
-    MY_SITES: 'my-sites'
+    MY_SITES: 'my-sites',
 };
 
 export const addInternalPages = (
@@ -19,7 +19,11 @@ export const addInternalPages = (
         tabId: string;
     },
     props: Record<string, unknown>
-): null | { pageComponent: ReactNode; title: string; tabButtonStyles?: Record<string, unknown> } => {
+): null | {
+    pageComponent: ReactNode;
+    title: string;
+    tabButtonStyles?: Record<string, unknown>;
+} => {
     switch ( urlObject.host ) {
         case SAFE_PAGES.EDIT_SITE: {
             const targetName = urlObject.path.slice( 1 );
@@ -29,7 +33,9 @@ export const addInternalPages = (
                     // backgroundColor: STYLE_CONSTANTS.editBgColor,
                     // color: STYLE_CONSTANTS.editFontColor
                 },
-                pageComponent: <Editor {...props} targetName={`safe://${targetName}`} />
+                pageComponent: (
+                    <Editor {...props} targetName={`safe://${targetName}`} />
+                ),
             };
         }
         case SAFE_PAGES.MY_SITES: {
@@ -42,7 +48,7 @@ export const addInternalPages = (
                         tabId={tab.tabId}
                         register={register ? `safe://${register}` : undefined}
                     />
-                )
+                ),
             };
         }
         default: {

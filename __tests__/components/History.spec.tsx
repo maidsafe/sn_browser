@@ -7,7 +7,7 @@ import { CLASSES } from '$Constants';
 const date = new Date().toLocaleDateString();
 
 jest.mock( 'extensions', () => ( {
-    urlIsValid: () => true
+    urlIsValid: () => true,
 } ) );
 
 describe( 'History Component', () => {
@@ -19,7 +19,7 @@ describe( 'History Component', () => {
         props = {
             tabs: {},
             addTab: jest.fn(),
-            addTabEnd: jest.fn()
+            addTabEnd: jest.fn(),
         };
 
         wrapper = shallow( <History {...props} /> );
@@ -40,10 +40,10 @@ describe( 'History Component', () => {
                     [date]: [
                         {
                             url: 'safe://hello',
-                            timeStamp: new Date().toLocaleTimeString()
-                        }
-                    ]
-                }
+                            timeStamp: new Date().toLocaleTimeString(),
+                        },
+                    ],
+                },
             };
             wrapper = shallow( <History {...props} /> );
         } );
@@ -62,22 +62,22 @@ describe( 'History Component', () => {
                     [date]: [
                         {
                             url: 'safe://somethingreal',
-                            timeStamp: new Date().toLocaleTimeString()
+                            timeStamp: new Date().toLocaleTimeString(),
                         },
                         {
                             url: 'about:blank',
-                            timeStamp: new Date().toLocaleTimeString()
+                            timeStamp: new Date().toLocaleTimeString(),
                         },
                         {
                             url: 'safe-browser://history',
-                            timeStamp: new Date().toLocaleTimeString()
+                            timeStamp: new Date().toLocaleTimeString(),
                         },
                         {
                             url: 'safe-browser://bookmarks',
-                            timeStamp: new Date().toLocaleTimeString()
-                        }
-                    ]
-                }
+                            timeStamp: new Date().toLocaleTimeString(),
+                        },
+                    ],
+                },
             };
             wrapper = shallow( <History {...props} /> );
         } );

@@ -14,7 +14,7 @@ describe( 'notification reducer', () => {
             expect(
                 bookmarks( [], {
                     type: TYPES.ADD_BOOKMARK,
-                    payload: { text: 'hellohello' }
+                    payload: { text: 'hellohello' },
                 } )
             ).toEqual( [{ text: 'hellohello' }] );
         } );
@@ -27,11 +27,11 @@ describe( 'notification reducer', () => {
                     [
                         { url: 'i also should exist' },
                         { url: 'i should not exist' },
-                        { url: 'i should exist' }
+                        { url: 'i should exist' },
                     ],
                     {
                         type: TYPES.REMOVE_BOOKMARK,
-                        payload: { url: 'i should not exist' }
+                        payload: { url: 'i should not exist' },
                     }
                 )
             ).toEqual( [{ url: 'i also should exist' }, { url: 'i should exist' }] );
@@ -43,7 +43,7 @@ describe( 'notification reducer', () => {
             expect(
                 bookmarks( [{ url: 'i should not exist' }], {
                     type: TYPES.UPDATE_BOOKMARK,
-                    payload: { url: 'changed', index: 0 }
+                    payload: { url: 'changed', index: 0 },
                 } )[0]
             ).toMatchObject( { url: 'safe://changed' } );
         } );
@@ -54,7 +54,7 @@ describe( 'notification reducer', () => {
             expect(
                 bookmarks( [{ url: 'i should not exist' }], {
                     type: TYPES.UPDATE_BOOKMARKS,
-                    payload: { bookmarks: [{ url: 'updated', index: 0 }] }
+                    payload: { bookmarks: [{ url: 'updated', index: 0 }] },
                 } )[1]
             ).toMatchObject( { url: 'updated', index: 0 } );
         } );
@@ -64,7 +64,7 @@ describe( 'notification reducer', () => {
                 [{ url: 'i should exist' }, { url: 'updated', index: 0 }],
                 {
                     type: TYPES.UPDATE_BOOKMARKS,
-                    payload: { bookmarks: [{ url: 'updated', index: 0 }] }
+                    payload: { bookmarks: [{ url: 'updated', index: 0 }] },
                 }
             );
             expect( newBookmarks[0] ).toMatchObject( { url: 'i should exist' } );
@@ -77,11 +77,11 @@ describe( 'notification reducer', () => {
         const state = [
             { url: 'safe-auth://home/#/login' },
             { url: 'i should not exist' },
-            { url: 'i should not exist  1' }
+            { url: 'i should not exist  1' },
         ];
 
         const bookmarksPostLogout = bookmarks( state, {
-            type: TABS_TYPES.TABS_RESET_STORE
+            type: TABS_TYPES.TABS_RESET_STORE,
         } );
 
         it( 'should reset bookmarks to inital state', () => {

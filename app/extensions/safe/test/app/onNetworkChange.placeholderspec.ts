@@ -11,12 +11,12 @@ describe( 'Network callback', () => {
     it( 'network callback dispatches action on Connected', () => {
         const initialState = {
             safeBrowserApp: {
-                networkStatus: null
-            }
+                networkStatus: null,
+            },
         };
         const mockStore = {
             getState: () => initialState,
-            dispatch: jest.fn()
+            dispatch: jest.fn(),
         };
         const networkCallback = onNetworkStateChange( mockStore );
         networkCallback( 'Connected' );
@@ -30,12 +30,12 @@ describe( 'Network callback', () => {
     it( 'network callback dispatches actions on Disconnected', () => {
         const initialState = {
             safeBrowserApp: {
-                networkStatus: null
-            }
+                networkStatus: null,
+            },
         };
         const mockStore = {
             getState: () => initialState,
-            dispatch: jest.fn()
+            dispatch: jest.fn(),
         };
         const networkCallback = onNetworkStateChange( mockStore );
         networkCallback( 'Disconnected' );
@@ -57,12 +57,12 @@ describe( 'Network callback', () => {
     it( 'network callback invokes operation to begin reconnection attempts upon Disconnect event', () => {
         const initialState = {
             safeBrowserApp: {
-                networkStatus: null
-            }
+                networkStatus: null,
+            },
         };
         const mockStore = {
             getState: () => initialState,
-            dispatch: jest.fn()
+            dispatch: jest.fn(),
         };
         const mockAttemptReconnect = jest.fn();
         const networkCallback = onNetworkStateChange(

@@ -12,7 +12,7 @@ import { extendComponent } from '$Utils/extendComponent';
 import { wrapBrowserComponent } from '$Extensions/components';
 import { handleNotifications, Notification } from '$Utils/handleNotificiations';
 
-interface BrowserProps {
+interface BrowserProperties {
     address: string;
     bookmarks?: Array<any>;
     notifications: Array<Notification>;
@@ -20,44 +20,44 @@ interface BrowserProps {
     windows: Record<string, unknown>;
     history: Record<string, unknown>;
     windowId: any;
-    addBookmark: ( ...args: Array<any> ) => any;
-    removeBookmark: ( ...args: Array<any> ) => any;
-    addWindow: ( ...args: Array<any> ) => any;
-    addTabNext: ( ...args: Array<any> ) => any;
-    addTabEnd: ( ...args: Array<any> ) => any;
-    setActiveTab: ( ...args: Array<any> ) => any;
-    windowCloseTab: ( ...args: Array<any> ) => any;
-    reopenTab: ( ...args: Array<any> ) => any;
-    closeWindow: ( ...args: Array<any> ) => any;
-    showSettingsMenu: ( ...args: Array<any> ) => any;
-    hideSettingsMenu: ( ...args: Array<any> ) => any;
-    addTab: ( ...args: Array<any> ) => any;
-    updateTabUrl: ( ...args: Array<any> ) => any;
-    updateTabWebId: ( ...args: Array<any> ) => any;
-    updateTabWebContentsId: ( ...args: Array<any> ) => any;
-    toggleDevTools: ( ...args: Array<any> ) => any;
-    tabShouldReload: ( ...args: Array<any> ) => any;
-    updateTabTitle: ( ...args: Array<any> ) => any;
-    updateTabFavicon: ( ...args: Array<any> ) => any;
-    tabLoad: ( ...args: Array<any> ) => any;
-    tabForwards: ( ...args: Array<any> ) => any;
-    tabBackwards: ( ...args: Array<any> ) => any;
-    focusWebview: ( ...args: Array<any> ) => any;
-    blurAddressBar: ( ...args: Array<any> ) => any;
-    selectAddressBar: ( ...args: Array<any> ) => any;
-    deselectAddressBar: ( ...args: Array<any> ) => any;
-    addNotification: ( ...args: Array<any> ) => any;
-    updateNotification: ( ...args: Array<any> ) => any;
-    clearNotification: ( ...args: Array<any> ) => any;
+    addBookmark: ( ...arguments_: Array<any> ) => any;
+    removeBookmark: ( ...arguments_: Array<any> ) => any;
+    addWindow: ( ...arguments_: Array<any> ) => any;
+    addTabNext: ( ...arguments_: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
+    setActiveTab: ( ...arguments_: Array<any> ) => any;
+    windowCloseTab: ( ...arguments_: Array<any> ) => any;
+    reopenTab: ( ...arguments_: Array<any> ) => any;
+    closeWindow: ( ...arguments_: Array<any> ) => any;
+    showSettingsMenu: ( ...arguments_: Array<any> ) => any;
+    hideSettingsMenu: ( ...arguments_: Array<any> ) => any;
+    addTab: ( ...arguments_: Array<any> ) => any;
+    updateTabUrl: ( ...arguments_: Array<any> ) => any;
+    updateTabWebId: ( ...arguments_: Array<any> ) => any;
+    updateTabWebContentsId: ( ...arguments_: Array<any> ) => any;
+    toggleDevTools: ( ...arguments_: Array<any> ) => any;
+    tabShouldReload: ( ...arguments_: Array<any> ) => any;
+    updateTabTitle: ( ...arguments_: Array<any> ) => any;
+    updateTabFavicon: ( ...arguments_: Array<any> ) => any;
+    tabLoad: ( ...arguments_: Array<any> ) => any;
+    tabForwards: ( ...arguments_: Array<any> ) => any;
+    tabBackwards: ( ...arguments_: Array<any> ) => any;
+    focusWebview: ( ...arguments_: Array<any> ) => any;
+    blurAddressBar: ( ...arguments_: Array<any> ) => any;
+    selectAddressBar: ( ...arguments_: Array<any> ) => any;
+    deselectAddressBar: ( ...arguments_: Array<any> ) => any;
+    addNotification: ( ...arguments_: Array<any> ) => any;
+    updateNotification: ( ...arguments_: Array<any> ) => any;
+    clearNotification: ( ...arguments_: Array<any> ) => any;
 }
 
-class Browser extends Component<BrowserProps, Record<string, unknown>> {
+class Browser extends Component<BrowserProperties, Record<string, unknown>> {
     static defaultProps = {
         addressBarIsSelected: false,
         tabs: {},
         windows: {},
         bookmarks: [],
-        notifications: []
+        notifications: [],
     };
 
     constructor( props ) {
@@ -74,7 +74,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             reopenTab,
             clearNotification,
             tabForwards,
-            tabBackwards
+            tabBackwards,
         } = this.props;
 
         // const addressBar = this.address;
@@ -102,13 +102,13 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
       currentWindow && currentWindow.tabs ? currentWindow.tabs : [];
 
         const thisWindowOpenTabs = [];
-        windowsTabs.forEach( ( tabId ) => {
+        for ( const tabId of windowsTabs ) {
             const aTab = tabs[tabId];
 
-            if ( !aTab || !aTab.url ) return;
+            if ( !aTab || !aTab.url ) continue;
 
             thisWindowOpenTabs.push( tabs[tabId] );
-        } );
+        }
 
         const activeTabId =
       currentWindow && currentWindow.activeTab
@@ -148,7 +148,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             shouldFocusWebview,
             settingsMenuIsVisible,
             windowId,
-            experimentsEnabled
+            experimentsEnabled,
         };
     }
 
@@ -196,7 +196,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             showSettingsMenu,
             hideSettingsMenu,
             // TODO extend tab to not need this
-            safeBrowserApp
+            safeBrowserApp,
         } = props;
 
         const {
@@ -209,7 +209,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             settingsMenuIsVisible,
             windowId,
             openTabs,
-            experimentsEnabled
+            experimentsEnabled,
         } = this.state;
 
         return (
@@ -319,7 +319,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             setActiveTab,
             windowId,
             windows,
-            addTabNext
+            addTabNext,
         } = this.props;
         const { activeTabId } = this.state;
         const { tabId, url } = tab;
@@ -328,9 +328,7 @@ class Browser extends Component<BrowserProps, Record<string, unknown>> {
             ? windows.openWindows[windowId]
             : {};
         const currentTabs = currentWindow !== {} ? currentWindow.tabs : [];
-        const tabIndex = currentTabs.findIndex(
-            ( element ) => element === activeTabId
-        );
+        const tabIndex = currentTabs.indexOf( activeTabId );
         if ( tabIndex !== undefined ) {
             addTabNext( { tabId, tabIndex, windowId } );
         } else {

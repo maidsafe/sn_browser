@@ -9,7 +9,7 @@ const safeInitialState = initialAppState.safeBrowserApp;
 
 // https://github.com/facebook/jest/issues/3552
 jest.mock( 'extensions/safe/backgroundProcess/safeBrowserApplication', () => ( {
-    getWebIds: () => []
+    getWebIds: () => [],
 } ) );
 
 describe( 'SafeBrowserApp App reducer', () => {
@@ -26,10 +26,10 @@ describe( 'SafeBrowserApp App reducer', () => {
             expect(
                 safeBrowserApp( safeInitialState, {
                     type: TYPES.SET_APP_STATUS,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( {
-                appStatus: SAFE.APP_STATUS.AUTHORISING
+                appStatus: SAFE.APP_STATUS.AUTHORISING,
             } );
         } );
     } );
@@ -38,10 +38,10 @@ describe( 'SafeBrowserApp App reducer', () => {
         it( 'should handle enabling experiments', () => {
             expect(
                 safeBrowserApp( safeInitialState, {
-                    type: TYPES.ENABLE_EXPERIMENTS
+                    type: TYPES.ENABLE_EXPERIMENTS,
                 } )
             ).toMatchObject( {
-                experimentsEnabled: true
+                experimentsEnabled: true,
             } );
         } );
     } );
@@ -50,10 +50,10 @@ describe( 'SafeBrowserApp App reducer', () => {
         it( 'should handle disabling experiments', () => {
             expect(
                 safeBrowserApp( safeInitialState, {
-                    type: TYPES.DISABLE_EXPERIMENTS
+                    type: TYPES.DISABLE_EXPERIMENTS,
                 } )
             ).toMatchObject( {
-                experimentsEnabled: false
+                experimentsEnabled: false,
             } );
         } );
     } );
@@ -65,10 +65,10 @@ describe( 'SafeBrowserApp App reducer', () => {
             expect(
                 safeBrowserApp( safeInitialState, {
                     type: TYPES.SET_NETWORK_STATUS,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( {
-                networkStatus: CONFIG.NET_STATUS_CONNECTED
+                networkStatus: CONFIG.NET_STATUS_CONNECTED,
             } );
         } );
     } );
@@ -80,7 +80,7 @@ describe( 'SafeBrowserApp App reducer', () => {
             expect(
                 safeBrowserApp( safeInitialState, {
                     type: TYPES.SET_SAVE_CONFIG_STATUS,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( { saveStatus: SAFE.SAVE_STATUS.TO_SAVE } );
         } );
@@ -93,7 +93,7 @@ describe( 'SafeBrowserApp App reducer', () => {
             expect(
                 safeBrowserApp( safeInitialState, {
                     type: TYPES.RECEIVED_AUTH_RESPONSE,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( { authResponseUri: payload } );
         } );
@@ -104,13 +104,13 @@ describe( 'SafeBrowserApp App reducer', () => {
             const payload = true;
             const newState = safeBrowserApp( safeInitialState, {
                 type: TYPES.SHOW_WEB_ID_DROPDOWN,
-                payload
+                payload,
             } );
             expect( newState.showingWebIdDropdown ).toBe( true );
 
             const newState2 = safeBrowserApp( safeInitialState, {
                 type: TYPES.SHOW_WEB_ID_DROPDOWN,
-                payload: false
+                payload: false,
             } );
             expect( newState2.showingWebIdDropdown ).toBe( false );
         } );

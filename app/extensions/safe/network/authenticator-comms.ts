@@ -54,7 +54,7 @@ export const replyToRemoteCallFromAuth = ( request ) => {
             ...remoteCallToReply,
             done: true,
             inProgress: true,
-            response: request.res
+            response: request.res,
         } )
     );
 };

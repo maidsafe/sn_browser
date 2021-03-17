@@ -9,7 +9,7 @@ describe( 'remote call actions', () => {
     it( 'should add a remote call', () => {
         const expectedAction = {
             type: remoteCall.TYPES.ADD_REMOTE_CALL,
-            payload
+            payload,
         };
         expect( remoteCall.addRemoteCall( payload ) ).toEqual( expectedAction );
     } );
@@ -17,7 +17,7 @@ describe( 'remote call actions', () => {
     it( 'should remove a remote call', () => {
         const expectedAction = {
             type: remoteCall.TYPES.REMOVE_REMOTE_CALL,
-            payload
+            payload,
         };
         expect( remoteCall.removeRemoteCall( payload ) ).toEqual( expectedAction );
     } );
@@ -25,7 +25,7 @@ describe( 'remote call actions', () => {
     it( 'should update a remote call', () => {
         const expectedAction = {
             type: remoteCall.TYPES.UPDATE_REMOTE_CALL,
-            payload
+            payload,
         };
         expect( remoteCall.updateRemoteCall( payload ) ).toEqual( expectedAction );
     } );

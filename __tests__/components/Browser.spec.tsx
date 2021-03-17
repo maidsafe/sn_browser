@@ -20,7 +20,7 @@ const initialState = {
     tabs: {},
     windows: {
         openWindows: {},
-        closedWindows: {}
+        closedWindows: {},
     },
     notifications: [],
     windowId: 1,
@@ -43,7 +43,7 @@ const initialState = {
     addNotification: jest.fn(),
     clearNotification: jest.fn(),
     updateNotification: jest.fn(),
-    addLocalNotification: jest.fn()
+    addLocalNotification: jest.fn(),
 };
 
 // here it is possible to pass in any middleware if needed into //configureStore
@@ -81,27 +81,27 @@ describe( 'Browser', () => {
                         addressBarIsSelected: false,
                         pageIsLoading: false,
                         shouldFocusWebview: false,
-                        shouldToggleDevTools: false
-                    }
-                }
+                        shouldToggleDevTools: false,
+                    },
+                },
             },
             windows: {
                 openWindows: {
                     [windowId]: {
                         activeTab: tabId,
                         ui: {
-                            settingsMenuIsVisible: false
+                            settingsMenuIsVisible: false,
                         },
-                        tabs: [tabId]
-                    }
+                        tabs: [tabId],
+                    },
                 },
                 closedWindows: {
                     [windowId]: {
                         closedtabs: [],
-                        lastActiveTabs: []
-                    }
-                }
-            }
+                        lastActiveTabs: [],
+                    },
+                },
+            },
         };
 
         store = mockStore( newState );
@@ -136,7 +136,7 @@ describe( 'Browser', () => {
             newState = {
                 ...initialState,
                 tabs: {},
-                windows: { openWindows: {}, closedWindows: {} }
+                windows: { openWindows: {}, closedWindows: {} },
             };
             store = mockStore( newState );
 

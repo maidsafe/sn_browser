@@ -23,7 +23,7 @@ const ButtonsLHS = ( props ) => {
         handleForward,
         handleRefresh,
         canGoForwards,
-        canGoBackwards
+        canGoBackwards,
     } = props;
     const activeTabUrl =
     activeTab && activeTab.url ? parse( activeTab.url ) : undefined;

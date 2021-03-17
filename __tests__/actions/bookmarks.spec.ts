@@ -9,7 +9,7 @@ describe( 'bookmark actions', () => {
         const payload = { text: 'hi' };
         const expectedAction = {
             type: bookmarks.TYPES.ADD_BOOKMARK,
-            payload
+            payload,
         };
         expect( bookmarks.addBookmark( payload ) ).toEqual( expectedAction );
     } );
@@ -18,7 +18,7 @@ describe( 'bookmark actions', () => {
         const payload = { text: 'ciao' };
         const expectedAction = {
             type: bookmarks.TYPES.REMOVE_BOOKMARK,
-            payload
+            payload,
         };
         expect( bookmarks.removeBookmark( payload ) ).toEqual( expectedAction );
     } );
@@ -27,7 +27,7 @@ describe( 'bookmark actions', () => {
         const payload = { text: 'ciao' };
         const expectedAction = {
             type: bookmarks.TYPES.UPDATE_BOOKMARK,
-            payload
+            payload,
         };
         expect( bookmarks.updateBookmark( payload ) ).toEqual( expectedAction );
     } );

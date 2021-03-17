@@ -14,15 +14,15 @@ import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 import { isInternalPage } from '$Utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from '$Constants';
 
-interface TabBarProps {
+interface TabBarProperties {
     tabInFocus: number;
     activeTab: any;
     activeTabId: any;
-    setActiveTab: ( ...args: Array<any> ) => any;
-    selectAddressBar: ( ...args: Array<any> ) => any;
-    addTabNext: ( ...args: Array<any> ) => any;
-    addTabEnd: ( ...args: Array<any> ) => any;
-    closeTab: ( ...args: Array<any> ) => any;
+    setActiveTab: ( ...arguments_: Array<any> ) => any;
+    selectAddressBar: ( ...arguments_: Array<any> ) => any;
+    addTabNext: ( ...arguments_: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
+    closeTab: ( ...arguments_: Array<any> ) => any;
     windowId: any;
     windows: Record<string, unknown>;
     tabs: Array<any>;
@@ -31,11 +31,11 @@ interface TabBarProps {
 interface TabBarState {
     tabInFocus: number;
 }
-export class TabBar extends Component<TabBarProps, TabBarState> {
+export class TabBar extends Component<TabBarProperties, TabBarState> {
     static defaultProps = {
         tabInFocus: 0,
         tabs: [],
-        activeTab: {}
+        activeTab: {},
     };
 
     constructor( props ) {
@@ -159,10 +159,10 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
         const tabId = Math.random().toString( 36 );
         addTabEnd( {
             tabId,
-            windowId
+            windowId,
         } );
         selectAddressBar( {
-            tabId
+            tabId,
         } );
     }
 
@@ -177,7 +177,7 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
         const { setActiveTab, windowId } = this.props;
         setActiveTab( {
             tabId,
-            windowId
+            windowId,
         } );
     }
 
@@ -186,7 +186,7 @@ export class TabBar extends Component<TabBarProps, TabBarState> {
             <div
                 className={[
                     styles.container,
-                    process.platform === 'darwin' ? styles.containerMac : ''
+                    process.platform === 'darwin' ? styles.containerMac : '',
                 ].join( ' ' )}
             >
                 <div className={styles.tabBar}>

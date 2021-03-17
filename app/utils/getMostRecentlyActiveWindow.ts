@@ -21,10 +21,10 @@ export const getMostRecentlyActiveWindow = ( aStore: Store ): BrowserWindow => {
     // fallback (mostly for during boot)
     try {
         targetWindow = BrowserWindow.fromId( windowInFocusId );
-    } catch ( error ) {
+    } catch {
         targetWindow = BrowserWindow.getAllWindows();
 
-        targetWindow.forEach( ( w ) => logger.info( 'a window id:', w.id ) );
+        for ( const w of targetWindow ) logger.info( 'a window id:', w.id );
 
         // eslint-disable-next-line prefer-destructuring
         targetWindow = targetWindow[0];

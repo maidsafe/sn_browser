@@ -22,33 +22,33 @@ describe( 'reactNodeToElement', () => {
                         _owner: null,
                         props: {
                             children: paraOne,
-                            key: '1'
+                            key: '1',
                         },
                         ref: null,
-                        type: 'p'
+                        type: 'p',
                     },
                     {
                         _owner: null,
                         props: {
                             children: paraTwo,
-                            key: '2'
+                            key: '2',
                         },
                         ref: null,
-                        type: 'p'
+                        type: 'p',
                     },
                     {
                         _owner: null,
                         props: {
                             children: paraThree,
-                            key: '3'
+                            key: '3',
                         },
                         ref: null,
-                        type: 'p'
-                    }
-                ]
+                        type: 'p',
+                    },
+                ],
             },
             ref: null,
-            type: 'div'
+            type: 'div',
         };
         const wrapper = shallow( reactNodeToElement( nodeObject ) );
         const expectedElement = (

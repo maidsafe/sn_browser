@@ -28,7 +28,7 @@ if ( platform === WINDOWS ) {
 
 const targetPath = path.resolve( homedir, targetFolder, CONFIG_FILE );
 
-const getContent = function( url ) {
+const getContent = function ( url ) {
     console.log( 'Getting content from:', url );
     // return new pending promise
     return new Promise( ( resolve, reject ) => {
@@ -86,7 +86,7 @@ const downloadVaultConfig = async () => {
 
     console.log( 'Config downloaded...' );
 
-    fs.writeFile( targetPath, config, function( error ) {
+    fs.writeFile( targetPath, config, function ( error ) {
         if ( error ) {
             console.log( 'Error writing file', error );
             process.exit( 1 );

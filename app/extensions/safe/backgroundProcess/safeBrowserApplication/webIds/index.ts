@@ -3,7 +3,7 @@ import { logger } from '$Logger';
 import {
     getCurrentStore,
     getSafeBrowserAppObject,
-    safeIsAuthorised
+    safeIsAuthorised,
 } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
 /**

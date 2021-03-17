@@ -15,28 +15,28 @@ import { uploadFiles as uploadFilesOnNetwork } from '$Extensions/safe/actions/al
 
 function mapStateToProperties( state ) {
     return {
-        tabs: state.tabs
+        tabs: state.tabs,
     };
 }
 function mapDispatchToProperties( dispatch ) {
     const actions = {
-        uploadFiles: uploadFilesOnNetwork
+        uploadFiles: uploadFilesOnNetwork,
     };
     return bindActionCreators( actions, dispatch );
 }
 
-interface EditorProps {
+interface EditorProperties {
     targetName: string;
     isActiveTab: boolean;
     uploadFiles: () => void;
 }
 export class EditorComponent extends Component<
-EditorProps,
+EditorProperties,
 { files: Array<string>; hasError: boolean; theError: string }
 > {
     static defaultProps = {
         history: [],
-        targetName: ''
+        targetName: '',
     };
 
     constructor( props ) {
@@ -45,7 +45,7 @@ EditorProps,
         this.state = {
             files: [],
             hasError: false,
-            theError: null
+            theError: null,
         };
     }
 
@@ -90,7 +90,7 @@ EditorProps,
                     <div className={styles.uploadAreaButton}>
                         <Button variant="contained" color="primary">
                             <label htmlFor="raised-button-file">
-                                {files.length < 1 &&
+                                {files.length === 0 &&
                   'Click to choose a directory to upload for this site.'}
                                 {files.length > 0 && 'Change directory'}
                             </label>

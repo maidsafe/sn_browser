@@ -19,18 +19,18 @@ const addWindow = ( state, tab ) => {
                 activeTab: null,
                 wasLastInFocus: true,
                 ui: {
-                    settingsMenuIsVisible: false
+                    settingsMenuIsVisible: false,
                 },
-                tabs: []
-            }
+                tabs: [],
+            },
         },
         closedWindows: {
             ...closedWindows,
             [targetWindow]: {
                 closedTabs: [],
-                lastActiveTabs: []
-            }
-        }
+                lastActiveTabs: [],
+            },
+        },
     };
     return newState;
 };
@@ -47,9 +47,9 @@ const addTabNext = ( state, tab ) => {
         ...openWindows[targetWindow],
         activeTab: null,
         ui: {
-            settingsMenuIsVisible: false
+            settingsMenuIsVisible: false,
         },
-        tabs: [...openWindows[targetWindow].tabs]
+        tabs: [...openWindows[targetWindow].tabs],
     };
     tabIndex += 1;
     const lastTabIndex = tabIndex || 0;
@@ -70,9 +70,9 @@ const addTabEnd = ( state, tab ) => {
     const newWindow = {
         ...openWindows[targetWindow],
         ui: {
-            settingsMenuIsVisible: false
+            settingsMenuIsVisible: false,
         },
-        tabs: [...openWindows[targetWindow].tabs, tabId]
+        tabs: [...openWindows[targetWindow].tabs, tabId],
     };
 
     newState.openWindows[targetWindow] = newWindow;
@@ -90,8 +90,8 @@ const setActiveTab = ( state, tab ) => {
         ...state.openWindows,
         [targetWindow]: {
             ...openWindows[targetWindow],
-            activeTab: tabId
-        }
+            activeTab: tabId,
+        },
     };
 
     const newState = { ...state, openWindows: newOpenWindows };
@@ -105,9 +105,7 @@ const closetab = ( state, tab ) => {
     const openWindows = { ...state.openWindows };
     const closedWindows = cloneDeep( state.closedWindows );
 
-    const lastTabIndex = openWindows[targetWindow].tabs.findIndex( ( Id ) => {
-        return Id === tabId;
-    } );
+    const lastTabIndex = openWindows[targetWindow].tabs.indexOf( tabId );
 
     const newOpenTabs = openWindows[targetWindow].tabs.filter(
         ( Id ) => Id !== tabId
@@ -123,12 +121,12 @@ const closetab = ( state, tab ) => {
     openWindows[targetWindow] = {
         ...openWindows[targetWindow],
         tabs: newOpenTabs,
-        activeTab: newActiveTab
+        activeTab: newActiveTab,
     };
 
     const closedTabObject = {
         tabId,
-        lastTabIndex
+        lastTabIndex,
     };
 
     closedWindows[targetWindow].closedTabs.push( closedTabObject );
@@ -136,7 +134,7 @@ const closetab = ( state, tab ) => {
     const newState = {
         ...state,
         openWindows,
-        closedWindows
+        closedWindows,
     };
     return newState;
 };
@@ -146,16 +144,16 @@ const setWindowLastInFocus = ( state, aWindowId ) => {
 
     const newOpenWindows = {};
 
-    Object.keys( newState.openWindows ).forEach( ( someWindowId ) => {
+    for ( const someWindowId of Object.keys( newState.openWindows ) ) {
         newOpenWindows[someWindowId] = {
             ...newState.openWindows[someWindowId],
-            wasLastInFocus: false
+            wasLastInFocus: false,
         };
-    } );
+    }
 
     const newFocusWindow = {
         ...newOpenWindows[aWindowId],
-        wasLastInFocus: true
+        wasLastInFocus: true,
     };
 
     newOpenWindows[aWindowId] = newFocusWindow;
@@ -180,7 +178,7 @@ const reOpenTab = ( state, tabs ) => {
 
     closedWindows[targetWindowId] = {
         ...closedWindows[targetWindowId],
-        closedTabs: closedWindowTabs
+        closedTabs: closedWindowTabs,
     };
 
     const lastTabObject = closedWindowTabs[closedWindowTabs.length - 1];
@@ -196,7 +194,7 @@ const reOpenTab = ( state, tabs ) => {
     const newState = {
         ...state,
         openWindows: newOpenWindows,
-        closedWindows
+        closedWindows,
     };
 
     return newState;
@@ -217,7 +215,7 @@ const closeWindow = ( state, tab ) => {
     const newTabs = [...closingWindowsTabs];
     const newCloseWindow = {
         ...newClosedWindows[targetwindow],
-        lastActiveTabs: newTabs
+        lastActiveTabs: newTabs,
     };
 
     delete newOpenWindows[targetwindow];
@@ -227,7 +225,7 @@ const closeWindow = ( state, tab ) => {
     const newState = {
         ...state,
         closedWindows: newClosedWindows,
-        openWindows: newOpenWindows
+        openWindows: newOpenWindows,
     };
     return newState;
 };
@@ -239,8 +237,8 @@ function toggleMenu( state, payload, showMenu ) {
     const newWindow = {
         ...newOpenWindows[targetWindow],
         ui: {
-            settingsMenuIsVisible: showMenu
-        }
+            settingsMenuIsVisible: showMenu,
+        },
     };
 
     newOpenWindows[targetWindow] = newWindow;
@@ -270,22 +268,25 @@ const resetStore = ( state, payload ) => {
             [targetWindow]: {
                 activeTab: tabId,
                 ui: {
-                    settingsMenuIsVisible: false
+                    settingsMenuIsVisible: false,
                 },
-                tabs: [tabId]
-            }
+                tabs: [tabId],
+            },
         },
         closedWindows: {
             [targetWindow]: {
                 closedTabs: [],
-                lastActiveTabs: []
-            }
-        }
+                lastActiveTabs: [],
+            },
+        },
     };
     return newState;
 };
 
-export const windows = ( state: Record<string, unknown> = initialState, action ) => {
+export const windows = (
+    state: Record<string, unknown> = initialState,
+    action
+) => {
     const { payload } = action;
 
     if ( action.error ) {

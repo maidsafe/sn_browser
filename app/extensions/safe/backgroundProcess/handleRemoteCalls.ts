@@ -17,7 +17,7 @@ export const getResetStoreActionObject = ( state, windowId ) => {
     const windowState = state.windows.openWindows;
     const windows = Object.keys( windowState );
     const windowsToBeClosed = windows.filter(
-        ( aWindowId ) => parseInt( aWindowId, 10 ) !== windowId
+        ( aWindowId ) => Number.parseInt( aWindowId, 10 ) !== windowId
     );
 
     return { fromWindow: windowId, tabId, windowsToBeClosed };

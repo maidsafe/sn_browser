@@ -16,7 +16,7 @@ export const TYPES = {
     BLUR_ADDRESS_BAR: 'BLUR_ADDRESS_BAR',
     SELECT_ADDRESS_BAR: 'SELECT_ADDRESS_BAR',
     DESELECT_ADDRESS_BAR: 'DESELECT_ADDRESS_BAR',
-    TABS_RESET_STORE: 'TABS_RESET_STORE'
+    TABS_RESET_STORE: 'TABS_RESET_STORE',
 };
 
 export const {
@@ -35,7 +35,7 @@ export const {
     blurAddressBar,
     selectAddressBar,
     deselectAddressBar,
-    tabsResetStore
+    tabsResetStore,
 } = createActions(
     TYPES.ADD_TAB,
     TYPES.UPDATE_TAB_URL,

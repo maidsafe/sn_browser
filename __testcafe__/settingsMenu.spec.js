@@ -14,7 +14,7 @@ import {
 const assertNoConsoleErrors = async ( t ) => {
     const { error } = await t.getBrowserConsoleMessages();
 
-    if ( error.length !== 0 ) {
+    if ( error.length > 0 ) {
         console.log( 'Errors encountered:', error );
     }
 

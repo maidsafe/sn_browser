@@ -3,7 +3,7 @@ import { Safe } from 'safe-nodejs';
 import { logger } from '$Logger';
 import {
     setSafeBrowserAppObject,
-    getCurrentStore
+    getCurrentStore,
 } from '$App/extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
 import { addNotification } from '$Actions/notification_actions';
@@ -42,7 +42,7 @@ export const initAuthed = async (): Safe => {
             store.dispatch(
                 addNotification( {
                     title: 'Authentication Failed. Check an authenticator is running.',
-                    acceptText: 'Dismiss'
+                    acceptText: 'Dismiss',
                 } )
             );
         }

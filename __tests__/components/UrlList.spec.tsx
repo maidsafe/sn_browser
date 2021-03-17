@@ -11,7 +11,7 @@ describe( 'UrlList', () => {
 
     beforeEach( () => {
         props = {
-            list: []
+            list: [],
         };
 
         wrapper = mount( <UrlList {...props} /> );

@@ -36,7 +36,7 @@ describe( 'AddressBarButtonsLHS', () => {
             onBlur: jest.fn(),
             onSelect: jest.fn(),
             onFocus: jest.fn(),
-            activeTab: { isLoading: false }
+            activeTab: { isLoading: false },
         };
     } );
 

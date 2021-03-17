@@ -4,7 +4,7 @@ import {
     startedRunningMock,
     isRunningSpectronTestProcess,
     APP_INFO,
-    PROTOCOLS
+    PROTOCOLS,
 } from '$Constants';
 
 // export { onRemoteCallInBgProcess } from '$Extensions/safe/backgroundProcess/handleRemoteCalls';
@@ -18,7 +18,7 @@ export { urlIsValid } from '$Extensions/safe/utils/urlIsValid';
  * @type {Object}
  */
 export const actionsForBrowser = {
-    ...safeBrowserAppActions
+    ...safeBrowserAppActions,
 };
 
 /**
