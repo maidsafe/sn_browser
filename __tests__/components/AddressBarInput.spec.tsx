@@ -8,7 +8,6 @@ import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 const mockStore = configureStore();
 
 jest.mock( '$Logger' );
-// jest.mock('/Users/josh/Projects/safe/forks/browser/node_modules/safe_nodejs/native/index.node');
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'AddressBarInput', () => {

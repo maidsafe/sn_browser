@@ -1,4 +1,4 @@
-import { Safe } from 'safe-nodejs';
+import { Safe } from 'sn_nodejs';
 
 import { logger } from '$Logger';
 import {
