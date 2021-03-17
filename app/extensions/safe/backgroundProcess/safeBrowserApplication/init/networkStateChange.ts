@@ -4,7 +4,7 @@ import { attemptReconnect } from '$Extensions/safe/network';
 import { setNetworkStatus } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import {
     addNotification,
-    clearNotification
+    clearNotification,
 } from '$Actions/notification_actions';
 import { getSafeBrowserAppObject } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/theApplication';
 
@@ -20,21 +20,19 @@ export const onNetworkStateChange = ( store, mockAttemptReconnect ) => (
     const isDisconnected = state === SAFE.NETWORK_STATE.DISCONNECTED;
     const notificationID = Math.random().toString( 36 );
 
-    if ( isDisconnected ) {
-        if ( store ) {
-            store.dispatch(
-                addNotification( {
-                    title: `Network state: ${state}`,
-                    body: 'Reconnecting...',
-                    id: notificationID
-                } )
-            );
+    if ( isDisconnected && store ) {
+        store.dispatch(
+            addNotification( {
+                title: `Network state: ${state}`,
+                body: 'Reconnecting...',
+                id: notificationID,
+            } )
+        );
 
-            if ( mockAttemptReconnect ) {
-                mockAttemptReconnect( store );
-            } else {
-                attemptReconnect( store, safeBrowserAppObject );
-            }
+        if ( mockAttemptReconnect ) {
+            mockAttemptReconnect( store );
+        } else {
+            attemptReconnect( store, safeBrowserAppObject );
         }
     }
 

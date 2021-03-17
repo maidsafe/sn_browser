@@ -43,10 +43,10 @@ module.exports = async ( AfterPackContext ) => {
     const removalArray = [
         'LICENSE.electron.txt',
         'LICENSES.chromium.html',
-        'LICENSE'
+        'LICENSE',
     ];
 
-    removalArray.forEach( ( file ) => {
+    for ( const file of removalArray ) {
         fs.removeSync( `${CONTAINING_FOLDER}/${file}` );
-    } );
+    }
 };

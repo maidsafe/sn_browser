@@ -24,21 +24,24 @@ const Meatball = () => (
         />
     </svg>
 );
-interface CustomMenuProps {
+interface CustomMenuProperties {
     isVisible?: boolean;
     menuItems?: Array<any>;
-    showMenu: ( ...args: Array<any> ) => any;
-    hideMenu: ( ...args: Array<any> ) => any;
+    showMenu: ( ...arguments_: Array<any> ) => any;
+    hideMenu: ( ...arguments_: Array<any> ) => any;
     windowId: number;
 }
 /**
  * A menu which will be displayed / hidden based upon isVisisble prop.
  * An ordered array of menu items can be passed in as an array of nodes to be displayed, each within their own Row.
  */
-export class CustomMenu extends Component<CustomMenuProps, Record<string, unknown>> {
+export class CustomMenu extends Component<
+CustomMenuProperties,
+Record<string, unknown>
+> {
     static defaultProps = {
         isVisible: false,
-        menuItems: []
+        menuItems: [],
     };
 
     handleShowingMenu = ( event ) => {
@@ -52,7 +55,7 @@ export class CustomMenu extends Component<CustomMenuProps, Record<string, unknow
                 hideMenu( { windowId } );
             };
             window.addEventListener( 'click', windowClickListener, {
-                once: true
+                once: true,
             } );
         }
     };
@@ -72,7 +75,7 @@ export class CustomMenu extends Component<CustomMenuProps, Record<string, unknow
                 {isVisible && (
                     <div className={`${styles.menuContainer} ${CLASSES.SETTINGS_MENU}`}>
                         <div className={styles.menu}>
-                            {menuItems.map( ( item, i ) => item )}
+                            {menuItems.map( ( item, index ) => item )}
                         </div>
                     </div>
                 )}

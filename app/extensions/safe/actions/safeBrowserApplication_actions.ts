@@ -45,7 +45,7 @@ export const TYPES = {
 
     // SAFE FILES
     ALIAS_UPLOAD_FILES: 'ALIAS_UPLOAD_FILES',
-    UPLOAD_FILES: 'UPLOAD_FILES'
+    UPLOAD_FILES: 'UPLOAD_FILES',
 };
 
 export const {
@@ -68,7 +68,7 @@ export const {
 
     resetStore,
 
-    showWebIdDropdown
+    showWebIdDropdown,
 } = createActions(
     TYPES.SET_APP_STATUS,
     TYPES.SET_NETWORK_STATUS,

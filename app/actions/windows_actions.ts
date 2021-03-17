@@ -10,7 +10,7 @@ export const TYPES = {
     CLOSE_WINDOW: 'CLOSE_WINDOW',
     SHOW_SETTINGS_MENU: 'SHOW_SETTINGS_MENU',
     HIDE_SETTINGS_MENU: 'HIDE_SETTINGS_MENU',
-    SET_LAST_FOCUSED_WINDOW: 'SET_LAST_FOCUSED_WINDOW'
+    SET_LAST_FOCUSED_WINDOW: 'SET_LAST_FOCUSED_WINDOW',
 };
 
 export const {
@@ -23,7 +23,7 @@ export const {
     closeWindow,
     showSettingsMenu,
     hideSettingsMenu,
-    setLastFocusedWindow
+    setLastFocusedWindow,
 } = createActions(
     TYPES.ADD_WINDOW,
     TYPES.ADD_TAB_NEXT,

@@ -11,5 +11,5 @@ module.exports = {
     $Constants: './app/constants.ts',
     $Package: './package.json',
     $Utils: './app/utils',
-    $TestCafeHelpers: './__testcafe__/helpers.js'
+    $TestCafeHelpers: './__testcafe__/helpers.js',
 };

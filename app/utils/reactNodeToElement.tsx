@@ -20,30 +20,30 @@ interface NodeDescription {
 
 export const reactNodeToElement = ( nodeObject: NodeObject ) => {
     const nodeDescription: NodeDescription = {
-        type: ''
+        type: '',
     };
-    Object.keys( nodeObject ).forEach( ( key ) => {
+    for ( const key of Object.keys( nodeObject ) ) {
         if ( key === 'type' ) {
             nodeDescription[key] = nodeObject[key];
-            return;
+            continue;
         }
         if ( key === 'props' ) {
-            Object.keys( nodeObject[key] ).forEach( ( property ) => {
+            for ( const property of Object.keys( nodeObject[key] ) ) {
                 if ( property === 'children' ) {
                     nodeDescription.children = nodeObject.props.children;
-                    return;
+                    continue;
                 }
                 if ( nodeDescription.props ) {
                     nodeDescription.props = {
                         ...nodeDescription.props,
-                        [property]: nodeObject[key][property]
+                        [property]: nodeObject[key][property],
                     };
                 } else {
                     nodeDescription.props = {
-                        [property]: nodeObject[key][property]
+                        [property]: nodeObject[key][property],
                     };
                 }
-            } );
+            }
         }
         if ( key === 'key' && nodeObject.key ) {
             if ( !nodeDescription.props ) {
@@ -51,7 +51,7 @@ export const reactNodeToElement = ( nodeObject: NodeObject ) => {
             }
             nodeDescription.props.key = nodeObject.key;
         }
-    } );
+    }
     if ( Array.isArray( nodeDescription.children ) ) {
         nodeDescription.children = nodeDescription.children
             .reduce( ( accumulator, value ) => accumulator.concat( value ), [] )

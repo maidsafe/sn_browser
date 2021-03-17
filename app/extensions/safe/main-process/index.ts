@@ -2,7 +2,7 @@ import {
     startedRunningMock,
     isRunningSpectronTestProcess,
     APP_INFO,
-    PROTOCOLS
+    PROTOCOLS,
 } from '$Constants';
 import { setIsMock } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { addFileMenus } from '$Extensions/safe/menus';
@@ -22,7 +22,7 @@ export const addExtensionMenuItems = ( store, menusArray ) => {
 
     const newMenuArray = [];
 
-    menusArray.forEach( ( menu ) => {
+    for ( const menu of menusArray ) {
         const { label } = menu;
         let newMenu = menu;
 
@@ -31,7 +31,7 @@ export const addExtensionMenuItems = ( store, menusArray ) => {
         }
 
         newMenuArray.push( newMenu );
-    } );
+    }
 
     return newMenuArray;
 };

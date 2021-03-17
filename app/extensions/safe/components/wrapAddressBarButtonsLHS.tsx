@@ -9,7 +9,7 @@ import 'antd/lib/col/style';
 import 'antd/lib/button/style';
 import {
     showWebIdDropdown,
-    setAppStatus
+    setAppStatus,
 } from '$Extensions/safe/actions/safeBrowserApplication_actions';
 import { getAvailableWebIds } from '$Extensions/safe/actions/aliased';
 
@@ -17,14 +17,14 @@ import { getAvailableWebIds } from '$Extensions/safe/actions/aliased';
 
 function mapStateToProperties( state ) {
     return {
-        safeBrowserApp: state.safeBrowserApp
+        safeBrowserApp: state.safeBrowserApp,
     };
 }
 function mapDispatchToProperties( dispatch ) {
     const actions = {
         showWebIdDropdown,
         getAvailableWebIds,
-        setAppStatus
+        setAppStatus,
     };
     return bindActionCreators( actions, dispatch );
 }

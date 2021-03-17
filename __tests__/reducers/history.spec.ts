@@ -10,13 +10,13 @@ const date = new Date().toLocaleDateString();
 describe( 'history reducer', () => {
     it( 'add an initial url', () => {
         const state = {};
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
                 url: 'another-url',
-                timeStamp
-            }
+                timeStamp,
+            },
         } );
 
         expect( newState ).not.toStrictEqual( state );
@@ -24,9 +24,9 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-url',
-                    timeStamp
-                }
-            ]
+                    timeStamp,
+                },
+            ],
         } );
     } );
     it( 'add another url', () => {
@@ -34,17 +34,17 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1559635003845
-                }
-            ]
+                    timeStamp: 1559635003845,
+                },
+            ],
         };
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
                 url: 'another-another-url',
-                timeStamp
-            }
+                timeStamp,
+            },
         } );
 
         expect( newState ).not.toStrictEqual( state );
@@ -52,13 +52,13 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp
+                    timeStamp,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1559635003845
-                }
-            ]
+                    timeStamp: 1559635003845,
+                },
+            ],
         } );
     } );
 
@@ -67,21 +67,21 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1559635306833
+                    timeStamp: 1559635306833,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1559635306845
-                }
-            ]
+                    timeStamp: 1559635306845,
+                },
+            ],
         };
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
                 url: 'another-another-url',
-                timeStamp
-            }
+                timeStamp,
+            },
         } );
 
         expect( newState ).not.toStrictEqual( state );
@@ -89,13 +89,13 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp
+                    timeStamp,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1559635306845
-                }
-            ]
+                    timeStamp: 1559635306845,
+                },
+            ],
         } );
     } );
 
@@ -104,28 +104,28 @@ describe( 'history reducer', () => {
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1559635306845
+                    timeStamp: 1559635306845,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1559635322845
-                }
+                    timeStamp: 1559635322845,
+                },
             ],
             [date]: [
                 {
                     url: 'safe://hello',
-                    timeStamp: 1559635306858
-                }
-            ]
+                    timeStamp: 1559635306858,
+                },
+            ],
         };
 
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         const newState = history( state, {
             type: TABS_TYPES.UPDATE_TAB_URL,
             payload: {
                 url: 'helloAgain',
-                timeStamp
-            }
+                timeStamp,
+            },
         } );
 
         expect( newState ).not.toStrictEqual( state );
@@ -133,23 +133,23 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://helloAgain',
-                    timeStamp
+                    timeStamp,
                 },
                 {
                     url: 'safe://hello',
-                    timeStamp: 1559635306858
-                }
+                    timeStamp: 1559635306858,
+                },
             ],
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1559635306845
+                    timeStamp: 1559635306845,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1559635322845
-                }
-            ]
+                    timeStamp: 1559635322845,
+                },
+            ],
         } );
     } );
 
@@ -158,23 +158,23 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://helloAgain',
-                    timeStamp: 1559635322225
+                    timeStamp: 1559635322225,
                 },
                 {
                     url: 'safe://hello',
-                    timeStamp: 1559635322845
-                }
+                    timeStamp: 1559635322845,
+                },
             ],
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1469635322845
+                    timeStamp: 1469635322845,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1239635322845
-                }
-            ]
+                    timeStamp: 1239635322845,
+                },
+            ],
         };
 
         const newState = history( state, {
@@ -187,20 +187,20 @@ describe( 'history reducer', () => {
                         { url: 'safe://home.dgeddes', timeStamp: 1559635322123 },
                         { url: 'safe://eye.eye', timeStamp: 1559635322345 },
                         { url: 'safe://safenetworkprimer', timeStamp: 1559635322456 },
-                        { url: 'safe://typer.game', timeStamp: 1559635322678 }
+                        { url: 'safe://typer.game', timeStamp: 1559635322678 },
                     ],
                     '10/11/2019': [
                         {
                             url: 'safe://another-another-url',
-                            timeStamp: 1469635322567
+                            timeStamp: 1469635322567,
                         },
                         {
                             url: 'safe://another-url',
-                            timeStamp: 1239635322567
-                        }
-                    ]
-                }
-            }
+                            timeStamp: 1239635322567,
+                        },
+                    ],
+                },
+            },
         } );
 
         expect( newState ).not.toStrictEqual( state );
@@ -208,57 +208,57 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://helloAgain',
-                    timeStamp: 1559635322225
+                    timeStamp: 1559635322225,
                 },
                 {
                     url: 'safe://hello',
-                    timeStamp: 1559635322845
+                    timeStamp: 1559635322845,
                 },
                 {
                     url: 'safe-auth://home/#/login',
-                    timeStamp: 1559635322450
+                    timeStamp: 1559635322450,
                 },
                 {
                     url: 'safe://cat.ashi',
-                    timeStamp: 1559635322111
+                    timeStamp: 1559635322111,
                 },
                 {
                     url: 'safe://home.dgeddes',
-                    timeStamp: 1559635322123
+                    timeStamp: 1559635322123,
                 },
                 {
                     url: 'safe://eye.eye',
-                    timeStamp: 1559635322345
+                    timeStamp: 1559635322345,
                 },
                 {
                     url: 'safe://safenetworkprimer',
-                    timeStamp: 1559635322456
+                    timeStamp: 1559635322456,
                 },
                 {
                     url: 'safe://typer.game',
-                    timeStamp: 1559635322678
-                }
+                    timeStamp: 1559635322678,
+                },
             ],
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1469635322845
+                    timeStamp: 1469635322845,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1239635322845
-                }
+                    timeStamp: 1239635322845,
+                },
             ],
             '10/11/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1469635322567
+                    timeStamp: 1469635322567,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1239635322567
-                }
-            ]
+                    timeStamp: 1239635322567,
+                },
+            ],
         } );
     } );
 
@@ -267,27 +267,27 @@ describe( 'history reducer', () => {
             [date]: [
                 {
                     url: 'safe://helloAgain',
-                    timeStamp: 1559635322225
+                    timeStamp: 1559635322225,
                 },
                 {
                     url: 'safe://hello',
-                    timeStamp: 1559635322845
-                }
+                    timeStamp: 1559635322845,
+                },
             ],
             '5/21/2019': [
                 {
                     url: 'safe://another-another-url',
-                    timeStamp: 1469635322845
+                    timeStamp: 1469635322845,
                 },
                 {
                     url: 'safe://another-url',
-                    timeStamp: 1239635322845
-                }
-            ]
+                    timeStamp: 1239635322845,
+                },
+            ],
         };
 
         const newState = history( state, {
-            type: TABS_TYPES.TABS_RESET_STORE
+            type: TABS_TYPES.TABS_RESET_STORE,
         } );
 
         expect( newState ).toStrictEqual( initialState );

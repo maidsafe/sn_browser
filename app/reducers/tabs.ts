@@ -44,13 +44,13 @@ const addTab = ( state, tab ) => {
         ui: {
             addressBarIsSelected: false,
             pageIsLoading: false,
-            shouldFocusWebview: false
+            shouldFocusWebview: false,
         },
         shouldToggleDevTools: false,
         webId: undefined,
         webContentsId: undefined,
         history: [tabUrl],
-        favicon: faviconPath
+        favicon: faviconPath,
     };
     const newState = { ...state, [tabId]: newTab };
     return newState;
@@ -99,23 +99,26 @@ const updateTabHistory = ( tabToMerge, payload ) => {
     let newHistory = [...ancientHistory];
     const currentIndex = tabToMerge.historyIndex;
 
-    if ( url && url !== tabToMerge.url ) {
-        if ( ancientHistory && ancientHistory[currentIndex] !== url ) {
-            updatedTab.historyIndex += 1;
+    if (
+        url &&
+    url !== tabToMerge.url &&
+    ancientHistory &&
+    ancientHistory[currentIndex] !== url
+    ) {
+        updatedTab.historyIndex += 1;
 
-            // if we're not at last index split array there.
-            if ( ancientHistory.length - 1 !== currentIndex ) {
-                newHistory = newHistory.slice( 0, currentIndex + 1 );
-            }
-
-            // else, a simple addition to array
-            updatedTab.history = newHistory;
-            updatedTab.history.push( url );
+        // if we're not at last index split array there.
+        if ( ancientHistory.length - 1 !== currentIndex ) {
+            newHistory = newHistory.slice( 0, currentIndex + 1 );
         }
+
+        // else, a simple addition to array
+        updatedTab.history = newHistory;
+        updatedTab.history.push( url );
     }
     updatedTab = {
         ...updatedTab,
-        url
+        url,
     };
     return updatedTab;
 };
@@ -255,8 +258,8 @@ const focusWebview = ( state, tab ) => {
         ...tabtoMerge,
         ui: {
             ...tabtoMerge.ui,
-            shouldFocusWebview: shouldFocus
-        }
+            shouldFocusWebview: shouldFocus,
+        },
     };
     const newState = { ...state, [tabId]: newTab };
     return newState;
@@ -268,8 +271,8 @@ const blurAddressBar = ( state, tab ) => {
         ...state[tabId],
         ui: {
             ...state[tabId].ui,
-            addressBarIsSelected: false
-        }
+            addressBarIsSelected: false,
+        },
     };
     const newState = { ...state, [tabId]: newTab };
     return newState;
@@ -281,8 +284,8 @@ const selectAddressBar = ( state, tab ) => {
         ...state[tabId],
         ui: {
             ...state[tabId].ui,
-            addressBarIsSelected: true
-        }
+            addressBarIsSelected: true,
+        },
     };
     const newState = { ...state, [tabId]: newTab };
     return newState;
@@ -294,8 +297,8 @@ const deselectAddressBar = ( state, tab ) => {
         ...state[tabId],
         ui: {
             ...state[tabId].ui,
-            addressBarIsSelected: false
-        }
+            addressBarIsSelected: false,
+        },
     };
     const newState = { ...state, [tabId]: newTab };
     return newState;
@@ -314,12 +317,12 @@ const resetStore = ( payload ) => {
         ui: {
             addressBarIsSelected: false,
             pageIsLoading: false,
-            shouldFocusWebview: false
+            shouldFocusWebview: false,
         },
         shouldToggleDevTools: false,
         webId: undefined,
         history: [newTabStartLocation],
-        favicon: faviconPath
+        favicon: faviconPath,
     };
     const newState = { ...initialState, [tabId]: newTab };
     return newState;

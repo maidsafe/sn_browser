@@ -2,7 +2,7 @@ export const initialAppState = {
     pWeb: {
         versionedUrls: {},
         availableNrsUrls: [],
-        mySites: []
+        mySites: [],
     },
     safeBrowserApp: {
     // appStatus: null,
@@ -17,6 +17,6 @@ export const initialAppState = {
         experimentsEnabled: false,
         showingWebIdDropdown: false,
         isFetchingWebIds: false,
-        webIds: []
-    }
+        webIds: [],
+    },
 };

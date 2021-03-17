@@ -11,30 +11,33 @@ import { wrapAddressBarButtonsRHS } from '$Extensions/components';
 import { CustomMenu } from '$Components/CustomMenu';
 import { CLASSES } from '$Constants';
 
-interface ButtonsRHSProps {
+interface ButtonsRHSProperties {
     address?: string;
-    addTabEnd: ( ...args: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
     isBookmarked: boolean;
-    addBookmark: ( ...args: Array<any> ) => any;
-    removeBookmark: ( ...args: Array<any> ) => any;
+    addBookmark: ( ...arguments_: Array<any> ) => any;
+    removeBookmark: ( ...arguments_: Array<any> ) => any;
     menuItems: Array<React.ReactNode>;
-    showSettingsMenu: ( ...args: Array<any> ) => any;
+    showSettingsMenu: ( ...arguments_: Array<any> ) => any;
     settingsMenuIsVisible: boolean;
-    hideSettingsMenu: ( ...args: Array<any> ) => any;
-    focusWebview: ( ...args: Array<any> ) => any;
+    hideSettingsMenu: ( ...arguments_: Array<any> ) => any;
+    focusWebview: ( ...arguments_: Array<any> ) => any;
     windowId: number;
-    setActiveTab: ( ...args: Array<any> ) => any;
+    setActiveTab: ( ...arguments_: Array<any> ) => any;
     tabId: string;
 }
 /**
  * Left hand side buttons for the Address Bar
  * @extends Component
  */
-class ButtonsRHS extends Component<ButtonsRHSProps, Record<string, unknown>> {
+class ButtonsRHS extends Component<
+ButtonsRHSProperties,
+Record<string, unknown>
+> {
     static defaultProps = {
         address: '',
         isSelected: false,
-        editingUrl: false
+        editingUrl: false,
     };
 
     handleBookmarking = () => {
@@ -55,7 +58,7 @@ class ButtonsRHS extends Component<ButtonsRHSProps, Record<string, unknown>> {
             menuItems,
             focusWebview,
             windowId,
-            tabId
+            tabId,
         } = this.props;
         return (
             <Row

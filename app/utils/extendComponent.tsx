@@ -45,7 +45,7 @@ export const extendComponent = ( WrappedComponent, extensionWrapperApi ) => {
 
     // set our wrapped class name to be the standard class name.
     Object.defineProperty( Extended, 'name', {
-        value: `Extended${componentClassName}`
+        value: `Extended${componentClassName}`,
     } );
 
     return Extended;

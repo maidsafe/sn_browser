@@ -7,7 +7,7 @@ export const ERROR_TYPES = {
     NO_CONTENT_FOUND: 'NO_CONTENT_FOUND',
     INVALID_VERSION: 'INVALID_VERSION',
     UNKNOWN_NAME: 'UNKNOWN_NAME',
-    CONNECTION_FAILED: 'CONNECTION_FAILED'
+    CONNECTION_FAILED: 'CONNECTION_FAILED',
 };
 
 export const ERROR_CODES = {
@@ -15,7 +15,7 @@ export const ERROR_CODES = {
     NO_CONTENT_FOUND: 404,
     INVALID_VERSION: 404,
     UNKNOWN_NAME: 404,
-    CONNECTION_FAILED: 500
+    CONNECTION_FAILED: 500,
 };
 
 // SAFE Error code space? 1000?
@@ -24,19 +24,19 @@ const ERROR_PAGES = {
     CONNECTION_FAILED: {
         superTitle: 'Connection Failed',
         title: 'Could not connect to the network',
-        getMessage: () => 'There was an problem with the network connection. '
+        getMessage: () => 'There was an problem with the network connection. ',
     },
     BAD_REQUEST: {
         superTitle: 'Bad Request',
         title: 'Invalid address',
         getMessage: ( address ) =>
-            `${address} is not a valid URL, please check it and try again.`
+            `${address} is not a valid URL, please check it and try again.`,
     },
     NO_CONTENT_FOUND: {
         superTitle: '404',
         title: 'Not Found',
         getMessage: () =>
-            'Nothing has been published at this address, no page or file can be found'
+            'Nothing has been published at this address, no page or file can be found',
     },
     INVALID_VERSION: {
         superTitle: 'Invalid version',
@@ -51,9 +51,9 @@ const ERROR_PAGES = {
 
             return {
                 text: 'Go to latest',
-                targetUrl: latestVersion
+                targetUrl: latestVersion,
             };
-        }
+        },
     },
     UNKNOWN_NAME: {
         superTitle: 'Unknown Public Name',
@@ -65,11 +65,11 @@ const ERROR_PAGES = {
 
             return {
                 ctaText: `Register ${address}`,
-                targetUrl: registerThis
+                targetUrl: registerThis,
             };
         },
-        errorCode: 404
-    }
+        errorCode: 404,
+    },
 };
 export const Error = ( props ) => {
     const { address, badVersion, latestVersion, type } = props;
@@ -79,7 +79,7 @@ export const Error = ( props ) => {
         title,
         getMessage,
         getCallToAction,
-        errorCode
+        errorCode,
     } = ERROR_PAGES[type];
 
     const pageStyle = {
@@ -93,7 +93,7 @@ export const Error = ( props ) => {
         borderRight: '0',
         overflow: 'auto',
         margin: '0',
-        fontFamily: 'system-ui'
+        fontFamily: 'system-ui',
     };
 
     const containerStyle = {
@@ -103,7 +103,7 @@ export const Error = ( props ) => {
         flexDirection: 'column',
         justifyContent: 'center',
         boxSizing: 'border-box',
-        margin: '0'
+        margin: '0',
     };
 
     const callToActionStyle = {
@@ -112,12 +112,12 @@ export const Error = ( props ) => {
         color: '#FFFFFF',
         padding: '12px',
         borderRadius: '200px',
-        textDecoration: 'none'
+        textDecoration: 'none',
     };
 
     const superTitleStyle = {
         display: 'block',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
     };
 
     const { ctaText, targetUrl } = getCallToAction

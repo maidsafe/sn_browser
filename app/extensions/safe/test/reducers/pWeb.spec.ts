@@ -18,12 +18,12 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
             expect(
                 pWeb( safeInitialState, {
                     type: TYPES.SET_KNOWN_VERSIONS_FOR_URL,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( {
                 versionedUrls: {
-                    'safe://lalalala': 22
-                }
+                    'safe://lalalala': 22,
+                },
             } );
         } );
         it( 'should not overwrite higher version numbers', () => {
@@ -31,7 +31,7 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
 
             const eleven = pWeb( safeInitialState, {
                 type: TYPES.SET_KNOWN_VERSIONS_FOR_URL,
-                payload
+                payload,
             } );
 
             const payload2 = { url: 'safe://lalalala', version: 2 };
@@ -39,12 +39,12 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
             expect(
                 pWeb( eleven, {
                     type: TYPES.SET_KNOWN_VERSIONS_FOR_URL,
-                    payload: payload2
+                    payload: payload2,
                 } )
             ).toMatchObject( {
                 versionedUrls: {
-                    'safe://lalalala': 11
-                }
+                    'safe://lalalala': 11,
+                },
             } );
         } );
     } );
@@ -56,10 +56,10 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
             expect(
                 pWeb( safeInitialState, {
                     type: TYPES.SET_NAME_AS_MY_SITE,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( {
-                mySites: ['x.lalalala']
+                mySites: ['x.lalalala'],
             } );
         } );
         it( 'should handle setting ownership of public name', () => {
@@ -68,10 +68,10 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
             expect(
                 pWeb( safeInitialState, {
                     type: TYPES.SET_NAME_AS_MY_SITE,
-                    payload
+                    payload,
                 } )
             ).toMatchObject( {
-                mySites: ['lalalala']
+                mySites: ['lalalala'],
             } );
         } );
 
@@ -83,11 +83,11 @@ describe( 'SafeBrowserApp pWeb reducer', () => {
                     { mySites: ['lalalala'] },
                     {
                         type: TYPES.SET_NAME_AS_MY_SITE,
-                        payload
+                        payload,
                     }
                 )
             ).toMatchObject( {
-                mySites: ['lalalala']
+                mySites: ['lalalala'],
             } );
         } );
     } );

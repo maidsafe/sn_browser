@@ -31,7 +31,7 @@ export const notifications = ( state: Array = initialState, action ) => {
 
             updatedState[notificationId] = {
                 ...oldNotification,
-                ...notification
+                ...notification,
             };
             return updatedState;
         }

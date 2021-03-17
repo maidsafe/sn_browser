@@ -16,32 +16,32 @@ import { logger } from '$Logger';
 
 // drawing on itch browser meat: https://github.com/itchio/itch/blob/3231a7f02a13ba2452616528a15f66670a8f088d/appsrc/components/browser-meat.js
 const WILL_NAVIGATE_GRACE_PERIOD = 3000;
-const SHOW_DEVTOOLS = parseInt( process.env.DEVTOOLS, 10 ) > 1;
+const SHOW_DEVTOOLS = Number.parseInt( process.env.DEVTOOLS, 10 ) > 1;
 
-interface TabProps {
-    addNotification: ( ...args: Array<any> ) => any;
+interface TabProperties {
+    addNotification: ( ...arguments_: Array<any> ) => any;
     webId: Record<string, unknown>;
     url: string;
     isActiveTab: boolean;
-    closeTab: ( ...args: Array<any> ) => any;
-    updateTabUrl: ( ...args: Array<any> ) => any;
-    updateTabWebId: ( ...args: Array<any> ) => any;
-    updateTabWebContentsId: ( ...args: Array<any> ) => any;
-    toggleDevTools: ( ...args: Array<any> ) => any;
-    tabShouldReload: ( ...args: Array<any> ) => any;
-    updateTabTitle: ( ...args: Array<any> ) => any;
-    updateTabFavicon: ( ...args: Array<any> ) => any;
-    tabLoad: ( ...args: Array<any> ) => any;
-    addTabNext: ( ...args: Array<any> ) => any;
-    addTabEnd: ( ...args: Array<any> ) => any;
-    setActiveTab: ( ...args: Array<any> ) => any;
+    closeTab: ( ...arguments_: Array<any> ) => any;
+    updateTabUrl: ( ...arguments_: Array<any> ) => any;
+    updateTabWebId: ( ...arguments_: Array<any> ) => any;
+    updateTabWebContentsId: ( ...arguments_: Array<any> ) => any;
+    toggleDevTools: ( ...arguments_: Array<any> ) => any;
+    tabShouldReload: ( ...arguments_: Array<any> ) => any;
+    updateTabTitle: ( ...arguments_: Array<any> ) => any;
+    updateTabFavicon: ( ...arguments_: Array<any> ) => any;
+    tabLoad: ( ...arguments_: Array<any> ) => any;
+    addTabNext: ( ...arguments_: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
+    setActiveTab: ( ...arguments_: Array<any> ) => any;
     key?: string;
     tabId?: string;
     windowId: number;
     safeExperimentsEnabled: boolean;
-    focusWebview: ( ...args: Array<any> ) => any;
+    focusWebview: ( ...arguments_: Array<any> ) => any;
     shouldFocusWebview: boolean;
-    tabBackwards: ( ...args: Array<any> ) => any;
+    tabBackwards: ( ...arguments_: Array<any> ) => any;
     shouldReload: boolean;
     shouldToggleDevTools: boolean;
 }
@@ -61,7 +61,7 @@ interface TabState {
     };
 }
 
-export class Tab extends Component<TabProps, TabState> {
+export class Tab extends Component<TabProperties, TabState> {
     debouncedWebIdUpdateFunc: () => void;
 
     webview: WebviewTag;
@@ -112,7 +112,7 @@ export class Tab extends Component<TabProps, TabState> {
     };
 
     buildMenu = ( webview ) => {
-        if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
+    // if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
         const { windowId, toggleDevTools, tabId, addTabNext } = this.props;
         // require here to avoid jest/electron remote issues
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
@@ -215,7 +215,7 @@ export class Tab extends Component<TabProps, TabState> {
             // We set the webContents here, and add it to the user agent
             // to be able to modify _all_ requests from a domain to pull
             // the correct version of site...
-            const webContents = webview.getWebContents();
+            const webContents = remote.webContents.fromId( webview.getWebContentsId() );
             const userAgent = webContents.getUserAgent();
 
             const webContentsId = webContents.id;
@@ -382,7 +382,7 @@ export class Tab extends Component<TabProps, TabState> {
     domReady() {
         const { url } = this.props;
         const { webview } = this;
-        const webContents = webview.getWebContents();
+        const webContents = remote.webContents.fromId( webview.getWebContentsId() );
         if ( !webContents || webContents.isDestroyed() ) return;
         if ( SHOW_DEVTOOLS ) {
             webContents.openDevTools( { mode: 'detach' } );
@@ -467,7 +467,7 @@ export class Tab extends Component<TabProps, TabState> {
 
             // check its the same link incase of double click
             if ( this.state.browserState.canGoBack && !urlHasChanged( errorUrl, url ) ) {
-                const timeStamp = new Date().getTime();
+                const timeStamp = Date.now();
                 tabBackwards( { tabId, windowId, timeStamp } );
             } else if ( !this.state.browserState.canGoBack ) {
                 closeTab( { tabId, windowId } );
@@ -516,10 +516,10 @@ export class Tab extends Component<TabProps, TabState> {
         const linkRevealer = document.getElementById( 'link_revealer' );
         if ( url.url ) {
             linkRevealer.setAttribute( 'class', 'reveal_link' );
-            linkRevealer.innerText = url.url;
+            linkRevealer.textContent = url.url;
         } else {
             linkRevealer.setAttribute( 'class', 'no_display' );
-            linkRevealer.innerText = '';
+            linkRevealer.textContent = '';
         }
     }
 
@@ -551,7 +551,7 @@ export class Tab extends Component<TabProps, TabState> {
         // TODO: Actually overwrite history for redirect
         if ( !this.state.browserState.redirects.includes( url ) ) {
             this.updateBrowserState( { url, redirects: [url] } );
-            const timeStamp = new Date().getTime();
+            const timeStamp = Date.now();
             updateTabUrl( { tabId, url, timeStamp } );
             this.addWindowIdToTab();
             this.setCurrentWebId( null );
@@ -567,14 +567,15 @@ export class Tab extends Component<TabProps, TabState> {
             this.state.browserState.url
         );
         // TODO: Actually overwrite history for redirect
-        if ( !this.state.browserState.redirects.includes( url ) ) {
-            if ( urlHasChanged( url, this.state.browserState.url ) ) {
-                this.updateBrowserState( { url, redirects: [url] } );
-                const timeStamp = new Date().getTime();
-                updateTabUrl( { tabId, url, timeStamp } );
-                this.addWindowIdToTab();
-                this.setCurrentWebId( null );
-            }
+        if (
+            !this.state.browserState.redirects.includes( url ) &&
+      urlHasChanged( url, this.state.browserState.url )
+        ) {
+            this.updateBrowserState( { url, redirects: [url] } );
+            const timeStamp = Date.now();
+            updateTabUrl( { tabId, url, timeStamp } );
+            this.addWindowIdToTab();
+            this.setCurrentWebId( null );
         }
     }
 
@@ -611,7 +612,7 @@ export class Tab extends Component<TabProps, TabState> {
         this.lastNavigationUrl = url;
         this.lastNavigationTimeStamp = event.timeStamp;
         const { tabId } = this.props;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         this.props.updateTabUrl( { tabId, url, timeStamp } );
         if ( this.props.isActiveTab ) {
             this.props.updateTabUrl( { tabId, url, timeStamp } );
@@ -697,7 +698,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     with( callback, options = { insist: false } ) {
         const { webview } = this;
         if ( !webview ) return;
-        const webContents = webview.getWebContents();
+        const webContents = remote.webContents.fromId( webview.getWebContentsId() );
         if ( !webContents ) {
             return;
         }

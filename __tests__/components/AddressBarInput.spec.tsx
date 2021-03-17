@@ -8,7 +8,6 @@ import { Input as AddressBarInput } from '$Components/AddressBar/Input';
 const mockStore = configureStore();
 
 jest.mock( '$Logger' );
-// jest.mock('/Users/josh/Projects/safe/forks/browser/node_modules/safe_nodejs/native/index.node');
 jest.mock( 'extensions/safe/actions/safeBrowserApplication_actions' );
 
 describe( 'AddressBarInput', () => {
@@ -38,13 +37,13 @@ describe( 'AddressBarInput', () => {
             updateTab: jest.fn(),
             safeBrowserApp: {
                 isMock: false,
-                experimentsEnabled: false
+                experimentsEnabled: false,
             },
             pWeb: {
                 versionedUrls: {},
                 availableNrsUrls: [],
-                mySites: []
-            }
+                mySites: [],
+            },
         };
     } );
 
@@ -132,7 +131,7 @@ describe( 'AddressBarInput', () => {
             expect( props.updateTabUrl ).toHaveBeenCalledWith(
                 expect.objectContaining( {
                     url: 'about:blank',
-                    tabId
+                    tabId,
                 } )
             );
         } );

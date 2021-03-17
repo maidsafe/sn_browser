@@ -8,11 +8,11 @@ import { logger } from '$Logger';
 export const setupRoutes = ( server, store ) => {
     const routes = [safeRoute( store )];
 
-    routes.forEach( ( route ) => {
+    for ( const route of routes ) {
         try {
             server.get( route.path, route.handler );
         } catch ( error ) {
             logger.error( 'Problem initing a route.', route, error );
         }
-    } );
+    }
 };

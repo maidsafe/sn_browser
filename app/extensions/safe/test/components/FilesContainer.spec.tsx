@@ -19,22 +19,22 @@ describe( 'FilesContainer', () => {
         props = {
             filesMap: {
                 '/testfolder/file': {
-                    link: 'safe://lalalalalala'
+                    link: 'safe://lalalalalala',
                 },
                 '/testfolder/subfolder/subfile': {
-                    link: 'safe://lalalalalala'
+                    link: 'safe://lalalalalala',
                 },
                 '/testfolder/subfolder/subfile2': {
-                    link: 'safe://lalalalalala'
+                    link: 'safe://lalalalalala',
                 },
                 '/testfolder/subfolder/subsub/subsubfile': {
-                    link: 'safe://lalalalalala'
+                    link: 'safe://lalalalalala',
                 },
                 '/anotherfolder/somefile': {
-                    link: 'safe://lalalalalala'
-                }
+                    link: 'safe://lalalalalala',
+                },
             },
-            currentLocation: 'safe://newstart'
+            currentLocation: 'safe://newstart',
         };
 
         wrapper = shallow( <FilesContainer {...props} /> );
@@ -58,53 +58,43 @@ describe( 'FilesContainer', () => {
 
         it( 'should display only next level folders / files once', () => {
             expect( wrapper.find( 'li' ).length ).toBe( 2 );
-            expect(
-                wrapper
-                    .find( 'a' )
-                    .first()
-                    .props()
-            ).toMatchObject( { children: '/testfolder', href: '/testfolder' } );
-            expect(
-                wrapper
-                    .find( 'a' )
-                    .last()
-                    .props()
-            ).toMatchObject( { children: '/anotherfolder', href: '/anotherfolder' } );
+            expect( wrapper.find( 'a' ).first().props() ).toMatchObject( {
+                children: '/testfolder',
+                href: '/testfolder',
+            } );
+            expect( wrapper.find( 'a' ).last().props() ).toMatchObject( {
+                children: '/anotherfolder',
+                href: '/anotherfolder',
+            } );
         } );
 
         it( 'should display only next level folders / files, when already at a location', () => {
             const newProperties = {
                 filesMap: {
                     'subfolder/subfile': {
-                        link: 'safe://lalalalalala'
+                        link: 'safe://lalalalalala',
                     },
                     'subfolder/subfile2': {
-                        link: 'safe://lalalalalala'
+                        link: 'safe://lalalalalala',
                     },
                     'subfolder2/subsub/subsubfile': {
-                        link: 'safe://lalalalalala'
+                        link: 'safe://lalalalalala',
                     },
                     'subfolder2/subsub/subsubfile2': {
-                        link: 'safe://lalalalalala'
-                    }
+                        link: 'safe://lalalalalala',
+                    },
                 },
-                currentLocation: 'safe://start/testfolder'
+                currentLocation: 'safe://start/testfolder',
             };
             wrapper = shallow( <FilesContainer {...newProperties} /> );
 
             expect( wrapper.find( 'li' ).length ).toBe( 2 );
-            expect(
-                wrapper
-                    .find( 'a' )
-                    .first()
-                    .props()
-            ).toMatchObject( { href: 'subfolder' } );
-            expect(
-                wrapper
-                    .find( 'a' )
-                    .last()
-                    .props()
-            ).toMatchObject( { href: 'subfolder2' } );
+            expect( wrapper.find( 'a' ).first().props() ).toMatchObject( {
+                href: 'subfolder',
+            } );
+            expect( wrapper.find( 'a' ).last().props() ).toMatchObject( {
+                href: 'subfolder2',
+            } );
         } );
     } );
 } );

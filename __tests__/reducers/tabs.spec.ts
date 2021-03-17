@@ -9,7 +9,7 @@ const favicon = isRunningUnpacked
     : '../favicon.ico';
 
 jest.mock( 'utils/urlHelpers', () => ( {
-    makeValidAddressBarUrl: jest.fn( ( uri ) => uri )
+    makeValidAddressBarUrl: jest.fn( ( uri ) => uri ),
 } ) );
 
 const tabId = Math.random().toString( 36 );
@@ -23,12 +23,12 @@ describe( 'tabs reducer', () => {
         ui: {
             addressBarIsSelected: false,
             pageIsLoading: false,
-            shouldFocusWebview: false
+            shouldFocusWebview: false,
         },
         shouldToggleDevTools: false,
         webId: undefined,
         history: ['hello'],
-        favicon
+        favicon,
     };
 
     it( 'should return the initial state', () => {
@@ -40,7 +40,7 @@ describe( 'tabs reducer', () => {
             const state = {};
             const newState = tabs( state, {
                 type: TYPES.ADD_TAB,
-                payload: { url: 'hello', tabId }
+                payload: { url: 'hello', tabId },
             } );
             expect( newState ).not.toStrictEqual( state );
             expect( newState ).toEqual( { [tabId]: { ...basicTab } } );
@@ -52,8 +52,8 @@ describe( 'tabs reducer', () => {
                 type: TYPES.ADD_TAB,
                 payload: {
                     url: 'another-url',
-                    tabId: tabId1
-                }
+                    tabId: tabId1,
+                },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -69,13 +69,13 @@ describe( 'tabs reducer', () => {
                     ui: {
                         addressBarIsSelected: false,
                         pageIsLoading: false,
-                        shouldFocusWebview: false
+                        shouldFocusWebview: false,
                     },
                     shouldToggleDevTools: false,
                     webId: undefined,
                     history: ['another-url'],
-                    favicon
-                }
+                    favicon,
+                },
             } );
         } );
     } );
@@ -84,12 +84,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'changed!', tabId }
+                payload: { url: 'changed!', tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -100,7 +100,7 @@ describe( 'tabs reducer', () => {
                 ...basicTab,
                 url: 'changed!',
                 historyIndex: 1,
-                history: ['hello', 'changed!']
+                history: ['hello', 'changed!'],
             } );
 
             expect( newState[tabId] ).toHaveProperty( 'history' );
@@ -110,12 +110,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's with a url when no protocol is given", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'changed!', tabId: tabId1 }
+                payload: { url: 'changed!', tabId: tabId1 },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -127,7 +127,7 @@ describe( 'tabs reducer', () => {
                 tabId: tabId1,
                 url: 'changed!',
                 historyIndex: 1,
-                history: ['hello', 'changed!']
+                history: ['hello', 'changed!'],
             } );
 
             expect( newState[tabId1] ).toHaveProperty( 'history' );
@@ -137,11 +137,11 @@ describe( 'tabs reducer', () => {
         it( 'should return a new history array when URL is changed', () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'changed!', tabId }
+                payload: { url: 'changed!', tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -154,12 +154,12 @@ describe( 'tabs reducer', () => {
         it( 'should not add to history index when same url is given', () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'changed!', tabId: tabId1 }
+                payload: { url: 'changed!', tabId: tabId1 },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -170,7 +170,7 @@ describe( 'tabs reducer', () => {
                 { ...newState },
                 {
                     type: TYPES.UPDATE_TAB_URL,
-                    payload: { url: 'changed!', tabId: tabId1 }
+                    payload: { url: 'changed!', tabId: tabId1 },
                 }
             );
 
@@ -182,7 +182,7 @@ describe( 'tabs reducer', () => {
                 { ...secondState },
                 {
                     type: TYPES.UPDATE_TAB_URL,
-                    payload: { url: 'changed#woooo', tabId: tabId1 }
+                    payload: { url: 'changed#woooo', tabId: tabId1 },
                 }
             );
 
@@ -194,7 +194,7 @@ describe( 'tabs reducer', () => {
                 { ...thirdState },
                 {
                     type: TYPES.UPDATE_TAB_URL,
-                    payload: { url: 'changed#woooo', tabId: tabId1 }
+                    payload: { url: 'changed#woooo', tabId: tabId1 },
                 }
             );
 
@@ -207,7 +207,7 @@ describe( 'tabs reducer', () => {
                 tabId: tabId1,
                 url: 'changed!',
                 historyIndex: 1,
-                history: ['hello', 'changed!']
+                history: ['hello', 'changed!'],
             } );
 
             expect( fourthState[tabId1] ).toMatchObject( {
@@ -215,7 +215,7 @@ describe( 'tabs reducer', () => {
                 tabId: tabId1,
                 url: 'changed#woooo',
                 historyIndex: 2,
-                history: ['hello', 'changed!', 'changed#woooo']
+                history: ['hello', 'changed!', 'changed#woooo'],
             } );
 
             expect( fourthState[tabId1].history.length ).toBe( 3 );
@@ -224,12 +224,12 @@ describe( 'tabs reducer', () => {
         it( 'should update the tab specified in the payload', () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'changedagain!', title: 'hi', tabId }
+                payload: { url: 'changedagain!', title: 'hi', tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -239,7 +239,7 @@ describe( 'tabs reducer', () => {
                 ...basicTab,
                 url: 'changedagain!',
                 historyIndex: 1,
-                history: ['hello', 'changedagain!']
+                history: ['hello', 'changedagain!'],
             } );
 
             expect( updatedTab ).toHaveProperty( 'history' );
@@ -250,12 +250,12 @@ describe( 'tabs reducer', () => {
 
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'hello/newurl', tabId }
+                payload: { url: 'hello/newurl', tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -264,7 +264,7 @@ describe( 'tabs reducer', () => {
 
             const secondState = tabs( newState, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'hello/newurl2', tabId }
+                payload: { url: 'hello/newurl2', tabId },
             } );
 
             expect( secondState ).not.toStrictEqual( newState );
@@ -276,7 +276,7 @@ describe( 'tabs reducer', () => {
                 ...basicTab,
                 url: 'hello/newurl2',
                 historyIndex: 2,
-                history: ['hello', 'hello/newurl', 'hello/newurl2']
+                history: ['hello', 'hello/newurl', 'hello/newurl2'],
             } );
 
             expect( updatedTab ).toHaveProperty( 'history' );
@@ -289,7 +289,7 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
@@ -302,15 +302,15 @@ describe( 'tabs reducer', () => {
                             '@type': 'http://xmlns.com/foaf/0.1/Person',
                             inbox: {
                                 '@id':
-                  'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                  'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303',
                             },
                             name: 'Its Something',
-                            nick: 'Its Something'
+                            nick: 'Its Something',
                         },
                         '@id': 'safe://its.something',
-                        '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
-                    }
-                }
+                        '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument',
+                    },
+                },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -325,20 +325,20 @@ describe( 'tabs reducer', () => {
                         '@type': 'http://xmlns.com/foaf/0.1/Person',
                         inbox: {
                             '@id':
-                'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303',
                         },
                         name: 'Its Something',
-                        nick: 'Its Something'
+                        nick: 'Its Something',
                     },
                     '@id': 'safe://its.something',
-                    '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
-                }
+                    '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument',
+                },
             } );
         } );
         it( "should update another tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
@@ -351,15 +351,15 @@ describe( 'tabs reducer', () => {
                             '@type': 'http://xmlns.com/foaf/0.1/Person',
                             inbox: {
                                 '@id':
-                  'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                  'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303',
                             },
                             name: 'Another Something',
-                            nick: 'Another Something'
+                            nick: 'Another Something',
                         },
                         '@id': 'safe://another.something',
-                        '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
-                    }
-                }
+                        '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument',
+                    },
+                },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -375,14 +375,14 @@ describe( 'tabs reducer', () => {
                         '@type': 'http://xmlns.com/foaf/0.1/Person',
                         inbox: {
                             '@id':
-                'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303'
+                'safe://hyfktcegyercp9sf8zk7i85t6hjesn7fbdbyf8pgmu8tdusf3kuyozf6jur:30303',
                         },
                         name: 'Another Something',
-                        nick: 'Another Something'
+                        nick: 'Another Something',
                     },
                     '@id': 'safe://another.something',
-                    '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument'
-                }
+                    '@type': 'http://xmlns.com/foaf/0.1/PersonalProfileDocument',
+                },
             } );
         } );
     } );
@@ -391,12 +391,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_TITLE,
-                payload: { title: 'hi', tabId }
+                payload: { title: 'hi', tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -405,7 +405,7 @@ describe( 'tabs reducer', () => {
 
             expect( newState[tabId] ).toMatchObject( {
                 ...basicTab,
-                title: 'hi'
+                title: 'hi',
             } );
         } );
     } );
@@ -413,12 +413,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's webContentsId", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_WEB_CONTENTS_ID,
-                payload: { webContentsId: 3, tabId }
+                payload: { webContentsId: 3, tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -427,7 +427,7 @@ describe( 'tabs reducer', () => {
 
             expect( newState[tabId] ).toMatchObject( {
                 ...basicTab,
-                webContentsId: 3
+                webContentsId: 3,
             } );
         } );
     } );
@@ -436,12 +436,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.TOGGLE_DEV_TOOLS,
-                payload: { shouldToggleDevTools: true, tabId }
+                payload: { shouldToggleDevTools: true, tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -450,7 +450,7 @@ describe( 'tabs reducer', () => {
 
             expect( newState[tabId] ).toMatchObject( {
                 ...basicTab,
-                shouldToggleDevTools: true
+                shouldToggleDevTools: true,
             } );
         } );
     } );
@@ -459,12 +459,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.TAB_SHOULD_RELOAD,
-                payload: { shouldReload: true, tabId }
+                payload: { shouldReload: true, tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -473,7 +473,7 @@ describe( 'tabs reducer', () => {
 
             expect( newState[tabId] ).toMatchObject( {
                 ...basicTab,
-                shouldReload: true
+                shouldReload: true,
             } );
         } );
     } );
@@ -482,12 +482,12 @@ describe( 'tabs reducer', () => {
         it( "should update the tab's properties", () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
 
             const newState = tabs( state, {
                 type: TYPES.TAB_LOAD,
-                payload: { isLoading: true, tabId }
+                payload: { isLoading: true, tabId },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -496,7 +496,7 @@ describe( 'tabs reducer', () => {
 
             expect( newState[tabId] ).toMatchObject( {
                 ...basicTab,
-                isLoading: true
+                isLoading: true,
             } );
         } );
     } );
@@ -508,14 +508,14 @@ describe( 'tabs reducer', () => {
                 tabId: tabId1,
                 history: ['hello', 'forward', 'forward again'],
                 historyIndex: 0,
-                index: 2
+                index: 2,
             };
 
             const state = { [tabId]: basicTab, [tabId1]: nonActiveTab };
 
             const firstUpdate = tabs( state, {
                 type: TYPES.TAB_FORWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( firstUpdate ).not.toStrictEqual( state );
@@ -526,14 +526,14 @@ describe( 'tabs reducer', () => {
             expect( updatedTab ).toMatchObject( {
                 ...nonActiveTab,
                 url: 'forward',
-                historyIndex: 1
+                historyIndex: 1,
             } );
 
             expect( updatedTab ).toHaveProperty( 'history' );
 
             const secondUpdate = tabs( firstUpdate, {
                 type: TYPES.TAB_FORWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( secondUpdate ).not.toStrictEqual( firstUpdate );
@@ -544,12 +544,12 @@ describe( 'tabs reducer', () => {
             expect( updatedTabAgain ).toMatchObject( {
                 ...nonActiveTab,
                 url: 'forward again',
-                historyIndex: 2
+                historyIndex: 2,
             } );
 
             const thirdUpdate = tabs( secondUpdate, {
                 type: TYPES.TAB_FORWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( thirdUpdate ).toStrictEqual( secondUpdate );
@@ -558,7 +558,7 @@ describe( 'tabs reducer', () => {
             expect( updatedTabThree ).toMatchObject( {
                 ...nonActiveTab,
                 url: 'forward again',
-                historyIndex: 2
+                historyIndex: 2,
             } );
         } );
     } );
@@ -569,7 +569,7 @@ describe( 'tabs reducer', () => {
             history: ['hello', 'second', 'third'],
             historyIndex: 2,
             url: 'forward again',
-            tabId: tabId1
+            tabId: tabId1,
         };
         it( 'should move the specified tab backwards, according to tab index', () => {
             const inActiveTab = {
@@ -577,14 +577,14 @@ describe( 'tabs reducer', () => {
                 history: ['hello', 'second', 'third'],
                 historyIndex: 2,
                 url: 'forward again',
-                tabId: tabId1
+                tabId: tabId1,
             };
 
             const state = { [tabId]: { ...basicTab }, [tabId1]: activeTab };
 
             const firstUpdate = tabs( state, {
                 type: TYPES.TAB_BACKWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( firstUpdate ).not.toStrictEqual( state );
@@ -595,14 +595,14 @@ describe( 'tabs reducer', () => {
             expect( updatedTab ).toMatchObject( {
                 ...inActiveTab,
                 url: 'second',
-                historyIndex: 1
+                historyIndex: 1,
             } );
 
             expect( updatedTab ).toHaveProperty( 'history' );
 
             const secondState = tabs( firstUpdate, {
                 type: TYPES.TAB_BACKWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( secondState ).not.toStrictEqual( firstUpdate );
@@ -613,12 +613,12 @@ describe( 'tabs reducer', () => {
             expect( updatedTabAgain ).toMatchObject( {
                 ...inActiveTab,
                 url: 'hello',
-                historyIndex: 0
+                historyIndex: 0,
             } );
 
             const thirdState = tabs( secondState, {
                 type: TYPES.TAB_BACKWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( thirdState ).toStrictEqual( secondState );
@@ -627,7 +627,7 @@ describe( 'tabs reducer', () => {
             expect( updatedTabThree ).toMatchObject( {
                 ...inActiveTab,
                 url: 'hello',
-                historyIndex: 0
+                historyIndex: 0,
             } );
         } );
 
@@ -637,7 +637,7 @@ describe( 'tabs reducer', () => {
             const state = { [tabId]: { ...basicTab }, [tabId1]: { ...activeTab } };
             const newState = tabs( state, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'hello/newurl', title: 'hi', tabId: tabId1 }
+                payload: { url: 'hello/newurl', title: 'hi', tabId: tabId1 },
             } );
 
             expect( newState ).not.toStrictEqual( state );
@@ -646,7 +646,7 @@ describe( 'tabs reducer', () => {
 
             const secondState = tabs( newState, {
                 type: TYPES.UPDATE_TAB_URL,
-                payload: { url: 'hello/newurl2', title: 'hi', tabId: tabId1 }
+                payload: { url: 'hello/newurl2', title: 'hi', tabId: tabId1 },
             } );
 
             expect( secondState ).not.toStrictEqual( newState );
@@ -655,7 +655,7 @@ describe( 'tabs reducer', () => {
 
             const backwardsOnce = tabs( secondState, {
                 type: TYPES.TAB_BACKWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( backwardsOnce ).not.toStrictEqual( secondState );
@@ -666,7 +666,7 @@ describe( 'tabs reducer', () => {
                 url: 'hello/newurl',
                 title: 'hi',
                 historyIndex: 3,
-                history: ['hello', 'second', 'third', 'hello/newurl', 'hello/newurl2']
+                history: ['hello', 'second', 'third', 'hello/newurl', 'hello/newurl2'],
             } );
 
             expect( updatedTab ).toHaveProperty( 'history' );
@@ -675,7 +675,7 @@ describe( 'tabs reducer', () => {
 
             const backwardsAgain = tabs( backwardsOnce, {
                 type: TYPES.TAB_BACKWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( backwardsAgain ).not.toStrictEqual( backwardsOnce );
@@ -688,7 +688,7 @@ describe( 'tabs reducer', () => {
                 url: 'third',
                 title: 'hi',
                 historyIndex: 2,
-                history: ['hello', 'second', 'third', 'hello/newurl', 'hello/newurl2']
+                history: ['hello', 'second', 'third', 'hello/newurl', 'hello/newurl2'],
             } );
 
             expect( updatedTabAgain ).toHaveProperty( 'history' );
@@ -697,7 +697,7 @@ describe( 'tabs reducer', () => {
 
             const forwardsNow = tabs( backwardsOnce, {
                 type: TYPES.TAB_FORWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( forwardsNow ).not.toStrictEqual( backwardsOnce );
@@ -706,7 +706,7 @@ describe( 'tabs reducer', () => {
 
             const forwardsAgin = tabs( forwardsNow, {
                 type: TYPES.TAB_FORWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( forwardsAgin ).toStrictEqual( forwardsNow );
@@ -717,7 +717,7 @@ describe( 'tabs reducer', () => {
                 url: 'hello/newurl2',
                 title: 'hi',
                 historyIndex: 4,
-                history: ['hello', 'second', 'third', 'hello/newurl', 'hello/newurl2']
+                history: ['hello', 'second', 'third', 'hello/newurl', 'hello/newurl2'],
             } );
             expect( updatedTabForwards.historyIndex ).toBe( 4 );
             expect( updatedTabForwards.history ).toHaveLength( 5 );
@@ -732,10 +732,10 @@ describe( 'tabs reducer', () => {
                 'forward',
                 'forward again',
                 'another',
-                'anotheranother'
+                'anotheranother',
             ],
             historyIndex: 0,
-            tabId: tabId1
+            tabId: tabId1,
         };
 
         it( 'should remove history on forward/backwards/newURL navigations', () => {
@@ -743,28 +743,28 @@ describe( 'tabs reducer', () => {
                 { [tabId]: basicTab, [tabId1]: activeTab },
                 {
                     type: TYPES.TAB_FORWARDS,
-                    payload: { tabId: tabId1 }
+                    payload: { tabId: tabId1 },
                 }
             );
             const updatedTab = firstUpdate[tabId1];
             expect( updatedTab ).toMatchObject( {
                 ...activeTab,
                 url: 'forward',
-                historyIndex: 1
+                historyIndex: 1,
             } );
 
             expect( updatedTab ).toHaveProperty( 'history' );
             expect( updatedTab.history ).toHaveLength( 5 );
             const secondUpdate = tabs( firstUpdate, {
                 type: TYPES.TAB_BACKWARDS,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             const updatedTabAgain = secondUpdate[tabId1];
             expect( updatedTabAgain ).toMatchObject( {
                 ...activeTab,
                 url: 'hello',
-                historyIndex: 0
+                historyIndex: 0,
             } );
 
             expect( updatedTabAgain ).toHaveProperty( 'history' );
@@ -774,8 +774,8 @@ describe( 'tabs reducer', () => {
                 type: TYPES.UPDATE_TAB_URL,
                 payload: {
                     url: 'new url overwriting previous history array',
-                    tabId: tabId1
-                }
+                    tabId: tabId1,
+                },
             } );
 
             const updatedTabThree = thirdUpdate[tabId1];
@@ -783,7 +783,7 @@ describe( 'tabs reducer', () => {
                 ...activeTab,
                 url: 'new url overwriting previous history array',
                 historyIndex: 1,
-                history: ['hello', 'new url overwriting previous history array']
+                history: ['hello', 'new url overwriting previous history array'],
             } );
 
             expect( updatedTabThree ).toHaveProperty( 'history' );
@@ -794,11 +794,11 @@ describe( 'tabs reducer', () => {
         it( 'should handle setting address bar focus', () => {
             const state = {
                 [tabId]: { ...basicTab },
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
             const nextState = tabs( state, {
                 type: TYPES.SELECT_ADDRESS_BAR,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( nextState ).not.toStrictEqual( state );
@@ -813,9 +813,9 @@ describe( 'tabs reducer', () => {
                     ui: {
                         addressBarIsSelected: true,
                         pageIsLoading: false,
-                        shouldFocusWebview: false
-                    }
-                }
+                        shouldFocusWebview: false,
+                    },
+                },
             } );
         } );
     } );
@@ -830,14 +830,14 @@ describe( 'tabs reducer', () => {
                     ui: {
                         addressBarIsSelected: true,
                         pageIsLoading: false,
-                        shouldFocusWebview: false
-                    }
-                }
+                        shouldFocusWebview: false,
+                    },
+                },
             };
 
             const nextState = tabs( state, {
                 type: TYPES.DESELECT_ADDRESS_BAR,
-                payload: { tabId: tabId1 }
+                payload: { tabId: tabId1 },
             } );
 
             expect( nextState ).not.toStrictEqual( state );
@@ -852,9 +852,9 @@ describe( 'tabs reducer', () => {
                     ui: {
                         addressBarIsSelected: false,
                         pageIsLoading: false,
-                        shouldFocusWebview: false
-                    }
-                }
+                        shouldFocusWebview: false,
+                    },
+                },
             } );
         } );
     } );
@@ -862,11 +862,11 @@ describe( 'tabs reducer', () => {
         it( 'should reset tabs to the inital state', () => {
             const state = {
                 [tabId]: basicTab,
-                [tabId1]: { ...basicTab, tabId: tabId1 }
+                [tabId1]: { ...basicTab, tabId: tabId1 },
             };
             const tabsPostLogout = tabs( state, {
                 type: TYPES.TABS_RESET_STORE,
-                payload: { tabId: 'asdad' }
+                payload: { tabId: 'asdad' },
             } );
 
             expect( tabsPostLogout ).not.toStrictEqual( state );
@@ -877,11 +877,11 @@ describe( 'tabs reducer', () => {
     describe( 'FOCUS_WEBVIEW', () => {
         it( 'should focus the webview when shouldFocus is set to true', () => {
             const state = {
-                [tabId]: basicTab
+                [tabId]: basicTab,
             };
             const tabsPostFocus = tabs( state, {
                 type: TYPES.FOCUS_WEBVIEW,
-                payload: { tabId, shouldFocus: true }
+                payload: { tabId, shouldFocus: true },
             } );
 
             expect( tabsPostFocus ).not.toStrictEqual( state );
@@ -890,12 +890,12 @@ describe( 'tabs reducer', () => {
 
         it( 'should unfocus the webview when shouldFocus is set to false', () => {
             const state = {
-                [tabId]: { ...basicTab, ui: { shouldFocusWebview: true } }
+                [tabId]: { ...basicTab, ui: { shouldFocusWebview: true } },
             };
 
             const tabsPostFocus = tabs( state, {
                 type: TYPES.FOCUS_WEBVIEW,
-                payload: { tabId, shouldFocus: false }
+                payload: { tabId, shouldFocus: false },
             } );
 
             expect( tabsPostFocus ).not.toStrictEqual( state );

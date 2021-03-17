@@ -8,7 +8,7 @@ import { getMostRecentlyActiveWindow } from '$Utils/getMostRecentlyActiveWindow'
 import { addTab } from '$Actions/tabs_actions';
 import { addTabEnd, setActiveTab } from '$Actions/windows_actions';
 
-const parseSafeUri = function( uri ) {
+const parseSafeUri = function ( uri ) {
     logger.info( 'Parsing safe uri', uri );
     return uri.replace( '//', '' ).replace( '==/', '==' );
 };
@@ -61,7 +61,7 @@ export const onReceiveUrl = async ( store, url ) => {
         store.dispatch(
             setActiveTab( {
                 tabId,
-                windowId
+                windowId,
             } )
         );
     }
@@ -75,9 +75,11 @@ export const onReceiveUrl = async ( store, url ) => {
         store.dispatch( safeBrowserAppActions.receivedAuthResponse( url ) );
     }
 
-    if ( process.platform === 'darwin' && global.macAllWindowsClosed ) {
-        if ( url.startsWith( 'safe-' ) ) {
-            openWindow( store );
-        }
+    if (
+        process.platform === 'darwin' &&
+    global.macAllWindowsClosed &&
+    url.startsWith( 'safe-' )
+    ) {
+        openWindow( store );
     }
 };

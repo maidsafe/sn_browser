@@ -3,5 +3,5 @@ export const logger = {
     verbose: jest.fn(),
     error: jest.fn(),
     warn: jest.fn(),
-    silly: jest.fn()
+    silly: jest.fn(),
 };

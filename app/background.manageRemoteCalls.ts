@@ -9,7 +9,7 @@ const pendingCallIds = {};
 const extensionApisToAdd = getRemoteCallApis();
 
 const allApiCalls = {
-    ...extensionApisToAdd
+    ...extensionApisToAdd,
 };
 
 /**
@@ -36,7 +36,7 @@ export const manageRemoteCalls = async ( store ) => {
                     store.dispatch(
                         remoteCallActions.updateRemoteCall( {
                             ...theCall,
-                            inProgress: true
+                            inProgress: true,
                         } )
                     );
                     const theArguments = theCall.args;
@@ -59,14 +59,14 @@ export const manageRemoteCalls = async ( store ) => {
                             remoteCallActions.updateRemoteCall( {
                                 ...theCall,
                                 done: true,
-                                response
+                                response,
                             } )
                         );
                     } catch ( error ) {
                         store.dispatch(
                             remoteCallActions.updateRemoteCall( {
                                 ...theCall,
-                                error: error.message || error
+                                error: error.message || error,
                             } )
                         );
                     }

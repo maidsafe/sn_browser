@@ -13,40 +13,40 @@ const allPackages = [safeBrowsingMainProcesses];
 const allMainProcessPackages = [safeBrowsingMainProcesses];
 
 export const preAppLoad = ( store: Store ): void => {
-    allMainProcessPackages.forEach( ( extension ): void => {
+    for ( const extension of allMainProcessPackages ) {
         if ( extension.preAppLoad ) {
             extension.preAppLoad( store );
         }
-    } );
+    }
 };
 
 export const onAppReady = ( store ): void => {
-    allMainProcessPackages.forEach( ( extension ): void => {
+    for ( const extension of allMainProcessPackages ) {
         if ( extension.onAppReady ) {
             extension.onAppReady( store );
         }
-    } );
+    }
 };
 
 export const onReceiveUrl = ( store, url ): void => {
-    allMainProcessPackages.forEach( ( extension ): void => {
+    for ( const extension of allMainProcessPackages ) {
         if ( extension.onReceiveUrl ) {
             extension.onReceiveUrl( store, url );
         }
-    } );
+    }
 };
 
 export const getExtensionMenuItems = ( store, menusArray ) => {
     logger.info( 'Extending menus array' );
     let newMenuArray = [];
-    allPackages.forEach( ( extension ) => {
+    for ( const extension of allPackages ) {
         if ( extension.addExtensionMenuItems ) {
             newMenuArray = extension.addExtensionMenuItems( store, menusArray );
 
             if ( !Array.isArray( newMenuArray ) )
                 throw new Error( 'Extensions must pass an array of menu items.' );
         }
-    } );
+    }
 
     return newMenuArray;
 };

@@ -6,6 +6,6 @@ export const initialAppState = {
     tabs: {},
     windows: {
         openWindows: {},
-        closedWindows: {}
-    }
+        closedWindows: {},
+    },
 };

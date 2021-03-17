@@ -9,15 +9,15 @@ import { extendComponent } from '$Utils/extendComponent';
 import { wrapAddressBarInput } from '$Extensions/components';
 import 'antd/lib/input/style';
 
-interface AddressBarInputProps {
+interface AddressBarInputProperties {
     address?: string;
     isSelected?: boolean;
     windowId: number;
     tabId?: string;
-    onBlur: ( ...args: Array<any> ) => any;
-    onSelect: ( ...args: Array<any> ) => any;
-    onFocus: ( ...args: Array<any> ) => any;
-    updateTabUrl: ( ...args: Array<any> ) => any;
+    onBlur: ( ...arguments_: Array<any> ) => any;
+    onSelect: ( ...arguments_: Array<any> ) => any;
+    onFocus: ( ...arguments_: Array<any> ) => any;
+    updateTabUrl: ( ...arguments_: Array<any> ) => any;
     extensionStyles: Record<string, unknown>;
     addonBefore: Array<ReactNode>;
     addonAfter: Array<ReactNode>;
@@ -35,13 +35,13 @@ interface AddressBarInputState {
  * @extends Component
  */
 class AddressBarInput extends Component<
-AddressBarInputProps,
+AddressBarInputProperties,
 AddressBarInputState
 > {
     static defaultProps = {
         address: '',
         isSelected: false,
-        editingUrl: false
+        editingUrl: false,
     };
 
     constructor( props ) {
@@ -49,7 +49,7 @@ AddressBarInputState
         this.handleChange = this.handleChange.bind( this );
         this.handleKeyPress = this.handleKeyPress.bind( this );
         this.state = {
-            address: props.address
+            address: props.address,
         };
     }
 
@@ -109,7 +109,7 @@ AddressBarInputState
             return;
         }
         const input = event.target.value;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         this.props.updateTabUrl( { tabId, url: input, timeStamp } );
     }
 
@@ -130,10 +130,10 @@ AddressBarInputState
                 className={CLASSES.ADDRESS_INPUT}
                 aria-label={I18n.t( 'aria.address_bar' )}
                 addonBefore={
-                    addonBefore && addonBefore.length !== 0 ? addonBefore : undefined
+                    addonBefore && addonBefore.length > 0 ? addonBefore : undefined
                 }
                 addonAfter={
-                    addonAfter && addonAfter.length !== 0 ? addonAfter : undefined
+                    addonAfter && addonAfter.length > 0 ? addonAfter : undefined
                 }
                 size="large"
                 value={address}

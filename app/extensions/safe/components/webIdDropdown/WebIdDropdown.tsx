@@ -16,7 +16,7 @@ const webIdManagerUri = startedRunningMock
     ? 'http://localhost:1234'
     : 'safe://webidmgr.dapp';
 
-interface WebIdDropdownProps {
+interface WebIdDropdownProperties {
     safeBrowserApp: {
         webIds: Array<any>;
         showingWebIdDropdown: boolean;
@@ -35,11 +35,14 @@ interface WebIdDropdownProps {
     showWebIdDropdown: () => void;
     windowId: number;
 }
-export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, unknown>> {
+export class WebIdDropdown extends Component<
+WebIdDropdownProperties,
+Record<string, unknown>
+> {
     static defaultProps = {
         safeBrowserApp: {
-            webIds: []
-        }
+            webIds: [],
+        },
     };
 
     private debouncedGetWebIds: () => void;
@@ -60,7 +63,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
             updateTabWebId,
             windowId,
             showWebIdDropdown,
-            activeTab
+            activeTab,
         } = this.props;
         const { tabId } = activeTab;
         // also if only 1 webID? mark as defualt?
@@ -69,12 +72,12 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
 
     handleIdButtonClick = () => {
         const { showWebIdDropdown } = this.props;
-        this.hoverTime = new Date().getTime();
+        this.hoverTime = Date.now();
         showWebIdDropdown( true );
     };
 
     handleMouseEnter = () => {
-        this.hoverTime = new Date().getTime();
+        this.hoverTime = Date.now();
         this.isMouseOverIdButton = true;
         const { getAvailableWebIds, safeBrowserApp } = this.props;
         const { isFetchingWebIds } = safeBrowserApp;
@@ -104,7 +107,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
 
     closeIfNotOver = () => {
         const { showWebIdDropdown } = this.props;
-        const now = new Date().getTime();
+        const now = Date.now();
         const diff = ( now - this.hoverTime ) / 1000;
         if ( diff > hideDropdownTimeout ) {
             showWebIdDropdown( false );
@@ -119,7 +122,7 @@ export class WebIdDropdown extends Component<WebIdDropdownProps, Record<string, 
             experimentsEnabled,
             appStatus,
             networkStatus,
-            isFetchingWebIds
+            isFetchingWebIds,
         } = safeBrowserApp;
         let activeWebId;
         const { handleIdClick } = this;

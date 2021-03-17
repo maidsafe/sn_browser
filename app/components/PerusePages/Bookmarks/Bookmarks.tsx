@@ -5,11 +5,11 @@ import styles from './bookmarks.css';
 
 import { UrlList } from '$Components/UrlList';
 
-interface BookmarksProps {
+interface BookmarksProperties {
     bookmarks: Array<any>;
-    addTabEnd?: ( ...args: Array<any> ) => any;
+    addTabEnd?: ( ...arguments_: Array<any> ) => any;
 }
-export const Bookmarks = ( props: BookmarksProps = { bookmarks: [] } ) => {
+export const Bookmarks = ( props: BookmarksProperties = { bookmarks: [] } ) => {
     const { bookmarks, addTabEnd } = props;
     const bookmarkList = bookmarks.map( ( bookmark ) => bookmark.url );
 

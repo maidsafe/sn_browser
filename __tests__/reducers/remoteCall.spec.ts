@@ -18,7 +18,7 @@ describe( 'notification reducer', () => {
             expect(
                 remoteCalls( [], {
                     type: TYPES.ADD_REMOTE_CALL,
-                    payload: aCall
+                    payload: aCall,
                 } )
             ).toEqual( [aCall] );
         } );
@@ -29,7 +29,7 @@ describe( 'notification reducer', () => {
             expect(
                 remoteCalls( [{ id: 'unimportant' }, aCall], {
                     type: TYPES.REMOVE_REMOTE_CALL,
-                    payload: aCall
+                    payload: aCall,
                 } )
             ).toEqual( [{ id: 'unimportant' }] );
         } );
@@ -42,14 +42,14 @@ describe( 'notification reducer', () => {
                     type: TYPES.UPDATE_REMOTE_CALL,
                     payload: {
                         id: 'A',
-                        data: ['hi']
-                    }
+                        data: ['hi'],
+                    },
                 } )
             ).toEqual( [
                 {
                     ...aCall,
-                    data: ['hi']
-                }
+                    data: ['hi'],
+                },
             ] );
         } );
     } );

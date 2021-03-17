@@ -10,51 +10,54 @@ import { Input } from '$Components/AddressBar/Input';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 
-interface AddressBarProps {
+interface AddressBarProperties {
     address?: string;
     activeTab?: {
         tabId?: string;
         url?: string;
     };
     tabId: string;
-    onSelect: ( ...args: Array<any> ) => any;
-    onFocus: ( ...args: Array<any> ) => any;
-    onBlur: ( ...args: Array<any> ) => any;
-    updateTabWebId: ( ...args: Array<any> ) => any;
+    onSelect: ( ...arguments_: Array<any> ) => any;
+    onFocus: ( ...arguments_: Array<any> ) => any;
+    onBlur: ( ...arguments_: Array<any> ) => any;
+    updateTabWebId: ( ...arguments_: Array<any> ) => any;
     windowId: number;
-    addBookmark: ( ...args: Array<any> ) => any;
+    addBookmark: ( ...arguments_: Array<any> ) => any;
     isBookmarked: boolean;
-    updateTabUrl: ( ...args: Array<any> ) => any;
-    addTabNext: ( ...args: Array<any> ) => any;
-    addTabEnd: ( ...args: Array<any> ) => any;
-    removeBookmark: ( ...args: Array<any> ) => any;
-    hideSettingsMenu: ( ...args: Array<any> ) => any;
-    showSettingsMenu: ( ...args: Array<any> ) => any;
+    updateTabUrl: ( ...arguments_: Array<any> ) => any;
+    addTabNext: ( ...arguments_: Array<any> ) => any;
+    addTabEnd: ( ...arguments_: Array<any> ) => any;
+    removeBookmark: ( ...arguments_: Array<any> ) => any;
+    hideSettingsMenu: ( ...arguments_: Array<any> ) => any;
+    showSettingsMenu: ( ...arguments_: Array<any> ) => any;
     settingsMenuIsVisible: boolean;
     isSelected: boolean;
-    tabBackwards: ( ...args: Array<any> ) => any;
-    tabForwards: ( ...args: Array<any> ) => any;
-    tabShouldReload: ( ...args: Array<any> ) => any;
-    focusWebview: ( ...args: Array<any> ) => any;
-    setActiveTab: ( ...args: Array<any> ) => any;
+    tabBackwards: ( ...arguments_: Array<any> ) => any;
+    tabForwards: ( ...arguments_: Array<any> ) => any;
+    tabShouldReload: ( ...arguments_: Array<any> ) => any;
+    focusWebview: ( ...arguments_: Array<any> ) => any;
+    setActiveTab: ( ...arguments_: Array<any> ) => any;
 }
-export class AddressBar extends Component<AddressBarProps, Record<string, unknown>> {
+export class AddressBar extends Component<
+AddressBarProperties,
+Record<string, unknown>
+> {
     static defaultProps = {
         address: '',
         isSelected: false,
         settingsMenuIsVisible: false,
-        editingUrl: false
+        editingUrl: false,
     };
 
     handleBack = () => {
         const { tabBackwards, tabId } = this.props;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         tabBackwards( { tabId, timeStamp } );
     };
 
     handleForward = () => {
         const { tabForwards, tabId } = this.props;
-        const timeStamp = new Date().getTime();
+        const timeStamp = Date.now();
         tabForwards( { tabId, timeStamp } );
     };
 
@@ -93,7 +96,7 @@ export class AddressBar extends Component<AddressBarProps, Record<string, unknow
                 >
           History
                 </div>
-            </Row>
+            </Row>,
         ];
     };
 
@@ -115,7 +118,7 @@ export class AddressBar extends Component<AddressBarProps, Record<string, unknow
             hideSettingsMenu,
             focusWebview,
             windowId,
-            setActiveTab
+            setActiveTab,
         } = this.props;
         const canGoBackwards = activeTab ? activeTab.historyIndex > 0 : false;
         const canGoForwards = activeTab

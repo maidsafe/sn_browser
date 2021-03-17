@@ -16,9 +16,9 @@ export const preAppLoad = ( store: Store ) => {
                 secure: true,
                 allowServiceWorkers: true,
                 corsEnabled: true,
-                supportFetchAPI: true
-            }
-        }
+                supportFetchAPI: true,
+            },
+        },
     ] );
 
     app.setAsDefaultProtocolClient( 'safe' );
@@ -42,12 +42,12 @@ export const preAppLoad = ( store: Store ) => {
 
         logger.info( 'Local mysites info found.', mySites );
 
-        if ( mySites != null ) {
-            mySites.forEach( ( site ) => {
+        if ( mySites != undefined ) {
+            for ( const site of mySites ) {
                 if ( site && site.length > 0 ) {
                     store.dispatch( setNameAsMySite( { url: `safe://${site}` } ) );
                 }
-            } );
+            }
         }
     } );
 

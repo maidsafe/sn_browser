@@ -29,7 +29,7 @@ export const TYPES = {
     RESET_STORE: 'RESET_STORE',
 
     // UI actions.
-    SHOW_WEB_ID_DROPDOWN: 'SHOW_WEB_ID_DROPDOWN'
+    SHOW_WEB_ID_DROPDOWN: 'SHOW_WEB_ID_DROPDOWN',
 };
 
 export const {
@@ -52,7 +52,7 @@ export const {
 
     resetStore,
 
-    showWebIdDropdown
+    showWebIdDropdown,
 } = createActions(
     TYPES.SET_APP_STATUS,
     TYPES.SET_NETWORK_STATUS,
@@ -89,6 +89,6 @@ export const getAvailableWebIds = createAliasedAction(
     () => ( {
     // the real action
         type: TYPES.GET_AVAILABLE_WEB_IDS,
-        payload: triggerGetWebIds()
+        payload: triggerGetWebIds(),
     } )
 );

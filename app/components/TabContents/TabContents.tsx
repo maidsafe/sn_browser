@@ -12,7 +12,10 @@ import { Bookmarks } from '$Components/PerusePages/Bookmarks';
 import { logger } from '$Logger';
 import { resolveExtensionInternalPages } from '$Extensions/renderProcess';
 
-export class TabContents extends Component<Record<string, unknown>, Record<string, unknown>> {
+export class TabContents extends Component<
+Record<string, unknown>,
+Record<string, unknown>
+> {
     static getDerivedStateFromError( error ) {
     // Update state so the next render will show the fallback UI.
         return { hasError: true, theError: error };
@@ -43,7 +46,7 @@ export class TabContents extends Component<Record<string, unknown>, Record<strin
             allTabs,
             bookmarks,
             windowId,
-            safeExperimentsEnabled
+            safeExperimentsEnabled,
         } = this.props;
 
         if ( this.state && this.state.hasError ) {
@@ -60,7 +63,7 @@ export class TabContents extends Component<Record<string, unknown>, Record<strin
             );
         }
 
-        const tabComponents = tabs.map( ( tab, i ) => {
+        const tabComponents = tabs.map( ( tab, index ) => {
             const isActiveTab = tab.tabId === activeTabId;
 
             if ( isInternalPage( tab ) ) {
@@ -146,7 +149,7 @@ export class TabContents extends Component<Record<string, unknown>, Record<strin
 
         return (
             <div className={styles.container}>
-                {tabs.map( ( tab, i ) => {
+                {tabs.map( ( tab, index ) => {
                     let moddedClass = styles.tab;
                     const isActiveTab = tab.tabId === activeTabId;
 
@@ -154,12 +157,12 @@ export class TabContents extends Component<Record<string, unknown>, Record<strin
                         moddedClass = styles.activeTab;
                     }
 
-                    const ThisTab = tabComponents[i];
+                    const ThisTab = tabComponents[index];
 
                     return (
                         <div className={moddedClass} key={tab.tabId}>
                             <Page className={`${styles.page}`} overflow="auto">
-                                {tabComponents[i]}
+                                {tabComponents[index]}
                             </Page>
                         </div>
                     );

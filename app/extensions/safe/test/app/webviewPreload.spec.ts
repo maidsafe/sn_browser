@@ -9,8 +9,8 @@ describe( 'SAFE Webpreload', () => {
     const store = {
         subscribe: jest.fn(),
         getState: jest.fn( () => ( {
-            safeBrowserApp: { experimentsEnabled: true }
-        } ) )
+            safeBrowserApp: { experimentsEnabled: true },
+        } ) ),
     };
     beforeEach( () => {
     // webviewPreload.onPreload( store, win );

@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { XorUrlEncoder } from 'safe-nodejs';
+import { XorUrlEncoder } from 'sn_nodejs';
 
 import { SaferSafe } from '$Extensions/safe/webviewProcess/saferSafe';
 // eslint-disable-next-line import/extensions

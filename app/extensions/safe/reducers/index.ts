@@ -3,5 +3,5 @@ import { pWeb } from './pWeb_reducer';
 
 export const additionalReducers = {
     safeBrowserApp,
-    pWeb
+    pWeb,
 };

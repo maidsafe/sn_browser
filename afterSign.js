@@ -7,7 +7,7 @@ const electronNotarize = require( 'electron-notarize' );
 const buildConfig = require( './builderConfig' );
 
 const shouldNotarize = process.env.SHOULD_NOTARIZE;
-module.exports = async function( parameters ) {
+module.exports = async function ( parameters ) {
     // Only notarize the app on Mac OS only & on CI.
     if ( process.platform !== 'darwin' || !shouldNotarize ) {
         return;
@@ -33,7 +33,7 @@ module.exports = async function( parameters ) {
             appBundleId: appId,
             appPath,
             appleId: `${process.env.APPLE_ID}`,
-            appleIdPassword: `${process.env.APPLE_ID_PASSWORD}`
+            appleIdPassword: `${process.env.APPLE_ID_PASSWORD}`,
         } );
     } catch ( error ) {
         console.error( error );

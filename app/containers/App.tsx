@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { SpriteMap } from 'nessie-ui';
 
-interface Props {
+interface Properties {
     children: React.ReactNode;
 }
 
-export const App = ( props: Props ) => {
+export const App = ( props: Properties ) => {
     const { children } = props;
     return (
         <React.Fragment>

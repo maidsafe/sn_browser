@@ -13,7 +13,7 @@ describe( 'Bookmarks', () => {
     beforeEach( () => {
         props = {
             bookmarks: [],
-            addTab: jest.fn()
+            addTab: jest.fn(),
         };
 
         wrapper = mount( <Bookmarks {...props} /> );
@@ -29,7 +29,7 @@ describe( 'Bookmarks', () => {
         beforeEach( () => {
             props = {
                 ...props,
-                bookmarks: [{ url: 'hello', isActiveTab: true }]
+                bookmarks: [{ url: 'hello', isActiveTab: true }],
             };
             wrapper = shallow( <Bookmarks {...props} /> );
         } );

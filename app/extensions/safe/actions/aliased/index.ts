@@ -3,7 +3,7 @@ import { createAliasedAction } from 'electron-redux';
 import { getWebIds } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/webIds';
 import {
     registerNrsNameOnNetwork,
-    uploadFilesToSafe
+    uploadFilesToSafe,
 } from '$Extensions/safe/backgroundProcess/safeBrowserApplication';
 import { initAnon } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAnon';
 import { initAuthed } from '$Extensions/safe/backgroundProcess/safeBrowserApplication/init/initAuthed';
@@ -16,7 +16,7 @@ export const getAvailableWebIds = createAliasedAction(
     () => ( {
     // the real action
         type: TYPES.GET_AVAILABLE_WEB_IDS,
-        payload: getWebIds()
+        payload: getWebIds(),
     } )
 );
 
@@ -25,7 +25,7 @@ export const connectUnauthorised = createAliasedAction(
     () => ( {
     // the real action
         type: TYPES.CONNECT_ANONYMOUS,
-        payload: initAnon()
+        payload: initAnon(),
     } )
 );
 
@@ -34,7 +34,7 @@ export const connectAuthorised = createAliasedAction(
     () => ( {
     // the real action
         type: TYPES.CONNECT_AUTHORISED,
-        payload: initAuthed()
+        payload: initAuthed(),
     } )
 );
 
@@ -42,7 +42,7 @@ export const registerNrsName = createAliasedAction(
     TYPES.ALIAS_REGISTER_NRS_NAME,
     ( address: string ) => ( {
         type: TYPES.REGISTER_NRS_NAME,
-        payload: registerNrsNameOnNetwork( address )
+        payload: registerNrsNameOnNetwork( address ),
     } )
 );
 
@@ -51,6 +51,6 @@ export const uploadFiles = createAliasedAction(
     ( folder: string, target: string ) => ( {
     // the real action
         type: TYPES.UPLOAD_FILES,
-        payload: uploadFilesToSafe( folder, target )
+        payload: uploadFilesToSafe( folder, target ),
     } )
 );
