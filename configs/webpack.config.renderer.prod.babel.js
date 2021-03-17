@@ -158,8 +158,8 @@ export default merge( baseConfig, {
             : [
                   new TerserPlugin( {
                       parallel: true,
-                      sourceMap: true,
-                      cache: true,
+                    //   sourceMap: true,
+                    //   cache: true,
                   } ),
                   new OptimizeCSSAssetsPlugin( {
                       cssProcessorOptions: {
