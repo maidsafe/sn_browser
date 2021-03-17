@@ -112,7 +112,7 @@ export class Tab extends Component<TabProperties, TabState> {
     };
 
     buildMenu = ( webview ) => {
-        if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
+    // if ( !webview.getWebContents ) return; // 'not now, as you're running jest;
         const { windowId, toggleDevTools, tabId, addTabNext } = this.props;
         // require here to avoid jest/electron remote issues
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
@@ -215,7 +215,7 @@ export class Tab extends Component<TabProperties, TabState> {
             // We set the webContents here, and add it to the user agent
             // to be able to modify _all_ requests from a domain to pull
             // the correct version of site...
-            const webContents = webview.getWebContents();
+            const webContents = remote.webContents.fromId( webview.getWebContentsId() );
             const userAgent = webContents.getUserAgent();
 
             const webContentsId = webContents.id;
@@ -382,7 +382,7 @@ export class Tab extends Component<TabProperties, TabState> {
     domReady() {
         const { url } = this.props;
         const { webview } = this;
-        const webContents = webview.getWebContents();
+        const webContents = remote.webContents.fromId( webview.getWebContentsId() );
         if ( !webContents || webContents.isDestroyed() ) return;
         if ( SHOW_DEVTOOLS ) {
             webContents.openDevTools( { mode: 'detach' } );
@@ -698,7 +698,7 @@ For updates or to submit ideas and suggestions, visit https://github.com/maidsaf
     with( callback, options = { insist: false } ) {
         const { webview } = this;
         if ( !webview ) return;
-        const webContents = webview.getWebContents();
+        const webContents = remote.webContents.fromId( webview.getWebContentsId() );
         if ( !webContents ) {
             return;
         }

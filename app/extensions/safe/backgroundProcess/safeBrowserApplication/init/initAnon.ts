@@ -1,4 +1,4 @@
-import { Safe } from 'sn_nodejs';
+import { Safe, Duration } from 'sn_nodejs';
 
 import { logger } from '$Logger';
 import {
@@ -9,7 +9,7 @@ import { cleanupNeonError } from '$Extensions/safe/utils/safeHelpers';
 import { addNotification } from '$Actions/notification_actions';
 
 export const initAnon = async (): Safe => {
-    const safeBrowserAppObject = new Safe();
+    const safeBrowserAppObject = new Safe( 'base32', { secs: 4, nanos: 0 } );
 
     const APP_ID = 'net.maidsafe.safe_browser';
     const APP_NAME = 'SAFE Browser';
