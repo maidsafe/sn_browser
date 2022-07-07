@@ -268,7 +268,7 @@
     "i18n": "0.10.0",
     "jest-tobetype": "git+https://github.com/joshuef/jest-tobetype.git#master",
     "lodash": ">=4.17.19",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "nessie-ui": "7.0.4",
     "open": "^7.0.4",
     "ps-list": "^7.2.0",
